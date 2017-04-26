@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_theaters"
+        android:enabled="true"
+        android:icon="@drawable/temp"
+        android:title="@string/menu_bottom_navigation_main_theaters"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_movies"
+        android:enabled="true"
+        android:icon="@drawable/temp"
+        android:title="@string/menu_bottom_navigation_main_movies"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_music"
+        android:enabled="true"
+        android:icon="@drawable/temp"
+        android:title="@string/menu_bottom_navigation_main_theaters"
+        app:showAsAction="ifRoom" />
+</menu>

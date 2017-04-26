@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+
+
+        <TextView
+            android:id="@+id/new_releases_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_movies_new_releases"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/new_releases"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/new_releases_text"
+            android:orientation="horizontal"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:listSelector="@android:color/transparent"
+            tools:listitem="@layout/list_item_movie_poster" />
+
+
+
+        <TextView
+            android:id="@+id/top_box_office_text"
+            android:layout_below="@+id/new_releases"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_movies_new_releases"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/top_box_office"
+            android:layout_below="@+id/top_box_office_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            tools:listitem="@layout/list_item_movie_poster"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:listSelector="@android:color/transparent" />
+
+
+        <TextView
+            android:id="@+id/coming_soon_text"
+            android:layout_below="@+id/top_box_office"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_movies_new_releases"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/coming_soon"
+            android:layout_below="@+id/coming_soon_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            tools:listitem="@layout/list_item_movie_poster"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:listSelector="@android:color/transparent" />
+
+
+</RelativeLayout>

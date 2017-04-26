@@ -2,12 +2,14 @@
 <resources>
 
     <color name="red">#c82229</color>
-    <color name="red_light">#e4333a</color>
+    <color name="red_light">#ff5b52</color>
+    <color name="red_dark">#8f0000</color>
 
-
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#c82229</color>
+    <color name="colorPrimaryDark">#8f0000</color>
+    <color name="colorAccent">#FFFFFF</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>

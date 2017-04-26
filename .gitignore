@@ -1,0 +1,54 @@
+#built application files
+*.apk
+*.ap_
+*.log
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+#keystore
+keystore.keystore
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath
+.project
+
+# Android Studio
+.idea
+*.iml
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
+.gradle/
+.idea/compiler.xml
+.idea/copyright/
+.idea/gradle.xml
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+build/android-profile/profile-2017-04-26-00-02-48-101.rawproto
+build/android-profile/profile-2017-04-26-00-03-04-657.rawproto
+build/android-profile/profile-2017-04-26-00-03-10-647.rawproto
+build/android-profile/profile-2017-04-26-00-04-19-360.rawproto
+build/android-profile/profile-2017-04-26-00-07-48-205.rawproto
+build/android-profile/profile-2017-04-26-00-10-03-583.rawproto
+build/android-profile/profile-2017-04-26-00-13-56-902.rawproto
+build/android-profile/profile-2017-04-26-00-14-21-285.rawproto
+build/intermediates/
