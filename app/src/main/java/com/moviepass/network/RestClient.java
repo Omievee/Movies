@@ -34,9 +34,11 @@ public class RestClient {
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sSimpleInstance;
 
-    public static int userId;
-    public static String deviceUuid = "";
-    public static String authToken = "";
+    /* TODO REMOVE GENERIC */
+
+    public static int userId = 2041;
+    public static String deviceUuid = "D999236A42B8C9AE71201E18058940C2A6AACC73";
+    public static String authToken = "W9MdGCulq64Jw1KKjK/QrxldKy+vn6QV9trDQXQEGxU=";
 
     private RestClient() {
     }

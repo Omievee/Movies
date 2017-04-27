@@ -1,4 +1,4 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="parallax_toolbar_size">91dp</dimen>
+    <dimen name="parallax_toolbar_size">48dp</dimen>
 </resources>

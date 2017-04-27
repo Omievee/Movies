@@ -3,18 +3,22 @@ package com.moviepass.fragments;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v13.view.ViewCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.MovieActivity;
-import com.moviepass.adapters.MoviePosterAdapter;
+import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
+import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.network.RestClient;
@@ -33,13 +37,18 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment {
+public class MoviesFragment extends Fragment implements MoviePosterClickListener {
 
-    private static final String MOVIES = "movies";
+    public static final String MOVIES = "movies";
+    public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
+    public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
+
 
     private MoviesNewReleasesAdapter mMoviesNewReleasesAdapter;
-    private MoviePosterAdapter mMoviePosterAdapter;
+    private MoviesTopBoxOfficeAdapter mMoviesTopBoxOfficeAdapter;
+    private MoviesComingSoonAdapter mMoviesComingSoonAdapter;
 
+    MoviesFragment mMoviesFragment;
     MoviesResponse mMoviesResponse;
     ArrayList<Movie> mMovieArrayList;
 
@@ -70,7 +79,7 @@ public class MoviesFragment extends Fragment {
         mNewReleasesRecyclerView = (RecyclerView) rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
 
-        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleasesOnClick, mMoviesNewReleases);
+        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(mMoviesNewReleases, this);
 
 
         /* Top Box Office RecyclerView */
@@ -80,7 +89,7 @@ public class MoviesFragment extends Fragment {
         mTopBoxOfficeRecyclerView = (RecyclerView) rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
 
-        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), topBoxOfficeOnClick, mMoviesTopBoxOffice);
+        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(mMoviesTopBoxOffice, this);
 
         /* Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
@@ -89,7 +98,7 @@ public class MoviesFragment extends Fragment {
         mComingSoonRecyclerView = (RecyclerView) rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
 
-        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), topBoxOfficeOnClick, mMoviesComingSoon);
+        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(mMoviesComingSoon, this);
 
         loadMovies();
 
@@ -104,8 +113,11 @@ public class MoviesFragment extends Fragment {
         }
 
         if (mTopBoxOfficeRecyclerView != null) {
-            mNewReleasesRecyclerView.setAdapter(mMoviePosterAdapter);
-            mComingSoonRecyclerView.setAdapter(mMoviePosterAdapter);
+            mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+        }
+
+        if (mComingSoonRecyclerView != null) {
+            mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
         }
 
     }
@@ -115,27 +127,18 @@ public class MoviesFragment extends Fragment {
         super.onDestroy();
     }
 
-    private View.OnClickListener newReleasesOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Movie movie = mMoviesNewReleases.get((int) view.getTag());
-            Intent moveIntent = new Intent(getActivity(), MovieActivity.class);
-            moveIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+    public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
+        Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
+        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+        movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
 
-            startActivity(moveIntent);
-        }
-    };
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                sharedImageView,
+                ViewCompat.getTransitionName(sharedImageView));
 
-    private View.OnClickListener topBoxOfficeOnClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Movie movie = mMoviesTopBoxOffice.get((int) view.getTag());
-            Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
-            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-
-            startActivity(movieIntent);
-        }
-    };
+        startActivity(movieIntent, options.toBundle());
+    }
 
     private void loadMovies() {
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue( new Callback<MoviesResponse>() {
@@ -151,7 +154,17 @@ public class MoviesFragment extends Fragment {
 
                     if (mMoviesNewReleasesAdapter != null) {
                         mNewReleasesRecyclerView.getRecycledViewPool().clear();
-                        mMoviePosterAdapter.notifyDataSetChanged();
+                        mMoviesNewReleasesAdapter.notifyDataSetChanged();
+                    }
+
+                    if (mMoviesTopBoxOfficeAdapter != null) {
+                        mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
+                        mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
+                    }
+
+                    if (mMoviesComingSoonAdapter != null) {
+                        mComingSoonRecyclerView.getRecycledViewPool().clear();
+                        mMoviesComingSoonAdapter.notifyDataSetChanged();
                     }
 
                     if (mMoviesResponse != null) {
@@ -159,12 +172,13 @@ public class MoviesFragment extends Fragment {
                         mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
 
                         mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
-                        mTopBoxOfficeRecyclerView.setAdapter(mMoviePosterAdapter);
+                        mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
 
                         mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
-                        mComingSoonRecyclerView.setAdapter(mMoviePosterAdapter);
+                        mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
 
                     }
+
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
                 }

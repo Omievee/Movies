@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MoviePass</string>
+    <string name="transition">transit</string>
 
     <!-- Android Manifest -->
     <string name="title_activity_main">MainActivity</string>

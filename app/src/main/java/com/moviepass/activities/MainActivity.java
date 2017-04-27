@@ -92,44 +92,6 @@ public class MainActivity extends AppCompatActivity {
             requestMandatoryPermissions();
         }
 
-        /* TODO : TEMPORARY AUTHENTICATION */
-        String email = "ryancmcmanus+real@gmail.com";
-        String password = "movies";
-        SignInRequest request = new SignInRequest(email, password);
-        final String deviceId = DeviceID.getID(this);
-
-        RestClient.get().login(deviceId, request).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() != null && response.isSuccessful()) {
-
-                    UserPreferences.setUserCredentials(response.body().getId(), deviceId, response.body().getAuthToken());
-                    RestClient.deviceUuid = deviceId;
-                    RestClient.authToken = response.body().getAuthToken();
-                    RestClient.userId = response.body().getId();
-
-                } else if (response.errorBody() != null) {
-
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                        Toast.makeText(MainActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-
-                    } catch (Exception e) {
-                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "No MoviePass User Found with this Facebook Account.", Toast.LENGTH_LONG).show();
-
-            }
-
-
-        });
-
 
         /* Set up the Toolbar */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

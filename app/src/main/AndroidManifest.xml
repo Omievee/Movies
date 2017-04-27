@@ -30,7 +30,7 @@
 
         <activity
             android:name=".activities.MovieActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" android:theme="@style/MoviePassThemeTransparentStatusBar"/>
 
         <activity
             android:name=".activities.MoviesActivity"

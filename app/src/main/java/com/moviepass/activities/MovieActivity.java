@@ -3,6 +3,7 @@ package com.moviepass.activities;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -23,8 +24,10 @@ import com.moviepass.UserPreferences;
 import com.moviepass.fragments.MovieReviewsFragment;
 import com.moviepass.fragments.MovieShowTimesFragment;
 import com.moviepass.fragments.MovieSynopsisFragment;
+import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Review;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -80,6 +83,10 @@ public class MovieActivity extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+        supportPostponeEnterTransition();
+
+        Bundle extras = getIntent().getExtras();
+        mMovie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -88,10 +95,7 @@ public class MovieActivity extends MainActivity {
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
         mCollapsingToolbarLayout.setTitle("TEST");
 
-        mMovie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
-
-
-        //ButterKnife.bind(this);
+        mImageHeader = (ImageView) findViewById(R.id.header);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.parallax_appbar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTabBar = (TabLayout) findViewById(R.id.tabbar);
@@ -101,10 +105,8 @@ public class MovieActivity extends MainActivity {
         mRatingTomato = (TextView) findViewById(R.id.textRatingTomato);
         rtImage = (ImageView) findViewById(R.id.rtImage);
         mTitleBarContainer = (FrameLayout) findViewById(R.id.title_bar_container);
-        mImageHeader = (ImageView) findViewById(R.id.header);
 
         if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
             if (extras == null) {
                 mSynopsis = null;
             } else {
@@ -114,19 +116,32 @@ public class MovieActivity extends MainActivity {
             mSynopsis = (String) savedInstanceState.getSerializable("SYNOPSIS");
         }
 
-
         Intent i = getIntent();
-        Bundle extras = i.getExtras();
         List<Review> mReviews = new ArrayList<Review>();
         mReviews =  (List<Review>) extras.getSerializable("extra");
 
         mPager.setAdapter(new MoviePagerAdapter(getFragmentManager()));
         mTabBar.setupWithViewPager(mPager);
 
-        Picasso.with(this).load(mMovie.getImageUrl())
-                .placeholder(R.mipmap.ic_launcher)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
+            mImageHeader.setTransitionName(imageTransitionName);
+        }
+
+        Picasso.with(this)
+                .load(mMovie.getImageUrl())
                 .error(R.mipmap.ic_launcher)
-                .into(mImageHeader);
+                .into(mImageHeader, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        supportStartPostponedEnterTransition();
+                    }
+
+                    @Override
+                    public void onError() {
+                        supportStartPostponedEnterTransition();
+                    }
+                });
 
         mSecondLineThings = ButterKnife.findById(this, R.id.secondLineThings);
         mRottenTomatoRating = ButterKnife.findById(findViewById(R.id.secondLineThings), R.id.rottenTomatoRating);
@@ -253,12 +268,11 @@ public class MovieActivity extends MainActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                finish();
+                supportFinishAfterTransition();
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 }

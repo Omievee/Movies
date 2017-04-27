@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by ryan on 4/26/17.
  */
 
-public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewReleasesAdapter.ImageViewHolder> {
+public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSoonAdapter.ImageViewHolder> {
 
     private final MoviePosterClickListener moviePosterClickListener;
     private ArrayList<Movie> moviesArrayList;
@@ -28,7 +28,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesNewReleasesAdapter(ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesComingSoonAdapter(ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
 
