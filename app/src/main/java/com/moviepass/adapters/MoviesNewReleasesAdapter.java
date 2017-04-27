@@ -60,6 +60,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<RecyclerView.
 
         Picasso.with(context).load(movie.getImageUrl()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(((ViewHolder) holder).imageMovie);
 
+        ((ViewHolder) holder).imageMovie.setTag(position);
         ((ViewHolder) holder).imageMovie.setOnClickListener(onClick);
     }
 

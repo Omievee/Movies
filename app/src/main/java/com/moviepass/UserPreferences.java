@@ -87,4 +87,13 @@ public class UserPreferences {
     public static double getLatitude() {
         return Double.longBitsToDouble(sPrefs.getLong(Constants.PREFS_LATITUDE, Double.doubleToLongBits(0)));
     }
+
+    public static void setRottenTomatoesDisplay(boolean rottenTomatoesDisplay) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putBoolean(Constants.ROTTEN_TOMATOES, rottenTomatoesDisplay);
+        editor.apply();
+    }
+
+    public static boolean getRottenTomatoesDisplay() { return sPrefs.getBoolean(Constants.ROTTEN_TOMATOES, true); }
 }

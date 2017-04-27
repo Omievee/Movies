@@ -23,8 +23,6 @@ public class Application extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-//        CalligraphyConfig.initDefault("fonts/Roboto-Regular.ttf", R.attr.fontPath);
-
         UserPreferences.load(this);
 
         RestClient.setupSimpleRestClient(getApplicationContext());

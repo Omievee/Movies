@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +22,6 @@ import com.moviepass.network.RestClient;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,26 +70,26 @@ public class MoviesFragment extends Fragment {
         mNewReleasesRecyclerView = (RecyclerView) rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
 
-        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), onClickListener, mMoviesNewReleases);
+        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleasesOnClick, mMoviesNewReleases);
 
 
-        /* New Releases RecyclerView */
+        /* Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mTopBoxOfficeRecyclerView = (RecyclerView) rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
 
-        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), onClickListener, mMoviesTopBoxOffice);
+        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), topBoxOfficeOnClick, mMoviesTopBoxOffice);
 
-        /* New Releases RecyclerView */
+        /* Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mComingSoonRecyclerView = (RecyclerView) rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
 
-        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), onClickListener, mMoviesComingSoon);
+        mMoviePosterAdapter = new MoviePosterAdapter(getActivity(), topBoxOfficeOnClick, mMoviesComingSoon);
 
         loadMovies();
 
@@ -118,22 +115,25 @@ public class MoviesFragment extends Fragment {
         super.onDestroy();
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        return false;
-    }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
+    private View.OnClickListener newReleasesOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Movie movie = mMovieArrayList.get((int) view.getTag());
+            Movie movie = mMoviesNewReleases.get((int) view.getTag());
             Intent moveIntent = new Intent(getActivity(), MovieActivity.class);
             moveIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
 
             startActivity(moveIntent);
+        }
+    };
+
+    private View.OnClickListener topBoxOfficeOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Movie movie = mMoviesTopBoxOffice.get((int) view.getTag());
+            Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
+            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+
+            startActivity(movieIntent);
         }
     };
 
@@ -142,10 +142,13 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
-                if (response.body() != null) {
+                if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
                     mMoviesNewReleases.clear();
+                    mMoviesTopBoxOffice.clear();
+                    mMoviesComingSoon.clear();
+
                     if (mMoviesNewReleasesAdapter != null) {
                         mNewReleasesRecyclerView.getRecycledViewPool().clear();
                         mMoviePosterAdapter.notifyDataSetChanged();
@@ -153,8 +156,8 @@ public class MoviesFragment extends Fragment {
 
                     if (mMoviesResponse != null) {
                         mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
-                        mNewReleasesRecyclerView.setAdapter(mMoviePosterAdapter);
-                        
+                        mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+
                         mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
                         mTopBoxOfficeRecyclerView.setAdapter(mMoviePosterAdapter);
 
@@ -162,9 +165,8 @@ public class MoviesFragment extends Fragment {
                         mComingSoonRecyclerView.setAdapter(mMoviePosterAdapter);
 
                     }
-
-
-
+                } else {
+                    /* TODO : FIX IF RESPONSE IS NULL */
                 }
             }
 

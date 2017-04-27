@@ -29,6 +29,10 @@
         </activity>
 
         <activity
+            android:name=".activities.MovieActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activities.MoviesActivity"
             android:screenOrientation="portrait" />
 
