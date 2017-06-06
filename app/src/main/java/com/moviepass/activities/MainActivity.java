@@ -2,8 +2,6 @@ package com.moviepass.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,34 +15,33 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
 import com.moviepass.Constants;
-import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.UserPreferences;
+import com.moviepass.fragments.BrowseFragment;
+import com.moviepass.fragments.ETicketFragment;
 import com.moviepass.fragments.MoviesFragment;
-import com.moviepass.model.User;
-import com.moviepass.network.RestClient;
-import com.moviepass.requests.SignInRequest;
-
-import org.json.JSONObject;
+import com.moviepass.fragments.NotificationFragment;
+import com.moviepass.fragments.ProfileFragment;
+import com.moviepass.fragments.SettingsFragment;
+import com.moviepass.helpers.BottomNavigationViewHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
+        ETicketFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener,
+        NotificationFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
 
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -59,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
-    /* Fragments */
-    MoviesFragment mMoviesFragment = new MoviesFragment();
 
     /* Location */
     protected LocationUpdateBroadCast mLocationBroadCast;
@@ -92,36 +86,50 @@ public class MainActivity extends AppCompatActivity {
             requestMandatoryPermissions();
         }
 
-
         /* Set up the Toolbar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar); */
 
         /* Create Bottom Navigation Menu */
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+
 
         /* Select View */
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment fragment = null;
                         switch (item.getItemId()) {
-                            case R.id.action_theaters:
-
-                            case R.id.action_movies:
+                            case R.id.action_profile:
+                                fragment = ProfileFragment.newInstance();
+                                break;
+                            case R.id.action_e_tickets:
+                                fragment = ETicketFragment.newInstance();
+                                break;
+                            case R.id.action_browse:
                                 if (grantedMandatoryPermissions()) {
-                                    Intent i = new Intent(MainActivity.this, MoviesActivity.class);
-                                    startActivity(i);
-                                    overridePendingTransition(0, 0);
+                                    fragment = BrowseFragment.newInstance();
                                 } else {
                                     requestMandatoryPermissions();
                                 }
                                 break;
-
-                            case R.id.action_music:
-
+                            case R.id.action_notifications:
+                                fragment = NotificationFragment.newInstance();
+                                break;
+                            case R.id.action_settings:
+                                fragment = SettingsFragment.newInstance();
+                                break;
                         }
+
+                        if (fragment != null) {
+                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.frame_layout, fragment);
+                            fragmentTransaction.commit();
+                        }
+
                         return true;
                     }
                 });
@@ -168,6 +176,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mLocationBroadCast != null) {
+            try {
+                unregisterReceiver(mLocationBroadCast);
+            } catch (Exception e) {
+                Log.d("BaseActivity onPause", "unregister received" + e.getMessage());
+            }
+        }
+    }
+
+    /*
 
     /* Handle Permissions */
     public void requestMandatoryPermissions(){

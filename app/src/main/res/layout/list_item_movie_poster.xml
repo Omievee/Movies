@@ -1,15 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/list_item_movie_poster"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="5dp"
-    android:elevation="4dp">
+    android:elevation="4dp"
+    android:layout_marginLeft="16dp">
 
-    <ImageView
-        android:id="@+id/poster"
-        android:layout_marginLeft="16dp"
-        android:layout_width="133dp"
-        android:layout_height="200dp"
-        android:src="@mipmap/ic_launcher" />
+    <RelativeLayout
+        android:id="@+id/ticket_top"
+        android:layout_width="165dp"
+        android:layout_height="250dp">
 
-</LinearLayout>
+        <FrameLayout
+            android:layout_width="165dp"
+            android:layout_height="250dp"
+            android:background="@drawable/ticket_top">
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ticket_top"
+                android:scaleType="centerCrop" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ticket_top" />
+
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="165dp"
+        android:layout_height="63dp"
+        android:layout_below="@+id/ticket_top"
+        android:background="@drawable/ticket_bottom">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="2dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black_text"
+            android:text="@string/list_item_movie_poster_title_placeholder"
+            android:maxLines="1"/>
+
+        <TextView
+            android:id="@+id/text_genre"
+            android:layout_below="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textSize="12sp"
+            android:textColor="@color/black_text"
+            android:text="@string/list_item_movie_poster_genre_placeholder"
+            android:maxLines="1" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/run_time_things"
+            android:background="@color/gray_icon"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <LinearLayout
+            android:id="@+id/run_time_things"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp" >
+
+            <ImageView
+                android:id="@+id/clock"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:paddingTop="1dp"
+                android:src="@drawable/clock"
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/text_run_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left|center_vertical"
+                android:layout_toRightOf="@+id/clock"
+                android:text="@string/list_item_movie_poster_run_time_placeholder"
+                android:textColor="@color/gray_icon"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

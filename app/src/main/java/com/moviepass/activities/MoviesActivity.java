@@ -1,8 +1,8 @@
 package com.moviepass.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import com.moviepass.R;
 import com.moviepass.fragments.MoviesFragment;
@@ -18,13 +18,7 @@ public class MoviesActivity extends MainActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mDoUpdateLocation=false;
-        super.onCreate(savedInstanceState);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, mMoviesFragment);
-        transaction.commit();
 
     }
 

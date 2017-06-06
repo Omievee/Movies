@@ -5,9 +5,11 @@
     <!-- Android Manifest -->
     <string name="title_activity_main">MainActivity</string>
 
-
-    <string name="menu_bottom_navigation_main_theaters">Theaters</string>
-    <string name="menu_bottom_navigation_main_movies">Movies</string>
+    <string name="menu_bottom_navigation_main_profile">Profile</string>
+    <string name="menu_bottom_navigation_main_e_tickets">E-Tickets</string>
+    <string name="menu_bottom_navigation_main_browse">Browse</string>
+    <string name="menu_bottom_navigation_main_notifications">Notifications</string>
+    <string name="menu_bottom_navigation_main_settings">Settings</string>
 
 
     <!-- Activitites -->
@@ -20,6 +22,7 @@
     <string name="activity_movie_holder_rating">[Rating]</string>
     <string name="activity_movie_holder_running_time">[### minutes]</string>
     <string name="activity_movie_holder_rotten_tomato_rating">[###%]</string>
+    <string name="activity_movie_running_time_minutes">minutes</string>
     <string name="activity_movie_showtimes">Showtimes</string>
     <string name="activity_movie_synopsis">Synopsis</string>
     <string name="activity_movie_reviews">Reviews</string>
@@ -37,6 +40,11 @@
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
 
+
+    <!-- List Item Movie Poster -->
+    <string name="list_item_movie_poster_title_placeholder">[Title]</string>
+    <string name="list_item_movie_poster_genre_placeholder">[Genre]</string>
+    <string name="list_item_movie_poster_run_time_placeholder">[Time]</string>
 
 
 </resources>

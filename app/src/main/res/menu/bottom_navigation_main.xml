@@ -3,23 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_theaters"
+        android:id="@+id/action_profile"
         android:enabled="true"
-        android:icon="@drawable/temp"
-        android:title="@string/menu_bottom_navigation_main_theaters"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_profile"
+        android:title="@string/menu_bottom_navigation_main_profile" />
+    <item
+        android:id="@+id/action_e_tickets"
+        android:enabled="true"
+        android:icon="@drawable/ic_e_tickets"
+        android:title="@string/menu_bottom_navigation_main_e_tickets" />
 
     <item
-        android:id="@+id/action_movies"
+        android:id="@+id/action_browse"
         android:enabled="true"
-        android:icon="@drawable/temp"
-        android:title="@string/menu_bottom_navigation_main_movies"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_theaters"
+        android:title="@string/menu_bottom_navigation_main_browse" />
 
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/action_notifications"
         android:enabled="true"
-        android:icon="@drawable/temp"
-        android:title="@string/menu_bottom_navigation_main_theaters"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/menu_bottom_navigation_main_notifications" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/menu_bottom_navigation_main_settings" />
+
 </menu>

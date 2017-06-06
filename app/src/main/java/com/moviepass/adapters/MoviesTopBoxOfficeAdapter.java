@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
@@ -15,11 +17,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by ryan on 4/26/17.
  */
 
-public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBoxOfficeAdapter.ImageViewHolder> {
+public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBoxOfficeAdapter.ViewHolder> {
 
     private final MoviePosterClickListener moviePosterClickListener;
     private ArrayList<Movie> moviesArrayList;
@@ -34,14 +39,31 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 
     }
 
-    @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
-        return new ImageViewHolder(view);
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.list_item_movie_poster)
+        RelativeLayout listItemMoviePoster;
+        @BindView(R.id.text_title)
+        TextView title;
+        @BindView(R.id.text_run_time)
+        TextView runTime;
+        @BindView(R.id.poster)
+        ImageView posterImageView;
+
+        public ViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(final ImageViewHolder holder, int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
+        return new ViewHolder(view);
+    }
+
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
         Picasso.with(holder.itemView.getContext())
@@ -49,7 +71,25 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                 .error(R.mipmap.ic_launcher)
                 .into(holder.posterImageView);
 
-        holder.posterImageView.setTag(position);
+        holder.title.setText(movie.getTitle());
+
+
+        int t = movie.getRunningTime();
+        int hours = t / 60; //since both are ints, you get an int
+        int minutes = t % 60;
+
+        if (movie.getRunningTime() == 0) {
+            holder.runTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            holder.runTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            holder.runTime.setText(translatedRunTime);
+        }
+
+
+        holder.listItemMoviePoster.setTag(position);
 
         ViewCompat.setTransitionName(holder.posterImageView, movie.getImageUrl());
 
@@ -67,16 +107,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
-    }
-
-    public static class ImageViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView posterImageView;
-
-        public ImageViewHolder(View itemView) {
-            super(itemView);
-            posterImageView = (ImageView) itemView.findViewById(R.id.poster);
-        }
     }
 
 }

@@ -27,6 +27,7 @@ import com.moviepass.fragments.MovieSynopsisFragment;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Review;
+import com.moviepass.model.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -98,12 +99,12 @@ public class MovieActivity extends MainActivity {
         mImageHeader = (ImageView) findViewById(R.id.header);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.parallax_appbar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTabBar = (TabLayout) findViewById(R.id.tabbar);
+        mTabBar = (TabLayout) findViewById(R.id.tab_bar);
         mPager = (ViewPager) findViewById(R.id.pager);
-        mRating = (TextView) findViewById(R.id.textRating);
-        mRunningTime = (TextView) findViewById(R.id.textRunningTime);
-        mRatingTomato = (TextView) findViewById(R.id.textRatingTomato);
-        rtImage = (ImageView) findViewById(R.id.rtImage);
+        mRating = (TextView) findViewById(R.id.text_rating);
+        mRunningTime = (TextView) findViewById(R.id.text_running_time);
+        mRatingTomato = (TextView) findViewById(R.id.text_tomato_rating);
+        rtImage = (ImageView) findViewById(R.id.image_tomato);
         mTitleBarContainer = (FrameLayout) findViewById(R.id.title_bar_container);
 
         if (savedInstanceState == null) {
@@ -143,10 +144,10 @@ public class MovieActivity extends MainActivity {
                     }
                 });
 
-        mSecondLineThings = ButterKnife.findById(this, R.id.secondLineThings);
-        mRottenTomatoRating = ButterKnife.findById(findViewById(R.id.secondLineThings), R.id.rottenTomatoRating);
-        mRottenTomatoImage = ButterKnife.findById(findViewById(R.id.secondLineThings), R.id.rottenTomatoImage);
-        mRatingsThings = ButterKnife.findById(findViewById(R.id.secondLineThings), R.id.ratingsThings);
+        mSecondLineThings = ButterKnife.findById(this, R.id.second_line_things);
+        mRatingsThings = ButterKnife.findById(findViewById(R.id.second_line_things), R.id.ratings_things);
+        mRottenTomatoRating = ButterKnife.findById(findViewById(R.id.second_line_things), R.id.rotten_tomato_rating);
+        mRottenTomatoImage = ButterKnife.findById(findViewById(R.id.second_line_things), R.id.rotten_tomato_image);
 
 
         //MOVIE RATING && BUFFER IF RT RATING OR  MINUTES PRESENT
@@ -162,38 +163,30 @@ public class MovieActivity extends MainActivity {
 
         //add buffer if RT rating present
         if (mMovie.getTomatoRating() != 0 && UserPreferences.getRottenTomatoesDisplay()) {
-            mRunningTime.setText(String.format(Locale.getDefault(), "%s %s %s", mMovie.getRunningTime(), getText(R.string.activity_movie_holder_running_time), " "));
+            mRunningTime.setText(String.format(Locale.getDefault(), "%s %s %s", mMovie.getRunningTime(), getText(R.string.activity_movie_running_time_minutes), " "));
         } else {
-            mRunningTime.setText(String.format(Locale.getDefault(), "%s %s", mMovie.getRunningTime(), getText(R.string.activity_movie_holder_running_time)));
+            mRunningTime.setText(String.format(Locale.getDefault(), "%s %s", mMovie.getRunningTime(), getText(R.string.activity_movie_running_time_minutes)));
         }
 
         //RT IMAGE & RATING SELECT
-        if (mMovie.getTomatoRating() != 0) {
-            if (UserPreferences.getRottenTomatoesDisplay()) {
-                int resId;
+        if (mMovie.getTomatoRating() != 0 && UserPreferences.getRottenTomatoesDisplay()) {
+            int resId;
 
-                if (mMovie.getTomatoRating() > 60) {
-                    resId = R.drawable.icon_tomato;
-                    rtImage.setImageResource(resId);
-                    rtImage.setVisibility(View.VISIBLE);
-                } else {
-                    resId = R.drawable.icon_splat;
-                    rtImage.setImageResource(resId);
-                    rtImage.setVisibility(View.VISIBLE);
-                }
-
-                mRatingTomato.setText((String.format(Locale.getDefault(), "%s%% %s", mMovie.getTomatoRating(), " ")));
-
+            if (mMovie.getTomatoRating() > 60) {
+                resId = R.drawable.icon_tomato;
+                rtImage.setImageResource(resId);
+                rtImage.setVisibility(View.VISIBLE);
             } else {
-                mRottenTomatoRating.setVisibility(View.GONE);
-                mRottenTomatoImage.setVisibility(View.GONE);
+                resId = R.drawable.icon_splat;
+                rtImage.setImageResource(resId);
+                rtImage.setVisibility(View.VISIBLE);
             }
+
+            mRatingTomato.setText((String.format(Locale.getDefault(), "%s%% %s", mMovie.getTomatoRating(), " ")));
         } else {
             mRottenTomatoRating.setVisibility(View.GONE);
             mRottenTomatoImage.setVisibility(View.GONE);
         }
-
-
 
 
         /*

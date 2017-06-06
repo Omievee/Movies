@@ -5,11 +5,16 @@
     <color name="red_light">#ff5b52</color>
     <color name="red_dark">#8f0000</color>
 
-    <color name="colorPrimary">#c82229</color>
-    <color name="colorPrimaryDark">#8f0000</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorPrimary">#323c46</color>
+    <color name="colorPrimaryDark">#202b36</color>
+    <color name="colorAccent">#c82229</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="black_text">#DE000000</color>
+    <color name="dark">#202b36</color>
     <color name="white">#FFFFFF</color>
+    <color name="charcoal">#323c46</color>
+
+    <color name="gray_icon">#7F7F7F</color>
 
 </resources>

@@ -130,7 +130,7 @@ public class RestClient {
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent","MoviePass/Android/20161221");
+                        .addHeader("User-Agent","MoviePass/Android/20170519");
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
