@@ -1,5 +1,6 @@
 package com.moviepass.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,10 +20,13 @@ import java.util.List;
  * Created by anubis on 6/6/17.
  */
 
-public class BrowseFragment extends Fragment {
+public class BrowseFragment extends Fragment implements TheatersFragment.OnFragmentInteractionListener,
+        MoviesFragment.OnFragmentInteractionListener {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    private OnFragmentInteractionListener listener;
 
     public static BrowseFragment newInstance() { return new BrowseFragment(); }
 
@@ -31,28 +35,32 @@ public class BrowseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_browse, container, false);
 
-
-        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new TheatersFragment(), "Theaters");
         adapter.addFragment(new MoviesFragment(), "Movies");
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    private class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        private ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -66,7 +74,7 @@ public class BrowseFragment extends Fragment {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        private void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
@@ -77,5 +85,24 @@ public class BrowseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        listener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+    }
 }

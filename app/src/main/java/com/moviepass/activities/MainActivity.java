@@ -30,18 +30,22 @@ import com.moviepass.UserLocationManagerFused;
 import com.moviepass.UserPreferences;
 import com.moviepass.fragments.BrowseFragment;
 import com.moviepass.fragments.ETicketFragment;
+import com.moviepass.fragments.BrowseFragment;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.fragments.NotificationFragment;
 import com.moviepass.fragments.ProfileFragment;
 import com.moviepass.fragments.SettingsFragment;
+import com.moviepass.fragments.TheatersFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.model.Movie;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
-        ETicketFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+        ETicketFragment.OnFragmentInteractionListener, BrowseFragment.OnFragmentInteractionListener,
+        NotificationFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
+        TheatersFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener {
 
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;

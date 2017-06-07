@@ -115,6 +115,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         if (mMoviesNewReleasesAdapter != null) {
             mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
         }
@@ -127,6 +128,24 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() { super.onResume(); }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -216,4 +235,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public interface OnFragmentInteractionListener {
     }
+
+
 }
