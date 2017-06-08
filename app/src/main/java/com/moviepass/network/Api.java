@@ -1,6 +1,7 @@
 package com.moviepass.network;
 
 import com.moviepass.model.MoviesResponse;
+import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
 import com.moviepass.requests.SignInRequest;
 
@@ -26,5 +27,9 @@ public interface Api {
     /* Movies */
     @GET("/api/v3/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
+
+    /* Theaters */
+    @GET("/api/v3/theaters/near")
+    Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
 
 }
