@@ -8,37 +8,50 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.moviepass.Constants;
 import com.moviepass.R;
+import com.moviepass.TheatersClickListener;
 import com.moviepass.UserLocationManagerFused;
+import com.moviepass.adapters.TheatersAdapter;
 import com.moviepass.model.Theater;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.network.RestClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,18 +68,30 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
             Manifest.permission.ACCESS_FINE_LOCATION
     };
 
-    private HashMap<LatLng, Theater> mMapData;
-
     private final static int REQUEST_LOCATION_CODE = 0;
-    final static byte DEFAULT_ZOOM_LEVEL = 8;
+    final static byte DEFAULT_ZOOM_LEVEL = 12;
+
+    private HashMap<LatLng, Theater> mMapData;
 
     boolean mLocationAcquired;
     private Location mMyLocation;
+    private TheatersAdapter mTheatersAdapter;
 
+    GoogleMap mMap;
     MapView mMapView;
-    GoogleMap mGoogleMap;
+    Marker unselectedMarkers;
+
     LocationUpdateBroadCast mLocationBroadCast;
+    TheatersClickListener mTheatersClickListener;
     private OnFragmentInteractionListener listener;
+
+    LayoutAnimationController controller;
+
+    ArrayList<Theater> mTheaters;
+    TheatersResponse mTheatersResponse;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,14 +111,29 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         mLocationBroadCast = new LocationUpdateBroadCast();
         getActivity().registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
+        /* Set up RecyclerView */
+        mTheaters = new ArrayList<>();
+
+        LinearLayoutManager mLayoutManager
+                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        mRecyclerView.setItemAnimator(itemAnimator);
+
+        mTheatersAdapter = new TheatersAdapter(mTheaters, mTheatersClickListener);
+
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Check if we were successful in obtaining the map.
-        if (mGoogleMap != null) {
-
+        if (mMap != null) {
             if (Build.VERSION.SDK_INT >= 23) {
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_CODE);
@@ -108,14 +148,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
+        mMap = googleMap;
 
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = mGoogleMap.setMapStyle(
+            boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             getActivity(), R.raw.map_style_json));
+            mMap.getUiSettings().setMapToolbarEnabled(false);
 
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
@@ -128,21 +169,45 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStart() {
         super.onStart();
+
+        try {
+            getActivity().registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+        } catch (IllegalArgumentException is) {
+            is.printStackTrace();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        try {
+            getActivity().registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+        } catch (IllegalArgumentException is) {
+            is.printStackTrace();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        try {
+            getActivity().unregisterReceiver(mLocationBroadCast);
+        } catch (IllegalArgumentException is) {
+            is.printStackTrace();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        try {
+            getActivity().unregisterReceiver(mLocationBroadCast);
+        } catch (IllegalArgumentException is) {
+            is.printStackTrace();
+        }
     }
 
     @Override
@@ -170,6 +235,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDetach() {
         super.onDetach();
+
         listener = null;
     }
 
@@ -188,7 +254,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    protected void onLocationChanged(Location location){
+    protected void onLocationChanged(Location location) {
         UserLocationManagerFused.getLocationInstance(getActivity()).stopLocationUpdates();
 
         if (location != null) {
@@ -196,8 +262,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
 
             mMyLocation = location;
 
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude()), DEFAULT_ZOOM_LEVEL));
-            mGoogleMap.clear();
+            LatLng coordinates = new LatLng(mMyLocation.getLatitude(), mMyLocation.getLongitude());
+            CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+
+            mMap.moveCamera(current);
+            mMap.clear();
 
             loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude());
 
@@ -242,7 +311,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         RestClient.get().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
                     @Override
-                    public void onResponse(Call<TheatersResponse> call, Response<TheatersResponse> response) {
+                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
                         TheatersResponse theaters = response.body();
                         if (theaters != null) {
                             List<Theater> theaterList = theaters.getTheaters();
@@ -261,39 +330,83 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
 
                                 builder.show();
                             } else {
-                                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                                 for (Theater theater : theaterList) {
                                     LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                                     mMapData.put(location, theater);
 
+                                    //Initial View to Display RecyclerView Based on User's Current Location
+                                    mTheatersResponse = response.body();
+                                    mTheaters.clear();
+
+                                    if (mTheatersAdapter != null) {
+                                        mRecyclerView.getRecycledViewPool().clear();
+                                        mTheatersAdapter.notifyDataSetChanged();
+                                    }
+
+                                    if (mTheatersResponse != null) {
+                                        mTheaters.addAll(mTheatersResponse.getTheaters());
+                                        mRecyclerView.setAdapter(mTheatersAdapter);
+                                    }
+
                                     MarkerOptions options = new MarkerOptions().title(theater.getName()).snippet(theater.getAddress()).position(location);
-                                    mGoogleMap.addMarker(options);
+                                    mMap.addMarker(options);
 
-                                    boundsBuilder.include(location);
+                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            // TODO Auto-generated method stub
+
+                                            if (unselectedMarkers != null) {
+                                                //Set prevMarker back to default color
+                                            }
+
+                                            if (!marker.equals(unselectedMarkers)) {
+                                                //leave Marker default color if re-click current Marker
+                                            }
+
+                                            unselectedMarkers = marker;
+
+                                            //Load New RecyclerView Based on User's Click
+                                            reloadTheaters(marker.getPosition().latitude, marker.getPosition().longitude);
+
+                                            return false;
+                                        }
+
+
+                                    });
+
+                                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                                        @Override
+                                        public void onMapClick(LatLng arg0) {
+                                            // TODO Auto-generated method stub
+
+                                            if (mRecyclerView != null) {
+
+                                                AnimationSet set = new AnimationSet(true);
+
+                                                Animation animation = AnimationUtils.loadAnimation(getContext(),
+                                                        R.anim.slide_down);
+                                                animation.setDuration(500);
+
+                                                set.addAnimation(animation);
+
+                                                controller = new LayoutAnimationController(set, 0.5f);
+
+                                                mRecyclerView.setLayoutAnimation(controller);
+                                                mRecyclerView.getRecycledViewPool().clear();
+                                                mTheatersAdapter.notifyDataSetChanged();
+                                                mTheaters.clear();
+                                            }
+
+                                        }
+
+
+                                    });
                                 }
 
-
-                                if (theaterList.size() == 1) {
-                                    Theater firstTheater = theaterList.get(0);
-                                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(firstTheater.getLat(), firstTheater.getLon()), DEFAULT_ZOOM_LEVEL));
-                                } else {
-                                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
-                                }
-
-                            /*
-                            mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                @Override
-                                public void onInfoWindowClick(Marker marker) {
-                                    Theater theater = mMapData.get(marker.getPosition());
-
-                                    Intent intent = new Intent(LocationActivity.this, TheaterActivity.class);
-                                    intent.putExtra(TheaterFragment.THEATER, Parcels.wrap(theater));
-
-                                    startActivity(intent);
-                                }
-                            });
-                            */
                             }
                         }
                     }
@@ -308,13 +421,121 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
                 });
     }
 
-    public interface OnFragmentInteractionListener {
+    private void reloadTheaters(Double latitude, final Double longitude) {
+        mMap.clear();
+
+        RestClient.get().getTheaters(latitude, longitude)
+                .enqueue(new Callback<TheatersResponse>() {
+                    @Override
+                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
+                        TheatersResponse theaters = response.body();
+                        if (theaters != null) {
+                            List<Theater> theaterList = theaters.getTheaters();
+
+                            if (theaterList.size() == 0) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
+
+/*                            builder.setTitle(R.string.activity_location_no_theaters_found);
+                            builder.setMessage(R.string.activity_location_try_another_zip_code);
+                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }); */
+
+                                builder.show();
+                            } else {
+                                for (Theater theater : theaterList) {
+                                    LatLng location = new LatLng(theater.getLat(), theater.getLon());
+
+                                    mMapData.put(location, theater);
+
+                                    //Initial View to Display RecyclerView Based on User's Current Location
+                                    mTheatersResponse = response.body();
+                                    mTheaters.clear();
+
+                                    if (mTheatersAdapter != null) {
+                                        mRecyclerView.getRecycledViewPool().clear();
+                                        mTheatersAdapter.notifyDataSetChanged();
+                                    }
+
+                                    if (mTheatersResponse != null) {
+                                        mTheaters.addAll(mTheatersResponse.getTheaters());
+                                        mRecyclerView.setAdapter(mTheatersAdapter);
+
+                                        AnimationSet set = new AnimationSet(true);
+
+                                        Animation animation = AnimationUtils.loadAnimation(getContext(),
+                                                R.anim.slide_up);
+                                        animation.setDuration(500);
+
+                                        set.addAnimation(animation);
+
+                                        controller = new LayoutAnimationController(set, 0.5f);
+
+                                        mRecyclerView.setLayoutAnimation(controller);
+                                    }
+
+                                    MarkerOptions options = new MarkerOptions().title(theater.getName()).snippet(theater.getAddress()).position(location);
+                                    mMap.addMarker(options);
+
+                                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                                        @Override
+                                        public boolean onMarkerClick(Marker marker) {
+                                            // TODO Auto-generated method stub
+
+                                            if (unselectedMarkers != null) {
+                                                //Set prevMarker back to default color
+                                            }
+
+                                            if (!marker.equals(unselectedMarkers)) {
+                                                //leave Marker default color if re-click current Marker
+                                            }
+
+                                            unselectedMarkers = marker;
+
+                                            //Load New RecyclerView Based on User's Click
+                                            reloadTheaters(marker.getPosition().latitude, marker.getPosition().longitude);
+
+                                            return false;
+                                        }
+
+
+                                    });
+
+                                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+                                        @Override
+                                        public void onMapClick(LatLng arg0) {
+                                            // TODO Auto-generated method stub
+
+                                            if (mRecyclerView != null) {
+                                                mRecyclerView.getRecycledViewPool().clear();
+                                                mTheatersAdapter.notifyDataSetChanged();
+                                                mTheaters.clear();
+                                            }
+
+                                        }
+
+
+                                    });
+                                }
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TheatersResponse> call, Throwable t) {
+                        if (t != null) {
+                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                        }
+                    }
+
+                });
     }
-}
-
-/*
-
-    CircularProgressView mProgress;
 
     private List<Theater> filterStandardTheaters(List<Theater> allTheaters) {
         List<Theater> filteredTheaters = new ArrayList<>();
@@ -331,4 +552,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         return filteredTheaters;
     }
 
-*/
+    public interface OnFragmentInteractionListener {
+    }
+}

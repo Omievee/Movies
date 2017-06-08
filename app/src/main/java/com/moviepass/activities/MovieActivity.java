@@ -173,11 +173,11 @@ public class MovieActivity extends MainActivity {
             int resId;
 
             if (mMovie.getTomatoRating() > 60) {
-                resId = R.drawable.icon_tomato;
+                resId = R.drawable.icon_rt_tomato;
                 rtImage.setImageResource(resId);
                 rtImage.setVisibility(View.VISIBLE);
             } else {
-                resId = R.drawable.icon_splat;
+                resId = R.drawable.icon_rt_splat;
                 rtImage.setImageResource(resId);
                 rtImage.setVisibility(View.VISIBLE);
             }

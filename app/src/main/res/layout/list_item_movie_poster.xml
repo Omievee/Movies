@@ -16,19 +16,19 @@
         <FrameLayout
             android:layout_width="165dp"
             android:layout_height="250dp"
-            android:background="@drawable/ticket_top">
+            android:background="@drawable/fragment_movie_ticket_top">
 
             <ImageView
                 android:id="@+id/poster"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ticket_top"
+                android:src="@drawable/fragment_movie_ticket_top"
                 android:scaleType="centerCrop" />
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ticket_top" />
+                android:src="@drawable/fragment_movie_ticket_top" />
 
         </FrameLayout>
     </RelativeLayout>
@@ -37,7 +37,7 @@
         android:layout_width="165dp"
         android:layout_height="63dp"
         android:layout_below="@+id/ticket_top"
-        android:background="@drawable/ticket_bottom">
+        android:background="@drawable/fragment_movie_ticket_bottom">
 
         <TextView
             android:id="@+id/text_title"

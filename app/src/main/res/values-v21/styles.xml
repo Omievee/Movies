@@ -25,6 +25,14 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
+    <!-- Red theme -->
+    <style name="RedTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/red_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <!-- Style for Alert Dialogs -->
     <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- SET BUTTON COLOR IN DIALOG BUILDER -->

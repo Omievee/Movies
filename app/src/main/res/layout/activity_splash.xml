@@ -3,9 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/red"
-    tools:context="com.moviepass.moviepass.com.moviepass.activities.SplashActivity">
+    tools:context="com.moviepass.activities.SplashActivity">
+
+    <ImageView
+        android:id="@+id/star"
+        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:src="@drawable/activity_splash_star"
+        android:layout_above="@+id/logo_things"/>
 
     <RelativeLayout
+        android:id="@+id/logo_things"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true">
@@ -14,6 +24,8 @@
             android:id="@+id/logo"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:src="@drawable/moviepass_logo"/>
 
         <TextView

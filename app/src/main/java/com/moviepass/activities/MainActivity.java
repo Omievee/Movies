@@ -99,14 +99,13 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-
         /* Select View */
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    public boolean onNavigationItemSelected(@NonNull MenuItem selectedMenuItem) {
                         Fragment fragment = null;
-                        switch (item.getItemId()) {
+                        switch (selectedMenuItem.getItemId()) {
                             case R.id.action_profile:
                                 fragment = ProfileFragment.newInstance();
                                 break;
@@ -137,6 +136,9 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                         return true;
                     }
                 });
+
+        bottomNavigationView.setSelectedItemId(R.id.action_browse);
+
 
     }
 

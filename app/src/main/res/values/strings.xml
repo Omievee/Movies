@@ -27,15 +27,19 @@
     <string name="activity_movie_synopsis">Synopsis</string>
     <string name="activity_movie_reviews">Reviews</string>
 
-
     <!-- SplashActivity -->
     <string name="activity_splash_copy">Available at over 3,700 theaters in the U.S.</string>
 
     <!-- Fragments -->
-    <!-- Movies Fragment -->
+    <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>
     <string name="fragment_movies_top_box_office">Top Box Office</string>
     <string name="fragment_movies_coming_soon">Coming Soon</string>
+
+    <!-- TheatersFragment -->
+    <string name="fragment_theaters_name">[Name]</string>
+    <string name="fragment_theaters_address">[Address]</string>
+    <string name="fragment_theaters_distance">[Distance]</string>
 
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
