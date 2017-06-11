@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -42,10 +43,7 @@ import com.moviepass.model.Movie;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements ProfileFragment.OnFragmentInteractionListener,
-        ETicketFragment.OnFragmentInteractionListener, BrowseFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
-        TheatersFragment.OnFragmentInteractionListener, MoviesFragment.OnFragmentInteractionListener {
+public abstract class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -61,10 +59,12 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    /* Location */
+    /* Location
     protected LocationUpdateBroadCast mLocationBroadCast;
     protected Location mLocation;
-    protected boolean mDoUpdateLocation = true;
+    protected boolean mDoUpdateLocation = true; */
+
+    protected BottomNavigationView bottomNavigationView;
 
     AlertDialog alert;
     SharedPreferences sharedpreferences;
@@ -74,12 +74,18 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(getContentViewId());
 
-        /* Marshmallow+ Request Permissions */
+        /* Create Bottom Navigation Menu */
+        bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        /* Marshmallow+ Request Permissions
         if (grantedMandatoryPermissions()) {
 
-            /* First Run Actions -- set default values */
+            /* First Run Actions -- set default values
             if (String.valueOf(UserPreferences.getIsUserFirstLogin()).matches(Constants.IS_USER_FIRST_LOGIN)) {
                 UserPreferences.setIsUserFirstLogin(false);
                 UserPreferences.setIsLocationUserDefined(false);
@@ -94,13 +100,10 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar); */
 
-        /* Create Bottom Navigation Menu */
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        /* Select View */
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+
+        /* Select View
+        /*bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem selectedMenuItem) {
@@ -114,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                                 break;
                             case R.id.action_browse:
                                 if (grantedMandatoryPermissions()) {
-                                    fragment = BrowseFragment.newInstance();
+                                    Intent intent = new Intent(getApplicationContext(), BrowseActivity.class);
+                                    startActivity(intent);
                                 } else {
                                     requestMandatoryPermissions();
                                 }
@@ -127,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                                 break;
                         }
 
-                        if (fragment != null) {
+                        /* if (fragment != null) {
                             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                             fragmentTransaction.replace(R.id.frame_layout, fragment);
                             fragmentTransaction.commit();
@@ -136,68 +140,70 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                         return true;
                     }
                 });
-
-        bottomNavigationView.setSelectedItemId(R.id.action_browse);
-
-
+        */
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (grantedMandatoryPermissions()) {
-            if (!UserPreferences.getIsLocationUserDefined() && mLocationBroadCast != null) {
-                registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-            }
-
-            LocationManager mlocManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            boolean enabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            if (!enabled) {
-                showDialogGPS();
-            }
-        } else {
-            requestMandatoryPermissions();
-        }
-
-        /* TODO :
-
-        if (!isOnline()) {
-            noInternetCheckLoop();
-        }
-
-        */
-
+    protected void onStart() {
+        super.onStart();
+        updateNavigationBarState();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mLocationBroadCast != null) {
-            try {
-                unregisterReceiver(mLocationBroadCast);
-            } catch (Exception e) {
-                Log.d("BaseActivity onPause", "unregister received" + e.getMessage());
-            }
-        }
+        overridePendingTransition(0, 0);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mLocationBroadCast != null) {
-            try {
-                unregisterReceiver(mLocationBroadCast);
-            } catch (Exception e) {
-                Log.d("BaseActivity onPause", "unregister received" + e.getMessage());
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        bottomNavigationView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int itemId = item.getItemId();
+                if (itemId == R.id.action_profile) {
+                    Toast.makeText(MainActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
+                } else if (itemId == R.id.action_e_tickets) {
+                    Toast.makeText(MainActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                } else if (itemId == R.id.action_browse) {
+                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
+                } else if (itemId == R.id.action_notifications) {
+                    Toast.makeText(MainActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
+                } else if (itemId == R.id.action_settings) {
+                    Toast.makeText(MainActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
+                }
+                finish();
+            }
+        }, 300);
+        return true;
+    }
+
+    private void updateNavigationBarState(){
+        int actionId = getNavigationMenuItemId();
+        selectBottomNavigationBarItem(actionId);
+    }
+
+    void selectBottomNavigationBarItem(int itemId) {
+        Menu menu = bottomNavigationView.getMenu();
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            boolean shouldBeChecked = item.getItemId() == itemId;
+            if (shouldBeChecked) {
+                item.setChecked(true);
+                break;
             }
         }
     }
 
+    abstract int getContentViewId();
+
+    abstract int getNavigationMenuItemId();
+
+
     /*
 
-    /* Handle Permissions */
+    /* Handle Permissions
     public void requestMandatoryPermissions(){
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -250,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         }
     }
 
-    /* Handle Location */
+    /* Handle Location
     class LocationUpdateBroadCast extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -282,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
             }
 
-            */
+
         } else {
             requestMandatoryPermissions();
         }
@@ -308,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
                 noInternetCheckLoop();
             }
 
-            */
+
         } else {
             requestMandatoryPermissions();
         }
@@ -318,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         return UserPreferences.getIsLocationUserDefined();
     }
 
-    /* TODO SET FLOW FOR USERS WHO DENY LOCATION PERMISSION */
+    /* TODO SET FLOW FOR USERS WHO DENY LOCATION PERMISSION
 
     private void showDialogGPS() {
         if (alert != null && alert.isShowing()) {
@@ -339,5 +345,6 @@ public class MainActivity extends AppCompatActivity implements ProfileFragment.O
         alert = builder.create();
         alert.show();
     }
+    */
 
 }

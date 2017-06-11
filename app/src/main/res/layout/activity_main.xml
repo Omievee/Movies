@@ -6,14 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        android:layout_above="@+id/bottom_navigation" />
 
     <android.support.design.widget.BottomNavigationView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +18,6 @@
         app:itemBackground="@color/white"
         app:itemIconTint="@color/dark"
         app:itemTextColor="@color/gray_icon"
-        app:menu="@menu/bottom_navigation_main" />
+        app:menu="@menu/navigation" />
 
 </RelativeLayout>

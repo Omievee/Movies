@@ -32,15 +32,36 @@
         </activity>
 
         <activity
+            android:name=".activities.BrowseActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.ETicketsActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".activities.MovieActivity"
-            android:screenOrientation="portrait" android:theme="@style/MoviePassThemeTransparentStatusBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/MoviePassThemeTransparentStatusBar"/>
 
         <activity
             android:name=".activities.MoviesActivity"
-            android:screenOrientation="portrait" />
+            android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.NotificationsActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.TheaterActivity"
             android:theme="@style/AppTheme">
         </activity>
 

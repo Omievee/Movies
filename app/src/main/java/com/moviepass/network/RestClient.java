@@ -5,6 +5,7 @@ import android.content.Context;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moviepass.Constants;
 
 import java.io.IOException;
@@ -92,8 +93,8 @@ public class RestClient {
 
         sAuthenticatedInstance = new Retrofit.Builder()
                 .baseUrl(Constants.ENDPOINT)
-
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
@@ -138,8 +139,8 @@ public class RestClient {
 
         sSimpleInstance = new Retrofit.Builder()
                 .baseUrl(Constants.ENDPOINT)
-
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sSimpleAPI  = sSimpleInstance.create(Api.class);

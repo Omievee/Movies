@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/navigation"
+        >
+
+        <android.support.v4.widget.NestedScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/theater_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    android:text="@string/activity_theater_name_placeholder"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/theater_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:text="@string/activity_theater_address_placeholder"
+                    android:layout_below="@+id/theater_name"
+                    android:layout_marginLeft="16dp" />
+
+                <TextView
+                    android:id="@+id/movie_select_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gun_metal"
+                    android:textSize="45sp"
+                    android:textStyle="bold"
+                    android:text="@string/activity_theater_movie_select"
+                    android:layout_below="@+id/theater_address"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_movies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:listSelector="@android:color/transparent"
+                    tools:listitem="@layout/list_item_movie_poster"
+                    android:layout_below="@+id/movie_select_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="16dp" />
+
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/navigation"
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom" />
+
+</RelativeLayout>

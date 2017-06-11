@@ -4,6 +4,7 @@ import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
 import com.moviepass.requests.SignInRequest;
+import com.moviepass.responses.ScreeningsResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,5 +32,8 @@ public interface Api {
     /* Theaters */
     @GET("/api/v3/theaters/near")
     Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
+
+    @GET("/api/v5/theaters/{id}/screenings")
+    Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
 }

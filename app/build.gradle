@@ -64,6 +64,9 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
+    //RxJava2 adapter
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+
     //RxJava
     compile "io.reactivex.rxjava2:rxjava:2.0.9"
 

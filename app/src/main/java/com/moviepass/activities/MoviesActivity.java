@@ -22,4 +22,14 @@ public class MoviesActivity extends MainActivity {
 
     }
 
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_movie;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.action_browse;
+    }
+
 }

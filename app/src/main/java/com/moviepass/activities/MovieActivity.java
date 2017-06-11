@@ -268,4 +268,14 @@ public class MovieActivity extends MainActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_movie;
+    }
+
+    @Override
+    int getNavigationMenuItemId() {
+        return R.id.action_browse;
+    }
+
 }

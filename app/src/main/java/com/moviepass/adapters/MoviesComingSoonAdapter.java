@@ -73,7 +73,6 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
 
         holder.title.setText(movie.getTitle());
 
-
         int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
@@ -87,7 +86,6 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
             String translatedRunTime = hours + " hour " + minutes + " minutes";
             holder.runTime.setText(translatedRunTime);
         }
-
 
         holder.listItemMoviePoster.setTag(position);
 

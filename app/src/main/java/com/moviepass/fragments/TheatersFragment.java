@@ -20,12 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -42,10 +40,13 @@ import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.TheatersClickListener;
 import com.moviepass.UserLocationManagerFused;
+import com.moviepass.activities.TheaterActivity;
 import com.moviepass.adapters.TheatersAdapter;
 import com.moviepass.model.Theater;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.network.RestClient;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ import retrofit2.Response;
  * Created by anubis on 6/6/17.
  */
 
-public class TheatersFragment extends Fragment implements OnMapReadyCallback {
+public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener {
 
     private static String LOCATION_PERMISSIONS[] = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -125,7 +126,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         itemAnimator.setRemoveDuration(1000);
         mRecyclerView.setItemAnimator(itemAnimator);
 
-        mTheatersAdapter = new TheatersAdapter(mTheaters, mTheatersClickListener);
+        mTheatersAdapter = new TheatersAdapter(mTheaters, this);
 
         return rootView;
     }
@@ -202,34 +203,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStop() {
         super.onStop();
-
-        try {
-            getActivity().unregisterReceiver(mLocationBroadCast);
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        try {
-            getActivity().unregisterReceiver(mLocationBroadCast);
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -550,6 +533,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback {
         }
 
         return filteredTheaters;
+    }
+
+    public void onTheaterClick(int pos, Theater theater) {
+        Intent intent = new Intent(getActivity(), TheaterActivity.class);
+        intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
+
+        startActivity(intent);
     }
 
     public interface OnFragmentInteractionListener {

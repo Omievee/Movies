@@ -30,6 +30,11 @@
     <!-- SplashActivity -->
     <string name="activity_splash_copy">Available at over 3,700 theaters in the U.S.</string>
 
+    <!-- TheaterActivity -->
+    <string name="activity_theater_name_placeholder">[Theater Name]</string>
+    <string name="activity_theater_address_placeholder">[Theater Address]</string>
+    <string name="activity_theater_movie_select">What movie do you want to see?</string>
+
     <!-- Fragments -->
     <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>
