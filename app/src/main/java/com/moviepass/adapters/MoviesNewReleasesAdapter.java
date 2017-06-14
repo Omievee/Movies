@@ -49,9 +49,14 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         @BindView(R.id.poster)
         ImageView posterImageView;
 
-        public ViewHolder(View v) {
+        private ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+
+            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
+            title = v.findViewById(R.id.text_title);
+            runTime = v.findViewById(R.id.text_run_time);
+            posterImageView = v.findViewById(R.id.poster);
         }
     }
 

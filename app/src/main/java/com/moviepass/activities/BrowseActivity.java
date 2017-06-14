@@ -26,7 +26,7 @@ import java.util.List;
  * Created by anubis on 6/9/17.
  */
 
-public class BrowseActivity extends MainActivity {
+public class BrowseActivity extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;

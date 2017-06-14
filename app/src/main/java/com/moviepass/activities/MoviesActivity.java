@@ -12,7 +12,7 @@ import com.moviepass.fragments.MoviesFragment;
  * Created by ryan on 4/26/17.
  */
 
-public class MoviesActivity extends MainActivity {
+public class MoviesActivity extends BaseActivity {
 
     MoviesFragment mMoviesFragment = new MoviesFragment();
 

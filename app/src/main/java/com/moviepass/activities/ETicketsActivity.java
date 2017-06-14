@@ -15,7 +15,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  * Created by anubis on 6/9/17.
  */
 
-public class ETicketsActivity extends MainActivity {
+public class ETicketsActivity extends BaseActivity {
 
     protected BottomNavigationView bottomNavigationView;
 

@@ -1,15 +1,18 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.moviepass.moviepass"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "beta-3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,28 +20,57 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 repositories {
     maven { url "https://jitpack.io" }
+    maven { url 'https://maven.google.com' }
+}
+
+ext {
+    dagger_version = '2.5'
+    play_services_version = '11.0.0'
+    retrofit_version = '2.2.0'
+    support_lib_version = '26.0.0-beta2'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.google.android.gms:play-services-location:10.2.6'
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
 
-    compile 'com.google.firebase:firebase-appindexing:10.2.1'
-    compile 'com.google.firebase:firebase-crash:10.2.1'
+    // Kotlin
+    kapt "com.android.databinding:compiler:2.3.1"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // Play Services
+    compile "com.google.android.gms:play-services-location:$play_services_version"
+    compile "com.google.android.gms:play-services-maps:$play_services_version"
+
+    //Support Libraries
+    compile "com.android.support:appcompat-v7:$support_lib_version"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:design:$support_lib_version"
+    compile "com.android.support:support-v4:$support_lib_version"
+    compile "com.android.support:support-v13:$support_lib_version"
+    compile 'com.android.support:multidex:1.0.1'
+
+    // Firebase
+    compile 'com.google.firebase:firebase-appindexing:11.0.0'
+    compile 'com.google.firebase:firebase-crash:11.0.0'
+
+    // Dagger
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    compile "com.google.dagger:dagger:$dagger_version"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
     //Butterknife
     compile 'com.jakewharton:butterknife:8.5.1'
@@ -49,7 +81,7 @@ dependencies {
 
     //Parceler
     compile 'org.parceler:parceler-api:1.1.6'
-    annotationProcessor 'org.parceler:parceler:1.1.6'
+    kapt 'org.parceler:parceler:1.1.6'
 
     //OKHttp3
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
@@ -61,14 +93,17 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     //Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     //RxJava2 adapter
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
-    //RxJava
-    compile "io.reactivex.rxjava2:rxjava:2.0.9"
+    //Rx
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile "io.reactivex.rxjava2:rxjava:2.1.0"
 
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations' })
     testCompile 'junit:junit:4.12'
 }

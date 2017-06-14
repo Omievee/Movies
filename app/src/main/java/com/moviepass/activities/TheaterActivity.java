@@ -4,18 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.ScreeningPosterClickListener;
+import com.moviepass.ShowtimeClickListener;
 import com.moviepass.adapters.TheaterMoviesAdapter;
+import com.moviepass.adapters.TheaterShowtimesAdapter;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
@@ -24,8 +28,10 @@ import com.moviepass.network.RestClient;
 import com.moviepass.responses.ScreeningsResponse;
 
 import org.parceler.Parcels;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -36,23 +42,30 @@ import retrofit2.Response;
  * Created by anubis on 6/8/17.
  */
 
-public class TheaterActivity extends MainActivity implements ScreeningPosterClickListener {
+public class TheaterActivity extends BaseActivity implements ScreeningPosterClickListener, ShowtimeClickListener {
 
     public static final String THEATER = "theater";
 
     TheaterMoviesAdapter mTheaterMoviesAdapter;
+    TheaterShowtimesAdapter mTheaterShowtimesAdapter;
 
     ArrayList<Screening> mMoviesList;
+    ArrayList<String> mShowtimesList;
 
     protected BottomNavigationView bottomNavigationView;
 
     Theater mTheater;
     ScreeningsResponse mScreeningsResponse;
+    Screening mScreening;
     TextView mTheaterName;
     TextView mTheaterAddress;
 
     @BindView(R.id.recycler_view_movies)
     RecyclerView mMoviesRecyclerView;
+    @BindView(R.id.recycler_view_showtimes)
+    RecyclerView mShowtimesRecyclerView;
+    @BindView(R.id.movie_select_time)
+    TextView mMovieSelectTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,11 +81,13 @@ public class TheaterActivity extends MainActivity implements ScreeningPosterClic
 
         mTheaterName = (TextView) findViewById(R.id.theater_name);
         mTheaterAddress = (TextView) findViewById(R.id.theater_address);
+        mMovieSelectTime = (TextView) findViewById(R.id.movie_select_time);
 
         mTheaterName.setText(mTheater.getName());
         mTheaterAddress.setText(mTheater.getAddress());
 
         mMoviesList = new ArrayList<>();
+        mShowtimesList = new ArrayList<>();
 
          /* Movies RecyclerView */
         LinearLayoutManager moviesLayoutManager
@@ -83,10 +98,18 @@ public class TheaterActivity extends MainActivity implements ScreeningPosterClic
 
         mTheaterMoviesAdapter = new TheaterMoviesAdapter(mMoviesList, this);
 
+        mMoviesRecyclerView.setAdapter(mTheaterMoviesAdapter);
+
         loadMovies();
 
         /* Showtimes RecyclerView */
 
+        mShowtimesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_showtimes);
+        mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+        mTheaterShowtimesAdapter = new TheaterShowtimesAdapter(mShowtimesList, this);
+
+        mShowtimesRecyclerView.setAdapter(mTheaterShowtimesAdapter);
     }
 
     @Override
@@ -102,31 +125,15 @@ public class TheaterActivity extends MainActivity implements ScreeningPosterClic
         overridePendingTransition(0, 0);
     }
 
-    public void onScreeningPosterClick(int pos, Screening movie, ImageView sharedImageView) {
-        /*
-        Intent movieIntent = new Intent(this, MovieActivity.class);
-        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                this,
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView));
-
-        startActivity(movieIntent, options.toBundle());
-        */
-    }
-
     private void loadMovies() {
-        int theaterId = mTheater.getId();
+        int theaterId = mTheater.getTribuneTheaterId();
 
         RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
             @Override
             public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
                 mScreeningsResponse = response.body();
 
-
-                if (mScreeningsResponse != null && response.isSuccessful()) {
+                if (mScreeningsResponse != null) {
 
                     mMoviesList.clear();
 
@@ -135,10 +142,7 @@ public class TheaterActivity extends MainActivity implements ScreeningPosterClic
                         mTheaterMoviesAdapter.notifyDataSetChanged();
                     }
 
-                    if (mScreeningsResponse != null) {
-                        mMoviesList.addAll(mScreeningsResponse.getScreenings());
-                        mMoviesRecyclerView.setAdapter(mTheaterMoviesAdapter);
-                    }
+                    mMoviesList.addAll(mScreeningsResponse.getScreenings());
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
@@ -151,6 +155,30 @@ public class TheaterActivity extends MainActivity implements ScreeningPosterClic
                 Log.d("t", t.getMessage());
             }
         });
+    }
+
+    public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
+        /* TODO : Get the screenings for that movie */
+
+        mMovieSelectTime.setVisibility(View.VISIBLE);
+        mShowtimesRecyclerView.setVisibility(View.VISIBLE);
+
+        mShowtimesList.clear();
+
+        if (mShowtimesRecyclerView != null) {
+            mShowtimesRecyclerView.getRecycledViewPool().clear();
+            mTheaterShowtimesAdapter.notifyDataSetChanged();
+        }
+
+        mShowtimesList.addAll(startTimes);
+
+        /* TODO change it so it passes the screening & the showtimes separartely to retrieve for checkin */
+
+    }
+
+    public void onShowtimeClick(int pos, String string) {
+        Log.d("String", string);
+
     }
 
     @Override

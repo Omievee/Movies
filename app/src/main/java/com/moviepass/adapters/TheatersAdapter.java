@@ -59,6 +59,11 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+
+            listItemTheater = v.findViewById(R.id.list_item_theater);
+            name = v.findViewById(R.id.theater_name);
+            address = v.findViewById(R.id.theater_address);
+            distance = v.findViewById(R.id.theater_distance);
         }
     }
 

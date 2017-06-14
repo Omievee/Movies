@@ -31,9 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestClient {
 
     private static Api sAuthenticatedAPI;
-    private static Api sSimpleAPI;
     private static Retrofit sAuthenticatedInstance;
-    private static Retrofit sSimpleInstance;
 
     /* TODO REMOVE GENERIC */
 
@@ -47,11 +45,7 @@ public class RestClient {
     public static Api getAuthenticated() {
         return sAuthenticatedAPI;
     }
-
-    public static Api get() {
-        return sSimpleAPI;
-    }
-
+    
     public static void setupAuthenticatedWebClient(Context context) {
         sAuthenticatedInstance = null;
 
@@ -98,52 +92,6 @@ public class RestClient {
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
-    }
-
-    public static void setupSimpleRestClient(Context context) {
-        sSimpleInstance = null;
-        sSimpleAPI = null;
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        if (Constants.DEBUG) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(40, TimeUnit.SECONDS);
-        httpClient.readTimeout(40, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
-
-        CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
-        httpClient.cookieJar(cookieJar);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
-
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("user_id", "" + userId)
-                        .addHeader("device_uuid", deviceUuid)
-                        .addHeader("auth_token", authToken)
-                        .addHeader("Content-type", "application/json")
-                        .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent","MoviePass/Android/20170519");
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        });
-
-        sSimpleInstance = new Retrofit.Builder()
-                .baseUrl(Constants.ENDPOINT)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(httpClient.build())
-                .build();
-        sSimpleAPI  = sSimpleInstance.create(Api.class);
     }
 
 }

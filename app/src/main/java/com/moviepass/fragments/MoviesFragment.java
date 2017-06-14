@@ -83,7 +83,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mNewReleasesRecyclerView = (RecyclerView) rootView.findViewById(R.id.new_releases);
+        mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
 
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(mMoviesNewReleases, this);
@@ -93,7 +93,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LinearLayoutManager topBoxOfficeLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mTopBoxOfficeRecyclerView = (RecyclerView) rootView.findViewById(R.id.top_box_office);
+        mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
 
         mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(mMoviesTopBoxOffice, this);
@@ -102,7 +102,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LinearLayoutManager comingSoonLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mComingSoonRecyclerView = (RecyclerView) rootView.findViewById(R.id.coming_soon);
+        mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
 
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(mMoviesComingSoon, this);

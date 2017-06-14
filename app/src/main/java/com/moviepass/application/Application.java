@@ -7,6 +7,7 @@ import com.moviepass.network.RestClient;
 
 
 public class Application extends MultiDexApplication {
+
     private static Application mApplication;
     public static final String TAG = "TAG";
 
@@ -25,11 +26,7 @@ public class Application extends MultiDexApplication {
 
         UserPreferences.load(this);
 
-        RestClient.setupSimpleRestClient(getApplicationContext());
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
-
     }
-
-
 }
 

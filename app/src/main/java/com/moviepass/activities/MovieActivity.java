@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
  * Created by ryan on 4/26/17.
  */
 
-public class MovieActivity extends MainActivity {
+public class MovieActivity extends BaseActivity {
 
     public static final String MOVIE = "movie";
     public static final String SYNOPSIS = "synopsis";

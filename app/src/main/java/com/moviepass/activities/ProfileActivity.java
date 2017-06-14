@@ -16,7 +16,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  * Created by anubis on 6/9/17.
  */
 
-public class ProfileActivity extends MainActivity {
+public class ProfileActivity extends BaseActivity {
 
     protected BottomNavigationView bottomNavigationView;
 

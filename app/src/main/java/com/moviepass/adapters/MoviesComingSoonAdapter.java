@@ -36,7 +36,6 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
     public MoviesComingSoonAdapter(ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,6 +51,10 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
+            title = v.findViewById(R.id.text_title);
+            runTime = v.findViewById(R.id.text_run_time);
+            posterImageView = v.findViewById(R.id.poster);
         }
     }
 

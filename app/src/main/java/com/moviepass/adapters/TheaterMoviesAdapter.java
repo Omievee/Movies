@@ -16,6 +16,7 @@ import com.moviepass.model.Screening;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +52,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+
+            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
+            title = v.findViewById(R.id.text_title);
+            runTime = v.findViewById(R.id.text_run_time);
+            posterImageView = v.findViewById(R.id.poster);
         }
     }
 
@@ -97,10 +103,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         ViewCompat.setTransitionName(holder.posterImageView, screening.getImageUrl());
 
+        final List<String> startTimes = screening.getStartTimes();
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, holder.posterImageView);
+                screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, startTimes, holder.posterImageView);
             }
         });
     }

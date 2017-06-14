@@ -34,6 +34,8 @@
     <string name="activity_theater_name_placeholder">[Theater Name]</string>
     <string name="activity_theater_address_placeholder">[Theater Address]</string>
     <string name="activity_theater_movie_select">What movie do you want to see?</string>
+    <string name="activity_theater_movie_time">What time?</string>
+    <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
 
     <!-- Fragments -->
     <!-- MoviesFragment -->

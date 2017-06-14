@@ -9,10 +9,7 @@ import java.util.HashMap;
 public class Constants {
 
     public static final boolean DEBUG = true;
-    //public static final String ENDPOINT = "http://moviepass-ti.herokuapp.com";
     public static final String ENDPOINT = "http://android.moviepass.com";
-    //public static final String ENDPOINT = "http://staging.moviepass.com";
-    //public static final String ENDPOINT = "http://ti.moviepass.com";
     public static final String TERMS = "http://moviepass.com/content/terms";
     public static final String REDEMPTION_ROUTE = ENDPOINT + "/coupons/form/redeem";
 

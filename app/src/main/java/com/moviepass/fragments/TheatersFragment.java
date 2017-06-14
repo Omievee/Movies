@@ -118,7 +118,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         LinearLayoutManager mLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -291,7 +291,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     private void loadTheaters(Double latitude, Double longitude) {
-        RestClient.get().getTheaters(latitude, longitude)
+        RestClient.getAuthenticated().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
                     @Override
                     public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
@@ -407,7 +407,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private void reloadTheaters(Double latitude, final Double longitude) {
         mMap.clear();
 
-        RestClient.get().getTheaters(latitude, longitude)
+        RestClient.getAuthenticated().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
                     @Override
                     public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
