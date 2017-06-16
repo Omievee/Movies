@@ -163,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     Toast.makeText(BaseActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
-                } else if (itemId == R.id.action_e_tickets) {
+                } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(BaseActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {

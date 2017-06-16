@@ -1,12 +1,14 @@
 package com.moviepass.network;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.moviepass.Constants;
+import com.moviepass.UserPreferences;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -32,12 +34,6 @@ public class RestClient {
 
     private static Api sAuthenticatedAPI;
     private static Retrofit sAuthenticatedInstance;
-
-    /* TODO REMOVE GENERIC */
-
-    public static int userId = 2041;
-    public static String deviceUuid = "D999236A42B8C9AE71201E18058940C2A6AACC73";
-    public static String authToken = "W9MdGCulq64Jw1KKjK/QrxldKy+vn6QV9trDQXQEGxU=";
 
     private RestClient() {
     }
@@ -74,9 +70,9 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
 
-                        .addHeader("user_id", "" + userId)
-                        .addHeader("device_uuid", deviceUuid)
-                        .addHeader("auth_token", authToken)
+                        .addHeader("user_id", "" + UserPreferences.getUserId())
+                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
                         .addHeader("User-Agent","MoviePass/Android/20161221");

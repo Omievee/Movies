@@ -8,9 +8,9 @@
     android:layout_marginRight="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/showtime_rounded_rectangle"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:clickable="true" >
 
     <TextView
         android:id="@+id/showtime"

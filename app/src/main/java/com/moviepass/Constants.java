@@ -19,9 +19,12 @@ public class Constants {
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
 
     /* TODO REMOVE GENERIC VALUES */
-    public static final String USER_ID = "2041";
-    public static final String USER_DEVICE_UUID = "D999236A42B8C9AE71201E18058940C2A6AACC73";
-    public static final String USER_AUTH_TOKEN = "W9MdGCulq64Jw1KKjK/QrxldKy+vn6QV9trDQXQEGxU=";
+    public static final String USER_ID = "0";
+    public static final String USER_DEVICE_UUID = "UUID";
+    public static final String USER_AUTH_TOKEN = "AUTH";
+
+    public static final String USER_FIRST_NAME = "CATHERINE";
+    public static final String USER_EMAIL = "BOB@LOBLAW.COM";
 
 
     //Location things

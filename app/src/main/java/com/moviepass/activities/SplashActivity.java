@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -27,10 +28,16 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent i = new Intent(SplashActivity.this, BrowseActivity.class);
-                startActivity(i);
+                if (UserPreferences.getHasUserLoggedInBefore()) {
+                    Intent i = new Intent(SplashActivity.this, BrowseActivity.class);
+                    startActivity(i);
+                    finish();
+                } else {
+                    Intent i = new Intent(SplashActivity.this, ProfileActivity.class);
+                    startActivity(i);
+                    finish();
+                }
 
-                finish();
 
             }
         }, SPLASH_TIME_OUT);

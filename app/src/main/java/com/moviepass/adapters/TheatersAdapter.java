@@ -21,6 +21,7 @@ import com.moviepass.TheatersClickListener;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +54,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         TextView name;
         @BindView(R.id.theater_address)
         TextView address;
+        @BindView(R.id.theater_city_things)
+        TextView cityThings;
         @BindView(R.id.theater_distance)
         TextView distance;
 
@@ -63,6 +66,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             listItemTheater = v.findViewById(R.id.list_item_theater);
             name = v.findViewById(R.id.theater_name);
             address = v.findViewById(R.id.theater_address);
+            cityThings = v.findViewById(R.id.theater_city_things);
             distance = v.findViewById(R.id.theater_distance);
         }
     }
@@ -91,6 +95,13 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         loc2.setLongitude(lon2);
 
         float distanceInMeters = loc1.distanceTo(loc2); */
+
+        String city = theater.getCity();
+        String state = theater.getState();
+        String zip = String.valueOf(theater.getZip());
+
+        String cityThings = city + ", " + state + " " + zip;
+        holder.cityThings.setText(cityThings);
 
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);

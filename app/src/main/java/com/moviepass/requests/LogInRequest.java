@@ -1,11 +1,11 @@
 package com.moviepass.requests;
 
-public class SignInRequest {
+public class LogInRequest {
 
     String email;
     String password;
 
-    public SignInRequest(String email, String password) {
+    public LogInRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

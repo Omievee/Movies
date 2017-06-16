@@ -18,16 +18,14 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
 
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_movie;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_browse;
     }

@@ -101,12 +101,10 @@ public class BrowseActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_browse;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_browse;
     }
@@ -120,7 +118,7 @@ public class BrowseActivity extends BaseActivity {
                 if (itemId == R.id.action_profile) {
                     Toast.makeText(BrowseActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_e_tickets) {
+                } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(BrowseActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {

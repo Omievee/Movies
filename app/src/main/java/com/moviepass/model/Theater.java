@@ -75,4 +75,11 @@ public class Theater {
     public String getTitle() {
         return getName();
     }
+
+    public String getCity() { return city; }
+
+    public String getState() { return state; }
+
+    public String getZip() { return zip; }
+
 }

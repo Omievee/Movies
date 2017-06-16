@@ -6,11 +6,10 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="menu_bottom_navigation_main_profile">Profile</string>
-    <string name="menu_bottom_navigation_main_e_tickets">E-Tickets</string>
+    <string name="menu_bottom_navigation_main_reservations">Reservations</string>
     <string name="menu_bottom_navigation_main_browse">Browse</string>
     <string name="menu_bottom_navigation_main_notifications">Notifications</string>
     <string name="menu_bottom_navigation_main_settings">Settings</string>
-
 
     <!-- Activitites -->
 
@@ -26,6 +25,29 @@
     <string name="activity_movie_showtimes">Showtimes</string>
     <string name="activity_movie_synopsis">Synopsis</string>
     <string name="activity_movie_reviews">Reviews</string>
+
+    <!-- SignInActivity -->
+    <string name="activity_sign_in_welcome_back">Welcome back</string>
+    <string name="activity_sign_in_email">Email</string>
+    <string name="activity_sign_in_password">Password</string>
+    <string name="activity_sign_in_log_in">Log in</string>
+    <string name="activity_sign_in_log_in_with_facebook">Log in with Facebook</string>
+    <string name="activity_sign_in_dont_have_an_account">Don\'t have an account?</string>
+    <string name="activity_sign_in_forgot_password">Forgot password?</string>
+    <string name="activity_sign_in_forgot_password_title">Reset password</string>
+    <string name="activity_sign_in_forgot_password_body">Please enter your email address</string>
+    <string name="activity_sign_in_enter_valid_email">Please enter a valid email address</string>
+    <string name="activity_sign_in_enter_valid_credentials">Please check your credentials and try again</string>
+
+
+    <!-- SignUpStepOneActivity -->
+    <string name="activity_sign_up_step_one_get_started">Sign up to get started</string>
+    <string name="activity_sign_up_step_one_email">Email</string>
+    <string name="activity_sign_up_step_one_password">Password</string>
+    <string name="activity_sign_up_step_one_sign_up">Sign Up</string>
+    <string name="activity_sign_up_step_one_sign_up_with_facebook">Sign up with Facebook</string>
+    <string name="activity_sign_up_step_one_not_ready">Not ready to sign up? Explore the app</string>
+
 
     <!-- SplashActivity -->
     <string name="activity_splash_copy">Available at over 3,700 theaters in the U.S.</string>

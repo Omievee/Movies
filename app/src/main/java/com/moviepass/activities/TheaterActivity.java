@@ -181,6 +181,13 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
     }
 
+
+    public void reserve() {
+
+    }
+
+
+
     @Override
     int getContentViewId() {
         return R.layout.activity_browse;
@@ -199,7 +206,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_e_tickets) {
+                } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(TheaterActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {

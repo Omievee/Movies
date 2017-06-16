@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,47 +11,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
 import butterknife.BindView;
 
-
 /**
- * Created by anubis on 6/9/17.
+ * Created by anubis on 6/15/17.
  */
 
-public class ProfileActivity extends BaseActivity {
+public class SignUpStepOneActivity extends BaseActivity {
 
     protected BottomNavigationView bottomNavigationView;
 
-    @BindView(R.id.log_out)
-    TextView mLogOut;
+    @BindView(R.id.not_ready)
+    TextView mNotReady;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
-
-        /* TODO : Create an if not logged in to show sign up */
-
-        Log.d("userId", String.valueOf(UserPreferences.getUserId()));
-        if (UserPreferences.getUserId() == 0) {
-            Intent intent = new Intent(this, LogInActivity.class);
-            startActivity(intent);
-        } else {
-            mLogOut = findViewById(R.id.log_out);
-            mLogOut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UserPreferences.clearUserId();
-                }
-            });
-        }
+        setContentView(R.layout.activity_sign_up_step_one);
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        mNotReady = findViewById(R.id.not_ready);
+        mNotReady.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUpStepOneActivity.this, BrowseActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -66,6 +56,14 @@ public class ProfileActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
     }
 
     @Override
@@ -86,15 +84,15 @@ public class ProfileActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(ProfileActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpStepOneActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(ProfileActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpStepOneActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(ProfileActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SignUpStepOneActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();
@@ -119,5 +117,4 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
 }

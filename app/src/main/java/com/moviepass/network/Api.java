@@ -3,7 +3,7 @@ package com.moviepass.network;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
-import com.moviepass.requests.SignInRequest;
+import com.moviepass.requests.LogInRequest;
 import com.moviepass.responses.ScreeningsResponse;
 
 import retrofit2.Call;
@@ -23,7 +23,10 @@ public interface Api {
 
     /* Authentication */
     @POST("/api/v1/auth/login")
-    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body SignInRequest request  );
+    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
+
+    @GET("/api/v1/auth/passwordReset/{emailAddress}")
+    Call<Object> forgotPassword(@Path("emailAddress") String email);
 
     /* Movies */
     @GET("/api/v3/movies")

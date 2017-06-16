@@ -40,6 +40,10 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".activities.LogInActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".activities.MovieActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MoviePassThemeTransparentStatusBar"/>
@@ -58,6 +62,14 @@
 
         <activity
             android:name=".activities.SettingsActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.SignUpFirstOpenActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.SignUpStepOneActivity"
             android:theme="@style/AppTheme" />
 
         <activity

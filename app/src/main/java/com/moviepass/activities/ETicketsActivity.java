@@ -43,14 +43,12 @@ public class ETicketsActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_e_tickets;
     }
 
-    @Override
     int getNavigationMenuItemId() {
-        return R.id.action_e_tickets;
+        return R.id.action_reservations;
     }
 
     @Override
@@ -61,7 +59,7 @@ public class ETicketsActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_e_tickets) {
+                } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(ETicketsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {

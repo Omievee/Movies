@@ -34,8 +34,9 @@
             android:layout_toLeftOf="@+id/layout_icons"
             android:layout_toStartOf="@+id/layout_icons"
             android:text="@string/fragment_theaters_name"
-            android:textSize="16sp"
-            android:textColor="@color/black_text"/>
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/red"/>
 
         <TextView
             android:id="@+id/theater_address"
@@ -45,14 +46,27 @@
             android:layout_marginTop="5dp"
             android:maxLines="2"
             android:text="@string/fragment_theaters_address"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/black_overlay"/>
+
+
+        <TextView
+            android:id="@+id/theater_city_things"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/theater_address"
+            android:layout_marginTop="5dp"
+            android:maxLines="2"
+            android:text="@string/fragment_theaters_address"
+            android:textSize="14sp"
+            android:textColor="@color/black_overlay"/>
+
 
         <ImageView
             android:id="@+id/icon_pin"
             android:layout_width="15dp"
             android:layout_height="15dp"
-            android:layout_below="@+id/theater_address"
+            android:layout_below="@+id/theater_city_things"
             android:layout_marginTop="10dp"
             android:src="@drawable/icon_location_pin" />
 
@@ -66,7 +80,7 @@
             android:layout_toEndOf="@+id/icon_pin"
             android:layout_toRightOf="@+id/icon_pin"
             android:text="@string/fragment_theaters_distance"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textColor="@color/black_overlay"/>
 
         <LinearLayout

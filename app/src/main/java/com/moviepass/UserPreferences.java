@@ -22,23 +22,41 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static boolean getIsUserFirstLogin() {
+    public static boolean getHasUserLoggedInBefore() {
         return sPrefs.getBoolean(Constants.IS_USER_FIRST_LOGIN, false);
     }
 
-    public static void setIsUserFirstLogin(boolean isUserFirstLogin) {
+    public static void hasUserLoggedInBefore(boolean isUserFirstLogin) {
         SharedPreferences.Editor editor = sPrefs.edit();
 
         editor.putBoolean(Constants.IS_USER_FIRST_LOGIN, isUserFirstLogin);
         editor.apply();
     }
 
-    public static void setUserCredentials(int userId, String deviceUUID, String authToken) {
+    public static void setUserCredentials(int userId, String deviceUUID, String authToken,
+                                          String firstName, String email) {
         SharedPreferences.Editor editor = sPrefs.edit();
 
         editor.putInt(Constants.USER_ID, userId);
         editor.putString(Constants.USER_DEVICE_UUID, deviceUUID);
         editor.putString(Constants.USER_AUTH_TOKEN, authToken);
+        editor.putString(Constants.USER_FIRST_NAME, firstName);
+        editor.putString(Constants.USER_EMAIL, email);
+        editor.apply();
+    }
+
+    public static int getUserId() {
+        return sPrefs.getInt(Constants.USER_ID, 0);
+    }
+
+    public static String getDeviceUuid() { return sPrefs.getString(Constants.USER_DEVICE_UUID, "device"); }
+
+    public static String getAuthToken() { return sPrefs.getString(Constants.USER_AUTH_TOKEN, "auth"); }
+
+    public static void clearUserId() {
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putInt(Constants.USER_ID, 0);
         editor.apply();
     }
 
