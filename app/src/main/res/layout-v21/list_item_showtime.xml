@@ -8,9 +8,9 @@
     android:layout_marginRight="8dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/showtime_rounded_rectangle"
+    android:foreground="?android:attr/selectableItemBackground"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:clickable="true" >
+    android:clickable="true">
 
     <TextView
         android:id="@+id/showtime"
@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:textColor="@color/black_text"
+        android:textColor="@color/selector_black_to_white"
         android:textSize="24sp"
         android:textStyle="bold"
         android:text="@string/activity_theater_showtime_placeholder" />

@@ -4,9 +4,17 @@
 
     <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
-            <solid android:color="@color/red" />
+            <solid android:color="@color/red_dark" />
         </shape>
     </item>
-    <item android:drawable="@color/white" />
+    <item>
+        <selector>
+            <item android:state_selected="true" android:drawable="@color/red" />
+            <item android:state_selected="false" android:drawable="@color/white" />
+            <item android:drawable="@color/white" />
+        </selector>
+    </item>
 
 </ripple>
+
+

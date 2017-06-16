@@ -3,7 +3,9 @@ package com.moviepass.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.moviepass.R;
 import com.moviepass.ShowtimeClickListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.RunnableFuture;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +30,9 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
     private final ShowtimeClickListener showtimeClickListener;
     private ArrayList<String> showtimesArrayList;
-    int row_idex;
+    int row_index;
+    private int selectedPosition = -1;
+
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
@@ -43,6 +48,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         RelativeLayout relativeLayout;
         @BindView(R.id.showtime)
         TextView showtime;
+        SparseBooleanArray selectedItems = null;
 
         public ViewHolder(View v) {
             super(v);
@@ -63,8 +69,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
-
         /* if (row_idex == position) {
             holder.itemView.setBackgroundColor(Color.parseColor("#c82229"));
             holder.showtime.setTextColor(Color.parseColor("#FFFFFF"));
@@ -73,22 +77,43 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             holder.showtime.setTextColor(Color.parseColor("#DE000000"));
         } */
 
+        if(position == selectedPosition){
+            holder.itemView.setSelected(true);
+        } else {
+            holder.itemView.setSelected(false);
+        }
+
         final String time = showtimesArrayList.get(position);
 
         holder.showtime.setText(time);
-
+        holder.relativeLayout.setSelected(holder.relativeLayout.isSelected());
         holder.relativeLayout.setTag(position);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //row_idex = position;
-                //holder.relativeLayout.setSelected(true);
+                final int currentPosition = holder.getLayoutPosition();
+                if (selectedPosition != currentPosition) {
+
+                    // Show Ripple and then change color
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Temporarily save the last selected position
+                            int lastSelectedPosition = selectedPosition;
+                            // Save the new selected position
+                            selectedPosition = currentPosition;
+                            // update the previous selected row
+                            notifyItemChanged(lastSelectedPosition);
+                            // select the clicked row
+                            holder.itemView.setSelected(true);
+                        }
+                    }, 150);
+
+                }
+
                 showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), time);
-                notifyDataSetChanged();
             }
         });
-
     }
 
     @Override
@@ -97,6 +122,14 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
+    }
+
+    public int lastPosition(int position) {
+
+
+
+
+        return position;
     }
 
 }

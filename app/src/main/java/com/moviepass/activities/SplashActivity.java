@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if (UserPreferences.getHasUserLoggedInBefore()) {
+                if (UserPreferences.getHasUserLoggedInBefore() || UserPreferences.getUserId() != 0) {
                     Intent i = new Intent(SplashActivity.this, BrowseActivity.class);
                     startActivity(i);
                     finish();

@@ -72,7 +72,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theater);
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
@@ -93,7 +93,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         LinearLayoutManager moviesLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        mMoviesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_movies);
+        mMoviesRecyclerView = findViewById(R.id.recycler_view_movies);
         mMoviesRecyclerView.setLayoutManager(moviesLayoutManager);
 
         mTheaterMoviesAdapter = new TheaterMoviesAdapter(mMoviesList, this);
@@ -104,7 +104,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         /* Showtimes RecyclerView */
 
-        mShowtimesRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_showtimes);
+        mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         mTheaterShowtimesAdapter = new TheaterShowtimesAdapter(mShowtimesList, this);
