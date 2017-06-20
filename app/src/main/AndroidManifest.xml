@@ -36,6 +36,10 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".activities.ConfirmationActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".activities.ETicketsActivity"
             android:theme="@style/AppTheme" />
 
@@ -47,10 +51,6 @@
             android:name=".activities.MovieActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MoviePassThemeTransparentStatusBar"/>
-
-        <activity
-            android:name=".activities.MoviesActivity"
-            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activities.NotificationsActivity"

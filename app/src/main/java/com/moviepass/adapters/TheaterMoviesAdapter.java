@@ -1,7 +1,10 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Handler;
 import android.support.v13.view.ViewCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +36,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
+    private int selectedPosition = -1;
 
     public TheaterMoviesAdapter(ArrayList<Screening> screeningsArrayList, ScreeningPosterClickListener screeningPosterClickListener) {
         this.screeningPosterClickListener = screeningPosterClickListener;
@@ -71,6 +75,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Screening screening = screeningsArrayList.get(position);
 
+        if (position == selectedPosition) {
+            holder.itemView.setSelected(true);
+        } else {
+            holder.itemView.setSelected(false);
+        }
+
         if (screening.getImageUrl().isEmpty()) {
             Picasso.with(holder.itemView.getContext())
                     .load(R.mipmap.ic_launcher)
@@ -108,6 +118,26 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final int currentPosition = holder.getLayoutPosition();
+                if (selectedPosition != currentPosition) {
+
+                    // Show Ripple and then change color
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Temporarily save the last selected position
+                            int lastSelectedPosition = selectedPosition;
+                            // Save the new selected position
+                            selectedPosition = currentPosition;
+                            // update the previous selected row
+                            notifyItemChanged(lastSelectedPosition);
+                            // select the clicked row
+                            holder.itemView.setSelected(true);
+                        }
+                    }, 150);
+
+                }
+
                 screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, startTimes, holder.posterImageView);
             }
         });

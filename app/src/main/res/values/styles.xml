@@ -23,6 +23,10 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/red</item>
+    </style>
+
     <!-- Red theme -->
     <style name="RedTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->

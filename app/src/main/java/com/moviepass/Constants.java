@@ -41,6 +41,7 @@ public class Constants {
     public static final String UNITED_STATES_PREFIX = "US";
 
 
+    public static final String API_RESPONSE_OK = "OK";
     public static final String ROTTEN_TOMATOES = "rt";
 
 }

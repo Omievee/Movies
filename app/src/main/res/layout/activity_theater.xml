@@ -8,8 +8,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/navigation"
-        >
+        android:layout_above="@+id/navigation">
 
         <android.support.v4.widget.NestedScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,6 +42,16 @@
                     android:layout_marginLeft="16dp" />
 
                 <TextView
+                    android:id="@+id/theater_city_things"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:text="@string/activity_theater_city_things_placeholder"
+                    android:layout_below="@+id/theater_address"
+                    android:layout_marginLeft="16dp" />
+
+                <TextView
                     android:id="@+id/movie_select_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,9 +59,10 @@
                     android:textSize="45sp"
                     android:textStyle="bold"
                     android:text="@string/activity_theater_movie_select"
-                    android:layout_below="@+id/theater_address"
+                    android:layout_below="@+id/theater_city_things"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"/>
+                    android:layout_marginTop="16dp"
+                    android:animateLayoutChanges="true" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_movies"
@@ -70,6 +80,20 @@
                     android:layout_alignParentStart="true" />
 
                 <TextView
+                    android:id="@+id/movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gun_metal"
+                    android:textSize="45sp"
+                    android:textStyle="bold"
+                    android:text="@string/activity_theater_movie_title"
+                    android:layout_below="@+id/recycler_view_movies"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true" />
+
+                <TextView
                     android:id="@+id/movie_select_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,10 +101,11 @@
                     android:textSize="45sp"
                     android:textStyle="bold"
                     android:text="@string/activity_theater_movie_time"
-                    android:layout_below="@+id/recycler_view_movies"
+                    android:layout_below="@+id/movie_title"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_showtimes"
@@ -99,6 +124,20 @@
                     android:layout_alignParentStart="true"
                     android:visibility="gone" />
 
+                <Button
+                    android:id="@+id/button_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_below="@+id/recycler_view_showtimes"
+                    android:background="@drawable/button_red"
+                    android:text="@string/activity_theater_button_action"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:layout_marginBottom="@dimen/margin_standard"/>
+
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>
@@ -112,5 +151,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
+
+    <include
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

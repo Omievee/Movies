@@ -1,4 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="parallax_toolbar_size">48dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
 </resources>

@@ -85,18 +85,6 @@ public class UserLocationManagerFused implements LocationListener,
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
     }
 
-    private boolean setLocationUpdateInterval() {
-        if (mLocationRequest != null) {
-            stopLocationUpdates();
-            mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(DELAYED_UPDATE_INTERVAL);
-            mLocationRequest.setFastestInterval(DELAYED_INTERVAL);
-            mLocationRequest.setSmallestDisplacement(10.0f);
-            startLocationUpdates();
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public void onLocationChanged(Location location) {

@@ -44,17 +44,21 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         RelativeLayout listItemMoviePoster;
         @BindView(R.id.text_title)
         TextView title;
+        @BindView(R.id.movie_genre)
+        TextView genre;
         @BindView(R.id.text_run_time)
         TextView runTime;
+        @BindView(R.id.clock)
+        ImageView clock;
         @BindView(R.id.poster)
         ImageView posterImageView;
 
-        private ViewHolder(View v) {
+        public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.text_title);
+            genre = v.findViewById(R.id.movie_genre);
             runTime = v.findViewById(R.id.text_run_time);
             posterImageView = v.findViewById(R.id.poster);
         }
@@ -78,7 +82,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
 
         holder.title.setText(movie.getTitle());
 
-
         int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
@@ -92,7 +95,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
             String translatedRunTime = hours + " hour " + minutes + " minutes";
             holder.runTime.setText(translatedRunTime);
         }
-
 
         holder.listItemMoviePoster.setTag(position);
 

@@ -3,7 +3,9 @@ package com.moviepass.network;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
+import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.LogInRequest;
+import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 
 import retrofit2.Call;
@@ -11,7 +13,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -31,6 +32,14 @@ public interface Api {
     /* Movies */
     @GET("/api/v3/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
+
+    @GET("/api/v5/screenings")
+    Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat")
+            double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+
+    /* Reservations */
+    @POST("/api/v3/reservations")
+    Call<ReservationResponse> checkIn(@Body CheckInRequest request);
 
     /* Theaters */
     @GET("/api/v3/theaters/near")

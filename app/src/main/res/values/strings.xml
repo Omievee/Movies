@@ -13,6 +13,18 @@
 
     <!-- Activitites -->
 
+    <!-- ConfirmationActivity -->
+    <string name="activity_confirmation_movie_title">[Title]</string>
+    <string name="activity_confirmation_theater">[Theater]</string>
+    <string name="activity_confirmation_address">[Address]</string>
+    <string name="activity_confirmation_city_things">[City Things]</string>
+    <string name="activity_confirmation_time">Time</string>
+    <string name="activity_confirmation_time_placeholder">[4:20 PM]</string>
+    <string name="activity_confirmation_date">Date</string>
+    <string name="activity_confirmation_date_placeholder">[4/20/1999]</string>
+    <string name="activity_confirmation_auditorium">[Auditorium]</string>
+    <string name="activity_confirmation_seat">[Seat]</string>
+
     <!-- MainActivity -->
     <string name="activity_main_mandatory_permissions">You must grant these permissions to use MoviePass</string>
 
@@ -22,9 +34,9 @@
     <string name="activity_movie_holder_running_time">[### minutes]</string>
     <string name="activity_movie_holder_rotten_tomato_rating">[###%]</string>
     <string name="activity_movie_running_time_minutes">minutes</string>
-    <string name="activity_movie_showtimes">Showtimes</string>
-    <string name="activity_movie_synopsis">Synopsis</string>
     <string name="activity_movie_reviews">Reviews</string>
+
+    <string name="activity_movie_theater_select_text">Theaters Nearby</string>
 
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
@@ -55,9 +67,12 @@
     <!-- TheaterActivity -->
     <string name="activity_theater_name_placeholder">[Theater Name]</string>
     <string name="activity_theater_address_placeholder">[Theater Address]</string>
+    <string name="activity_theater_city_things_placeholder">[City, State Zip Code]</string>
     <string name="activity_theater_movie_select">What movie do you want to see?</string>
-    <string name="activity_theater_movie_time">What time?</string>
+    <string name="activity_theater_movie_title">[Movie Title]</string>
+    <string name="activity_theater_movie_time"> at what time?</string>
     <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
+    <string name="activity_theater_button_action">[Action]</string>
 
     <!-- Fragments -->
     <!-- MoviesFragment -->

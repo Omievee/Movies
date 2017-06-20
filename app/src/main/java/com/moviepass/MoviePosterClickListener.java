@@ -10,6 +10,5 @@ import com.moviepass.model.Movie;
 
 public interface MoviePosterClickListener {
 
-    void onMoviePosterClick(int pos, Movie movie, ImageView shareImageView);
-
+    void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView);
 }

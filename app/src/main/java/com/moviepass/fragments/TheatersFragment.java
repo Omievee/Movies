@@ -99,7 +99,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
         mMapView.getMapAsync(this);

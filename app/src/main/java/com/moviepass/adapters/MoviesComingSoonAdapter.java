@@ -1,6 +1,7 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,8 +44,12 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         RelativeLayout listItemMoviePoster;
         @BindView(R.id.text_title)
         TextView title;
+        @BindView(R.id.movie_genre)
+        TextView genre;
         @BindView(R.id.text_run_time)
         TextView runTime;
+        @BindView(R.id.clock)
+        ImageView clock;
         @BindView(R.id.poster)
         ImageView posterImageView;
 
@@ -53,6 +58,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.text_title);
+            genre = v.findViewById(R.id.movie_genre);
             runTime = v.findViewById(R.id.text_run_time);
             posterImageView = v.findViewById(R.id.poster);
         }

@@ -2,14 +2,14 @@
     <item android:left="8dp" android:right="8dp" android:top="4dp" android:bottom="6dp">
         <shape android:shape="rectangle" android:dither="true">
             <corners android:radius="2dp" />
-            <solid android:color="#cccccc" />
+            <solid android:drawable="@color/selector_white_to_red" />
         </shape>
     </item>
 
     <item android:left="8dp" android:right="8dp" android:top="4dp" android:bottom="4dp">
         <shape>
             <corners android:radius="2dp" />
-            <solid android:color="@color/white" />
+            <solid android:drawable="@color/selector_white_to_red" />
             <padding
                 android:bottom="8dp"
                 android:left="8dp"
