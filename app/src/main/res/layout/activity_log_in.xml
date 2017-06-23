@@ -65,7 +65,7 @@
 
         <Button
             android:id="@+id/button_log_in"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/button_height"
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:gravity="center"
@@ -76,7 +76,7 @@
             android:textSize="15sp" />
 
         <!-- <com.facebook.login.widget.LoginButton -->
-        <Button
+        <!-- <Button
             android:id="@+id/button_facebook_log_in"
             android:layout_height="48dp"
             android:layout_width="match_parent"
@@ -87,7 +87,15 @@
             android:layout_below="@+id/button_log_in"
             android:background="@drawable/button_facebook"
             android:text="@string/activity_sign_in_log_in_with_facebook"
-            android:textSize="15sp"/>
+            android:textSize="15sp"/> -->
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/button_facebook_log_in"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
 
     </LinearLayout>
 
