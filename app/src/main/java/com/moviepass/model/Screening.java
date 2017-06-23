@@ -1,5 +1,7 @@
 package com.moviepass.model;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
  * Created by anubis on 6/10/17.
  */
 
+@Parcel
 public class Screening {
 
     private List<Screening> screening;

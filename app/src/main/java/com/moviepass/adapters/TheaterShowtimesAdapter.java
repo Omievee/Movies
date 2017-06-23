@@ -55,8 +55,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
 
                 relativeLayout = v.findViewById(R.id.relative_layout);
                 showtime = v.findViewById(R.id.showtime);
-
-
         }
     }
 
@@ -107,7 +105,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
                             holder.itemView.setSelected(true);
                         }
                     }, 150);
-
                 }
 
                 showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, time);

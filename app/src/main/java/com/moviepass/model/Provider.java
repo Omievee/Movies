@@ -1,11 +1,14 @@
 package com.moviepass.model;
 
+import org.parceler.Parcel;
+
 import java.util.HashMap;
 
 /**
  * Created by anubis on 6/10/17.
  */
 
+@Parcel
 public class Provider {
 
     public String providerName;

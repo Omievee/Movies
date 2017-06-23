@@ -5,4 +5,10 @@ package com.moviepass.requests;
  */
 
 public class ChangedMindRequest {
+
+    int reservationId;
+
+    public ChangedMindRequest(int reservationId) {
+        this.reservationId = reservationId;
+    }
 }

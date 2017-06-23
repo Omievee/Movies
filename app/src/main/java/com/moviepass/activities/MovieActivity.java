@@ -27,6 +27,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,13 +66,21 @@ import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.fragments.TheatersFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
+import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
+import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
+import com.moviepass.network.RestError;
+import com.moviepass.requests.CheckInRequest;
+import com.moviepass.requests.PerformanceInfoRequest;
+import com.moviepass.requests.TicketInfoRequest;
+import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.DateFormat;
@@ -87,6 +99,8 @@ import retrofit2.Response;
 public class MovieActivity extends BaseActivity implements MovieTheaterClickListener, ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
+    public static final String RESERVATION = "reservation";
+    public static final String SCREENING = "screening";
     private static final String TAG = "TAG";
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -97,6 +111,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     private Location mMyLocation;
 
     Movie mMovie;
+    Reservation mReservation;
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter mMovieTheatersAdapter;
     MovieShowtimesAdapter mMovieShowtimesAdapter;
@@ -107,8 +122,12 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     TextView mTitle;
     TextView mGenre;
     TextView mRunTime;
+    TextView mTheatersNearby;
     TextView mTheaterSelectTime;
     Button mAction;
+    View mBelowShowtimes;
+    View mScreenBottom;
+    View mProgress;
 
     ArrayList<Screening> mScreeningsList;
     ArrayList<String> mShowtimesList;
@@ -131,7 +150,15 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mTitle = findViewById(R.id.movie_title);
         mRunTime = findViewById(R.id.text_run_time);
         mTheaterSelectTime = findViewById(R.id.theater_select_time);
+        mTheatersNearby = findViewById(R.id.movie_select_text);
         mAction = findViewById(R.id.button_action);
+        mBelowShowtimes = findViewById(R.id.below_showtimes);
+        mBelowShowtimes.setFocusable(true);
+        mBelowShowtimes.setFocusableInTouchMode(true);
+        mScreenBottom = findViewById(R.id.bottom_of_screen);
+        mScreenBottom.setFocusable(true);
+        mScreenBottom.setFocusableInTouchMode(true);
+        mProgress = findViewById(R.id.progress);
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -192,6 +219,9 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mMovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
 
         mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        mTheatersNearby.setAnimation(animShow);
+        mTheatersRecyclerView.setAnimation(animShow);
 
         /* Showtimes RecyclerView */
 
@@ -199,11 +229,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-
-        mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, mScreening, this);
-
-        mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
-
     }
 
     class LocationUpdateBroadCast extends BroadcastReceiver {
@@ -289,14 +314,22 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void onTheaterClick(int pos, Screening screening) {
-        /* TODO : Get the screenings for that movie */
-
-        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
 
         String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
         mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
+
+        mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, screening, this);
+
+        mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
+        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+
         mTheaterSelectTime.setVisibility(View.VISIBLE);
+        mTheaterSelectTime.startAnimation(animShow);
         mShowtimesRecyclerView.setVisibility(View.VISIBLE);
+        mShowtimesRecyclerView.startAnimation(animShow);
+        mBelowShowtimes.setVisibility(View.VISIBLE);
+
+        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
 
         mShowtimesList.clear();
 
@@ -307,15 +340,147 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         mShowtimesList.addAll(startTimes);
 
-        mShowtimesRecyclerView.requestFocus();
+        mBelowShowtimes.requestFocus();
 
-        /* TODO change it so it passes the screening & the showtimes separartely to retrieve for checkin */
     }
 
-    public void onShowtimeClick(int pos, Screening screening, String string) {
+    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
+        final String time = showtime;
+        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
-        mAction.requestFocus();
         mAction.setVisibility(View.VISIBLE);
+        mAction.setAnimation(animShow);
+        mScreenBottom.setVisibility(View.VISIBLE);
+        mScreenBottom.requestFocus();
+
+        String ticketType = screening.getProvider().ticketType;
+
+        if (ticketType.matches("STANDARD")) {
+            String checkIn = "Check In";
+            mAction.setText(checkIn);
+        } else if (ticketType.matches("")) {
+            String reserve = "Reserve E-Ticket";
+            mAction.setText(reserve);
+        } else {
+            String selectSeat = "Select Seat";
+            mAction.setText(selectSeat);
+        }
+
+        mAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mProgress.setVisibility(View.VISIBLE);
+                reserve(screening, time);
+            }
+        });
+    }
+
+    public void reserve(Screening screening, String showtime) {
+        mAction.setEnabled(false);
+
+        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
+        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
+
+        /* Standard Check In */
+
+        String providerName = screening.getProvider().providerName;
+
+        //PerformanceInfo
+        int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
+        String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
+        String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
+        int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
+        int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
+        String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
+        String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
+        String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
+        String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
+        int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
+        String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
+        Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+
+        if (screening.getProvider().ticketType.matches("STANDARD")) {
+            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(normalizedMovieId, externalMovieId, format, tribuneTheaterId, screeningId, dateTime);
+            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
+            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            reservationRequest(screening, checkInRequest);
+        } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
+            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
+                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
+            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
+            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            reservationRequest(screening, checkInRequest);
+        } else {
+            /* TODO : Go to SELECT SEAT */
+        }
+
+    }
+
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest) {
+
+        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+            @Override
+            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
+                ReservationResponse reservationResponse = response.body();
+
+                if (reservationResponse.isOk()) {
+                    mReservation = reservationResponse.getReservation();
+                    mProgress.setVisibility(View.GONE);
+
+                    showConfirmation(screening, mReservation);
+
+/*                    if (!UserPreferences.getVerificationRequired()) {
+                        showConfirmation();
+                    } else {
+                        showTicketVerificationConfirmation();
+                    } */
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+
+                        Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        mProgress.setVisibility(View.GONE);
+                        mAction.setEnabled(true);
+                    } catch (Exception e) {
+                        Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        mProgress.setVisibility(View.GONE);
+                        mAction.setEnabled(true);
+                    }
+                }
+
+            }
+
+            @Override
+            public void failure(RestError restError) {
+                mProgress.setVisibility(View.GONE);
+                mAction.setEnabled(true);
+
+                String hostname = "Unable to resolve host: No address associated with hostname";
+
+/*                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
+                    Toast.makeText(TheaterActivity.this, R.string.log_out_log_in, Toast.LENGTH_LONG).show();
+                }
+                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
+                    Toast.makeText(TheaterActivity.this, R.string.data_connection, Toast.LENGTH_LONG).show();
+                }
+                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
+                    Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
+                } else if(restError!=null){
+                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+                    Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+                clearSuccessCount(); */
+            }
+        });
+    }
+
+    private void showConfirmation(Screening screening, Reservation reservation) {
+        Intent confirmationIntent = new Intent(MovieActivity.this, ConfirmationActivity.class);
+        confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
+        confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
+        startActivity(confirmationIntent);
+        finish();
     }
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
@@ -355,6 +520,25 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                                     Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
                                     mScreeningsList.addAll(mScreeningsResponse.getScreenings());
                                     mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+                                    mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                                            new ViewTreeObserver.OnPreDrawListener() {
+
+                                                @Override
+                                                public boolean onPreDraw() {
+                                                    mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                                                    for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
+                                                        View v = mTheatersRecyclerView.getChildAt(i);
+                                                        v.setAlpha(0.0f);
+                                                        v.animate().alpha(1.0f)
+                                                                .setDuration(1000)
+                                                                .setStartDelay(i * 50)
+                                                                .start();
+                                                    }
+
+                                                    return true;
+                                                }
+                                            });
                                 }
 
                             }

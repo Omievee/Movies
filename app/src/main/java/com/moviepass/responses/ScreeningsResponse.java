@@ -10,6 +10,7 @@ import java.util.List;
  * Created by anubis on 6/10/17.
  */
 
+@Parcel
 public class ScreeningsResponse {
 
     public String availability;

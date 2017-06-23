@@ -5,4 +5,11 @@ package com.moviepass.responses;
  */
 
 public class ChangedMindResponse {
+
+    String status;
+    String message;
+
+    public String getMessage() {
+        return message;
+    }
 }

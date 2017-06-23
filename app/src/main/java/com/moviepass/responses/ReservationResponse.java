@@ -3,10 +3,13 @@ package com.moviepass.responses;
 import com.moviepass.Constants;
 import com.moviepass.model.Reservation;
 
+import org.parceler.Parcel;
+
 /**
  * Created by anubis on 6/20/17.
  */
 
+@Parcel
 public class ReservationResponse {
 
     String status;
@@ -31,7 +34,8 @@ public class ReservationResponse {
 
     public eTicketConfirmation getE_ticket_confirmation() {return this.e_ticket_confirmation;}
 
-    public class eTicketConfirmation {
+    @Parcel
+    public static class eTicketConfirmation {
         private String barCodeUrl;
         private String confirmationCode;
 

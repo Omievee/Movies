@@ -55,8 +55,6 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
 
             relativeLayout = v.findViewById(R.id.relative_layout);
             showtime = v.findViewById(R.id.showtime);
-
-
         }
     }
 

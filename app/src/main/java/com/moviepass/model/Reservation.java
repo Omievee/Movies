@@ -1,9 +1,12 @@
 package com.moviepass.model;
 
+import org.parceler.Parcel;
+
 /**
  * Created by anubis on 6/20/17.
  */
 
+@Parcel
 public class Reservation {
 
     int id;

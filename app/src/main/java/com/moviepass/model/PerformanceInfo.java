@@ -1,9 +1,12 @@
 package com.moviepass.model;
 
+import org.parceler.Parcel;
+
 /**
  * Created by anubis on 6/10/17.
  */
 
+@Parcel
 public class PerformanceInfo {
 
     String externalMovieId;
