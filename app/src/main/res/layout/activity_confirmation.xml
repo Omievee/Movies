@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -9,11 +10,13 @@
         android:id="@+id/ticket_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp">
 
         <ImageView
             android:id="@+id/poster"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/fragment_movie_ticket_top" />
 
@@ -82,10 +85,29 @@
 
     <ImageView
         android:id="@+id/ticket_bottom"
-        android:layout_below="@+id/ticket_top"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/fragment_movie_ticket_bottom"/>
+        android:src="@drawable/fragment_movie_ticket_bottom"
+        android:layout_below="@+id/ticket_top"
+        android:layout_centerHorizontal="true" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menuActions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        fab:menu_animationDelayPerItem="0"
+        fab:menu_colorNormal="@color/red"
+        fab:menu_colorPressed="@color/red_dark"
+        fab:menu_labels_colorNormal="@color/red_dark"
+        fab:menu_labels_colorPressed="@color/red_dark" />
 
     <include
         android:id="@+id/navigation"
@@ -95,4 +117,10 @@
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
 
-</LinearLayout>
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
