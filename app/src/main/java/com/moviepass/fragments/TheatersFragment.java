@@ -24,6 +24,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.lapism.searchview.SearchView;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.TheatersClickListener;
@@ -86,6 +88,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     TheatersClickListener mTheatersClickListener;
     private OnFragmentInteractionListener listener;
 
+    SearchView mSearchLocation;
+    ImageView mSearchClose;
+
     LayoutAnimationController controller;
 
     ArrayList<Theater> mTheaters;
@@ -99,6 +104,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
+        mSearchClose = rootView.findViewById(R.id.search_inactive);
+        mSearchLocation = rootView.findViewById(R.id.search);
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
@@ -127,6 +134,33 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mRecyclerView.setItemAnimator(itemAnimator);
 
         mTheatersAdapter = new TheatersAdapter(mTheaters, this);
+
+        mSearchLocation.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
+            @Override
+            public boolean onClose() {
+                mSearchLocation.close(true);
+                mSearchLocation.setVisibility(View.GONE);
+                mSearchClose.setVisibility(View.VISIBLE);
+                return false;
+            }
+
+            @Override
+            public boolean onOpen() {
+                mSearchLocation.open(true);
+                mSearchLocation.setVisibility(View.VISIBLE);
+                mSearchClose.setVisibility(View.GONE);
+                return false;
+            }
+        });
+
+        mSearchClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchLocation.open(true);
+                mSearchLocation.setVisibility(View.VISIBLE);
+                mSearchClose.setVisibility(View.GONE);
+            }
+        });
 
         return rootView;
     }
@@ -495,6 +529,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                             // TODO Auto-generated method stub
 
                                             if (mRecyclerView != null) {
+                                                AnimationSet set = new AnimationSet(true);
+
+                                                Animation animation = AnimationUtils.loadAnimation(getContext(),
+                                                        R.anim.slide_down);
+                                                animation.setDuration(500);
+
+                                                set.addAnimation(animation);
+
+                                                controller = new LayoutAnimationController(set, 0.5f);
+
+                                                mRecyclerView.setLayoutAnimation(controller);
                                                 mRecyclerView.getRecycledViewPool().clear();
                                                 mTheatersAdapter.notifyDataSetChanged();
                                                 mTheaters.clear();

@@ -33,7 +33,8 @@
 
         <activity
             android:name=".activities.BrowseActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustNothing" />
 
         <activity
             android:name=".activities.ConfirmationActivity"
