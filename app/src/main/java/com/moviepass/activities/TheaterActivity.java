@@ -57,6 +57,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     public static final String THEATER = "theater";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screening";
+    public static final String SHOWTIME = "showtime";
+
 
     TheaterMoviesAdapter mTheaterMoviesAdapter;
     TheaterShowtimesAdapter mTheaterShowtimesAdapter;
@@ -244,7 +246,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         mShowtimesList.addAll(startTimes);
 
-        /* TODO change it so it passes the screening & the showtimes separartely to retrieve for checkin */
     }
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
@@ -312,6 +313,13 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest);
         } else {
+
+            Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
+            intent.putExtra(SCREENING, Parcels.wrap(screening));
+            intent.putExtra(SHOWTIME, Parcels.wrap(showtime));
+            startActivity(intent);
+            finish();
+
             /* TODO : Go to SELECT SEAT */
         }
 
@@ -323,8 +331,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
-                mReservation = reservationResponse.getReservation();
                 if (reservationResponse.isOk()) {
+                    mReservation = reservationResponse.getReservation();
 //                    mToken.setReservation(reservationResponse.getReservation());
 //                    mToken.setZipCodeTicket(reservationResponse.getZipCode());
                     mProgress.setVisibility(View.GONE);

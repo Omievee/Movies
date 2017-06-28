@@ -412,6 +412,12 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             reservationRequest(screening, checkInRequest);
         } else {
             /* TODO : Go to SELECT SEAT */
+
+            Intent intent = new Intent(this, SelectSeatActivity.class);
+            intent.putExtra(SCREENING, Parcels.wrap(screening));
+            intent.putExtra("showtime", showtime);
+            startActivity(intent);
+            finish();
         }
 
     }

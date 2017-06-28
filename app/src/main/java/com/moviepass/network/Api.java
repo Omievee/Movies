@@ -6,9 +6,11 @@ import com.moviepass.model.User;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.LogInRequest;
+import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
+import com.moviepass.responses.SeatingsInfoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -46,6 +48,10 @@ public interface Api {
 
     @PUT("/api/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
+
+    @POST("/api/v3/seats")
+    Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater,
+                                        @Body PerformanceInfoRequest request);
 
 
     /* Theaters */

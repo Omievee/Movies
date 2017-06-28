@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Provider {
 
     public String providerName;
-    public String theater;
+    public int theater;
     public String ticketType;
     public HashMap<String, PerformanceInfo> performanceInfo;
 
@@ -20,5 +20,8 @@ public class Provider {
     }
 
     public PerformanceInfo getPerformanceInfo(String key) { return performanceInfo.get(key); }
+
+    public int getTheater() { return theater; }
+
 
 }
