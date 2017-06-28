@@ -26,13 +26,11 @@ public class Constants {
     public static final String USER_FIRST_NAME = "CATHERINE";
     public static final String USER_EMAIL = "BOB@LOBLAW.COM";
 
-
     //Location things
     public static final String IS_LOCATION_USER_DEFINED = "usr_loc_defi";
     public static final String PREFS_LATITUDE = "lat";
     public static final String PREFS_LONGITUDE = "lng";
     public static final String LOCATION_UPDATE_INTENT_FILTER = "LOCATION_UPDATE_INTENT_FILTER";
-
 
     //Address things
     public static final String CITY_AND_STATE = "city_state";

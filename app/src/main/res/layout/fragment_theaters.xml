@@ -29,7 +29,25 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:layout_marginRight="@dimen/margin_standard"
         android:layout_marginLeft="@dimen/margin_standard"
-        app:layout_collapseMode="pin" />
+        android:visibility="gone" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment" />
+
+    </android.support.v7.widget.CardView>
 
     <RelativeLayout
         android:layout_width="wrap_content"

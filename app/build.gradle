@@ -54,6 +54,7 @@ dependencies {
     // Play Services
     compile "com.google.android.gms:play-services-location:$play_services_version"
     compile "com.google.android.gms:play-services-maps:$play_services_version"
+    compile "com.google.android.gms:play-services-places:$play_services_version"
 
     //Support Libraries
     compile "com.android.support:appcompat-v7:$support_lib_version"

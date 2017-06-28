@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
 
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
+            android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBYTdUkozXsZOpZ0WbJKkXYq_MIb9EBlXI" />
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
@@ -78,6 +78,10 @@
 
         <activity
             android:name=".activities.ProfileActivity"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.SelectSeatActivity"
             android:theme="@style/AppTheme" />
 
         <activity

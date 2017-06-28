@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,9 +25,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,11 +72,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by anubis on 6/6/17.
  */
 
-public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener {
+public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static String LOCATION_PERMISSIONS[] = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -73,9 +88,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private final static int REQUEST_LOCATION_CODE = 0;
     final static byte DEFAULT_ZOOM_LEVEL = 12;
+    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+
 
     private HashMap<LatLng, Theater> mMapData;
 
+    private GoogleApiClient mGoogleApiClient;
     boolean mLocationAcquired;
     private Location mMyLocation;
     private TheatersAdapter mTheatersAdapter;
@@ -90,6 +108,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     SearchView mSearchLocation;
     ImageView mSearchClose;
+    CardView mCardView;
 
     LayoutAnimationController controller;
 
@@ -99,13 +118,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    String TAG = "TAG";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mSearchLocation = rootView.findViewById(R.id.search);
+        mCardView = rootView.findViewById(R.id.card_view);
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
@@ -135,11 +164,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         mTheatersAdapter = new TheatersAdapter(mTheaters, this);
 
+        mSearchLocation.setVisibility(View.GONE);
         mSearchLocation.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
             @Override
             public boolean onClose() {
+                collapse(mSearchLocation);
                 mSearchLocation.close(true);
                 mSearchLocation.setVisibility(View.GONE);
+                expand(mSearchClose);
                 mSearchClose.setVisibility(View.VISIBLE);
                 return false;
             }
@@ -157,8 +189,36 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             @Override
             public void onClick(View view) {
                 mSearchLocation.open(true);
+                expand(mCardView);
+                collapse(mSearchClose);
                 mSearchLocation.setVisibility(View.VISIBLE);
                 mSearchClose.setVisibility(View.GONE);
+            }
+        });
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .setCountry("US")
+                .build();
+
+        SupportPlaceAutocompleteFragment places = (SupportPlaceAutocompleteFragment)
+                getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        places.setFilter(typeFilter);
+        places.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                collapse(mCardView);
+                expand(mSearchClose);
+
+                CameraUpdate current = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM_LEVEL);
+
+                mMap.moveCamera(current);
+                loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
+            }
+
+            @Override
+            public void onError(Status status) {
+                Toast.makeText(getActivity().getApplicationContext(),status.toString(),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -177,6 +237,32 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 }
             } else {
                 currentLocationTasks();
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
+
+        // ...
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                Log.i(TAG, "Place: " + place.getName());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                // TODO: Handle the error.
+                Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
         }
     }
@@ -210,6 +296,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         } catch (IllegalArgumentException is) {
             is.printStackTrace();
         }
+
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -237,6 +325,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onStop() {
         super.onStop();
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -400,6 +489,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         public void onMapClick(LatLng arg0) {
                                             // TODO Auto-generated method stub
 
+                                            collapse(mCardView);
+                                            expand(mSearchClose);
+
                                             if (mRecyclerView != null) {
 
                                                 AnimationSet set = new AnimationSet(true);
@@ -528,6 +620,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         public void onMapClick(LatLng arg0) {
                                             // TODO Auto-generated method stub
 
+                                            collapse(mCardView);
+                                            expand(mSearchClose);
+
                                             if (mRecyclerView != null) {
                                                 AnimationSet set = new AnimationSet(true);
 
@@ -588,5 +683,54 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     public interface OnFragmentInteractionListener {
+    }
+
+    public static void expand(final View v) {
+        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final int targtetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
+                        : (int)(targtetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1){
+                    v.setVisibility(View.GONE);
+                }else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
     }
 }
