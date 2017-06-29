@@ -1,6 +1,8 @@
 package com.moviepass.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,17 +17,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -44,6 +49,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -88,7 +94,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private final static int REQUEST_LOCATION_CODE = 0;
     final static byte DEFAULT_ZOOM_LEVEL = 12;
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    int SUPPORT_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
 
     private HashMap<LatLng, Theater> mMapData;
@@ -100,11 +106,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     GoogleMap mMap;
     MapView mMapView;
-    Marker unselectedMarkers;
+    private Marker selectedMarker;
 
     LocationUpdateBroadCast mLocationBroadCast;
     TheatersClickListener mTheatersClickListener;
     private OnFragmentInteractionListener listener;
+    SupportPlaceAutocompleteFragment places;
 
     SearchView mSearchLocation;
     ImageView mSearchClose;
@@ -141,6 +148,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mMapView.getMapAsync(this);
 
         mMapData = new HashMap<>();
+
+        selectedMarker = null;
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(getActivity()).startLocationUpdates();
@@ -207,8 +216,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         places.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                collapse(mCardView);
-                expand(mSearchClose);
+//                closeKeyboard();
 
                 CameraUpdate current = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM_LEVEL);
 
@@ -218,9 +226,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
             @Override
             public void onError(Status status) {
-                Toast.makeText(getActivity().getApplicationContext(),status.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), status.toString(),Toast.LENGTH_SHORT).show();
             }
         });
+        places.setHint(getResources().getString(R.string.fragment_theaters_search));
+
+        //Hide Keyboard when not in use
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         return rootView;
     }
@@ -248,23 +262,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         // the failure silently
 
         // ...
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-                Log.i(TAG, "Place: " + place.getName());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
-
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }
     }
 
     @Override
@@ -420,7 +417,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
                         TheatersResponse theaters = response.body();
                         if (theaters != null) {
-                            List<Theater> theaterList = theaters.getTheaters();
+                            final List<Theater> theaterList = theaters.getTheaters();
 
                             if (theaterList.size() == 0) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
@@ -455,67 +452,69 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         mRecyclerView.setAdapter(mTheatersAdapter);
                                     }
 
-                                    MarkerOptions options = new MarkerOptions().title(theater.getName()).snippet(theater.getAddress()).position(location);
+                                    MarkerOptions options = new MarkerOptions()
+                                            .title(theater.getName())
+                                            .snippet(theater.getAddress())
+                                            .position(location)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin_unselected));
+
                                     mMap.addMarker(options);
 
                                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
                                         @Override
                                         public boolean onMarkerClick(Marker marker) {
-                                            // TODO Auto-generated method stub
+                                            final Marker finalMarker = marker;
 
-                                            if (unselectedMarkers != null) {
-                                                //Set prevMarker back to default color
-                                            }
+                                            mRecyclerView.animate()
+                                                    .translationY(mRecyclerView.getHeight())
+                                                    .alpha(0.5f)
+                                                    .setListener(new AnimatorListenerAdapter() {
+                                                        @Override
+                                                        public void onAnimationEnd(Animator animation) {
+                                                            super.onAnimationEnd(animation);
 
-                                            if (!marker.equals(unselectedMarkers)) {
-                                                //leave Marker default color if re-click current Marker
-                                            }
-
-                                            unselectedMarkers = marker;
-
-                                            //Load New RecyclerView Based on User's Click
-                                            reloadTheaters(marker.getPosition().latitude, marker.getPosition().longitude);
+                                                            //Load New RecyclerView Based on User's Click
+                                                            reloadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
+                                                        }
+                                                    });
 
                                             return false;
                                         }
-
-
                                     });
 
                                     mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
                                         @Override
                                         public void onMapClick(LatLng arg0) {
-                                            // TODO Auto-generated method stub
+                                            if (mCardView.getVisibility() == View.VISIBLE) {
+                                                collapse(mCardView);
+                                            }
 
-                                            collapse(mCardView);
-                                            expand(mSearchClose);
+                                            if (mSearchClose.getVisibility() == View.GONE) {
+                                                expand(mSearchClose);
+                                            }
 
                                             if (mRecyclerView != null) {
 
-                                                AnimationSet set = new AnimationSet(true);
+                                                mRecyclerView.animate()
+                                                        .translationY(mRecyclerView.getHeight())
+                                                        .alpha(0.5f)
+                                                        .setListener(new AnimatorListenerAdapter() {
+                                                            @Override
+                                                            public void onAnimationEnd(Animator animation) {
+                                                                super.onAnimationEnd(animation);
 
-                                                Animation animation = AnimationUtils.loadAnimation(getContext(),
-                                                        R.anim.slide_down);
-                                                animation.setDuration(500);
-
-                                                set.addAnimation(animation);
-
-                                                controller = new LayoutAnimationController(set, 0.5f);
-
-                                                mRecyclerView.setLayoutAnimation(controller);
-                                                mRecyclerView.getRecycledViewPool().clear();
-                                                mTheatersAdapter.notifyDataSetChanged();
-                                                mTheaters.clear();
+                                                                mTheatersAdapter.notifyDataSetChanged();
+                                                                mRecyclerView.getRecycledViewPool().clear();
+                                                                mTheaters.clear();
+                                                            }
+                                                        });
                                             }
-
                                         }
 
 
                                     });
                                 }
-
                             }
                         }
                     }
@@ -572,80 +571,83 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                     if (mTheatersResponse != null) {
                                         mTheaters.addAll(mTheatersResponse.getTheaters());
                                         mRecyclerView.setAdapter(mTheatersAdapter);
-
-                                        AnimationSet set = new AnimationSet(true);
-
-                                        Animation animation = AnimationUtils.loadAnimation(getContext(),
-                                                R.anim.slide_up);
-                                        animation.setDuration(500);
-
-                                        set.addAnimation(animation);
-
-                                        controller = new LayoutAnimationController(set, 0.5f);
-
-                                        mRecyclerView.setLayoutAnimation(controller);
+                                        mRecyclerView.setTranslationY(0);
+                                        mRecyclerView.setAlpha(1.0f);
                                     }
 
-                                    MarkerOptions options = new MarkerOptions().title(theater.getName()).snippet(theater.getAddress()).position(location);
-                                    mMap.addMarker(options);
+                                    int position;
+                                    position = theaterList.indexOf(theater);
+
+                                    if (position == 0) {
+                                        MarkerOptions options = new MarkerOptions()
+                                                .title(theater.getName())
+                                                .snippet(theater.getAddress())
+                                                .position(location)
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin));
+
+                                        mMap.addMarker(options);
+                                    } else {
+                                        MarkerOptions options = new MarkerOptions()
+                                                .title(theater.getName())
+                                                .snippet(theater.getAddress())
+                                                .position(location)
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin_unselected));
+
+                                        mMap.addMarker(options);
+                                    }
 
                                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
                                         @Override
                                         public boolean onMarkerClick(Marker marker) {
-                                            // TODO Auto-generated method stub
+                                            final Marker finalMarker = marker;
 
-                                            if (unselectedMarkers != null) {
-                                                //Set prevMarker back to default color
-                                            }
+                                            mRecyclerView.animate()
+                                                    .translationY(mRecyclerView.getHeight())
+                                                    .alpha(0.5f)
+                                                    .setListener(new AnimatorListenerAdapter() {
+                                                        @Override
+                                                        public void onAnimationEnd(Animator animation) {
+                                                            super.onAnimationEnd(animation);
 
-                                            if (!marker.equals(unselectedMarkers)) {
-                                                //leave Marker default color if re-click current Marker
-                                            }
-
-                                            unselectedMarkers = marker;
-
-                                            //Load New RecyclerView Based on User's Click
-                                            reloadTheaters(marker.getPosition().latitude, marker.getPosition().longitude);
+                                                            //Load New RecyclerView Based on User's Click
+                                                            reloadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
+                                                        }
+                                                    });
 
                                             return false;
                                         }
-
-
                                     });
 
                                     mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-
                                         @Override
                                         public void onMapClick(LatLng arg0) {
-                                            // TODO Auto-generated method stub
-
-                                            collapse(mCardView);
-                                            expand(mSearchClose);
-
-                                            if (mRecyclerView != null) {
-                                                AnimationSet set = new AnimationSet(true);
-
-                                                Animation animation = AnimationUtils.loadAnimation(getContext(),
-                                                        R.anim.slide_down);
-                                                animation.setDuration(500);
-
-                                                set.addAnimation(animation);
-
-                                                controller = new LayoutAnimationController(set, 0.5f);
-
-                                                mRecyclerView.setLayoutAnimation(controller);
-                                                mRecyclerView.getRecycledViewPool().clear();
-                                                mTheatersAdapter.notifyDataSetChanged();
-                                                mTheaters.clear();
+                                            if (mCardView.getVisibility() == View.VISIBLE) {
+                                                collapse(mCardView);
                                             }
 
+                                            if (mSearchClose.getVisibility() == View.GONE) {
+                                                expand(mSearchClose);
+                                            }
+
+                                            if (mRecyclerView != null) {
+                                                mRecyclerView.animate()
+                                                        .translationY(mRecyclerView.getHeight())
+                                                        .alpha(0.5f)
+                                                        .setListener(new AnimatorListenerAdapter() {
+                                                            @Override
+                                                            public void onAnimationEnd(Animator animation) {
+                                                                super.onAnimationEnd(animation);
+
+                                                                mTheatersAdapter.notifyDataSetChanged();
+                                                                mRecyclerView.getRecycledViewPool().clear();
+                                                                mTheaters.clear();
+                                                            }
+                                                        });
+                                            }
                                         }
-
-
                                     });
                                 }
-
                             }
                         }
                     }
@@ -687,7 +689,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     public static void expand(final View v) {
         v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        final int targtetHeight = v.getMeasuredHeight();
+        final int targetedHeight = v.getMeasuredHeight();
 
         v.getLayoutParams().height = 0;
         v.setVisibility(View.VISIBLE);
@@ -696,7 +698,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
                         ? RelativeLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targtetHeight * interpolatedTime);
+                        : (int)(targetedHeight * interpolatedTime);
                 v.requestLayout();
             }
 
@@ -706,19 +708,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         };
 
-        a.setDuration((int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration((int)(targetedHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
 
-    public static void collapse(final View v) {
+    public void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
+
+//        closeKeyboard();
 
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if(interpolatedTime == 1){
+                if (interpolatedTime == 1) {
                     v.setVisibility(View.GONE);
-                }else{
+                } else {
                     v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
                     v.requestLayout();
                 }
@@ -732,5 +736,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
+    }
+
+    public void closeKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

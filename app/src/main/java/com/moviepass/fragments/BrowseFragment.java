@@ -1,6 +1,7 @@
 package com.moviepass.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -42,10 +43,10 @@ public class BrowseFragment extends Fragment implements TheatersFragment.OnFragm
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.pager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -103,6 +104,6 @@ public class BrowseFragment extends Fragment implements TheatersFragment.OnFragm
         listener = null;
     }
 
-    public interface OnFragmentInteractionListener {
+    private interface OnFragmentInteractionListener {
     }
 }

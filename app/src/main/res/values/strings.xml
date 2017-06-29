@@ -97,6 +97,7 @@
     <string name="fragment_theaters_name">[Name]</string>
     <string name="fragment_theaters_address">[Address]</string>
     <string name="fragment_theaters_distance">[Distance]</string>
+    <string name="fragment_theaters_search">City</string>
 
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>

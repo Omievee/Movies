@@ -1,5 +1,6 @@
 package com.moviepass.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +10,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.moviepass.R;
 import com.moviepass.fragments.BrowseFragment;
 import com.moviepass.fragments.MoviesFragment;
@@ -27,6 +34,10 @@ import java.util.List;
  */
 
 public class BrowseActivity extends BaseActivity {
+
+    int SUPPORT_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    String TAG = "TAG";
+
 
     private TabLayout tabLayout;
     private ViewPager viewPager;

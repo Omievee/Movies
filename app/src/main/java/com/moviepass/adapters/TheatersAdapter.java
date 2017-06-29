@@ -2,6 +2,7 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.location.Location;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +40,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     private LayoutInflater inflater;
     private Context context;
 
-    private final static int FADE_DURATION = 1000;
-
     public TheatersAdapter(ArrayList<Theater> theatersArrayList, TheatersClickListener theatersClickListener) {
         this.theatersClickListener = theatersClickListener;
         this.theatersArrayList = theatersArrayList;
-
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,6 +56,10 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         TextView cityThings;
         @BindView(R.id.theater_distance)
         TextView distance;
+        @BindView(R.id.icon_ticket)
+        ImageView iconTicket;
+        @BindView(R.id.icon_seat)
+        ImageView iconSeat;
 
         public ViewHolder(View v) {
             super(v);
@@ -68,6 +70,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             address = v.findViewById(R.id.theater_address);
             cityThings = v.findViewById(R.id.theater_city_things);
             distance = v.findViewById(R.id.theater_distance);
+            iconTicket = v.findViewById(R.id.icon_ticket);
+            iconSeat = v.findViewById(R.id.icon_seat);
         }
     }
 
@@ -106,11 +110,16 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);
 
+        if (theater.ticketTypeIsStandard()) {
+            holder.iconTicket.setVisibility(View.INVISIBLE);
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else if (theater.ticketTypeIsETicket()) {
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        }
+
         holder.listItemTheater.setTag(position);
 
-//        animate(holder);
-
-//        ViewCompat.setTransitionName(holder.posterImageView, movie.getImageUrl());
+        setSlideAnimation(holder.listItemTheater);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +137,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         return TYPE_ITEM;
     }
 
-    public void animate(RecyclerView.ViewHolder viewHolder) {
-        final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, R.anim.slide_up);
-        viewHolder.itemView.setAnimation(animAnticipateOvershoot);
+    private void setSlideAnimation(View view) {
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
+        view.startAnimation(animation);
     }
 }
