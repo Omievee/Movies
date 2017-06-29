@@ -8,15 +8,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.extensions.SeatButton;
+import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Screening;
 import com.moviepass.model.SeatInfo;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.responses.SeatingsInfoResponse;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -38,8 +42,17 @@ public class SelectSeatActivity extends BaseActivity {
     public static final String SHOWTIME = "showtime";
 
     GridLayout mGridSeats;
+    ImageView mPoster;
     Screening mScreening;
+    TextView mMovieTitle;
+    TextView mMovieGenre;
+    TextView mMovieRunTime;
+    TextView mTheaterName;
+    TextView mAuditorium;
+    TextView mShowtime;
+    TextView mSeats;
     View mProgress;
+
 
     private ArrayList<SeatButton> mSeatButtons;
 
@@ -47,12 +60,47 @@ public class SelectSeatActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_seat);
 
+        bottomNavigationView = findViewById(R.id.navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
         mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
         String showtime = Parcels.unwrap(getIntent().getParcelableExtra(SHOWTIME));
 
+        mPoster = findViewById(R.id.poster);
+        mMovieTitle = findViewById(R.id.movie_title);
+        mMovieGenre = findViewById(R.id.movie_genre);
+        mMovieRunTime = findViewById(R.id.text_run_time);
+        mTheaterName = findViewById(R.id.theater_name);
+        mAuditorium = findViewById(R.id.auditorium);
+        mShowtime = findViewById(R.id.showtime);
+        mSeats = findViewById(R.id.selected_seats);
         mGridSeats = findViewById(R.id.grid_seats);
         mProgress = findViewById(R.id.progress);
-//        mTextSeat = ButterKnife.findById(R.id.text_seat);
+
+        Picasso.with(this)
+                .load(mScreening.getImageUrl())
+                .error(R.mipmap.ic_launcher)
+                .into(mPoster);
+
+        mMovieTitle.setText(mScreening.getTitle());
+
+        int t = mScreening.getRunningTime();
+        int hours = t / 60; //since both are ints, you get an int
+        int minutes = t % 60;
+
+        if (mScreening.getRunningTime() == 0) {
+            mMovieRunTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            mMovieRunTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            mMovieRunTime.setText(translatedRunTime);
+        }
+
+        mTheaterName.setText(mScreening.getTheaterName());
+        mShowtime.setText(showtime);
 
         //PerformanceInfo
         int normalizedMovieId = mScreening.getMoviepassId();
@@ -104,10 +152,6 @@ public class SelectSeatActivity extends BaseActivity {
         mGridSeats.setColumnCount(columns);
         mGridSeats.setRowCount(rows);
         mGridSeats.setOrientation(GridLayout.HORIZONTAL);
-
-        /* GridLayout.LayoutParams params = (GridLayout.LayoutParams) child.getLayoutParams();
-        params.width = (parent.getWidth()/parent.getColumnCount()) -params.rightMargin - params.leftMargin;
-        mGridSeats.setLayoutParams(params); */
 
         mSeatButtons = new ArrayList<>();
 

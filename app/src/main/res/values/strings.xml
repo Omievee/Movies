@@ -35,8 +35,21 @@
     <string name="activity_movie_holder_rotten_tomato_rating">[###%]</string>
     <string name="activity_movie_running_time_minutes">minutes</string>
     <string name="activity_movie_reviews">Reviews</string>
-
     <string name="activity_movie_theater_select_text">Theaters Nearby</string>
+
+    <!-- SelectSeatActivity -->
+    <string name="activity_select_seat_movie_title">[Title]</string>
+    <string name="activity_select_seat_movie_genre">[Genre]</string>
+    <string name="activity_select_seat_run_time_placeholder">[Time]</string>
+    <string name="activity_select_seat_theater_name">[Theater]</string>
+    <string name="activity_select_seat_auditorium">[Auditorium]</string>
+    <string name="activity_select_seat_showtime">[Time]</string>
+    <string name="activity_select_seat_seats">Seat:</string>
+    <string name="activity_select_seat_seats_placeholder">[Seats]</string>
+    <string name="activity_select_seat_available">Available</string>
+    <string name="activity_select_seat_unavailable">Unavailable</string>
+    <string name="activity_select_seat_selected">Selected</string>
+
 
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>

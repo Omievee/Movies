@@ -49,9 +49,9 @@ public class SeatButton extends AppCompatImageButton {
 
             case SeatTypeWheelchair:
                 if (mSeatInfo.isAvailable())
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_available);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_available_rotate);
                 else
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable_rotate);
                 break;
 
             case SeatTypeCanReserve:
@@ -59,9 +59,9 @@ public class SeatButton extends AppCompatImageButton {
             case SeatTypeCanReserveRight:
             case SeatTypeUnknown:
                 if (mSeatInfo.isAvailable())
-                    this.setImageResource(R.drawable.icon_seat_available);
+                    this.setImageResource(R.drawable.icon_seat_available_rotate);
                 else
-                    this.setImageResource(R.drawable.icon_seat_unavailable);
+                    this.setImageResource(R.drawable.icon_seat_unavailable_rotate);
                 break;
         }
 
@@ -77,11 +77,11 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeCanReserve:
                 case SeatTypeCanReserveLeft:
                 case SeatTypeCanReserveRight:
-                    this.setImageResource(R.drawable.icon_seat_selected);
+                    this.setImageResource(R.drawable.icon_seat_selected_rotate);
                     break;
 
                 case SeatTypeWheelchair:
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_selected);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_selected_rotate);
                     break;
             }
         } else {
@@ -91,15 +91,15 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeCanReserveRight:
                 case SeatTypeUnknown:
                     if (mSeatInfo.isAvailable())
-                        this.setImageResource(R.drawable.icon_seat_available);
+                        this.setImageResource(R.drawable.icon_seat_available_rotate);
                     else
-                        this.setImageResource(R.drawable.icon_seat_unavailable);
+                        this.setImageResource(R.drawable.icon_seat_unavailable_rotate);
                     break;
                 case SeatTypeWheelchair:
                     if (mSeatInfo.isAvailable())
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_available);
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_available_rotate);
                     else
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable_rotate);
                     break;
 
 
