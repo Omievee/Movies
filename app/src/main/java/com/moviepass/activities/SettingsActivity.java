@@ -43,12 +43,10 @@ public class SettingsActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_settings;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_settings;
     }

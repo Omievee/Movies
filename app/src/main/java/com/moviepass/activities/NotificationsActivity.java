@@ -43,12 +43,10 @@ public class NotificationsActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_notifications;
     }
 
-    @Override
     int getNavigationMenuItemId() { return R.id.action_notifications; }
 
     @Override

@@ -74,79 +74,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getContentViewId());
 
-        /* Create Bottom Navigation Menu */
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-        /* Marshmallow+ Request Permissions
-        if (grantedMandatoryPermissions()) {
-
-            /* First Run Actions -- set default values
-            if (String.valueOf(UserPreferences.getIsUserFirstLogin()).matches(Constants.IS_USER_FIRST_LOGIN)) {
-                UserPreferences.setIsUserFirstLogin(false);
-                UserPreferences.setIsLocationUserDefined(false);
-            }
-
-            locationInit();
-        } else {
-            requestMandatoryPermissions();
-        }
-
-        /* Set up the Toolbar */
-        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar); */
-
-
-
-        /* Select View
-        /*bottomNavigationView.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem selectedMenuItem) {
-                        Fragment fragment = null;
-                        switch (selectedMenuItem.getItemId()) {
-                            case R.id.action_profile:
-                                fragment = ProfileFragment.newInstance();
-                                break;
-                            case R.id.action_e_tickets:
-                                fragment = ETicketFragment.newInstance();
-                                break;
-                            case R.id.action_browse:
-                                if (grantedMandatoryPermissions()) {
-                                    Intent intent = new Intent(getApplicationContext(), BrowseActivity.class);
-                                    startActivity(intent);
-                                } else {
-                                    requestMandatoryPermissions();
-                                }
-                                break;
-                            case R.id.action_notifications:
-                                fragment = NotificationFragment.newInstance();
-                                break;
-                            case R.id.action_settings:
-                                fragment = SettingsFragment.newInstance();
-                                break;
-                        }
-
-                        /* if (fragment != null) {
-                            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.frame_layout, fragment);
-                            fragmentTransaction.commit();
-                        }
-
-                        return true;
-                    }
-                });
-        */
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        updateNavigationBarState();
+//        updateNavigationBarState();
     }
 
     @Override
@@ -154,6 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         super.onPause();
         overridePendingTransition(0, 0);
     }
+
+    /*
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -201,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     abstract int getNavigationMenuItemId();
 
 
-    /*
+
 
     /* Handle Permissions
     public void requestMandatoryPermissions(){

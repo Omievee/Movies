@@ -149,12 +149,10 @@ public class SelectSeatActivity extends BaseActivity {
 
     /* Bottom Navigation Things */
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_browse;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_browse;
     }

@@ -33,21 +33,21 @@ public class BrowseActivity extends BaseActivity {
 
     protected BottomNavigationView bottomNavigationView;
 
-    public static BrowseFragment newInstance(){return new BrowseFragment();}
+    public static BrowseFragment newInstance() { return new BrowseFragment(); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse);
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -56,7 +56,7 @@ public class BrowseActivity extends BaseActivity {
             adapter.addFragment(new TheatersFragment(),"Theaters");
             adapter.addFragment(new MoviesFragment(),"Movies");
             viewPager.setAdapter(adapter);
-            }
+    }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

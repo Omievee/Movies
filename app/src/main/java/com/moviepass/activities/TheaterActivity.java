@@ -404,12 +404,10 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
     /* Bottom Navigation Things */
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_browse;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_browse;
     }

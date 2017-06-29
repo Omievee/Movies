@@ -66,12 +66,10 @@ public class SignUpStepOneActivity extends BaseActivity {
         }
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_profile;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_profile;
     }

@@ -68,12 +68,10 @@ public class ProfileActivity extends BaseActivity {
         overridePendingTransition(0, 0);
     }
 
-    @Override
     int getContentViewId() {
         return R.layout.activity_profile;
     }
 
-    @Override
     int getNavigationMenuItemId() {
         return R.id.action_profile;
     }
