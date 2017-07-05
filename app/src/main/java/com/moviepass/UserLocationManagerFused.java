@@ -179,60 +179,6 @@ public class UserLocationManagerFused implements LocationListener,
         return formattedStr;
     }
 
-    public void requestLocationForZipCode(final String zipCode, Context ctx) {
-
-        if (zipCode.length() > 0) {
-
-            final String addressToFind = zipCode + ", " + Constants.UNITED_STATES_PREFIX;
-            final Handler handler = new Handler();
-            Runnable runnable = new Runnable() {
-
-                @Override
-                public void run() {
-                    List<Address> addresses = null;
-
-                    try {
-                        addresses = gcd.getFromLocationName(addressToFind, 1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (addresses != null && addresses.size() > 0) {
-                        String cityName = null;
-                        String stateName = null;
-                        String stateNameAbrev = null;
-                        boolean isLocationUserDefined = true;
-                        double lat, lon;
-                        Address address = addresses.get(0);
-
-                        lat = address.getLatitude();
-                        lon = address.getLongitude();
-                        cityName = address.getLocality();
-                        if (cityName == null) {
-                            cityName = address.getSubLocality();
-                        }
-                        stateName = address.getAdminArea().toLowerCase();
-                        stateNameAbrev = Constants.STATES_AND_STATES_ABREV.get(stateName);
-
-                        UserPreferences.setLocation(formatCityAndState(cityName, stateNameAbrev), zipCode, lat, lon, isLocationUserDefined);
-
-                        /* TODO : switch to rxJava */
-                        EventBus.getDefault().post(new UIRefreshEvent<>(UIRefreshEvent.EventName.USER_ZIP_CODE_CHANGED, null));
-                    }
-
-                }
-            };
-
-            handler.postDelayed(runnable, 10);
-        } else {
-
-            if (ctx != null) {
-                Toast.makeText(ctx, R.string.user_location_manager_fused_zip_code_empty, Toast.LENGTH_LONG).show();
-            }
-
-        }
-    }
-
     public void requestLocationForCoords(final double lat, final double lng, Context ctx) {
 
         final Handler handler = new Handler();

@@ -86,7 +86,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
-        holder.name.setText(theater.getTitle());
+        holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
 /*
