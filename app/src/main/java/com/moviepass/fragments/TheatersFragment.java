@@ -8,17 +8,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.ExpandedMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,12 +32,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -70,6 +79,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.moviepass.R;
 import com.moviepass.TheatersClickListener;
@@ -100,14 +110,13 @@ import retrofit2.Response;
  */
 
 public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin> {
 
+    public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
-    private final static int REQUEST_LOCATION_CODE = 0;
-    final static byte DEFAULT_ZOOM_LEVEL = 12;
-    int SUPPORT_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    final static byte DEFAULT_ZOOM_LEVEL = 10;
 
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
@@ -116,8 +125,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private HashMap<LatLng, Theater> mMapData;
 
     private GoogleApiClient mGoogleApiClient;
-    boolean mLocationAcquired;
-    private Location mMyLocation;
     private TheatersAdapter mTheatersAdapter;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -138,6 +145,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     SearchView mSearchLocation;
     ImageView mSearchClose;
     CardView mCardView;
+    View mProgress;
+    RelativeLayout mRelativeLayout;
 
     ArrayList<Theater> mTheaters;
     private ClusterManager<TheaterPin> mClusterManager;
@@ -151,7 +160,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
         mGoogleApiClient = new GoogleApiClient
@@ -161,9 +170,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 .enableAutoManage(getActivity(), this)
                 .build();
 
+        mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mSearchLocation = rootView.findViewById(R.id.search);
         mCardView = rootView.findViewById(R.id.card_view);
+        mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
@@ -180,9 +191,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         createLocationRequest();
         buildLocationSettingsRequest();
 
-        /* mLocationBroadCast = new LocationUpdateBroadCast();
-        getActivity().registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER)); */
-
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
 
@@ -193,8 +201,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        itemAnimator.setAddDuration(1000);
-        itemAnimator.setRemoveDuration(1000);
+        itemAnimator.setAddDuration(250);
+        itemAnimator.setRemoveDuration(250);
         mRecyclerView.setItemAnimator(itemAnimator);
 
         mTheatersAdapter = new TheatersAdapter(mTheaters, this);
@@ -215,6 +223,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             public boolean onOpen() {
                 mSearchLocation.open(true);
                 mSearchLocation.setVisibility(View.VISIBLE);
+
                 mSearchClose.setVisibility(View.GONE);
                 return false;
             }
@@ -267,7 +276,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Check if we were successful in obtaining the map.
-
     }
 
     @Override
@@ -275,12 +283,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         // An unresolvable error has occurred and a connection to Google APIs
         // could not be established. Display an error message, or handle
         // the failure silently
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMinZoomPreference(10);
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -290,11 +298,24 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                             getActivity(), R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
 
-            /* buildGoogleApiClient(); */
+            mClusterManager = new ClusterManager<>(getActivity(), mMap);
+            mClusterManager.setRenderer(new TheaterPinRenderer());
+            mMap.setOnMarkerClickListener(mClusterManager);
+            mClusterManager.setOnClusterClickListener(this);
+
+            if (mRequestingLocationUpdates && checkPermissions()) {
+                startLocationUpdates();
+            } else if (!checkPermissions()) {
+                requestPermissions();
+            }
+
+            updateLocationUI();
 
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
+
+            mClusterManager.cluster();
         } catch (Resources.NotFoundException e) {
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
@@ -303,31 +324,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mRequestingLocationUpdates && checkPermissions()) {
-            startLocationUpdates();
-        } else if (!checkPermissions()) {
-            requestPermissions();
-        }
-
-        updateLocationUI();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -357,26 +365,39 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH24:mm:ss");
+            if (mRecyclerView.getVisibility() == View.VISIBLE) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH24:mm:ss");
 
-            try {
-                Date now = new Date();
-                Date lastUpdate = simpleDateFormat.parse(mLastUpdateTime);
+                try {
+                    Date now = new Date();
+                    Date lastUpdate = simpleDateFormat.parse(mLastUpdateTime);
 
-                long difference = now.getTime() - lastUpdate.getTime();
-                if (difference > (10 * 60 * 1000) && mRequestingLocationUpdates) {
-                    loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                    long difference = now.getTime() - lastUpdate.getTime();
 
-                    LatLng coordinates = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                    CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+                    if (difference > (10 * 60 * 1000) && mRequestingLocationUpdates) {
+                        Log.d("difference", String.valueOf(difference));
+                        loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-                    mMap.moveCamera(current);
+                        LatLng coordinates = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
 
-                    mClusterManager.cluster();
+                        mMap.moveCamera(current);
+
+                        mClusterManager.cluster();
+                    }
+                } catch (Exception e) {
+                    Log.d("exception", e.toString());
                 }
-            } catch (Exception e) {
-                Log.d("exception", e.toString());
+            } else {
+                loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+
+                LatLng coords = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coords, DEFAULT_ZOOM_LEVEL);
+                mMap.moveCamera(current);
             }
+        } else {
+            Log.d("currentlocaiton", "current locaiton is null");
+
         }
     }
 
@@ -560,6 +581,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private void loadTheaters(Double latitude, final Double longitude) {
         mMap.clear();
+        mTheaters.clear();
+        mProgress.setVisibility(View.VISIBLE);
 
         RestClient.getAuthenticated().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
@@ -584,6 +607,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                 builder.show();
                             } else {
                                 for (Theater theater : theaterList) {
+                                    mRecyclerView.setVisibility(View.VISIBLE);
+
                                     LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                                     mMapData.put(location, theater);
@@ -602,13 +627,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         mRecyclerView.setAdapter(mTheatersAdapter);
                                         mRecyclerView.setTranslationY(0);
                                         mRecyclerView.setAlpha(1.0f);
+                                        mProgress.setVisibility(View.GONE);
                                     }
 
                                     int position;
                                     position = theaterList.indexOf(theater);
-
-                                    mClusterManager = new ClusterManager<>(getActivity(), mMap);
-                                    mClusterManager.setRenderer(new TheaterPinRenderer());
 
                                     if (position == 0) {
                                         mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
@@ -635,10 +658,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         @Override
                                         public void onInfoWindowClick(Marker marker) {
                                             mRequestingLocationUpdates = false;
-
-                                            // Does nothing, but you could go into the user's profile page, for example.
                                             final Marker finalMarker = marker;
-
+                                            mProgress.setVisibility(View.VISIBLE);
 
                                             mRecyclerView.animate()
                                                     .translationY(mRecyclerView.getHeight())
@@ -649,6 +670,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                             super.onAnimationEnd(animation);
 
                                                             //Load New RecyclerView Based on User's Click
+                                                            mClusterManager.clearItems();
                                                             loadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
                                                         }
                                                     });
@@ -716,9 +738,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {
+        private final IconGenerator mClusterIconGenerator;
 
         public TheaterPinRenderer() {
             super(getActivity().getApplicationContext(), mMap, mClusterManager);
+            mClusterIconGenerator = new IconGenerator(getActivity().getApplicationContext());
+
         }
 
         @Override
@@ -735,11 +760,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
+            mClusterIconGenerator.setBackground(
+                    ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
+
+            mClusterIconGenerator.setTextAppearance(R.style.AppTheme_WhiteTextAppearance);
+
+            final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
-            //int width = mDimension;
-            //int height = mDimension;
 
             for (TheaterPin p : cluster.getItems()) {
                 // Draw 4 at most.
@@ -748,12 +779,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 //drawable.setBounds(0, 0, width, height);
                 theaterPins.add(drawable);
             }
-            /*MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
-            multiDrawable.setBounds(0, 0, width, height);
+        }
 
-            mClusterImageView.setImageDrawable(multiDrawable);
-            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)); */
+        @Override
+        protected void onClusterRendered(Cluster<TheaterPin> cluster, Marker marker) {
+            super.onClusterRendered(cluster, marker);
         }
 
         @Override
@@ -763,9 +793,45 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         }
     }
 
+    @Override
+    public boolean onClusterClick(final Cluster<TheaterPin> cluster) {
+        Log.d("onClusterClick", "clusterClick");
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                cluster.getPosition(), (float) Math.floor(mMap
+                        .getCameraPosition().zoom + 1)), 300,
+                null);
+
+        return true;
+    }
+
     public void onTheaterClick(int pos, Theater theater) {
+
+        /*
+        int x = mRelativeLayout.getRight();
+        int y = mRelativeLayout.getBottom();
+
+        int startRadius = 0;
+        int endRadius = (int) Math.hypot(mRelativeLayout.getWidth(), mRelativeLayout.getHeight());
+
+        fab.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(),android.R.color.white,null)));
+        fab.setImageResource(R.drawable.ic_close_grey);
+
+        Animator anim = ViewAnimationUtils.createCircularReveal(layoutButtons, x, y, startRadius, endRadius);
+
+        layoutButtons.setVisibility(View.VISIBLE);
+        anim.start(); */
+
+        mClusterManager.clearItems();
         Intent intent = new Intent(getActivity(), TheaterActivity.class);
         intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
+//        intent.putExtra(EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
+//
+//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                getActivity(),
+//                sharedImageView,
+//                ViewCompat.getTransitionName(sharedImageView));
+
+//        startActivity(intent, options.toBundle());
 
         startActivity(intent);
     }

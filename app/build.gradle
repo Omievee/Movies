@@ -64,6 +64,9 @@ dependencies {
     compile "com.android.support:support-v13:$support_lib_version"
     compile 'com.android.support:multidex:1.0.1'
 
+    // Google Maps Utilities
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
     // Firebase
     compile 'com.google.firebase:firebase-appindexing:11.0.0'
     compile 'com.google.firebase:firebase-crash:11.0.0'
