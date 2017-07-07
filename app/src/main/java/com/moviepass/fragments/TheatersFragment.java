@@ -3,7 +3,9 @@ package com.moviepass.fragments;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -31,6 +34,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -74,8 +78,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -151,10 +157,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     ArrayList<Theater> mTheaters;
     private ClusterManager<TheaterPin> mClusterManager;
 
+    boolean isRecyclerViewShown;
+
     TheatersResponse mTheatersResponse;
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.red)
+    View mRedView;
 
     String TAG = "TAG";
 
@@ -170,26 +180,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 .enableAutoManage(getActivity(), this)
                 .build();
 
+        mRedView = rootView.findViewById(R.id.red);
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mSearchLocation = rootView.findViewById(R.id.search);
         mCardView = rootView.findViewById(R.id.card_view);
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();// needed to get the map to display immediately
-        mMapView.getMapAsync(this);
 
-        mMapData = new HashMap<>();
+        //mMapView.onResume();// needed to get the map to display immediately
 
         mRequestingLocationUpdates = true;
+        mRedView.setVisibility(View.INVISIBLE);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         mSettingsClient = LocationServices.getSettingsClient(getActivity());
 
-        createLocationCallback();
-        createLocationRequest();
-        buildLocationSettingsRequest();
+        mMapData = new HashMap<>();
 
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
@@ -275,7 +282,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Check if we were successful in obtaining the map.
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
+        mMapView.getMapAsync(this);
+
+        createLocationCallback();
+        createLocationRequest();
+        buildLocationSettingsRequest();
+
+        updateLocationUI();
     }
 
     @Override
@@ -323,19 +338,33 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public void onResume() {
+        mMapView.onResume();
         super.onResume();
+
+        if (mClusterManager != null) {
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
+        }
+        mRedView.setVisibility(View.INVISIBLE);
+        updateLocationUI();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mRecyclerView.setVisibility(View.INVISIBLE);
+        mClusterManager.clearItems();
+        mClusterManager.cluster();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        if (mClusterManager != null) {
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
+        }
     }
 
     @Override
@@ -346,7 +375,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onDetach() {
         super.onDetach();
-
+        mClusterManager.clearItems();
+        mClusterManager.cluster();
         listener = null;
     }
 
@@ -376,14 +406,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                     if (difference > (10 * 60 * 1000) && mRequestingLocationUpdates) {
                         Log.d("difference", String.valueOf(difference));
+
+                        if (mClusterManager != null) {
+                            mClusterManager.clearItems();
+                            mClusterManager.cluster();
+                        }
+
                         loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
                         LatLng coordinates = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                         CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
 
                         mMap.moveCamera(current);
-
-                        mClusterManager.cluster();
                     }
                 } catch (Exception e) {
                     Log.d("exception", e.toString());
@@ -396,8 +430,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 mMap.moveCamera(current);
             }
         } else {
-            Log.d("currentlocaiton", "current locaiton is null");
+            if (checkPermissions()) {
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location loc = task.getResult();
 
+                        loadTheaters(loc.getLatitude(), loc.getLongitude());
+
+                        LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
+                        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+
+                        mMap.moveCamera(current);
+                    }
+                });
+            } else {
+                requestPermissions();
+            }
         }
     }
 
@@ -417,47 +466,20 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private void startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
-        mSettingsClient.checkLocationSettings(mLocationSettingsRequest)
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<LocationSettingsResponse>() {
-                    @Override
-                    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                        Log.i(TAG, "All location settings are satisfied.");
 
-                        //noinspection MissingPermission
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                                mLocationCallback, Looper.myLooper());
+        //noinspection MissingPermission
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task task) {
 
-                        updateLocationUI();
-                    }
-                })
-                .addOnFailureListener(getActivity(), new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        int statusCode = ((ApiException) e).getStatusCode();
-                        switch (statusCode) {
-                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade " +
-                                        "location settings ");
-                                try {
-                                    // Show the dialog by calling startResolutionForResult(), and check the
-                                    // result in onActivityResult().
-                                    ResolvableApiException rae = (ResolvableApiException) e;
-                                    rae.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-                                } catch (IntentSender.SendIntentException sie) {
-                                    Log.i(TAG, "PendingIntent unable to execute request.");
-                                }
-                                break;
-                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                String errorMessage = "Location settings are inadequate, and cannot be " +
-                                        "fixed here. Fix in Settings.";
-                                Log.e(TAG, errorMessage);
-                                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                                mRequestingLocationUpdates = false;
-                        }
+                if (task.isSuccessful() && task.getResult() != null){
+                    Log.d("MainActivity", "Result: " + task.getResult());
+                    // Location mCurrentLocation = task.getResult();
 
-                        updateLocationUI();
-                    }
-                });
+                    updateLocationUI();
+                }
+            }
+        });
     }
 
     private boolean checkPermissions() {
@@ -583,143 +605,162 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mMap.clear();
         mTheaters.clear();
         mProgress.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
 
         RestClient.getAuthenticated().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
-                    @Override
-                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
-                        TheatersResponse theaters = response.body();
-                        if (theaters != null) {
-                            List<Theater> theaterList = theaters.getTheaters();
+            @Override
+            public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
+                TheatersResponse theaters = response.body();
+                if (theaters != null) {
+                    List<Theater> theaterList = theaters.getTheaters();
 
-                            if (theaterList.size() == 0) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
+                    if (theaterList.size() == 0) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
 
 /*                            builder.setTitle(R.string.activity_location_no_theaters_found);
-                            builder.setMessage(R.string.activity_location_try_another_zip_code);
-                            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            }); */
+                    builder.setMessage(R.string.activity_location_try_another_zip_code);
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }); */
 
-                                builder.show();
-                            } else {
-                                for (Theater theater : theaterList) {
-                                    mRecyclerView.setVisibility(View.VISIBLE);
+                        builder.show();
+                    } else {
+                        mClusterManager.clearItems();
+                        mClusterManager.cluster();
 
-                                    LatLng location = new LatLng(theater.getLat(), theater.getLon());
+                        for (Theater theater : theaterList) {
+                            LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
-                                    mMapData.put(location, theater);
+                            mMapData.put(location, theater);
 
-                                    //Initial View to Display RecyclerView Based on User's Current Location
-                                    mTheatersResponse = response.body();
-                                    mTheaters.clear();
+                            //Initial View to Display RecyclerView Based on User's Current Location
+                            mTheatersResponse = response.body();
+                            mTheaters.clear();
 
-                                    if (mTheatersAdapter != null) {
-                                        mRecyclerView.getRecycledViewPool().clear();
-                                        mTheatersAdapter.notifyDataSetChanged();
-                                    }
-
-                                    if (mTheatersResponse != null) {
-                                        mTheaters.addAll(mTheatersResponse.getTheaters());
-                                        mRecyclerView.setAdapter(mTheatersAdapter);
-                                        mRecyclerView.setTranslationY(0);
-                                        mRecyclerView.setAlpha(1.0f);
-                                        mProgress.setVisibility(View.GONE);
-                                    }
-
-                                    int position;
-                                    position = theaterList.indexOf(theater);
-
-                                    if (position == 0) {
-                                        mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                                theater.getName(), R.drawable.theater_pin, position));
-                                    } else {
-                                        mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                                theater.getName(), R.drawable.theater_pin_unselected, position));
-                                    }
-
-                                    mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
-                                    final CameraPosition[] mPreviousCameraPosition = {null};
-                                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                                        @Override
-                                        public void onCameraIdle() {
-                                            CameraPosition position = mMap.getCameraPosition();
-                                            if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
-                                                mPreviousCameraPosition[0] = mMap.getCameraPosition();
-                                                mClusterManager.cluster();
-                                            }
-                                        }
-                                    });
-
-                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                        @Override
-                                        public void onInfoWindowClick(Marker marker) {
-                                            mRequestingLocationUpdates = false;
-                                            final Marker finalMarker = marker;
-                                            mProgress.setVisibility(View.VISIBLE);
-
-                                            mRecyclerView.animate()
-                                                    .translationY(mRecyclerView.getHeight())
-                                                    .alpha(0.5f)
-                                                    .setListener(new AnimatorListenerAdapter() {
-                                                        @Override
-                                                        public void onAnimationEnd(Animator animation) {
-                                                            super.onAnimationEnd(animation);
-
-                                                            //Load New RecyclerView Based on User's Click
-                                                            mClusterManager.clearItems();
-                                                            loadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
-                                                        }
-                                                    });
-                                        }
-                                    });
-
-                                    mClusterManager.cluster();
-
-                                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                                        @Override
-                                        public void onMapClick(LatLng arg0) {
-                                            if (mCardView.getVisibility() == View.VISIBLE) {
-                                                collapse(mCardView);
-                                            }
-
-                                            if (mSearchClose.getVisibility() == View.GONE) {
-                                                expand(mSearchClose);
-                                            }
-
-                                            if (mRecyclerView != null) {
-                                                mRecyclerView.animate()
-                                                        .translationY(mRecyclerView.getHeight())
-                                                        .alpha(0.5f)
-                                                        .setListener(new AnimatorListenerAdapter() {
-                                                            @Override
-                                                            public void onAnimationEnd(Animator animation) {
-                                                                super.onAnimationEnd(animation);
-
-                                                                mTheatersAdapter.notifyDataSetChanged();
-                                                                mRecyclerView.getRecycledViewPool().clear();
-                                                                mTheaters.clear();
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    });
-                                }
+                            if (mTheatersAdapter != null) {
+                                mRecyclerView.getRecycledViewPool().clear();
+                                mTheatersAdapter.notifyDataSetChanged();
                             }
+
+                            if (mTheatersResponse != null) {
+                                mTheaters.addAll(mTheatersResponse.getTheaters());
+                                mRecyclerView.setAdapter(mTheatersAdapter);
+                                mRecyclerView.setTranslationY(0);
+                                mRecyclerView.setAlpha(1.0f);
+                                isRecyclerViewShown = true;
+                                mProgress.setVisibility(View.GONE);
+                            }
+
+                            int position;
+                            position = theaterList.indexOf(theater);
+
+                            if (position == 0) {
+                                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
+                                        theater.getName(), R.drawable.theater_pin, position));
+                            } else {
+                                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
+                                        theater.getName(), R.drawable.theater_pin_unselected, position));
+                            }
+
+                            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+                            final CameraPosition[] mPreviousCameraPosition = {null};
+                            mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                                @Override
+                                public void onCameraIdle() {
+                                    CameraPosition position = mMap.getCameraPosition();
+                                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
+                                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
+                                        mClusterManager.cluster();
+                                    }
+                                }
+                            });
+
+                            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                @Override
+                                public void onInfoWindowClick(Marker marker) {
+                                    mRequestingLocationUpdates = false;
+                                    final Marker finalMarker = marker;
+                                    mProgress.setVisibility(View.VISIBLE);
+
+                                    mRecyclerView.animate()
+                                        .translationY(mRecyclerView.getHeight())
+                                        .alpha(0.5f)
+                                        .setListener(new AnimatorListenerAdapter() {
+                                            @Override
+                                            public void onAnimationEnd(Animator animation) {
+                                                super.onAnimationEnd(animation);
+
+                                                //Load New RecyclerView Based on User's Click
+                                                mClusterManager.clearItems();
+                                                mClusterManager.cluster();
+                                                loadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
+                                            }
+                                        });
+                                }
+                            });
+
+                            mClusterManager.cluster();
+
+                            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                                @Override
+                                public void onMapClick(LatLng arg0) {
+                                    if (mCardView.getVisibility() == View.VISIBLE) {
+                                        collapse(mCardView);
+                                    }
+
+                                    if (mSearchClose.getVisibility() == View.GONE) {
+                                        expand(mSearchClose);
+                                    }
+
+                                    if (mRecyclerView != null) {
+
+                                        if (isRecyclerViewShown) {
+                                            mRecyclerView.animate()
+                                                .translationY(mRecyclerView.getHeight())
+                                                .alpha(0.5f)
+                                                .setListener(new AnimatorListenerAdapter() {
+                                                    @Override
+                                                    public void onAnimationEnd(Animator animation) {
+                                                        super.onAnimationEnd(animation);
+
+                                                        isRecyclerViewShown = false;
+
+                                                    }
+                                                });
+                                        } else {
+                                            mRecyclerView.animate()
+                                                .translationY(0)
+                                                .alpha(1.0f)
+                                                .setListener(new AnimatorListenerAdapter() {
+                                                    @Override
+                                                    public void onAnimationEnd(Animator animation) {
+                                                        super.onAnimationEnd(animation);
+
+                                                        isRecyclerViewShown = true;
+                                                    }
+                                                });
+                                        }
+
+                                    }
+                                }
+                            });
                         }
                     }
+                }
+            }
 
-                    @Override
-                    public void onFailure(Call<TheatersResponse> call, Throwable t) {
-                        if (t != null) {
-                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
-                        }
-                    }
+            @Override
+            public void onFailure(Call<TheatersResponse> call, Throwable t) {
+                if (t != null) {
+                    Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                }
+            }
 
-                });
+        });
     }
 
     private List<Theater> filterStandardTheaters(List<Theater> allTheaters) {
@@ -763,7 +804,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             mClusterIconGenerator.setBackground(
                     ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
 
-            mClusterIconGenerator.setTextAppearance(R.style.AppTheme_WhiteTextAppearance);
+            mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
             final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
@@ -805,35 +846,43 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     public void onTheaterClick(int pos, Theater theater) {
+        collapse(mCardView);
+        final Theater finalTheater = theater;
 
-        /*
-        int x = mRelativeLayout.getRight();
-        int y = mRelativeLayout.getBottom();
+        if (Build.VERSION.SDK_INT >= 21) {
+            mRedView.bringToFront();
 
-        int startRadius = 0;
-        int endRadius = (int) Math.hypot(mRelativeLayout.getWidth(), mRelativeLayout.getHeight());
+            int recyclerViewHeight = mRecyclerView.getHeight();
+            float screenHeight = mRelativeLayout.getHeight();
 
-        fab.setBackgroundTintList(ColorStateList.valueOf(ResourcesCompat.getColor(getResources(),android.R.color.white,null)));
-        fab.setImageResource(R.drawable.ic_close_grey);
+            int cx = (int) mRecyclerView.getChildAt(pos).getX();
+            int cy = (int) screenHeight + recyclerViewHeight - (int) mRecyclerView.getChildAt(pos).getY();
 
-        Animator anim = ViewAnimationUtils.createCircularReveal(layoutButtons, x, y, startRadius, endRadius);
+            int cxFinal = mRedView.getWidth() / 2;
+            int cyFinal = mRedView.getHeight() / 2;
 
-        layoutButtons.setVisibility(View.VISIBLE);
-        anim.start(); */
+            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
 
-        mClusterManager.clearItems();
-        Intent intent = new Intent(getActivity(), TheaterActivity.class);
-        intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
-//        intent.putExtra(EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-//
-//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                getActivity(),
-//                sharedImageView,
-//                ViewCompat.getTransitionName(sharedImageView));
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
 
-//        startActivity(intent, options.toBundle());
+            mRedView.setVisibility(View.VISIBLE);
+            anim.start();
+        }
 
-        startActivity(intent);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mClusterManager.clearItems();
+                mClusterManager.cluster();
+
+                Intent intent = new Intent(getActivity(), TheaterActivity.class);
+                intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
+
+                startActivity(intent);
+            }
+        }, 100);
     }
 
     public interface OnFragmentInteractionListener {

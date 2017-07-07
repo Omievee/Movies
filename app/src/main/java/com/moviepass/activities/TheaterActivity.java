@@ -1,8 +1,12 @@
 package com.moviepass.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,11 +59,11 @@ import retrofit2.Response;
 
 public class TheaterActivity extends BaseActivity implements ScreeningPosterClickListener, ShowtimeClickListener {
 
+    public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     public static final String THEATER = "theater";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
-
 
     TheaterMoviesAdapter mTheaterMoviesAdapter;
     TheaterShowtimesAdapter mTheaterShowtimesAdapter;
@@ -79,8 +84,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     TextView mMovieSelectTime;
     Button mAction;
     View mProgress;
+    View mRedView;
     Location mCurrentLocation;
-
 
     @BindView(R.id.recycler_view_movies)
     RecyclerView mMoviesRecyclerView;
@@ -156,6 +161,42 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            mRedView = findViewById(R.id.red);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                        // previously visible view
+                        // get the center for the clipping circle
+                        int cx = mRedView.getWidth() / 2;
+                        int cy = mRedView.getHeight() / 2;
+
+                        Log.d("cx", String.valueOf(cx));
+
+                        // get the initial radius for the clipping circle
+                        float initialRadius = (float) Math.hypot(cx, cy);
+
+                        // create the animation (the final radius is zero)
+                        Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
+
+                        // make the view invisible when the animation is done
+                        anim.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mRedView.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
+                        anim.start();
+                    }
+
+            }, 100);
+        }
     }
 
     @Override
