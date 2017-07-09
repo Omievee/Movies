@@ -19,18 +19,22 @@ import android.support.design.BuildConfig;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -143,6 +147,19 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         setContentView(R.layout.activity_movie);
         supportPostponeEnterTransition();
 
+        final Toolbar mToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(mToolbar);
+
+        final ActionBar mActionBar = getSupportActionBar();
+
+        // Enable the Up button
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setHomeButtonEnabled(true);
+
+        bottomNavigationView = findViewById(R.id.navigation);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
         Bundle extras = getIntent().getExtras();
         mMovie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
@@ -160,16 +177,16 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mScreenBottom.setFocusableInTouchMode(true);
         mProgress = findViewById(R.id.progress);
 
+        mToolbar.setTitle(mMovie.getTitle());
+        mActionBar.setTitle(mMovie.getTitle());
+
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         currentLocationTasks();
-
-        bottomNavigationView = findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        mProgress.setVisibility(View.VISIBLE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
@@ -219,9 +236,26 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mMovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
 
         mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
-        mTheatersNearby.setAnimation(animShow);
-        mTheatersRecyclerView.setAnimation(animShow);
+        mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                        for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
+                            View v = mTheatersRecyclerView.getChildAt(i);
+                            v.setAlpha(0.0f);
+                            v.animate().alpha(1.0f)
+                                    .setDuration(1000)
+                                    .setStartDelay(i * 50)
+                                    .start();
+                        }
+
+                        return true;
+                    }
+                });
+
+        fadeIn(mTheatersNearby);
 
         /* Showtimes RecyclerView */
 
@@ -313,20 +347,40 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     public void onTheaterClick(int pos, Screening screening) {
-
-        String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-        mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-
         mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, screening, this);
-
         mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
-        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
-        mTheaterSelectTime.setVisibility(View.VISIBLE);
-        mTheaterSelectTime.startAnimation(animShow);
-        mShowtimesRecyclerView.setVisibility(View.VISIBLE);
-        mShowtimesRecyclerView.startAnimation(animShow);
+        if (mTheaterSelectTime.getVisibility() != View.VISIBLE) {
+            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
+            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
+            mTheaterSelectTime.setVisibility(View.VISIBLE);
+            fadeIn(mTheaterSelectTime);
+        } else {
+            fadeOut(mTheaterSelectTime);
+            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
+            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
+            fadeIn(mTheaterSelectTime);
+        }
+
+        if (mAction.getVisibility() == View.VISIBLE) {
+            fadeOut(mAction);
+            mAction.setVisibility(View.GONE);
+        }
+
+        if (mShowtimesRecyclerView.getVisibility() != View.VISIBLE) {
+            mShowtimesRecyclerView.setVisibility(View.VISIBLE);
+            fadeIn(mShowtimesRecyclerView);
+        } else {
+            fadeOut(mShowtimesRecyclerView);
+            fadeIn(mShowtimesRecyclerView);
+        }
+
         mBelowShowtimes.setVisibility(View.VISIBLE);
 
         ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
@@ -341,17 +395,25 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mShowtimesList.addAll(startTimes);
 
         mBelowShowtimes.requestFocus();
-
     }
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
         final String time = showtime;
         Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
-        mAction.setVisibility(View.VISIBLE);
-        mAction.setAnimation(animShow);
-        mScreenBottom.setVisibility(View.VISIBLE);
-        mScreenBottom.requestFocus();
+        if (mAction.getVisibility() != View.VISIBLE) {
+            mAction.setVisibility(View.VISIBLE);
+            fadeIn(mAction);
+            mScreenBottom.setVisibility(View.VISIBLE);
+            mScreenBottom.requestFocus();
+        } else {
+            fadeOut(mAction);
+            mAction.setVisibility(View.INVISIBLE);
+            mAction.setVisibility(View.VISIBLE);
+            fadeIn(mAction);
+            mScreenBottom.setVisibility(View.VISIBLE);
+            mScreenBottom.requestFocus();
+        }
 
         String ticketType = screening.getProvider().ticketType;
 
@@ -492,73 +554,96 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
-                    @Override
-                    public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
-                        ScreeningsResponse screenings = response.body();
-                        if (screenings != null) {
-                            List<Screening> screeningsList = screenings.getScreenings();
+            @Override
+            public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
+                ScreeningsResponse screenings = response.body();
+                if (screenings != null) {
+                    List<Screening> screeningsList = screenings.getScreenings();
 
-                            if (screeningsList.size() == 0) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
+                    if (screeningsList.size() == 0) {
+                        mProgress.setVisibility(View.GONE);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
 
 /*                            builder.setTitle(R.string.activity_location_no_theaters_found);
-                    builder.setMessage(R.string.activity_location_try_another_zip_code);
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }); */
-
-                                builder.show();
-                            } else {
-
-                                //Initial View to Display RecyclerView Based on User's Current Location
-                                mScreeningsResponse = response.body();
-                                mScreeningsList.clear();
-
-                                if (mMovieTheatersAdapter != null) {
-                                    mTheatersRecyclerView.getRecycledViewPool().clear();
-                                    mMovieTheatersAdapter.notifyDataSetChanged();
-                                }
-
-                                if (mScreeningsResponse != null) {
-                                    Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
-                                    mScreeningsList.addAll(mScreeningsResponse.getScreenings());
-                                    mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-                                    mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                                            new ViewTreeObserver.OnPreDrawListener() {
-
-                                                @Override
-                                                public boolean onPreDraw() {
-                                                    mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                                                    for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
-                                                        View v = mTheatersRecyclerView.getChildAt(i);
-                                                        v.setAlpha(0.0f);
-                                                        v.animate().alpha(1.0f)
-                                                                .setDuration(1000)
-                                                                .setStartDelay(i * 50)
-                                                                .start();
-                                                    }
-
-                                                    return true;
-                                                }
-                                            });
-                                }
-
+                        builder.setMessage(R.string.activity_location_try_another_zip_code);
+                        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
-                        }
-                    }
+                        }); */
 
-                    @Override
-                    public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                        if (t != null) {
-                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
-                        }
-                    }
+                        builder.show();
+                    } else {
 
-                });
+                        //Initial View to Display RecyclerView Based on User's Current Location
+                        mScreeningsResponse = response.body();
+                        mScreeningsList.clear();
+
+                        if (mMovieTheatersAdapter != null) {
+                            mTheatersRecyclerView.getRecycledViewPool().clear();
+                            mMovieTheatersAdapter.notifyDataSetChanged();
+                        }
+
+                        if (mScreeningsResponse != null) {
+                            Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
+                            mScreeningsList.addAll(mScreeningsResponse.getScreenings());
+                            mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+                            mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                                new ViewTreeObserver.OnPreDrawListener() {
+
+                                    @Override
+                                    public boolean onPreDraw() {
+                                        mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                                        for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
+                                            View v = mTheatersRecyclerView.getChildAt(i);
+                                            v.setAlpha(0.0f);
+                                            v.animate().alpha(1.0f)
+                                                    .setDuration(1000)
+                                                    .setStartDelay(i * 50)
+                                                    .start();
+                                        }
+
+                                        return true;
+                                    }
+                                });
+
+                            mProgress.setVisibility(View.GONE);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+                if (t != null) {
+                    Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                }
+            }
+
+        });
+    }
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
     }
 
     @Override

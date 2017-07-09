@@ -69,8 +69,14 @@
 
         <activity
             android:name=".activities.MovieActivity"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
-            android:theme="@style/MoviePassThemeTransparentStatusBar"/>
+            android:parentActivityName=".activities.BrowseActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BrowseActivity" />
+        </activity>
 
         <activity
             android:name=".activities.NotificationsActivity"
@@ -98,7 +104,12 @@
 
         <activity
             android:name=".activities.TheaterActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.BrowseActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BrowseActivity" />
         </activity>
 
     </application>
