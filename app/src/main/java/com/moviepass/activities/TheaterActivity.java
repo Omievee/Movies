@@ -169,31 +169,30 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    // previously visible view
+                    // get the center for the clipping circle
+                    int cx = mRedView.getWidth() / 2;
+                    int cy = mRedView.getHeight() / 2;
 
-                        // previously visible view
-                        // get the center for the clipping circle
-                        int cx = mRedView.getWidth() / 2;
-                        int cy = mRedView.getHeight() / 2;
+                    Log.d("cx", String.valueOf(cx));
 
-                        Log.d("cx", String.valueOf(cx));
+                    // get the initial radius for the clipping circle
+                    float initialRadius = (float) Math.hypot(cx, cy);
 
-                        // get the initial radius for the clipping circle
-                        float initialRadius = (float) Math.hypot(cx, cy);
+                    // create the animation (the final radius is zero)
+                    Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
 
-                        // create the animation (the final radius is zero)
-                        Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
+                    // make the view invisible when the animation is done
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mRedView.setVisibility(View.INVISIBLE);
+                        }
+                    });
 
-                        // make the view invisible when the animation is done
-                        anim.addListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                super.onAnimationEnd(animation);
-                                mRedView.setVisibility(View.INVISIBLE);
-                            }
-                        });
-
-                        anim.start();
-                    }
+                    anim.start();
+                }
 
             }, 100);
         }
@@ -242,6 +241,46 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 Log.d("t", t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            mRedView = findViewById(R.id.red);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // previously visible view
+                    // get the center for the clipping circle
+                    int cx = mRedView.getWidth() / 2;
+                    int cy = mRedView.getHeight() / 2;
+
+                    Log.d("cx", String.valueOf(cx));
+
+                    // get the initial radius for the clipping circle
+                    float initialRadius = (float) Math.hypot(cx, cy);
+
+                    // create the animation (the final radius is zero)
+                    Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
+
+                    // make the view invisible when the animation is done
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            mRedView.setVisibility(View.INVISIBLE);
+                        }
+                    });
+
+                    anim.start();
+                }
+
+            }, 100);
+        }
     }
 
     public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {

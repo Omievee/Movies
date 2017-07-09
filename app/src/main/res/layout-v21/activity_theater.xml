@@ -146,12 +146,6 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/red"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red" />
-
     <include
         android:id="@+id/navigation"
         layout="@layout/element_bottom_navigation"
@@ -159,6 +153,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
+
+    <View
+        android:id="@+id/red"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/red" />
 
     <include
         android:id="@+id/progress"

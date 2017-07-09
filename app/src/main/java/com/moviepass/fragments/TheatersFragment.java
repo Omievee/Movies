@@ -89,6 +89,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.moviepass.R;
 import com.moviepass.TheatersClickListener;
+import com.moviepass.activities.BrowseActivity;
 import com.moviepass.activities.TheaterActivity;
 import com.moviepass.adapters.TheatersAdapter;
 import com.moviepass.model.Theater;
@@ -160,11 +161,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     boolean isRecyclerViewShown;
 
     TheatersResponse mTheatersResponse;
+    OnTheaterSelect theaterSelect;
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @BindView(R.id.red)
-    View mRedView;
 
     String TAG = "TAG";
 
@@ -180,7 +180,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 .enableAutoManage(getActivity(), this)
                 .build();
 
-        mRedView = rootView.findViewById(R.id.red);
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mSearchLocation = rootView.findViewById(R.id.search);
@@ -191,7 +190,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         //mMapView.onResume();// needed to get the map to display immediately
 
         mRequestingLocationUpdates = true;
-        mRedView.setVisibility(View.INVISIBLE);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         mSettingsClient = LocationServices.getSettingsClient(getActivity());
@@ -345,7 +343,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             mClusterManager.clearItems();
             mClusterManager.cluster();
         }
-        mRedView.setVisibility(View.INVISIBLE);
         updateLocationUI();
     }
 
@@ -368,8 +365,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Activity context) {
         super.onAttach(context);
+        theaterSelect = (OnTheaterSelect) context;
     }
 
     @Override
@@ -618,7 +616,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     if (theaterList.size() == 0) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom);
 
-/*                            builder.setTitle(R.string.activity_location_no_theaters_found);
+/*                    builder.setTitle(R.string.activity_location_no_theaters_found);
                     builder.setMessage(R.string.activity_location_try_another_zip_code);
                     builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
@@ -679,6 +677,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                 }
                             });
 
+                            mClusterManager.cluster();
+
                             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                                 @Override
                                 public void onInfoWindowClick(Marker marker) {
@@ -703,8 +703,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                 }
                             });
 
-                            mClusterManager.cluster();
-
                             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                                 @Override
                                 public void onMapClick(LatLng arg0) {
@@ -717,7 +715,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                     }
 
                                     if (mRecyclerView != null) {
-
                                         if (isRecyclerViewShown) {
                                             mRecyclerView.animate()
                                                 .translationY(mRecyclerView.getHeight())
@@ -728,7 +725,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                         super.onAnimationEnd(animation);
 
                                                         isRecyclerViewShown = false;
-
                                                     }
                                                 });
                                         } else {
@@ -744,7 +740,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                     }
                                                 });
                                         }
-
                                     }
                                 }
                             });
@@ -784,14 +779,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         public TheaterPinRenderer() {
             super(getActivity().getApplicationContext(), mMap, mClusterManager);
             mClusterIconGenerator = new IconGenerator(getActivity().getApplicationContext());
-
         }
 
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
-            // Draw a single person.
-            // Set the info window to show their name.
-
             if (theaterPin.getArrayPosition() == 0) {
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin)).title(theaterPin.getTitle());
             } else {
@@ -849,40 +840,24 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         collapse(mCardView);
         final Theater finalTheater = theater;
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            mRedView.bringToFront();
+        mClusterManager.clearItems();
+        mClusterManager.cluster();
 
-            int recyclerViewHeight = mRecyclerView.getHeight();
-            float screenHeight = mRelativeLayout.getHeight();
+        int recyclerViewHeight = mRecyclerView.getHeight();
+        float screenHeight = mRelativeLayout.getHeight();
 
-            int cx = (int) mRecyclerView.getChildAt(pos).getX();
-            int cy = (int) screenHeight + recyclerViewHeight - (int) mRecyclerView.getChildAt(pos).getY();
+        int cx = (int) mRecyclerView.getChildAt(pos).getX();
+        int cy = (int) screenHeight + recyclerViewHeight - (int) mRecyclerView.getChildAt(pos).getY();
 
-            int cxFinal = mRedView.getWidth() / 2;
-            int cyFinal = mRedView.getHeight() / 2;
+        onTheaterSelect(pos, theater, cx, cy);
+    }
 
-            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
+    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
+        theaterSelect.onTheaterSelect(pos, theater, cx, cy);
+    }
 
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
-
-            mRedView.setVisibility(View.VISIBLE);
-            anim.start();
-        }
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mClusterManager.clearItems();
-                mClusterManager.cluster();
-
-                Intent intent = new Intent(getActivity(), TheaterActivity.class);
-                intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-
-                startActivity(intent);
-            }
-        }, 100);
+    public interface OnTheaterSelect {
+        public void onTheaterSelect(int pos, Theater theater, int cx, int cy);
     }
 
     public interface OnFragmentInteractionListener {
