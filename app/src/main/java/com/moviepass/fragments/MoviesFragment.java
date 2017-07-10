@@ -22,17 +22,24 @@ import com.moviepass.adapters.MoviesNewReleasesAdapter;
 import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
+import com.moviepass.network.Api;
 import com.moviepass.network.RestClient;
 
 import org.parceler.Parcels;
+import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ryan on 4/25/17.
@@ -44,6 +51,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
 
+    Api api;
 
     private MoviesNewReleasesAdapter mMoviesNewReleasesAdapter;
     private MoviesTopBoxOfficeAdapter mMoviesTopBoxOfficeAdapter;
@@ -75,6 +83,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, rootView);
 
+        Api api;
+
         mMoviesNewReleases = new ArrayList<>();
         mMoviesTopBoxOffice = new ArrayList<>();
         mMoviesComingSoon = new ArrayList<>();
@@ -86,7 +96,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
 
-        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(mMoviesNewReleases, this);
+        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
 
         /* Top Box Office RecyclerView */
@@ -96,7 +106,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
 
-        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(mMoviesTopBoxOffice, this);
+        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
 
         /* Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
@@ -105,7 +115,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
 
-        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(mMoviesComingSoon, this);
+        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
 
         loadMovies();
 

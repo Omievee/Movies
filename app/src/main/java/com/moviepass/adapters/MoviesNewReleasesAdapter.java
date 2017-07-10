@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;
@@ -33,10 +34,10 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesNewReleasesAdapter(ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesNewReleasesAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
-
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,7 +52,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         @BindView(R.id.clock)
         ImageView clock;
         @BindView(R.id.poster)
-        ImageView posterImageView;
+        SvgImageView posterImageView;
 
         public ViewHolder(View v) {
             super(v);

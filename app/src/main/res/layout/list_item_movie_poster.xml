@@ -1,36 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/list_item_movie_poster"
+<RelativeLayout android:id="@+id/list_item_movie_poster"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingBottom="5dp"
     android:elevation="4dp"
-    android:layout_marginLeft="16dp">
+    android:layout_marginLeft="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/ticket_top"
         android:layout_width="165dp"
         android:layout_height="250dp">
 
-        <FrameLayout
-            android:layout_width="165dp"
-            android:layout_height="250dp"
-            android:background="@drawable/fragment_movie_ticket_top">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/poster"
+                android:id="@+id/ticket_top_red_dark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/fragment_movie_ticket_top"
-                android:scaleType="centerCrop" />
+                android:src="@drawable/ticket_top_red_dark"
+                android:visibility="invisible"/>
 
-            <FrameLayout
+            <TextView
+                android:id="@+id/poster_movie_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/fragment_movie_ticket_top" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_standard"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:visibility="invisible"/>
 
-        </FrameLayout>
+        </RelativeLayout>
+
+        <com.meg7.widget.SvgImageView
+            android:id="@+id/poster"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@raw/shape_movie_poster"
+            app:svg_raw_resource="@raw/shape_movie_poster"
+            android:scaleType="centerCrop" />
+
     </RelativeLayout>
 
     <RelativeLayout

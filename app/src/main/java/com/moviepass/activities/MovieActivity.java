@@ -345,6 +345,10 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         } catch (IllegalArgumentException is) {
             is.printStackTrace();
         }
+
+        if (mProgress.getVisibility() == View.VISIBLE) {
+            mProgress.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -485,7 +489,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     private void reservationRequest(final Screening screening, CheckInRequest checkInRequest) {
-
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {

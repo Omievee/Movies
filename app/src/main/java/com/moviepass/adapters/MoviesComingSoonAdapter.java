@@ -2,6 +2,7 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.media.Image;
+import android.support.annotation.BinderThread;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;
@@ -34,9 +36,10 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesComingSoonAdapter(ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesComingSoonAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,7 +54,11 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         @BindView(R.id.clock)
         ImageView clock;
         @BindView(R.id.poster)
-        ImageView posterImageView;
+        SvgImageView posterImageView;
+        @BindView(R.id.ticket_top_red_dark)
+        ImageView missingPosterBackground;
+        @BindView(R.id.poster_movie_title)
+        TextView missingPosterTitle;
 
         public ViewHolder(View v) {
             super(v);
@@ -61,6 +68,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
             genre = v.findViewById(R.id.movie_genre);
             runTime = v.findViewById(R.id.text_run_time);
             posterImageView = v.findViewById(R.id.poster);
+            missingPosterBackground = v.findViewById(R.id.ticket_top_red_dark);
+            missingPosterTitle = v.findViewById(R.id.poster_movie_title);
         }
     }
 
@@ -70,15 +79,21 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         return new ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-        Picasso.with(holder.itemView.getContext())
+        if (movie.getImageUrl().toLowerCase().contains("jpg")) {
+            Picasso.with(context)
                 .load(movie.getImageUrl())
-                .error(R.mipmap.ic_launcher)
                 .into(holder.posterImageView);
+        } else {
+            Picasso.with(context)
+                    .load(R.drawable.ticket_top_red_dark)
+                    .into(holder.posterImageView);
+            holder.missingPosterTitle.setText(movie.getTitle());
+            holder.missingPosterTitle.setVisibility(View.VISIBLE);
+        }
 
         holder.title.setText(movie.getTitle());
 
