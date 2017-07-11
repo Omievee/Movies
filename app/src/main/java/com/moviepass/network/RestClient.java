@@ -75,7 +75,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent","MoviePass/Android/20161221");
+                        .addHeader("User-Agent","MoviePass/Android/20170706");
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -84,7 +84,7 @@ public class RestClient {
         sAuthenticatedInstance = new Retrofit.Builder()
                 .baseUrl(Constants.ENDPOINT)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);

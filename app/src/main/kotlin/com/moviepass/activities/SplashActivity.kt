@@ -15,20 +15,20 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            if (UserPreferences.getHasUserLoggedInBefore() || UserPreferences.getUserId() != 0) {
+//            if (UserPreferences.getHasUserLoggedInBefore() || UserPreferences.getUserId() != 0) {
+/*            if (UserPreferences.getUserId() != 0) {
                 val i = Intent(this@SplashActivity, BrowseActivity::class.java)
                 startActivity(i)
                 finish()
-            } else {
-                val i = Intent(this@SplashActivity, ProfileActivity::class.java)
+            } else { */
+                val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
                 startActivity(i)
                 finish()
-            }
+//            }
         }, SPLASH_TIME_OUT.toLong())
     }
 
     companion object {
-
         // Splash screen timer
         private val SPLASH_TIME_OUT = 2500
     }

@@ -49,69 +49,58 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.BrowseActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustNothing" />
-
         <activity
             android:name=".activities.ConfirmationActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.ETicketsActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.LogInActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.MovieActivity"
-            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.BrowseActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.BrowseActivity">
-
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BrowseActivity" />
         </activity>
-
         <activity
             android:name=".activities.NotificationsActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.ProfileActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.SelectSeatActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.SettingsActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.SignUpFirstOpenActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.SignUpStepOneActivity"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".activities.TheaterActivity"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".activities.BrowseActivity">
-
+            android:parentActivityName=".activities.BrowseActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BrowseActivity" />
         </activity>
-
+        <activity
+            android:name=".activities.OnboardingActivity"
+            android:label="@string/title_activity_onboarding"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
