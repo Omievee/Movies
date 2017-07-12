@@ -2,8 +2,6 @@ package com.moviepass.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -32,8 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
-import com.moviepass.ScreeningPosterClickListener;
-import com.moviepass.ShowtimeClickListener;
+import com.moviepass.listeners.ScreeningPosterClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.adapters.TheaterMoviesAdapter;
 import com.moviepass.adapters.TheaterShowtimesAdapter;

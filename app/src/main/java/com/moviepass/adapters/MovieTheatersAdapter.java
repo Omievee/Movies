@@ -6,17 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.moviepass.MovieTheaterClickListener;
+import com.moviepass.listeners.MovieTheaterClickListener;
 import com.moviepass.R;
-import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
-import com.moviepass.model.Theater;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 

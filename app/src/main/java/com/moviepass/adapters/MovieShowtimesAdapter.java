@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moviepass.R;
-import com.moviepass.ShowtimeClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 
 import java.util.ArrayList;

@@ -1,10 +1,8 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.v13.view.ViewCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moviepass.R;
-import com.moviepass.ScreeningPosterClickListener;
+import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.model.Screening;
 import com.squareup.picasso.Picasso;
 
