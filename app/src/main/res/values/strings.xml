@@ -86,7 +86,7 @@
     <string name="activity_sign_in_enter_valid_credentials">Please check your credentials and try again</string>
 
 
-    <!-- SignUpStepOneActivity -->
+    <!-- SignUpActivity -->
     <string name="activity_sign_up_step_one_get_started">Sign up to get started</string>
     <string name="activity_sign_up_step_one_email">Email</string>
     <string name="activity_sign_up_step_one_password">Password</string>
@@ -113,6 +113,11 @@
     <string name="fragment_movies_new_releases">New Releases</string>
     <string name="fragment_movies_top_box_office">Top Box Office</string>
     <string name="fragment_movies_coming_soon">Coming Soon</string>
+
+    <!-- SignUpStepOneFragment -->
+    <string name="fragment_sign_up_step_one_header">Available at over 3,700 theaters in the US</string>
+    <string name="fragment_sign_up_step_one_zip_hint">Enter your zipcode</string>
+    <string name="fragment_sign_up_step_one_next">Next step: choose your plan</string>
 
     <!-- TheatersFragment -->
     <string name="fragment_theaters_name">[Name]</string>

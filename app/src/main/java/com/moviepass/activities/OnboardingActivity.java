@@ -1,7 +1,9 @@
 package com.moviepass.activities;
 
+import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 
@@ -13,19 +15,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moviepass.R;
+
+import org.parceler.Parcels;
 
 public class OnboardingActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    View mRedView;
     Button mButtonSignUp;
     Button mButtonLogIn;
     TextView mNotReady;
@@ -50,7 +58,7 @@ public class OnboardingActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mCoordinator = findViewById(R.id.main_content);
-
+        mRedView = findViewById(R.id.red);
         mButtonLogIn = findViewById(R.id.button_log_in);
         mButtonSignUp = findViewById(R.id.button_sign_up);
         mNotReady = findViewById(R.id.not_ready);
@@ -63,6 +71,8 @@ public class OnboardingActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        mRedView.setVisibility(View.INVISIBLE);
 
         indicators = new ImageView[]{zero, one, two, three};
 
@@ -109,11 +119,55 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
+        mButtonSignUp.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OnboardingActivity.this, SignUpStepOneActivity.class);
-                startActivity(intent);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (Build.VERSION.SDK_INT >= 21 ) {
+
+                    mRedView.bringToFront();
+
+                    int[] location = new int[2];
+                    view.getLocationOnScreen(location);
+
+                    int cx = location[0] + view.getWidth() / 2;
+                    int cy = location[1] + view.getHeight() / 2;
+
+                    int cxFinal = mRedView.getWidth() / 2;
+                    int cyFinal = mRedView.getHeight() / 2;
+
+                    float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
+
+                    Animator anim =
+                            ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
+
+                    mRedView.setVisibility(View.VISIBLE);
+                    anim.start();
+                    anim.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+                        }
+                    });
+                } else {
+                    Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+                    startActivity(intent);
+                }
+
+
+                return false;
             }
         });
 
@@ -232,11 +286,19 @@ public class OnboardingActivity extends AppCompatActivity {
         }
     }
 
-    void updateIndicators(int position) {
+    public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(
                     i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
             );
         }
+    }
+
+    public boolean shouldAskForPermissions() {
+        return Build.VERSION.SDK_INT >= 23;
+    }
+
+    public void askPermissions() {
+        /* TODO : ASK PERMISSIONS PLEASE */
     }
 }

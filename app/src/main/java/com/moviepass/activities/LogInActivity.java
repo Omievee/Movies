@@ -78,7 +78,7 @@ public class LogInActivity extends BaseActivity {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LogInActivity.this, SignUpStepOneActivity.class);
+                Intent intent = new Intent(LogInActivity.this, SignUpFirstOpenActivity.class);
                 startActivity(intent);
             }
         });
