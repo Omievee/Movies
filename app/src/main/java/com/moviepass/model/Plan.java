@@ -1,21 +1,19 @@
 package com.moviepass.model;
 
+import org.parceler.Parcel;
+
 /**
  * Created by anubis on 7/12/17.
  */
 
+@Parcel
 public class Plan {
 
-    String installationAmountInCents;
     boolean amcUpgradeAble;
-    String total;
-    String shipping;
+    String installationAmountInCents;
     String price;
-    int legacyId;
-    String name;
-    int signUpFee;
-    int installmentAmount;
-    String numberOfInstallments;
+    String shipping;
+    String total;
 
     public boolean getAmcUpgradeAble() { return amcUpgradeAble; }
 

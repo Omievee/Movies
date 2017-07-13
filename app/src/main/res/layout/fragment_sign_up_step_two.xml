@@ -31,19 +31,6 @@
         android:listSelector="@android:color/transparent"
         tools:listitem="@layout/list_item_plan" />
 
-    <Button
-        android:id="@+id/button_sign_up"
-        android:layout_height="48dp"
-        android:layout_width="match_parent"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:elevation="2dp"
-        android:background="@drawable/button_red"
-        android:text="@string/fragment_sign_up_step_two_next_address"
-        android:textSize="15sp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/double_margin_standard" />
-
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"

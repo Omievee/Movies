@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class SignUpStepThreeFragment extends Fragment {
 
     Spinner mState;
     EditText mZip;
+    Button mNext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class SignUpStepThreeFragment extends Fragment {
 
         mState = rootView.findViewById(R.id.state);
         mZip = rootView.findViewById(R.id.et_zip);
+        mNext = getActivity().findViewById(R.id.button_next);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 

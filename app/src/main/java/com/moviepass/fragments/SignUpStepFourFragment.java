@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.braintreepayments.api.BraintreeFragment;
@@ -28,6 +29,7 @@ public class SignUpStepFourFragment extends Fragment implements PaymentMethodNon
         BraintreeCancelListener, BraintreeErrorListener {
 
     BraintreeFragment mBraintreeFragment;
+    Button mNext;
 
     static {
         System.loadLibrary("native-lib");
@@ -42,6 +44,8 @@ public class SignUpStepFourFragment extends Fragment implements PaymentMethodNon
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_four, container, false);
+
+        mNext = getActivity().findViewById(R.id.button_next);
 
         return rootView;
     }

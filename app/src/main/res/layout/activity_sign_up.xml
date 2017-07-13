@@ -38,16 +38,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/double_margin_standard">
 
             <View
                 android:id="@id/line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:alpha="0.12"
-                android:background="@android:color/white"
                 android:layout_above="@id/dots"
-                android:layout_marginBottom="@dimen/margin_standard"/>
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:alpha="0.12"
+                android:background="@android:color/white" />
 
             <LinearLayout
                 android:id="@+id/dots"
@@ -57,8 +58,8 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_alignParentBottom="true"
-                android:paddingBottom="100dp">
+                android:paddingBottom="@dimen/double_margin_standard"
+                android:layout_above="@+id/button_next">
 
                 <ImageView
                     android:id="@+id/intro_indicator_0"
@@ -95,6 +96,17 @@
                 <!-- Your other 2 indicators here -->
 
             </LinearLayout>
+
+            <Button
+                android:id="@+id/button_next"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/button_red"
+                android:elevation="2dp"
+                android:gravity="center"
+                android:text="@string/fragment_sign_up_step_one_next"
+                android:textSize="15sp" />
 
         </RelativeLayout>
 

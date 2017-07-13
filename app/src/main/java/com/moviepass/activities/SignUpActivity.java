@@ -1,6 +1,5 @@
 package com.moviepass.activities;
 
-import android.animation.ArgbEvaluator;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -8,11 +7,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.moviepass.R;
 import com.moviepass.fragments.SignUpStepFourFragment;
@@ -26,16 +26,17 @@ import com.moviepass.fragments.SignUpStepTwoFragment;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    String zip;
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
-    final ArgbEvaluator evaluator = new ArgbEvaluator();
 
     ImageView zero, one, two, three;
     ImageView[] indicators;
 
     int page = 0;
 
+    Button mNext;
     CoordinatorLayout mCoordinator;
 
     @Override
@@ -45,6 +46,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
+        mNext = findViewById(R.id.button_next);
         mCoordinator = findViewById(R.id.main_content);
 
         zero = findViewById(R.id.intro_indicator_0);
@@ -58,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         indicators = new ImageView[]{zero, one, two, three};
 
-        indicators = new ImageView[]{zero, one, two, three};
+        zip = null;
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -77,12 +79,16 @@ public class SignUpActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                        mNext.setText(R.string.fragment_sign_up_step_one_next);
                         break;
                     case 1:
+                        mNext.setText(R.string.fragment_sign_up_step_two_next_address);
                         break;
                     case 2:
+                        mNext.setText(R.string.fragment_sign_up_step_three_next);
                         break;
                     case 3:
+                        mNext.setText(R.string.fragment_sign_up_step_four_finish);
                         break;
                 }
             }
@@ -91,8 +97,6 @@ public class SignUpActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-
-
         });
     }
 
@@ -115,17 +119,6 @@ public class SignUpActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        ImageView img;
-
-        int[] bgs = new int[] {R.drawable.image_onboarding_1, R.drawable.image_onboarding_2,
-                R.drawable.image_onboarding_3, R.drawable.image_onboarding_4};
-
-        int[] headers = new int[] {R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
-                R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4};
-
-        int[] bodies = new int[] {R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
-                R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4};
-
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -138,15 +131,6 @@ public class SignUpActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.activity_sign_up, container, false);
-
-            TextView textView = rootView.findViewById(R.id.section_label);
-            textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
-            TextView bodyText = rootView.findViewById(R.id.section_body);
-            bodyText.setText(bodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
-            img = rootView.findViewById(R.id.section_img);
-            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
             return rootView;
         }
@@ -196,5 +180,26 @@ public class SignUpActivity extends AppCompatActivity {
             );
         }
     }
+
+    /* Fragment One */
+
+    public void setZip(String zipcode) {
+        zip = zipcode;
+        Log.d("SUA set", zip);
+
+        mViewPager.setCurrentItem(1);
+    }
+
+    public String getZip() {
+        try {
+            Log.d("SUG get", zip);
+        } catch (Exception e) {
+            Log.d("e", e.toString());
+        }
+
+        return zip;
+    }
+
+    /* Fragment Two */
 
 }
