@@ -5,9 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.moviepass.R;
+import com.moviepass.network.RestCallback;
+import com.moviepass.network.RestClient;
+import com.moviepass.network.RestError;
+import com.moviepass.responses.RegistrationPlanResponse;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 7/11/17.
@@ -16,14 +24,43 @@ import com.moviepass.R;
 public class SignUpStepOneFragment extends Fragment {
 
     EditText mZip;
+    Button mNext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_one, container, false);
 
         mZip = rootView.findViewById(R.id.et_zip);
+        mNext = rootView.findViewById(R.id.button_next);
+
+        mNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String zip = mZip.getText().toString();
+
+                if (zip.length() == 5) {
+                    getPlans(zip);
+                }
+            }
+        });
 
         return rootView;
+    }
+
+    public void getPlans(String zip) {
+
+        RestClient.getAuthenticated().getPlans(zip).enqueue(new RestCallback<RegistrationPlanResponse>() {
+            @Override
+            public void failure(RestError restError) {
+
+            }
+
+            @Override
+            public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
+
+            }
+        });
+
     }
 
     public static SignUpStepOneFragment newInstance(String text) {

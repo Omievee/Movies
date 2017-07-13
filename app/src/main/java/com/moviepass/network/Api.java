@@ -8,6 +8,7 @@ import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.responses.ChangedMindResponse;
+import com.moviepass.responses.RegistrationPlanResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.moviepass.responses.SeatingsInfoResponse;
@@ -20,6 +21,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 public interface Api {
 
@@ -35,12 +37,17 @@ public interface Api {
     Call<Object> forgotPassword(@Path("emailAddress") String email);
 
     /* Movies */
-    @GET("/api/v3/movies")
+    @GET("/api/v4/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
     @GET("/api/v5/screenings")
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat")
             double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+
+    /* Registration */
+    @GET("/api/v2/register/amc_upgradeability/{zip}")
+    Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
+
 
     /* Reservations */
     @POST("/api/v3/reservations")

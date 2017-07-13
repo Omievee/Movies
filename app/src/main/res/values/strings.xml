@@ -133,6 +133,13 @@
     <string name="fragment_sign_up_step_three_zip">Zip</string>
     <string name="fragment_sign_up_step_three_next">Next step: payment details</string>
 
+    <!-- SignUpStepFourFragment -->
+    <string name="fragment_sign_up_step_four_header">Your first month will not begin until you receive your MoviePass card</string>
+    <string name="fragment_sign_up_step_four_copy">Please allow 7 business days for shipping</string>
+    <string name="fragment_sign_up_step_four_price">$[##.##]/month</string>
+    <string name="fragment_sign_up_step_four_finish">Finish</string>
+
+
     <!-- TheatersFragment -->
     <string name="fragment_theaters_name">[Name]</string>
     <string name="fragment_theaters_address">[Address]</string>
