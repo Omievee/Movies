@@ -11,6 +11,7 @@ import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
 
 import java.io.IOException;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CookieJar;
@@ -32,6 +33,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RestClient {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    private native static String getEndPoint();
+
+    static String url = String.valueOf(getEndPoint());
+
     private static Api sAuthenticatedAPI;
     private static Retrofit sAuthenticatedInstance;
 
@@ -43,6 +52,7 @@ public class RestClient {
     }
     
     public static void setupAuthenticatedWebClient(Context context) {
+
         sAuthenticatedInstance = null;
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -82,12 +92,11 @@ public class RestClient {
         });
 
         sAuthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(Constants.ENDPOINT)
+                .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
     }
-
 }

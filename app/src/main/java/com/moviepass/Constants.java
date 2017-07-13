@@ -9,9 +9,8 @@ import java.util.HashMap;
 public class Constants {
 
     public static final boolean DEBUG = true;
-    public static final String ENDPOINT = "http://android.moviepass.com";
     public static final String TERMS = "http://moviepass.com/content/terms";
-    public static final String REDEMPTION_ROUTE = ENDPOINT + "/coupons/form/redeem";
+    public static final String REDEMPTION_ROUTE = "/coupons/form/redeem";
 
 
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
@@ -38,6 +37,8 @@ public class Constants {
     public static final String ZIP_CODE = "zip";
     public static final String UNITED_STATES_PREFIX = "US";
 
+
+    public static final int CARD_SCAN_REQUEST_CODE = 27;
 
     public static final String API_RESPONSE_OK = "OK";
     public static final String ROTTEN_TOMATOES = "rt";
