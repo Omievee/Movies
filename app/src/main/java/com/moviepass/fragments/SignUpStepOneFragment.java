@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.moviepass.R;
 
@@ -14,12 +15,15 @@ import com.moviepass.R;
 
 public class SignUpStepOneFragment extends Fragment {
 
+    EditText mZip;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sign_up_step_one, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_sign_up_step_one, container, false);
 
+        mZip = rootView.findViewById(R.id.et_zip);
 
-        return v;
+        return rootView;
     }
 
     public static SignUpStepOneFragment newInstance(String text) {

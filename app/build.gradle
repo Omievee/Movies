@@ -76,9 +76,20 @@ dependencies {
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
+    //Braintree
+    compile ('com.braintreepayments.api:drop-in:3.+') {
+        exclude group: 'com.android.support'
+    }
+
     //Butterknife
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    //CardIO
+    compile 'io.card:android-sdk:5.5.1'
+
+    //Custom Shape Image View
+    compile 'com.mostafagazar:customshapeimageview:1.0.4'
 
     //EventBus
     compile 'de.greenrobot:eventbus:2.4.0'

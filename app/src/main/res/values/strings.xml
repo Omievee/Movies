@@ -119,6 +119,20 @@
     <string name="fragment_sign_up_step_one_zip_hint">Enter your zipcode</string>
     <string name="fragment_sign_up_step_one_next">Next step: choose your plan</string>
 
+    <!-- SignUpStepTwoFragment -->
+    <string name="fragment_sign_up_step_two_header">Plans available in your area</string>
+    <string name="fragment_sign_up_step_two_next_address">Next step: shipping address</string>
+
+    <!-- SignUpStepThreeFragment -->
+    <string name="fragment_sign_up_step_three_header">Tell us where to send your MoviePass card</string>
+    <string name="fragment_sign_up_step_three_name">Name</string>
+    <string name="fragment_sign_up_step_three_address">Address</string>
+    <string name="fragment_sign_up_step_three_address_two">Address Line 2</string>
+    <string name="fragment_sign_up_step_three_city">City</string>
+    <string name="fragment_sign_up_step_three_state">State</string>
+    <string name="fragment_sign_up_step_three_zip">Zip</string>
+    <string name="fragment_sign_up_step_three_next">Next step: payment details</string>
+
     <!-- TheatersFragment -->
     <string name="fragment_theaters_name">[Name]</string>
     <string name="fragment_theaters_address">[Address]</string>
@@ -136,6 +150,12 @@
     <string name="title_activity_onboarding">OnboardingActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- List Item Plan -->
+    <string name="list_item_plan_name">Cinephile</string>
+    <string name="list_item_plan_cap">[## MOVIES]</string>
+    <string name="list_item_plan_per_month">/month</string>
+    <string name="list_item_plan_price_placeholder">$[price]</string>
 
 
 </resources>

@@ -1,7 +1,6 @@
 package com.moviepass.activities;
 
 import android.animation.ArgbEvaluator;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -127,8 +126,8 @@ public class SignUpActivity extends AppCompatActivity {
         int[] bodies = new int[] {R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
                 R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4};
 
-        public static OnboardingActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            OnboardingActivity.PlaceholderFragment fragment = new OnboardingActivity.PlaceholderFragment();
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -138,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
+            View rootView = inflater.inflate(R.layout.activity_sign_up, container, false);
 
             TextView textView = rootView.findViewById(R.id.section_label);
             textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
@@ -174,16 +173,16 @@ public class SignUpActivity extends AppCompatActivity {
             Fragment fragment = null;
             switch(pos) {
                 case 0:
-                    fragment = SignUpStepOneFragment.newInstance("FirstFragment, Instance 1");
+                    fragment = new SignUpStepOneFragment();
                     break;
                 case 1:
-                    fragment = SignUpStepTwoFragment.newInstance("SecondFragment, Instance 1");
+                    fragment = new SignUpStepTwoFragment();
                     break;
                 case 2:
-                    fragment = SignUpStepThreeFragment.newInstance("ThirdFragment, Instance 1");
+                    fragment = new SignUpStepThreeFragment();
                     break;
                 case 3:
-                    fragment = SignUpStepFourFragment.newInstance("ThirdFragment, Instance 2");
+                    fragment = new SignUpStepFourFragment();
                     break;
             }
             return fragment;

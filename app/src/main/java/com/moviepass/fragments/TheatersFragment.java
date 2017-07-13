@@ -3,30 +3,19 @@ package com.moviepass.fragments;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -34,23 +23,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -58,8 +41,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
@@ -79,8 +60,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -88,16 +67,12 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.moviepass.R;
-import com.moviepass.TheatersClickListener;
-import com.moviepass.activities.BrowseActivity;
-import com.moviepass.activities.TheaterActivity;
+import com.moviepass.listeners.TheatersClickListener;
 import com.moviepass.adapters.TheatersAdapter;
 import com.moviepass.model.Theater;
 import com.moviepass.model.TheaterPin;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.network.RestClient;
-
-import org.parceler.Parcels;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -343,6 +318,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             mClusterManager.clearItems();
             mClusterManager.cluster();
         }
+
         updateLocationUI();
     }
 
@@ -836,9 +812,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         return true;
     }
 
-    public void onTheaterClick(int pos, Theater theater) {
+    public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
         collapse(mCardView);
-        final Theater finalTheater = theater;
 
         mClusterManager.clearItems();
         mClusterManager.cluster();
@@ -846,10 +821,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         int recyclerViewHeight = mRecyclerView.getHeight();
         float screenHeight = mRelativeLayout.getHeight();
 
-        int cx = (int) mRecyclerView.getChildAt(pos).getX();
-        int cy = (int) screenHeight + recyclerViewHeight - (int) mRecyclerView.getChildAt(pos).getY();
+        int finalCx = cx;
+        int finalCy = (int) screenHeight + recyclerViewHeight - cy;
 
-        onTheaterSelect(pos, theater, cx, cy);
+        onTheaterSelect(pos, theater, finalCx, finalCy);
     }
 
     public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
