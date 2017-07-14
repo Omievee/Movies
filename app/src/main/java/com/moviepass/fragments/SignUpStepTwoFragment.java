@@ -139,4 +139,5 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
             }
         });
     }
+
 }

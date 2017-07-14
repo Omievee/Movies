@@ -330,5 +330,20 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(3);
     }
 
+    /* Fragment Four */
+
+    /* Handle Back Button Behavior */
+    @Override
+    public void onBackPressed(){
+        if (mViewPager.getCurrentItem() == 1) {
+            mViewPager.setCurrentItem(0);
+        } else if (mViewPager.getCurrentItem() == 2) {
+            mViewPager.setCurrentItem(1);
+        } else if (mViewPager.getCurrentItem() == 3) {
+            mViewPager.setCurrentItem(2);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 }
