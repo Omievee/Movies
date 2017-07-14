@@ -1,5 +1,6 @@
 package com.moviepass.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -7,8 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +22,7 @@ import com.moviepass.fragments.SignUpStepFourFragment;
 import com.moviepass.fragments.SignUpStepOneFragment;
 import com.moviepass.fragments.SignUpStepThreeFragment;
 import com.moviepass.fragments.SignUpStepTwoFragment;
+import com.moviepass.model.Plan;
 
 /**
  * Created by anubis on 6/15/17.
@@ -27,9 +31,10 @@ import com.moviepass.fragments.SignUpStepTwoFragment;
 public class SignUpActivity extends AppCompatActivity {
 
     String zip;
+    Plan mPlan;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
+    public NonSwipeableViewPager mViewPager;
 
     ImageView zero, one, two, three;
     ImageView[] indicators;
@@ -38,6 +43,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     Button mNext;
     CoordinatorLayout mCoordinator;
+
+    int mScrollProgress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
         indicators = new ImageView[]{zero, one, two, three};
 
         zip = null;
+        mPlan = null;
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -173,6 +181,71 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /* Disallow swiping */
+    public static class NonSwipeableViewPager extends ViewPager {
+        private boolean swipingEnabled;
+
+        public NonSwipeableViewPager(Context context) {
+            super(context);
+        }
+
+        public NonSwipeableViewPager(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            swipingEnabled = true;
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            if (swipingEnabled && detectSwipeToRight(event)) {
+                return super.onTouchEvent(event);
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent event) {
+            if (swipingEnabled && detectSwipeToRight(event)) {
+                return super.onInterceptTouchEvent(event);
+            }
+
+            return false;
+        }
+
+        // To enable/disable swipe
+        public void setPagingEnabled(boolean enabled) {
+            swipingEnabled = enabled;
+        }
+
+        // Detects the direction of swipe. Right or left.
+        // Returns true if swipe is in right direction
+        public boolean detectSwipeToRight(MotionEvent event){
+
+            int initialXValue = 0; // as we have to detect swipe to right
+            final int SWIPE_THRESHOLD = 100; // detect swipe
+            boolean result = false;
+
+            try {
+                float diffX = event.getX() - initialXValue;
+
+                if (Math.abs(diffX) > SWIPE_THRESHOLD ) {
+                    if (diffX > 0) {
+                        // swipe from left to right detected ie.SwipeRight
+                        result = false;
+                    } else {
+                        // swipe from right to left detected ie.SwipeLeft
+                        result = true;
+                    }
+                }
+            }
+            catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
+    }
+
+
     void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(
@@ -190,6 +263,8 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(1);
     }
 
+    /* Fragment Two */
+
     public String getZip() {
         try {
             Log.d("SUG get", zip);
@@ -200,6 +275,13 @@ public class SignUpActivity extends AppCompatActivity {
         return zip;
     }
 
-    /* Fragment Two */
+    public void setPlan(Plan plan) {
+        mPlan = plan;
+
+        mViewPager.setCurrentItem(2);
+    }
+
+    /* Fragment Three */
+
 
 }

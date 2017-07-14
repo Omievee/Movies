@@ -16,7 +16,6 @@
         android:gravity="center_vertical"
         android:text="@string/fragment_sign_up_step_two_header"
         android:layout_marginTop="100dp"
-        android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true" />
 
     <android.support.v7.widget.RecyclerView
@@ -29,7 +28,9 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:listSelector="@android:color/transparent"
-        tools:listitem="@layout/list_item_plan" />
+        tools:listitem="@layout/list_item_plan"
+        android:layout_below="@id/copy"
+        android:layout_marginTop="@dimen/quadruple_margin_standard"/>
 
     <include
         android:id="@+id/progress"

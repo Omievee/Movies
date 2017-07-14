@@ -8,6 +8,6 @@ import com.moviepass.model.Plan
 
 interface PlanClickListener {
 
-    fun onPlanClick(pos: Int, plan: Plan, showtime: String)
+    fun onPlanClick(pos: Int, plan: Plan)
 
 }

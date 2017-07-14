@@ -62,9 +62,6 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
         mPlans = new ArrayList<>();
         mPlansAdapter = new PlansAdapter(mPlans, this);
 
-
-
-
         return rootView;
     }
 
@@ -78,6 +75,8 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
 
                 getPlans(zip);
             }
+
+            mNext.setEnabled(false);
         }
     }
 
@@ -121,7 +120,17 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
     }
 
     @Override
-    public void onPlanClick(int pos, @NotNull Plan plan, @NotNull String showtime) {
+    public void onPlanClick(int pos, @NotNull Plan plan) {
+        mNext.setEnabled(true);
 
+        final Plan finalPlan = plan;
+
+        mNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mNext.setEnabled(false);
+                ((SignUpActivity) getActivity()).setPlan(finalPlan);
+            }
+        });
     }
 }

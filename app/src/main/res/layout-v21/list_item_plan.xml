@@ -18,18 +18,21 @@
         android:id="@+id/rel_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/showtime_rounded_rectangle"
         android:paddingBottom="15dp"
         android:paddingLeft="15dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:gravity="center_vertical|center_horizontal">
 
         <TextView
             android:id="@+id/plan_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="@string/list_item_plan_name"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -45,15 +48,15 @@
             android:text="@string/list_item_plan_cap"
             android:textSize="14sp"
             android:textColor="@color/selector_pinkish_gray_to_dark"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal" />
+            android:layout_gravity="center"
+            android:gravity="center" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/plan_cap"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal">
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/price"

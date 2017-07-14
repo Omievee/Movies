@@ -1,6 +1,7 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
+    private int selectedPosition = -1;
 
     public PlansAdapter(ArrayList<Plan> plansArrayList, PlanClickListener planClickListener) {
         this.planClickListener = planClickListener;
@@ -53,7 +55,7 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
             super(v);
             ButterKnife.bind(this, v);
 
-            relativeLayout = v.findViewById(R.id.relative_layout);
+            relativeLayout = v.findViewById(R.id.rel_container);
             planName = v.findViewById(R.id.plan_name);
             planCap = v.findViewById(R.id.plan_cap);
             price = v.findViewById(R.id.price);
@@ -68,13 +70,6 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final PlansAdapter.ViewHolder holder, final int position) {
-        /* if (row_idex == position) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#c82229"));
-            holder.showtime.setTextColor(Color.parseColor("#FFFFFF"));
-        } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.showtime.setTextColor(Color.parseColor("#DE000000"));
-        }
 
         if (position == selectedPosition) {
             holder.itemView.setSelected(true);
@@ -82,9 +77,15 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
             holder.itemView.setSelected(false);
         }
 
-        final String time = showtimesArrayList.get(position);
+        final Plan plan = plansArrayList.get(position);
 
-        holder.showtime.setText(time);
+        String formattedPrice = "$"+plan.getPrice();
+        holder.price.setText(formattedPrice);
+
+        /* TODO : Remove hard cap */
+        String formattedCap = "UNLIMITED MOVIES";
+        holder.planCap.setText(formattedCap);
+
         holder.relativeLayout.setSelected(holder.relativeLayout.isSelected());
         holder.relativeLayout.setTag(position);
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
@@ -109,11 +110,9 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
                     }, 150);
                 }
 
-                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, time);
+                planClickListener.onPlanClick(holder.getAdapterPosition(), plan);
             }
         });
-
-        */
     }
 
     @Override
