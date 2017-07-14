@@ -61,6 +61,8 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                 if (isValidEmail(email) && isValidPassword(password)) {
                     /* TODO : animate this */
                     Intent intent = new Intent(SignUpFirstOpenActivity.this, SignUpActivity.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("password", password);
                     startActivity(intent);
                 } else if (!isValidEmail(email)) {
                     Snackbar snackbar = Snackbar.make(mRelativeLayout, "Please enter a valid email address", Snackbar.LENGTH_INDEFINITE);

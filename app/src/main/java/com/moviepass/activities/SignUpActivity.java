@@ -30,6 +30,9 @@ import com.moviepass.model.Plan;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    String email;
+    String password;
+
     String zip;
     Plan mPlan;
 
@@ -66,6 +69,9 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         indicators = new ImageView[]{zero, one, two, three};
+
+        email = getIntent().getStringExtra("email");
+        password = getIntent().getStringExtra("password");
 
         zip = null;
         mPlan = null;
