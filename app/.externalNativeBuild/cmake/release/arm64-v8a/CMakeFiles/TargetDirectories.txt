@@ -1,3 +1,0 @@
-/Users/anubis/Repos/Android-3/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/anubis/Repos/Android-3/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/rebuild_cache.dir
-/Users/anubis/Repos/Android-3/app/.externalNativeBuild/cmake/release/arm64-v8a/CMakeFiles/native-lib.dir
