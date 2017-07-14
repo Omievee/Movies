@@ -118,10 +118,12 @@
     <string name="fragment_sign_up_step_one_header">Available at over 3,700 theaters in the US</string>
     <string name="fragment_sign_up_step_one_zip_hint">Enter your zipcode</string>
     <string name="fragment_sign_up_step_one_next">Next step: choose your plan</string>
+    <string name="fragment_sign_up_step_one_enter_valid_zip">Please enter a zip code first</string>
 
     <!-- SignUpStepTwoFragment -->
     <string name="fragment_sign_up_step_two_header">Plans available in your area</string>
     <string name="fragment_sign_up_step_two_next_address">Next step: shipping address</string>
+    <string name="fragment_sign_up_step_two_select_plan">Please select a plan first</string>
 
     <!-- SignUpStepThreeFragment -->
     <string name="fragment_sign_up_step_three_header">Tell us where to send your MoviePass card</string>
@@ -132,6 +134,12 @@
     <string name="fragment_sign_up_step_three_state">State</string>
     <string name="fragment_sign_up_step_three_zip">Zip</string>
     <string name="fragment_sign_up_step_three_next">Next step: payment details</string>
+    <string name="fragment_sign_up_step_three_valid_name">Please enter a valid name</string>
+    <string name="fragment_sign_up_step_three_valid_address">Please enter a valid address</string>
+    <string name="fragment_sign_up_step_three_valid_address_two">Please enter a valid address line 2</string>
+    <string name="fragment_sign_up_step_three_valid_city">Please enter a valid city</string>
+    <string name="fragment_sign_up_step_three_valid_state">Please enter a valid state</string>
+    <string name="fragment_sign_up_step_three_valid_zip">Please enter a valid zip code</string>
 
     <!-- SignUpStepFourFragment -->
     <string name="fragment_sign_up_step_four_header">Your first month will not begin until you receive your MoviePass card</string>

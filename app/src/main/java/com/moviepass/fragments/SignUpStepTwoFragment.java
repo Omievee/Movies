@@ -1,8 +1,8 @@
 package com.moviepass.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
@@ -19,10 +20,8 @@ import com.moviepass.model.Plan;
 import com.moviepass.network.RestClient;
 
 import org.jetbrains.annotations.NotNull;
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -35,11 +34,9 @@ import retrofit2.Response;
 
 public class SignUpStepTwoFragment extends Fragment implements PlanClickListener {
 
-    private Bundle bundle;
-    public static final String PLANS = "plans";
-
     PlansAdapter mPlansAdapter;
 
+    RelativeLayout mRelativeLayout;
     @BindView(R.id.recycler_view_plans)
     RecyclerView mRecyclerView;
 
@@ -54,6 +51,7 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
         LinearLayoutManager mLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
+        mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mRecyclerView = rootView.findViewById(R.id.recycler_view_plans);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -65,18 +63,29 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
         return rootView;
     }
 
+    // This is for actions only available when SignUpTwoFrag is visible
     @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
         if (visible) {
             zip = ((SignUpActivity) getActivity()).getZip();
             if (zip != null) {
-                Log.d("SU2", zip);
-
                 getPlans(zip);
             }
 
-            mNext.setEnabled(false);
+            mNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final Snackbar snackbar = Snackbar.make(mRelativeLayout, R.string.fragment_sign_up_step_two_select_plan, Snackbar.LENGTH_INDEFINITE);
+                    snackbar.setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            snackbar.dismiss();
+                        }
+                    });
+                    snackbar.show();
+                }
+            });
         }
     }
 
@@ -86,6 +95,7 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
             public void onResponse(Call<Plan> call, Response<Plan> response) {
                 Plan plan = response.body();
 
+                //Doesn't need to check ifSuccessful() because already determined zip was valid in SignUpStepOneFrag
                 mPlans.clear();
                 mPlans.add(plan);
 
@@ -109,7 +119,6 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
     }
 
     public static SignUpStepTwoFragment newInstance(String zip) {
-
         Bundle b = new Bundle();
         SignUpStepTwoFragment signUpStepTwoFragment = new SignUpStepTwoFragment();
         b.putString("zip", zip);
@@ -121,14 +130,11 @@ public class SignUpStepTwoFragment extends Fragment implements PlanClickListener
 
     @Override
     public void onPlanClick(int pos, @NotNull Plan plan) {
-        mNext.setEnabled(true);
-
         final Plan finalPlan = plan;
 
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mNext.setEnabled(false);
                 ((SignUpActivity) getActivity()).setPlan(finalPlan);
             }
         });

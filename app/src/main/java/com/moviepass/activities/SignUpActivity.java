@@ -36,6 +36,13 @@ public class SignUpActivity extends AppCompatActivity {
     String zip;
     Plan mPlan;
 
+    String name;
+    String address;
+    String address2;
+    String city;
+    String state;
+    String addressZip;
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
@@ -288,6 +295,40 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     /* Fragment Three */
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setName(String frag_name) {
+        name = frag_name;
+    }
+
+    public void setAddress(String frag_address) {
+        address = frag_address;
+    }
+
+    public void setAddress2(String frag_address2) {
+        address2 = frag_address2;
+    }
+
+    public void setCity(String frag_city) {
+        city = frag_city;
+    }
+
+    public void setState(String frag_state) {
+        state = frag_state;
+    }
+
+    public void setAddressZip(String frag_addressZip) {
+        addressZip = frag_addressZip;
+
+        mViewPager.setCurrentItem(3);
+    }
 
 
 }

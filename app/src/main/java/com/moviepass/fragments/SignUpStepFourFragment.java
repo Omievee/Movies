@@ -1,23 +1,34 @@
 package com.moviepass.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.moviepass.BuildConfig;
 import com.moviepass.Constants;
 import com.moviepass.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
 
@@ -29,60 +40,85 @@ public class SignUpStepFourFragment extends Fragment implements PaymentMethodNon
         BraintreeCancelListener, BraintreeErrorListener {
 
     BraintreeFragment mBraintreeFragment;
+
+    ImageButton mButtonCreditCard;
+    ImageButton mButtonPaypal;
+    ImageButton mButtonAndroidPay;
+
+    View mProgress;
+
     Button mNext;
 
     static {
         System.loadLibrary("native-lib");
     }
 
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
+
+    private final static int REQUEST_CAMERA_CODE = 0;
+
     private native static String getSandboxTokenizationKey();
     private native static String getProductionTokenizationKey();
-
-    static String sandboxString = String.valueOf(getSandboxTokenizationKey());
-    static String productionString = String.valueOf(getProductionTokenizationKey());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_four, container, false);
+        ButterKnife.bind(getActivity());
+
+        mProgress = rootView.findViewById(R.id.progress);
+
+        mButtonCreditCard = rootView.findViewById(R.id.button_credit_card);
+        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
+        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
 
         mNext = getActivity().findViewById(R.id.button_next);
+
+        mButtonCreditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                creditCardClick();
+            }
+        });
+
+        mButtonPaypal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paypalClick();
+            }
+        });
 
         return rootView;
     }
 
-    @OnClick(R.id.button_credit_card)
-    public void onClickScan(View v) {
-        /*
+    public void creditCardClick() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
+                scan_card();
             } else {
                 scan_card();
             }
         } else {
             scan_card();
         }
-        */
     }
 
-    @OnClick(R.id.button_paypal)
-    public void paypalClick(View v) {
-
-        /*
+    public void paypalClick() {
         mProgress.setVisibility(View.VISIBLE);
         mButtonPaypal.setEnabled(false);
         try {
-            if (Constants.ENDPOINT.contains("android")) {
-                String mAuthorization = Constants.PRODUCTION_TOKENIZATION_KEY;
-                mBraintreeFragment = BraintreeFragment.newInstance(this, mAuthorization);
+            if (BuildConfig.DEBUG) {
+                String mAuthorization = getSandboxTokenizationKey();
+                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
                 mProgress.setVisibility(View.GONE);
                 // mBraintreeFragment is ready to use!
 
                 PayPal.authorizeAccount(mBraintreeFragment);
             } else {
-                SANDBOX_TOKENIZATION_KEY =
-                String mAuthorization = Constants.SANDBOX_TOKENIZATION_KEY;
-                mBraintreeFragment = BraintreeFragment.newInstance(this, mAuthorization);
+                String mAuthorization = getProductionTokenizationKey();
+                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
                 mProgress.setVisibility(View.GONE);
                 // mBraintreeFragment is ready to use!
 
@@ -94,8 +130,6 @@ public class SignUpStepFourFragment extends Fragment implements PaymentMethodNon
             mButtonPaypal.setEnabled(true);
             Log.d("error", "error: " + e.getMessage());
         }
-
-        */
     }
 
     public void scan_card() {
