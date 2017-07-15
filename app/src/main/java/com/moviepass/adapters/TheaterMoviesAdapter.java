@@ -1,6 +1,7 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -44,11 +45,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_movie_poster)
         RelativeLayout listItemMoviePoster;
-        @BindView(R.id.text_title)
+        @BindView(R.id.poster_movie_title)
         TextView title;
-        @BindView(R.id.text_run_time)
-        TextView runTime;
-        @BindView(R.id.poster)
+        @BindView(R.id.ticket_top_red_dark)
         ImageView posterImageView;
 
         public ViewHolder(View v) {
@@ -56,9 +55,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             ButterKnife.bind(this, v);
 
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
-            title = v.findViewById(R.id.text_title);
-            runTime = v.findViewById(R.id.text_run_time);
-            posterImageView = v.findViewById(R.id.poster);
+            title = v.findViewById(R.id.poster_movie_title);
+            posterImageView = v.findViewById(R.id.ticket_top_red_dark);
         }
     }
 
@@ -79,33 +77,22 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             holder.itemView.setSelected(false);
         }
 
-        if (screening.getImageUrl().isEmpty()) {
-            Picasso.with(holder.itemView.getContext())
-                    .load(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
-                    .into(holder.posterImageView);
-        } else {
-            Picasso.with(holder.itemView.getContext())
-                    .load(screening.getImageUrl())
-                    .error(R.mipmap.ic_launcher)
-                    .into(holder.posterImageView);
-        }
+        String imgUrl = screening.getImageUrl();
 
-        holder.title.setText(screening.getTitle());
+        Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
 
-        int t = screening.getRunningTime();
-        int hours = t / 60; //since both are ints, you get an int
-        int minutes = t % 60;
-
-        if (screening.getRunningTime() == 0) {
-            holder.runTime.setVisibility(View.GONE);
-        } else if (hours > 1) {
-            String translatedRunTime = hours + " hours " + minutes + " minutes";
-            holder.runTime.setText(translatedRunTime);
-        } else {
-            String translatedRunTime = hours + " hour " + minutes + " minutes";
-            holder.runTime.setText(translatedRunTime);
-        }
+                holder.title.setText(screening.getTitle());
+            }
+        });
+        builder.build()
+                .load(imgUrl)
+                .placeholder(R.drawable.ticket_top_red_dark)
+                .error(R.drawable.ticket_top_red_dark)
+                .into(holder.posterImageView);
 
         holder.listItemMoviePoster.setTag(position);
 

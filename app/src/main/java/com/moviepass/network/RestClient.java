@@ -87,6 +87,7 @@ public class RestClient {
                         .addHeader("Accept", "application/json")
                         .addHeader("User-Agent","MoviePass/Android/20170706");
                 Request request = requestBuilder.build();
+
                 return chain.proceed(request);
             }
         });

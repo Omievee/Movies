@@ -1,6 +1,7 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,25 +44,17 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_movie_poster)
         RelativeLayout listItemMoviePoster;
-        @BindView(R.id.text_title)
+        @BindView(R.id.poster_movie_title)
         TextView title;
-        @BindView(R.id.movie_genre)
-        TextView genre;
-        @BindView(R.id.text_run_time)
-        TextView runTime;
-        @BindView(R.id.clock)
-        ImageView clock;
-        @BindView(R.id.poster)
-        SvgImageView posterImageView;
+        @BindView(R.id.ticket_top_red_dark)
+        ImageView posterImageView;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
-            title = v.findViewById(R.id.text_title);
-            genre = v.findViewById(R.id.movie_genre);
-            runTime = v.findViewById(R.id.text_run_time);
-            posterImageView = v.findViewById(R.id.poster);
+            title = v.findViewById(R.id.poster_movie_title);
+            posterImageView = v.findViewById(R.id.ticket_top_red_dark);
         }
     }
 
@@ -76,26 +69,22 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-        Picasso.with(holder.itemView.getContext())
-                .load(movie.getImageUrl())
-                .error(R.mipmap.ic_launcher)
+        String imgUrl = movie.getImageUrl();
+
+        Picasso.Builder builder = new Picasso.Builder(context);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+
+                holder.title.setText(movie.getTitle());
+            }
+        });
+        builder.build()
+                .load(imgUrl)
+                .placeholder(R.drawable.ticket_top_red_dark)
+                .error(R.drawable.ticket_top_red_dark)
                 .into(holder.posterImageView);
-
-        holder.title.setText(movie.getTitle());
-
-        int t = movie.getRunningTime();
-        int hours = t / 60; //since both are ints, you get an int
-        int minutes = t % 60;
-
-        if (movie.getRunningTime() == 0) {
-            holder.runTime.setVisibility(View.GONE);
-        } else if (hours > 1) {
-            String translatedRunTime = hours + " hours " + minutes + " minutes";
-            holder.runTime.setText(translatedRunTime);
-        } else {
-            String translatedRunTime = hours + " hour " + minutes + " minutes";
-            holder.runTime.setText(translatedRunTime);
-        }
 
         holder.listItemMoviePoster.setTag(position);
 

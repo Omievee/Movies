@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,6 +96,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
+        mNewReleasesRecyclerView.setItemAnimator(null);
 
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
@@ -105,6 +107,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
+        mTopBoxOfficeRecyclerView.setItemAnimator(null);
 
         mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
 
@@ -114,6 +117,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
+        mComingSoonRecyclerView.setItemAnimator(null);
 
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
 
@@ -167,7 +171,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
                 sharedImageView,
@@ -184,39 +187,42 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
-                    mMoviesNewReleases.clear();
-                    mMoviesTopBoxOffice.clear();
-                    mMoviesComingSoon.clear();
 
-                    if (mMoviesNewReleasesAdapter != null) {
-                        mNewReleasesRecyclerView.getRecycledViewPool().clear();
-                        mMoviesNewReleasesAdapter.notifyDataSetChanged();
-                    }
+                        mMoviesNewReleases.clear();
+                        mMoviesTopBoxOffice.clear();
+                        mMoviesComingSoon.clear();
 
-                    if (mMoviesTopBoxOfficeAdapter != null) {
-                        mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
-                        mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
-                    }
+                        if (mMoviesNewReleasesAdapter != null) {
+                            mNewReleasesRecyclerView.getRecycledViewPool().clear();
+                            mMoviesNewReleasesAdapter.notifyDataSetChanged();
+                        }
 
-                    if (mMoviesComingSoonAdapter != null) {
-                        mComingSoonRecyclerView.getRecycledViewPool().clear();
-                        mMoviesComingSoonAdapter.notifyDataSetChanged();
-                    }
+                        if (mMoviesTopBoxOfficeAdapter != null) {
+                            mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
+                            mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
+                        }
 
-                    if (mMoviesResponse != null) {
-                        mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
-                        mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+                        if (mMoviesComingSoonAdapter != null) {
+                            mComingSoonRecyclerView.getRecycledViewPool().clear();
+                            mMoviesComingSoonAdapter.notifyDataSetChanged();
+                        }
 
-                        mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
-                        mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+                        if (mMoviesResponse != null) {
+                            mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
+                            mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
 
-                        mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
-                        mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+                            mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
+                            mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
 
-                    }
+                            mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
+                            mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+
+                        }
+
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
+
                 }
             }
 

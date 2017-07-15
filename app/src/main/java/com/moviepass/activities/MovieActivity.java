@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -95,6 +96,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     Screening mScreening;
 
     ImageView mPoster;
+    TextView mPosterTitle;
     TextView mTitle;
     TextView mGenre;
     TextView mRunTime;
@@ -136,6 +138,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mMovie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
         mPoster = findViewById(R.id.poster);
+        mPosterTitle = findViewById(R.id.poster_movie_title);
         mTitle = findViewById(R.id.movie_title);
         mRunTime = findViewById(R.id.text_run_time);
         mTheaterSelectTime = findViewById(R.id.theater_select_time);
@@ -165,9 +168,21 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             mPoster.setTransitionName(imageTransitionName);
         }
 
-        Picasso.with(this)
-                .load(mMovie.getImageUrl())
-                .error(R.mipmap.ic_launcher)
+        String imgUrl = mMovie.getImageUrl();
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+
+                mPosterTitle.setText(mMovie.getTitle());
+            }
+        });
+        builder.build()
+                .load(imgUrl)
+                .placeholder(R.drawable.ticket_top_red_dark)
+                .error(R.drawable.ticket_top_red_dark)
                 .into(mPoster, new Callback() {
                     @Override
                     public void onSuccess() {
