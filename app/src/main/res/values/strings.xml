@@ -28,6 +28,7 @@
     <string name="activity_confirmation_date_placeholder">[4/20/1999]</string>
     <string name="activity_confirmation_auditorium">[Auditorium]</string>
     <string name="activity_confirmation_seat">[Seat]</string>
+    <string name="activity_confirmation_purchase_ticket">Use your MoviePass card to purchase your ticket.</string>
     <string name="activity_confirmation_change_reservation">Change Reservation</string>
 
 

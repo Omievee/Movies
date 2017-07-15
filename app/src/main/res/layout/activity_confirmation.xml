@@ -18,60 +18,141 @@
             android:id="@+id/poster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/fragment_movie_ticket_top" />
+            android:src="@drawable/confirmation_ticket_top"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:id="@+id/movie_title"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_movie_title"
-            android:textSize="20sp"/>
+            android:layout_marginLeft="@dimen/quadruple_margin_standard"
+            android:layout_marginRight="@dimen/quadruple_margin_standard"
+            android:layout_marginTop="@dimen/double_margin_standard">
 
-        <TextView
-            android:id="@+id/theater"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_theater"
-            android:textSize="20sp"
-            android:layout_below="@+id/movie_title" />
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/activity_confirmation_movie_title"
+                android:textSize="36sp"/>
 
-        <TextView
-            android:id="@+id/address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_address"
-            android:textSize="20sp"
-            android:layout_below="@+id/theater" />
+            <TextView
+                android:id="@+id/theater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/activity_confirmation_theater"
+                android:textSize="24sp"
+                android:layout_below="@+id/movie_title"
+                android:layout_marginTop="@dimen/margin_half"/>
 
-        <TextView
-            android:id="@+id/city_things"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_city_things"
-            android:textSize="20sp"
-            android:layout_below="@+id/address" />
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/activity_confirmation_address"
+                android:textSize="20sp"
+                android:layout_below="@+id/theater"
+                android:layout_marginTop="@dimen/margin_standard"/>
 
-        <TextView
-            android:id="@+id/time_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_time"
-            android:textSize="20sp"
-            android:layout_below="@+id/city_things" />
+            <TextView
+                android:id="@+id/city_things"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/activity_confirmation_city_things"
+                android:textSize="20sp"
+                android:layout_below="@+id/address" />
 
-        <TextView
-            android:id="@+id/time_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="@string/activity_confirmation_time_placeholder"
-            android:textSize="20sp"
-            android:layout_below="@+id/time_text" />
+            <LinearLayout
+                android:id="@+id/showtime_things"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/city_things"
+                android:orientation="horizontal">
+            
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/time_things"
+                    android:layout_marginTop="@dimen/margin_standard">
+
+                    <TextView
+                        android:id="@+id/time_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/activity_confirmation_time"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/time_placeholder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/activity_confirmation_time_placeholder"
+                        android:textSize="20sp"
+                        android:layout_below="@+id/time_text" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/date_things"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginLeft="@dimen/quadruple_margin_standard">
+
+                    <TextView
+                        android:id="@+id/date_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/activity_confirmation_date"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/date_placeholder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/date_text"
+                        android:text="@string/activity_confirmation_date_placeholder"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/seat_things"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_below="@+id/showtime_things">
+
+                <TextView
+                    android:id="@+id/seat_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_confirmation_auditorium"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/seat_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/seat_text"
+                    android:text="@string/activity_confirmation_seat"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -83,14 +164,42 @@
     -->
 
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/ticket_bottom"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/fragment_movie_ticket_bottom"
         android:layout_below="@+id/ticket_top"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/confirmation_ticket_bottom"
+            android:id="@+id/imageView" />
+
+        <ImageView
+            android:id="@+id/qr_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical" />
+
+        <TextView
+            android:id="@+id/action_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_text"
+            android:textSize="20sp"
+            android:text="@string/activity_confirmation_purchase_ticket"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_centerVertical="true"
+            android:layout_alignRight="@+id/imageView"
+            android:layout_alignEnd="@+id/imageView"
+            android:layout_margin="@dimen/margin_standard"/>
+
+    </RelativeLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menuActions"

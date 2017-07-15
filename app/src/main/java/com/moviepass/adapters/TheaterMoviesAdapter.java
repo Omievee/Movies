@@ -120,7 +120,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             holder.itemView.setSelected(true);
                         }
                     }, 150);
-
                 }
 
                 screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, startTimes, holder.posterImageView);
