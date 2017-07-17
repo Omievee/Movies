@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
 import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.UserLocationManagerFused;
@@ -390,6 +391,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mProgress.setVisibility(View.VISIBLE);
                 reserve(screening, time);
             }
         });
@@ -469,27 +471,19 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                     mReservation = reservationResponse.getReservation();
                     mProgress.setVisibility(View.GONE);
 
-                    showConfirmation(screening, mReservation);
-
-/*                    if (!UserPreferences.getVerificationRequired()) {
-                        showConfirmation();
+                    if (UserPreferences.getIsVerificationRequired()) {
+                        showVerification(screening, mReservation);
                     } else {
-                        showTicketVerificationConfirmation();
-                    } */
+                        showConfirmation(screening, mReservation);
+                    }
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        if (jObjError.getString("message").matches("You have a pending reservation")) {
-                            mProgress.setVisibility(View.GONE);
-                            mAction.setEnabled(true);
-                            Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            mProgress.setVisibility(View.GONE);
-                            mAction.setEnabled(true);
-                        }
+                        mProgress.setVisibility(View.GONE);
+                        mAction.setEnabled(true);
+                        Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(TheaterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
@@ -526,7 +520,17 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     private void showConfirmation(Screening screening, Reservation reservation) {
+        mProgress.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(TheaterActivity.this, ConfirmationActivity.class);
+        confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
+        confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
+        startActivity(confirmationIntent);
+        finish();
+    }
+
+    private void showVerification(Screening screening, Reservation reservation) {
+        mProgress.setVisibility(View.GONE);
+        Intent confirmationIntent = new Intent(TheaterActivity.this, VerificationActivity.class);
         confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
         confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
         startActivity(confirmationIntent);

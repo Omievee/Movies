@@ -1,20 +1,20 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -23,10 +23,11 @@ import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.responses.ChangedMindResponse;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -41,9 +42,10 @@ public class ConfirmationActivity extends BaseActivity {
 
     Reservation mReservation;
     Screening mScreening;
-    FloatingActionMenu mFab;
-    View mProgress;
+    FloatingActionMenu fab;
+    View progress;
 
+    ImageView poster;
     TextView mMovieTitle;
     TextView mTheater;
 
@@ -57,18 +59,44 @@ public class ConfirmationActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        mFab = findViewById(R.id.menuActions);
-        mProgress = findViewById(R.id.progress);
+        fab = findViewById(R.id.menuActions);
+        progress = findViewById(R.id.progress);
 
         Bundle extras = getIntent().getExtras();
         mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
         mReservation = Parcels.unwrap(getIntent().getParcelableExtra(RESERVATION));
 
+        poster = findViewById(R.id.poster);
         mMovieTitle = findViewById(R.id.movie_title);
         mTheater = findViewById(R.id.theater);
 
         mMovieTitle.setText(mScreening.getTitle());
         mTheater.setText(mScreening.getTheaterName());
+
+        String imgUrl = mScreening.getImageUrl();
+
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        builder.build()
+                .load(imgUrl)
+                .placeholder(R.drawable.ticket_top_red_dark)
+                .error(R.drawable.ticket_top_red_dark)
+                .into(poster, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        supportStartPostponedEnterTransition();
+                    }
+
+                    @Override
+                    public void onError() {
+                        supportStartPostponedEnterTransition();
+                    }
+                });
 
         FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
         buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
@@ -76,35 +104,32 @@ public class ConfirmationActivity extends BaseActivity {
         buttonChangeReservation.setButtonSize(FloatingActionButton.SIZE_MINI);
         buttonChangeReservation.setColorNormalResId(R.color.red);
         buttonChangeReservation.setColorPressedResId(R.color.red_dark);
-        mFab.addMenuButton(buttonChangeReservation);
+        fab.addMenuButton(buttonChangeReservation);
 
         buttonChangeReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgress.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.VISIBLE);
                 ChangedMindRequest request = new ChangedMindRequest(mReservation.getId());
 
                 RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
                     @Override
                     public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
                         ChangedMindResponse responseBody = response.body();
+                        progress.setVisibility(View.GONE);
 
                         if (responseBody != null){
-//                            UserPreferences.clearSuccessfulReservationCount(0);
                             Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
                             finish();
                         }
-
                     }
 
                     @Override
                     public void failure(RestError restError) {
-                            mProgress.setVisibility(View.GONE);
-                            mFab.setEnabled(true);
-                            Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-
+                        progress.setVisibility(View.GONE);
+                        fab.setEnabled(true);
+                        Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                     }
-
                 });
             }
         });

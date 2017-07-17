@@ -37,6 +37,12 @@ public class Constants {
     public static final String ZIP_CODE = "zip";
     public static final String UNITED_STATES_PREFIX = "US";
 
+    //Restrictions Things
+    public static final String SUBSCRIPTION_STATUS = "STATUS";
+    public static final String THREE_D_ENABLED = "threed";
+    public static final String ALL_FORMATS_ENABLED = "imax";
+    public static final String VERIFICATION_REQUIRED = "verification";
+    public static final String ACTIVE_CARD = "card";
 
     public static final int CARD_SCAN_REQUEST_CODE = 27;
 

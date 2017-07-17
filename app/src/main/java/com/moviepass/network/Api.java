@@ -8,11 +8,14 @@ import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
+import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.PlanResponse;
 import com.moviepass.responses.ReservationResponse;
+import com.moviepass.responses.RestrictionsResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.moviepass.responses.SeatingsInfoResponse;
+import com.moviepass.responses.VerificationLostResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -60,6 +63,10 @@ public interface Api {
     Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater,
                                         @Body PerformanceInfoRequest request);
 
+    @POST("/api/v1/reservations/{reservationId}/verification")
+    Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
+
+
 
     /* Theaters */
     @GET("/api/v3/theaters/near")
@@ -67,5 +74,9 @@ public interface Api {
 
     @GET("/api/v5/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
+
+    /* User */
+    @GET("/api/v2/auth/restrictions")
+    Call<RestrictionsResponse> getRestrictions( );
 
 }

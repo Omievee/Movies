@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.crash.FirebaseCrash;
@@ -39,9 +40,18 @@ import com.moviepass.fragments.SettingsFragment;
 import com.moviepass.fragments.TheatersFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
+import com.moviepass.network.RestClient;
+import com.moviepass.responses.RestrictionsResponse;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -75,6 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkRestrictions();
     }
 
     @Override
@@ -84,9 +95,84 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkRestrictions();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    private void checkRestrictions() {
+        RestClient.getAuthenticated().getRestrictions().enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    RestrictionsResponse restriction = response.body();
+
+                    String status = restriction.getSubscriptionStatus();
+                    boolean threeDEnabled = restriction.get3dEnabled();
+                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+                    boolean verificationRequired = restriction.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restriction.getHasActiveCard();
+
+                    /* TODO : Update only if change */
+
+                    UserPreferences.setRestrictions(status, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard);
+
+                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
+                    if (restriction.getPopInfo() != null) {
+                        int reservationId = restriction.getPopInfo().getReservationId();
+                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+                        String theaterName = restriction.getPopInfo().getTheaterName();
+                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+                        String showtime = restriction.getPopInfo().getShowtime();
+
+                        Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
+                        intent.putExtra("reservationId", reservationId);
+                        intent.putExtra("movieTitle", movieTitle);
+                        intent.putExtra("tribuneMovieId", tribuneMovieId);
+                        intent.putExtra("theaterName", theaterName);
+                        intent.putExtra("tribuneTheaterId", tribuneTheaterId);
+                        intent.putExtra("showtime", showtime);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+
+                        //IF API ERROR LOG OUT TO LOG BACK IN
+                        /*
+                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
+
+                            UserPreferences.resetUserCredentials();
+                            Intent intent = new Intent(BaseActivity.this, LauncherActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+
+                            finish();
+                        }
+
+                        */
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     /*

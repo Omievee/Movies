@@ -109,6 +109,21 @@
     <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
     <string name="activity_theater_button_action">[Action]</string>
 
+    <!-- VerificationActivity -->
+    <string name="activity_verification_header">We need you to verify your ticket purchase</string>
+    <string name="activity_verification_subheader">Please, take a photo of your ticket</string>
+    <string name="activity_verification_movie_title">[Title]</string>
+    <string name="activity_verification_movie_genre">[Genres]</string>
+    <string name="activity_verification_run_time_placeholder">[6:30 PM]</string>
+    <string name="activity_verification_change_reservation">Change Reservation</string>
+    <string name="activity_verification_lost_ticket">Lost Ticket</string>
+    <string name="activity_verification_lost_ticket_title">Lost Ticket</string>
+    <string name="activity_verification_lost_ticket_message">Please tell us why you weren\'t able to submit your ticket.</string>
+    <string name="activity_verification_lost_ticket_title_post">Lost Ticket</string>
+    <string name="activity_verification_lost_ticket_message_post">Your account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
+    <string name="activity_verification_empty_reason">You must list a reason</string>
+
+
     <!-- Fragments -->
     <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>

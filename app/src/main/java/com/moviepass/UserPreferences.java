@@ -79,21 +79,6 @@ public class UserPreferences {
         return location;
     }
 
-    public static void setCoordinates(double lat, double lng) {
-        SharedPreferences.Editor editor = sPrefs.edit();
-
-        editor.putLong(Constants.PREFS_LATITUDE, Double.doubleToRawLongBits(lat));
-        editor.putLong(Constants.PREFS_LONGITUDE, Double.doubleToRawLongBits(lng));
-        editor.apply();
-    }
-
-    public static void setIsLocationUserDefined(boolean isLocationUserDefined) {
-        SharedPreferences.Editor editor = sPrefs.edit();
-
-        editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
-        editor.apply();
-    }
-
     public static boolean getIsLocationUserDefined() {
         return sPrefs.getBoolean(Constants.IS_LOCATION_USER_DEFINED, false);
     }
@@ -114,4 +99,20 @@ public class UserPreferences {
     }
 
     public static boolean getRottenTomatoesDisplay() { return sPrefs.getBoolean(Constants.ROTTEN_TOMATOES, true); }
+
+    public static void setRestrictions(String status, boolean threeDEnabled, boolean allFormatsEnabled,
+                                       boolean verificationRequired, boolean hasActiveCard) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putString(Constants.SUBSCRIPTION_STATUS, status);
+        editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
+        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
+        editor.putBoolean(Constants.VERIFICATION_REQUIRED, verificationRequired);
+        editor.putBoolean(Constants.ACTIVE_CARD, hasActiveCard);
+        editor.apply();
+    }
+
+    public static boolean getIsVerificationRequired() {
+        return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, false);
+    }
 }

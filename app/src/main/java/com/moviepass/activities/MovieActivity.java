@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.Constants;
+import com.moviepass.UserPreferences;
 import com.moviepass.listeners.MovieTheaterClickListener;
 import com.moviepass.R;
 import com.moviepass.listeners.ShowtimeClickListener;
@@ -485,13 +486,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                     mReservation = reservationResponse.getReservation();
                     mProgress.setVisibility(View.GONE);
 
-                    showConfirmation(screening, mReservation);
-
-/*                    if (!UserPreferences.getVerificationRequired()) {
-                        showConfirmation();
+                    if (UserPreferences.getIsVerificationRequired()) {
+                        showVerification(screening, mReservation);
                     } else {
-                        showTicketVerificationConfirmation();
-                    } */
+                        showConfirmation(screening, mReservation);
+                    }
 
                 } else {
                     try {
@@ -535,6 +534,15 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     private void showConfirmation(Screening screening, Reservation reservation) {
         Intent confirmationIntent = new Intent(MovieActivity.this, ConfirmationActivity.class);
+        confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
+        confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
+        startActivity(confirmationIntent);
+        finish();
+    }
+
+    private void showVerification(Screening screening, Reservation reservation) {
+        mProgress.setVisibility(View.GONE);
+        Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
         confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
         confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
         startActivity(confirmationIntent);

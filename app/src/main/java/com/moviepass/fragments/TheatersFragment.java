@@ -753,8 +753,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         private final IconGenerator mClusterIconGenerator;
 
         public TheaterPinRenderer() {
-            super(getActivity().getApplicationContext(), mMap, mClusterManager);
-            mClusterIconGenerator = new IconGenerator(getActivity().getApplicationContext());
+            super(getActivity(), mMap, mClusterManager);
+            mClusterIconGenerator = new IconGenerator(getActivity());
         }
 
         @Override
@@ -768,24 +768,28 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
-            mClusterIconGenerator.setBackground(
-                    ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
+            try {
+                mClusterIconGenerator.setBackground(
+                        ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
 
-            mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
+                mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
-            final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+                final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
-            // Draw multiple people.
-            // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-            List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
+                // Draw multiple people.
+                // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+                List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
 
-            for (TheaterPin p : cluster.getItems()) {
-                // Draw 4 at most.
-                if (theaterPins.size() == 4) break;
-                Drawable drawable = getResources().getDrawable(R.drawable.theater_pin_unselected);
-                //drawable.setBounds(0, 0, width, height);
-                theaterPins.add(drawable);
+                for (TheaterPin p : cluster.getItems()) {
+                    // Draw 4 at most.
+                    if (theaterPins.size() == 4) break;
+                    Drawable drawable = getResources().getDrawable(R.drawable.theater_pin_unselected);
+                    //drawable.setBounds(0, 0, width, height);
+                    theaterPins.add(drawable);
+                }
+            } catch (Exception e) {
+                Log.d("onBeforeClusterRender: ", e.toString());
             }
         }
 

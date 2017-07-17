@@ -132,6 +132,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.BrowseActivity" />
         </activity>
+        <activity
+            android:name=".activities.VerificationActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.VerificationPictureActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

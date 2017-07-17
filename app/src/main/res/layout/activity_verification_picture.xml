@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_bar"
+        android:layout_alignParentTop="true">
+
+        <SurfaceView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close_white"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <RelativeLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/quadruple_margin_standard"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark">
+
+        <ImageView
+            android:id="@+id/take_picture"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:src="@drawable/camera_button"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/submit_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end|center_vertical"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/shape_circle_white"
+            android:src="@drawable/arrow_forward_dark"
+            android:layout_alignTop="@+id/take_picture"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
