@@ -240,8 +240,27 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
         buttonOpenCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(VerificationActivity.this, VerificationPictureActivity.class);
-                startActivity(intent);
+                if (screening != null) {
+                    Intent intent = new Intent(VerificationActivity.this, VerificationPictureActivity.class);
+                    intent.putExtra(SCREENING, Parcels.wrap(screening));
+                    startActivity(intent);
+                } else {
+                    String movieTitle = getIntent().getStringExtra("movieTitle");
+                    String theaterName = getIntent().getStringExtra("theaterName");
+                    String showtime = getIntent().getStringExtra("showtime");
+                    String reservationId = getIntent().getStringExtra("reservationId");
+                    String tribuneMovieId = getIntent().getStringExtra("tribuneMovieId");
+                    String tribuneTheaterId = getIntent().getStringExtra("tribuneTheaterId");
+
+                    Intent intent = new Intent(VerificationActivity.this, VerificationPictureActivity.class);
+                    intent.putExtra("reservationId", reservationId);
+                    intent.putExtra("movieTitle", movieTitle);
+                    intent.putExtra("tribuneMovieId", tribuneMovieId);
+                    intent.putExtra("theaterName", theaterName);
+                    intent.putExtra("tribuneTheaterId", tribuneTheaterId);
+                    intent.putExtra("showtime", showtime);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -484,69 +503,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
         }
         return optimalSize;
     }
-
-    /*
-    public static int getRoatationAngle(Activity mContext, int cameraId) {
-        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
-        int rotation = mContext.getWindowManager().getDefaultDisplay().getRotation();
-        int degrees = 0;
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                degrees = 0;
-                break;
-            case Surface.ROTATION_90:
-                degrees = 90;
-                break;
-            case Surface.ROTATION_180:
-                degrees = 180;
-                break;
-            case Surface.ROTATION_270:
-                degrees = 270;
-                break;
-        }
-        int result;
-
-        result = (info.orientation - degrees + 360) % 360;
-
-        return result;
-    }
-
-    public static Bitmap rotate(Bitmap bitmap, int degree) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-
-        Matrix mtx = new Matrix();
-        mtx.postRotate(degree);
-
-        return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
-    }
-
-    public void refreshCamera() {
-        if (surfaceHolder.getSurface() == null) {
-            // preview surface does not exist
-            return;
-        }
-        // stop preview before making changes
-        try {
-            camera.stopPreview();
-            isPreview = false;
-        } catch (Exception e) {
-            // ignore: tried to stop a non-existent preview
-        }
-
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
-        // start preview with new settings
-        try {
-            camera.setPreviewDisplay(surfaceHolder);
-            camera.startPreview();
-
-            isPreview = true;
-        } catch (Exception e) {
-
-        }
-    } */
 
     private Camera.AutoFocusCallback mAutoFocusTakePictureCallback = new Camera.AutoFocusCallback() {
         @Override

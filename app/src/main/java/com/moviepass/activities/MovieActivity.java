@@ -49,6 +49,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
+import com.moviepass.model.ScreeningToken;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
@@ -79,6 +80,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     public static final String MOVIE = "movie";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screening";
+    public static final String SHOWTIME = "showtime";
+    public static final String TOKEN = "token";
     private static final String TAG = "TAG";
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -89,7 +92,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     private Location mMyLocation;
 
     Movie mMovie;
-    Reservation mReservation;
+    Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter mMovieTheatersAdapter;
     MovieShowtimesAdapter mMovieShowtimesAdapter;
@@ -457,13 +460,13 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(normalizedMovieId, externalMovieId, format, tribuneTheaterId, screeningId, dateTime);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest);
+            reservationRequest(screening, checkInRequest, showtime);
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
                     tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest);
+            reservationRequest(screening, checkInRequest, showtime);
         } else {
             /* TODO : Go to SELECT SEAT */
 
@@ -476,20 +479,22 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     }
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest) {
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
                 if (reservationResponse.isOk()) {
-                    mReservation = reservationResponse.getReservation();
+                    reservation = reservationResponse.getReservation();
                     mProgress.setVisibility(View.GONE);
 
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+
                     if (UserPreferences.getIsVerificationRequired()) {
-                        showVerification(screening, mReservation);
+                        showVerification(token);
                     } else {
-                        showConfirmation(screening, mReservation);
+                        showConfirmation(token);
                     }
 
                 } else {
@@ -532,19 +537,17 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         });
     }
 
-    private void showConfirmation(Screening screening, Reservation reservation) {
+    private void showConfirmation(ScreeningToken token) {
         Intent confirmationIntent = new Intent(MovieActivity.this, ConfirmationActivity.class);
-        confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
-        confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
+        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         finish();
     }
 
-    private void showVerification(Screening screening, Reservation reservation) {
+    private void showVerification(ScreeningToken token) {
         mProgress.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
-        confirmationIntent.putExtra(SCREENING, Parcels.wrap(screening));
-        confirmationIntent.putExtra(RESERVATION, Parcels.wrap(reservation));
+        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         finish();
     }

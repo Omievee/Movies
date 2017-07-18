@@ -81,6 +81,12 @@ dependencies {
     compile "com.google.dagger:dagger:$dagger_version"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
+    //AWS
+    compile 'com.amazonaws:aws-android-sdk-core:2.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.11'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
+
     //Braintree
     compile ('com.braintreepayments.api:drop-in:3.+') {
         exclude group: 'com.android.support'

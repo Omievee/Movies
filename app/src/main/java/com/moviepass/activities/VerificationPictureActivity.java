@@ -1,19 +1,40 @@
 package com.moviepass.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Surface;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
+import com.moviepass.application.Application;
+import com.moviepass.model.Screening;
+import com.moviepass.model.ScreeningToken;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.VerificationRequest;
+import com.moviepass.responses.VerificationResponse;
+import com.moviepass.utils.AppUtils;
+
+import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,21 +47,62 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by anubis on 7/17/17.
  */
 
 public class VerificationPictureActivity extends AppCompatActivity {
 
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    private native static String getProductionBucket();
+    private native static String getStagingBucket();
+
+    private static final String TAG = "TAG";
+    public static final String TOKEN = "token";
+
+    private boolean isPreview;
+    private boolean isActivityFinished;
+
     private Camera camera;
+
+    private AmazonS3 s3;
+    private TransferUtility transferUtility;
+
+    Screening screening;
+    ScreeningToken token;
+
+    RelativeLayout relativeLayout;
+    ImageView buttonTakePicture;
+    ImageView buttonRetakePicture;
+    ImageView buttonSubmitPicture;
+    View progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification_picture);
+
+        s3 = ((Application) getApplicationContext()).getAmazonS3Client();
+        transferUtility = new TransferUtility(s3, getApplicationContext());
+
+        Bundle extras = getIntent().getExtras();
+        token = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
+
+        buttonTakePicture = findViewById(R.id.take_picture);
+        buttonRetakePicture = findViewById(R.id.retake_picture);
+        buttonSubmitPicture = findViewById(R.id.submit_picture);
+
+        progress = findViewById(R.id.progress);
     }
 
-    /*
+
     void addViewAndRemove(float x, float y) {
         mRelFocusViewContainer.removeAllViews();
 
@@ -57,25 +119,84 @@ public class VerificationPictureActivity extends AppCompatActivity {
         }, 1000);
     }
 
+    public static int getRotationAngle(Activity mContext, int cameraId) {
+        android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = mContext.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        int result;
+
+        result = (info.orientation - degrees + 360) % 360;
+
+        return result;
+    }
+
+    public static Bitmap rotate(Bitmap bitmap, int degree) {
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        Matrix mtx = new Matrix();
+        mtx.postRotate(degree);
+
+        return Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, true);
+    }
 
     public void takePicture() {
         camera.takePicture(null, null, mPicture);
 
-        mReTakePictureButton.setVisibility(View.VISIBLE);
-        mSubmitPictureButton.setVisibility(View.VISIBLE);
+        buttonRetakePicture.setVisibility(View.VISIBLE);
+        buttonSubmitPicture.setVisibility(View.VISIBLE);
 
-        mTakePictureButton.setVisibility(View.GONE);
-        mBottomText.setText(R.string.activity_ticket_verification_ticket_camera_info_bottom_alt);
+        buttonTakePicture.setVisibility(View.GONE);
     }
 
     public void reTakePicture() {
         refreshCamera();
 
-        mReTakePictureButton.setVisibility(View.GONE);
-        mSubmitPictureButton.setVisibility(View.GONE);
+        buttonRetakePicture.setVisibility(View.GONE);
+        buttonSubmitPicture.setVisibility(View.GONE);
 
-        mTakePictureButton.setVisibility(View.VISIBLE);
-        mBottomText.setText(R.string.activity_ticket_verification_ticket_camera_info_bottom);
+        buttonTakePicture.setVisibility(View.VISIBLE);
+    }
+
+    public void refreshCamera() {
+        if (surfaceHolder.getSurface() == null) {
+            // preview surface does not exist
+            return;
+        }
+        // stop preview before making changes
+        try {
+            camera.stopPreview();
+            isPreview = false;
+        } catch (Exception e) {
+            // ignore: tried to stop a non-existent preview
+        }
+
+        // set preview size and make any resize, rotate or
+        // reformatting changes here
+        // start preview with new settings
+        try {
+            camera.setPreviewDisplay(surfaceHolder);
+            camera.startPreview();
+
+            isPreview = true;
+        } catch (Exception e) {
+
+        }
     }
 
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
@@ -83,7 +204,7 @@ public class VerificationPictureActivity extends AppCompatActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            int angleToRotate = getRoatationAngle(VerificationActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK);
+            int angleToRotate = getRotationAngle(VerificationPictureActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK);
             // Solve image inverting problem
             Bitmap orignalImage = BitmapFactory.decodeByteArray(data, 0, data.length);
             Bitmap bitmapImage = rotate(orignalImage, angleToRotate);
@@ -117,31 +238,31 @@ public class VerificationPictureActivity extends AppCompatActivity {
                 return;
             }
 
-            mSubmitPictureButton.setOnClickListener(new View.OnClickListener() {
+            buttonSubmitPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mProgress.setVisibility(View.VISIBLE);
-                    mSubmitPictureButton.setEnabled(false);
+                    progress.setVisibility(View.VISIBLE);
+                    buttonSubmitPicture.setEnabled(false);
 
                     final Intent intent = getIntent();
 
                     //MetaData
                     final ObjectMetadata objectMetadata = new ObjectMetadata();
 
-                    if (mToken != null) {
+                    if (screening != null) {
 
-                        final String fileKey = String.valueOf(mToken.getReservation().getId());
+                        final String fileKey = String.valueOf(token.getReservation().getId());
 
                         //AWS S3 upload
                         try {
-                            String reservationId = String.valueOf(mToken.getReservation().getId());
-                            String showTime = String.valueOf(mToken.getTime());
-                            String movieTitle = URLEncoder.encode(mToken.getScreening() != null ? mToken.getScreening().getTitle() : "", "UTF-8");
-                            String theaterName = URLEncoder.encode(mToken.getScreening().getTheaterName(), "UTF-8");
+                            String reservationId = String.valueOf(token.getReservation().getId());
+                            String showTime = String.valueOf(token.getTime());
+                            String movieTitle = URLEncoder.encode(token.getScreening() != null ? token.getScreening().getTitle() : "", "UTF-8");
+                            String theaterName = URLEncoder.encode(token.getScreening().getTheaterName(), "UTF-8");
                             URLEncoder.encode(Build.MODEL, "UTF-8");
-                            String reservationKind = mToken.getScreening().getKind();
-                            String movieId = String.valueOf(mToken.getScreening().getMovieId());
-                            String theaterId = String.valueOf(mToken.getScreening().getTribuneTheaterId());
+                            String reservationKind = token.getScreening().getKind();
+                            String movieId = String.valueOf(token.getScreening().getMoviepassId());
+                            String theaterId = String.valueOf(token.getScreening().getTribuneTheaterId());
 
                             //Setting MetaData
                             objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
@@ -151,12 +272,7 @@ public class VerificationPictureActivity extends AppCompatActivity {
 
                         //Upload
                         uploadAWSFile(getPictureFile, fileKey, objectMetadata);
-                    }
-
-                    //Test if value from get extras is null
-                    String test = String.valueOf(intent.getStringExtra("movieTitle"));
-
-                    if (mToken == null && test != null) {
+                    } else {
 
                         Log.d("intextras", "intextras" + intent.getExtras());
 
@@ -205,33 +321,33 @@ public class VerificationPictureActivity extends AppCompatActivity {
     }
 
     private void uploadAWSFile(File file, final String fileKey, ObjectMetadata objectMetadata) {
-        mSubmitPictureButton.setEnabled(false);
+        buttonSubmitPicture.setEnabled(false);
 
         //Staging Bucket
-        //TransferObserver observer = transferUtility.upload(Constants.STAGING_BUCKET, fileKey, file, objectMetadata);
+        //TransferObserver observer = transferUtility.upload(getStagingBucket(), fileKey, file, objectMetadata);
 
         //Production Bucket
-        TransferObserver observer = transferUtility.upload(Constants.PRDUCTION_BUCKET, fileKey, file, objectMetadata);
+        TransferObserver observer = transferUtility.upload(getProductionBucket(), fileKey, file, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                if(isActivityFinished)
+                if (isActivityFinished)
                     return;
 
                 if (state == TransferState.COMPLETED) {
                     Log.i(TAG, "id: " + id + " State: " + state);
-                    mProgress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
 
                     Intent intent = getIntent();
 
-                    if (mToken != null) {
-                        int reservationId = mToken.getReservation().getId();
+                    if (screening != null) {
+                        int reservationId = token.getReservation().getId();
                         VerificationRequest ticketVerificationRequest = new VerificationRequest();
 
                         RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
                             @Override
                             public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
-                                Intent confirmationIntent = new Intent(VerificationActivity.this, VerificationConfirmationActivity.class);
+                                Intent confirmationIntent = new Intent(VerificationPictureActivity.this, VerificationConfirmationActivity.class);
                                 startActivity(confirmationIntent);
                                 finish();
                             }
@@ -242,12 +358,12 @@ public class VerificationPictureActivity extends AppCompatActivity {
                         });
                     } else if (intent.getExtras() != null) {
                         int reservationId = intent.getIntExtra("reservationId", 0);
-                        VerificationRequest ticketVerificationRequest = new TicketVerificationRequest();
+                        VerificationRequest ticketVerificationRequest = new VerificationRequest();
 
                         RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
                             @Override
                             public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
-                                Intent confirmationIntent = new Intent(VerificationActivity.this, VerificationConfirmationActivity.class);
+                                Intent confirmationIntent = new Intent(VerificationPictureActivity.this, VerificationConfirmationActivity.class);
                                 startActivity(confirmationIntent);
                                 finish();
                             }
@@ -259,18 +375,19 @@ public class VerificationPictureActivity extends AppCompatActivity {
                     }
 
                 } else if (state == TransferState.FAILED) {
-                    Toast.makeText(VerificationActivity.this, "Uploading Failed", Toast.LENGTH_LONG).show();
-                    mProgress.setVisibility(View.GONE);
-                    mSubmitPictureButton.setEnabled(true);
+                    Snackbar snackbar = Snackbar.make(relativeLayout, "Uploading Failed", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    progress.setVisibility(View.GONE);
+                    buttonSubmitPicture.setEnabled(true);
                 } else if (state == TransferState.CANCELED) {
-                    Toast.makeText(VerificationActivity.this, "Uploading Cancelled", Toast.LENGTH_LONG).show();
-                    mProgress.setVisibility(View.GONE);
-                    mSubmitPictureButton.setEnabled(true);
+                    Snackbar snackbar = Snackbar.make(relativeLayout, "Uploading Cancelled", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    progress.setVisibility(View.GONE);
+                    buttonSubmitPicture.setEnabled(true);
                 } else if (state == TransferState.IN_PROGRESS) {
-                    Toast.makeText(VerificationActivity.this, "Uploading", Toast.LENGTH_LONG).show();
+                    Snackbar snackbar = Snackbar.make(relativeLayout, "Uploading", Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
-
-
             }
 
             @Override
@@ -281,14 +398,13 @@ public class VerificationPictureActivity extends AppCompatActivity {
 
             @Override
             public void onError(int id, Exception ex) {
-                if(isActivityFinished)
+                if (isActivityFinished)
                     return;
 
                 Log.e(TAG, "id:" + id);
                 ex.printStackTrace();
-                mProgress.setVisibility(View.GONE);
-                mSubmitPictureButton.setEnabled(true);
-
+                progress.setVisibility(View.GONE);
+                buttonSubmitPicture.setEnabled(true);
             }
         });
 
