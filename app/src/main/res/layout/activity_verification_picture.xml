@@ -9,13 +9,13 @@
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true">
 
         <SurfaceView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
@@ -78,6 +78,16 @@
         android:id="@+id/progress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/image_focus_touch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/focus_view_container"
         android:layout_height="match_parent" />
 
 </RelativeLayout>
