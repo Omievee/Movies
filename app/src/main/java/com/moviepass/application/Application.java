@@ -10,6 +10,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
+import com.taplytics.sdk.Taplytics;
 
 
 public class Application extends MultiDexApplication {
@@ -39,6 +40,8 @@ public class Application extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Taplytics.startTaplytics(this, "setUserAttributes");
 
         UserPreferences.load(this);
 

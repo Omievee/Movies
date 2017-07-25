@@ -28,6 +28,41 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBYTdUkozXsZOpZ0WbJKkXYq_MIb9EBlXI" />
 
+        <!-- Taplytics -->
+        <receiver
+            android:name="com.taplytics.sdk.TLGcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="taplytics.push.OPEN" />
+                <action android:name="taplytics.push.DISMISS" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="tl-6ea3ea4d"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.taplytics.sdk.TLGcmIntentService" />
+
+        <receiver android:name="com.taplytics.sdk.TLBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.taplytics.sdk.TLGeofenceEventService"/>
+
+        <meta-data android:name="com.taplytics.sdk.notification_icon"
+            android:resource="@drawable/notification_icon"/>
+
+        <!-- End of Taplytics -->
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

@@ -53,6 +53,10 @@ public class UserPreferences {
 
     public static String getAuthToken() { return sPrefs.getString(Constants.USER_AUTH_TOKEN, "auth"); }
 
+    public static String getUserName() { return sPrefs.getString(Constants.USER_FIRST_NAME, "bob"); }
+
+    public static String getUserEmail() { return sPrefs.getString(Constants.USER_EMAIL, "email"); }
+
     public static void clearUserId() {
         SharedPreferences.Editor editor = sPrefs.edit();
 

@@ -42,7 +42,9 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.RestrictionsResponse;
+import com.taplytics.sdk.Taplytics;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -69,21 +71,25 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    /* Location
-    protected LocationUpdateBroadCast mLocationBroadCast;
-    protected Location mLocation;
-    protected boolean mDoUpdateLocation = true; */
-
     protected BottomNavigationView bottomNavigationView;
 
     AlertDialog alert;
-    SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "myprefs";
 
     /* Creation */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            JSONObject attributes = new JSONObject();
+            attributes.put("email", UserPreferences.getUserEmail());
+            attributes.put("name", UserPreferences.getUserName());
+
+            Taplytics.setUserAttributes(attributes);
+        } catch (JSONException e) {
+
+        }
 
         checkRestrictions();
     }
