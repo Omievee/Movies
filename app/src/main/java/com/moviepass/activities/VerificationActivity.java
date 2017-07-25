@@ -158,7 +158,7 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                             ChangedMindResponse responseBody = response.body();
                             progress.setVisibility(View.GONE);
 
-                            if (responseBody != null){
+                            if (responseBody != null) {
                                 Snackbar snackbar = Snackbar.make(relativeLayout, responseBody.getMessage(), BaseTransientBottomBar.LENGTH_LONG);
                                 snackbar.show();
                                 finish();
@@ -248,7 +248,7 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                     String movieTitle = getIntent().getStringExtra("movieTitle");
                     String theaterName = getIntent().getStringExtra("theaterName");
                     String showtime = getIntent().getStringExtra("showtime");
-                    String reservationId = getIntent().getStringExtra("reservationId");
+                    int reservationId = getIntent().getIntExtra("reservationId", 0);
                     String tribuneMovieId = getIntent().getStringExtra("tribuneMovieId");
                     String tribuneTheaterId = getIntent().getStringExtra("tribuneTheaterId");
 
@@ -260,6 +260,8 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                     intent.putExtra("tribuneTheaterId", tribuneTheaterId);
                     intent.putExtra("showtime", showtime);
                     startActivity(intent);
+
+                    Log.d("VAresId", String.valueOf(reservationId));
                 }
             }
         });

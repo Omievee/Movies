@@ -44,7 +44,8 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:src="@drawable/camera_button"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+             />
 
         <ImageView
             android:id="@+id/retake_picture"
@@ -53,24 +54,28 @@
             android:gravity="center_horizontal|center_vertical"
             android:layout_gravity="center_horizontal|center_vertical"
             android:background="@drawable/shape_circle_white"
-            android:src="@drawable/icon_arrow_redo"
+            android:src="@drawable/icon_arrow_redo_dark"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:visibility="gone" />
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/submit_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end|center_vertical"
-            android:layout_gravity="end|center_vertical"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:gravity="right|center_vertical"
+            android:layout_gravity="right|center_vertical"
+            android:layout_centerVertical="true"
             android:background="@drawable/shape_circle_white"
             android:src="@drawable/arrow_forward_dark"
             android:layout_alignTop="@+id/take_picture"
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="gone"/>
+
+             />
 
     </RelativeLayout>
 

@@ -126,6 +126,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (restriction.getPopInfo() != null) {
+                        Log.d("popInfo", restriction.getPopInfo().toString());
+
                         int reservationId = restriction.getPopInfo().getReservationId();
                         String movieTitle = restriction.getPopInfo().getMovieTitle();
                         String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();

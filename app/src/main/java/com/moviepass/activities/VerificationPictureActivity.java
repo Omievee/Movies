@@ -137,6 +137,27 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                 takePicture();
             }
         });
+
+        buttonRetakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
+                    retakePicture();
+                }
+            }
+        });
+
+        mRequestFocusImageView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (isPreview) {
+                        focusOnTouch(motionEvent);
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -206,7 +227,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             if (focusModes != null && focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 camera.autoFocus(mAutoFocusTakePictureCallback);
             }
-            addViewAndRemove(holder.getSurfaceFrame().centerX(),holder.getSurfaceFrame().centerY());
+            addViewAndRemove(holder.getSurfaceFrame().centerX(), holder.getSurfaceFrame().centerY());
             isPreview = true;
         } catch (IOException e) {
             //Log.d(TAG, "Error setting camera preview: " + e.getMessage());
@@ -328,9 +349,9 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mRelFocusViewContainer.removeAllViews();
+
             }
-        }, 1000);
+        }, 750);
     }
 
     public static int getRotationAngle(Activity mContext, int cameraId) {
@@ -378,7 +399,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         buttonTakePicture.setVisibility(View.GONE);
     }
 
-    public void reTakePicture() {
+    public void retakePicture() {
         refreshCamera();
 
         buttonRetakePicture.setVisibility(View.GONE);
@@ -593,7 +614,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                             }
                         });
                     }
-
                 } else if (state == TransferState.FAILED) {
                     Snackbar snackbar = Snackbar.make(relativeLayout, "Uploading Failed", Snackbar.LENGTH_LONG);
                     snackbar.show();
