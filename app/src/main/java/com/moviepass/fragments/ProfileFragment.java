@@ -1,37 +1,49 @@
 package com.moviepass.fragments;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.view.View;
+import android.widget.ListView;
+
+import com.moviepass.R;
+import com.moviepass.UserPreferences;
+import com.moviepass.activities.BrowseActivity;
 
 /**
  * Created by anubis on 5/31/17.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends PreferenceFragment {
 
-    private OnFragmentInteractionListener listener;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.profile_preferences);
 
-    public static ProfileFragment newInstance() {
-        return new ProfileFragment();
+        Preference logOut = findPreference("log_out");
+        logOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                UserPreferences.clearUserId();
+
+                Intent intent = new Intent(getActivity(), BrowseActivity.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ProfileFragment.OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
-    }
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
+        // remove dividers
+        View rootView = getView();
+        ListView list = rootView.findViewById(android.R.id.list);
+        list.setDivider(null);
     }
 }

@@ -6,47 +6,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.fragments.ProfileFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
-import butterknife.BindView;
-
-
 /**
- * Created by anubis on 6/9/17.
+ * Created by anubis on 7/23/17.
  */
 
-public class ProfileActivity extends BaseActivity {
+public class ManageProfileActivity extends BaseActivity {
 
+    ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
-
-    @BindView(R.id.log_out)
-    TextView mLogOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_manage_profile);
 
-        /* TODO : Create an if not logged in to show sign up */
-
-        Log.d("userId", String.valueOf(UserPreferences.getUserId()));
-        if (UserPreferences.getUserId() == 0) {
-            Intent intent = new Intent(this, LogInActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, ManageProfileActivity.class);
-            startActivity(intent);
-        }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.container, profileFragment);
+        transaction.commit();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -82,15 +67,15 @@ public class ProfileActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(ProfileActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ManageProfileActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(ProfileActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ManageProfileActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(ProfileActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ManageProfileActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();
@@ -115,5 +100,4 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
 }

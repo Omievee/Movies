@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/xml_account_preferences_account">
+
+        <Preference
+            android:id="@+id/plan_information"
+            android:key="plan_information"
+            android:title="@string/xml_account_preferences_account_plan_information" />
+
+        <Preference
+            android:id="@+id/billing_address"
+            android:key="billing_address"
+            android:title="@string/xml_account_preferences_account_billing_address" />
+
+        <Preference
+            android:id="@+id/shipping_address"
+            android:key="shipping_address"
+            android:title="@string/xml_account_preferences_account_shipping_address" />
+
+        <Preference
+            android:id="@+id/billing_card"
+            android:key="billing_card"
+            android:title="@string/xml_account_preferences_account_billing_card" />
+
+        <Preference
+            android:id="@+id/moviepass_card"
+            android:key="moviepass_card"
+            android:title="@string/xml_account_preferences_account_moviepass_card" />
+
+        <Preference
+            android:id="@+id/log_out"
+            android:key="log_out"
+            android:title="@string/xml_account_preferences_account_log_out" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

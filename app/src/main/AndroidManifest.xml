@@ -93,6 +93,9 @@
             android:name=".activities.LogInActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".activities.ManageProfileActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".activities.MovieActivity"
             android:parentActivityName=".activities.BrowseActivity"
             android:screenOrientation="portrait"
