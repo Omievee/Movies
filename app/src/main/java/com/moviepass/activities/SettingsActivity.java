@@ -1,5 +1,7 @@
 package com.moviepass.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.moviepass.R;
+import com.moviepass.fragments.SettingsFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
 /**
@@ -17,12 +20,18 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 
 public class SettingsActivity extends BaseActivity {
 
+    SettingsFragment settingsFragment;
     protected BottomNavigationView bottomNavigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.container, settingsFragment);
+        transaction.commit();
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -68,7 +77,6 @@ public class SettingsActivity extends BaseActivity {
                     Toast.makeText(SettingsActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(SettingsActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();

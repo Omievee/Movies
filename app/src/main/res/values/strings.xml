@@ -198,4 +198,12 @@
     <string name="xml_account_preferences_account_moviepass_card">MoviePass Card Information</string>
     <string name="xml_account_preferences_account_log_out">Log Out</string>
 
+    <!-- Settings Preferences -->
+    <string name="xml_settings_preferences_settings">Settings</string>
+    <string name="xml_settings_preferences_settings_push">Enable push notifications</string>
+    <string name="xml_settings_preferences_settings_help">Help &amp; Support</string>
+    <string name="xml_settings_preferences_settings_help_faqs">FAQs</string>
+    <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
+    <string name="xml_settings_preferences_settings_help_version">Version</string>
+
 </resources>

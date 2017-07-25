@@ -1,37 +1,47 @@
 package com.moviepass.fragments;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.view.View;
+import android.widget.ListView;
+
+import com.moviepass.BuildConfig;
+import com.moviepass.R;
 
 /**
  * Created by anubis on 5/31/17.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragment {
 
-    private OnFragmentInteractionListener listener;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        // Load the preferences from an XML resource
+        addPreferencesFromResource(R.xml.settings_preferences);
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+        String versionName = BuildConfig.VERSION_NAME;
+        Preference versionPreference = findPreference("version");
+        versionPreference.setSummary(versionName);
+
+        Preference logOut = findPreference("faq");
+        logOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+
+                return true;
+            }
+        });
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof SettingsFragment.OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }
-    }
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
+        // remove dividers
+        View rootView = getView();
+        ListView list = rootView.findViewById(android.R.id.list);
+        list.setDivider(null);
     }
 }

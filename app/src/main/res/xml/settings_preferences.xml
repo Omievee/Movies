@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/xml_settings_preferences_settings">
+
+        <Preference
+            android:id="@+id/push"
+            android:key="push"
+            android:title="@string/xml_settings_preferences_settings_push" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/xml_settings_preferences_settings_help">
+
+        <Preference
+            android:id="@+id/faqs"
+            android:key="faqs"
+            android:title="@string/xml_settings_preferences_settings_help_faqs" />
+
+        <Preference
+            android:id="@+id/contact"
+            android:key="contact"
+            android:title="@string/xml_settings_preferences_settings_help_contact" />
+
+        <Preference
+            android:selectable="false"
+            android:enabled="true"
+            android:key="version"
+            android:title="@string/xml_settings_preferences_settings_help_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
