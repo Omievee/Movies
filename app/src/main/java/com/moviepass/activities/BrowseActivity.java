@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
 import com.moviepass.fragments.BrowseFragment;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.fragments.TheatersFragment;
@@ -45,7 +46,6 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
 
     int SUPPORT_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     String TAG = "TAG";
-
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -109,7 +109,6 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-
     }
 
     @Override
@@ -189,18 +188,20 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
             public void run() {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
-                    Toast.makeText(BrowseActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    if (UserPreferences.getUserId() == 0) {
+                        Intent intent = new Intent(BrowseActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(BrowseActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                    }
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(BrowseActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(BrowseActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                 } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(BrowseActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                    startActivity(new Intent(BrowseActivity.this, NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(BrowseActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                    startActivity(new Intent(BrowseActivity.this, SettingsActivity.class));
                 }
                 finish();
             }

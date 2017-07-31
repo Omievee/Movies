@@ -82,15 +82,12 @@ public class ProfileActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(ProfileActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(ProfileActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(ProfileActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();

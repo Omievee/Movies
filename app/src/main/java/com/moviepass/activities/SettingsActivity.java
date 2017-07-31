@@ -67,17 +67,16 @@ public class SettingsActivity extends BaseActivity {
             public void run() {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(SettingsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(SettingsActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, SettingsActivity.class));
                 }
                 finish();
             }

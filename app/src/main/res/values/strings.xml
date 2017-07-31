@@ -173,6 +173,14 @@
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
 
+    <!-- List Item Movie Poster -->
+    <string name="list_item_history_title_placeholder">[Title]</string>
+    <string name="list_item_history_theater_placeholder">[Theater]</string>
+    <string name="list_item_history_auditorium_placeholder">[Auditorium]</string>
+    <string name="list_item_history_time">Time</string>
+    <string name="list_item_history_date">Date</string>
+    <string name="list_item_history_time_placeholder">[Time]</string>
+    <string name="list_item_history_date_placeholder">[Date]</string>
 
     <!-- List Item Movie Poster -->
     <string name="list_item_movie_poster_title_placeholder">[Title]</string>

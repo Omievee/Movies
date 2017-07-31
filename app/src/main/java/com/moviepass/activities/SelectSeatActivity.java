@@ -211,7 +211,7 @@ public class SelectSeatActivity extends BaseActivity {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(SelectSeatActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                 } else if (itemId == R.id.action_notifications) {
                     Toast.makeText(SelectSeatActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();

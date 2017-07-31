@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;

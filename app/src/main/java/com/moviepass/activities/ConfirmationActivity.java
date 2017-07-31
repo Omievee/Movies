@@ -154,18 +154,17 @@ public class ConfirmationActivity extends BaseActivity {
             public void run() {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(ConfirmationActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
+                    startActivity(new Intent(ConfirmationActivity.this, BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {
                     Toast.makeText(ConfirmationActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                    startActivity(new Intent(ConfirmationActivity.this, NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
                     Toast.makeText(ConfirmationActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                    startActivity(new Intent(ConfirmationActivity.this, SettingsActivity.class));
                 }
                 finish();
             }

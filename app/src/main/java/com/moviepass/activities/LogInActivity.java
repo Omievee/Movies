@@ -254,7 +254,7 @@ public class LogInActivity extends BaseActivity {
                 if (itemId == R.id.action_profile) {
                 } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(LogInActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
+                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_browse) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
                 } else if (itemId == R.id.action_notifications) {

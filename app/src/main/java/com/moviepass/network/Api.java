@@ -11,6 +11,7 @@ import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
 import com.moviepass.responses.ChangedMindResponse;
+import com.moviepass.responses.HistoryResponse;
 import com.moviepass.responses.PlanResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.RestrictionsResponse;
@@ -71,7 +72,8 @@ public interface Api {
     @POST("/api/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
-
+    @GET("/api/v2/reservations")
+    Call<HistoryResponse>  getReservations();
 
     /* Theaters */
     @GET("/api/v3/theaters/near")

@@ -122,9 +122,6 @@
             android:name=".activities.ConfirmationActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ETicketsActivity"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.LogInActivity"
             android:theme="@style/AppTheme" />
         <activity
@@ -148,6 +145,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ProfileActivity"
+        <activity
+            android:name=".activities.ReservationsActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SelectSeatActivity"
