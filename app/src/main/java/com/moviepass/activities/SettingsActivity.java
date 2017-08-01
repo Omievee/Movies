@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -20,7 +22,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 
 public class SettingsActivity extends BaseActivity {
 
-    SettingsFragment settingsFragment;
+    SettingsFragment settingsFragment = new SettingsFragment();
     protected BottomNavigationView bottomNavigationView;
 
     @Override
@@ -28,12 +30,21 @@ public class SettingsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        // Enable the Up button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle("Settings");
+
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.container, settingsFragment);
         transaction.commit();
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
@@ -50,6 +61,15 @@ public class SettingsActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(SettingsActivity.this, BrowseActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     int getContentViewId() {

@@ -95,14 +95,14 @@ public class UserPreferences {
         return Double.longBitsToDouble(sPrefs.getLong(Constants.PREFS_LATITUDE, Double.doubleToLongBits(0)));
     }
 
-    public static void setRottenTomatoesDisplay(boolean rottenTomatoesDisplay) {
+    public static void setPushPermission(boolean pushPermission) {
         SharedPreferences.Editor editor = sPrefs.edit();
 
-        editor.putBoolean(Constants.ROTTEN_TOMATOES, rottenTomatoesDisplay);
+        editor.putBoolean(Constants.PUSH_PERMISSION, pushPermission);
         editor.apply();
     }
 
-    public static boolean getRottenTomatoesDisplay() { return sPrefs.getBoolean(Constants.ROTTEN_TOMATOES, true); }
+    public static boolean getPushPermission() { return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true); }
 
     public static void setRestrictions(String status, boolean threeDEnabled, boolean allFormatsEnabled,
                                        boolean verificationRequired, boolean hasActiveCard) {

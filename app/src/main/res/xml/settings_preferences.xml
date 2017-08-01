@@ -5,7 +5,7 @@
     <PreferenceCategory
         android:title="@string/xml_settings_preferences_settings">
 
-        <Preference
+        <SwitchPreference
             android:id="@+id/push"
             android:key="push"
             android:title="@string/xml_settings_preferences_settings_push" />
@@ -21,8 +21,8 @@
             android:title="@string/xml_settings_preferences_settings_help_faqs" />
 
         <Preference
-            android:id="@+id/contact"
-            android:key="contact"
+            android:id="@+id/contact_support"
+            android:key="contact_support"
             android:title="@string/xml_settings_preferences_settings_help_contact" />
 
         <Preference

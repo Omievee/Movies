@@ -6,47 +6,42 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.fragments.ProfileFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
-import butterknife.BindView;
-
-
 /**
- * Created by anubis on 6/9/17.
+ * Created by anubis on 7/23/17.
  */
 
 public class ProfileActivity extends BaseActivity {
 
+    ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
-
-    @BindView(R.id.log_out)
-    TextView mLogOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        /* TODO : Create an if not logged in to show sign up */
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        Log.d("userId", String.valueOf(UserPreferences.getUserId()));
-        if (UserPreferences.getUserId() == 0) {
-            Intent intent = new Intent(this, LogInActivity.class);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, ManageProfileActivity.class);
-            startActivity(intent);
-        }
+        final ActionBar actionBar = getSupportActionBar();
+
+        // Enable the Up button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle("Profile");
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.container, profileFragment);
+        transaction.commit();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -64,6 +59,15 @@ public class ProfileActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(ProfileActivity.this, BrowseActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     int getContentViewId() {
@@ -112,5 +116,4 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
 }
