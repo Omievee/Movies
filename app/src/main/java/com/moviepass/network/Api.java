@@ -4,6 +4,7 @@ import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.Plan;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
+import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.LogInRequest;
@@ -17,6 +18,7 @@ import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.RestrictionsResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.moviepass.responses.SeatingsInfoResponse;
+import com.moviepass.responses.UserInfoResponse;
 import com.moviepass.responses.VerificationLostResponse;
 import com.moviepass.responses.VerificationResponse;
 
@@ -86,4 +88,9 @@ public interface Api {
     @GET("/api/v2/auth/restrictions")
     Call<RestrictionsResponse> getRestrictions( );
 
+    @GET("/api/v1/users/{userId}")
+    Call<UserInfoResponse> getUserData(@Path("userId") int userId);
+
+    @PUT("/api/v1/users/{userId}")
+    Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 }

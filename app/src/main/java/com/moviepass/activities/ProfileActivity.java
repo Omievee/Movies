@@ -64,7 +64,15 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(ProfileActivity.this, BrowseActivity.class));
+
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            } else {
+                startActivity(new Intent(ProfileActivity.this, BrowseActivity.class));
+            }
+            return true;
+
         }
 
         return super.onOptionsItemSelected(item);

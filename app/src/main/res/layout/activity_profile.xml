@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@id/navigation"/>
+        android:layout_above="@id/navigation" />
 
     <include
         android:id="@+id/navigation"
@@ -28,5 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

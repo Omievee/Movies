@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/xml_plan_information_preferences">
+
+        <Preference
+            android:id="@+id/plan_information"
+            android:key="plan_information"
+            android:title="@string/xml_plan_information_preferences_plan" />
+
+        <Preference
+            android:id="@+id/bill_date"
+            android:key="bill_date"
+            android:title="@string/xml_plan_information_preferences_bill_date" />
+
+        <Preference
+            android:id="@+id/cancel"
+            android:key="cancel"
+            android:title="@string/xml_plan_information_preferences_cancel" />
+
+        <Preference
+            android:id="@+id/contact"
+            android:key="contact"
+            android:title="@string/xml_plan_information_preferences_contact" />
+
+        <Preference android:widgetLayout="@layout/view_loading" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

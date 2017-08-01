@@ -130,6 +130,34 @@
     <string name="fragment_movies_top_box_office">Top Box Office</string>
     <string name="fragment_movies_coming_soon">Coming Soon</string>
 
+    <!-- ProfileBillingAddressFragment -->
+    <string name="fragment_profile_billing_address_address">Address</string>
+    <string name="fragment_profile_billing_address_address_two">Address Line 2</string>
+    <string name="fragment_profile_billing_address_city">City</string>
+    <string name="fragment_profile_billing_address_state">State</string>
+    <string name="fragment_profile_billing_address_zip">Zip</string>
+    <string name="fragment_profile_billing_address_update">Update</string>
+    <string name="fragment_profile_billing_address_valid_address">Please enter a valid address</string>
+    <string name="fragment_profile_billing_address_valid_address_two">Please enter a valid address line 2</string>
+    <string name="fragment_profile_billing_address_valid_city">Please enter a valid city</string>
+    <string name="fragment_profile_billing_address_valid_state">Please enter a valid state</string>
+    <string name="fragment_profile_billing_address_valid_zip">Please enter a valid zip code</string>
+    <string name="fragment_profile_billing_address_updated">Billing Address Updated</string>
+
+    <!-- ProfileShippingAddressFragment -->
+    <string name="fragment_profile_shipping_address_address">Address</string>
+    <string name="fragment_profile_shipping_address_address_two">Address Line 2</string>
+    <string name="fragment_profile_shipping_address_city">City</string>
+    <string name="fragment_profile_shipping_address_state">State</string>
+    <string name="fragment_profile_shipping_address_zip">Zip</string>
+    <string name="fragment_profile_shipping_address_update">Update</string>
+    <string name="fragment_profile_shipping_address_valid_address">Please enter a valid address</string>
+    <string name="fragment_profile_shipping_address_valid_address_two">Please enter a valid address line 2</string>
+    <string name="fragment_profile_shipping_address_valid_city">Please enter a valid city</string>
+    <string name="fragment_profile_shipping_address_valid_state">Please enter a valid state</string>
+    <string name="fragment_profile_shipping_address_valid_zip">Please enter a valid zip code</string>
+    <string name="fragment_profile_shipping_address_updated">Shipping Address Updated</string>
+
     <!-- SignUpStepOneFragment -->
     <string name="fragment_sign_up_step_one_header">Available at over 3,700 theaters in the US</string>
     <string name="fragment_sign_up_step_one_zip_hint">Enter your zipcode</string>
@@ -202,9 +230,17 @@
     <string name="xml_account_preferences_account_plan_information">Plan Information</string>
     <string name="xml_account_preferences_account_billing_address">Billing Address</string>
     <string name="xml_account_preferences_account_shipping_address">Shipping Address</string>
-    <string name="xml_account_preferences_account_billing_card">Payment Information</string>
+    <string name="xml_account_preferences_account_payment_information">Payment Information</string>
     <string name="xml_account_preferences_account_moviepass_card">MoviePass Card Information</string>
+    <string name="xml_account_preferences_account_facebook">Connect to Facebook</string>
     <string name="xml_account_preferences_account_log_out">Log Out</string>
+
+    <!-- ProfilePlanInformation -->
+    <string name="xml_plan_information_preferences">Subscription</string>
+    <string name="xml_plan_information_preferences_plan">Plan</string>
+    <string name="xml_plan_information_preferences_bill_date">Next Bill Date</string>
+    <string name="xml_plan_information_preferences_cancel">Cancel Subscription</string>
+    <string name="xml_plan_information_preferences_contact">Contact Support</string>
 
     <!-- Settings Preferences -->
     <string name="xml_settings_preferences_settings">Settings</string>

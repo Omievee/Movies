@@ -21,14 +21,19 @@
             android:title="@string/xml_account_preferences_account_shipping_address" />
 
         <Preference
-            android:id="@+id/billing_card"
-            android:key="billing_card"
-            android:title="@string/xml_account_preferences_account_billing_card" />
+            android:id="@+id/payment_information"
+            android:key="payment_information"
+            android:title="@string/xml_account_preferences_account_payment_information" />
 
         <Preference
             android:id="@+id/moviepass_card"
             android:key="moviepass_card"
             android:title="@string/xml_account_preferences_account_moviepass_card" />
+
+        <Preference
+            android:id="@+id/facebook"
+            android:key="facebook"
+            android:title="@string/xml_account_preferences_account_facebook" />
 
         <Preference
             android:id="@+id/log_out"

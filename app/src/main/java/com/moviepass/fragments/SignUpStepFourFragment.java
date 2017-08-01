@@ -27,9 +27,7 @@ import com.moviepass.BuildConfig;
 import com.moviepass.Constants;
 import com.moviepass.R;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
 
 /**
