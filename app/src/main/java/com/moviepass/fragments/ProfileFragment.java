@@ -23,6 +23,7 @@ public class ProfileFragment extends PreferenceFragment {
     ProfilePlanInformationFragment profilePlanInformationFragent = new ProfilePlanInformationFragment();
     ProfileBillingAddressFragment profileBillingAddressFragment = new ProfileBillingAddressFragment();
     ProfileShippingAddressFragment profileShippingAddressFragment = new ProfileShippingAddressFragment();
+    ProfilePaymentInformationFragment profilePaymentInformationFragment = new ProfilePaymentInformationFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class ProfileFragment extends PreferenceFragment {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, profileBillingAddressFragment);
+                transaction.replace(R.id.container, profilePaymentInformationFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 

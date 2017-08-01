@@ -7,6 +7,7 @@ import com.moviepass.model.User;
 import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
+import com.moviepass.requests.CreditCardChangeRequest;
 import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.VerificationLostRequest;
@@ -93,4 +94,7 @@ public interface Api {
 
     @PUT("/api/v1/users/{userId}")
     Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
+
+    @PUT("/api/v1/users/{userId}")
+    Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 }

@@ -144,6 +144,12 @@
     <string name="fragment_profile_billing_address_valid_zip">Please enter a valid zip code</string>
     <string name="fragment_profile_billing_address_updated">Billing Address Updated</string>
 
+    <!-- ProfilePaymentInformationFragment -->
+    <string name="fragment_profile_payment_information_current_card">Current Card:</string>
+    <string name="fragment_profile_payment_information_current_card_number">[Card Number]</string>
+    <string name="fragment_profile_payment_information_instructions">Click to Update Payment Information</string>
+    <string name="fragment_profile_payment_information_update">Update</string>
+
     <!-- ProfileShippingAddressFragment -->
     <string name="fragment_profile_shipping_address_address">Address</string>
     <string name="fragment_profile_shipping_address_address_two">Address Line 2</string>
