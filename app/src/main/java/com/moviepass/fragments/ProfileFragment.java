@@ -24,6 +24,7 @@ public class ProfileFragment extends PreferenceFragment {
     ProfileBillingAddressFragment profileBillingAddressFragment = new ProfileBillingAddressFragment();
     ProfileShippingAddressFragment profileShippingAddressFragment = new ProfileShippingAddressFragment();
     ProfilePaymentInformationFragment profilePaymentInformationFragment = new ProfilePaymentInformationFragment();
+    ProfileMoviePassCardFragment profileMoviePassCardFragment = new ProfileMoviePassCardFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,6 @@ public class ProfileFragment extends PreferenceFragment {
         planInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -54,7 +54,6 @@ public class ProfileFragment extends PreferenceFragment {
         billingAddress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -70,7 +69,6 @@ public class ProfileFragment extends PreferenceFragment {
         shippingAddress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -86,7 +84,6 @@ public class ProfileFragment extends PreferenceFragment {
         paymentInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -102,11 +99,10 @@ public class ProfileFragment extends PreferenceFragment {
         moviepassCard.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, profileBillingAddressFragment);
+                transaction.replace(R.id.container, profileMoviePassCardFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 
@@ -115,17 +111,12 @@ public class ProfileFragment extends PreferenceFragment {
         });
 
         Preference facebook = findPreference("facebook");
+
+
+
         facebook.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, profileBillingAddressFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
                 return true;
             }
         });

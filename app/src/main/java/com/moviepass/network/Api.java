@@ -1,5 +1,6 @@
 package com.moviepass.network;
 
+import com.moviepass.model.MoviePassCard;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.Plan;
 import com.moviepass.model.TheatersResponse;
@@ -14,6 +15,7 @@ import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.HistoryResponse;
+import com.moviepass.responses.MoviePassCardsResponse;
 import com.moviepass.responses.PlanResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.RestrictionsResponse;
@@ -22,6 +24,8 @@ import com.moviepass.responses.SeatingsInfoResponse;
 import com.moviepass.responses.UserInfoResponse;
 import com.moviepass.responses.VerificationLostResponse;
 import com.moviepass.responses.VerificationResponse;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -44,6 +48,10 @@ public interface Api {
 
     @GET("/api/v1/auth/passwordReset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
+
+    /* Cards */
+    @GET("/api/v4/cards")
+    Call<List<MoviePassCard>> getMoviePassCards( );
 
     /* Movies */
     @GET("/api/v4/movies")
