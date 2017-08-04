@@ -15,13 +15,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp">
 
-        <ImageView
-            android:id="@+id/poster"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/confirmation_ticket_top"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/poster"
+                android:layout_width="346dp"
+                android:layout_height="345dp"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:id="@+id/mask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/confirmation_ticket_top" />
+
+        </FrameLayout>
+
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -91,7 +105,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/time_placeholder"
+                        android:id="@+id/time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
@@ -117,7 +131,7 @@
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/date_placeholder"
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/date_text"
@@ -137,18 +151,18 @@
                 android:layout_below="@+id/showtime_things">
 
                 <TextView
-                    android:id="@+id/seat_text"
+                    android:id="@+id/auditorium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/activity_confirmation_auditorium"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/seat_placeholder"
+                    android:id="@+id/seat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/seat_text"
+                    android:layout_below="@+id/auditorium"
                     android:text="@string/activity_confirmation_seat"
                     android:textColor="@color/white"
                     android:textSize="16sp" />

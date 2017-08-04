@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.moviepass.R;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
+import com.moviepass.model.ScreeningToken;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
@@ -39,15 +41,22 @@ public class ConfirmationActivity extends BaseActivity {
 
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screening";
+    public static final String TOKEN = "token";
 
-    Reservation mReservation;
-    Screening mScreening;
+    Reservation reservation;
+    Screening screening;
+    ScreeningToken screeningToken;
     FloatingActionMenu fab;
     View progress;
 
     ImageView poster;
-    TextView mMovieTitle;
-    TextView mTheater;
+    ImageView mask;
+    TextView movieTitle;
+    TextView theater;
+    TextView time;
+    TextView date;
+    TextView auditorium;
+    TextView seat;
 
     protected BottomNavigationView bottomNavigationView;
 
@@ -63,40 +72,40 @@ public class ConfirmationActivity extends BaseActivity {
         progress = findViewById(R.id.progress);
 
         Bundle extras = getIntent().getExtras();
-        mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
-        mReservation = Parcels.unwrap(getIntent().getParcelableExtra(RESERVATION));
+
+        screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
+        screening = screeningToken.getScreening();
+        reservation = screeningToken.getReservation();
+        String screeningTime = screeningToken.getTime();
 
         poster = findViewById(R.id.poster);
-        mMovieTitle = findViewById(R.id.movie_title);
-        mTheater = findViewById(R.id.theater);
+        mask = findViewById(R.id.mask);
+        movieTitle = findViewById(R.id.movie_title);
+        theater = findViewById(R.id.theater);
+        time = findViewById(R.id.time);
+        date = findViewById(R.id.date);
+        auditorium = findViewById(R.id.auditorium);
+        seat = findViewById(R.id.seat);
 
-        mMovieTitle.setText(mScreening.getTitle());
-        mTheater.setText(mScreening.getTheaterName());
+        movieTitle.setText(screening.getTitle());
+        theater.setText(screening.getTheaterName());
+        time.setText(screeningTime);
+        date.setText(screening.getDate());
 
-        String imgUrl = mScreening.getImageUrl();
+        /* TODO : Add Auditorum logic */
+        auditorium.setVisibility(View.GONE);
+
+        seat.setText(screeningToken.getSeatName());
+
+        String imgUrl = screening.getImageUrl();
 
         Picasso.Builder builder = new Picasso.Builder(this);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
-            }
-        });
         builder.build()
                 .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(poster, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
+                .error(R.drawable.confirmation_ticket_top_red)
+                .centerCrop()
+                .fit()
+                .into(poster);
 
         FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
         buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
@@ -110,7 +119,7 @@ public class ConfirmationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 progress.setVisibility(View.VISIBLE);
-                ChangedMindRequest request = new ChangedMindRequest(mReservation.getId());
+                ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
 
                 RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
                     @Override
