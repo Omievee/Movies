@@ -21,6 +21,7 @@ public class Constants {
     public static final String USER_ID = "0";
     public static final String USER_DEVICE_UUID = "UUID";
     public static final String USER_AUTH_TOKEN = "AUTH";
+    public static final String FB_TOKEN = "token";
 
     public static final String USER_FIRST_NAME = "CATHERINE";
     public static final String USER_EMAIL = "BOB@LOBLAW.COM";
@@ -39,6 +40,7 @@ public class Constants {
 
     //Restrictions Things
     public static final String SUBSCRIPTION_STATUS = "STATUS";
+    public static final String FB_PRESENT = "fb";
     public static final String THREE_D_ENABLED = "threed";
     public static final String ALL_FORMATS_ENABLED = "imax";
     public static final String VERIFICATION_REQUIRED = "verification";

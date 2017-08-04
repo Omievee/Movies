@@ -121,14 +121,21 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     RestrictionsResponse restriction = response.body();
 
                     String status = restriction.getSubscriptionStatus();
+                    boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
                     boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
                     boolean verificationRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
 
-                    /* TODO : Update only if change */
+                    if (!UserPreferences.getRestrictionStatus().equals(status) ||
+                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+                            UserPreferences.getRestrictionVerificationRequired() != verificationRequired ||
+                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard) {
 
-                    UserPreferences.setRestrictions(status, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard);
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard);
+                    }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (restriction.getPopInfo() != null) {

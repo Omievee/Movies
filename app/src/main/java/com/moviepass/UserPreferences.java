@@ -3,6 +3,7 @@ package com.moviepass;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.util.StringBuilderPrinter;
 
 /**
  * Created by ryan on 4/26/17.
@@ -104,11 +105,12 @@ public class UserPreferences {
 
     public static boolean getPushPermission() { return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true); }
 
-    public static void setRestrictions(String status, boolean threeDEnabled, boolean allFormatsEnabled,
+    public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
                                        boolean verificationRequired, boolean hasActiveCard) {
         SharedPreferences.Editor editor = sPrefs.edit();
 
         editor.putString(Constants.SUBSCRIPTION_STATUS, status);
+        editor.putBoolean(Constants.FB_PRESENT, fb);
         editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
         editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
         editor.putBoolean(Constants.VERIFICATION_REQUIRED, verificationRequired);
@@ -116,7 +118,49 @@ public class UserPreferences {
         editor.apply();
     }
 
+    public static String getRestrictionStatus() {
+        return sPrefs.getString(Constants.SUBSCRIPTION_STATUS, "status");
+    }
+
+    public static boolean getRestrictionFacebookPresent() {
+        return sPrefs.getBoolean(Constants.FB_PRESENT, true);
+    }
+
+    public static boolean getRestrictionThreeDEnabled() {
+        return sPrefs.getBoolean(Constants.THREE_D_ENABLED, true);
+    }
+
+    public static boolean getRestrictionAllFormatsEnabled() {
+        return sPrefs.getBoolean(Constants.ALL_FORMATS_ENABLED, true);
+    }
+
+    public static boolean getRestrictionVerificationRequired() {
+        return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, true);
+    }
+
+    public static boolean getRestrictionHasActiveCard() {
+        return sPrefs.getBoolean(Constants.ACTIVE_CARD, true);
+    }
+
     public static boolean getIsVerificationRequired() {
         return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, false);
+    }
+
+    public static void setFbToken(String token) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putString(Constants.FB_TOKEN, token);
+        editor.apply();
+    }
+
+    public static void clearFbToken() {
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putString(Constants.FB_TOKEN, "token");
+        editor.apply();
+    }
+
+    public static String getFbToken() {
+        return sPrefs.getString(Constants.FB_TOKEN, "token");
     }
 }
