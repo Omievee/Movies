@@ -9,14 +9,14 @@ import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.CreditCardChangeRequest;
+import com.moviepass.requests.FacebookLinkRequest;
+import com.moviepass.requests.FacebookSignInRequest;
 import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.HistoryResponse;
-import com.moviepass.responses.MoviePassCardsResponse;
-import com.moviepass.responses.PlanResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.RestrictionsResponse;
 import com.moviepass.responses.ScreeningsResponse;
@@ -48,6 +48,9 @@ public interface Api {
 
     @GET("/api/v1/auth/passwordReset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
+
+    @POST("/api/v1/auth/fb_login")
+    Call<User> loginWithFacebook(@Header(HEADER_UUID) String deviceId, @Body FacebookSignInRequest request);
 
     /* Cards */
     @GET("/api/v4/cards")
@@ -105,4 +108,7 @@ public interface Api {
 
     @PUT("/api/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
+
+    @POST("/api/v1/users/link_to_facebook")
+    Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 }

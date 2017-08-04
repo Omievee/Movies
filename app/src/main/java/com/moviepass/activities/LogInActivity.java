@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +21,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.User;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.FacebookSignInRequest;
 import com.moviepass.requests.LogInRequest;
 
 import org.json.JSONObject;
@@ -53,14 +62,24 @@ public class LogInActivity extends BaseActivity {
     TextView mForgotPassword;
     @BindView(R.id.sign_up)
     TextView mSignUp;
+    @BindView(R.id.progress)
+    View progress;
+
+    CallbackManager callbackManager;
+    LoginButton loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
+
         mInputEmail = findViewById(R.id.input_email);
         mInputPassword = findViewById(R.id.input_password);
+        progress = findViewById(R.id.progress);
+        loginButton = findViewById(R.id.button_facebook_log_in);
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -90,6 +109,53 @@ public class LogInActivity extends BaseActivity {
                 forgotPassword();
             }
         });
+
+        loginButton.setReadPermissions("public_profile", "email", "user_birthday");
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+
+                        Log.d("loginResult", loginResult.getAccessToken().getToken());
+
+                        String device = UserPreferences.getDeviceUuid();
+
+                        FacebookSignInRequest fbSigninRequest = new FacebookSignInRequest(loginResult.getAccessToken().getToken());
+
+                        RestClient.getAuthenticated().loginWithFacebook(device, fbSigninRequest).enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Call<User> call, Response<User> response) {
+                                if (response.body() != null && response.isSuccessful()) {
+                                    moviePassLoginSucceeded(response.body());
+                                } else if (response.errorBody() != null) {
+                                    Toast.makeText(LogInActivity.this, "Please check your credentials and try again.", Toast.LENGTH_LONG).show();
+                                    progress.setVisibility(View.GONE);
+//                                    toggleControls(true);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<User> call, Throwable t) {
+                                progress.setVisibility(View.INVISIBLE);
+//                                toggleControls(true);
+                                Toast.makeText(LogInActivity.this, t.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        Toast.makeText(LogInActivity.this, "cancel", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(LogInActivity.this, exception.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     @Override
@@ -221,6 +287,8 @@ public class LogInActivity extends BaseActivity {
             String deviceUuid = user.getDeviceUuid();
             String authToken = user.getAuthToken();
 
+            UserPreferences.setFbToken(authToken);
+
             UserPreferences.setUserCredentials(userId, deviceUuid, authToken, user.getFirstName(), user.getEmail());
 
             Intent i = new Intent(LogInActivity.this, BrowseActivity.class);
@@ -235,6 +303,12 @@ public class LogInActivity extends BaseActivity {
 //            mProgress.setVisibility(View.INVISIBLE);
             finish();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     int getContentViewId() {

@@ -9,7 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/progress"
+        android:layout_toEndOf="@+id/progress">
 
         <ImageView
             android:id="@+id/logo"
@@ -75,27 +78,15 @@
             android:text="@string/activity_sign_in_log_in"
             android:textSize="15sp" />
 
-        <!-- <com.facebook.login.widget.LoginButton -->
-        <!-- <Button
-            android:id="@+id/button_facebook_log_in"
-            android:layout_height="48dp"
-            android:layout_width="match_parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="30dp"
-            android:gravity="center"
-            android:elevation="2dp"
-            android:layout_below="@+id/button_log_in"
-            android:background="@drawable/button_facebook"
-            android:text="@string/activity_sign_in_log_in_with_facebook"
-            android:textSize="15sp"/> -->
-
         <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook_log_in"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginBottom="@dimen/margin_half"
+            android:paddingTop="@dimen/margin_standard"
+            android:paddingBottom="@dimen/margin_standard"/>
 
     </LinearLayout>
 
@@ -134,5 +125,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

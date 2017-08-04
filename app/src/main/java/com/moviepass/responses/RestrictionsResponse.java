@@ -10,6 +10,7 @@ public class RestrictionsResponse {
 
     int countdown;
     String subscriptionStatus;
+    boolean facebook;
     boolean has3d;
     boolean hasAllFormats;
     boolean proofOfPurchaseRequired;
@@ -26,6 +27,8 @@ public class RestrictionsResponse {
     public String getSubscriptionStatus() {
         return subscriptionStatus;
     }
+
+    public boolean getFacebookPresent() {return facebook; }
 
     public boolean get3dEnabled() { return has3d; }
 

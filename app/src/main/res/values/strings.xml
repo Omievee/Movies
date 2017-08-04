@@ -15,7 +15,7 @@
     <string name="menu_bottom_navigation_main_notifications">Notifications</string>
     <string name="menu_bottom_navigation_main_settings">Settings</string>
 
-    <!-- Activitites -->
+    <!-- Activities -->
 
     <!-- ConfirmationActivity -->
     <string name="activity_confirmation_movie_title">[Title]</string>
@@ -129,6 +129,11 @@
     <string name="fragment_movies_new_releases">New Releases</string>
     <string name="fragment_movies_top_box_office">Top Box Office</string>
     <string name="fragment_movies_coming_soon">Coming Soon</string>
+
+    <!-- ProfileFragment -->
+    <string name="fragment_profile_facebook_never_post">We\'ll never post without your permission.</string>
+    <string name="fragment_profile_facebook_connect">Connect to Facebook</string>
+    <string name="fragment_profile_facebook_disconnect">Disconnect from Facebook</string>
 
     <!-- ProfileBillingAddressFragment -->
     <string name="fragment_profile_billing_address_address">Address</string>
