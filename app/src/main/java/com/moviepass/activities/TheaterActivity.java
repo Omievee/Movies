@@ -442,9 +442,9 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
         Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
 
-
         if (screening.getProvider().ticketType.matches("STANDARD")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(normalizedMovieId, externalMovieId, format, tribuneTheaterId, screeningId, dateTime);
+            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
+                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
@@ -471,10 +471,11 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
-                if (reservationResponse.isOk()) {
+                if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
                     mProgress.setVisibility(View.GONE);
 
+                    Log.d("screening,", screening.toString());
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
 
                     if (UserPreferences.getIsVerificationRequired()) {

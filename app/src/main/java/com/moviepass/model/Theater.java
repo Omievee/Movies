@@ -50,9 +50,7 @@ public class Theater {
         return address;
     }
 
-    public double getDistance() {
-        return distance;
-    }
+    public double getDistance() { return distance; }
 
     public int getMoviepassId() { return  moviepassId; }
 

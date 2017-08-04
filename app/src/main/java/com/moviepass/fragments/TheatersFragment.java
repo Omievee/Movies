@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -232,9 +234,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             @Override
             public void onPlaceSelected(Place place) {
                 mRequestingLocationUpdates = false;
-                CameraUpdate current = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM_LEVEL);
 
-                mMap.moveCamera(current);
                 loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
             }
 
@@ -320,6 +320,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         }
 
         updateLocationUI();
+
+        if (mRecyclerView.getVisibility() != View.VISIBLE && !mRequestingLocationUpdates) {
+            loadTheaters(mMap.getCameraPosition().target.latitude, mMap.getCameraPosition().target.longitude);
+        }
     }
 
     @Override
@@ -387,21 +391,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                         }
 
                         loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-
-                        LatLng coordinates = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
-
-                        mMap.moveCamera(current);
                     }
                 } catch (Exception e) {
                     Log.d("exception", e.toString());
                 }
             } else {
-                loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-
-                LatLng coords = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coords, DEFAULT_ZOOM_LEVEL);
-                mMap.moveCamera(current);
+                if (mRequestingLocationUpdates) {
+                    loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                }
             }
         } else {
             if (checkPermissions()) {
@@ -410,12 +407,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     public void onComplete(@NonNull Task<Location> task) {
                         Location loc = task.getResult();
 
-                        loadTheaters(loc.getLatitude(), loc.getLongitude());
+                        if (mRequestingLocationUpdates) {
+                            loadTheaters(loc.getLatitude(), loc.getLongitude());
 
-                        LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
-                        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+                            LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
+                            CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
 
-                        mMap.moveCamera(current);
+                            mMap.moveCamera(current);
+                        }
                     }
                 });
             } else {
@@ -581,6 +580,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mProgress.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
 
+        LatLng latlng = new LatLng(latitude, longitude);
+        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
+        Log.d("loadTheaters", latlng.toString());
+        mMap.moveCamera(current);
+        mMap.animateCamera(current);
+
         RestClient.getAuthenticated().getTheaters(latitude, longitude)
                 .enqueue(new Callback<TheatersResponse>() {
             @Override
@@ -606,7 +611,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                         mClusterManager.clearItems();
                         mClusterManager.cluster();
 
-                        for (Theater theater : theaterList) {
+                        for (final Theater theater : theaterList) {
                             LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                             mMapData.put(location, theater);
@@ -629,16 +634,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                 mProgress.setVisibility(View.GONE);
                             }
 
-                            int position;
+                            final int position;
                             position = theaterList.indexOf(theater);
 
-                            if (position == 0) {
-                                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                        theater.getName(), R.drawable.theater_pin, position));
-                            } else {
-                                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                        theater.getName(), R.drawable.theater_pin_unselected, position));
-                            }
+
+                            mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
+                                    theater.getName(), R.drawable.theater_pin, position));
+
 
                             mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
                             final CameraPosition[] mPreviousCameraPosition = {null};
@@ -657,7 +659,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                             mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                                 @Override
-                                public void onInfoWindowClick(Marker marker) {
+                                public void onInfoWindowClick(final Marker marker) {
                                     mRequestingLocationUpdates = false;
                                     final Marker finalMarker = marker;
                                     mProgress.setVisibility(View.VISIBLE);
@@ -673,7 +675,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                 //Load New RecyclerView Based on User's Click
                                                 mClusterManager.clearItems();
                                                 mClusterManager.cluster();
-                                                loadTheaters(finalMarker.getPosition().latitude, finalMarker.getPosition().longitude);
+
+                                                Projection projection = mMap.getProjection();
+                                                LatLng markerLocation = finalMarker.getPosition();
+                                                Point screenPosition = projection.toScreenLocation(markerLocation);
+
+                                                onTheaterClick(position, theater, screenPosition.x, screenPosition.y);
                                             }
                                         });
                                 }
@@ -759,11 +766,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
-            if (theaterPin.getArrayPosition() == 0) {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin)).title(theaterPin.getTitle());
-            } else {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin_unselected)).title(theaterPin.getTitle());
-            }
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin)).title(theaterPin.getTitle());
         }
 
         @Override
@@ -784,7 +787,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 for (TheaterPin p : cluster.getItems()) {
                     // Draw 4 at most.
                     if (theaterPins.size() == 4) break;
-                    Drawable drawable = getResources().getDrawable(R.drawable.theater_pin_unselected);
+                    Drawable drawable = getResources().getDrawable(R.drawable.theater_pin);
                     //drawable.setBounds(0, 0, width, height);
                     theaterPins.add(drawable);
                 }
