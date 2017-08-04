@@ -101,6 +101,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     ImageView mPoster;
     TextView mPosterTitle;
+    TextView theaterAddress;
     TextView mTitle;
     TextView mGenre;
     TextView mRunTime;
@@ -115,7 +116,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     ArrayList<String> mShowtimesList;
 
     @BindView(R.id.recycler_view_theaters)
-    RecyclerView mTheatersRecyclerView;
+    RecyclerView theatersRecyclerView;
     @BindView(R.id.recycler_view_showtimes)
     RecyclerView mShowtimesRecyclerView;
 
@@ -144,6 +145,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mPoster = findViewById(R.id.poster);
         mPosterTitle = findViewById(R.id.poster_movie_title);
         mTitle = findViewById(R.id.movie_title);
+        theaterAddress = findViewById(R.id.theater_address);
         mRunTime = findViewById(R.id.text_run_time);
         mTheaterSelectTime = findViewById(R.id.theater_select_time);
         mTheatersNearby = findViewById(R.id.movie_select_text);
@@ -158,6 +160,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         mToolbar.setTitle(mMovie.getTitle());
         mActionBar.setTitle(mMovie.getTitle());
+
+        theaterAddress.setVisibility(View.GONE);
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -221,20 +225,20 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         LinearLayoutManager moviesLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        mTheatersRecyclerView = findViewById(R.id.recycler_view_theaters);
-        mTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
+        theatersRecyclerView = findViewById(R.id.recycler_view_theaters);
+        theatersRecyclerView.setLayoutManager(moviesLayoutManager);
 
         mMovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
 
-        mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-        mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+        theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+        theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
-                        mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                        for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
-                            View v = mTheatersRecyclerView.getChildAt(i);
+                        for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
+                            View v = theatersRecyclerView.getChildAt(i);
                             v.setAlpha(0.0f);
                             v.animate().alpha(1.0f)
                                     .setDuration(1000)
@@ -582,23 +586,23 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                         mScreeningsList.clear();
 
                         if (mMovieTheatersAdapter != null) {
-                            mTheatersRecyclerView.getRecycledViewPool().clear();
+                            theatersRecyclerView.getRecycledViewPool().clear();
                             mMovieTheatersAdapter.notifyDataSetChanged();
                         }
 
                         if (mScreeningsResponse != null) {
                             Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
                             mScreeningsList.addAll(mScreeningsResponse.getScreenings());
-                            mTheatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-                            mTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                            theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+                            theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                                 new ViewTreeObserver.OnPreDrawListener() {
 
                                     @Override
                                     public boolean onPreDraw() {
-                                        mTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                        theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                                        for (int i = 0; i < mTheatersRecyclerView.getChildCount(); i++) {
-                                            View v = mTheatersRecyclerView.getChildAt(i);
+                                        for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
+                                            View v = theatersRecyclerView.getChildAt(i);
                                             v.setAlpha(0.0f);
                                             v.animate().alpha(1.0f)
                                                     .setDuration(1000)
