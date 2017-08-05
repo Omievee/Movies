@@ -69,7 +69,7 @@ public class ProfileActivity extends BaseActivity {
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
             } else {
-                startActivity(new Intent(ProfileActivity.this, BrowseActivity.class));
+                startActivity(new Intent(ProfileActivity.this, MoviesActivity.class));
             }
             return true;
 
@@ -95,14 +95,13 @@ public class ProfileActivity extends BaseActivity {
                 if (itemId == R.id.action_profile) {
                 } else if (itemId == R.id.action_reservations) {
                     startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                    startActivity(new Intent(getApplicationContext(), MoviesActivity.class));
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
                 } else if (itemId == R.id.action_settings) {
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
-                finish();
             }
         }, 300);
         return true;

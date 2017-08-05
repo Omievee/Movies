@@ -61,7 +61,7 @@ public class OnboardingActivity extends AppCompatActivity {
         mRedView = findViewById(R.id.red);
         mButtonLogIn = findViewById(R.id.button_log_in);
         mButtonSignUp = findViewById(R.id.button_sign_up);
-        mNotReady = findViewById(R.id.not_ready);
+//        mNotReady = findViewById(R.id.not_ready);
 
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
@@ -82,7 +82,6 @@ public class OnboardingActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -171,13 +170,13 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        mNotReady.setOnClickListener(new View.OnClickListener() {
+        /* mNotReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OnboardingActivity.this, BrowseActivity.class);
                 startActivity(intent);
             }
-        });
+        }); */
 
     }
 

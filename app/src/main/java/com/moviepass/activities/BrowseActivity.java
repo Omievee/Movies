@@ -178,7 +178,7 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
     }
 
     int getNavigationMenuItemId() {
-        return R.id.action_browse;
+        return R.id.action_movies;
     }
 
     @Override
@@ -197,13 +197,12 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
                     }
                 } else if (itemId == R.id.action_reservations) {
                     startActivity(new Intent(BrowseActivity.this, ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                } else if (itemId == R.id.action_notifications) {
+                } else if (itemId == R.id.action_movies) {
+                } else if (itemId == R.id.action_theaters) {
                     startActivity(new Intent(BrowseActivity.this, NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {
                     startActivity(new Intent(BrowseActivity.this, SettingsActivity.class));
                 }
-                finish();
             }
         }, 300);
         return true;

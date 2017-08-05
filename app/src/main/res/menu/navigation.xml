@@ -15,16 +15,16 @@
         android:title="@string/menu_bottom_navigation_main_reservations" />
 
     <item
-        android:id="@+id/action_browse"
+        android:id="@+id/action_movies"
         android:enabled="true"
-        android:icon="@drawable/ic_theaters"
-        android:title="@string/menu_bottom_navigation_main_browse" />
+        android:icon="@drawable/ic_movies"
+        android:title="@string/menu_bottom_navigation_main_movies" />
 
     <item
-        android:id="@+id/action_notifications"
+        android:id="@+id/action_theaters"
         android:enabled="true"
-        android:icon="@drawable/ic_notifications"
-        android:title="@string/menu_bottom_navigation_main_notifications" />
+        android:icon="@drawable/ic_theaters"
+        android:title="@string/menu_bottom_navigation_main_theaters" />
 
     <item
         android:id="@+id/action_settings"

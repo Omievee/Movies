@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         TextView cityThings;
         @BindView(R.id.theater_distance)
         TextView distance;
+        @BindView(R.id.icon_ticket)
+        ImageView iconTicket;
+        @BindView(R.id.icon_seat)
+        ImageView iconSeat;
 
         public ViewHolder(View v) {
             super(v);
@@ -59,6 +64,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             address = v.findViewById(R.id.theater_address);
             cityThings = v.findViewById(R.id.theater_city_things);
             distance = v.findViewById(R.id.theater_distance);
+            iconTicket = v.findViewById(R.id.icon_ticket);
+            iconSeat = v.findViewById(R.id.icon_seat);
         }
     }
 
@@ -92,6 +99,13 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         loc2.setLongitude(lon2);
 
         float distanceInMeters = loc1.distanceTo(loc2); */
+
+        if (screening.getProvider().ticketTypeIsStandard()) {
+            holder.iconTicket.setVisibility(View.INVISIBLE);
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else if (screening.getProvider().ticketTypeIsETicket()) {
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        }
 
         String city = screening.getTheaterAddress();
         String state = screening.getTheaterAddress();

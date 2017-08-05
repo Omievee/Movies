@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -48,9 +49,7 @@ import retrofit2.Response;
  * Created by anubis on 4/27/17.
  */
 
-public class LogInActivity extends BaseActivity {
-
-    protected BottomNavigationView bottomNavigationView;
+public class LogInActivity extends AppCompatActivity {
 
     @BindView(R.id.input_email)
     EditText mInputEmail;
@@ -80,10 +79,6 @@ public class LogInActivity extends BaseActivity {
         mInputPassword = findViewById(R.id.input_password);
         progress = findViewById(R.id.progress);
         loginButton = findViewById(R.id.button_facebook_log_in);
-
-        bottomNavigationView = findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         mButtonLogIn = findViewById(R.id.button_log_in);
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +156,6 @@ public class LogInActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updateNavigationBarState();
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -291,7 +285,7 @@ public class LogInActivity extends BaseActivity {
 
             UserPreferences.setUserCredentials(userId, deviceUuid, authToken, user.getFirstName(), user.getEmail());
 
-            Intent i = new Intent(LogInActivity.this, BrowseActivity.class);
+            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
             i.putExtra("launch", true);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
@@ -309,55 +303,5 @@ public class LogInActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    int getContentViewId() {
-        return R.layout.activity_profile;
-    }
-
-    int getNavigationMenuItemId() {
-        return R.id.action_profile;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(LogInActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(LogInActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
-                } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(LogInActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState(){
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
     }
 }

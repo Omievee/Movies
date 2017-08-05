@@ -37,7 +37,7 @@ public class SettingsActivity extends BaseActivity {
 
         // Enable the Up button
         actionBar.setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Settings");
+        actionBar.setTitle("Settings");
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -66,7 +66,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            startActivity(new Intent(SettingsActivity.this, BrowseActivity.class));
+            startActivity(new Intent(SettingsActivity.this, MoviesActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -89,16 +89,14 @@ public class SettingsActivity extends BaseActivity {
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(SettingsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(SettingsActivity.this, ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(SettingsActivity.this, BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    startActivity(new Intent(SettingsActivity.this, NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                    startActivity(new Intent(SettingsActivity.this, MoviesActivity.class));
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(SettingsActivity.this, TheatersActivity.class));
                 } else if (itemId == R.id.action_settings) {
                     startActivity(new Intent(SettingsActivity.this, SettingsActivity.class));
                 }
-                finish();
             }
         }, 300);
         return true;

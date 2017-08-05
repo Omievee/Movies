@@ -783,15 +783,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(MovieActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(MovieActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(MovieActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();

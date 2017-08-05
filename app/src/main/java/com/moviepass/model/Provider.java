@@ -23,5 +23,15 @@ public class Provider {
 
     public int getTheater() { return theater; }
 
+    public boolean ticketTypeIsStandard() {
+        return ticketType.matches("STANDARD");
+    }
 
+    public boolean ticketTypeIsETicket() {
+        return ticketType.matches("E_TICKET");
+    }
+
+    public boolean ticketTypeIsSelectSeating() {
+        return ticketType.matches("SELECT_SEATING");
+    }
 }

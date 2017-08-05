@@ -11,8 +11,8 @@
 
     <string name="menu_bottom_navigation_main_profile">Profile</string>
     <string name="menu_bottom_navigation_main_reservations">Reservations</string>
-    <string name="menu_bottom_navigation_main_browse">Browse</string>
-    <string name="menu_bottom_navigation_main_notifications">Notifications</string>
+    <string name="menu_bottom_navigation_main_movies">Movies</string>
+    <string name="menu_bottom_navigation_main_theaters">Theaters</string>
     <string name="menu_bottom_navigation_main_settings">Settings</string>
 
     <!-- Activities -->

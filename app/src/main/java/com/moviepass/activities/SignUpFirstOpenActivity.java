@@ -8,17 +8,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.moviepass.R;
 
@@ -33,7 +30,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
     Button mButonSignUp;
     Button mButtonSignUpFacebook;
-    TextView mNotReady;
+//    TextView mNotReady;
 
     EditText mInputEmail;
     EditText mInputPassword;
@@ -48,7 +45,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         mInputEmail = findViewById(R.id.input_email);
         mInputPassword = findViewById(R.id.input_password);
         mButonSignUp = findViewById(R.id.button_sign_up);
-        mNotReady = findViewById(R.id.not_ready);
+//        mNotReady = findViewById(R.id.not_ready);
 
         openAnimation();
 
@@ -90,13 +87,13 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             }
         });
 
-        mNotReady.setOnClickListener(new View.OnClickListener() {
+        /* mNotReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SignUpFirstOpenActivity.this, BrowseActivity.class);
                 startActivity(intent);
             }
-        });
+        }); */
     }
 
     public static boolean isValidEmail(CharSequence target) {

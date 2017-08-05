@@ -126,13 +126,16 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.MovieActivity"
-            android:parentActivityName=".activities.BrowseActivity"
+            android:parentActivityName=".activities.MoviesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.BrowseActivity" />
+                android:value=".activities.MoviesActivity" />
         </activity>
+        <activity
+            android:name=".activities.MoviesActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.NotificationsActivity"
             android:theme="@style/AppTheme" />
@@ -142,11 +145,11 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ProfileActivity"
-            android:parentActivityName=".activities.BrowseActivity"
+            android:parentActivityName=".activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.BrowseActivity" />
+                android:value=".activities.MoviesActivity" />
         </activity>
         <activity
             android:name=".activities.ReservationsActivity"
@@ -156,11 +159,11 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.BrowseActivity"
+            android:parentActivityName=".activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.BrowseActivity" />
+                android:value=".activities.MoviesActivity" />
         </activity>
         <activity
             android:name=".activities.SignUpFirstOpenActivity"
@@ -171,12 +174,15 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".activities.TheaterActivity"
-            android:parentActivityName=".activities.BrowseActivity"
+            android:parentActivityName=".activities.TheatersActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.BrowseActivity" />
+                android:value=".activities.TheatersActivity" />
         </activity>
+        <activity
+            android:name=".activities.TheatersActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.VerificationActivity"
             android:theme="@style/AppTheme" />

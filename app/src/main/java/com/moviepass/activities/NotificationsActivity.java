@@ -47,7 +47,7 @@ public class NotificationsActivity extends BaseActivity {
         return R.layout.activity_notifications;
     }
 
-    int getNavigationMenuItemId() { return R.id.action_notifications; }
+    int getNavigationMenuItemId() { return R.id.action_theaters; }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -60,9 +60,9 @@ public class NotificationsActivity extends BaseActivity {
                 } else if (itemId == R.id.action_reservations) {
                     Toast.makeText(NotificationsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
+                } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
+                } else if (itemId == R.id.action_theaters) {
                     Toast.makeText(NotificationsActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
                 } else if (itemId == R.id.action_settings) {

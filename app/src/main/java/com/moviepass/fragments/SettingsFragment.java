@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -32,6 +33,9 @@ public class SettingsFragment extends PreferenceFragment {
 
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_preferences);
+
+        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Settings");
 
         final SwitchPreference pushSwitch = (SwitchPreference) findPreference("push");
         boolean pushStatus = UserPreferences.getPushPermission();

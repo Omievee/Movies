@@ -549,7 +549,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     int getNavigationMenuItemId() {
-        return R.id.action_browse;
+        return R.id.action_theaters;
     }
 
     @Override
@@ -561,14 +561,11 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(TheaterActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(TheaterActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                    startActivity(new Intent(getApplicationContext(), MoviesActivity.class));
+                } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(TheaterActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
                 finish();

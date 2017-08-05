@@ -149,11 +149,11 @@ public class ConfirmationActivity extends BaseActivity {
     /* Bottom Navigation View */
 
     int getContentViewId() {
-        return R.layout.activity_settings;
+        return R.layout.activity_movies;
     }
 
     int getNavigationMenuItemId() {
-        return R.id.action_settings;
+        return R.id.action_movies;
     }
 
     @Override
@@ -166,13 +166,9 @@ public class ConfirmationActivity extends BaseActivity {
                     startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
                     startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(ConfirmationActivity.this, BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(ConfirmationActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(ConfirmationActivity.this, NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(ConfirmationActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(ConfirmationActivity.this, SettingsActivity.class));
                 }
                 finish();

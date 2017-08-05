@@ -22,7 +22,7 @@ class SplashActivity : AppCompatActivity() {
                     startActivity(i)
                     finish()
                 } else {
-                    val i = Intent(this@SplashActivity, BrowseActivity::class.java)
+                    val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                     startActivity(i)
                     finish()
                 }
