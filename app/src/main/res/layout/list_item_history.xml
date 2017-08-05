@@ -13,39 +13,25 @@
     android:layout_gravity="center_horizontal">
 
     <RelativeLayout
-        android:id="@+id/ticket_left"
+        android:id="@+id/ticket_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/qr_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/history_ticket_left" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/ticket_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ticket_left">
-
         <FrameLayout
             android:id="@+id/frameLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/poster"
-                android:layout_width="262dp"
+                android:layout_width="match_parent"
                 android:layout_height="104dp"
                 android:scaleType="centerCrop"/>
 
             <ImageView
-                android:layout_width="262dp"
+                android:layout_width="match_parent"
                 android:layout_height="104dp"
-                android:src="@drawable/history_mask_darken"/>
+                android:src="@drawable/rounded_image_frame"/>
 
         </FrameLayout>
 
