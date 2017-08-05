@@ -1,26 +1,21 @@
 package com.moviepass.activities;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.moviepass.R;
-import com.moviepass.fragments.ActiveReservationFragment;
 import com.moviepass.fragments.HistoryFragment;
-import com.moviepass.fragments.MoviesFragment;
-import com.moviepass.fragments.TheatersFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by anubis on 6/9/17.
@@ -37,18 +32,33 @@ public class ReservationsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservations);
 
+        /* TODO: Set up active reservation later
         viewPager = findViewById(R.id.pager);
         setupViewPager(viewPager);
 
         tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        setupViewPager(viewPager);
+        setupViewPager(viewPager); */
+
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        // Enable the Up button
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("History");
+
+        Fragment historyFragment = new HistoryFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, historyFragment).commit();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
+    /*
     private void setupViewPager(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new ActiveReservationFragment(), "Active");
@@ -84,6 +94,7 @@ public class ReservationsActivity extends BaseActivity {
             return mFragmentTitleList.get(position);
         }
     }
+    */
 
     @Override
     protected void onStart() {
@@ -115,14 +126,13 @@ public class ReservationsActivity extends BaseActivity {
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(ReservationsActivity.this, ProfileActivity.class));
                 } else if (itemId == R.id.action_reservations) {
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(ReservationsActivity.this, BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    startActivity(new Intent(ReservationsActivity.this, NotificationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                    startActivity(new Intent(ReservationsActivity.this, MoviesActivity.class));
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(ReservationsActivity.this, TheatersActivity.class));
                 } else if (itemId == R.id.action_settings) {
                     startActivity(new Intent(ReservationsActivity.this, SettingsActivity.class));
                 }
-                finish();
             }
         }, 300);
         return true;

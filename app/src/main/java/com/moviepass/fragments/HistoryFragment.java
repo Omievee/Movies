@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,9 @@ public class HistoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, rootView);
 
+        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("History");
+
         progress = rootView.findViewById(R.id.progress);
 
         historyArrayList = new ArrayList<>();
@@ -74,12 +78,9 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
-
                     HistoryResponse historyResponse = response.body();
 
-
                     progress.setVisibility(View.GONE);
-
                     historyArrayList.clear();
 
                     if (historyAdapter != null) {

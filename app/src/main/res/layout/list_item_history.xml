@@ -70,7 +70,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/margin_half"
-                android:text="@string/list_item_history_title_placeholder"/>
+                android:text="@string/list_item_history_title_placeholder"
+                android:maxLines="1"/>
 
             <LinearLayout
                 android:id="@+id/theater_details"
