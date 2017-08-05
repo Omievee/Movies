@@ -92,7 +92,7 @@
                 android:id="@+id/buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/not_ready"
+                android:layout_alignParentBottom="true"
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_standard"
@@ -120,7 +120,7 @@
 
             </RelativeLayout>
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/not_ready"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                 android:paddingBottom="@dimen/double_margin_standard"
                 android:text="@string/activity_onboarding_not_ready"
                 android:textColor="@color/red"
-                android:textSize="14sp" />
+                android:textSize="14sp" /> -->
 
         </RelativeLayout>
 

@@ -90,7 +90,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/not_ready"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -102,6 +102,6 @@
         android:layout_marginBottom="@dimen/double_margin_standard"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true" /> -->
 
 </RelativeLayout>
