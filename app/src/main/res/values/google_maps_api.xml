@@ -1,0 +1,18 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=A2:C8:00:1A:29:25:53:DA:97:02:63:D0:7E:AF:71:86:A7:21:4B:76%3Bcom.moviepass.fragments
+
+    You can also add your credentials to an existing key, using this line:
+    A2:C8:00:1A:29:25:53:DA:97:02:63:D0:7E:AF:71:86:A7:21:4B:76;com.moviepass.fragments
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyBYTdUkozXsZOpZ0WbJKkXYq_MIb9EBlXI
+    </string>
+</resources>
