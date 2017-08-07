@@ -2,11 +2,16 @@ package com.moviepass.application;
 
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.helpshift.All;
+import com.helpshift.Core;
+import com.helpshift.InstallConfig;
+import com.helpshift.exceptions.InstallException;
 import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
@@ -46,6 +51,26 @@ public class Application extends MultiDexApplication {
         UserPreferences.load(this);
 
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
+
+        /*
+        InstallConfig installConfig = new InstallConfig.Builder().build();
+        Core.init(All.getInstance());
+        try {
+            Core.install(this,
+                    "d7307fbf50724282a116acadd54fb053",
+                    "moviepass.helpshift.com",
+                    "moviepass_platform_20170512180003329-05097f788df2b3a",
+                    installConfig);
+
+            String userId = String.valueOf(UserPreferences.getUserId());
+            String name = UserPreferences.getUserName();
+            String email = UserPreferences.getUserEmail();
+
+            Core.login(userId, name, email);
+        } catch (InstallException e) {
+            Log.e(TAG, "invalid install credentials : ", e);
+        }
+        */
     }
 
     private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
