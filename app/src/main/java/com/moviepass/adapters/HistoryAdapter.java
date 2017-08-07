@@ -82,6 +82,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         String imgUrl = movie.getImageUrl();
         String movieTitle = movie.getTitle();
 
+        /* TODO : do something with auditorium on history */
+        holder.auditorium.setVisibility(View.GONE);
+
         long createdAt = movie.getCreatedAt();
         Date date = new Date(createdAt);
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
