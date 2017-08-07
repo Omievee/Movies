@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="340dp"
-            android:layout_height="135dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/moviepass_logo_red" />
 
