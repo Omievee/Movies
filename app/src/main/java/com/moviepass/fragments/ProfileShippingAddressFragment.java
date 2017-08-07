@@ -218,6 +218,8 @@ public class ProfileShippingAddressFragment extends Fragment {
                 update.setEnabled(true);
                 progress.setVisibility(View.GONE);
 
+                loadUserInfo();
+
                 final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_shipping_address_updated, Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
