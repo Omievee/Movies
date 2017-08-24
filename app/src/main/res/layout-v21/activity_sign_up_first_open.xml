@@ -14,10 +14,11 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="340dp"
-            android:layout_height="135dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/moviepass_logo_red" />
+            android:src="@drawable/moviepass_logo_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,7 +78,7 @@
             android:textSize="15sp" />
 
         <!-- <com.facebook.login.widget.LoginButton -->
-        <Button
+        <!-- <Button
             android:id="@+id/button_facebook_sign_up"
             android:layout_height="48dp"
             android:layout_width="match_parent"
@@ -88,28 +89,29 @@
             android:layout_below="@+id/button_sign_up"
             android:background="@drawable/button_facebook"
             android:text="@string/activity_sign_up_step_one_sign_up_with_facebook"
-            android:textSize="15sp"/>
+            android:textSize="15sp"/> -->
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/not_ready"
+    <!-- <TextView
+        android:id="@+id/see_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/activity_sign_up_step_one_not_ready"
+        android:text="@string/activity_sign_up_first_open_see_theaters"
         android:textColor="@color/red"
         android:textSize="15sp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/double_margin_standard"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true" /> -->
 
     <View
         android:id="@+id/red"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/red" />
+        android:background="@color/red"
+        android:visibility="gone"/>
 
 </RelativeLayout>

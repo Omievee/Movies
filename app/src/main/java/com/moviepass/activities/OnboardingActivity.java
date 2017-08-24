@@ -118,6 +118,15 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
+        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /*
         mButtonSignUp.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -16,6 +16,7 @@ import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.moviepass.R;
 
@@ -30,7 +31,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
     Button mButonSignUp;
     Button mButtonSignUpFacebook;
-//    TextView mNotReady;
+    TextView seeMap;
 
     EditText mInputEmail;
     EditText mInputPassword;
@@ -45,15 +46,15 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         mInputEmail = findViewById(R.id.input_email);
         mInputPassword = findViewById(R.id.input_password);
         mButonSignUp = findViewById(R.id.button_sign_up);
-//        mNotReady = findViewById(R.id.not_ready);
+//        seeMap = findViewById(R.id.see_map);
 
-        openAnimation();
+//        openAnimation();
 
         mButonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = mInputEmail.getText().toString().trim();
-                String password = mInputPassword.getText().toString().trim();
+                    String password = mInputPassword.getText().toString().trim();
 
                 if (isValidEmail(email) && isValidPassword(password)) {
                     /* TODO : animate this */
@@ -87,10 +88,11 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             }
         });
 
-        /* mNotReady.setOnClickListener(new View.OnClickListener() {
+        /* seeMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SignUpFirstOpenActivity.this, BrowseActivity.class);
+
+                Intent intent = new Intent(SignUpFirstOpenActivity.this, ViewTheatersActivity.class);
                 startActivity(intent);
             }
         }); */
@@ -112,6 +114,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         }
     }
 
+    /*
     @TargetApi(21)
     public void openAnimation() {
         if (Build.VERSION.SDK_INT >= 21) {
@@ -148,5 +151,14 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
             }, 100);
         }
+    } */
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, OnboardingActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
     }
 }

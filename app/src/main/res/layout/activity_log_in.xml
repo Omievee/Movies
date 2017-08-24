@@ -93,7 +93,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/navigation"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
         android:layout_marginBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -118,13 +119,13 @@
 
     </RelativeLayout>
 
-    <include
+    <!-- <include
         android:id="@+id/navigation"
         layout="@layout/element_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom" />
+        android:gravity="bottom" /> -->
 
     <include
         android:id="@+id/progress"
