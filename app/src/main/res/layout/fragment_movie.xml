@@ -87,36 +87,6 @@
                             />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/rottenTomatoRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/minutes">
-
-                        <TextView
-                            android:id="@+id/textRatingTomato"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/activity_movie_holder_rotten_tomato_rating"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/rottenTomatoImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/rottenTomatoRating">
-
-                        <ImageView
-                            android:id="@+id/rtImage"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            />
-
-                    </LinearLayout>
-
                 </RelativeLayout>
 
             </FrameLayout>

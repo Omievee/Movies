@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gun_metal"
-                    android:textSize="45sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
                     android:text="@string/activity_theater_movie_time"
                     android:layout_below="@+id/movie_title"

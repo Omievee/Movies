@@ -39,7 +39,6 @@
     <string name="activity_movie_holder_title">[Title]</string>
     <string name="activity_movie_holder_rating">[Rating]</string>
     <string name="activity_movie_holder_running_time">[### minutes]</string>
-    <string name="activity_movie_holder_rotten_tomato_rating">[###%]</string>
     <string name="activity_movie_running_time_minutes">minutes</string>
     <string name="activity_movie_reviews">Reviews</string>
     <string name="activity_movie_theater_select_text">Theaters Nearby</string>
