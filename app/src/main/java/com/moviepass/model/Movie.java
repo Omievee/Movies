@@ -11,7 +11,6 @@ public class Movie implements ISearchable {
     protected int id;
     protected String tribuneId;
     protected String title;
-    protected int tomatoRating;
     protected int runningTime;
     protected String releaseDate;
     protected String rating;
@@ -49,14 +48,6 @@ public class Movie implements ISearchable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getTomatoRating() {
-        return tomatoRating;
-    }
-
-    public void setTomatoRating(int tomatoRating) {
-        this.tomatoRating = tomatoRating;
     }
 
     public int getRunningTime() {

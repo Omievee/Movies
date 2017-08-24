@@ -37,7 +37,6 @@ public class Screening {
     String theaterAddress;
     String theaterName;
     String title;
-    int tomatoRating;
     int tribuneTheaterId;
 
     public Screening() {
@@ -48,9 +47,6 @@ public class Screening {
     public int getRunningTime() { return runningTime; }
 
     public String getTitle() { return title; }
-
-
-
 
     public int getMoviepassId() { return moviepassId; }
 

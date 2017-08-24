@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -243,6 +244,7 @@ public class OnboardingActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
             TextView textView = rootView.findViewById(R.id.section_label);
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
             TextView bodyText = rootView.findViewById(R.id.section_body);
@@ -282,13 +284,13 @@ public class OnboardingActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Share your location";
+                    return getResources().getString(R.string.activity_onboarding_header_1);
                 case 1:
-                    return "Get notified";
+                    return getResources().getString(R.string.activity_onboarding_header_2);
                 case 2:
-                    return "Choose your movie";
+                    return getResources().getString(R.string.activity_onboarding_header_3);
                 case 3:
-                    return "Grab your seat";
+                    return getResources().getString(R.string.activity_onboarding_header_4);
             }
             return null;
         }
