@@ -1,143 +1,288 @@
 package com.moviepass.fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.braintreepayments.api.BraintreeFragment;
+import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.exceptions.ErrorWithResponse;
+import com.braintreepayments.api.exceptions.InvalidArgumentException;
+import com.braintreepayments.api.interfaces.BraintreeCancelListener;
+import com.braintreepayments.api.interfaces.BraintreeErrorListener;
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.moviepass.BuildConfig;
+import com.moviepass.Constants;
 import com.moviepass.R;
-import com.moviepass.activities.SignUpActivity;
-import com.moviepass.adapters.PlansAdapter;
-import com.moviepass.listeners.PlanClickListener;
-import com.moviepass.model.Plan;
-import com.moviepass.network.RestClient;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import butterknife.ButterKnife;
+import io.card.payment.CardIOActivity;
 
 /**
  * Created by anubis on 7/11/17.
  */
 
-public class SignUpStepTwoFragment extends Fragment implements PlanClickListener {
+public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonceCreatedListener,
+        BraintreeCancelListener, BraintreeErrorListener {
 
-    PlansAdapter mPlansAdapter;
+    BraintreeFragment mBraintreeFragment;
 
-    RelativeLayout mRelativeLayout;
-    @BindView(R.id.recycler_view_plans)
-    RecyclerView mRecyclerView;
+    ImageButton mButtonCreditCard;
+    ImageButton mButtonPaypal;
+    ImageButton mButtonAndroidPay;
 
-    ArrayList<Plan> mPlans;
+    View mProgress;
+
     Button mNext;
-    String zip;
+
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
+
+    private final static int REQUEST_CAMERA_CODE = 0;
+
+    private native static String getSandboxTokenizationKey();
+    private native static String getProductionTokenizationKey();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_two, container, false);
+        ButterKnife.bind(getActivity());
 
-        LinearLayoutManager mLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mProgress = rootView.findViewById(R.id.progress);
 
-        mRelativeLayout = rootView.findViewById(R.id.relative_layout);
-        mRecyclerView = rootView.findViewById(R.id.recycler_view_plans);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mButtonCreditCard = rootView.findViewById(R.id.button_credit_card);
+        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
+        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
 
         mNext = getActivity().findViewById(R.id.button_next);
 
-        mPlans = new ArrayList<>();
-        mPlansAdapter = new PlansAdapter(mPlans, this);
+        mButtonCreditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                creditCardClick();
+            }
+        });
+
+        mButtonPaypal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paypalClick();
+            }
+        });
 
         return rootView;
     }
 
-    // This is for actions only available when SignUpTwoFrag is visible
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (visible) {
-            zip = ((SignUpActivity) getActivity()).getZip();
-            if (zip != null) {
-                getPlans(zip);
+    public void creditCardClick() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
+                scan_card();
+            } else {
+                scan_card();
             }
-
-            mNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final Snackbar snackbar = Snackbar.make(mRelativeLayout, R.string.fragment_sign_up_step_two_select_plan, Snackbar.LENGTH_INDEFINITE);
-                    snackbar.setAction("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            snackbar.dismiss();
-                        }
-                    });
-                    snackbar.show();
-                }
-            });
+        } else {
+            scan_card();
         }
     }
 
-    public void getPlans(String zip) {
-        RestClient.getAuthenticated().getPlans(zip).enqueue(new Callback<Plan>() {
-            @Override
-            public void onResponse(Call<Plan> call, Response<Plan> response) {
-                Plan plan = response.body();
+    public void paypalClick() {
+        mProgress.setVisibility(View.VISIBLE);
+        mButtonPaypal.setEnabled(false);
+        try {
+            if (BuildConfig.DEBUG) {
+                String mAuthorization = getSandboxTokenizationKey();
+                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
+                mProgress.setVisibility(View.GONE);
+                // mBraintreeFragment is ready to use!
 
-                //Doesn't need to check ifSuccessful() because already determined zip was valid in SignUpStepOneFrag
-                mPlans.clear();
-                mPlans.add(plan);
+                PayPal.authorizeAccount(mBraintreeFragment);
+            } else {
+                String mAuthorization = getProductionTokenizationKey();
+                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
+                mProgress.setVisibility(View.GONE);
+                // mBraintreeFragment is ready to use!
 
-                Log.d("mPlans: ", mPlans.toString());
-
-                if (mPlansAdapter != null) {
-                    mRecyclerView.getRecycledViewPool().clear();
-                    mPlansAdapter.notifyDataSetChanged();
-                }
-
-                mRecyclerView.setAdapter(mPlansAdapter);
-                mRecyclerView.setTranslationY(0);
-                mRecyclerView.setAlpha(1.0f);
+                PayPal.authorizeAccount(mBraintreeFragment);
             }
 
-            @Override
-            public void onFailure(Call<Plan> call, Throwable t) {
-
-            }
-        });
+        } catch (InvalidArgumentException e) {
+            // There was an issue with your authorization string.
+            mButtonPaypal.setEnabled(true);
+            Log.d("error", "error: " + e.getMessage());
+        }
     }
 
-    public static SignUpStepTwoFragment newInstance(String zip) {
-        Bundle b = new Bundle();
-        SignUpStepTwoFragment signUpStepTwoFragment = new SignUpStepTwoFragment();
-        b.putString("zip", zip);
+    public void scan_card() {
+        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
-        signUpStepTwoFragment.setArguments(b);
+        // customize these values to suit your needs.
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
 
-        return signUpStepTwoFragment;
+        startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
     }
 
     @Override
-    public void onPlanClick(int pos, @NotNull Plan plan) {
-        final Plan finalPlan = plan;
+    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+        // Send this nonce to your server
+        String nonce = paymentMethodNonce.getNonce();
 
-        mNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((SignUpActivity) getActivity()).setPlan(finalPlan);
-            }
-        });
+        final String bStreet;
+        final String bStreet2;
+        final String bCity;
+        final String bState;
+        final String bZip;
+
+        /*
+
+        String email = ProspectUser.email;
+        String password = ProspectUser.password;
+        String firstName = ProspectUser.firstName;
+        String lastName = ProspectUser.lastName;
+        String sStreet = ProspectUser.street;
+        String sStreet2 = ProspectUser.street2;
+        String sCity = ProspectUser.city;
+        String sState = ProspectUser.state;
+        String sZip = ProspectUser.zip;
+        boolean amc3dMarkup = getIntent().getExtras().getBoolean("amc3dMarkup");
+        String facebookToken = getIntent().getExtras().getString("fbToken");
+
+        Log.d("facebookToken:", "" + facebookToken);
+
+        bStreet = ProspectUser.street;
+        bStreet2 = ProspectUser.street2;
+        bCity = ProspectUser.city;
+        bState = ProspectUser.state;
+        bZip = ProspectUser.zip;
+
+        if (facebookToken == null) {
+            mProgress.setVisibility(View.VISIBLE);
+            mButtonFinish.setEnabled(false);
+
+            final SignUpRequest request = new SignUpRequest(nonce,
+                    sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
+                    email, firstName, lastName, password, amc3dMarkup);
+
+            RestClient.getAuthenticated().signUp(ProspectUser.session, request).enqueue( new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+
+                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
+
+                    if (response.isSuccessful()) {
+
+                        Log.d("subId", response.body().getSubId());
+                        login();
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
+
+                            //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
+
+                            Toast.makeText(getActivity(), jObjError.toString(), Toast.LENGTH_LONG).show();
+                            mProgress.setVisibility(View.GONE);
+                            mButtonFinish.setEnabled(true);
+
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                    mProgress.setVisibility(View.GONE);
+                    mButtonFinish.setEnabled(true);
+                    Log.d("signUpRespnose: t", t.getMessage().toString());
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } else {
+            mProgress.setVisibility(View.VISIBLE);
+            final SignUpRequest request = new SignUpRequest(nonce,
+                    sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
+                    email, firstName, lastName, password, amc3dMarkup, facebookToken);
+
+            RestClient.getAuthenticated().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+
+                    if (response.isSuccessful()) {
+                        Log.d("subId", response.body().getSubId());
+                        login();
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
+
+                            //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
+
+                            Toast.makeText(getActivity(), jObjError.toString(), Toast.LENGTH_LONG).show();
+                            mProgress.setVisibility(View.GONE);
+                            mButtonFinish.setEnabled(true);
+
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                    mProgress.setVisibility(View.INVISIBLE);
+                    mButtonFinish.setEnabled(true);
+                    Log.d("error", t.getMessage().toString());
+
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+
+            });
+        }
+
+        */
     }
 
+    @Override
+    public void onCancel(int requestCode) {
+        // Use this to handle a canceled activity, if the given requestCode is important.
+        // You may want to use this callback to hide loading indicators, and prepare your UI for input
+    }
+
+    @Override
+    public void onError(Exception error) {
+        if (error instanceof ErrorWithResponse) {
+            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static SignUpStepTwoFragment newInstance(String text) {
+
+        SignUpStepTwoFragment f = new SignUpStepTwoFragment();
+        Bundle b = new Bundle();
+        b.putString("msg", text);
+
+        f.setArguments(b);
+
+        return f;
+    }
 }

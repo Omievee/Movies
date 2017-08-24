@@ -18,9 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.moviepass.R;
-import com.moviepass.fragments.SignUpStepFourFragment;
 import com.moviepass.fragments.SignUpStepOneFragment;
-import com.moviepass.fragments.SignUpStepThreeFragment;
 import com.moviepass.fragments.SignUpStepTwoFragment;
 import com.moviepass.model.Plan;
 
@@ -32,11 +30,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     String email;
     String password;
-
     String zip;
     Plan mPlan;
 
-    String name;
+    String firstName;
+    String lastName;
     String address;
     String address2;
     String city;
@@ -46,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
-    ImageView zero, one, two, three;
+    ImageView zero, one;
     ImageView[] indicators;
 
     int page = 0;
@@ -68,14 +66,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
-        two = findViewById(R.id.intro_indicator_2);
-        three = findViewById(R.id.intro_indicator_3);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        indicators = new ImageView[]{zero, one, two, three};
+        indicators = new ImageView[]{zero, one};
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
@@ -103,12 +99,6 @@ public class SignUpActivity extends AppCompatActivity {
                         mNext.setText(R.string.fragment_sign_up_step_one_next);
                         break;
                     case 1:
-                        mNext.setText(R.string.fragment_sign_up_step_two_next_address);
-                        break;
-                    case 2:
-                        mNext.setText(R.string.fragment_sign_up_step_three_next);
-                        break;
-                    case 3:
                         mNext.setText(R.string.fragment_sign_up_step_four_finish);
                         break;
                 }
@@ -169,8 +159,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 4;
+            return 2;
         }
 
         @Override
@@ -182,12 +171,6 @@ public class SignUpActivity extends AppCompatActivity {
                     break;
                 case 1:
                     fragment = new SignUpStepTwoFragment();
-                    break;
-                case 2:
-                    fragment = new SignUpStepThreeFragment();
-                    break;
-                case 3:
-                    fragment = new SignUpStepFourFragment();
                     break;
             }
             return fragment;
@@ -304,8 +287,12 @@ public class SignUpActivity extends AppCompatActivity {
         return password;
     }
 
-    public void setName(String frag_name) {
-        name = frag_name;
+    public void setFirstName(String frag_name) {
+        firstName = frag_name;
+    }
+
+    public void setLastName(String frag_name) {
+        lastName = frag_name;
     }
 
     public void setAddress(String frag_address) {
@@ -327,7 +314,9 @@ public class SignUpActivity extends AppCompatActivity {
     public void setAddressZip(String frag_addressZip) {
         addressZip = frag_addressZip;
 
-        mViewPager.setCurrentItem(3);
+        Log.d("currentItem", String.valueOf(mViewPager.getCurrentItem()));
+
+        mViewPager.setCurrentItem(1);
     }
 
     /* Fragment Four */
@@ -339,8 +328,6 @@ public class SignUpActivity extends AppCompatActivity {
             mViewPager.setCurrentItem(0);
         } else if (mViewPager.getCurrentItem() == 2) {
             mViewPager.setCurrentItem(1);
-        } else if (mViewPager.getCurrentItem() == 3) {
-            mViewPager.setCurrentItem(2);
         } else {
             super.onBackPressed();
         }

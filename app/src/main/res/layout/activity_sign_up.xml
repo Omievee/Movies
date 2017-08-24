@@ -12,11 +12,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_compact"
-        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/margin_standard"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"/>
 
-    <view class="com.moviepass.activities.SignUpActivity$NonSwipeableViewPager"
+    <view
+        class="com.moviepass.activities.SignUpActivity$NonSwipeableViewPager"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,7 +40,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/double_margin_standard">
+            android:paddingBottom="@dimen/margin_standard">
 
             <View
                 android:id="@id/line"
@@ -58,7 +59,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/double_margin_standard"
+                android:paddingBottom="@dimen/margin_standard"
                 android:layout_above="@+id/button_next">
 
                 <ImageView
@@ -71,22 +72,6 @@
 
                 <ImageView
                     android:id="@+id/intro_indicator_1"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_standard"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:background="@drawable/indicator_unselected" />
-
-                <ImageView
-                    android:id="@+id/intro_indicator_2"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_standard"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:background="@drawable/indicator_unselected" />
-
-                <ImageView
-                    android:id="@+id/intro_indicator_3"
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_standard"
@@ -112,6 +97,5 @@
         </RelativeLayout>
 
     </FrameLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>

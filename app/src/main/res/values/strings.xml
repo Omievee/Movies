@@ -58,7 +58,6 @@
     <string name="activity_onboarding_body_4">With MoviePass, you just have to choose the movie you want to see</string>
 
 
-
     <!-- SelectSeatActivity -->
     <string name="activity_select_seat_movie_title">[Title]</string>
     <string name="activity_select_seat_movie_genre">[Genre]</string>
