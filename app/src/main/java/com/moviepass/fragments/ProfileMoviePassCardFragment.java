@@ -14,10 +14,8 @@ import android.widget.TextView;
 
 import com.moviepass.R;
 import com.moviepass.adapters.MoviePassCardAdapter;
-import com.moviepass.adapters.TheatersAdapter;
 import com.moviepass.model.MoviePassCard;
 import com.moviepass.network.RestClient;
-import com.moviepass.responses.MoviePassCardsResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +25,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.taplytics.fox.getActivity;
 
 /**
  * Created by anubis on 8/1/17.

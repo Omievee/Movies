@@ -35,4 +35,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/button_facebook_log_in"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_half"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:paddingTop="@dimen/button_height"
+        android:paddingBottom="@dimen/button_height"
+        android:visibility="gone"/>
+
 </RelativeLayout>

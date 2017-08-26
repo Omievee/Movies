@@ -56,7 +56,7 @@ public class ProfileShippingAddressFragment extends Fragment {
         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
         relativeLayout.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
 
-        name = rootView.findViewById(R.id.et_name);
+        name = rootView.findViewById(R.id.et_last_name);
         address = rootView.findViewById(R.id.et_address);
         address2 = rootView.findViewById(R.id.et_address_two);
         city = rootView.findViewById(R.id.et_city);

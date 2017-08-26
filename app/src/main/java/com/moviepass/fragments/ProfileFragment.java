@@ -7,12 +7,27 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.moviepass.activities.BrowseActivity;
+import com.moviepass.activities.LogInActivity;
+import com.moviepass.network.RestClient;
+import com.moviepass.requests.FacebookLinkRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 5/31/17.
@@ -26,14 +41,20 @@ public class ProfileFragment extends PreferenceFragment {
     ProfilePaymentInformationFragment profilePaymentInformationFragment = new ProfilePaymentInformationFragment();
     ProfileMoviePassCardFragment profileMoviePassCardFragment = new ProfileMoviePassCardFragment();
 
+    CallbackManager callbackManager;
+    LoginButton loginButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.profile_preferences);
 
-        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Profile");
+        FacebookSdk.sdkInitialize(getActivity());
+        callbackManager = CallbackManager.Factory.create();
+
+        /* final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Profile"); */
 
         Preference planInformation = findPreference("plan_information");
         planInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -110,13 +131,78 @@ public class ProfileFragment extends PreferenceFragment {
             }
         });
 
-        Preference facebook = findPreference("facebook");
+        final Preference facebook = findPreference("facebook");
 
-
+        if (UserPreferences.getFbToken().matches("token")) {
+            facebook.setSummary(R.string.fragment_profile_facebook_never_post);
+            facebook.setTitle(R.string.fragment_profile_facebook_connect);
+        } else {
+            facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
+        }
 
         facebook.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                Log.d("prefClick", "prefClick");
+
+                final LoginButton l = new LoginButton(getActivity());
+                loginButton = getActivity().findViewById(R.id.button_facebook_log_in);
+                loginButton.setReadPermissions("public_profile", "email", "user_birthday");
+                l.setReadPermissions("public_profile", "email", "user_birthday");
+
+                l.performClick();
+                loginButton.performClick();
+
+                if (UserPreferences.getFbToken().matches("token")) {
+                    facebook.setSummary(R.string.fragment_profile_facebook_never_post);
+                    facebook.setTitle(R.string.fragment_profile_facebook_connect);
+                } else {
+                    facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
+                }
+
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        String fbToken = loginResult.getAccessToken().getToken();
+                        Log.d("fbUserId", fbToken);
+                        UserPreferences.setFbToken(fbToken);
+
+                        if (UserPreferences.getFbToken().matches("token")) {
+                            facebook.setSummary(R.string.fragment_profile_facebook_never_post);
+                            facebook.setTitle(R.string.fragment_profile_facebook_connect);
+                        } else {
+                            facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
+                        }
+
+                        FacebookLinkRequest fbLinkRequest = new FacebookLinkRequest(fbToken);
+                        RestClient.getAuthenticated().linkToFacebook(fbLinkRequest).enqueue(new Callback<Object>() {
+                            @Override
+                            public void onResponse(Call<Object> call, Response<Object> response) {
+                                Log.d("response", response.toString());
+
+                                Toast.makeText(getActivity(), "Your Facebook account has been connected.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Object> call, Throwable t) {
+                                Log.d("error", t.getMessage().toString());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                        Log.d("cancel", "onCancel");
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(getActivity(), exception.toString(), Toast.LENGTH_SHORT).show();
+                        Log.d("error", exception.toString());
+                    }
+                });
                 return true;
             }
         });
@@ -126,7 +212,7 @@ public class ProfileFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference preference) {
                 UserPreferences.clearUserId();
 
-                Intent intent = new Intent(getActivity(), BrowseActivity.class);
+                Intent intent = new Intent(getActivity(), LogInActivity.class);
                 startActivity(intent);
 
                 return true;
@@ -150,5 +236,12 @@ public class ProfileFragment extends PreferenceFragment {
 
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Profile");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("onActivityResult", "onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
