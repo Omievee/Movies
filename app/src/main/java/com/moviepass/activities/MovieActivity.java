@@ -21,6 +21,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -352,7 +353,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void onTheaterClick(int pos, Screening screening) {
-        mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, screening, this);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+
+        mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, screening, this, width);
         mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
 
         if (mTheaterSelectTime.getVisibility() != View.VISIBLE) {

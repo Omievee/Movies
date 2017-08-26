@@ -2,7 +2,7 @@
 <RelativeLayout
     android:id="@+id/relative_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
+    android:layout_width="100dp"
     android:layout_height="65dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
@@ -19,7 +19,7 @@
         android:layout_gravity="center_vertical"
         android:gravity="center"
         android:textColor="@color/selector_black_to_white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:text="@string/activity_theater_showtime_placeholder" />
 
