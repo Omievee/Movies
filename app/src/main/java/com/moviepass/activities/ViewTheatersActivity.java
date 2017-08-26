@@ -635,8 +635,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
 
 
                                     mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                            theater.getName(), R.drawable.theater_pin, position));
-
+                                            theater.getName(), R.drawable.theater_pin, position, theater));
 
                                     mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
                                     final CameraPosition[] mPreviousCameraPosition = {null};
