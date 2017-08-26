@@ -23,3 +23,15 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#OKHttp3
+-dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+
+#Picaasso
+-dontwarn com.squareup.okhttp.**
+
+# Retrofit 2
+-dontwarn okio.**
+-dontwarn javax.annotation.**
