@@ -15,18 +15,20 @@ public class TheaterPin implements ClusterItem {
     public int profilePhoto;
     private double latitude;
     private double longitude;
+    private Theater mTheater;
 
     public TheaterPin(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
     }
 
-    public TheaterPin(double lat, double lng, String title, int pictureResource, int arrayPosition) {
+    public TheaterPin(double lat, double lng, String title, int pictureResource, int arrayPosition, Theater theater) {
         latitude = lat;
         longitude = lng;
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         profilePhoto = pictureResource;
         mArrayPosition = arrayPosition;
+        mTheater = theater;
     }
 
     @Override
@@ -49,4 +51,6 @@ public class TheaterPin implements ClusterItem {
     public double getLatitude() { return latitude; }
 
     public double getLongitude() { return longitude; }
+
+    public Theater getTheater() { return mTheater; }
 }
