@@ -107,6 +107,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     private HashMap<LatLng, Theater> mMapData;
+    private HashMap<String, Theater> markerTheaterMap;
 
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter mTheatersAdapter;
@@ -172,6 +173,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mSettingsClient = LocationServices.getSettingsClient(getActivity());
 
         mMapData = new HashMap<>();
+        markerTheaterMap = new HashMap<>();
 
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
@@ -637,10 +639,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                             final int position;
                             position = theaterList.indexOf(theater);
 
-
                             mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
-                                    theater.getName(), R.drawable.theater_pin, position));
-
+                                    theater.getName(), R.drawable.theater_pin, position, theater));
 
                             mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
                             final CameraPosition[] mPreviousCameraPosition = {null};
@@ -662,6 +662,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                 public void onInfoWindowClick(final Marker marker) {
                                     mRequestingLocationUpdates = false;
                                     final Marker finalMarker = marker;
+                                    final Theater theaterMarker = markerTheaterMap.get(marker.getId());
                                     mProgress.setVisibility(View.VISIBLE);
 
                                     mRecyclerView.animate()
@@ -672,15 +673,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                             public void onAnimationEnd(Animator animation) {
                                                 super.onAnimationEnd(animation);
 
-                                                //Load New RecyclerView Based on User's Click
-                                                mClusterManager.clearItems();
-                                                mClusterManager.cluster();
-
                                                 Projection projection = mMap.getProjection();
                                                 LatLng markerLocation = finalMarker.getPosition();
                                                 Point screenPosition = projection.toScreenLocation(markerLocation);
 
-                                                onTheaterClick(position, theater, screenPosition.x, screenPosition.y);
+                                                onTheaterClick(position, theaterMarker, screenPosition.x, screenPosition.y);
                                             }
                                         });
                                 }
@@ -706,7 +703,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                     @Override
                                                     public void onAnimationEnd(Animator animation) {
                                                         super.onAnimationEnd(animation);
-
                                                         isRecyclerViewShown = false;
                                                     }
                                                 });
@@ -718,7 +714,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                                     @Override
                                                     public void onAnimationEnd(Animator animation) {
                                                         super.onAnimationEnd(animation);
-
                                                         isRecyclerViewShown = true;
                                                     }
                                                 });
@@ -746,7 +741,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         if (allTheaters != null) {
             for (Theater theater : allTheaters) {
-
                 if (!theater.getTicketType().matches("STANDARD")) {
                     filteredTheaters.add(theater);
                 }
@@ -794,6 +788,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             } catch (Exception e) {
                 Log.d("onBeforeClusterRender: ", e.toString());
             }
+        }
+;
+        @Override
+        protected void onClusterItemRendered(TheaterPin theaterPin, Marker marker) {
+            super.onClusterItemRendered(theaterPin, marker);
+
+            Theater theater = theaterPin.getTheater();
+            markerTheaterMap.put(marker.getId(), theater);
         }
 
         @Override
