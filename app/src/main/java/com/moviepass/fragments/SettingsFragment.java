@@ -34,9 +34,6 @@ public class SettingsFragment extends PreferenceFragment {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.settings_preferences);
 
-        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
-
         final SwitchPreference pushSwitch = (SwitchPreference) findPreference("push");
         boolean pushStatus = UserPreferences.getPushPermission();
         pushSwitch.setChecked(pushStatus);
