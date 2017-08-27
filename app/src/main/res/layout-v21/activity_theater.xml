@@ -136,6 +136,13 @@
                     android:layout_alignParentStart="true"
                     android:visibility="gone" />
 
+                <View
+                    android:id="@+id/below_showtimes"
+                    android:layout_below="@+id/recycler_view_showtimes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:visibility="gone"/>
+
                 <Button
                     android:id="@+id/button_action"
                     android:layout_width="match_parent"
@@ -150,7 +157,12 @@
                     android:layout_marginRight="@dimen/margin_standard"
                     android:layout_marginBottom="@dimen/margin_standard"/>
 
-
+                <View
+                    android:id="@+id/bottom_of_screen"
+                    android:layout_below="@+id/button_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 

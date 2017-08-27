@@ -74,74 +74,81 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
 
-    TheaterMoviesAdapter mTheaterMoviesAdapter;
-    TheaterShowtimesAdapter mTheaterShowtimesAdapter;
+    TheaterMoviesAdapter theaterMoviesAdapter;
+    TheaterShowtimesAdapter theaterShowtimesAdapter;
 
-    ArrayList<Screening> mMoviesList;
-    ArrayList<String> mShowtimesList;
+    ArrayList<Screening> moviesList;
+    ArrayList<String> showtimesList;
 
     protected BottomNavigationView bottomNavigationView;
 
-    Theater mTheater;
-    ScreeningsResponse mScreeningsResponse;
-    Screening mScreening;
+    Theater theater;
+    ScreeningsResponse screeningsResponse;
     Reservation reservation;
-    TextView mTheaterName;
-    TextView mTheaterAddress;
-    TextView mTheaterCityThings;
-    TextView mMovieTitle;
-    TextView mMovieSelectTime;
-    Button mAction;
-    View mProgress;
-    View mRedView;
-    Location mCurrentLocation;
+    TextView theaterName;
+    TextView theaterAddress;
+    TextView theaterCityThings;
+    TextView movieTitle;
+    TextView movieSelectTime;
+    View belowShowtimes;
+    View screenBottom;
+    Button action;
+    View progress;
+    View redView;
+    Location currentLocation;
 
     @BindView(R.id.recycler_view_movies)
-    RecyclerView mMoviesRecyclerView;
+    RecyclerView moviesRecyclerView;
     @BindView(R.id.recycler_view_showtimes)
-    RecyclerView mShowtimesRecyclerView;
+    RecyclerView showtimesRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theater);
 
-        final Toolbar mToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(mToolbar);
+        final Toolbar toolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
 
-        final ActionBar mActionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
 
         // Enable the Up button
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         Bundle extras = getIntent().getExtras();
-        mTheater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
+        theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
-        mTheaterName = findViewById(R.id.theater_name);
-        mTheaterAddress = findViewById(R.id.theater_address);
-        mTheaterCityThings = findViewById(R.id.theater_city_things);
-        mMovieTitle = findViewById(R.id.movie_title);
-        mMovieSelectTime = findViewById(R.id.movie_select_time);
-        mAction = findViewById(R.id.button_action);
-        mAction.setFocusable(true);
-        mAction.setFocusableInTouchMode(true);
-        mProgress = findViewById(R.id.progress);
+        theaterName = findViewById(R.id.theater_name);
+        theaterAddress = findViewById(R.id.theater_address);
+        theaterCityThings = findViewById(R.id.theater_city_things);
+        movieTitle = findViewById(R.id.movie_title);
+        movieSelectTime = findViewById(R.id.movie_select_time);
+        belowShowtimes = findViewById(R.id.below_showtimes);
+        belowShowtimes.setFocusable(true);
+        belowShowtimes.setFocusableInTouchMode(true);
+        screenBottom = findViewById(R.id.bottom_of_screen);
+        screenBottom.setFocusable(true);
+        screenBottom.setFocusableInTouchMode(true);
+        action = findViewById(R.id.button_action);
+        action.setFocusable(true);
+        action.setFocusableInTouchMode(true);
+        progress = findViewById(R.id.progress);
 
-        mTheaterName.setText(mTheater.getName());
-        mTheaterAddress.setText(mTheater.getAddress());
-        String cityThings = (mTheater.getCity() + " " + mTheater.getState() + ", " + mTheater.getZip());
-        mTheaterCityThings.setText(cityThings);
+        theaterName.setText(theater.getName());
+        theaterAddress.setText(theater.getAddress());
+        String cityThings = (theater.getCity() + " " + theater.getState() + ", " + theater.getZip());
+        theaterCityThings.setText(cityThings);
 
-        mToolbar.setTitle(mTheater.getName());
-        mActionBar.setTitle(mTheater.getName());
+        toolbar.setTitle(theater.getName());
+        actionBar.setTitle(theater.getName());
 
-        mMoviesList = new ArrayList<>();
-        mShowtimesList = new ArrayList<>();
+        moviesList = new ArrayList<>();
+        showtimesList = new ArrayList<>();
 
         /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -150,20 +157,20 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         LinearLayoutManager moviesLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        mMoviesRecyclerView = findViewById(R.id.recycler_view_movies);
-        mMoviesRecyclerView.setLayoutManager(moviesLayoutManager);
+        moviesRecyclerView = findViewById(R.id.recycler_view_movies);
+        moviesRecyclerView.setLayoutManager(moviesLayoutManager);
 
-        mTheaterMoviesAdapter = new TheaterMoviesAdapter(mMoviesList, this);
+        theaterMoviesAdapter = new TheaterMoviesAdapter(moviesList, this);
 
-        mMoviesRecyclerView.setAdapter(mTheaterMoviesAdapter);
-        mMoviesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+        moviesRecyclerView.setAdapter(theaterMoviesAdapter);
+        moviesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
             new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
-                    mMoviesRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    moviesRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                    for (int i = 0; i < mMoviesRecyclerView.getChildCount(); i++) {
-                        View v = mMoviesRecyclerView.getChildAt(i);
+                    for (int i = 0; i < moviesRecyclerView.getChildCount(); i++) {
+                        View v = moviesRecyclerView.getChildAt(i);
                         v.setAlpha(0.0f);
                         v.animate().alpha(1.0f)
                                 .setDuration(1000)
@@ -179,11 +186,11 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         /* Showtimes RecyclerView */
 
-        mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
-        mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        showtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
+        showtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         if (Build.VERSION.SDK_INT >= 21) {
-            mRedView = findViewById(R.id.red);
+            redView = findViewById(R.id.red);
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -191,8 +198,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 public void run() {
                     // previously visible view
                     // get the center for the clipping circle
-                    int cx = mRedView.getWidth() / 2;
-                    int cy = mRedView.getHeight() / 2;
+                    int cx = redView.getWidth() / 2;
+                    int cy = redView.getHeight() / 2;
 
                     Log.d("cx", String.valueOf(cx));
 
@@ -200,15 +207,15 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                     float initialRadius = (float) Math.hypot(cx, cy);
 
                     // create the animation (the final radius is zero)
-                    Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
+                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
 
                     // make the view invisible when the animation is done
                     anim.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mRedView.setVisibility(View.INVISIBLE);
-                            mToolbar.setVisibility(View.VISIBLE);
+                            redView.setVisibility(View.INVISIBLE);
+                            toolbar.setVisibility(View.VISIBLE);
                         }
                     });
 
@@ -233,23 +240,23 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     private void loadMovies() {
-        int theaterId = mTheater.getTribuneTheaterId();
+        int theaterId = theater.getTribuneTheaterId();
 
         RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
             @Override
             public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
-                mScreeningsResponse = response.body();
+                screeningsResponse = response.body();
 
-                if (mScreeningsResponse != null) {
+                if (screeningsResponse != null) {
 
-                    mMoviesList.clear();
+                    moviesList.clear();
 
-                    if (mMoviesRecyclerView != null) {
-                        mMoviesRecyclerView.getRecycledViewPool().clear();
-                        mTheaterMoviesAdapter.notifyDataSetChanged();
+                    if (moviesRecyclerView != null) {
+                        moviesRecyclerView.getRecycledViewPool().clear();
+                        theaterMoviesAdapter.notifyDataSetChanged();
                     }
 
-                    mMoviesList.addAll(mScreeningsResponse.getScreenings());
+                    moviesList.addAll(screeningsResponse.getScreenings());
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
@@ -271,7 +278,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         Log.d("onBackPressed", "onBackPressed");
 
         if (Build.VERSION.SDK_INT >= 21) {
-            mRedView = findViewById(R.id.red);
+            redView = findViewById(R.id.red);
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -279,8 +286,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 public void run() {
                     // previously visible view
                     // get the center for the clipping circle
-                    int cx = mRedView.getWidth() / 2;
-                    int cy = mRedView.getHeight() / 2;
+                    int cx = redView.getWidth() / 2;
+                    int cy = redView.getHeight() / 2;
 
                     Log.d("cx", String.valueOf(cx));
 
@@ -288,14 +295,14 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                     float initialRadius = (float) Math.hypot(cx, cy);
 
                     // create the animation (the final radius is zero)
-                    Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, initialRadius, 0);
+                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
 
                     // make the view invisible when the animation is done
                     anim.addListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            mRedView.setVisibility(View.INVISIBLE);
+                            redView.setVisibility(View.INVISIBLE);
                         }
                     });
 
@@ -308,18 +315,18 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
         /* TODO : Get the screenings for that movie */
 
-        mTheaterShowtimesAdapter = new TheaterShowtimesAdapter(mShowtimesList, screening, this);
+        theaterShowtimesAdapter = new TheaterShowtimesAdapter(showtimesList, screening, this);
 
-        mShowtimesRecyclerView.setAdapter(mTheaterShowtimesAdapter);
-        mShowtimesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+        showtimesRecyclerView.setAdapter(theaterShowtimesAdapter);
+        showtimesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
             new ViewTreeObserver.OnPreDrawListener() {
 
                 @Override
                 public boolean onPreDraw() {
-                    mShowtimesRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    showtimesRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                    for (int i = 0; i < mShowtimesRecyclerView.getChildCount(); i++) {
-                        View v = mShowtimesRecyclerView.getChildAt(i);
+                    for (int i = 0; i < showtimesRecyclerView.getChildCount(); i++) {
+                        View v = showtimesRecyclerView.getChildAt(i);
                         v.setAlpha(0.0f);
                         v.animate().alpha(1.0f)
                                 .setDuration(1000)
@@ -331,69 +338,75 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 }
             });
 
-        if (mMovieSelectTime.getVisibility() == View.VISIBLE) {
-            fadeOut(mMovieSelectTime);
+        if (movieSelectTime.getVisibility() == View.VISIBLE) {
+            fadeOut(movieSelectTime);
 
             String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-            mMovieSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-            fadeIn(mMovieSelectTime);
+            movieSelectTime.setText(screening.getTitle() + " " + atWhatTime);
+            fadeIn(movieSelectTime);
         } else {
-            mMovieSelectTime.setVisibility(View.VISIBLE);
+            movieSelectTime.setVisibility(View.VISIBLE);
 
             String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-            mMovieSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-            fadeIn(mMovieSelectTime);
+            movieSelectTime.setText(screening.getTitle() + " " + atWhatTime);
+            fadeIn(movieSelectTime);
         }
 
-        if (mAction.getVisibility() == View.VISIBLE) {
-            fadeOut(mAction);
-            mAction.setVisibility(View.INVISIBLE);
+        if (action.getVisibility() == View.VISIBLE) {
+            fadeOut(action);
+            action.setVisibility(View.INVISIBLE);
         }
 
-        mShowtimesRecyclerView.setVisibility(View.VISIBLE);
-        mShowtimesRecyclerView.requestFocus();
-        mShowtimesList.clear();
+        showtimesRecyclerView.setVisibility(View.VISIBLE);
+        showtimesRecyclerView.requestFocus();
+        showtimesList.clear();
 
-        if (mShowtimesRecyclerView != null) {
-            mShowtimesRecyclerView.getRecycledViewPool().clear();
-            mTheaterShowtimesAdapter.notifyDataSetChanged();
+        if (showtimesRecyclerView != null) {
+            showtimesRecyclerView.getRecycledViewPool().clear();
+            theaterShowtimesAdapter.notifyDataSetChanged();
         }
 
-        mShowtimesList.addAll(startTimes);
+        belowShowtimes.setVisibility(View.VISIBLE);
+
+        showtimesList.addAll(startTimes);
+
+        belowShowtimes.requestFocus();
     }
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
         final String time = showtime;
 
-        mAction.setVisibility(View.VISIBLE);
+        action.setVisibility(View.VISIBLE);
 
-        if (mAction.getVisibility() == View.VISIBLE) {
-            fadeOut(mAction);
-            mAction.requestFocus();
-            fadeIn(mAction);
+        if (action.getVisibility() == View.VISIBLE) {
+            fadeOut(action);
+            fadeIn(action);
+            screenBottom.setVisibility(View.VISIBLE);
+            screenBottom.requestFocus();
         } else {
-            fadeIn(mAction);
-            mAction.setVisibility(View.VISIBLE);
-            mAction.requestFocus();
+            fadeIn(action);
+            action.setVisibility(View.VISIBLE);
+            screenBottom.setVisibility(View.VISIBLE);
+            screenBottom.requestFocus();
         }
 
         String ticketType = screening.getProvider().ticketType;
 
         if (ticketType.matches("STANDARD")) {
             String checkIn = "Check In";
-            mAction.setText(checkIn);
+            action.setText(checkIn);
         } else if (ticketType.matches("")) {
             String reserve = "Reserve E-Ticket";
-            mAction.setText(reserve);
+            action.setText(reserve);
         } else {
             String selectSeat = "Select Seat";
-            mAction.setText(selectSeat);
+            action.setText(selectSeat);
         }
 
-        mAction.setOnClickListener(new View.OnClickListener() {
+        action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mProgress.setVisibility(View.VISIBLE);
+                progress.setVisibility(View.VISIBLE);
                 reserve(screening, time);
             }
         });
@@ -420,7 +433,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     public void reserve(Screening screening, String showtime) {
-        mAction.setEnabled(false);
+        action.setEnabled(false);
 
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
@@ -473,7 +486,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 ReservationResponse reservationResponse = response.body();
                 if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
-                    mProgress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
 
                     Log.d("screening,", screening.toString());
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
@@ -488,24 +501,24 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        mProgress.setVisibility(View.GONE);
-                        mAction.setEnabled(true);
+                        progress.setVisibility(View.GONE);
+                        action.setEnabled(true);
                         Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(TheaterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
-                    mProgress.setVisibility(View.GONE);
-                    mAction.setEnabled(true);
+                    progress.setVisibility(View.GONE);
+                    action.setEnabled(true);
                 }
 
-                mAction.setEnabled(true);
+                action.setEnabled(true);
             }
 
             @Override
             public void failure(RestError restError) {
-                mProgress.setVisibility(View.GONE);
-                mAction.setEnabled(true);
+                progress.setVisibility(View.GONE);
+                action.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
@@ -527,7 +540,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     private void showConfirmation(ScreeningToken token) {
-        mProgress.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(TheaterActivity.this, ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
@@ -535,7 +548,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     }
 
     private void showVerification(ScreeningToken token) {
-        mProgress.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(TheaterActivity.this, VerificationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);

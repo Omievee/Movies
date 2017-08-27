@@ -148,6 +148,13 @@
                     android:layout_marginRight="@dimen/margin_standard"
                     android:layout_marginBottom="@dimen/margin_standard"/>
 
+                <View
+                    android:id="@+id/bottom_of_screen"
+                    android:layout_below="@+id/button_action"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>
