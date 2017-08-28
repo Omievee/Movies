@@ -470,7 +470,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         } else {
             Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
-            intent.putExtra(SHOWTIME, Parcels.wrap(showtime));
             intent.putExtra(SHOWTIME, showtime);
             startActivity(intent);
             finish();

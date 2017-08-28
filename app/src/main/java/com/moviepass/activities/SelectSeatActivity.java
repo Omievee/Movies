@@ -16,6 +16,7 @@ import com.moviepass.R;
 import com.moviepass.extensions.SeatButton;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Screening;
+import com.moviepass.model.ScreeningToken;
 import com.moviepass.model.SeatInfo;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.PerformanceInfoRequest;
@@ -65,7 +66,7 @@ public class SelectSeatActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
-        String showtime = Parcels.unwrap(getIntent().getParcelableExtra(SHOWTIME));
+        String showtime = getIntent().getStringExtra(SHOWTIME);
 
         mPoster = findViewById(R.id.poster);
         mMovieTitle = findViewById(R.id.movie_title);
@@ -104,6 +105,7 @@ public class SelectSeatActivity extends BaseActivity {
 
         //PerformanceInfo
         int normalizedMovieId = mScreening.getMoviepassId();
+        Log.d("showtime", showtime);
         String externalMovieId = mScreening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = mScreening.getFormat();
         int tribuneTheaterId = mScreening.getTribuneTheaterId();
