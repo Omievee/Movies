@@ -50,6 +50,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         TextView cityThings;
         @BindView(R.id.theater_distance)
         TextView distance;
+        @BindView(R.id.icon_pin)
+        ImageView iconPin;
         @BindView(R.id.icon_ticket)
         ImageView iconTicket;
         @BindView(R.id.icon_seat)
@@ -64,6 +66,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             address = v.findViewById(R.id.theater_address);
             cityThings = v.findViewById(R.id.theater_city_things);
             distance = v.findViewById(R.id.theater_distance);
+            iconPin = v.findViewById(R.id.icon_pin);
             iconTicket = v.findViewById(R.id.icon_ticket);
             iconSeat = v.findViewById(R.id.icon_seat);
         }
@@ -100,6 +103,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         float distanceInMeters = loc1.distanceTo(loc2); */
 
+        holder.cityThings.setVisibility(View.GONE);
+        holder.distance.setVisibility(View.GONE);
+        holder.iconPin.setVisibility(View.GONE);
+
         if (screening.getProvider().ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);
             holder.iconSeat.setVisibility(View.INVISIBLE);
@@ -112,10 +119,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         String zip = String.valueOf(screening.getTheaterAddress());
 
         String cityThings = city + ", " + state + " " + zip;
-        holder.cityThings.setText(cityThings);
+        //holder.cityThings.setText(cityThings);
 
         String formattedAddress = screening.getTheaterAddress() + " miles";
-        holder.distance.setText(formattedAddress);
+        //holder.distance.setText(formattedAddress);
 
         holder.listItemTheater.setTag(position);
 
