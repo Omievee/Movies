@@ -468,9 +468,11 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
+            String previousScreen = "TheaterActivity";
             Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
+            intent.putExtra(THEATER, Parcels.wrap(theater));
             startActivity(intent);
             finish();
 

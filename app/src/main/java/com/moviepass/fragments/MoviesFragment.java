@@ -100,7 +100,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
-
         /* Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -186,7 +185,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
-
 
                         mMoviesNewReleases.clear();
                         mMoviesTopBoxOffice.clear();

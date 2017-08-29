@@ -15,9 +15,11 @@ import android.widget.Toast;
 import com.moviepass.R;
 import com.moviepass.extensions.SeatButton;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
 import com.moviepass.model.SeatInfo;
+import com.moviepass.model.Theater;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.responses.SeatingsInfoResponse;
@@ -41,6 +43,9 @@ public class SelectSeatActivity extends BaseActivity {
 
     public static final String SCREENING = "screening" ;
     public static final String SHOWTIME = "showtime";
+    public static final String THEATER = "theater";
+    public static final String MOVIE = "movie";
+
 
     GridLayout mGridSeats;
     ImageView mPoster;
@@ -53,7 +58,6 @@ public class SelectSeatActivity extends BaseActivity {
     TextView mShowtime;
     TextView mSeats;
     View mProgress;
-
 
     private ArrayList<SeatButton> mSeatButtons;
 
@@ -186,11 +190,28 @@ public class SelectSeatActivity extends BaseActivity {
     }
 
     private void selectSeat(String seatName) {
-
         for (SeatButton button : mSeatButtons) {
             button.setSeatSelected(button.getSeatName().matches(seatName));
         }
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (getIntent().getParcelableExtra(THEATER) != null) {
+            Theater theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
+
+            Intent intent = new Intent(SelectSeatActivity.this, TheaterActivity.class);
+            intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
+            startActivity(intent);
+        } else if (getIntent().getParcelableExtra(MOVIE) != null){
+            Movie movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
+
+            Intent intent = new Intent(SelectSeatActivity.this, MovieActivity.class);
+            intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(movie));
+            startActivity(intent);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /* Bottom Navigation Things */

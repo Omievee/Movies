@@ -112,7 +112,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-
                     Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
                     intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
 

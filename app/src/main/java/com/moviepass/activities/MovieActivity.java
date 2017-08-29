@@ -92,7 +92,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     boolean mLocationAcquired;
     private Location mMyLocation;
 
-    Movie mMovie;
+    Movie movie;
     Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter mMovieTheatersAdapter;
@@ -141,7 +141,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         Bundle extras = getIntent().getExtras();
-        mMovie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
+        movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
         mPoster = findViewById(R.id.poster);
         mPosterTitle = findViewById(R.id.poster_movie_title);
@@ -159,8 +159,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mScreenBottom.setFocusableInTouchMode(true);
         mProgress = findViewById(R.id.progress);
 
-        mToolbar.setTitle(mMovie.getTitle());
-        mActionBar.setTitle(mMovie.getTitle());
+        mToolbar.setTitle(movie.getTitle());
+        mActionBar.setTitle(movie.getTitle());
 
         theaterAddress.setVisibility(View.GONE);
 
@@ -177,7 +177,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             mPoster.setTransitionName(imageTransitionName);
         }
 
-        String imgUrl = mMovie.getImageUrl();
+        String imgUrl = movie.getImageUrl();
 
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.listener(new Picasso.Listener() {
@@ -185,7 +185,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
                 exception.printStackTrace();
 
-                mPosterTitle.setText(mMovie.getTitle());
+                mPosterTitle.setText(movie.getTitle());
             }
         });
         builder.build()
@@ -205,8 +205,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                 });
 
 
-        mTitle.setText(mMovie.getTitle());
-        int t = mMovie.getRunningTime();
+        mTitle.setText(movie.getTitle());
+        int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
 
@@ -284,7 +284,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
             mMyLocation = location;
 
-            loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), mMovie.getId());
+            loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), movie.getId());
 
             mLocationAcquired = true;
         }
@@ -478,10 +478,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             reservationRequest(screening, checkInRequest, showtime);
         } else {
             /* TODO : Go to SELECT SEAT */
-
+            String previousScreen = "MovieActivity";
             Intent intent = new Intent(this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
+            intent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
             startActivity(intent);
             finish();
         }
