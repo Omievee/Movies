@@ -19,6 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moviepass.R;
+import com.moviepass.model.ProspectUser;
+import com.moviepass.network.RestClient;
+import com.moviepass.requests.CredentialsRequest;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 6/15/17.
@@ -26,44 +33,64 @@ import com.moviepass.R;
 
 public class SignUpFirstOpenActivity extends AppCompatActivity {
 
-    RelativeLayout mRelativeLayout;
-    View mRedView;
+    RelativeLayout relativeLayout;
+    View redView;
+    View progress;
 
-    Button mButonSignUp;
-    Button mButtonSignUpFacebook;
+    Button butonSignUp;
+    Button buttonSignUpFacebook;
     TextView seeMap;
 
-    EditText mInputEmail;
-    EditText mInputPassword;
+    EditText inputEmail;
+    EditText inputPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_first_open);
 
-        mRedView = findViewById(R.id.red);
-        mRelativeLayout = findViewById(R.id.relative_layout);
-        mInputEmail = findViewById(R.id.input_email);
-        mInputPassword = findViewById(R.id.input_password);
-        mButonSignUp = findViewById(R.id.button_sign_up);
+        redView = findViewById(R.id.red);
+        relativeLayout = findViewById(R.id.relative_layout);
+        inputEmail = findViewById(R.id.input_email);
+        inputPassword = findViewById(R.id.input_password);
+        butonSignUp = findViewById(R.id.button_sign_up);
 //        seeMap = findViewById(R.id.see_map);
 
 //        openAnimation();
 
-        mButonSignUp.setOnClickListener(new View.OnClickListener() {
+        butonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = mInputEmail.getText().toString().trim();
-                    String password = mInputPassword.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
+                final String password = inputPassword.getText().toString().trim();
 
                 if (isValidEmail(email) && isValidPassword(password)) {
                     /* TODO : animate this */
-                    Intent intent = new Intent(SignUpFirstOpenActivity.this, SignUpActivity.class);
-                    intent.putExtra("email", email);
-                    intent.putExtra("password", password);
-                    startActivity(intent);
+
+                    CredentialsRequest request = new CredentialsRequest(email, password, password);
+
+                    RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, Response<Object> response) {
+                            progress.setVisibility(View.GONE);
+                            if (response != null && response.isSuccessful()) {
+                                ProspectUser.email = email;
+                                ProspectUser.password = password;
+
+                                Intent intent = new Intent(SignUpFirstOpenActivity.this, SignUpActivity.class);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            /* TODO : Handle failure situation */
+                        }
+                    });
                 } else if (!isValidEmail(email)) {
-                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "Please enter a valid email address", Snackbar.LENGTH_INDEFINITE);
+                    Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid email address", Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -74,7 +101,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
                     snackbar.show();
                 } else if (!isValidPassword(password)) {
-                    Snackbar snackbar = Snackbar.make(mRelativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
+                    Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
                     snackbar.setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

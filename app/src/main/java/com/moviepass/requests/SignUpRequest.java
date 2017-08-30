@@ -14,6 +14,7 @@ public class SignUpRequest {
     String facebookToken;
     boolean amc3dMarkup;
 
+    //CC & No FB
     public SignUpRequest(String number, String month, String year, String ccv,
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
@@ -27,6 +28,7 @@ public class SignUpRequest {
         this.personalInfo = new PersonalInfo(email, password, firstName, lastName);
     }
 
+    //CC & FB
     public SignUpRequest(String number, String month, String year, String ccv,
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,

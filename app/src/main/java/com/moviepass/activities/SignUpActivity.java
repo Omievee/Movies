@@ -40,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
     String city;
     String state;
     String addressZip;
+    String price;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     public NonSwipeableViewPager mViewPager;
@@ -90,7 +91,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
                 page = position;
                 updateIndicators(page);
 
@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
                         mNext.setText(R.string.fragment_sign_up_step_one_next);
                         break;
                     case 1:
-                        mNext.setText(R.string.fragment_sign_up_step_four_finish);
+                        mNext.setText(R.string.fragment_sign_up_step_two_finish);
                         break;
                 }
             }
@@ -315,6 +315,11 @@ public class SignUpActivity extends AppCompatActivity {
         addressZip = frag_addressZip;
 
         Log.d("currentItem", String.valueOf(mViewPager.getCurrentItem()));
+
+    }
+
+    public void setPrice(String frag_price) {
+        price = frag_price;
 
         mViewPager.setCurrentItem(1);
     }

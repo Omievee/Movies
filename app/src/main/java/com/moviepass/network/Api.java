@@ -8,19 +8,25 @@ import com.moviepass.model.User;
 import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
+import com.moviepass.requests.CredentialsRequest;
 import com.moviepass.requests.CreditCardChangeRequest;
 import com.moviepass.requests.FacebookLinkRequest;
 import com.moviepass.requests.FacebookSignInRequest;
 import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
+import com.moviepass.requests.PersonalInfoRequest;
+import com.moviepass.requests.SignUpRequest;
 import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.HistoryResponse;
+import com.moviepass.responses.PersonalInfoResponse;
+import com.moviepass.responses.RegistrationPlanResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.RestrictionsResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.moviepass.responses.SeatingsInfoResponse;
+import com.moviepass.responses.SignUpResponse;
 import com.moviepass.responses.UserInfoResponse;
 import com.moviepass.responses.VerificationLostResponse;
 import com.moviepass.responses.VerificationResponse;
@@ -65,8 +71,17 @@ public interface Api {
             double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
+    @POST("/register/create/json")
+    Call<Object> registerCredentials(@Body CredentialsRequest request);
+
     @GET("/api/v2/register/amc_upgradeability/{zip}")
-    Call<Plan> getPlans(@Path("zip") String zip);
+    Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
+
+    @POST("/register/create/json")
+    Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
+
+    @POST("/api/v1/register/create/mobile")
+    Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
 
     /* Reservations */

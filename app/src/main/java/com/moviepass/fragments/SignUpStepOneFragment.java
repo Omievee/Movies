@@ -1,6 +1,7 @@
 package com.moviepass.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -14,11 +15,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
 import com.moviepass.model.Plan;
+import com.moviepass.model.ProspectUser;
+import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
+import com.moviepass.network.RestError;
+import com.moviepass.requests.PersonalInfoRequest;
+import com.moviepass.responses.PersonalInfoResponse;
+import com.moviepass.responses.RegistrationPlanResponse;
 
 import org.json.JSONObject;
 
@@ -35,14 +43,15 @@ public class SignUpStepOneFragment extends Fragment {
     ArrayAdapter<CharSequence> statesAdapter;
 
     RelativeLayout relativeLayout;
-    EditText firstName;
-    EditText lastName;
-    EditText address;
-    EditText address2;
-    EditText city;
+    EditText etFirstName;
+    EditText etLastName;
+    EditText etAddress;
+    EditText etAddress2;
+    EditText etCity;
     Spinner state;
-    EditText zip;
+    EditText etZip;
     Button next;
+    View progress;
 
     String states[] = new String[]{
             "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL",
@@ -60,14 +69,15 @@ public class SignUpStepOneFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_one, container, false);
 
         relativeLayout = rootView.findViewById(R.id.relative_layout);
-        firstName = rootView.findViewById(R.id.et_first_name);
-        lastName = rootView.findViewById(R.id.et_last_name);
-        address = rootView.findViewById(R.id.et_address);
-        address2 = rootView.findViewById(R.id.et_address_two);
-        city = rootView.findViewById(R.id.et_city);
+        etFirstName = rootView.findViewById(R.id.et_first_name);
+        etLastName = rootView.findViewById(R.id.et_last_name);
+        etAddress = rootView.findViewById(R.id.et_address);
+        etAddress2 = rootView.findViewById(R.id.et_address_two);
+        etCity = rootView.findViewById(R.id.et_city);
         state = rootView.findViewById(R.id.state);
-        zip = rootView.findViewById(R.id.et_zip);
+        etZip = rootView.findViewById(R.id.et_zip);
         next = getActivity().findViewById(R.id.button_next);
+        progress = getActivity().findViewById(R.id.progress);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -83,7 +93,6 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public static SignUpStepOneFragment newInstance(String text) {
-
         SignUpStepOneFragment f = new SignUpStepOneFragment();
         Bundle b = new Bundle();
         b.putString("msg", text);
@@ -138,7 +147,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isFirstNameValid() {
-        if (firstName.length() > 1 && firstName.length() <= 26 && !firstName.getText().toString().matches(".*\\d+.*")) {
+        if (etFirstName.length() > 1 && etFirstName.length() <= 26 && !etFirstName.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             pos = 0;
@@ -147,7 +156,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isLastNameValid() {
-        if (lastName.length() > 1 && lastName.length() <= 26 && !lastName.getText().toString().matches(".*\\d+.*")) {
+        if (etLastName.length() > 1 && etLastName.length() <= 26 && !etLastName.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             pos = 0;
@@ -156,7 +165,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isAddressValid() {
-        if (address.length() > 2 && address.length() <= 26) {
+        if (etAddress.length() > 2 && etAddress.length() <= 26) {
             return true;
         } else {
             return false;
@@ -164,17 +173,17 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isAddress2Valid() {
-        if ((address2.length() > 0 && address2.length() <= 26)
-                || address2.getText().toString().equals("")) {
+        if ((etAddress2.length() > 0 && etAddress2.length() <= 26)
+                || etAddress2.getText().toString().equals("")) {
             return true;
         } else {
-            Log.d("mAddress2", address2.getText().toString());
+            Log.d("mAddress2", etAddress2.getText().toString());
             return false;
         }
     }
 
     public boolean isCityValid() {
-        if (city.length() > 2 && city.length() <= 26 && !city.getText().toString().matches(".*\\d+.*")) {
+        if (etCity.length() > 2 && etCity.length() <= 26 && !etCity.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             return false;
@@ -191,7 +200,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isZipValid() {
-        if (zip.length() == 5) {
+        if (etZip.length() == 5) {
             return true;
         } else {
             return false;
@@ -210,18 +219,59 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public void processSignUpInfo() {
-        /* TODO : Set prospect user */
-
-        ((SignUpActivity) getActivity()).setFirstName(firstName.getText().toString());
-        ((SignUpActivity) getActivity()).setLastName(lastName.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress(address.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress2(address2.getText().toString());
-        ((SignUpActivity) getActivity()).setCity(city.getText().toString());
+        ((SignUpActivity) getActivity()).setFirstName(etFirstName.getText().toString());
+        ((SignUpActivity) getActivity()).setLastName(etLastName.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress(etAddress.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress2(etAddress2.getText().toString());
+        ((SignUpActivity) getActivity()).setCity(etCity.getText().toString());
         ((SignUpActivity) getActivity()).setState(state.getSelectedItem().toString());
-        ((SignUpActivity) getActivity()).setAddressZip(zip.getText().toString());
+        ((SignUpActivity) getActivity()).setAddressZip(etZip.getText().toString());
 
         String email = ((SignUpActivity) getActivity()).getEmail();
         String password = ((SignUpActivity) getActivity()).getPassword();
+
+        ProspectUser.firstName = etFirstName.getText().toString();
+        ProspectUser.lastName = etLastName.getText().toString();
+        ProspectUser.address = etAddress.getText().toString();
+        ProspectUser.address2 = etAddress2.getText().toString();
+        ProspectUser.city = etCity.getText().toString();
+        ProspectUser.state = state.getSelectedItem().toString();
+        ProspectUser.zip = etZip.getText().toString();
+
+        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
+                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
+                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.zip);
+
+        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
+            @Override
+            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
+                RestClient.getUnauthenticated().getPlans(ProspectUser.zip).enqueue(new RestCallback<RegistrationPlanResponse>() {
+                    @Override
+                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
+                        progress.setVisibility(View.GONE);
+                        RegistrationPlanResponse registrationPlanResponse = response.body();
+
+                        if (registrationPlanResponse != null) {
+                            String price = (registrationPlanResponse.getPrice());
+
+                            ((SignUpActivity) getActivity()).setPrice(price);
+                        } else if (response.errorBody() != null) {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RestError restError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<PersonalInfoResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setButtonActions() {

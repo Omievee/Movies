@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.braintreepayments.api.BraintreeFragment;
@@ -26,9 +28,20 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.moviepass.BuildConfig;
 import com.moviepass.Constants;
 import com.moviepass.R;
+import com.moviepass.model.ProspectUser;
+import com.moviepass.network.RestClient;
+import com.moviepass.requests.SignUpRequest;
+import com.moviepass.responses.SignUpResponse;
+
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 7/11/17.
@@ -39,13 +52,16 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     BraintreeFragment mBraintreeFragment;
 
-    ImageButton mButtonCreditCard;
-    ImageButton mButtonPaypal;
-    ImageButton mButtonAndroidPay;
+    ImageButton buttonCreditCard;
+    ImageButton buttonPaypal;
+    ImageButton buttonAndroidPay;
+    TextView selectedCreditCardText;
+    TextView selectedCreditCardMasked;
+    CheckBox terms;
+    CheckBox billingAddress;
+    View progress;
 
-    View mProgress;
-
-    Button mNext;
+    Button buttonFinish;
 
     static {
         System.loadLibrary("native-lib");
@@ -65,22 +81,28 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_two, container, false);
         ButterKnife.bind(getActivity());
 
-        mProgress = rootView.findViewById(R.id.progress);
+        progress = rootView.findViewById(R.id.progress);
 
-        mButtonCreditCard = rootView.findViewById(R.id.button_credit_card);
-        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
-        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
+        buttonCreditCard = rootView.findViewById(R.id.button_credit_card);
+//        buttonPaypal = rootView.findViewById(R.id.button_paypal);
+//        buttonAndroidPay = rootView.findViewById(R.id.button_android_pay);
+        selectedCreditCardText = rootView.findViewById(R.id.credit_card_number_copy);
+        selectedCreditCardMasked = rootView.findViewById(R.id.credit_card_number);
 
-        mNext = getActivity().findViewById(R.id.button_next);
+        terms = rootView.findViewById(R.id.checkbox_terms);
+        billingAddress = rootView.findViewById(R.id.checkbox_address);
 
-        mButtonCreditCard.setOnClickListener(new View.OnClickListener() {
+        buttonFinish = getActivity().findViewById(R.id.button_next);
+        buttonFinish.setEnabled(false);
+
+        buttonCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 creditCardClick();
             }
         });
 
-        mButtonPaypal.setOnClickListener(new View.OnClickListener() {
+        buttonPaypal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 paypalClick();
@@ -94,30 +116,30 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
-                scan_card();
+                scanCard();
             } else {
-                scan_card();
+                scanCard();
             }
         } else {
-            scan_card();
+            scanCard();
         }
     }
 
     public void paypalClick() {
-        mProgress.setVisibility(View.VISIBLE);
-        mButtonPaypal.setEnabled(false);
+        progress.setVisibility(View.VISIBLE);
+        buttonPaypal.setEnabled(false);
         try {
             if (BuildConfig.DEBUG) {
                 String mAuthorization = getSandboxTokenizationKey();
                 mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
-                mProgress.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
                 // mBraintreeFragment is ready to use!
 
                 PayPal.authorizeAccount(mBraintreeFragment);
             } else {
                 String mAuthorization = getProductionTokenizationKey();
                 mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
-                mProgress.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
                 // mBraintreeFragment is ready to use!
 
                 PayPal.authorizeAccount(mBraintreeFragment);
@@ -125,12 +147,12 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
         } catch (InvalidArgumentException e) {
             // There was an issue with your authorization string.
-            mButtonPaypal.setEnabled(true);
+            buttonPaypal.setEnabled(true);
             Log.d("error", "error: " + e.getMessage());
         }
     }
 
-    public void scan_card() {
+    public void scanCard() {
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
         // customize these values to suit your needs.
@@ -153,7 +175,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         final String bZip;
 
         /*
-
         String email = ProspectUser.email;
         String password = ProspectUser.password;
         String firstName = ProspectUser.firstName;
@@ -258,8 +279,39 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
             });
         }
-
         */
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        buttonFinish.setEnabled(true);
+
+        if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
+            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+
+                 selectedCreditCardMasked.setText(scanResult.getRedactedCardNumber());
+
+                if (scanResult.isExpiryValid()) {
+                    String month = String.valueOf(scanResult.expiryMonth);
+                    String year = String.valueOf(scanResult.expiryYear);
+                    if (year.length() > 4) {
+                        year = year.substring(4);
+                    }
+
+                }
+
+                buttonFinish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        completeRegistration(scanResult.cardNumber, scanResult.expiryMonth, scanResult.expiryYear, scanResult.cvv);
+                    }
+                });
+            }
+        }
+
+
     }
 
     @Override
@@ -272,6 +324,96 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public void onError(Exception error) {
         if (error instanceof ErrorWithResponse) {
             Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @OnClick(R.id.button_next)
+    public void completeRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
+        progress.setVisibility(View.VISIBLE);
+
+        String creditCardNumber = String.valueOf(cardNumber);
+        String month = String.valueOf(cardExpMonth);
+        String year = String.valueOf(cardExpYear);
+//        String expirationDate = String.format(Locale.getDefault(), "%s/%s", mEditCreditCardMonth.getText(), mEditCreditCardYear.getText());
+        String cvv = String.valueOf(cardCvv);
+
+        final String bStreet;
+        final String bStreet2;
+        final String bCity;
+        final String bState;
+        final String bZip;
+
+        String email = ProspectUser.email;
+        String password = ProspectUser.password;
+        String firstName = ProspectUser.firstName;
+        String lastName = ProspectUser.lastName;
+        String sStreet = ProspectUser.address;
+        String sStreet2 = ProspectUser.address2;
+        String sCity = ProspectUser.city;
+        String sState = ProspectUser.state;
+        String sZip = ProspectUser.zip;
+        boolean amc3dMarkup = false;
+        //String facebookToken = getIntent().getExtras().getString("fbToken");
+
+        if (terms.isChecked()) {
+            bStreet = ProspectUser.address;
+            bStreet2 = ProspectUser.address2;
+            bCity = ProspectUser.city;
+            bState = ProspectUser.state;
+            bZip = ProspectUser.zip;
+        } else {
+            bStreet = ProspectUser.address;
+            bStreet2 = ProspectUser.address2;
+            bCity = ProspectUser.city;
+            bState = ProspectUser.state;
+            bZip = ProspectUser.zip;
+        }
+
+        if (terms.isChecked()) {
+            progress.setVisibility(View.VISIBLE);
+            buttonFinish.setEnabled(false);
+
+            final SignUpRequest request = new SignUpRequest(creditCardNumber, month, year, cvv,
+                    sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
+                    email, firstName, lastName, password, amc3dMarkup);
+
+            RestClient.getUnauthenticated().signUp(ProspectUser.session, request).enqueue( new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+
+                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
+
+                    if (response.isSuccessful()) {
+
+                        Log.d("subId", response.body().getSubId());
+                        login();
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
+
+                            //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
+                            Toast.makeText(getActivity(), jObjError.toString(), Toast.LENGTH_LONG).show();
+                            progress.setVisibility(View.GONE);
+                            buttonFinish.setEnabled(true);
+
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                    progress.setVisibility(View.GONE);
+                    buttonFinish.setEnabled(true);
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        } else {
+            Toast.makeText(getActivity(), R.string.fragment_sign_up_step_two_must_agree_to_terms, Toast.LENGTH_LONG).show();
+            progress.setVisibility(View.GONE);
+            buttonFinish.setEnabled(true);
         }
     }
 

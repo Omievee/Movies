@@ -42,7 +42,13 @@ public class RestClient {
     static String url = String.valueOf(getEndPoint());
 
     private static Api sAuthenticatedAPI;
+    private static Api sUnauthenticatedAPI;
     private static Retrofit sAuthenticatedInstance;
+    private static Retrofit sUnauthenticatedInstance;
+
+    public static int userId;
+    public static String deviceUuid = "";
+    public static String authToken = "";
 
     private RestClient() {
     }
@@ -50,6 +56,8 @@ public class RestClient {
     public static Api getAuthenticated() {
         return sAuthenticatedAPI;
     }
+
+    public static Api getUnauthenticated() { return sUnauthenticatedAPI; }
     
     public static void setupAuthenticatedWebClient(Context context) {
 
@@ -99,5 +107,50 @@ public class RestClient {
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
+    }
+
+    public static void setupSimpleRestClient(Context context) {
+        sUnauthenticatedInstance = null;
+        sUnauthenticatedAPI = null;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        if (Constants.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(40, TimeUnit.SECONDS);
+        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.addInterceptor(logging);
+
+        CookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient.cookieJar(cookieJar);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("user_id", "" + userId)
+                        .addHeader("device_uuid", deviceUuid)
+                        .addHeader("auth_token", authToken)
+                        .addHeader("Content-type", "application/json")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("User-Agent","MoviePass/Android/20170703");
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
+
+        sUnauthenticatedInstance = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+        sUnauthenticatedAPI  = sUnauthenticatedInstance.create(Api.class);
     }
 }
