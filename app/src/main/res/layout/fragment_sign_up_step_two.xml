@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/relative_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -108,12 +110,14 @@
                     android:id="@+id/credit_card_number_copy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:text="@string/fragment_sign_up_step_two_selected_card_copy" />
 
                 <TextView
                     android:id="@+id/credit_card_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginLeft="@dimen/margin_standard"
                     android:text="@string/fragment_sign_up_step_two_selected_card_masked" />
 

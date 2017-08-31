@@ -1,25 +1,32 @@
 package com.moviepass.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.PayPal;
@@ -44,9 +51,7 @@ import com.moviepass.requests.SignUpRequest;
 import com.moviepass.responses.SignUpResponse;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
@@ -66,6 +71,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     ArrayAdapter<CharSequence> statesAdapter;
 
+    RelativeLayout relativeLayout;
     ImageButton buttonCreditCard;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
@@ -104,6 +110,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_two, container, false);
         ButterKnife.bind(this, rootView);
 
+        relativeLayout = rootView.findViewById(R.id.relative_layout);
         progress = rootView.findViewById(R.id.progress);
         buttonCreditCard = rootView.findViewById(R.id.button_credit_card);
 //        buttonPaypal = rootView.findViewById(R.id.button_paypal);
@@ -121,8 +128,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         billingAddress = rootView.findViewById(R.id.checkbox_address);
         fullBillingAddress = rootView.findViewById(R.id.full_billing_address);
         buttonFinish = rootView.findViewById(R.id.button_next);
-
-        buttonFinish.setEnabled(false);
 
         buttonCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -363,7 +368,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 buttonFinish.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        completeRegistration(scanResult.cardNumber, scanResult.expiryMonth, scanResult.expiryYear, scanResult.cvv);
+                        beginRegistration(scanResult.cardNumber, scanResult.expiryMonth, scanResult.expiryYear, scanResult.cvv);
                     }
                 });
             }
@@ -379,18 +384,17 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     @Override
     public void onError(Exception error) {
         if (error instanceof ErrorWithResponse) {
-            Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+            makeSnackbar(error.getMessage());
         }
     }
 
     @OnClick(R.id.button_next)
-    public void completeRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
+    public void beginRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
         progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
         String month = String.valueOf(cardExpMonth);
         String year = String.valueOf(cardExpYear);
-//        String expirationDate = String.format(Locale.getDefault(), "%s/%s", mEditCreditCardMonth.getText(), mEditCreditCardYear.getText());
         String cvv = String.valueOf(cardCvv);
 
         final String bStreet;
@@ -411,20 +415,53 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         boolean amc3dMarkup = false;
         //String facebookToken = getIntent().getExtras().getString("fbToken");
 
-        if (terms.isChecked()) {
-            bStreet = ProspectUser.address;
-            bStreet2 = ProspectUser.address2;
-            bCity = ProspectUser.city;
-            bState = ProspectUser.state;
-            bZip = ProspectUser.zip;
+        if (!billingAddress.isChecked()) {
+            if (canContinue()) {
+                bStreet = etAddress.getText().toString();
+                bStreet2 = etAddress2.getText().toString();
+                bCity = etCity.getText().toString();
+                bState = state.getSelectedItem().toString();
+                bZip = etZip.getText().toString();
+
+                completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
+                        sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, amc3dMarkup);
+            } else {
+                if (!isAddressValid()) {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_address));
+                } else if (!isAddress2Valid()) {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_address_two));
+                } else if (!isCityValid()) {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_city));
+                } else if (!isStateValid()) {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_state));
+                } else {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_zip));
+                }
+            }
         } else {
             bStreet = ProspectUser.address;
             bStreet2 = ProspectUser.address2;
             bCity = ProspectUser.city;
             bState = ProspectUser.state;
             bZip = ProspectUser.zip;
+
+            completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
+                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, amc3dMarkup);
+
         }
 
+
+    }
+
+    private void completeRegistration(String creditCardNumber, String month, String year, String cvv, String sStreet,
+                                      String sStreet2, String sCity, String sState, String sZip, String bStreet,
+                                      String bStreet2, String bCity, String bState, String bZip, String email,
+                                      String firstName, String lastName, String password, boolean amc3dMarkup) {
         if (terms.isChecked()) {
             progress.setVisibility(View.VISIBLE);
             buttonFinish.setEnabled(false);
@@ -442,18 +479,18 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     if (response.isSuccessful()) {
 
                         Log.d("subId", response.body().getSubId());
-                        login();
+                        displaySuccess();
                     } else {
                         try {
                             JSONObject jObjError = new JSONObject(response.body().getGlobal());
 
                             //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                            Toast.makeText(getActivity(), jObjError.toString(), Toast.LENGTH_LONG).show();
+                            makeSnackbar(jObjError.toString());
                             progress.setVisibility(View.GONE);
                             buttonFinish.setEnabled(true);
 
                         } catch (Exception e) {
-                            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            makeSnackbar(e.getMessage());
                         }
                     }
                 }
@@ -462,15 +499,44 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 public void onFailure(Call<SignUpResponse> call, Throwable t) {
                     progress.setVisibility(View.GONE);
                     buttonFinish.setEnabled(true);
-                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-
+                    makeSnackbar(t.getMessage());
                 }
             });
         } else {
-            Toast.makeText(getActivity(), R.string.fragment_sign_up_step_two_must_agree_to_terms, Toast.LENGTH_LONG).show();
+            makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
             progress.setVisibility(View.GONE);
             buttonFinish.setEnabled(true);
         }
+    }
+
+
+
+    private void displaySuccess() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+        View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
+
+        alert.setView(layout);
+        alert.setTitle(getString(R.string.fragment_sign_up_step_two_success_header));
+        alert.setMessage(getString(R.string.fragment_sign_up_step_two_success_body));
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                login();
+            }
+        });
+
+        AlertDialog dialog = alert.create();
+        /*dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(email, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }); */
+
+        dialog.show();
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
     private void login() {
@@ -506,6 +572,17 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         });
     }
 
+    public void makeSnackbar(String message) {
+        final Snackbar snackbar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("OK", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+    }
+
     @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
@@ -522,6 +599,58 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             } else {
                 isViewShown = false;
             }
+        }
+    }
+
+    public boolean canContinue() {
+        if (isAddressValid() && isAddress2Valid() && isCityValid() && isStateValid() && isZipValid()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public boolean isAddressValid() {
+        if (etAddress.length() > 2 && etAddress.length() <= 26) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isAddress2Valid() {
+        if ((etAddress2.length() > 0 && etAddress2.length() <= 26)
+                || etAddress2.getText().toString().equals("")) {
+            return true;
+        } else {
+            Log.d("mAddress2", etAddress2.getText().toString());
+            return false;
+        }
+    }
+
+    public boolean isCityValid() {
+        if (etCity.length() > 2 && etCity.length() <= 26 && !etCity.getText().toString().matches(".*\\d+.*")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isStateValid() {
+        if (!state.getSelectedItem().toString().equals("State")) {
+            Log.d("mStateValue: ", state.getSelectedItem().toString());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isZipValid() {
+        if (etZip.length() == 5) {
+            return true;
+        } else {
+            return false;
         }
     }
 

@@ -99,6 +99,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     snackbar.setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            progress.setVisibility(View.GONE);
                         }
                     });
 
@@ -110,6 +111,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     snackbar.setAction("OK", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            progress.setVisibility(View.GONE);
                         }
                     });
 
