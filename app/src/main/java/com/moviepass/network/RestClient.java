@@ -109,7 +109,7 @@ public class RestClient {
         sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
     }
 
-    public static void setupSimpleRestClient(Context context) {
+    public static void setupUnauthenticatedWebClient(Context context) {
         sUnauthenticatedInstance = null;
         sUnauthenticatedAPI = null;
 

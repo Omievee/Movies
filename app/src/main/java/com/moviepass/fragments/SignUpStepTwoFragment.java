@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +28,14 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.moviepass.BuildConfig;
 import com.moviepass.Constants;
+import com.moviepass.DeviceID;
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
+import com.moviepass.activities.TheatersActivity;
 import com.moviepass.model.ProspectUser;
+import com.moviepass.model.User;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.LogInRequest;
 import com.moviepass.requests.SignUpRequest;
 import com.moviepass.responses.SignUpResponse;
 
@@ -59,6 +65,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     TextView selectedCreditCardMasked;
     CheckBox terms;
     CheckBox billingAddress;
+    LinearLayout fullBillingAddress;
     View progress;
 
     Button buttonFinish;
@@ -91,6 +98,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
         terms = rootView.findViewById(R.id.checkbox_terms);
         billingAddress = rootView.findViewById(R.id.checkbox_address);
+        fullBillingAddress = rootView.findViewById(R.id.full_billing_address);
+
 
         buttonFinish = getActivity().findViewById(R.id.button_next);
         buttonFinish.setEnabled(false);
@@ -102,12 +111,24 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }
         });
 
-        buttonPaypal.setOnClickListener(new View.OnClickListener() {
+        /* buttonPaypal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 paypalClick();
             }
+        }); */
+
+        billingAddress.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on clicks, depending on whether it's now checked
+                if (((CheckBox) v).isChecked()) {
+                    fullBillingAddress.setVisibility(View.GONE);
+                } else {
+                    fullBillingAddress.setVisibility(View.VISIBLE);
+                }
+            }
         });
+
 
         return rootView;
     }
@@ -415,6 +436,39 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             progress.setVisibility(View.GONE);
             buttonFinish.setEnabled(true);
         }
+    }
+
+    private void login() {
+        String email = ProspectUser.email;
+        String password = ProspectUser.password;
+
+        LogInRequest request = new LogInRequest(email, password);
+        String deviceId = DeviceID.getID(getActivity());
+
+        RestClient.getUnauthenticated().login(deviceId, request).enqueue( new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user=response.body();
+                if(user!=null){
+                    RestClient.userId = user.getId();
+                    RestClient.deviceUuid = user.getDeviceUuid();
+                    RestClient.authToken = user.getAuthToken();
+
+                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
+
+                    Intent i = new Intent(getActivity(), TheatersActivity.class);
+                    i.putExtra("launch", true);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    progress.setVisibility(View.GONE);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                /* TODO : handle failure */
+            }
+        });
     }
 
     public static SignUpStepTwoFragment newInstance(String text) {

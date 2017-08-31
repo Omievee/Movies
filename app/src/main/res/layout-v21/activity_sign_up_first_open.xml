@@ -114,4 +114,10 @@
         android:background="@color/red"
         android:visibility="gone"/>
 
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

@@ -54,6 +54,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         inputEmail = findViewById(R.id.input_email);
         inputPassword = findViewById(R.id.input_password);
         butonSignUp = findViewById(R.id.button_sign_up);
+        progress = findViewById(R.id.progress);
 //        seeMap = findViewById(R.id.see_map);
 
 //        openAnimation();
@@ -61,6 +62,8 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         butonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress.setVisibility(View.VISIBLE);
+
                 final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
 
@@ -68,11 +71,13 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     /* TODO : animate this */
 
                     CredentialsRequest request = new CredentialsRequest(email, password, password);
+                    Log.d("request", email + " " + password);
 
                     RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
                             progress.setVisibility(View.GONE);
+
                             if (response != null && response.isSuccessful()) {
                                 ProspectUser.email = email;
                                 ProspectUser.password = password;

@@ -51,6 +51,7 @@ public class Application extends MultiDexApplication {
         UserPreferences.load(this);
 
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
+        RestClient.setupUnauthenticatedWebClient(getApplicationContext());
 
         /*
         InstallConfig installConfig = new InstallConfig.Builder().build();
