@@ -255,6 +255,7 @@ public class SignUpStepOneFragment extends Fragment {
                             String price = (registrationPlanResponse.getPrice());
 
                             ((SignUpActivity) getActivity()).setPrice(price);
+                            Log.d("SUSOFprice", price);
                         } else if (response.errorBody() != null) {
                             Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
                         }

@@ -11,10 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.moviepass.responses.SignUpResponse;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.card.payment.CardIOActivity;
@@ -60,12 +64,19 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     BraintreeFragment mBraintreeFragment;
 
+    ArrayAdapter<CharSequence> statesAdapter;
+
     ImageButton buttonCreditCard;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
     TextView price;
     TextView selectedCreditCardText;
     TextView selectedCreditCardMasked;
+    EditText etAddress;
+    EditText etAddress2;
+    EditText etCity;
+    Spinner state;
+    EditText etZip;
     CheckBox terms;
     CheckBox billingAddress;
     LinearLayout fullBillingAddress;
@@ -86,10 +97,12 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     private native static String getSandboxTokenizationKey();
     private native static String getProductionTokenizationKey();
 
+    private boolean isViewShown = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sign_up_step_two, container, false);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, rootView);
 
         progress = rootView.findViewById(R.id.progress);
         buttonCreditCard = rootView.findViewById(R.id.button_credit_card);
@@ -98,6 +111,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         selectedCreditCardText = rootView.findViewById(R.id.credit_card_number_copy);
         selectedCreditCardMasked = rootView.findViewById(R.id.credit_card_number);
         price = rootView.findViewById(R.id.price);
+        etAddress = rootView.findViewById(R.id.et_address);
+        etAddress2 = rootView.findViewById(R.id.et_address_two);
+        etCity = rootView.findViewById(R.id.et_city);
+        state = rootView.findViewById(R.id.state);
+        etZip = rootView.findViewById(R.id.et_zip);
 
         terms = rootView.findViewById(R.id.checkbox_terms);
         billingAddress = rootView.findViewById(R.id.checkbox_address);
@@ -105,11 +123,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         buttonFinish = rootView.findViewById(R.id.button_next);
 
         buttonFinish.setEnabled(false);
-
-        String priceAmount = ((SignUpActivity) getActivity()).getPrice();
-        String formattedPriceText = "$" + priceAmount + "/month";
-
-        price.setText(formattedPriceText);
 
         buttonCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,11 +145,28 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     fullBillingAddress.setVisibility(View.GONE);
                 } else {
                     fullBillingAddress.setVisibility(View.VISIBLE);
+
+                    statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
+                    statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                    state.setAdapter(statesAdapter);
                 }
             }
         });
 
         return rootView;
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        String priceAmount = ((SignUpActivity) getActivity()).getPrice();
+        if (priceAmount != null) {
+            Log.d("priceAmount", priceAmount);
+        }
+
+        String formattedPriceText = "$" + priceAmount + "/month";
+
+        price.setText(formattedPriceText);
     }
 
     public void creditCardClick() {
@@ -474,6 +504,25 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 /* TODO : handle failure */
             }
         });
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (getView() != null) {
+            if (visible) {
+                String priceAmount = ((SignUpActivity) getActivity()).getPrice();
+                if (priceAmount != null) {
+                    Log.d("priceAmount", priceAmount);
+                }
+
+                String formattedPriceText = "$" + priceAmount + "/month";
+
+                price.setText(formattedPriceText);
+            } else {
+                isViewShown = false;
+            }
+        }
     }
 
     public static SignUpStepTwoFragment newInstance(String text) {

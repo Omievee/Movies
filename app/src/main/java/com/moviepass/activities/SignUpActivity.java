@@ -76,6 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
         password = getIntent().getStringExtra("password");
 
         zip = null;
+        price = null;
         mPlan = null;
 
         mViewPager.setCurrentItem(page);
@@ -315,12 +316,21 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void setPrice(String frag_price) {
+        Log.d("setPrice", frag_price);
         price = frag_price;
+        Log.d("setPricePrice", price);
 
         mViewPager.setCurrentItem(1);
     }
 
     public String getPrice() {
+
+        try {
+            Log.d("SUG get", price);
+        } catch (Exception e) {
+            Log.d("e", e.toString());
+        }
+
         return price;
     }
 
