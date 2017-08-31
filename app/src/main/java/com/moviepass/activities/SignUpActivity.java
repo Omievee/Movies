@@ -50,7 +50,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     int page = 0;
 
-    Button mNext;
     CoordinatorLayout mCoordinator;
 
     int mScrollProgress;
@@ -62,7 +61,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mNext = findViewById(R.id.button_next);
         mCoordinator = findViewById(R.id.main_content);
 
         zero = findViewById(R.id.intro_indicator_0);
@@ -96,10 +94,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        mNext.setText(R.string.fragment_sign_up_step_one_next);
                         break;
                     case 1:
-                        mNext.setText(R.string.fragment_sign_up_step_two_finish);
                         break;
                 }
             }
@@ -322,6 +318,10 @@ public class SignUpActivity extends AppCompatActivity {
         price = frag_price;
 
         mViewPager.setCurrentItem(1);
+    }
+
+    public String getPrice() {
+        return price;
     }
 
     /* Fragment Four */

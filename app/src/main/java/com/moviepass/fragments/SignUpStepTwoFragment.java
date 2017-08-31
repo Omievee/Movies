@@ -31,6 +31,7 @@ import com.moviepass.Constants;
 import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.activities.SignUpActivity;
 import com.moviepass.activities.TheatersActivity;
 import com.moviepass.model.ProspectUser;
 import com.moviepass.model.User;
@@ -40,6 +41,7 @@ import com.moviepass.requests.SignUpRequest;
 import com.moviepass.responses.SignUpResponse;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -61,6 +63,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     ImageButton buttonCreditCard;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
+    TextView price;
     TextView selectedCreditCardText;
     TextView selectedCreditCardMasked;
     CheckBox terms;
@@ -89,20 +92,24 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         ButterKnife.bind(getActivity());
 
         progress = rootView.findViewById(R.id.progress);
-
         buttonCreditCard = rootView.findViewById(R.id.button_credit_card);
 //        buttonPaypal = rootView.findViewById(R.id.button_paypal);
 //        buttonAndroidPay = rootView.findViewById(R.id.button_android_pay);
         selectedCreditCardText = rootView.findViewById(R.id.credit_card_number_copy);
         selectedCreditCardMasked = rootView.findViewById(R.id.credit_card_number);
+        price = rootView.findViewById(R.id.price);
 
         terms = rootView.findViewById(R.id.checkbox_terms);
         billingAddress = rootView.findViewById(R.id.checkbox_address);
         fullBillingAddress = rootView.findViewById(R.id.full_billing_address);
+        buttonFinish = rootView.findViewById(R.id.button_next);
 
-
-        buttonFinish = getActivity().findViewById(R.id.button_next);
         buttonFinish.setEnabled(false);
+
+        String priceAmount = ((SignUpActivity) getActivity()).getPrice();
+        String formattedPriceText = "$" + priceAmount + "/month";
+
+        price.setText(formattedPriceText);
 
         buttonCreditCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +135,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 }
             }
         });
-
 
         return rootView;
     }
@@ -312,7 +318,9 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 
-                 selectedCreditCardMasked.setText(scanResult.getRedactedCardNumber());
+                selectedCreditCardText.setVisibility(View.VISIBLE);
+                selectedCreditCardMasked.setVisibility(View.VISIBLE);
+                selectedCreditCardMasked.setText(scanResult.getRedactedCardNumber());
 
                 if (scanResult.isExpiryValid()) {
                     String month = String.valueOf(scanResult.expiryMonth);
@@ -320,7 +328,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     if (year.length() > 4) {
                         year = year.substring(4);
                     }
-
                 }
 
                 buttonFinish.setOnClickListener(new View.OnClickListener() {
@@ -331,8 +338,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 });
             }
         }
-
-
     }
 
     @Override

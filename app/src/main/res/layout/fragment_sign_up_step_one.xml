@@ -173,6 +173,19 @@
 
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:background="@drawable/button_red"
+        android:textColor="@color/white"
+        android:elevation="2dp"
+        android:gravity="center"
+        android:text="@string/fragment_sign_up_step_one_next"
+        android:textSize="15sp" />
+
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"

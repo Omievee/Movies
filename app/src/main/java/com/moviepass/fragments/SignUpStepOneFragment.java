@@ -76,7 +76,7 @@ public class SignUpStepOneFragment extends Fragment {
         etCity = rootView.findViewById(R.id.et_city);
         state = rootView.findViewById(R.id.state);
         etZip = rootView.findViewById(R.id.et_zip);
-        next = getActivity().findViewById(R.id.button_next);
+        next = rootView.findViewById(R.id.button_next);
         progress = getActivity().findViewById(R.id.progress);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);

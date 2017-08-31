@@ -8,257 +8,288 @@
     android:paddingRight="16dp"
     tools:context="com.moviepass.fragments.SignUpStepTwoFragment">
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="18sp"
-        android:gravity="center_vertical"
-        android:text="@string/fragment_sign_up_step_two_header"
-        android:layout_marginTop="100dp"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
-
-    <TextView
-        android:id="@+id/copy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="16sp"
-        android:gravity="center_vertical"
-        android:layout_below="@+id/header"
-        android:text="@string/fragment_sign_up_step_two_copy"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:id="@+id/price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="16sp"
-        android:gravity="center_vertical"
-        android:text="@string/fragment_sign_up_step_two_price"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:layout_below="@+id/copy"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"/>
-
-    <LinearLayout
-        android:id="@+id/buttons"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/price"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal">
+        android:fillViewport="true"
+        android:layout_marginTop="@dimen/quadruple_margin_standard"
+        android:layout_marginBottom="@dimen/a_lot_margin_standard"
+        android:layout_alignParentTop="true">
 
-        <ImageButton
-            android:id="@+id/button_credit_card"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:background="@drawable/selector_white_to_red"
-            android:layout_marginLeft="@dimen/margin_standard"
-            android:layout_marginRight="@dimen/margin_standard"
-            android:src="@drawable/icon_credit_card" />
-
-        <!-- <ImageButton
-            android:id="@+id/button_paypal"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:background="@drawable/selector_white_to_red"
-            android:layout_marginLeft="@dimen/margin_standard"
-            android:layout_marginRight="@dimen/margin_standard"
-            android:src="@drawable/selector_paypal"/>
-
-        <ImageButton
-            android:id="@+id/button_android_pay"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:src="@drawable/icon_android_pay"
-            android:background="@drawable/selector_white_to_red"
-            android:layout_marginLeft="@dimen/margin_standard"
-            android:layout_marginRight="@dimen/margin_standard" /> -->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/credit_card_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/buttons"
-        android:layout_marginTop="@dimen/margin_standard">
-
-        <TextView
-            android:id="@+id/credit_card_number_copy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/fragment_sign_up_step_two_selected_card_copy"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/credit_card_number"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/fragment_sign_up_step_two_selected_card_masked"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/checkbox_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_sign_up_step_two_billing_address"
-        android:textColor="@color/white"
-        android:textColorLink="@color/white"
-        android:textColorHint="@color/white"
-        android:shadowColor="@color/white"
-        android:orientation="horizontal"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_below="@+id/credit_card_info"
-        android:checked="true"
-        android:layout_marginTop="5dp"/>
-
-    <CheckBox
-        android:id="@+id/checkbox_terms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_sign_up_step_two_terms"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:textColorHighlight="@color/white"
-        android:textColorLink="@color/white"
-        android:shadowColor="@color/white"
-        android:orientation="horizontal"
-        android:layout_below="@+id/full_billing_address"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/full_billing_address"
-        android:layout_below="@id/checkbox_address"
-        android:visibility="gone">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/address"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_quarter"
-            android:textColorHint="@color/white"
-            android:layout_below="@+id/last_name">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/et_address"
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+                android:gravity="center_vertical"
+                android:text="@string/fragment_sign_up_step_two_header"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:layout_below="@+id/header"
+                android:text="@string/fragment_sign_up_step_two_copy"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:gravity="center_vertical"
+                android:text="@string/fragment_sign_up_step_two_price"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:layout_below="@+id/copy"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:id="@+id/buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="26"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="@string/fragment_sign_up_step_one_address"
-                android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white" />
+                android:layout_below="@+id/price"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal">
 
-        </android.support.design.widget.TextInputLayout>
+                <ImageButton
+                    android:id="@+id/button_credit_card"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selector_white_to_red"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:src="@drawable/icon_credit_card" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/address_two"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_quarter"
-            android:textColorHint="@color/white"
-            android:layout_below="@+id/address">
+                <!-- <ImageButton
+                    android:id="@+id/button_paypal"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/selector_white_to_red"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:src="@drawable/selector_paypal"/>
 
-            <EditText
-                android:id="@+id/et_address_two"
+                <ImageButton
+                    android:id="@+id/button_android_pay"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icon_android_pay"
+                    android:background="@drawable/selector_white_to_red"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard" /> -->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/credit_card_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="26"
-                android:inputType="text"
-                android:maxLines="1"
-                android:hint="@string/fragment_sign_up_step_one_address_two"
-                android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white" />
+                android:orientation="horizontal"
+                android:layout_below="@+id/buttons"
+                android:layout_marginTop="@dimen/margin_standard">
 
-        </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:id="@+id/credit_card_number_copy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/fragment_sign_up_step_two_selected_card_copy"
+                    android:visibility="gone" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_quarter"
-            android:textColorHint="@color/white"
-            android:layout_below="@+id/address_two">
+                <TextView
+                    android:id="@+id/credit_card_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/fragment_sign_up_step_two_selected_card_masked"
+                    android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/et_city"
-                android:layout_width="match_parent"
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/checkbox_address"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/fragment_sign_up_step_one_city"
-                android:maxLength="26"
-                android:inputType="text"
-                android:maxLines="1"
+                android:text="@string/fragment_sign_up_step_two_billing_address"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColorLink="@color/white"
+                android:textColorHint="@color/white"
+                android:shadowColor="@color/white"
+                android:orientation="horizontal"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_below="@+id/credit_card_info"
+                android:checked="true"
+                android:layout_marginTop="5dp"/>
 
-        </android.support.design.widget.TextInputLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/city"
-            android:id="@+id/city_things"
-            android:layout_marginTop="@dimen/margin_quarter"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:layout_width="160dp"
-                android:layout_height="42dp"
-                android:id="@+id/state"
-                android:hint="@string/fragment_sign_up_step_one_state"
-                android:prompt="@string/fragment_sign_up_step_one_state"
+            <CheckBox
+                android:id="@+id/checkbox_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_sign_up_step_two_terms"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:textColorHighlight="@color/white"
+                android:textColorLink="@color/white"
+                android:shadowColor="@color/white"
+                android:orientation="horizontal"
+                android:layout_below="@+id/full_billing_address"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/zip"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/white"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/full_billing_address"
+                android:layout_below="@id/checkbox_address"
+                android:visibility="gone">
 
-                <EditText
-                    android:id="@+id/et_zip"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/fragment_sign_up_step_one_zip"
-                    android:inputType="number"
-                    android:maxLength="5"
-                    android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textColorHighlight="@color/white"
-                    android:textColorHint="@color/white" />
+                    android:layout_marginTop="@dimen/margin_quarter"
+                    android:textColorHint="@color/white"
+                    android:layout_below="@+id/last_name">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/et_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="26"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:hint="@string/fragment_sign_up_step_one_address"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white"
+                        android:textColorHint="@color/white" />
 
-        </RelativeLayout>
+                </android.support.design.widget.TextInputLayout>
 
-    </LinearLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/address_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_quarter"
+                    android:textColorHint="@color/white"
+                    android:layout_below="@+id/address">
+
+                    <EditText
+                        android:id="@+id/et_address_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="26"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:hint="@string/fragment_sign_up_step_one_address_two"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white"
+                        android:textColorHint="@color/white" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_quarter"
+                    android:textColorHint="@color/white"
+                    android:layout_below="@+id/address_two">
+
+                    <EditText
+                        android:id="@+id/et_city"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/fragment_sign_up_step_one_city"
+                        android:maxLength="26"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white"
+                        android:textColorHint="@color/white" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/city"
+                    android:id="@+id/city_things"
+                    android:layout_marginTop="@dimen/margin_quarter"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:layout_width="160dp"
+                        android:layout_height="42dp"
+                        android:id="@+id/state"
+                        android:hint="@string/fragment_sign_up_step_one_state"
+                        android:prompt="@string/fragment_sign_up_step_one_state"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/zip"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/white"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true">
+
+                        <EditText
+                            android:id="@+id/et_zip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/fragment_sign_up_step_one_zip"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white"
+                            android:textColorHint="@color/white" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@drawable/button_red"
+        android:textColor="@color/white"
+        android:elevation="2dp"
+        android:gravity="center"
+        android:text="@string/fragment_sign_up_step_two_finish"
+        android:textSize="15sp" />
 
     <include
         android:id="@+id/progress"
