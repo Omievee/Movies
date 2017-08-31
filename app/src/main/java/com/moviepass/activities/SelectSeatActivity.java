@@ -17,7 +17,6 @@ import com.moviepass.extensions.SeatButton;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
-import com.moviepass.model.ScreeningToken;
 import com.moviepass.model.SeatInfo;
 import com.moviepass.model.Theater;
 import com.moviepass.network.RestClient;
@@ -47,19 +46,17 @@ public class SelectSeatActivity extends BaseActivity {
     public static final String MOVIE = "movie";
 
 
-    GridLayout mGridSeats;
-    ImageView mPoster;
-    Screening mScreening;
-    TextView mMovieTitle;
-    TextView mMovieGenre;
-    TextView mMovieRunTime;
-    TextView mTheaterName;
-    TextView mAuditorium;
-    TextView mShowtime;
-    TextView mSeats;
-    View mProgress;
+    GridLayout gridSeats;
+    ImageView poster;
+    Screening screening;
+    TextView movieTitle;
+    TextView movieRunTime;
+    TextView theaterName;
+    TextView screeningShowtime;
+    TextView selectedSeat;
+    View progress;
 
-    private ArrayList<SeatButton> mSeatButtons;
+    private ArrayList<SeatButton> seatButtons;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,75 +66,72 @@ public class SelectSeatActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
+        screening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
         String showtime = getIntent().getStringExtra(SHOWTIME);
 
-        mPoster = findViewById(R.id.poster);
-        mMovieTitle = findViewById(R.id.movie_title);
-        mMovieGenre = findViewById(R.id.movie_genre);
-        mMovieRunTime = findViewById(R.id.text_run_time);
-        mTheaterName = findViewById(R.id.theater_name);
-        mAuditorium = findViewById(R.id.auditorium);
-        mShowtime = findViewById(R.id.showtime);
-        mSeats = findViewById(R.id.selected_seats);
-        mGridSeats = findViewById(R.id.grid_seats);
-        mProgress = findViewById(R.id.progress);
+        poster = findViewById(R.id.poster);
+        movieTitle = findViewById(R.id.movie_title);
+        movieRunTime = findViewById(R.id.text_run_time);
+        theaterName = findViewById(R.id.theater_name);
+        screeningShowtime = findViewById(R.id.showtime);
+        selectedSeat = findViewById(R.id.selected_seats);
+        gridSeats = findViewById(R.id.grid_seats);
+        progress = findViewById(R.id.progress);
 
         Picasso.with(this)
-                .load(mScreening.getImageUrl())
+                .load(screening.getImageUrl())
                 .error(R.mipmap.ic_launcher)
-                .into(mPoster);
+                .into(poster);
 
-        mMovieTitle.setText(mScreening.getTitle());
+        movieTitle.setText(screening.getTitle());
 
-        int t = mScreening.getRunningTime();
+        int t = screening.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
 
-        if (mScreening.getRunningTime() == 0) {
-            mMovieRunTime.setVisibility(View.GONE);
+        if (screening.getRunningTime() == 0) {
+            movieRunTime.setVisibility(View.GONE);
         } else if (hours > 1) {
             String translatedRunTime = hours + " hours " + minutes + " minutes";
-            mMovieRunTime.setText(translatedRunTime);
+            movieRunTime.setText(translatedRunTime);
         } else {
             String translatedRunTime = hours + " hour " + minutes + " minutes";
-            mMovieRunTime.setText(translatedRunTime);
+            movieRunTime.setText(translatedRunTime);
         }
 
-        mTheaterName.setText(mScreening.getTheaterName());
-        mShowtime.setText(showtime);
+        theaterName.setText(screening.getTheaterName());
+        screeningShowtime.setText(showtime);
 
         //PerformanceInfo
-        int normalizedMovieId = mScreening.getMoviepassId();
+        int normalizedMovieId = screening.getMoviepassId();
         Log.d("showtime", showtime);
-        String externalMovieId = mScreening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-        String format = mScreening.getFormat();
-        int tribuneTheaterId = mScreening.getTribuneTheaterId();
-        int performanceNumber = mScreening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-        String sku = mScreening.getProvider().getPerformanceInfo(showtime).getSku();
-        Double price = mScreening.getProvider().getPerformanceInfo(showtime).getPrice();
-        String dateTime = mScreening.getProvider().getPerformanceInfo(showtime).getDateTime();
-        String auditorium = mScreening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-        String performanceId = mScreening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-        String sessionId = mScreening.getProvider().getPerformanceInfo(showtime).getSessionId();
-        int theater = mScreening.getProvider().getTheater();
+        String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
+        String format = screening.getFormat();
+        int tribuneTheaterId = screening.getTribuneTheaterId();
+        int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
+        String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
+        Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+        String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
+        String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
+        String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
+        String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
+        int theater = screening.getProvider().getTheater();
 
         PerformanceInfoRequest performanceInfoRequest =  new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
                 tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
-
 
         getSeats(tribuneTheaterId, theater, performanceInfoRequest);
     }
 
     protected void getSeats(int tribuneTheaterId, int theater, PerformanceInfoRequest performanceInfoRequest) {
-        mProgress.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
 
         RestClient.getAuthenticated().getSeats(tribuneTheaterId,
                 String.valueOf(theater), performanceInfoRequest).enqueue(
                 new Callback<SeatingsInfoResponse>() {
                     @Override
                     public void onResponse(Call<SeatingsInfoResponse> call, Response<SeatingsInfoResponse> response) {
-                        mProgress.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
 
                         SeatingsInfoResponse seatingsInfoResponse = response.body();
                         if (seatingsInfoResponse != null) {
@@ -148,18 +142,18 @@ public class SelectSeatActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<SeatingsInfoResponse> call, Throwable t) {
-                        mProgress.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
                         Log.d("error", "Unable to download seat information: " + t.getMessage().toString());
                     }
                 });
     }
 
     private void showSeats(List<SeatInfo> seats, int rows, int columns) {
-        mGridSeats.setColumnCount(columns);
-        mGridSeats.setRowCount(rows);
-        mGridSeats.setOrientation(GridLayout.HORIZONTAL);
+        gridSeats.setColumnCount(columns);
+        gridSeats.setRowCount(rows);
+        gridSeats.setOrientation(GridLayout.HORIZONTAL);
 
-        mSeatButtons = new ArrayList<>();
+        seatButtons = new ArrayList<>();
 
         Collections.sort(seats);
         for (SeatInfo seat : seats) {
@@ -167,30 +161,35 @@ public class SelectSeatActivity extends BaseActivity {
 
             final int seatRow = seat.getRow();
             final int seatCol = seat.getColumn();
+            final String finalSeatName = seat.getSeatName();
 
             seatButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View sender) {
                     Log.d("seat", "seat: " + seatRow + " col:" + seatCol);
 
+                    if (finalSeatName != null) {
+                        selectedSeat.setText(finalSeatName);
+                    } else {
+                        String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
+                        selectedSeat.setText(formattedSeatName);
+                    }
+
                     SeatButton button = (SeatButton) sender;
 
                     selectSeat(button.getSeatName());
-//                    mTextSeat.setText(button.getSeatName());
-
-//                    mSelectedSeat = button.getSeatInfo();
 
 //                    mToken.setSeatName(button.getSeatName());
                 }
             });
 
             seatButton.setPadding(3, 3, 3, 3);
-            mGridSeats.addView(seatButton);
-            mSeatButtons.add(seatButton);
+            gridSeats.addView(seatButton);
+            seatButtons.add(seatButton);
         }
     }
 
     private void selectSeat(String seatName) {
-        for (SeatButton button : mSeatButtons) {
+        for (SeatButton button : seatButtons) {
             button.setSeatSelected(button.getSeatName().matches(seatName));
         }
     }
