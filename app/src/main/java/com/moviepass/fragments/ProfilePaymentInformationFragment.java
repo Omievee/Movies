@@ -87,8 +87,8 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
         progress = rootView.findViewById(R.id.progress);
         cardNumber = rootView.findViewById(R.id.card_number);
         mButtonCreditCard = rootView.findViewById(R.id.button_credit_card);
-        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
-        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
+//        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
+//        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
 
         update = rootView.findViewById(R.id.button_update);
         update.setVisibility(View.GONE);
@@ -102,12 +102,12 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
             }
         });
 
-        mButtonPaypal.setOnClickListener(new View.OnClickListener() {
+/*        mButtonPaypal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 paypalClick();
             }
-        });
+        }); */
 
         return rootView;
     }
