@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.moviepass.R;
 import com.moviepass.adapters.HistoryAdapter;
@@ -38,6 +39,7 @@ public class HistoryFragment extends Fragment {
     RecyclerView historyRecyclerView;
 
     View progress;
+    TextView noHistory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,9 +47,10 @@ public class HistoryFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("History");
+        toolbar.setTitle("Reservation History");
 
         progress = rootView.findViewById(R.id.progress);
+        noHistory = rootView.findViewById(R.id.no_history);
 
         historyArrayList = new ArrayList<>();
 
@@ -77,6 +80,7 @@ public class HistoryFragment extends Fragment {
         RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
             @Override
             public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+
                 if (response.body() != null && response.isSuccessful()) {
                     HistoryResponse historyResponse = response.body();
 
@@ -89,8 +93,14 @@ public class HistoryFragment extends Fragment {
                     }
 
                     if (historyResponse != null) {
-                        historyArrayList.addAll(historyResponse.getHistory());
-                        historyRecyclerView.setAdapter(historyAdapter);
+                        Log.d("getHistory", String.valueOf(historyResponse.getHistory()));
+
+                        if (!historyResponse.getHistory().isEmpty()) {
+                            historyArrayList.addAll(historyResponse.getHistory());
+                            historyRecyclerView.setAdapter(historyAdapter);
+                        } else {
+                            noHistory.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 

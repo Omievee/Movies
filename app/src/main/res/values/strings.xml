@@ -126,6 +126,9 @@
 
 
     <!-- Fragments -->
+    <!-- HistoryFragment -->
+    <string name="fragment_history_no_history">Start seeing movies to begin your reservation history</string>
+
     <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>
     <string name="fragment_movies_top_box_office">Top Box Office</string>

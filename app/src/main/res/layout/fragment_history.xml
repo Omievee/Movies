@@ -19,6 +19,15 @@
         android:listSelector="@android:color/transparent"
         tools:listitem="@layout/list_item_history" />
 
+    <TextView
+        android:id="@+id/no_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/fragment_history_no_history"
+        android:layout_margin="@dimen/margin_standard"
+        android:textSize="@dimen/bt_default_text_size"
+        android:visibility="gone"/>
+
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"
