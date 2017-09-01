@@ -57,6 +57,8 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
     ImageButton mButtonCreditCard;
     ImageButton mButtonPaypal;
     ImageButton mButtonAndroidPay;
+    TextView selectedCreditCardText;
+    TextView selectedCreditCardMasked;
 
     TextView cardNumber;
     View progress;
@@ -87,6 +89,8 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
         progress = rootView.findViewById(R.id.progress);
         cardNumber = rootView.findViewById(R.id.card_number);
         mButtonCreditCard = rootView.findViewById(R.id.button_credit_card);
+        selectedCreditCardText = rootView.findViewById(R.id.credit_card_number_copy);
+        selectedCreditCardMasked = rootView.findViewById(R.id.credit_card_number);
 //        mButtonPaypal = rootView.findViewById(R.id.button_paypal);
 //        mButtonAndroidPay = rootView.findViewById(R.id.button_android_pay);
 
@@ -319,6 +323,9 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
 
                 scanResult.getFormattedCardNumber();
 
+                selectedCreditCardText.setVisibility(View.VISIBLE);
+                selectedCreditCardMasked.setVisibility(View.VISIBLE);
+                selectedCreditCardMasked.setText(scanResult.getRedactedCardNumber());
 
                 if (scanResult.isExpiryValid() && scanResult.cvv != null) {
                     final String month = String.valueOf(scanResult.expiryMonth);
@@ -355,7 +362,7 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
                     progress.setVisibility(View.GONE);
                     update.setVisibility(View.GONE);
 
-                    final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_billing_address_updated, Snackbar.LENGTH_LONG);
+                    final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_payment_information_updated, Snackbar.LENGTH_LONG);
                     snackbar.show();
 
                     loadUserInfo();

@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/margin_standard"
     android:paddingRight="@dimen/margin_standard"
     android:paddingBottom="@dimen/margin_standard"
-    tools:context="com.moviepass.fragments.SignUpStepFourFragment">
+    tools:context="com.moviepass.fragments.ProfilePaymentInformationFragment">
 
     <TextView
         android:id="@+id/header"
@@ -78,6 +78,34 @@
             android:background="@drawable/selector_white_to_red"
             android:layout_marginLeft="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard" /> -->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/credit_card_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_below="@+id/buttons">
+
+        <TextView
+            android:id="@+id/credit_card_number_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/fragment_profile_payment_information_selected_card_copy" />
+
+        <TextView
+            android:id="@+id/credit_card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:text="@string/fragment_profile_payment_information_selected_card_masked" />
 
     </LinearLayout>
 

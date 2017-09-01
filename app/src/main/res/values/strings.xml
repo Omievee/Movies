@@ -160,6 +160,9 @@
     <string name="fragment_profile_payment_information_current_card">Current Card:</string>
     <string name="fragment_profile_payment_information_current_card_number">[Card Number]</string>
     <string name="fragment_profile_payment_information_instructions">Click to Update Payment Information</string>
+    <string name="fragment_profile_payment_information_selected_card_copy">Selected Card: </string>
+    <string name="fragment_profile_payment_information_selected_card_masked">[xxxx]</string>
+    <string name="fragment_profile_payment_information_updated">Payment Method updated</string>
     <string name="fragment_profile_payment_information_update">Update</string>
 
     <!-- ProfileShippingAddressFragment -->
