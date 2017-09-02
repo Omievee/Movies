@@ -2,6 +2,7 @@ package com.moviepass.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -14,6 +15,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,9 +48,11 @@ import com.moviepass.model.Theater;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
+import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.TicketInfoRequest;
+import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 
@@ -406,8 +412,12 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
-                reserve(screening, time);
+                if (isPendingSubscription()) {
+                    showActivateCardDialog(screening, time);
+                } else {
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
+                }
             }
         });
     }
@@ -475,8 +485,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             intent.putExtra(THEATER, Parcels.wrap(theater));
             startActivity(intent);
             finish();
-
-            /* TODO : Go to SELECT SEAT */
         }
     }
 
@@ -554,6 +562,67 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         finish();
+    }
+
+    private void showActivateCardDialog(final Screening screening, final String showtime) {
+        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(TheaterActivity.this);
+        alert.setView(dialoglayout);
+
+        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(4);
+        editText.setFilters(filters);
+
+        alert.setTitle(getString(R.string.dialog_activate_card_header));
+        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                String digits = editText.getText().toString();
+                dialog.dismiss();
+
+                if (digits.length() == 4) {
+                    CardActivationRequest request = new CardActivationRequest(digits);
+                    progress.setVisibility(View.VISIBLE);
+
+                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
+                        @Override
+                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                            CardActivationResponse cardActivationResponse = response.body();
+                            progress.setVisibility(View.GONE);
+
+                            if (cardActivationResponse != null && response.isSuccessful()) {
+                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                                Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+                                reserve(screening, showtime);
+                            } else {
+                                Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+
+                            showActivateCardDialog(screening, showtime);
+                        }
+                    });
+                } else {
+                    Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     /* Bottom Navigation Things */

@@ -2,8 +2,10 @@ package com.moviepass.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -21,6 +23,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -33,6 +37,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,9 +59,11 @@ import com.moviepass.model.ScreeningToken;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
+import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.TicketInfoRequest;
+import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 import com.squareup.picasso.Callback;
@@ -111,7 +118,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     Button mAction;
     View mBelowShowtimes;
     View mScreenBottom;
-    View mProgress;
+    View progress;
 
     ArrayList<Screening> mScreeningsList;
     ArrayList<String> mShowtimesList;
@@ -157,7 +164,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mScreenBottom = findViewById(R.id.bottom_of_screen);
         mScreenBottom.setFocusable(true);
         mScreenBottom.setFocusableInTouchMode(true);
-        mProgress = findViewById(R.id.progress);
+        progress = findViewById(R.id.progress);
 
         mToolbar.setTitle(movie.getTitle());
         mActionBar.setTitle(movie.getTitle());
@@ -170,7 +177,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         currentLocationTasks();
-        mProgress.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
@@ -342,8 +349,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             is.printStackTrace();
         }
 
-        if (mProgress.getVisibility() == View.VISIBLE) {
-            mProgress.setVisibility(View.GONE);
+        if (progress.getVisibility() == View.VISIBLE) {
+            progress.setVisibility(View.GONE);
         }
     }
 
@@ -435,8 +442,12 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mProgress.setVisibility(View.VISIBLE);
-                reserve(screening, time);
+                if (isPendingSubscription()) {
+                    showActivateCardDialog(screening, time);
+                } else {
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
+                }
             }
         });
     }
@@ -497,7 +508,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
                 if (reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
-                    mProgress.setVisibility(View.GONE);
+                    progress.setVisibility(View.GONE);
 
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
 
@@ -512,11 +523,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        mProgress.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
                         mAction.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        mProgress.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
                         mAction.setEnabled(true);
                     }
                 }
@@ -525,7 +536,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
             @Override
             public void failure(RestError restError) {
-                mProgress.setVisibility(View.GONE);
+                progress.setVisibility(View.GONE);
                 mAction.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
@@ -555,7 +566,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     private void showVerification(ScreeningToken token) {
-        mProgress.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
@@ -572,7 +583,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                     List<Screening> screeningsList = screenings.getScreenings();
 
                     if (screeningsList.size() == 0) {
-                        mProgress.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
                         AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
 
 /*                            builder.setTitle(R.string.activity_location_no_theaters_found);
@@ -620,7 +631,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                                     }
                                 });
 
-                            mProgress.setVisibility(View.GONE);
+                            progress.setVisibility(View.GONE);
                         }
 
                     }
@@ -655,6 +666,67 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    private void showActivateCardDialog(final Screening screening, final String showtime) {
+        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(MovieActivity.this);
+        alert.setView(dialoglayout);
+
+        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(4);
+        editText.setFilters(filters);
+
+        alert.setTitle(getString(R.string.dialog_activate_card_header));
+        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                String digits = editText.getText().toString();
+                dialog.dismiss();
+
+                if (digits.length() == 4) {
+                    CardActivationRequest request = new CardActivationRequest(digits);
+                    progress.setVisibility(View.VISIBLE);
+
+                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
+                        @Override
+                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                            CardActivationResponse cardActivationResponse = response.body();
+                            progress.setVisibility(View.GONE);
+
+                            if (cardActivationResponse != null && response.isSuccessful()) {
+                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+;                               reserve(screening, showtime);
+                            } else {
+                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+
+                            showActivateCardDialog(screening, showtime);
+                        }
+                    });
+                } else {
+                    Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     @Override

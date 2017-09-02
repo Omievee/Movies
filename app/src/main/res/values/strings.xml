@@ -165,6 +165,7 @@
     <string name="fragment_profile_cancellation_fragment_cancel">Cancel Membership</string>
 
     <!-- ProfileMoviePassCardFragment -->
+    <string name="fragment_profile_moviepass_card_activate">Activate Your Card</string>
     <string name="fragment_profile_moviepass_card_no_card">No Cards Available</string>
 
     <!-- ProfilePaymentInformationFragment -->
@@ -227,6 +228,17 @@
     <string name="fragment_theaters_address">[Address]</string>
     <string name="fragment_theaters_distance">[Distance]</string>
     <string name="fragment_theaters_search">City</string>
+
+    <!-- Dialogs -->
+    <!-- Activate Card Dialog -->
+    <string name="dialog_activate_card_header">Activate Your MoviePass Card</string>
+    <string name="dialog_activate_card_enter_card_digits">Enter the last four digits of your MoviePass card.</string>
+    <string name="dialog_activate_card_must_enter_four_digits">Please enter your MoviePass card\'s last four digits.</string>
+    <string name="dialog_activate_card_successful">Your MoviePass card has been activated successfully</string>
+    <string name="dialog_activate_card_bad_four_digits">Sorry, the four digits you entered do not match with last four digits of your MoviePass card</string>
+    <string name="dialog_activate_card_error">Sorry, we\'re having trouble activating your card. Please live chat with Customer Service</string>
+    <string name="dialog_activate_card_must_activate_standard_theater">You must activate your MoviePass card before checking into this theater</string>
+    <string name="dialog_activate_card_must_activate_future">You\'ll need to activate your card before using MoviePass at certain theaters. Explore the app in the mean time!</string>
 
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>

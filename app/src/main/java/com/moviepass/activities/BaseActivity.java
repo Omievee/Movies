@@ -134,7 +134,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean verificationRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
 
-                    if (!UserPreferences.getRestrictionStatus().equals(status) ||
+                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
                             UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
@@ -201,6 +201,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         final ConnectivityManager connectivityManager = ((ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE));
         NetworkInfo nInfo = connectivityManager.getActiveNetworkInfo();
         if (nInfo != null && nInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isPendingSubscription() {
+        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
+                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
             return true;
         } else {
             return false;

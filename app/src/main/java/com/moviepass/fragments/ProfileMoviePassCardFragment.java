@@ -1,21 +1,32 @@
 package com.moviepass.fragments;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
+import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviePassCardAdapter;
 import com.moviepass.model.MoviePassCard;
+import com.moviepass.model.Screening;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.CardActivationRequest;
+import com.moviepass.responses.CardActivationResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +50,8 @@ public class ProfileMoviePassCardFragment extends Fragment {
     RecyclerView moviepassCardRecyclerView;
     @BindView(R.id.text_no_card)
     TextView textNoCard;
+    @BindView(R.id.button_activate)
+    Button buttonActivate;
     @BindView(R.id.progress)
     View progress;
 
@@ -60,6 +73,7 @@ public class ProfileMoviePassCardFragment extends Fragment {
 
         progress = rootView.findViewById(R.id.progress);
         textNoCard = rootView.findViewById(R.id.text_no_card);
+        buttonActivate = rootView.findViewById(R.id.button_activate);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setAddDuration(250);
@@ -68,7 +82,17 @@ public class ProfileMoviePassCardFragment extends Fragment {
 
         moviePassCardAdapter = new MoviePassCardAdapter(moviePassCardArrayList);
 
-        loadMoviePassCards();
+        if (isPendingSubscription()) {
+            buttonActivate.setVisibility(View.VISIBLE);
+            buttonActivate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showActivateCardDialog();
+                }
+            });
+        } else {
+            loadMoviePassCards();
+        }
 
         return rootView;
     }
@@ -116,6 +140,77 @@ public class ProfileMoviePassCardFragment extends Fragment {
                 progress.setVisibility(View.GONE);
             }
         });
+    }
+
+    public boolean isPendingSubscription() {
+        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
+                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void showActivateCardDialog() {
+        View dialoglayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getActivity());
+        alert.setView(dialoglayout);
+
+        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(4);
+        editText.setFilters(filters);
+
+        alert.setTitle(getString(R.string.dialog_activate_card_header));
+        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                String digits = editText.getText().toString();
+                dialog.dismiss();
+
+                if (digits.length() == 4) {
+                    CardActivationRequest request = new CardActivationRequest(digits);
+                    progress.setVisibility(View.VISIBLE);
+
+                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
+                        @Override
+                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                            CardActivationResponse cardActivationResponse = response.body();
+                            progress.setVisibility(View.GONE);
+
+                            if (cardActivationResponse != null && response.isSuccessful()) {
+                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                                Toast.makeText(getActivity(), R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+                                buttonActivate.setVisibility(View.GONE);
+                                loadMoviePassCards();
+                            } else {
+                                Toast.makeText(getActivity(), R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+
+                            showActivateCardDialog();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getActivity(), R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), R.string.dialog_activate_card_must_activate_future, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     void manageVisiblity() {

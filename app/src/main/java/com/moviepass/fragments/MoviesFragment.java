@@ -1,6 +1,7 @@
 package com.moviepass.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.view.ViewCompat;
@@ -8,10 +9,14 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
@@ -24,6 +29,8 @@ import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.network.Api;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.CardActivationRequest;
+import com.moviepass.responses.CardActivationResponse;
 
 import org.parceler.Parcels;
 import org.reactivestreams.Subscriber;
@@ -73,6 +80,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @BindView(R.id.coming_soon)
     RecyclerView mComingSoonRecyclerView;
 
+    View progress;
+
     private OnFragmentInteractionListener listener;
 
     public static MoviesFragment newInstance() {
@@ -83,6 +92,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, rootView);
+
+        progress = rootView.findViewById(R.id.progress);
 
         Api api;
 
@@ -121,6 +132,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
 
         loadMovies();
+
+        if (isPendingSubscription()) {
+            showActivateCardDialog();
+        }
 
         return rootView;
     }
@@ -164,6 +179,23 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        /*if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }*/
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
@@ -231,21 +263,73 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         });
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        /*if (context instanceof OnFragmentInteractionListener) {
-            listener = (OnFragmentInteractionListener) context;
+    public boolean isPendingSubscription() {
+        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
+                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
+            return true;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-        }*/
+            return false;
+        }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
+    private void showActivateCardDialog() {
+        View dialoglayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getActivity());
+        alert.setView(dialoglayout);
+
+        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(4);
+        editText.setFilters(filters);
+
+        alert.setTitle(getString(R.string.dialog_activate_card_header));
+        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                String digits = editText.getText().toString();
+                dialog.dismiss();
+
+                if (digits.length() == 4) {
+                    CardActivationRequest request = new CardActivationRequest(digits);
+                    progress.setVisibility(View.VISIBLE);
+
+                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
+                        @Override
+                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                            CardActivationResponse cardActivationResponse = response.body();
+                            progress.setVisibility(View.GONE);
+
+                            if (cardActivationResponse != null && response.isSuccessful()) {
+                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                                Toast.makeText(getActivity(), R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+
+                            showActivateCardDialog();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getActivity(), R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                Toast.makeText(getActivity(), R.string.dialog_activate_card_must_activate_future, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     public interface OnFragmentInteractionListener {

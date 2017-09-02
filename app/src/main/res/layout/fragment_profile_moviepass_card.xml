@@ -24,6 +24,18 @@
         android:text="@string/fragment_profile_moviepass_card_no_card"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/button_activate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:text="@string/fragment_profile_moviepass_card_activate"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:visibility="gone"/>
+
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"

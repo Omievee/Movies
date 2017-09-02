@@ -118,7 +118,7 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static String getRestrictionStatus() {
+    public static String getRestrictionSubscriptionStatus() {
         return sPrefs.getString(Constants.SUBSCRIPTION_STATUS, "status");
     }
 
