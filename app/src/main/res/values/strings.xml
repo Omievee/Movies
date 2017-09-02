@@ -261,7 +261,8 @@
     <!-- XML -->
     <!-- Profile Preferences -->
     <string name="xml_account_preferences_account">Account</string>
-    <string name="xml_account_preferences_account_plan_information">Plan Information</string>
+    <string name="xml_account_preferences_account_account_information">Account Information</string>
+    <string name="xml_account_preferences_account_subscription_information">Subscription Information</string>
     <string name="xml_account_preferences_account_billing_address">Billing Address</string>
     <string name="xml_account_preferences_account_shipping_address">Shipping Address</string>
     <string name="xml_account_preferences_account_payment_information">Payment Information</string>
@@ -269,12 +270,18 @@
     <string name="xml_account_preferences_account_facebook">Connect to Facebook</string>
     <string name="xml_account_preferences_account_log_out">Log Out</string>
 
-    <!-- ProfilePlanInformation -->
-    <string name="xml_plan_information_preferences">Subscription</string>
-    <string name="xml_plan_information_preferences_plan">Plan</string>
-    <string name="xml_plan_information_preferences_bill_date">Next Bill Date</string>
-    <string name="xml_plan_information_preferences_cancel">Cancel Subscription</string>
-    <string name="xml_plan_information_preferences_contact">Contact Support</string>
+    <!-- ProfileAccountInformation -->
+    <string name="xml_account_information_preferences">Account</string>
+    <string name="xml_account_information_name">Name</string>
+    <string name="xml_account_information_email">Email</string>
+
+    <!-- ProfileSubscriptionInformation -->
+    <string name="xml_subscription_information_preferences">Subscription</string>
+    <string name="xml_subscription_information_preferences_plan">Plan</string>
+    <string name="xml_subscription_information_preferences_bill_date">Next Bill Date</string>
+    <string name="xml_subscription_information_preference_bill_date_pending">Your first month will begin when you receive your MoviePass card</string>
+    <string name="xml_subscription_information_preferences_cancel">Cancel Subscription</string>
+    <string name="xml_subscription_information_preferences_contact">Contact Support</string>
 
     <!-- Settings Preferences -->
     <string name="xml_settings_preferences_settings">Settings</string>

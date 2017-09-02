@@ -35,7 +35,8 @@ import retrofit2.Response;
 
 public class ProfileFragment extends PreferenceFragment {
 
-    ProfilePlanInformationFragment profilePlanInformationFragent = new ProfilePlanInformationFragment();
+    ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
+    ProfileSubscriptionInformationFragment profileSubscriptionInformationFragment = new ProfileSubscriptionInformationFragment();
     ProfileBillingAddressFragment profileBillingAddressFragment = new ProfileBillingAddressFragment();
     ProfileShippingAddressFragment profileShippingAddressFragment = new ProfileShippingAddressFragment();
     ProfilePaymentInformationFragment profilePaymentInformationFragment = new ProfilePaymentInformationFragment();
@@ -56,14 +57,29 @@ public class ProfileFragment extends PreferenceFragment {
         /* final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Profile"); */
 
-        Preference planInformation = findPreference("plan_information");
-        planInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference accountInformation = findPreference("account_information");
+        accountInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, profilePlanInformationFragent);
+                transaction.replace(R.id.container, profileAccountInformationFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                return true;
+            }
+        });
+
+        Preference subscriptionInformation = findPreference("subscription_information");
+        subscriptionInformation.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.container, profileSubscriptionInformationFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
 

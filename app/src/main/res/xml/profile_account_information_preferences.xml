@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/xml_account_information_preferences">
+
+        <Preference
+            android:id="@+id/name"
+            android:key="name"
+            android:title="@string/xml_account_information_name" />
+
+        <Preference
+            android:id="@+id/email"
+            android:key="email"
+            android:title="@string/xml_account_information_email" />
+
+        <Preference android:widgetLayout="@layout/view_loading" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

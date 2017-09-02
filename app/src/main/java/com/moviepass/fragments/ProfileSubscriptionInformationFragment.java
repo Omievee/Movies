@@ -25,7 +25,7 @@ import retrofit2.Response;
  * Created by anubis on 8/1/17.
  */
 
-public class ProfilePlanInformationFragment extends PreferenceFragment {
+public class ProfileSubscriptionInformationFragment extends PreferenceFragment {
 
     ProfileCancellationFragment profileCancellationFragment = new ProfileCancellationFragment();
 
@@ -33,10 +33,10 @@ public class ProfilePlanInformationFragment extends PreferenceFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.profile_plan_information_preferences);
+        addPreferencesFromResource(R.xml.profile_subscription_information_preferences);
 
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Plan Information");
+        toolbar.setTitle("Subscription Information");
 
         loadUserInfo();
 
@@ -62,7 +62,7 @@ public class ProfilePlanInformationFragment extends PreferenceFragment {
         super.onResume();
 
         final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Plan Information");
+        toolbar.setTitle("Subscription Information");
     }
 
     @Override
@@ -103,7 +103,11 @@ public class ProfilePlanInformationFragment extends PreferenceFragment {
                     }
 
                     Preference billDate = findPreference("bill_date");
-                    billDate.setSummary(nextBillingDate);
+                    if (isPendingSubscription()) {
+                        billDate.setSummary(R.string.xml_subscription_information_preference_bill_date_pending);
+                    } else {
+                        billDate.setSummary(nextBillingDate);
+                    }
                 }
             }
 
@@ -112,5 +116,14 @@ public class ProfilePlanInformationFragment extends PreferenceFragment {
 
             }
         });
+    }
+
+    public boolean isPendingSubscription() {
+        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
+                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

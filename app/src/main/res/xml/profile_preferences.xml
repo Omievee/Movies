@@ -6,9 +6,14 @@
         android:title="@string/xml_account_preferences_account">
 
         <Preference
-            android:id="@+id/plan_information"
-            android:key="plan_information"
-            android:title="@string/xml_account_preferences_account_plan_information" />
+            android:id="@+id/account_information"
+            android:key="account_information"
+            android:title="@string/xml_account_preferences_account_account_information" />
+
+        <Preference
+            android:id="@+id/subscription_information"
+            android:key="subscription_information"
+            android:title="@string/xml_account_preferences_account_subscription_information" />
 
         <Preference
             android:id="@+id/billing_address"
