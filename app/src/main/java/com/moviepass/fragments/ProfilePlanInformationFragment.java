@@ -1,5 +1,7 @@
 package com.moviepass.fragments;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -25,6 +27,8 @@ import retrofit2.Response;
 
 public class ProfilePlanInformationFragment extends PreferenceFragment {
 
+    ProfileCancellationFragment profileCancellationFragment = new ProfileCancellationFragment();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,29 @@ public class ProfilePlanInformationFragment extends PreferenceFragment {
 
         loadUserInfo();
 
-        /* TODO : Add Cancel & Contact Flows */
+        /* TODO : Add Contact Flows */
+        Preference cancel = findPreference("cancel");
+        cancel.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.container, profileCancellationFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("Plan Information");
     }
 
     @Override

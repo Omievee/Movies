@@ -6,6 +6,7 @@ import com.moviepass.model.Plan;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
 import com.moviepass.requests.AddressChangeRequest;
+import com.moviepass.requests.CancellationRequest;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.CredentialsRequest;
@@ -18,6 +19,7 @@ import com.moviepass.requests.PersonalInfoRequest;
 import com.moviepass.requests.SignUpRequest;
 import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
+import com.moviepass.responses.CancellationResponse;
 import com.moviepass.responses.ChangedMindResponse;
 import com.moviepass.responses.HistoryResponse;
 import com.moviepass.responses.PersonalInfoResponse;
@@ -126,4 +128,7 @@ public interface Api {
 
     @POST("/api/v1/users/link_to_facebook")
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
+
+    @POST("/api/v1/subscriptions/cancellation")
+    Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 }

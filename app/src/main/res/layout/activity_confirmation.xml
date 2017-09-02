@@ -13,7 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp">
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/margin_standard">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -23,25 +25,23 @@
 
             <ImageView
                 android:id="@+id/poster"
-                android:layout_width="346dp"
-                android:layout_height="345dp"
+                android:layout_width="match_parent"
+                android:layout_height="316dp"
                 android:scaleType="centerCrop"/>
 
             <ImageView
                 android:id="@+id/mask"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="316dp"
                 android:src="@drawable/confirmation_ticket_top" />
 
         </FrameLayout>
 
-
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/quadruple_margin_standard"
-            android:layout_marginRight="@dimen/quadruple_margin_standard"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/double_margin_standard">
 
             <TextView
@@ -180,43 +180,47 @@
     <string name="activity_confirmation_seat">[Seat]</string>
     -->
 
-
     <RelativeLayout
         android:id="@+id/ticket_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ticket_top"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:paddingBottom="@dimen/double_margin_standard">
 
         <ImageView
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/confirmation_ticket_bottom"
-            android:id="@+id/imageView" />
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/confirmation_ticket_bottom" />
 
         <ImageView
             android:id="@+id/qr_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_gravity="center_horizontal|center_vertical" />
 
         <TextView
             android:id="@+id/action_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_text"
-            android:textSize="20sp"
-            android:text="@string/activity_confirmation_purchase_ticket"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_centerVertical="true"
-            android:layout_alignRight="@+id/imageView"
             android:layout_alignEnd="@+id/imageView"
-            android:layout_margin="@dimen/margin_standard"/>
+            android:layout_alignRight="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/margin_standard"
+            android:paddingTop="@dimen/margin_standard"
+            android:paddingLeft="@dimen/margin_standard"
+            android:paddingRight="@dimen/margin_standard"
+            android:gravity="center_horizontal"
+            android:text="@string/activity_confirmation_purchase_ticket"
+            android:textColor="@color/black_text"
+            android:textSize="20sp" />
 
     </RelativeLayout>
 

@@ -153,6 +153,12 @@
     <string name="fragment_profile_billing_address_valid_zip">Please enter a valid zip code</string>
     <string name="fragment_profile_billing_address_updated">Billing Address Updated</string>
 
+    <!-- ProfileCancellationFragment -->
+    <string name="fragment_profile_cancellation_fragment_header">Cancel Membership</string>
+    <string name="fragment_profile_cancellation_fragment_reason">Please select your cancellation reason:</string>
+    <string name="fragment_profile_cancellation_fragment_comments">Additional comments (Optional)</string>
+    <string name="fragment_profile_cancellation_fragment_cancel">Cancel Membership</string>
+
     <!-- ProfileMoviePassCardFragment -->
     <string name="fragment_profile_moviepass_card_no_card">No Cards Available</string>
 
