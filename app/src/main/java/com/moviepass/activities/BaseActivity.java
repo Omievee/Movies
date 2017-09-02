@@ -11,6 +11,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -105,6 +107,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         super.onResume();
 
         checkRestrictions();
+
+        if (!isOnline()) {
+            Intent intent = new Intent(BaseActivity.this, NoDataActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -188,6 +195,16 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             }
         });
+    }
+
+    public boolean isOnline() {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE));
+        NetworkInfo nInfo = connectivityManager.getActiveNetworkInfo();
+        if (nInfo != null && nInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*

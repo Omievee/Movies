@@ -43,6 +43,11 @@
     <string name="activity_movie_reviews">Reviews</string>
     <string name="activity_movie_theater_select_text">Theaters Nearby</string>
 
+    <!-- NoDataActivity -->
+    <string name="activity_no_data_activity_header">Oops!</string>
+    <string name="activity_no_data_activity_body">No internet connection found</string>
+    <string name="activity_no_data_activity_button">Try again</string>
+
     <!-- OnboardingActivity -->
     <string name="activity_onboarding_button_log_in">Log in</string>
     <string name="activity_onboarding_button_sign_up">Sign up</string>

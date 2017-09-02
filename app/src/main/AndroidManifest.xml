@@ -142,6 +142,9 @@
             android:name=".activities.MoviesActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".activities.NoDataActivity"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".activities.NotificationsActivity"
             android:theme="@style/AppTheme" />
         <activity

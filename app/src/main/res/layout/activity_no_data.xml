@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/no_wifi_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/a_lot_margin_standard"
+        android:src="@drawable/no_wifi_icon"/>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginLeft="@dimen/quadruple_margin_standard"
+        android:layout_marginRight="@dimen/quadruple_margin_standard"
+        android:background="@color/gray_icon" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_no_data_activity_header"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/double_margin_standard"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/activity_no_data_activity_body"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/double_margin_standard"/>
+
+    <Button
+        android:id="@+id/button_reconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@color/white"
+        android:textColor="@color/red"
+        android:text="@string/activity_no_data_activity_button"/>
+
+</LinearLayout>
