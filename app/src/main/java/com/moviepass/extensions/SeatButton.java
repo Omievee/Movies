@@ -7,10 +7,6 @@ import android.util.AttributeSet;
 import com.moviepass.R;
 import com.moviepass.model.SeatInfo;
 
-/**
- * Created by sebacancinos on 3/9/15.
- */
-
 public class SeatButton extends AppCompatImageButton {
 
     private SeatInfo mSeatInfo;
@@ -37,21 +33,18 @@ public class SeatButton extends AppCompatImageButton {
         mSeatInfo = seat;
         mSelected = false;
 
-        this.setBackgroundResource(R.color.white);
-
         switch (mSeatInfo.getSeatType()) {
             case SeatTypeCompanion:
                 break;
 
             case SeatTypeNotASeat:
-                this.setImageResource(R.drawable.icon_seat_not_a_seat);
                 break;
 
             case SeatTypeWheelchair:
                 if (mSeatInfo.isAvailable())
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_available_rotate);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_available);
                 else
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable_rotate);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
                 break;
 
             case SeatTypeCanReserve:
@@ -59,9 +52,9 @@ public class SeatButton extends AppCompatImageButton {
             case SeatTypeCanReserveRight:
             case SeatTypeUnknown:
                 if (mSeatInfo.isAvailable())
-                    this.setImageResource(R.drawable.icon_seat_available_rotate);
+                    this.setImageResource(R.drawable.icon_seat_available);
                 else
-                    this.setImageResource(R.drawable.icon_seat_unavailable_rotate);
+                    this.setImageResource(R.drawable.icon_seat_unavailable);
                 break;
         }
 
@@ -77,11 +70,11 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeCanReserve:
                 case SeatTypeCanReserveLeft:
                 case SeatTypeCanReserveRight:
-                    this.setImageResource(R.drawable.icon_seat_selected_rotate);
+                    this.setImageResource(R.drawable.icon_seat_selected);
                     break;
 
                 case SeatTypeWheelchair:
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_selected_rotate);
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_selected);
                     break;
             }
         } else {
@@ -91,15 +84,15 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeCanReserveRight:
                 case SeatTypeUnknown:
                     if (mSeatInfo.isAvailable())
-                        this.setImageResource(R.drawable.icon_seat_available_rotate);
+                        this.setImageResource(R.drawable.icon_seat_available);
                     else
-                        this.setImageResource(R.drawable.icon_seat_unavailable_rotate);
+                        this.setImageResource(R.drawable.icon_seat_unavailable);
                     break;
                 case SeatTypeWheelchair:
                     if (mSeatInfo.isAvailable())
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_available_rotate);
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_available);
                     else
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable_rotate);
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
                     break;
 
 

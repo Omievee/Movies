@@ -10,7 +10,7 @@ public class TicketInfoRequest {
 
     PerformanceInfoRequest performanceInfo;
     String theatreNumber;
-    SelectedSeat selectedSeat;
+    SelectedSeatRequest selectedSeatRequest;
 
 
     public TicketInfoRequest(PerformanceInfoRequest performanceInfo) {
@@ -18,10 +18,10 @@ public class TicketInfoRequest {
     }
 
 
-    public TicketInfoRequest(PerformanceInfoRequest performanceInfo, SelectedSeat selectedSeat) {
+    public TicketInfoRequest(PerformanceInfoRequest performanceInfo, SelectedSeatRequest selectedSeatRequest) {
         this.theatreNumber = theatreNumber + "";
         this.performanceInfo = performanceInfo;
-        this.selectedSeat = selectedSeat;
+        this.selectedSeatRequest = selectedSeatRequest;
     }
 
     public TicketInfoRequest(int theatreNumber, PerformanceInfoRequest performanceInfo) {

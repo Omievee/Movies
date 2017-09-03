@@ -72,6 +72,7 @@ public class ConfirmationActivity extends BaseActivity {
     TextView auditorium;
     TextView seat;
     TextView actionText;
+    ImageView qrCode;
     RelativeLayout ticketTop;
     RelativeLayout ticketBottom;
 
@@ -108,6 +109,7 @@ public class ConfirmationActivity extends BaseActivity {
         ticketTop = findViewById(R.id.ticket_top);
         ticketBottom = findViewById(R.id.ticket_bottom);
         actionText = findViewById(R.id.action_text);
+        qrCode = findViewById(R.id.qr_code);
 
         movieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
@@ -147,6 +149,37 @@ public class ConfirmationActivity extends BaseActivity {
                 .fit()
                 .into(poster);
 
+        if (screeningToken.getConfirmationCode() != null) {
+            String confirmationCode = screeningToken.getConfirmationCode();
+
+            if (screeningToken.getSelectedSeat() != null) {
+                String seatName = screeningToken.getSelectedSeat().getSeatName();
+
+                Log.d("seatName", seatName);
+                String fullConfirmationCodeInstructionsWithSeat = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
+                        getString(R.string.activity_confirmation_confirmation_text) + ". " + confirmationCode + " " +
+                        getString(R.string.activity_confirmation_seat_selected) + " " + seatName;
+
+                actionText.setText(fullConfirmationCodeInstructionsWithSeat);
+            } else {
+
+                String fullConfirmationCodeInstructions = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
+                    getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
+
+                actionText.setText(fullConfirmationCodeInstructions);
+            }
+        } else if (!screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png") &&
+                screeningToken.getQrUrl() != null) {
+            String qrUrl = screeningToken.getQrUrl();
+
+            Picasso.Builder qrBuilder = new Picasso.Builder(this);
+            qrBuilder.build()
+                    .load(qrUrl)
+                    .centerCrop()
+                    .fit()
+                    .into(qrCode);
+        }
+
         FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
         buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
         buttonChangeReservation.setImageResource(R.drawable.icon_reset);
@@ -185,7 +218,7 @@ public class ConfirmationActivity extends BaseActivity {
                                 JSONObject jObjError = new JSONObject(response.errorBody().string());
                                 Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
-                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                             } catch (Exception e) {
                             }
                         }
