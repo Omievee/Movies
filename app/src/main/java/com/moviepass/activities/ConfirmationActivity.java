@@ -175,6 +175,8 @@ public class ConfirmationActivity extends BaseActivity {
                                 Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
                             } catch (Exception e) {
                             }
+                        } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
+                            finish();
                         } else if (responseBody != null && response.isSuccessful()) {
                             Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
                             finish();
