@@ -1,21 +1,27 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -28,7 +34,13 @@ import com.moviepass.responses.ChangedMindResponse;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -53,10 +65,15 @@ public class ConfirmationActivity extends BaseActivity {
     ImageView mask;
     TextView movieTitle;
     TextView theater;
+    TextView address;
+    TextView cityThings;
     TextView time;
     TextView date;
     TextView auditorium;
     TextView seat;
+    TextView actionText;
+    RelativeLayout ticketTop;
+    RelativeLayout ticketBottom;
 
     protected BottomNavigationView bottomNavigationView;
 
@@ -82,15 +99,37 @@ public class ConfirmationActivity extends BaseActivity {
         mask = findViewById(R.id.mask);
         movieTitle = findViewById(R.id.movie_title);
         theater = findViewById(R.id.theater);
+        address = findViewById(R.id.address);
+        cityThings = findViewById(R.id.city_things);
         time = findViewById(R.id.time);
         date = findViewById(R.id.date);
         auditorium = findViewById(R.id.auditorium);
         seat = findViewById(R.id.seat);
+        ticketTop = findViewById(R.id.ticket_top);
+        ticketBottom = findViewById(R.id.ticket_bottom);
+        actionText = findViewById(R.id.action_text);
 
         movieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
+        address.setText(screening.getTheaterAddress());
+        cityThings.setVisibility(View.GONE);
         time.setText(screeningTime);
-        date.setText(screening.getDate());
+
+        try {
+            SimpleDateFormat inputDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            Log.d("screeningGetDate", screening.getDate());
+            Date createdAt = inputDate.parse(screening.getDate());
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            String finalDate = sdf.format(createdAt);
+
+            Log.d("finalDate", finalDate);
+
+            date.setText(finalDate);
+
+        } catch (Exception e) {
+            Log.d("exception", e.toString());
+        }
 
         /* TODO : Add Auditorum logic */
         auditorium.setVisibility(View.GONE);
@@ -98,6 +137,7 @@ public class ConfirmationActivity extends BaseActivity {
         seat.setText(screeningToken.getSeatName());
 
         String imgUrl = screening.getImageUrl();
+        Log.d("imgUrl", imgUrl);
 
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.build()
@@ -127,9 +167,25 @@ public class ConfirmationActivity extends BaseActivity {
                         ChangedMindResponse responseBody = response.body();
                         progress.setVisibility(View.GONE);
 
-                        if (responseBody != null){
+                        if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
+                            try {
+                                JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+
+                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                            } catch (Exception e) {
+                            }
+                        } else if (responseBody != null && response.isSuccessful()) {
                             Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
                             finish();
+                        } else {
+                            try {
+                                JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+
+                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                            } catch (Exception e) {
+                            }
                         }
                     }
 
@@ -143,8 +199,6 @@ public class ConfirmationActivity extends BaseActivity {
             }
         });
     }
-
-
 
     /* Bottom Navigation View */
 

@@ -506,7 +506,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
-                if (reservationResponse.isOk()) {
+                if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
                     progress.setVisibility(View.GONE);
 
