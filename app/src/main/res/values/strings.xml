@@ -30,6 +30,9 @@
     <string name="activity_confirmation_seat">[Seat]</string>
     <string name="activity_confirmation_purchase_ticket">You checked in successfully! Use your MoviePass card to purchase your ticket.</string>
     <string name="activity_confirmation_change_reservation">Change Reservation</string>
+    <string name="activity_confirmation_pick_up_instructions">Please pick up your ticket.</string>
+    <string name="activity_confirmation_confirmation_text">Confirmation Code:</string>
+    <string name="activity_confirmation_seat_selected"> Seat: </string>
 
 
     <!-- MainActivity -->

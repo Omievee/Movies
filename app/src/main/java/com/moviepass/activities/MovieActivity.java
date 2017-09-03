@@ -489,7 +489,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             reservationRequest(screening, checkInRequest, showtime);
         } else {
             /* TODO : Go to SELECT SEAT */
-            String previousScreen = "MovieActivity";
             Intent intent = new Intent(this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
@@ -510,14 +509,18 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                     reservation = reservationResponse.getReservation();
                     progress.setVisibility(View.GONE);
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+                    if (reservationResponse.getE_ticket_confirmation() != null) {
+                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
 
-                    if (UserPreferences.getIsVerificationRequired()) {
-                        showVerification(token);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                        showConfirmation(token);
                     } else {
+                        Log.d("screening,", screening.toString());
+
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
                     }
-
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

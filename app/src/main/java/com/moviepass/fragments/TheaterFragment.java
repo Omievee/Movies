@@ -34,8 +34,8 @@ public class TheaterFragment extends Fragment {
         Bundle extras = getArguments();
         mTheater = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(THEATER));
 
-        mTheaterName = (TextView) rootView.findViewById(R.id.theater_name);
-        mTheaterAddress = (TextView) rootView.findViewById(R.id.theater_address);
+        mTheaterName = rootView.findViewById(R.id.theater_name);
+        mTheaterAddress = rootView.findViewById(R.id.theater_address);
 
         mTheaterName.setText(mTheater.getName());
         mTheaterAddress.setText(mTheater.getAddress());

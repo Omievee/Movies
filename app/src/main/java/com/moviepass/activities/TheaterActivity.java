@@ -401,7 +401,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         if (ticketType.matches("STANDARD")) {
             String checkIn = "Check In";
             action.setText(checkIn);
-        } else if (ticketType.matches("")) {
+        } else if (ticketType.matches("E_TICKET")) {
             String reserve = "Reserve E-Ticket";
             action.setText(reserve);
         } else {
@@ -478,7 +478,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
-            String previousScreen = "TheaterActivity";
+            Log.d("ticketType", screening.getProvider().ticketType);
             Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
@@ -493,16 +493,21 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
+
                 if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
                     progress.setVisibility(View.GONE);
 
-                    Log.d("screening,", screening.toString());
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+                    if (reservationResponse.getE_ticket_confirmation() != null) {
+                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
 
-                    if (UserPreferences.getIsVerificationRequired()) {
-                        showVerification(token);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                        showConfirmation(token);
                     } else {
+                        Log.d("screening,", screening.toString());
+
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
                     }
                 } else {

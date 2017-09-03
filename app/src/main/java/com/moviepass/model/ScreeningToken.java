@@ -30,6 +30,13 @@ public class ScreeningToken {
         this.seatName = null;
     }
 
+    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode) {
+        this.screening = screening;
+        this.time = time;
+        this.reservation = res;
+        this.qrUrl = qrUrl;
+        this.confirmationCode = confirmationCode;
+    }
 
     public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode, SelectedSeat selectedSeat) {
         this.screening = screening;

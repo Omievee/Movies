@@ -188,6 +188,10 @@ public class ConfirmationActivity extends BaseActivity {
         buttonChangeReservation.setColorPressedResId(R.color.red_dark);
         fab.addMenuButton(buttonChangeReservation);
 
+        if (screeningToken.getConfirmationCode() != null) {
+            fab.setVisibility(View.GONE);
+        }
+
         buttonChangeReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
