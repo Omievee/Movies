@@ -53,14 +53,13 @@ public class Application extends MultiDexApplication {
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
 
-        /*
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {
             Core.install(this,
-                    "d7307fbf50724282a116acadd54fb053",
+                    "aa91c35dbd8884b5f017e42174c2a3a5",
                     "moviepass.helpshift.com",
-                    "moviepass_platform_20170512180003329-05097f788df2b3a",
+                    "moviepass_platform_20170118151356463-28066a03efe840b",
                     installConfig);
 
             String userId = String.valueOf(UserPreferences.getUserId());
@@ -71,7 +70,6 @@ public class Application extends MultiDexApplication {
         } catch (InstallException e) {
             Log.e(TAG, "invalid install credentials : ", e);
         }
-        */
     }
 
     private static CognitoCachingCredentialsProvider getCredProvider(Context context) {

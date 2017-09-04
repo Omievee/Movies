@@ -6,11 +6,11 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.moviepass.parapluies"
+        applicationId 'com.moviepass.mobile'
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 6
-        versionName "3.0-beta-v6"
+        versionCode 55
+        versionName "3.0-beta-v7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -104,7 +104,7 @@ dependencies {
     // Facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     // Helpshift
-    compile 'com.helpshift:android-helpshift-aar:6.0.0'
+    compile 'com.helpshift:android-helpshift-aar:6.1.0'
     // Parceler
     compile 'org.parceler:parceler-api:1.1.6'
     kapt 'org.parceler:parceler:1.1.6'
