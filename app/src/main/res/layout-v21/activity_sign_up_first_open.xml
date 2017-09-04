@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/relative_layout"
+<RelativeLayout android:id="@+id/relative_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical"
@@ -52,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:textColorHint="@color/white">
+            android:textColorHint="@color/white"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/input_password"
@@ -63,6 +64,7 @@
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/white" />
+
         </android.support.design.widget.TextInputLayout>
 
         <Button

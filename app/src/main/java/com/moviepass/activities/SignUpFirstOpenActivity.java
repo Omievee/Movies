@@ -107,17 +107,51 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
                     snackbar.show();
                 } else if (!isValidPassword(password)) {
-                    Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
-                    snackbar.setAction("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    });
-
-                    // Changing message text color
-                    snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-                    snackbar.show();
+                    if (password.length() < 4) {
+                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create a password longer than four characters", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                        // Changing message text color
+                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                        snackbar.show();
+                    } else if (password.length() > 20) {
+                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password shorter than twenty characters", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                        // Changing message text color
+                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                        snackbar.show();
+                    } else if (password.contains(" ")) {
+                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password without spaces", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                        // Changing message text color
+                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                        snackbar.show();
+                    } else {
+                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
+                        // Changing message text color
+                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                        snackbar.show();
+                    }
                 }
             }
         });

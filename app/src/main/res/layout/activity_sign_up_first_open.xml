@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/relative_layout"
+<RelativeLayout android:id="@+id/relative_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical"
@@ -52,7 +52,8 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:textColorHint="@color/white"
-            android:hint="@string/activity_sign_up_step_one_password">
+            android:hint="@string/activity_sign_up_step_one_password"
+            app:passwordToggleEnabled="true">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_password"
