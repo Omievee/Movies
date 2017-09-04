@@ -27,13 +27,14 @@
 
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme"/>
 
-    <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Light.DarkActionBar">
+    <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:windowBackground">@color/dark</item>
+        <item name="android:windowBackground">@color/idk_gray</item>
+        <item name="android:colorBackground">@color/idk_gray</item>
     </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
@@ -67,9 +68,9 @@
         <item name="android:editTextColor">@android:color/white</item>
     </style>
 
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+    <!-- <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/charcoal</item>
-    </style>
+    </style> -->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
