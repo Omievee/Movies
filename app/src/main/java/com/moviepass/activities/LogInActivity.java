@@ -231,7 +231,7 @@ public class LogInActivity extends AppCompatActivity {
                     RestClient.getAuthenticated().forgotPassword(emailAddress).enqueue(new Callback<Object>() {
                         @Override
                         public void onResponse(Call<Object> call, Response<Object> response) {
-                            Toast.makeText(LogInActivity.this, "You will receive an email with instructions on how to reset your password.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogInActivity.this, "If the email is registered with MoviePass, you will receive an email with instructions about how to reset your password.", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
