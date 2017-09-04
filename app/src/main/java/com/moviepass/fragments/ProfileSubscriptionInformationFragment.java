@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 
+import com.helpshift.support.Support;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
@@ -16,6 +17,7 @@ import com.moviepass.responses.UserInfoResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +53,21 @@ public class ProfileSubscriptionInformationFragment extends PreferenceFragment {
                 transaction.replace(R.id.container, profileCancellationFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
+
+                return true;
+            }
+        });
+
+        Preference contact = findPreference("contact");
+        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                HashMap config = new HashMap ();
+                config.put("gotoConversationAfterContactUs", true);
+                config.put("hideNameAndEmail", true);
+                config.put("showSearchOnNewConversation", true);
+
+                Support.showConversation(getActivity(), config);
 
                 return true;
             }
