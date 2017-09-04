@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -84,6 +85,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     Spinner state;
     EditText etZip;
     CheckBox terms;
+    TextView termsLink;
     CheckBox billingAddress;
     LinearLayout fullBillingAddress;
     View progress;
@@ -125,6 +127,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         etZip = rootView.findViewById(R.id.et_zip);
 
         terms = rootView.findViewById(R.id.checkbox_terms);
+        termsLink = rootView.findViewById(R.id.terms_link);
         billingAddress = rootView.findViewById(R.id.checkbox_address);
         fullBillingAddress = rootView.findViewById(R.id.full_billing_address);
         buttonFinish = rootView.findViewById(R.id.button_next);
@@ -155,6 +158,16 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
                     state.setAdapter(statesAdapter);
                 }
+            }
+        });
+
+        termsLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://www.moviepass.com/content/terms";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             }
         });
 

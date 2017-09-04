@@ -223,7 +223,8 @@
     <string name="fragment_sign_up_step_two_selected_card_copy">Selected Card: </string>
     <string name="fragment_sign_up_step_two_selected_card_masked">[xxxx]</string>
     <string name="fragment_sign_up_step_two_billing_address">My billing address is the same as my shipping address</string>
-    <string name="fragment_sign_up_step_two_terms">I agree with the terms and conditions</string>
+    <string name="fragment_sign_up_step_two_terms">I agree with the</string>
+    <string name="fragment_sign_up_step_two_terms_link">terms and conditions</string>
     <string name="fragment_sign_up_step_two_must_agree_to_terms">You must agree with the terms and conditions to sign up</string>
     <string name="fragment_sign_up_step_two_success_header">Success!</string>
     <string name="fragment_sign_up_step_two_success_body">You signed up successfully! Keep an eye out for your card in the mail. You can start seeing movies in e-ticketing theaters immediately.</string>
