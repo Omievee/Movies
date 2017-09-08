@@ -26,7 +26,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBYTdUkozXsZOpZ0WbJKkXYq_MIb9EBlXI" />
+            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ" />
 
         <!-- Taplytics -->
         <receiver
@@ -202,7 +202,7 @@
             android:name=".activities.TheatersActivity"
             android:theme="@style/AppTheme"
             android:parentActivityName=".activities.MoviesActivity"
-            android:windowSoftInputMode="stateHidden|adjustNothing">
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MoviesActivity" />
