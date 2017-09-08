@@ -79,20 +79,38 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         String imgUrl = screening.getImageUrl();
 
-        Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
+        if (imgUrl.isEmpty()) {
+            Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    exception.printStackTrace();
 
-                holder.title.setText(screening.getTitle());
-            }
-        });
-        builder.build()
-                .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(holder.posterImageView);
+                    holder.title.setText(screening.getTitle());
+                }
+            });
+            builder.build()
+                    .load(R.drawable.ticket_top_red_dark)
+                    .placeholder(R.drawable.ticket_top_red_dark)
+                    .error(R.drawable.ticket_top_red_dark)
+                    .into(holder.posterImageView);
+            holder.title.setText(screening.getTitle());
+        } else {
+            Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
+            builder.listener(new Picasso.Listener() {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                    exception.printStackTrace();
+
+                    holder.title.setText(screening.getTitle());
+                }
+            });
+            builder.build()
+                    .load(imgUrl)
+                    .placeholder(R.drawable.ticket_top_red_dark)
+                    .error(R.drawable.ticket_top_red_dark)
+                    .into(holder.posterImageView);
+        }
 
         holder.listItemMoviePoster.setTag(position);
 
