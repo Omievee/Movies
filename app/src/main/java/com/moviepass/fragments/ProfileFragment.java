@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,6 +46,8 @@ public class ProfileFragment extends PreferenceFragment {
 
     CallbackManager callbackManager;
     LoginButton loginButton;
+    AccessTokenTracker accessTokenTracker;
+    AccessToken accessToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +55,46 @@ public class ProfileFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.profile_preferences);
 
-        FacebookSdk.sdkInitialize(getActivity());
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                String fbToken = loginResult.getAccessToken().getToken();
+                Log.d("fbUserId", fbToken);
+                UserPreferences.setFbToken(fbToken);
+
+
+                FacebookLinkRequest fbLinkRequest = new FacebookLinkRequest(fbToken);
+                RestClient.getAuthenticated().linkToFacebook(fbLinkRequest).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        Log.d("response", response.toString());
+
+                        Toast.makeText(getActivity(), "Your Facebook account has been connected.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Log.d("error", t.getMessage().toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.d("cancel", "onCancel");
+
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Toast.makeText(getActivity(), exception.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("error", exception.toString());
+            }
+        });
 
         /* final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Profile"); */
@@ -147,6 +189,16 @@ public class ProfileFragment extends PreferenceFragment {
             }
         });
 
+        Log.d("fbToken", UserPreferences.getFbToken());
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+                String newAccessTokenString = String.valueOf(newAccessToken);
+                UserPreferences.setFbToken(newAccessTokenString);
+            }
+        };
+
         final Preference facebook = findPreference("facebook");
 
         if (UserPreferences.getFbToken().matches("token")) {
@@ -154,6 +206,27 @@ public class ProfileFragment extends PreferenceFragment {
             facebook.setTitle(R.string.fragment_profile_facebook_connect);
         } else {
             facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
+        }
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+                // Set the access token using
+                // currentAccessToken when it's loaded or set.
+            }
+        };
+
+
+        try {
+            Log.d("accessToken", String.valueOf(accessToken));
+        } catch (Exception e) {
+        }
+
+        try {
+            Log.d("accessTokenToken", accessToken.getToken());
+        } catch (Exception e) {
         }
 
         facebook.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -169,56 +242,6 @@ public class ProfileFragment extends PreferenceFragment {
                 l.performClick();
                 loginButton.performClick();
 
-                if (UserPreferences.getFbToken().matches("token")) {
-                    facebook.setSummary(R.string.fragment_profile_facebook_never_post);
-                    facebook.setTitle(R.string.fragment_profile_facebook_connect);
-                } else {
-                    facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
-                }
-
-                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        String fbToken = loginResult.getAccessToken().getToken();
-                        Log.d("fbUserId", fbToken);
-                        UserPreferences.setFbToken(fbToken);
-
-                        if (UserPreferences.getFbToken().matches("token")) {
-                            facebook.setSummary(R.string.fragment_profile_facebook_never_post);
-                            facebook.setTitle(R.string.fragment_profile_facebook_connect);
-                        } else {
-                            facebook.setTitle(R.string.fragment_profile_facebook_disconnect);
-                        }
-
-                        FacebookLinkRequest fbLinkRequest = new FacebookLinkRequest(fbToken);
-                        RestClient.getAuthenticated().linkToFacebook(fbLinkRequest).enqueue(new Callback<Object>() {
-                            @Override
-                            public void onResponse(Call<Object> call, Response<Object> response) {
-                                Log.d("response", response.toString());
-
-                                Toast.makeText(getActivity(), "Your Facebook account has been connected.", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onFailure(Call<Object> call, Throwable t) {
-                                Log.d("error", t.getMessage().toString());
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // App code
-                        Log.d("cancel", "onCancel");
-
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        Toast.makeText(getActivity(), exception.toString(), Toast.LENGTH_SHORT).show();
-                        Log.d("error", exception.toString());
-                    }
-                });
                 return true;
             }
         });
@@ -227,6 +250,7 @@ public class ProfileFragment extends PreferenceFragment {
         logOut.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 UserPreferences.clearUserId();
+                UserPreferences.clearFbToken();
 
                 Intent intent = new Intent(getActivity(), LogInActivity.class);
                 startActivity(intent);
@@ -259,5 +283,11 @@ public class ProfileFragment extends PreferenceFragment {
         Log.d("onActivityResult", "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        accessTokenTracker.stopTracking();
     }
 }

@@ -281,8 +281,6 @@ public class LogInActivity extends AppCompatActivity {
             String deviceUuid = user.getDeviceUuid();
             String authToken = user.getAuthToken();
 
-            UserPreferences.setFbToken(authToken);
-
             UserPreferences.setUserCredentials(userId, deviceUuid, authToken, user.getFirstName(), user.getEmail());
 
             Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
