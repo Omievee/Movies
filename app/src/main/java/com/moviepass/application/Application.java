@@ -8,6 +8,7 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.crashlytics.android.Crashlytics;
 import com.helpshift.All;
 import com.helpshift.Core;
 import com.helpshift.InstallConfig;
@@ -16,6 +17,7 @@ import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
 import com.taplytics.sdk.Taplytics;
+import io.fabric.sdk.android.Fabric;
 
 
 public class Application extends MultiDexApplication {
@@ -45,6 +47,7 @@ public class Application extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Taplytics.startTaplytics(this, "setUserAttributes");
 

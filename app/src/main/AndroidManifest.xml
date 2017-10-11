@@ -216,6 +216,9 @@
         <activity
             android:name=".activities.ViewTheatersActivity"
             android:theme="@style/AppTheme" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="817d4d68505df552813b127d4149583ade2132e1" />
     </application>
 
 </manifest>
