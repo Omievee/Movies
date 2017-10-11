@@ -137,6 +137,9 @@
     <string name="activity_verification_empty_reason">You must list a reason</string>
 
 
+    <!-- Adapters -->
+    <string name="adapter_movie_showtimes_adapter">This screening is not a supported MoviePass screening.</string>
+
     <!-- Fragments -->
     <!-- HistoryFragment -->
     <string name="fragment_history_no_history">Start seeing movies to begin your reservation history</string>

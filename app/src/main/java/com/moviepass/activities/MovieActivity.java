@@ -364,7 +364,9 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
 
-        mMovieShowtimesAdapter = new MovieShowtimesAdapter(mShowtimesList, screening, this, width);
+        boolean qualifiersApproved = screening.getQualifiersApproved();
+
+        mMovieShowtimesAdapter = new MovieShowtimesAdapter(this, mShowtimesList, screening, this, width, qualifiersApproved);
         mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
 
         if (mTheaterSelectTime.getVisibility() != View.VISIBLE) {

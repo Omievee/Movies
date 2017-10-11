@@ -122,7 +122,7 @@ public class Screening {
         this.qualifiers = qualifiers;
     }
 
-    public boolean isQualifiersApproved() {
+    public boolean getQualifiersApproved() {
         return qualifiersApproved;
     }
 
