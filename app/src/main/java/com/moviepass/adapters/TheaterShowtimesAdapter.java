@@ -2,6 +2,7 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private final ShowtimeClickListener showtimeClickListener;
     private ArrayList<String> showtimesArrayList;
     private Screening screening;
+    private boolean qualifiersApproved;
     int row_index;
     private int selectedPosition = -1;
 
@@ -35,11 +37,14 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
+    Snackbar snackbar;
 
-    public TheaterShowtimesAdapter(ArrayList<String> showtimesArrayList, Screening screening, ShowtimeClickListener showtimeClickListener) {
+    public TheaterShowtimesAdapter(Context context, ArrayList<String> showtimesArrayList, Screening screening, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
+        this.context = context;
         this.showtimeClickListener = showtimeClickListener;
         this.showtimesArrayList = showtimesArrayList;
         this.screening = screening;
+        this.qualifiersApproved = qualifiersApproved;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -83,33 +88,46 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         final String time = showtimesArrayList.get(position);
 
         holder.showtime.setText(time);
-        holder.relativeLayout.setSelected(holder.relativeLayout.isSelected());
-        holder.relativeLayout.setTag(position);
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int currentPosition = holder.getLayoutPosition();
-                if (selectedPosition != currentPosition) {
 
-                    // Show Ripple and then change color
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Temporarily save the last selected position
-                            int lastSelectedPosition = selectedPosition;
-                            // Save the new selected position
-                            selectedPosition = currentPosition;
-                            // update the previous selected row
-                            notifyItemChanged(lastSelectedPosition);
-                            // select the clicked row
-                            holder.itemView.setSelected(true);
-                        }
-                    }, 150);
+        if (qualifiersApproved) {
+            holder.relativeLayout.setSelected(holder.relativeLayout.isSelected());
+            holder.relativeLayout.setTag(position);
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int currentPosition = holder.getLayoutPosition();
+                    if (selectedPosition != currentPosition) {
+
+                        // Show Ripple and then change color
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Temporarily save the last selected position
+                                int lastSelectedPosition = selectedPosition;
+                                // Save the new selected position
+                                selectedPosition = currentPosition;
+                                // update the previous selected row
+                                notifyItemChanged(lastSelectedPosition);
+                                // select the clicked row
+                                holder.itemView.setSelected(true);
+                            }
+                        }, 150);
+                    }
+
+                    showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, time);
                 }
-
-                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, time);
-            }
-        });
+            });
+        } else {
+            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.gray_dark));
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    snackbar.make(
+                            holder.itemView, R.string.adapter_movie_showtimes_adapter,
+                            Snackbar.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     @Override

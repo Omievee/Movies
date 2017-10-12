@@ -321,7 +321,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
         /* TODO : Get the screenings for that movie */
 
-        theaterShowtimesAdapter = new TheaterShowtimesAdapter(showtimesList, screening, this);
+        boolean qualifiersApproved = screening.getQualifiersApproved();
+        theaterShowtimesAdapter = new TheaterShowtimesAdapter(this, showtimesList, screening, this, qualifiersApproved);
 
         showtimesRecyclerView.setAdapter(theaterShowtimesAdapter);
         showtimesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
