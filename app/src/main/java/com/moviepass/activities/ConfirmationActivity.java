@@ -168,8 +168,8 @@ public class ConfirmationActivity extends BaseActivity {
 
                 actionText.setText(fullConfirmationCodeInstructions);
             }
-        } else if (!screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png") &&
-                screeningToken.getQrUrl() != null) {
+        } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")
+                ) {
             String qrUrl = screeningToken.getQrUrl();
 
             Picasso.Builder qrBuilder = new Picasso.Builder(this);

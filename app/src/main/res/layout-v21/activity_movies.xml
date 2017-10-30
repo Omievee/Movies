@@ -12,7 +12,6 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="@dimen/basic_elevation"
-
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -30,11 +29,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
-
-    <View
-        android:id="@+id/red"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/red" />
 
 </RelativeLayout>
