@@ -127,6 +127,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         Bundle extras = getIntent().getExtras();
+        extras.getBundle(TheaterActivity.THEATER);
         theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
         theaterName = findViewById(R.id.theater_name);
@@ -178,10 +179,10 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                     for (int i = 0; i < moviesRecyclerView.getChildCount(); i++) {
                         View v = moviesRecyclerView.getChildAt(i);
                         v.setAlpha(0.0f);
-                        v.animate().alpha(1.0f)
-                                .setDuration(1000)
-                                .setStartDelay(i * 50)
-                                .start();
+//                        v.animate().alpha(1.0f)
+//                                .setDuration(1000)
+//                                .setStartDelay(i * 50)
+//                                .start();
                     }
 
                     return true;
@@ -194,42 +195,46 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         showtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         showtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        redView = findViewById(R.id.red);
+        redView.setVisibility(View.INVISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            redView = findViewById(R.id.red);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // previously visible view
-                    // get the center for the clipping circle
-                    int cx = redView.getWidth() / 2;
-                    int cy = redView.getHeight() / 2;
-
-                    Log.d("cx", String.valueOf(cx));
-
-                    // get the initial radius for the clipping circle
-                    float initialRadius = (float) Math.hypot(cx, cy);
-
-                    // create the animation (the final radius is zero)
-                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
-
-                    // make the view invisible when the animation is done
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            redView.setVisibility(View.INVISIBLE);
-                            toolbar.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-                    anim.start();
-                }
-
-            }, 100);
-        }
+        //TODO: Bring back animations once polished.. Simpler Animations?.. 
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            redView = findViewById(R.id.red);
+//
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    // previously visible view
+//                    // get the center for the clipping circle
+//                    int cx = redView.getWidth() / 2;
+//                    int cy = redView.getHeight() / 2;
+//
+//                    Log.d("cx", String.valueOf(cx));
+//
+//                    // get the initial radius for the clipping circle
+//                    float initialRadius = (float) Math.hypot(cx, cy);
+//
+//                    // create the animation (the final radius is zero)
+//                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
+//
+//                    // make the view invisible when the animation is done
+//                    anim.addListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            super.onAnimationEnd(animation);
+//                            redView.setVisibility(View.INVISIBLE);
+//                            toolbar.setVisibility(View.VISIBLE);
+//                        }
+//                    });
+//
+//                    anim.start();
+//                }
+//
+//            }, 100);
+//        }
     }
 
     @Override
@@ -283,39 +288,39 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         Log.d("onBackPressed", "onBackPressed");
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            redView = findViewById(R.id.red);
-
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // previously visible view
-                    // get the center for the clipping circle
-                    int cx = redView.getWidth() / 2;
-                    int cy = redView.getHeight() / 2;
-
-                    Log.d("cx", String.valueOf(cx));
-
-                    // get the initial radius for the clipping circle
-                    float initialRadius = (float) Math.hypot(cx, cy);
-
-                    // create the animation (the final radius is zero)
-                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
-
-                    // make the view invisible when the animation is done
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            redView.setVisibility(View.INVISIBLE);
-                        }
-                    });
-
-                    anim.start();
-                }
-            }, 100);
-        }
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            redView = findViewById(R.id.red);
+//
+//            final Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    // previously visible view
+//                    // get the center for the clipping circle
+//                    int cx = redView.getWidth() / 2;
+//                    int cy = redView.getHeight() / 2;
+//
+//                    Log.d("cx", String.valueOf(cx));
+//
+//                    // get the initial radius for the clipping circle
+//                    float initialRadius = (float) Math.hypot(cx, cy);
+//
+//                    // create the animation (the final radius is zero)
+//                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
+//
+//                    // make the view invisible when the animation is done
+//                    anim.addListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            super.onAnimationEnd(animation);
+//                            redView.setVisibility(View.INVISIBLE);
+//                        }
+//                    });
+//
+//                    anim.start();
+//                }
+//            }, 100);
+//        }
     }
 
     public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
