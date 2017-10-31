@@ -13,7 +13,7 @@
     android:paddingStart="8dp"
     android:paddingTop="5dp"
     tools:ignore="MissingPrefix"
-    android:elevation="4dp">
+    android:elevation="@dimen/basic_elevation">
 
     <RelativeLayout
         android:id="@+id/rel_container"
