@@ -92,41 +92,48 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
     public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
         final Theater finalTheater = theater;
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            redView.bringToFront();
+        Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
+        intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
 
-            int cxFinal = redView.getWidth() / 2;
-            int cyFinal = redView.getHeight() / 2;
+        startActivity(intent);
 
-            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
 
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(redView, cx, cy, 0, finalRadius);
-
-            redView.setVisibility(View.VISIBLE);
-            anim.start();
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
-                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-            });
-        }
+        //TODO Bring back animations when polished.. Simpler ones?
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            redView.bringToFront();
+//
+//            int cxFinal = redView.getWidth() / 2;
+//            int cyFinal = redView.getHeight() / 2;
+//
+//            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
+//
+//           Animator anim =
+//                   ViewAnimationUtils.createCircularReveal(redView, cx, cy, 0, finalRadius);
+//
+//            redView.setVisibility(View.VISIBLE);
+//            anim.start();
+//            anim.addListener(new Animator.AnimatorListener() {
+//                @Override
+//                public void onAnimationStart(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animator) {
+//                    Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
+//                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
+//
+//                    startActivity(intent);
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animator) {
+//                }
+//            });
+//        }
     }
 
     int getContentViewId() {
@@ -164,7 +171,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         return true;
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }
