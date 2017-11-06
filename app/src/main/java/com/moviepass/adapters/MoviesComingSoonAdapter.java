@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;
@@ -45,7 +47,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        ImageView mDraweeView;
+        SimpleDraweeView mDraweeView;
 
         public ViewHolder(View v) {
             super(v);
@@ -66,16 +68,13 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-//        String imgUrl = movie.getImageUrl();
+        Uri imgUrl = Uri.parse(movie.getImageUrl());
 
-//        Uri uri = Uri.parse(movie.getImageUrl());
-//        holder.mDraweeView.setImageURI(uri);
+        holder.mDraweeView.setImageURI(imgUrl);
 
+        holder.listItemMoviePoster.setTag(position);
 
-
-//        holder.listItemMoviePoster.setTag(position);
-//
-//        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

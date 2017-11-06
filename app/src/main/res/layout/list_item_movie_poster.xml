@@ -10,7 +10,7 @@
 
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/my_image_view"
+        android:id="@+id/ticket_top_red_dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         fresco:placeholderImage="@drawable/ticket_top_red_dark" />

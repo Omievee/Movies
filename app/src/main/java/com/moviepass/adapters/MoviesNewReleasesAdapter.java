@@ -49,7 +49,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        ImageView mDraweeView;
+        SimpleDraweeView mDraweeView;
 
         public ViewHolder(View v) {
             super(v);
@@ -72,17 +72,14 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-        String imgUrl = movie.getImageUrl();
-        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
+        Uri imgUrl = Uri.parse(movie.getImageUrl());
 
-//        Uri uri = Uri.parse(movie.getImageUrl());
-//        holder.mDraweeView.setImageURI(uri);
+        holder.mDraweeView.setImageURI(imgUrl);
 
 
+        holder.listItemMoviePoster.setTag(position);
 
-//        holder.listItemMoviePoster.setTag(position);
-//
-//        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

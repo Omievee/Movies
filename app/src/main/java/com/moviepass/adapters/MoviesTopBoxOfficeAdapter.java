@@ -52,9 +52,9 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-            listItemMoviePoster = v.findViewById(R.id.my_image_view);
+            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
-            mDraweeView = v.findViewById(R.id.my_image_view);
+            mDraweeView = v.findViewById(R.id.ticket_top_red_dark);
         }
     }
 
@@ -68,17 +68,16 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-        String imgUrl = movie.getImageUrl();
-        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
+//        String imgUrl = movie.getImageUrl();
+//        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
+
+        Uri imgUrl = Uri.parse(movie.getImageUrl());
+        holder.mDraweeView.setImageURI(imgUrl);
 
 
-//        Uri uri = Uri.parse(movie.getImageUrl());
-//        holder.mDraweeView.setImageURI(uri);
+        holder.listItemMoviePoster.setTag(position);
 
-
-//        holder.listItemMoviePoster.setTag(position);
-//
-//        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
