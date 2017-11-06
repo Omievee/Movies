@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.crash.FirebaseCrash;
 import com.moviepass.Constants;
 import com.moviepass.R;
@@ -94,6 +95,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
         checkRestrictions();
+
+        Fresco.initialize(this);
+
     }
 
     @Override

@@ -14,7 +14,7 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 16
@@ -51,6 +51,7 @@ repositories {
     maven { url 'https://maven.google.com' }
     maven { url "https://github.com/taplytics/Taplytics-Android-SDK/raw/master/AndroidStudio/" }
     maven { url 'https://maven.fabric.io/public' }
+    google()
 }
 
 ext {
@@ -80,6 +81,8 @@ dependencies {
     compile "com.android.support:support-v4:$support_lib_version"
     compile "com.android.support:support-v13:$support_lib_version"
     compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.android.support:support-core-utils:26.2.1'
+
 
     // Google Maps Utilities
     compile 'com.google.maps.android:android-maps-utils:0.5+'
@@ -114,6 +117,8 @@ dependencies {
     compile 'com.github.clans:fab:1.5.0'
     // Facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    // Fresco
+    compile 'com.facebook.fresco:fresco:1.5.0'
     // Helpshift
     compile 'com.helpshift:android-helpshift-aar:6.1.0'
     // Parceler

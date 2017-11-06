@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
@@ -52,7 +53,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
+            listItemMoviePoster = v.findViewById(R.id.my_image_view);
             title = v.findViewById(R.id.poster_movie_title);
             posterImageView = v.findViewById(R.id.ticket_top_red_dark);
         }
@@ -70,20 +71,24 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 
         String imgUrl = movie.getImageUrl();
 
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
 
-                holder.title.setText(movie.getTitle());
-            }
-        });
-        builder.build()
-                .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(holder.posterImageView);
+        Uri uri = Uri.parse(movie.getImageUrl());
+        SimpleDraweeView draweeView = (SimpleDraweeView) holder.posterImageView;
+        draweeView.setImageURI(uri);
+//        Picasso.Builder builder = new Picasso.Builder(context);
+//        builder.listener(new Picasso.Listener() {
+//            @Override
+//            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+//                exception.printStackTrace();
+//
+//                holder.title.setText(movie.getTitle());
+//            }
+//        });
+//        builder.build()
+//                .load(imgUrl)
+//                .placeholder(R.drawable.ticket_top_red_dark)
+//                .error(R.drawable.ticket_top_red_dark)
+//                .into(holder.posterImageView);
 
         holder.listItemMoviePoster.setTag(position);
 
@@ -98,7 +103,9 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     }
 
     @Override
-    public int getItemCount() { return moviesArrayList.size(); }
+    public int getItemCount() {
+        return moviesArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {
