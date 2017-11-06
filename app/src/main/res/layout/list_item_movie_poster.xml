@@ -9,11 +9,10 @@
     android:paddingBottom="5dp">
 
 
-
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/my_image_view"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         fresco:placeholderImage="@drawable/ticket_top_red_dark" />
 
     <!--<ImageView-->
