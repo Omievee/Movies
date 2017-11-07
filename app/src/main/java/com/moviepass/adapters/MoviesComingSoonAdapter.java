@@ -1,7 +1,10 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
@@ -31,7 +36,7 @@ import butterknife.ButterKnife;
  */
 
 public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSoonAdapter.ViewHolder> {
-
+    public static final String TAG = "FOUND IT.. ";
     private final MoviePosterClickListener moviePosterClickListener;
     private ArrayList<Movie> moviesArrayList;
 
@@ -73,17 +78,32 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         final Movie movie = moviesArrayList.get(position);
 
 
-        
-        Uri imgUrl = Uri.parse(movie.getImageUrl());
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(2000);
+        holder.mDraweeView.getHierarchy().setFadeDuration(500);
 
+        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
-                .setOldController(holder.mDraweeView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.title.setText(movie.getTitle());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        holder.title.setText(movie.getTitle());
+                    }
+                })
                 .build();
         holder.mDraweeView.setController(controller);
 

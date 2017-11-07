@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -19,9 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.MoviePosterClickListener;
@@ -82,18 +85,33 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 
 
         Log.d(TAG, "onBindViewHolder: " + movie.getImageUrl());
-        Uri imgUrl = Uri.parse(movie.getImageUrl());
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
 
 
         holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(2000);
-
+        holder.mDraweeView.getHierarchy().setFadeDuration(500);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
-                .setOldController(holder.mDraweeView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.title.setText(movie.getTitle());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        holder.title.setText(movie.getTitle());
+                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                    }
+                })
                 .build();
         holder.mDraweeView.setController(controller);
 

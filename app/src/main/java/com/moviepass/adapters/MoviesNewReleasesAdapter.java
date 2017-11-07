@@ -1,7 +1,9 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,8 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.meg7.widget.SvgImageView;
@@ -76,24 +81,53 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
-        Uri imgUrl = Uri.parse(movie.getImageUrl());
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
 
         holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(2000);
+        holder.mDraweeView.getHierarchy().setFadeDuration(500);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
-                .setOldController(holder.mDraweeView.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.title.setText(movie.getTitle());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        holder.title.setText(movie.getTitle());
+                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                    }
+                })
                 .build();
+
+
         holder.mDraweeView.setController(controller);
 
 
+//        class onImagesLoaded extends BaseControllerListener<ImageInfo> {
+//            @Override
+//            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+//                super.onFinalImageSet(id, imageInfo, animatable);
+//            }
+//
+//            @Override
+//            public void onFailure(String id, Throwable throwable) {
+//                super.onFailure(id, throwable);
+//            }
+//        }
+
 
         ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,5 +145,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }
