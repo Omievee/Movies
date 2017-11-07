@@ -84,8 +84,8 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         Log.d(TAG, "onBindViewHolder: " + movie.getImageUrl());
         Uri imgUrl = Uri.parse(movie.getImageUrl());
 
-//        if(holder.mDraweeView.getHierarchy().
 
+        holder.mDraweeView.setImageURI(imgUrl);
         holder.mDraweeView.getHierarchy().setFadeDuration(2000);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)

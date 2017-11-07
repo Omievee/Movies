@@ -12,7 +12,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
@@ -75,9 +79,18 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         Uri imgUrl = Uri.parse(movie.getImageUrl());
 
         holder.mDraweeView.setImageURI(imgUrl);
+        holder.mDraweeView.getHierarchy().setFadeDuration(2000);
+
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(holder.mDraweeView.getController())
+                .build();
+        holder.mDraweeView.setController(controller);
 
 
-        holder.listItemMoviePoster.setTag(position);
 
         ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
 
