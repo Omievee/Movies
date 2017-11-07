@@ -248,8 +248,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         mShowtimesList = new ArrayList<>();
         mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-
-
     }
 
     class LocationUpdateBroadCast extends BroadcastReceiver {
@@ -285,7 +283,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
         UserLocationManagerFused.getLocationInstance(MovieActivity.this).startLocationUpdates();
         mLocationAcquired = false;
-
         boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
         if (!enabled) {
 //            showDialogGPS();
