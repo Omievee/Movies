@@ -1,7 +1,6 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,14 +54,14 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        SimpleDraweeView mDraweeView;
+        SimpleDraweeView mComingSoonMoviePosterDV;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
-            mDraweeView = v.findViewById(R.id.ticket_top_red_dark);
+            mComingSoonMoviePosterDV = v.findViewById(R.id.ticket_top_red_dark);
         }
     }
 
@@ -79,8 +77,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
 
 
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(500);
+        holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
+        holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
 
         Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -94,7 +92,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.activity_splash_star);
                             holder.title.setText(movie.getTitle());
                         }
                     }
@@ -105,15 +103,13 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     }
                 })
                 .build();
-        holder.mDraweeView.setController(controller);
-
-
-        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        holder.mComingSoonMoviePosterDV.setController(controller);
+        ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mDraweeView);
+                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
             }
         });
     }

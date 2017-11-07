@@ -2,18 +2,19 @@ package com.moviepass.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.ActivityCompat;
@@ -42,8 +43,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.moviepass.Constants;
-import com.moviepass.UserPreferences;
 import com.moviepass.listeners.MovieTheaterClickListener;
 import com.moviepass.R;
 import com.moviepass.listeners.ShowtimeClickListener;
@@ -107,8 +112,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     ScreeningsResponse mScreeningsResponse;
     Screening mScreening;
 
-    ImageView mPoster;
-    TextView mPosterTitle;
+    SimpleDraweeView mSelectedPosterImage;
+    TextView mSelectedPosterTitle;
     TextView theaterAddress;
     TextView mTitle;
     TextView mGenre;
@@ -133,6 +138,10 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
         supportPostponeEnterTransition();
+        Fresco.initialize(this);
+
+        supportStartPostponedEnterTransition();
+
 
         final Toolbar mToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
@@ -150,8 +159,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         Bundle extras = getIntent().getExtras();
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
-        mPoster = findViewById(R.id.poster);
-        mPosterTitle = findViewById(R.id.poster_movie_title);
+        mSelectedPosterImage = findViewById(R.id.movieSelected_Poster);
+        mSelectedPosterTitle = findViewById(R.id.poster_movie_title);
         mTitle = findViewById(R.id.movie_title);
         theaterAddress = findViewById(R.id.theater_address);
         mRunTime = findViewById(R.id.text_run_time);
@@ -181,35 +190,9 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
-            mPoster.setTransitionName(imageTransitionName);
+            mSelectedPosterImage.setTransitionName(imageTransitionName);
+
         }
-
-        String imgUrl = movie.getImageUrl();
-
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
-
-                mPosterTitle.setText(movie.getTitle());
-            }
-        });
-        builder.build()
-                .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(mPoster, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
 
 
         mTitle.setText(movie.getTitle());
@@ -266,6 +249,36 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+
+        //FRESCO CODE TO SET IMAGE FROM PREVIOUS ADAPTER SELECTION:
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        mSelectedPosterImage.setImageURI(imgUrl);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            supportStartPostponedEnterTransition();
+                            mSelectedPosterImage.setImageResource(R.drawable.activity_splash_star);
+                            mSelectedPosterTitle.setText(movie.getTitle());
+                        } else {
+                            supportStartPostponedEnterTransition();
+                            mSelectedPosterImage.getHierarchy().setFadeDuration(500);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        supportStartPostponedEnterTransition();
+                        mSelectedPosterTitle.setText(movie.getTitle());
+                    }
+                })
+                .setUri(imgUrl)
+                .build();
+        mSelectedPosterImage.setController(controller);
     }
 
     class LocationUpdateBroadCast extends BroadcastReceiver {
@@ -357,6 +370,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
     }
 
     public void onTheaterClick(int pos, Screening screening) {
@@ -581,15 +595,15 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
-            @Override
-            public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
-                ScreeningsResponse screenings = response.body();
-                if (screenings != null) {
-                    List<Screening> screeningsList = screenings.getScreenings();
+                    @Override
+                    public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
+                        ScreeningsResponse screenings = response.body();
+                        if (screenings != null) {
+                            List<Screening> screeningsList = screenings.getScreenings();
 
-                    if (screeningsList.size() == 0) {
-                        progress.setVisibility(View.GONE);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
+                            if (screeningsList.size() == 0) {
+                                progress.setVisibility(View.GONE);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
 
 /*                            builder.setTitle(R.string.activity_location_no_theaters_found);
                         builder.setMessage(R.string.activity_location_try_another_zip_code);
@@ -600,57 +614,57 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                             }
                         }); */
 
-                        builder.show();
-                    } else {
+                                builder.show();
+                            } else {
 
-                        //Initial View to Display RecyclerView Based on User's Current Location
-                        mScreeningsResponse = response.body();
-                        mScreeningsList.clear();
+                                //Initial View to Display RecyclerView Based on User's Current Location
+                                mScreeningsResponse = response.body();
+                                mScreeningsList.clear();
 
-                        if (mMovieTheatersAdapter != null) {
-                            theatersRecyclerView.getRecycledViewPool().clear();
-                            mMovieTheatersAdapter.notifyDataSetChanged();
+                                if (mMovieTheatersAdapter != null) {
+                                    theatersRecyclerView.getRecycledViewPool().clear();
+                                    mMovieTheatersAdapter.notifyDataSetChanged();
+                                }
+
+                                if (mScreeningsResponse != null) {
+                                    Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
+                                    mScreeningsList.addAll(mScreeningsResponse.getScreenings());
+                                    theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
+                                    theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                                            new ViewTreeObserver.OnPreDrawListener() {
+
+                                                @Override
+                                                public boolean onPreDraw() {
+                                                    theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                                                    for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
+                                                        View v = theatersRecyclerView.getChildAt(i);
+                                                        v.setAlpha(0.0f);
+                                                        v.animate().alpha(1.0f)
+                                                                .setDuration(1000)
+                                                                .setStartDelay(i * 50)
+                                                                .start();
+                                                    }
+
+                                                    return true;
+                                                }
+                                            });
+
+                                    progress.setVisibility(View.GONE);
+                                }
+
+                            }
                         }
-
-                        if (mScreeningsResponse != null) {
-                            Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
-                            mScreeningsList.addAll(mScreeningsResponse.getScreenings());
-                            theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-                            theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                                new ViewTreeObserver.OnPreDrawListener() {
-
-                                    @Override
-                                    public boolean onPreDraw() {
-                                        theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                                        for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
-                                            View v = theatersRecyclerView.getChildAt(i);
-                                            v.setAlpha(0.0f);
-                                            v.animate().alpha(1.0f)
-                                                    .setDuration(1000)
-                                                    .setStartDelay(i * 50)
-                                                    .start();
-                                        }
-
-                                        return true;
-                                    }
-                                });
-
-                            progress.setVisibility(View.GONE);
-                        }
-
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                if (t != null) {
-                    Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
-                }
-            }
+                    @Override
+                    public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+                        if (t != null) {
+                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                        }
+                    }
 
-        });
+                });
     }
 
     public void fadeIn(View view) {
@@ -705,7 +719,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                             if (cardActivationResponse != null && response.isSuccessful()) {
                                 String cardActivationResponseMessage = cardActivationResponse.getMessage();
                                 Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-;                               reserve(screening, showtime);
+                                ;
+                                reserve(screening, showtime);
                             } else {
                                 Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
                             }
@@ -879,7 +894,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         return true;
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }

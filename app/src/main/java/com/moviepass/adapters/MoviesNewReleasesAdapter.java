@@ -6,27 +6,22 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.meg7.widget.SvgImageView;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -58,14 +53,14 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        SimpleDraweeView mDraweeView;
+        SimpleDraweeView mNewReleasePosterDV;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
-            mDraweeView = v.findViewById(R.id.ticket_top_red_dark);
+            mNewReleasePosterDV = v.findViewById(R.id.ticket_top_red_dark);
 
         }
     }
@@ -83,8 +78,8 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
 
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
 
-        holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(500);
+        holder.mNewReleasePosterDV.setImageURI(imgUrl);
+        holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
@@ -97,7 +92,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.mNewReleasePosterDV.setImageResource(R.drawable.activity_splash_star);
                             holder.title.setText(movie.getTitle());
                         }
                     }
@@ -111,7 +106,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                 .build();
 
 
-        holder.mDraweeView.setController(controller);
+        holder.mNewReleasePosterDV.setController(controller);
 
 
 //        class onImagesLoaded extends BaseControllerListener<ImageInfo> {
@@ -127,11 +122,11 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
 //        }
 
 
-        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        ViewCompat.setTransitionName(holder.mNewReleasePosterDV, movie.getImageUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mDraweeView);
+                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
             }
         });
     }

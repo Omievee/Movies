@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -19,8 +20,7 @@
         android:layout_above="@+id/navigation"
         android:layout_below="@+id/my_toolbar">
 
-        <android.support.v4.widget.NestedScrollView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
@@ -41,50 +41,51 @@
                         android:layout_width="116dp"
                         android:layout_height="175dp">
 
-                        <ImageView
-                            android:id="@+id/poster"
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/movieSelected_Poster"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ticket_top_red_dark" />
+                            fresco:failureImage="@drawable/activity_splash_star"
+                             />
 
                         <TextView
                             android:id="@+id/poster_movie_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/margin_half"
                             android:layout_marginRight="@dimen/margin_half"
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
                             android:gravity="center"
                             android:textAlignment="center"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/white" />
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/poster_relative_layout"
                         android:layout_marginLeft="16dp"
-                        android:layout_marginRight="@dimen/margin_standard">
+                        android:layout_marginRight="@dimen/margin_standard"
+                        android:layout_toRightOf="@+id/poster_relative_layout">
 
                         <TextView
                             android:id="@+id/movie_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="@string/activity_theater_address_placeholder"
                             android:textColor="@color/white"
-                            android:textSize="24sp"
-                            android:text="@string/activity_theater_address_placeholder" />
+                            android:textSize="24sp" />
 
                         <TextView
                             android:id="@+id/theater_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textSize="24sp"
+                            android:layout_below="@+id/movie_title"
                             android:text="@string/activity_theater_city_things_placeholder"
-                            android:layout_below="@+id/movie_title" />
+                            android:textColor="@color/white"
+                            android:textSize="24sp" />
 
                         <View
                             android:id="@+id/line"
@@ -98,8 +99,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="16dp"
                             android:layout_below="@+id/line"
-                            android:layout_marginBottom="8dp"
-                            android:layout_gravity="center_vertical">
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="8dp">
 
                             <ImageView
                                 android:id="@+id/clock"
@@ -115,8 +116,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="left|center_vertical"
-                                android:gravity="center_vertical"
                                 android:layout_toRightOf="@+id/clock"
+                                android:gravity="center_vertical"
                                 android:text="@string/list_item_movie_poster_run_time_placeholder"
                                 android:textColor="@color/gray_icon"
                                 android:textSize="12sp" />
@@ -131,102 +132,102 @@
                     android:id="@+id/movie_select_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gun_metal"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="@string/activity_movie_theater_select_text"
                     android:layout_below="@+id/movie_things"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
-                    android:animateLayoutChanges="true" />
+                    android:animateLayoutChanges="true"
+                    android:text="@string/activity_movie_theater_select_text"
+                    android:textColor="@color/gun_metal"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_theaters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/movie_select_text"
                     android:divider="@null"
                     android:dividerHeight="0dp"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
                     android:listSelector="@android:color/transparent"
-                    tools:listitem="@layout/list_item_theater"
-                    android:layout_below="@+id/movie_select_text"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:orientation="horizontal"
+                    tools:listitem="@layout/list_item_theater" />
 
                 <TextView
                     android:id="@+id/theater_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gun_metal"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="@string/activity_theater_movie_title"
                     android:layout_below="@+id/recycler_view_theaters"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone"
-                    android:animateLayoutChanges="true" />
+                    android:animateLayoutChanges="true"
+                    android:text="@string/activity_theater_movie_title"
+                    android:textColor="@color/gun_metal"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/theater_select_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gun_metal"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:text="@string/activity_theater_movie_time"
                     android:layout_below="@+id/theater_title"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone"
-                    android:animateLayoutChanges="true" />
+                    android:animateLayoutChanges="true"
+                    android:text="@string/activity_theater_movie_time"
+                    android:textColor="@color/gun_metal"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_showtimes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/theater_select_time"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal"
                     android:divider="@null"
                     android:dividerHeight="8dp"
                     android:listSelector="@android:color/transparent"
-                    tools:listitem="@layout/list_item_showtime"
-                    android:layout_below="@+id/theater_select_time"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:visibility="gone" />
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:listitem="@layout/list_item_showtime" />
 
                 <View
                     android:id="@+id/below_showtimes"
-                    android:layout_below="@+id/recycler_view_showtimes"
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
-                    android:visibility="gone"/>
+                    android:layout_below="@+id/recycler_view_showtimes"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/button_action"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
                     android:layout_below="@+id/recycler_view_showtimes"
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
                     android:background="@drawable/button_red"
                     android:text="@string/activity_theater_button_action"
                     android:textSize="15sp"
-                    android:visibility="gone"
-                    android:animateLayoutChanges="true"
-                    android:layout_marginLeft="@dimen/margin_standard"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:layout_marginBottom="@dimen/margin_standard" />
+                    android:visibility="gone" />
 
                 <View
                     android:id="@+id/bottom_of_screen"
-                    android:layout_below="@+id/button_action"
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
-                    android:visibility="gone"/>
+                    android:layout_below="@+id/button_action"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

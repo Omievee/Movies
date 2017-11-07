@@ -1,14 +1,9 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.PixelFormat;
+import android.content.Intent;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +16,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -29,6 +23,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
+import com.moviepass.activities.MovieActivity;
 import com.moviepass.model.Movie;
 
 import java.util.ArrayList;
@@ -61,14 +56,14 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        SimpleDraweeView mDraweeView;
+        SimpleDraweeView mTopBoxMovieDV;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
-            mDraweeView = v.findViewById(R.id.ticket_top_red_dark);
+            mTopBoxMovieDV = v.findViewById(R.id.ticket_top_red_dark);
         }
     }
 
@@ -88,8 +83,8 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
 
 
-        holder.mDraweeView.setImageURI(imgUrl);
-        holder.mDraweeView.getHierarchy().setFadeDuration(500);
+        holder.mTopBoxMovieDV.setImageURI(imgUrl);
+        holder.mTopBoxMovieDV.getHierarchy().setFadeDuration(500);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
@@ -101,7 +96,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mDraweeView.setImageResource(R.drawable.activity_splash_star);
+                            holder.mTopBoxMovieDV.setImageResource(R.drawable.activity_splash_star);
                             holder.title.setText(movie.getTitle());
                         }
                     }
@@ -113,14 +108,18 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     }
                 })
                 .build();
-        holder.mDraweeView.setController(controller);
+        holder.mTopBoxMovieDV.setController(controller);
 
 
-        ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
+        ViewCompat.setTransitionName(holder.mTopBoxMovieDV, movie.getImageUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mDraweeView);
+                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mTopBoxMovieDV);
+//                Intent intent = new Intent(context, MovieActivity.class);
+//                intent.putExtra("Movie Selected", holder.getAdapterPosition());
+
+
             }
         });
     }

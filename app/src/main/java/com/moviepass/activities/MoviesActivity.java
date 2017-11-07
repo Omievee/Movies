@@ -123,7 +123,7 @@ public class MoviesActivity extends BaseActivity {
         return true;
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }
@@ -139,7 +139,6 @@ public class MoviesActivity extends BaseActivity {
             }
         }
     }
-
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         final int id = item.getItemId();
