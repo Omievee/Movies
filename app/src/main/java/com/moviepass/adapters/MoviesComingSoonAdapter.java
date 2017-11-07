@@ -75,12 +75,13 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
 
+        holder.title.setText("");
 
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
         holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
 
-        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
+        Log.d(TAG, "coming soon: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
@@ -104,7 +105,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 })
                 .build();
         holder.mComingSoonMoviePosterDV.setController(controller);
-        ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
+        android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

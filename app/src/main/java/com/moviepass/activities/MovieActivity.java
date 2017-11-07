@@ -141,7 +141,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         Fresco.initialize(this);
 
         supportStartPostponedEnterTransition();
-
+        supportPostponeEnterTransition();
 
         final Toolbar mToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
@@ -191,9 +191,10 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
             mSelectedPosterImage.setTransitionName(imageTransitionName);
-
         }
 
+        //FRESCO:
+        loadMoviePosterData();
 
         mTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
@@ -244,41 +245,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         fadeIn(mTheatersNearby);
 
         /* Showtimes RecyclerView */
-
         mShowtimesList = new ArrayList<>();
-
         mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
         mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
 
-        //FRESCO CODE TO SET IMAGE FROM PREVIOUS ADAPTER SELECTION:
-        final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        mSelectedPosterImage.setImageURI(imgUrl);
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                    @Override
-                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                        super.onFinalImageSet(id, imageInfo, animatable);
-
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
-                            supportStartPostponedEnterTransition();
-                            mSelectedPosterImage.setImageResource(R.drawable.activity_splash_star);
-                            mSelectedPosterTitle.setText(movie.getTitle());
-                        } else {
-                            supportStartPostponedEnterTransition();
-                            mSelectedPosterImage.getHierarchy().setFadeDuration(500);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-                        supportStartPostponedEnterTransition();
-                        mSelectedPosterTitle.setText(movie.getTitle());
-                    }
-                })
-                .setUri(imgUrl)
-                .build();
-        mSelectedPosterImage.setController(controller);
     }
 
     class LocationUpdateBroadCast extends BroadcastReceiver {
@@ -370,6 +341,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        supportFinishAfterTransition();
 
     }
 
@@ -909,6 +881,37 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                 break;
             }
         }
+    }
+
+    private void loadMoviePosterData() {
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        mSelectedPosterImage.setImageURI(imgUrl);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            supportStartPostponedEnterTransition();
+                            mSelectedPosterImage.setImageResource(R.drawable.activity_splash_star);
+                            mSelectedPosterTitle.setText(movie.getTitle());
+                        } else {
+                            supportStartPostponedEnterTransition();
+                            mSelectedPosterImage.getHierarchy().setFadeDuration(500);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        supportStartPostponedEnterTransition();
+                        mSelectedPosterImage.setImageResource(R.drawable.activity_splash_star);
+                        mSelectedPosterTitle.setText(movie.getTitle());
+                    }
+                })
+                .setUri(imgUrl)
+                .build();
+        mSelectedPosterImage.setController(controller);
     }
 
 }

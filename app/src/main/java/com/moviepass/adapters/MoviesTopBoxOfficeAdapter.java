@@ -79,9 +79,8 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         holder.title.setText("");
 
 
-        Log.d(TAG, "onBindViewHolder: " + movie.getImageUrl());
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-
+        Log.d(TAG, "Top box: " + imgUrl.toString() );
 
         holder.mTopBoxMovieDV.setImageURI(imgUrl);
         holder.mTopBoxMovieDV.getHierarchy().setFadeDuration(500);
@@ -107,11 +106,12 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                         holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     }
                 })
+
                 .build();
         holder.mTopBoxMovieDV.setController(controller);
 
 
-        ViewCompat.setTransitionName(holder.mTopBoxMovieDV, movie.getImageUrl());
+        android.support.v4.view.ViewCompat.setTransitionName(holder.mTopBoxMovieDV, movie.getImageUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

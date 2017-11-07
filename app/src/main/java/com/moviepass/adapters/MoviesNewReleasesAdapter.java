@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,14 +76,15 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
-
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-
+        Log.d(TAG, " NEW MOVIE: " + imgUrl.toString());
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
+        holder.title.setText("");
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
+                .setSource(imgUrl)
                 .build();
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()

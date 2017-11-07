@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -198,14 +199,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         listener = null;
     }
 
-    public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
+    public void onMoviePosterClick(int pos, @NonNull Movie movie, @NonNull ImageView sharedImageView) {
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
                 sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView));
+                android.support.v4.view.ViewCompat.getTransitionName(sharedImageView));
 
         startActivity(movieIntent, options.toBundle());
     }
@@ -258,7 +259,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-
             }
         });
     }
