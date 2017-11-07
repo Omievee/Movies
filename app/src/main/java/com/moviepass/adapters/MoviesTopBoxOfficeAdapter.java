@@ -1,20 +1,31 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.moviepass.R;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.MoviePosterClickListener;
+import com.moviepass.R;
 import com.moviepass.model.Movie;
 
 import java.util.ArrayList;
@@ -67,18 +78,27 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
+        holder.title.setText("");
 
-//        String imgUrl = movie.getImageUrl();
-//        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
 
+        Log.d(TAG, "onBindViewHolder: " + movie.getImageUrl());
         Uri imgUrl = Uri.parse(movie.getImageUrl());
-        holder.mDraweeView.setImageURI(imgUrl);
 
+//        if(holder.mDraweeView.getHierarchy().
 
-        holder.listItemMoviePoster.setTag(position);
+        holder.mDraweeView.getHierarchy().setFadeDuration(2000);
+
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(holder.mDraweeView.getController())
+                .build();
+        holder.mDraweeView.setController(controller);
+
 
         ViewCompat.setTransitionName(holder.mDraweeView, movie.getImageUrl());
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,5 +116,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }

@@ -4,7 +4,7 @@
     android:id="@+id/list_item_movie_poster"
     android:layout_width="165dp"
     android:layout_height="250dp"
-    android:layout_marginLeft="16dp"
+    android:layout_marginLeft="7dp"
     android:elevation="4dp"
     android:paddingBottom="5dp">
 
@@ -13,7 +13,9 @@
         android:id="@+id/ticket_top_red_dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        fresco:placeholderImage="@drawable/ticket_top_red_dark" />
+        fresco:failureImage="@drawable/moviepass_logo"
+        fresco:placeholderImage="@drawable/ticket_top_red_dark"
+        fresco:roundedCornerRadius="4dp" />
 
     <!--<ImageView-->
     <!--android:id="@+id/ticket_top_red_dark"-->

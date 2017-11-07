@@ -126,6 +126,8 @@ android {
         compile 'com.facebook.android:facebook-android-sdk:[4,5)'
         // Fresco
         compile 'com.facebook.fresco:fresco:1.5.0'
+        compile 'com.facebook.fresco:animated-gif:1.5.0'
+
         // Helpshift
         compile 'com.helpshift:android-helpshift-aar:6.1.0'
         // Parceler
