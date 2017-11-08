@@ -409,6 +409,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             fadeIn(mAction);
             mScreenBottom.setVisibility(View.VISIBLE);
             mScreenBottom.requestFocus();
+
         }
 
         String ticketType = screening.getProvider().ticketType;
@@ -444,7 +445,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
         /* Standard Check In */
-
         String providerName = screening.getProvider().providerName;
 
         //PerformanceInfo
@@ -460,6 +460,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
         String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
         Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(normalizedMovieId, externalMovieId, format, tribuneTheaterId, screeningId, dateTime);
