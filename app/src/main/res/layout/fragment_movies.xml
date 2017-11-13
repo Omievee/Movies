@@ -1,50 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
-            android:id="@+id/HEADER"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="5dp">
+        <RelativeLayout
+            android:id="@+id/REL1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-
-            <ImageView
-                android:id="@+id/HEADLINE_IMAGE"
+            <FrameLayout
+                android:id="@+id/HEADER"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
-
-            <TextView
-                android:id="@+id/HEADLINE_TITLE"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="@dimen/margin_standard"
-                android:text="Test"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-        </FrameLayout>
+                android:elevation="5dp">
 
 
-        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/HEADER"
-            android:fillViewport="true">
+                <ImageView
+                    android:id="@+id/HEADLINE_IMAGE"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+                <ImageView
+                    android:id="@+id/MoviePass_HEADER"
+                    android:layout_width="@dimen/magin_MAX"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:src="@drawable/logo_compact"
+                    android:textAlignment="center"
+                    android:tint="@color/white" />
+
+
+                <TextView
+                    android:id="@+id/HEADLINE_TITLE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="@dimen/margin_standard"
+                    android:text="Test"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+
+            </FrameLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/HEADER"
                 android:orientation="vertical">
 
                 <TextView
@@ -115,11 +130,11 @@
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
 
             </LinearLayout>
+        </RelativeLayout>
 
-        </android.support.v4.widget.NestedScrollView>
 
+    </android.support.v4.widget.NestedScrollView>
 
-    </RelativeLayout>
 
     <include
         android:id="@+id/progress"
