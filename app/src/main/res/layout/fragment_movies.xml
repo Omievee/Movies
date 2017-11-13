@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!--LAYOUT FOR IMAGE TRANSITION-->
+    <!--LAYOUT FOR IMAGE TRANSITION - APP, Collapse, <IMAGE>, Toolbar-->
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
