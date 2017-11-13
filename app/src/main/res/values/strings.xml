@@ -44,7 +44,8 @@
     <string name="activity_movie_holder_running_time">[### minutes]</string>
     <string name="activity_movie_running_time_minutes">minutes</string>
     <string name="activity_movie_reviews">Reviews</string>
-    <string name="activity_movie_theater_select_text">Theaters Nearby</string>
+    <string name="activity_movie_choose_theater_time">Choose Theater &amp; Time</string>
+    <string name="activity_movie_change_location">Change Location</string>
 
     <!-- NoDataActivity -->
     <string name="activity_no_data_activity_header">Oops!</string>
@@ -82,7 +83,6 @@
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
 
 
-
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
     <string name="activity_sign_in_email">Email</string>
@@ -104,7 +104,7 @@
     <string name="activity_sign_up_step_one_sign_up">Sign Up</string>
     <string name="activity_sign_up_step_one_sign_up_with_facebook">Sign up with Facebook</string>
     <string name="activity_sign_up_step_one_not_ready">Not ready to sign up? Explore the app</string>
-    
+
     <!-- SignUpFirstOpenActivity -->
     <string name="activity_sign_up_first_open_see_theaters">See theaters in your area</string>
 

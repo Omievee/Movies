@@ -43,7 +43,7 @@
                         android:layout_height="175dp">
 
                         <com.facebook.drawee.view.SimpleDraweeView
-                            android:id = "@+id/movieSelected_Poster"
+                            android:id="@+id/movieSelected_Poster"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             fresco:failureImage="@drawable/activity_splash_star"
@@ -134,10 +134,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/movie_things"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
+                    android:layout_toEndOf="@+id/recycler_view_showtimes"
+                    android:layout_toRightOf="@+id/recycler_view_showtimes"
                     android:animateLayoutChanges="true"
-                    android:text="@string/activity_movie_theater_select_text"
                     android:textColor="@color/gun_metal"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -155,6 +155,7 @@
                     android:focusableInTouchMode="false"
                     android:listSelector="@android:color/transparent"
                     android:orientation="horizontal"
+                    android:visibility="visible"
                     tools:listitem="@layout/list_item_theater" />
 
                 <TextView
