@@ -45,8 +45,7 @@
                             android:id="@+id/movieSelected_Poster"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            fresco:failureImage="@drawable/activity_splash_star"
-                             />
+                            fresco:failureImage="@drawable/activity_splash_star" />
 
                         <TextView
                             android:id="@+id/poster_movie_title"

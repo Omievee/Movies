@@ -17,13 +17,13 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:elevation="5dp"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            xmlns:fresco="http://schemas.android.com/apk/res-auto"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -34,9 +34,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:animateLayoutChanges="true"
-                fresco:placeholderImage="@drawable/moviepass_logo"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
+                app:layout_collapseMode="parallax"
+                fresco:overlayImage="@drawable/poster_gradient" />
 
             <TextView
                 android:id="@+id/HEADLINE_TITLE"
@@ -55,7 +55,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="5dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
