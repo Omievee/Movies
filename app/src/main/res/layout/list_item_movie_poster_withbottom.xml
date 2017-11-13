@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/list_item_movie_poster"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_item_movie_poster"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
-    android:elevation="4dp"
     android:layout_marginLeft="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:elevation="4dp"
+    android:paddingBottom="5dp">
 
     <RelativeLayout
         android:id="@+id/ticket_top"
@@ -22,18 +22,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ticket_top_red_dark"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/poster_movie_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginRight="@dimen/margin_standard"
-                android:layout_centerVertical="true"
-                android:textSize="16sp"
                 android:textColor="@color/white"
-                android:visibility="invisible"/>
+                android:textSize="16sp"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 
@@ -41,9 +41,9 @@
             android:id="@+id/poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:src="@raw/shape_movie_poster"
-            app:svg_raw_resource="@raw/shape_movie_poster"
-            android:scaleType="centerCrop" />
+            app:svg_raw_resource="@raw/shape_movie_poster" />
 
     </RelativeLayout>
 
@@ -59,47 +59,47 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="2dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="@color/black_text"
+            android:maxLines="1"
             android:text="@string/list_item_movie_poster_title_placeholder"
-            android:maxLines="1"/>
+            android:textColor="@color/black_text"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_genre"
-            android:layout_below="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/text_title"
             android:layout_marginLeft="16dp"
-            android:textSize="12sp"
-            android:textColor="@color/black_text"
+            android:maxLines="1"
             android:text="@string/list_item_movie_poster_genre_placeholder"
-            android:maxLines="1" />
+            android:textColor="@color/black_text"
+            android:textSize="12sp" />
 
         <View
             android:id="@+id/line"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/run_time_things"
-            android:background="@color/gray_icon"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginRight="16dp"
+            android:background="@color/gray_icon" />
 
         <LinearLayout
             android:id="@+id/run_time_things"
             android:layout_width="wrap_content"
             android:layout_height="14dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="8dp" >
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp">
 
             <ImageView
                 android:id="@+id/clock"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
+                android:layout_gravity="center_vertical"
                 android:paddingTop="1dp"
-                android:src="@drawable/clock"
-                android:layout_gravity="center_vertical"/>
+                android:src="@drawable/clock" />
 
             <TextView
                 android:id="@+id/text_run_time"
@@ -112,7 +112,6 @@
                 android:textSize="12sp" />
 
         </LinearLayout>
-
 
 
     </RelativeLayout>
