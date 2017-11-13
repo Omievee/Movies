@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark"
     android:orientation="vertical">
 
 
@@ -22,7 +23,17 @@
         android:layout_above="@id/navigation" />
 
 
-
+    <ImageView
+        android:id="@+id/MoviePass_HEADER"
+        android:layout_width="@dimen/magin_MAX"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:src="@drawable/logo_compact"
+        android:textAlignment="center"
+        android:tint="@color/white"
+        app:layout_collapseMode="parallax" />
 
     <include
         android:id="@+id/navigation"
