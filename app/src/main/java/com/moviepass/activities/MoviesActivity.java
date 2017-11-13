@@ -36,14 +36,11 @@ public class MoviesActivity extends BaseActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-//        final Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        final Toolbar toolbar = findViewById(R.id.MOVIES_TOOLBAR);
+        setSupportActionBar(toolbar);
 
-        final ActionBar actionBar = getSupportActionBar();
 
-        // Enable the Up button
-//        actionBar.setTitle("Movies");
-
+//        final ActionBar actionBar = getSupportActionBar();
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, moviesFragment).commit();
@@ -119,7 +116,7 @@ public class MoviesActivity extends BaseActivity {
                     }
                 }
             }
-        }, 300);
+        }, 50);
         return true;
     }
 
@@ -139,6 +136,7 @@ public class MoviesActivity extends BaseActivity {
             }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         final int id = item.getItemId();
