@@ -34,4 +34,8 @@ public class Provider {
     public boolean ticketTypeIsSelectSeating() {
         return ticketType.matches("SELECT_SEATING");
     }
+
+    public String getProviderName() {
+        return providerName;
+    }
 }

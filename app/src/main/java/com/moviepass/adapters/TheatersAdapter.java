@@ -1,6 +1,7 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.braintreepayments.api.Card;
 import com.moviepass.R;
 import com.moviepass.listeners.TheatersClickListener;
 import com.moviepass.model.Theater;
@@ -40,7 +42,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_theater)
-        LinearLayout listItemTheater;
+        CardView listItemTheater;
         @BindView(R.id.theater_name)
         TextView name;
         @BindView(R.id.theater_address)
@@ -123,7 +125,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     }
 
     @Override
-    public int getItemCount() { return theatersArrayList.size(); }
+    public int getItemCount() {
+        return theatersArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {

@@ -52,7 +52,7 @@ import retrofit2.Response;
 public class ConfirmationActivity extends BaseActivity {
 
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screening";
+    public static final String SCREENING = "mScreening";
     public static final String TOKEN = "token";
 
     Reservation reservation;

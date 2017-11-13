@@ -161,9 +161,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                         Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
                         intent.putExtra("reservationId", reservationId);
-                        intent.putExtra("movieTitle", movieTitle);
+                        intent.putExtra("mSelectedMovieTitle", movieTitle);
                         intent.putExtra("tribuneMovieId", tribuneMovieId);
-                        intent.putExtra("theaterName", theaterName);
+                        intent.putExtra("mTheaterSelected", theaterName);
                         intent.putExtra("tribuneTheaterId", tribuneTheaterId);
                         intent.putExtra("showtime", showtime);
                         startActivity(intent);

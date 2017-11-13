@@ -76,7 +76,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     public static final String THEATER = "theater";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screening";
+    public static final String SCREENING = "mScreening";
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
 
@@ -511,7 +511,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
                     } else {
-                        Log.d("screening,", screening.toString());
+                        Log.d("mScreening,", screening.toString());
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);

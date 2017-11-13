@@ -67,7 +67,7 @@
 
 
     <!-- SelectSeatActivity -->
-    <string name="activity_select_seat_activity_title">Select Your Seat</string>
+    <string name="activity_select_seat_activity_title">SELECT YOUR SEAT</string>
     <string name="activity_select_seat_movie_title">[Title]</string>
     <string name="activity_select_seat_movie_genre">[Genre]</string>
     <string name="activity_select_seat_run_time_placeholder">[Time]</string>
@@ -81,7 +81,9 @@
     <string name="activity_select_seat_selected">Selected</string>
     <string name="activity_select_seat_reserve">Reserve Your Seat</string>
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
-
+    <string name="data_connection">Check Your Connection And Try Again</string>
+    <string name="pending_reservation">You have a pending reservation</string>
+    <string name="error">Error: Contact Customer Support</string>
 
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
