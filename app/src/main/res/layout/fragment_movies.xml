@@ -8,17 +8,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!--LAYOUT FOR IMAGE TRANSITION - APP, Collapse, <IMAGE>, Toolbar-->
+    <!--LAYOUT FOR IMAGE TRANSITION - APP, Collapse, <IMAGE>, Toolbar
+    LAYOUT FOR MAIN MOVIES PAGE WITH RECYCLERS & SUCH..
+    -->
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
+        android:id="@+id/MAINPAGE_APPBAR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/MAINPAGE_collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="5dp"
@@ -30,7 +32,7 @@
 
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/HEADLINE_IMAGE"
+                android:id="@+id/MAINPAGE_FEATURED"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:animateLayoutChanges="true"
@@ -39,7 +41,7 @@
                 fresco:overlayImage="@drawable/poster_gradient" />
 
             <TextView
-                android:id="@+id/HEADLINE_TITLE"
+                android:id="@+id/MAINPAGE_FEATURE_TITLE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -52,7 +54,7 @@
 
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/MOVIES_TOOLBAR"
+                android:id="@+id/MAINPAGE_TOOLBAR"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -69,7 +71,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
-            android:id="@+id/REL1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true">
