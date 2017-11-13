@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -165,7 +164,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
     @Override
-    public void onResume() { super.onResume(); }
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void onPause() {
@@ -199,56 +200,57 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         listener = null;
     }
 
-    public void onMoviePosterClick(int pos, @NonNull Movie movie, @NonNull ImageView sharedImageView) {
+    //TODO:
+    public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
                 sharedImageView,
-                android.support.v4.view.ViewCompat.getTransitionName(sharedImageView));
+                ViewCompat.getTransitionName(sharedImageView));
 
         startActivity(movieIntent, options.toBundle());
     }
 
     private void loadMovies() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue( new Callback<MoviesResponse>() {
+        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
-                        mMoviesNewReleases.clear();
-                        mMoviesTopBoxOffice.clear();
-                        mMoviesComingSoon.clear();
+                    mMoviesNewReleases.clear();
+                    mMoviesTopBoxOffice.clear();
+                    mMoviesComingSoon.clear();
 
-                        if (mMoviesNewReleasesAdapter != null) {
-                            mNewReleasesRecyclerView.getRecycledViewPool().clear();
-                            mMoviesNewReleasesAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesNewReleasesAdapter != null) {
+                        mNewReleasesRecyclerView.getRecycledViewPool().clear();
+                        mMoviesNewReleasesAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesTopBoxOfficeAdapter != null) {
-                            mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
-                            mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesTopBoxOfficeAdapter != null) {
+                        mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
+                        mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesComingSoonAdapter != null) {
-                            mComingSoonRecyclerView.getRecycledViewPool().clear();
-                            mMoviesComingSoonAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesComingSoonAdapter != null) {
+                        mComingSoonRecyclerView.getRecycledViewPool().clear();
+                        mMoviesComingSoonAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesResponse != null) {
-                            mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
-                            mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+                    if (mMoviesResponse != null) {
+                        mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
+                        mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
 
-                            mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
-                            mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+                        mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
+                        mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
 
-                            mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
-                            mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+                        mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
+                        mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
 
-                        }
+                    }
 
 
                 } else {
@@ -259,6 +261,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+
             }
         });
     }

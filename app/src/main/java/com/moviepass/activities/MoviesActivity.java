@@ -36,13 +36,13 @@ public class MoviesActivity extends BaseActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        final Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
 
         // Enable the Up button
-        actionBar.setTitle("Movies");
+//        actionBar.setTitle("Movies");
 
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
