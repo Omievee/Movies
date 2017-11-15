@@ -850,8 +850,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
+
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                     startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
@@ -863,6 +862,9 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         }, 300);
         return true;
     }
+//
+//    else if (itemId == R.id.action_reservations) {
+//        startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
 
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();

@@ -88,8 +88,8 @@ public class SettingsActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(SettingsActivity.this, ReservationsActivity.class));
+//                } else if (itemId == R.id.action_reservations) {
+//                    startActivity(new Intent(SettingsActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(SettingsActivity.this, MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {

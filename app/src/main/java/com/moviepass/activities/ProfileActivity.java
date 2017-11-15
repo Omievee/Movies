@@ -3,11 +3,15 @@ package com.moviepass.activities;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +24,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  */
 
 public class ProfileActivity extends BaseActivity {
+    public static final String TAG = "Found it";
 
     ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
@@ -37,6 +42,7 @@ public class ProfileActivity extends BaseActivity {
         // Enable the Up button
         actionBar.setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Profile");
+
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -64,7 +70,6 @@ public class ProfileActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-
             FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
@@ -93,8 +98,7 @@ public class ProfileActivity extends BaseActivity {
             public void run() {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
+                    Log.d(TAG, "run: " + item.toString());
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(getApplicationContext(), MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {
@@ -107,7 +111,9 @@ public class ProfileActivity extends BaseActivity {
         return true;
     }
 
-    private void updateNavigationBarState(){
+    //} else if (itemId == R.id.action_reservations) {
+//    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }

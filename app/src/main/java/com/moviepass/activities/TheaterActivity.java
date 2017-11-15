@@ -654,8 +654,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
+//                } else if (itemId == R.id.action_reservations) {
+//                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(getApplicationContext(), MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {

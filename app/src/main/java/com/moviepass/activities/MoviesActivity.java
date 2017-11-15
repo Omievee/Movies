@@ -36,7 +36,7 @@ public class MoviesActivity extends BaseActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-        final Toolbar toolbar = findViewById(R.id.MOVIES_TOOLBAR);
+        final Toolbar toolbar = findViewById(R.id.MAINPAGE_TOOLBAR);
         setSupportActionBar(toolbar);
 
 
@@ -54,6 +54,7 @@ public class MoviesActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         updateNavigationBarState();
+
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -106,8 +107,7 @@ public class MoviesActivity extends BaseActivity {
                             Intent intent = new Intent(MoviesActivity.this, ProfileActivity.class);
                             startActivity(intent);
                         }
-                    } else if (itemId == R.id.action_reservations) {
-                        startActivity(new Intent(MoviesActivity.this, ReservationsActivity.class));
+
                     } else if (itemId == R.id.action_movies) {
                     } else if (itemId == R.id.action_theaters) {
                         startActivity(new Intent(MoviesActivity.this, TheatersActivity.class));
@@ -119,6 +119,9 @@ public class MoviesActivity extends BaseActivity {
         }, 50);
         return true;
     }
+//
+//    else if (itemId == R.id.action_reservations) {
+//        startActivity(new Intent(MoviesActivity.this, ReservationsActivity.class));
 
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();

@@ -164,7 +164,7 @@ public class ConfirmationActivity extends BaseActivity {
             } else {
 
                 String fullConfirmationCodeInstructions = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
-                    getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
+                        getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
 
                 actionText.setText(fullConfirmationCodeInstructions);
             }
@@ -257,8 +257,7 @@ public class ConfirmationActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
+
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {
@@ -268,9 +267,12 @@ public class ConfirmationActivity extends BaseActivity {
             }
         }, 300);
         return true;
+
+//        else if (itemId == R.id.action_reservations) {
+//            startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }

@@ -54,7 +54,9 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
 
     protected BottomNavigationView bottomNavigationView;
 
-    public static BrowseFragment newInstance() { return new BrowseFragment(); }
+    public static BrowseFragment newInstance() {
+        return new BrowseFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,11 +77,11 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
         mRedView.setVisibility(View.INVISIBLE);
     }
 
-    private void setupViewPager(ViewPager viewPager){
-            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-            adapter.addFragment(new TheatersFragment(),"Theaters");
-            adapter.addFragment(new MoviesFragment(),"Movies");
-            viewPager.setAdapter(adapter);
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new TheatersFragment(), "Theaters");
+        adapter.addFragment(new MoviesFragment(), "Movies");
+        viewPager.setAdapter(adapter);
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -195,8 +197,7 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
                         Intent intent = new Intent(BrowseActivity.this, ProfileActivity.class);
                         startActivity(intent);
                     }
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(BrowseActivity.this, ReservationsActivity.class));
+
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                     startActivity(new Intent(BrowseActivity.this, NotificationsActivity.class));
@@ -208,7 +209,10 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
         return true;
     }
 
-    private void updateNavigationBarState(){
+//     else if (itemId == R.id.action_reservations) {
+//        startActivity(new Intent(BrowseActivity.this, ReservationsActivity.class));
+
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }

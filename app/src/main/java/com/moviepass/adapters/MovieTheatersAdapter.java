@@ -2,6 +2,7 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_theater)
-        LinearLayout listItemTheater;
+        CardView listItemTheater;
         @BindView(R.id.theater_name)
         TextView name;
         @BindView(R.id.theater_address)
@@ -105,7 +106,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         holder.cityThings.setVisibility(View.GONE);
         holder.distance.setVisibility(View.GONE);
-        holder.iconPin.setVisibility(View.GONE);
+//        holder.iconPin.setVisibility(View.GONE);
 
         if (screening.getProvider().ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);
@@ -155,7 +156,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     }
 
     @Override
-    public int getItemCount() { return screeningsArrayList.size(); }
+    public int getItemCount() {
+        return screeningsArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {

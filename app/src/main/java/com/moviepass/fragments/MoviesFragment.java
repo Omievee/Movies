@@ -137,6 +137,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             showActivateCardDialog();
         }
 
+
+
+
         return rootView;
     }
 
@@ -155,6 +158,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (mComingSoonRecyclerView != null) {
             mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
         }
+
 
     }
 

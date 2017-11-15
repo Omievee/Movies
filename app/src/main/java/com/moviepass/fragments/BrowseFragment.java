@@ -29,7 +29,9 @@ public class BrowseFragment extends Fragment implements TheatersFragment.OnFragm
 
     private OnFragmentInteractionListener listener;
 
-    public static BrowseFragment newInstance() { return new BrowseFragment(); }
+    public static BrowseFragment newInstance() {
+        return new BrowseFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,7 +47,6 @@ public class BrowseFragment extends Fragment implements TheatersFragment.OnFragm
 
         viewPager = view.findViewById(R.id.pager);
         setupViewPager(viewPager);
-
         tabLayout = view.findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }

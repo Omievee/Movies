@@ -2,7 +2,8 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo">
 
 
     <android.support.design.widget.AppBarLayout
@@ -111,9 +112,9 @@
                 android:id="@+id/movie_select_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_half"
                 android:layout_weight="2"
                 android:gravity="start"
+                android:padding="@dimen/margin_quarter"
                 android:text="@string/activity_movie_choose_theater_time"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -126,9 +127,7 @@
                 android:layout_gravity="end"
                 android:layout_weight=".2"
                 android:background="@color/dark"
-                android:padding="@dimen/margin_standard"
-                android:paddingLeft="@dimen/margin_standard"
-                android:paddingStart="@dimen/margin_standard"
+                android:padding="@dimen/margin_quarter"
                 android:src="@drawable/icon_location_pin"
                 android:textAlignment="viewEnd"
                 android:tint="@color/red" />
@@ -142,18 +141,8 @@
                 android:layout_weight=".5"
                 android:gravity="center"
                 android:text="@string/activity_movie_change_location"
-                android:textAlignment="viewStart"
                 android:textColor="@color/red"
                 android:textSize="15sp" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
 
         </LinearLayout>

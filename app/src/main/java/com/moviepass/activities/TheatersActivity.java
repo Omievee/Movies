@@ -158,8 +158,8 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
                         Intent intent = new Intent(TheatersActivity.this, ProfileActivity.class);
                         startActivity(intent);
                     }
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(TheatersActivity.this, ReservationsActivity.class));
+//                } else if (itemId == R.id.action_reservations) {
+//                    startActivity(new Intent(TheatersActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(TheatersActivity.this, MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {

@@ -47,7 +47,9 @@ public class NotificationsActivity extends BaseActivity {
         return R.layout.activity_notifications;
     }
 
-    int getNavigationMenuItemId() { return R.id.action_theaters; }
+    int getNavigationMenuItemId() {
+        return R.id.action_theaters;
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -57,9 +59,6 @@ public class NotificationsActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(NotificationsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
                 } else if (itemId == R.id.action_theaters) {
@@ -75,7 +74,11 @@ public class NotificationsActivity extends BaseActivity {
         return true;
     }
 
-    private void updateNavigationBarState(){
+//} else if (itemId == R.id.action_reservations) {
+//        Toast.makeText(NotificationsActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
+//        startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
+
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }

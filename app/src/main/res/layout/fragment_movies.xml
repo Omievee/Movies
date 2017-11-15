@@ -147,6 +147,12 @@
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
 
             </LinearLayout>
+
+            <!--<android.support.design.widget.FloatingActionButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+
+
         </RelativeLayout>
 
 
