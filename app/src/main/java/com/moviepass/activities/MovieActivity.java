@@ -88,7 +88,6 @@ public class MovieActivity extends BaseActivity {
 
     TextView THEATER_ADDRESS_LISTITEM;
     TextView SELECTED_MOVIE_TITLE;
-
     Button mAction;
     View ProgressBar;
 
@@ -125,6 +124,8 @@ public class MovieActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         Bundle extras = getIntent().getExtras();
+//        extras.getBundle();
+
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
         SELECTED_MOVIEPOSTER = findViewById(R.id.SELECTED_MOVIE_IMAGE);
@@ -143,10 +144,10 @@ public class MovieActivity extends BaseActivity {
         currentLocationTasks();
         ProgressBar.setVisibility(View.VISIBLE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
-            SELECTED_MOVIEPOSTER.setTransitionName(imageTransitionName);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
+//            SELECTED_MOVIEPOSTER.setTransitionName(imageTransitionName);
+//        }
 
         //FRESCO:
         ButterKnife.bind(this, SELECTED_MOVIEPOSTER);

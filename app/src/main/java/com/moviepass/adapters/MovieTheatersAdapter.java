@@ -123,8 +123,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         String state = screening.getTheaterAddress();
         String zip = String.valueOf(screening.getTheaterAddress());
 
-//        String cityThings = city + ", " + state + " " + zip;
-//        //holder.TheaterCityAddressListItem.setText(TheaterCityAddressListItem);
+        String cityThings = city + ", " + state + " " + zip;
+        holder.TheaterCityAddressListItem.setText(cityThings);
 
         String formattedAddress = screening.getTheaterAddress() + " miles";
         //holder.TheaterDistance.setText(formattedAddress);
