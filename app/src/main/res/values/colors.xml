@@ -4,6 +4,7 @@
     <color name="red">#c82229</color>
     <color name="red_light">#ff5b52</color>
     <color name="red_dark">#8f0000</color>
+    <color name="lipstick_red">#c82229</color>
 
     <color name="colorPrimary">#ff202b36</color>
     <color name="colorPrimaryDark">#ff202b36</color>
@@ -12,12 +13,13 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="black_text">#DE000000</color>
-    <color name="dark">#ff202b36</color>
+    <color name="dark">#202b36</color>
     <color name="white">#FFFFFF</color>
     <color name="white_transparent">#40ffffff</color>
     <color name="gun_metal_mask">#404c5863</color>
-    <color name="charcoal">#323c46</color>
+    <color name="charcoal">#303a43</color>
     <color name="gun_metal">#4c5863</color>
+
 
     <color name="white_ish">#f7f7f7</color>
     <color name="pinkish_gray">#d1d1d1</color>

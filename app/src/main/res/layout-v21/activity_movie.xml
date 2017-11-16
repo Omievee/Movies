@@ -218,7 +218,7 @@
                     android:background="@drawable/button_red"
                     android:text="@string/activity_theater_button_action"
                     android:textSize="15sp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <View
                     android:id="@+id/bottom_of_screen"

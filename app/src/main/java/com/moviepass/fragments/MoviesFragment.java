@@ -316,11 +316,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                             }
 
                         }
-
                         @Override
                         public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                             progress.setVisibility(View.GONE);
-
                             showActivateCardDialog();
                         }
                     });
