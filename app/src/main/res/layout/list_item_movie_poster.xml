@@ -4,7 +4,7 @@
     android:id="@+id/list_item_movie_poster"
     android:layout_width="165dp"
     android:layout_height="250dp"
-    android:layout_marginLeft="7dp"
+    android:layout_marginStart="7dp"
     android:elevation="4dp"
     android:paddingBottom="5dp">
 
@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         fresco:failureImage="@drawable/activity_splash_star"
-        fresco:placeholderImage="@drawable/ticket_top_red_dark"
         fresco:roundedCornerRadius="4dp" />
 
     <!--<ImageView-->
