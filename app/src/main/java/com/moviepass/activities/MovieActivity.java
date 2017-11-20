@@ -96,8 +96,8 @@ public class MovieActivity extends BaseActivity {
 
     @BindView(R.id.SELECTED_THEATERS)
     RecyclerView SelectedTheatersRecyclerView;
-    @BindView(R.id.THEATER_SHOWTIME_LISTITEM)
-    RecyclerView TheaterShowtimeListItem;
+//    @BindView(R.id.THEATER_SHOWTIME_LISTITEM)
+//    RecyclerView TheaterShowtimeListItem;
     @BindView(R.id.SELECTED_MOVIE_IMAGE)
     SimpleDraweeView SELECTED_MOVIEPOSTER;
     @BindView(R.id.theater_select_time)
@@ -201,7 +201,7 @@ public class MovieActivity extends BaseActivity {
 
         /* Showtimes RecyclerView */
         ShowtimesList = new ArrayList<>();
-        TheaterShowtimeListItem = findViewById(R.id.THEATER_SHOWTIME_LISTITEM);
+//        TheaterShowtimeListItem = findViewById(R.id.THEATER_SHOWTIME_LISTITEM);
 //        TheaterShowtimeListItem.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 //        TheaterShowtimeListItem.setAdapter(new MovieTheatersAdapter(ShowtimesList, this));
     }

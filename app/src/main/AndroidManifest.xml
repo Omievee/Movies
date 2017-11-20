@@ -4,9 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -31,7 +32,7 @@
         <!-- Taplytics -->
         <receiver
             android:name="com.taplytics.sdk.TLGcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -42,24 +43,27 @@
             </intent-filter>
 
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="tl-6ea3ea4d"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tl-6ea3ea4d" />
             </intent-filter>
         </receiver>
         <service android:name="com.taplytics.sdk.TLGcmIntentService" />
 
         <receiver android:name="com.taplytics.sdk.TLBootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.taplytics.sdk.TLGeofenceEventService"/>
+        <service android:name="com.taplytics.sdk.TLGeofenceEventService" />
 
-        <meta-data android:name="com.taplytics.sdk.notification_icon"
-            android:resource="@drawable/notification_icon"/>
+        <meta-data
+            android:name="com.taplytics.sdk.notification_icon"
+            android:resource="@drawable/notification_icon" />
 
         <!-- End of Taplytics -->
 
@@ -92,12 +96,15 @@
 
         <activity android:name="io.card.payment.DataEntryActivity" />
 
-        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+        <activity
+            android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="com.moviepass.mobile.braintree" />
             </intent-filter>
         </activity>
@@ -200,8 +207,8 @@
         </activity>
         <activity
             android:name=".activities.TheatersActivity"
-            android:theme="@style/AppTheme"
             android:parentActivityName=".activities.MoviesActivity"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -216,6 +223,7 @@
         <activity
             android:name=".activities.ViewTheatersActivity"
             android:theme="@style/AppTheme" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="817d4d68505df552813b127d4149583ade2132e1" />

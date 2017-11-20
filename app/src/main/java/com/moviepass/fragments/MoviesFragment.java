@@ -1,12 +1,21 @@
 package com.moviepass.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v13.view.ViewCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -22,11 +31,13 @@ import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.MovieActivity;
+import com.moviepass.activities.MoviesActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
 import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
+import com.moviepass.model.Provider;
 import com.moviepass.network.Api;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.CardActivationRequest;
@@ -53,11 +64,16 @@ import rx.schedulers.Schedulers;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment implements MoviePosterClickListener {
+public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
 
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
+
+
+    public static final int LOCATION_PERMISSIONS = 99;
+    android.location.LocationManager LocationManager;
+    String Provider;
 
     Api api;
 
@@ -112,8 +128,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
         /* Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
@@ -137,8 +152,15 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             showActivateCardDialog();
         }
 
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+        LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Provider = LocationManager.getBestProvider(criteria, true);
+//        Location location = LocationManager.getLastKnownLocation(Provider);
 
 
+        checkLocationPermission();
 
         return rootView;
     }
@@ -170,6 +192,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onResume() {
         super.onResume();
+        if (checkLocationPermission()) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //Request location updates:
+                Toast.makeText(getActivity(), "GPS Location Is Required", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -316,6 +344,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                             }
 
                         }
+
                         @Override
                         public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                             progress.setVisibility(View.GONE);
@@ -338,6 +367,96 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
     public interface OnFragmentInteractionListener {
+    }
+
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("GPS Services Are Required For MoviePass to Run Properlly")
+                        .setMessage(" Allow GPS Location Access? ")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        LOCATION_PERMISSIONS);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSIONS);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                        LocationManager.requestLocationUpdates(Provider, 400, 1, this);
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "Location Permissions Are Required. ", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
 

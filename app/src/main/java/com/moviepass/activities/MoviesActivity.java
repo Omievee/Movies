@@ -1,16 +1,25 @@
 package com.moviepass.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.Manifest;
+import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
@@ -21,7 +30,9 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity {
+public class MoviesActivity extends BaseActivity  {
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,10 @@ public class MoviesActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+
+
+
     }
 
     @Override
@@ -192,4 +207,6 @@ public class MoviesActivity extends BaseActivity {
         alert = builder.create();
         alert.show();
     }
+
+
 }

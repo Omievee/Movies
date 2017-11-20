@@ -406,7 +406,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 startActivity(
-                        new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        new Intent(android.Provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             }
         });
         alert = builder.create();
