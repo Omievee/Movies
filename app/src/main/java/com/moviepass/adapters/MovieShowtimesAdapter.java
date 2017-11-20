@@ -1,22 +1,17 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moviepass.R;
-import com.moviepass.activities.MovieActivity;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 
@@ -57,17 +52,17 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.relative_layout)
-        RelativeLayout relativeLayout;
-        @BindView(R.id.showtime)
-        TextView showtime;
+        CardView ShowtimeCardview;
+        @BindView(R.id.SHOWTIME_CARD)
+        TextView ScreeningShowtimeListItem;
         SparseBooleanArray selectedItems = null;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
 
-            relativeLayout = v.findViewById(R.id.relative_layout);
-            showtime = v.findViewById(R.id.showtime);
+            ShowtimeCardview = v.findViewById(R.id.relative_layout);
+            ScreeningShowtimeListItem = v.findViewById(R.id.SHOWTIME_CARD);
         }
     }
 
@@ -77,7 +72,6 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
 
         int itemWidth = screenWidth / 4;
         view.setMinimumWidth(itemWidth);
-
         return new ViewHolder(view);
     }
 
@@ -91,12 +85,12 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
 
         final String time = showtimesArrayList.get(position);
 
-        holder.showtime.setText(time);
+        holder.ScreeningShowtimeListItem.setText(time);
 
         if (qualifiersApproved) {
-            holder.relativeLayout.setSelected(holder.relativeLayout.isSelected());
-            holder.relativeLayout.setTag(position);
-            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            holder.ShowtimeCardview.setSelected(holder.ShowtimeCardview.isSelected());
+            holder.ShowtimeCardview.setTag(position);
+            holder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (snackbar != null && snackbar.isShown()) {
@@ -125,8 +119,8 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
                 }
             });
         } else {
-            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.gray_dark));
-            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            holder.ShowtimeCardview.setBackgroundColor(context.getResources().getColor(R.color.gray_dark));
+            holder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     snackbar.make(
@@ -138,7 +132,9 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
     }
 
     @Override
-    public int getItemCount() { return showtimesArrayList.size(); }
+    public int getItemCount() {
+        return showtimesArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {

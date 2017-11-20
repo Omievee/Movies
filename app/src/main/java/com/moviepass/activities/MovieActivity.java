@@ -2,24 +2,33 @@ package com.moviepass.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +40,11 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserLocationManagerFused;
+import com.moviepass.adapters.MovieShowtimesAdapter;
 import com.moviepass.adapters.MovieTheatersAdapter;
-import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.listeners.MovieTheaterClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -41,9 +52,11 @@ import com.moviepass.model.ScreeningToken;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
+import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.requests.CheckInRequest;
 import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.TicketInfoRequest;
+import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
 
@@ -63,7 +76,7 @@ import retrofit2.Response;
  * Created by anubis on 6/9/17.
  */
 
-public class MovieActivity extends BaseActivity {
+public class MovieActivity extends BaseActivity implements MovieTheaterClickListener, ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
     public static final String RESERVATION = "reservation";
@@ -72,23 +85,26 @@ public class MovieActivity extends BaseActivity {
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
 
+
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
     private Location mMyLocation;
+    ArrayList<String> mShowtimesList;
+
 
     Movie movie;
     Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter MovieTheatersAdapter;
-    //    MovieShowtimesAdapter mMovieShowtimesAdapter;
+    MovieShowtimesAdapter ShowtimesAdapter;
     ScreeningsResponse mScreeningsResponse;
+    Screening Screening;
 
     TextView THEATER_ADDRESS_LISTITEM;
     TextView SELECTED_MOVIE_TITLE;
-    Button mAction;
     View ProgressBar;
 
     ArrayList<Screening> mScreeningsList;
@@ -96,14 +112,24 @@ public class MovieActivity extends BaseActivity {
 
     @BindView(R.id.SELECTED_THEATERS)
     RecyclerView SelectedTheatersRecyclerView;
-//    @BindView(R.id.THEATER_SHOWTIME_LISTITEM)
-//    RecyclerView TheaterShowtimeListItem;
+
     @BindView(R.id.SELECTED_MOVIE_IMAGE)
     SimpleDraweeView SELECTED_MOVIEPOSTER;
+
     @BindView(R.id.theater_select_time)
     TextView mTheaterSelectTime;
+
     @BindView(R.id.SELECTED_RUNTIME)
     TextView SELECTED_RUNTIME;
+
+    @BindView(R.id.SHOWTIME_RECYCLER)
+    RecyclerView ShowtimesRecyclerView;
+
+    @BindView(R.id.SHOWTIME_CARD)
+    TextView ScreeningShowtime;
+
+    @BindView(R.id.FAB_LOADCARD)
+    FloatingActionButton mAction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,10 +156,13 @@ public class MovieActivity extends BaseActivity {
 
         SELECTED_MOVIEPOSTER = findViewById(R.id.SELECTED_MOVIE_IMAGE);
         SELECTED_MOVIE_TITLE = findViewById(R.id.SELECTED_MOVIE_TITLE);
-        THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS_LISTITEM);
+        THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
-        mTheaterSelectTime = findViewById(R.id.theater_select_time);
+        ScreeningShowtime = findViewById(R.id.SHOWTIME_CARD);
+        ShowtimesRecyclerView = findViewById(R.id.SHOWTIME_RECYCLER);
+        mAction = findViewById(R.id.FAB_LOADCARD);
 
+        mShowtimesList = new ArrayList<>();
         ProgressBar = findViewById(R.id.progress);
 
         //Start location tasks
@@ -144,17 +173,10 @@ public class MovieActivity extends BaseActivity {
         currentLocationTasks();
         ProgressBar.setVisibility(View.VISIBLE);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
-//            SELECTED_MOVIEPOSTER.setTransitionName(imageTransitionName);
-//        }
-
         //FRESCO:
         ButterKnife.bind(this, SELECTED_MOVIEPOSTER);
 
         loadMoviePosterData();
-
-
         SELECTED_MOVIE_TITLE.setText(movie.getTitle());
         int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
@@ -176,7 +198,7 @@ public class MovieActivity extends BaseActivity {
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         SelectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
         SelectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-        MovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList);
+        MovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
         SelectedTheatersRecyclerView.setAdapter(MovieTheatersAdapter);
         SelectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
@@ -197,13 +219,11 @@ public class MovieActivity extends BaseActivity {
                     }
                 });
 
-//        fadeIn(mTheatersNearby);
+
 
         /* Showtimes RecyclerView */
+
         ShowtimesList = new ArrayList<>();
-//        TheaterShowtimeListItem = findViewById(R.id.THEATER_SHOWTIME_LISTITEM);
-//        TheaterShowtimeListItem.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        TheaterShowtimeListItem.setAdapter(new MovieTheatersAdapter(ShowtimesList, this));
     }
 
 
@@ -253,79 +273,60 @@ public class MovieActivity extends BaseActivity {
 
     }
 
-//    public void onTheaterClick(int pos, Screening screening) {
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int width = displayMetrics.widthPixels;
-//
-//        boolean qualifiersApproved = screening.getQualifiersApproved();
-//
-//        mMovieShowtimesAdapter = new MovieShowtimesAdapter(this, ShowtimesList, screening, this, width, qualifiersApproved);
-////        TheaterShowtimeListItem.setAdapter(mMovieShowtimesAdapter);
-//
-//        if (mTheaterSelectTime.getVisibility() != View.VISIBLE) {
-//            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-//            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-//            mTheaterSelectTime.setVisibility(View.VISIBLE);
-//            fadeIn(mTheaterSelectTime);
-//        } else {
-//            fadeOut(mTheaterSelectTime);
-//            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-//            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-//            fadeIn(mTheaterSelectTime);
-//        }
-//
-//        if (mAction.getVisibility() == View.VISIBLE) {
-//            fadeOut(mAction);
-//            mAction.setVisibility(View.GONE);
-//        }
-//
-//        if (TheaterShowtimeListItem.getVisibility() != View.VISIBLE) {
-//            TheaterShowtimeListItem.setVisibility(View.VISIBLE);
-//            fadeIn(TheaterShowtimeListItem);
-//        } else {
-//            fadeOut(TheaterShowtimeListItem);
-//            fadeIn(TheaterShowtimeListItem);
-//        }
-//
-//        mBelowShowtimes.setVisibility(View.VISIBLE);
-//
-//        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
-//
-//        ShowtimesList.clear();
-//
-//        if (TheaterShowtimeListItem != null) {
-//            TheaterShowtimeListItem.getRecycledViewPool().clear();
-//            mMovieShowtimesAdapter.notifyDataSetChanged();
-//        }
-//
-//        ShowtimesList.addAll(startTimes);
-//
-//        mBelowShowtimes.requestFocus();
-//    }
+    public void onTheaterClick(int pos, Screening screening) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        boolean qualifiersApproved = screening.getQualifiersApproved();
 
-//    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-//        final String time = showtime;
-//        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
-//
-//        if (mAction.getVisibility() != View.VISIBLE) {
-//            mAction.setVisibility(View.VISIBLE);
-//            fadeIn(mAction);
-//            mScreenBottom.setVisibility(View.VISIBLE);
-//            mScreenBottom.requestFocus();
-//        } else {
-//            fadeOut(mAction);
-//            mAction.setVisibility(View.INVISIBLE);
-//            mAction.setVisibility(View.VISIBLE);
-//            fadeIn(mAction);
-//            mScreenBottom.setVisibility(View.VISIBLE);
-//            mScreenBottom.requestFocus();
-//
-//        }
-//
-//        String ticketType = screening.getProvider().ticketType;
-//
-//        if (ticketType.matches("STANDARD")) {
+        ShowtimesRecyclerView = findViewById(R.id.SHOWTIME_RECYCLER);
+        ShowtimesAdapter = new MovieShowtimesAdapter(this, ShowtimesList, screening, this, width, qualifiersApproved);
+        ShowtimesRecyclerView.setAdapter(ShowtimesAdapter);
+        ShowtimesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+
+        if (mAction.getVisibility() == View.VISIBLE) {
+            fadeOut(mAction);
+            mAction.setVisibility(View.GONE);
+        }
+
+        if (ShowtimesRecyclerView.getVisibility() == View.GONE) {
+            ShowtimesRecyclerView.setVisibility(View.VISIBLE);
+            fadeIn(ShowtimesRecyclerView);
+        } else {
+            fadeOut(ShowtimesRecyclerView);
+        }
+
+        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
+        ShowtimesList.clear();
+
+        if (ShowtimesRecyclerView != null) {
+            ShowtimesRecyclerView.getRecycledViewPool().clear();
+            ShowtimesAdapter.notifyDataSetChanged();
+        }
+
+        ShowtimesList.addAll(startTimes);
+
+    }
+
+    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
+        final String time = showtime;
+        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+
+        if (mAction.getVisibility() != View.VISIBLE) {
+            mAction.setVisibility(View.VISIBLE);
+            fadeIn(mAction);
+        } else {
+            fadeOut(mAction);
+            mAction.setVisibility(View.INVISIBLE);
+            mAction.setVisibility(View.VISIBLE);
+            fadeIn(mAction);
+
+        }
+
+        String ticketType = screening.getProvider().ticketType;
+
+        if (ticketType.matches("STANDARD")) {
 //            String checkIn = "Check In";
 //            mAction.setText(checkIn);
 //        } else if (ticketType.matches("")) {
@@ -335,19 +336,19 @@ public class MovieActivity extends BaseActivity {
 //            String selectSeat = "Select Seat";
 //            mAction.setText(selectSeat);
 //        }
-//
-//        mAction.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (isPendingSubscription()) {
-//                    showActivateCardDialog(screening, time);
-//                } else {
-//                    ProgressBar.setVisibility(View.VISIBLE);
-//                    reserve(screening, time);
-//                }
-//            }
-//        });
-//    }
+        }
+        mAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPendingSubscription()) {
+                    showActivateCardDialog(screening, time);
+                } else {
+                    ProgressBar.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
+                }
+            }
+        });
+    }
 
     public void reserve(Screening screening, String showtime) {
         mAction.setEnabled(false);
@@ -640,14 +641,10 @@ public class MovieActivity extends BaseActivity {
 
     protected void onLocationChanged(Location location) {
         UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
-
         if (location != null) {
             UserLocationManagerFused.getLocationInstance(this).updateLocation(location);
-
             mMyLocation = location;
-
             loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), movie.getId());
-
             mLocationAcquired = true;
         }
     }
@@ -662,7 +659,6 @@ public class MovieActivity extends BaseActivity {
         } else {
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
             onLocationChanged(location);
-
             if (location != null) {
                 UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), MovieActivity.this);
             }
@@ -670,65 +666,84 @@ public class MovieActivity extends BaseActivity {
     }
 
 
-//    private void showActivateCardDialog(final Screening screening, final String showtime) {
-//        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
-//        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(MovieActivity.this);
-//        alert.setView(dialoglayout);
-//
-//        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
-//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        InputFilter[] filters = new InputFilter[1];
-//        filters[0] = new InputFilter.LengthFilter(4);
-//        editText.setFilters(filters);
-//
-//        alert.setTitle(getString(R.string.dialog_activate_card_header));
-//        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
-//        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, int which) {
-//                String digits = editText.getText().toString();
-//                dialog.dismiss();
-//
-//                if (digits.length() == 4) {
-//                    CardActivationRequest request = new CardActivationRequest(digits);
-//                    ProgressBar.setVisibility(View.VISIBLE);
-//
-//                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
-//                        @Override
-//                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-//                            CardActivationResponse cardActivationResponse = response.body();
-//                            ProgressBar.setVisibility(View.GONE);
-//
-//                            if (cardActivationResponse != null && response.isSuccessful()) {
-//                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
-//                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-//
-//                                reserve(screening, showtime);
-//                            } else {
-//                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-//                            ProgressBar.setVisibility(View.GONE);
-//
-//                            showActivateCardDialog(screening, showtime);
-//                        }
-//                    });
-//                } else {
-//                    Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, int which) {
-//                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
-//                dialog.dismiss();
-//            }
-//        });
-//        alert.show();
-//    }
-//}
+    private void showActivateCardDialog(final Screening screening, final String showtime) {
+        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(MovieActivity.this);
+        alert.setView(dialoglayout);
+
+        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(4);
+        editText.setFilters(filters);
+
+        alert.setTitle(getString(R.string.dialog_activate_card_header));
+        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                String digits = editText.getText().toString();
+                dialog.dismiss();
+
+                if (digits.length() == 4) {
+                    CardActivationRequest request = new CardActivationRequest(digits);
+                    ProgressBar.setVisibility(View.VISIBLE);
+
+                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
+                        @Override
+                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                            CardActivationResponse cardActivationResponse = response.body();
+                            ProgressBar.setVisibility(View.GONE);
+
+                            if (cardActivationResponse != null && response.isSuccessful()) {
+                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+
+                                reserve(screening, showtime);
+                            } else {
+                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                            ProgressBar.setVisibility(View.GONE);
+
+                            showActivateCardDialog(screening, showtime);
+                        }
+                    });
+                } else {
+                    Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
+        alert.show();
+    }
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
 }

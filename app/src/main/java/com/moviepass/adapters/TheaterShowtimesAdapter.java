@@ -73,10 +73,10 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         /* if (row_idex == position) {
             holder.itemView.setBackgroundColor(Color.parseColor("#c82229"));
-            holder.showtime.setTextColor(Color.parseColor("#FFFFFF"));
+            holder.ScreeningShowtimeListItem.setTextColor(Color.parseColor("#FFFFFF"));
         } else {
             holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            holder.showtime.setTextColor(Color.parseColor("#DE000000"));
+            holder.ScreeningShowtimeListItem.setTextColor(Color.parseColor("#DE000000"));
         } */
 
         if (position == selectedPosition) {

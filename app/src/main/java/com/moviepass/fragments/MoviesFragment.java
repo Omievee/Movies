@@ -181,7 +181,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
         }
 
-
     }
 
     @Override
@@ -430,7 +429,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     }
 
                 } else {
-                    Toast.makeText(getActivity(), "Location Permissions Are Required. ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
 
                 }
             }
