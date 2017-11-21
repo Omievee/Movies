@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark"
     android:orientation="vertical">
 
 
@@ -12,8 +11,17 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navigation" />
+        android:layout_above="@id/navigation"
+        android:background="@color/test_black" />
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/MovieToolbar_MAINPAGE"
+        android:layout_width="match_parent"
+        android:animateLayoutChanges="true"
+        android:paddingTop="@dimen/double_margin_standard"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.Toolbar>
 
     <ImageView
         android:id="@+id/MoviePass_HEADER"
@@ -25,7 +33,22 @@
         android:src="@drawable/logo_compact"
         android:textAlignment="center"
         android:tint="@color/white"
-        app:layout_collapseMode="parallax" />
+        android:visibility="visible"
+        app:layout_collapseMode="pin" />
+
+
+    <!--<android.support.v7.widget.SearchView-->
+    <!--android:id="@+id/MOVIES_SEARCH"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_marginTop="@dimen/double_margin_standard"-->
+    <!--android:animateLayoutChanges="true"-->
+    <!--android:background="@android:color/transparent">-->
+
+
+    <!--</android.support.v7.widget.SearchView>-->
+
 
     <include
         android:id="@+id/navigation"

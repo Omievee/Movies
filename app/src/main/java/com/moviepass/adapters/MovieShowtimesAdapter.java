@@ -69,34 +69,32 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_showtime, parent, false);
-
         int itemWidth = screenWidth / 4;
         view.setMinimumWidth(itemWidth);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder currentHolder, final int position) {
         if (position == selectedPosition) {
-            holder.itemView.setSelected(true);
+            currentHolder.itemView.setSelected(true);
         } else {
-            holder.itemView.setSelected(false);
+            currentHolder.itemView.setSelected(false);
         }
 
         final String time = showtimesArrayList.get(position);
-
-        holder.ScreeningShowtimeListItem.setText(time);
+        currentHolder.ScreeningShowtimeListItem.setText(time);
 
         if (qualifiersApproved) {
-            holder.ShowtimeCardview.setSelected(holder.ShowtimeCardview.isSelected());
-            holder.ShowtimeCardview.setTag(position);
-            holder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
+            currentHolder.ShowtimeCardview.setSelected(currentHolder.ShowtimeCardview.isSelected());
+            currentHolder.ShowtimeCardview.setTag(position);
+            currentHolder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (snackbar != null && snackbar.isShown()) {
                         snackbar.dismiss();
                     }
-                    final int currentPosition = holder.getLayoutPosition();
+                    final int currentPosition = currentHolder.getLayoutPosition();
                     if (selectedPosition != currentPosition) {
 
                         // Show Ripple and then change color
@@ -110,21 +108,21 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
                                 // update the previous selected row
                                 notifyItemChanged(lastSelectedPosition);
                                 // select the clicked row
-                                holder.itemView.setSelected(true);
+                                currentHolder.itemView.setSelected(true);
                             }
                         }, 150);
 
                     }
-                    showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, time);
+                    showtimeClickListener.onShowtimeClick(currentHolder.getAdapterPosition(), screening, time);
                 }
             });
         } else {
-            holder.ShowtimeCardview.setBackgroundColor(context.getResources().getColor(R.color.gray_dark));
-            holder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
+            currentHolder.ShowtimeCardview.setBackgroundColor(context.getResources().getColor(R.color.gray_dark));
+            currentHolder.ShowtimeCardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     snackbar.make(
-                            holder.itemView, R.string.adapter_movie_showtimes_adapter,
+                            currentHolder.itemView, R.string.adapter_movie_showtimes_adapter,
                             Snackbar.LENGTH_LONG).show();
                 }
             });
@@ -138,7 +136,7 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_ITEM;
+        return position;
     }
 
 }

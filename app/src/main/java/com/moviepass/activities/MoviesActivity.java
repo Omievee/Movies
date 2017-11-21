@@ -1,24 +1,23 @@
 package com.moviepass.activities;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.Manifest;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.moviepass.R;
@@ -30,8 +29,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity  {
-
+public class MoviesActivity extends BaseActivity {
 
 
     @Override
@@ -47,11 +45,11 @@ public class MoviesActivity extends BaseActivity  {
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-        final Toolbar toolbar = findViewById(R.id.MAINPAGE_TOOLBAR);
+        final Toolbar toolbar = findViewById(R.id.MovieToolbar_MAINPAGE);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-//        final ActionBar actionBar = getSupportActionBar();
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, moviesFragment).commit();
@@ -59,8 +57,6 @@ public class MoviesActivity extends BaseActivity  {
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-
 
 
     }
@@ -208,5 +204,32 @@ public class MoviesActivity extends BaseActivity  {
         alert.show();
     }
 
+    //Search For Movies
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
 
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        final android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                Toast.makeText(MoviesActivity.this, "You typed" + s, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+
+        return true;
+    }
 }

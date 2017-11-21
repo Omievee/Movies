@@ -18,7 +18,7 @@
     <item
         android:id="@+id/action_theaters"
         android:enabled="true"
-        android:icon="@drawable/ic_theaters"
+        android:icon="@drawable/icon_location_pin"
         android:title="@string/menu_bottom_navigation_main_theaters" />
 
     <item

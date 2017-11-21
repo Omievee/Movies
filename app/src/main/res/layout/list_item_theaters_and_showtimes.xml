@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
+    android:layout_marginBottom="@dimen/double_margin_standard"
+    android:layout_marginTop="@dimen/margin_standard"
     android:animateLayoutChanges="true"
     android:paddingBottom="@dimen/margin_standard"
     app:cardCornerRadius="5dp">
@@ -13,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gun_metal_mask"
+        android:background="@color/test_blue"
         android:orientation="vertical">
 
         <TextView
@@ -22,7 +24,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_standard"
             android:text="[MOVIE THEATER NAME]"
-            android:textColor="@color/lipstick_red"
+            android:textColor="@color/white_ish"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -50,7 +52,7 @@
                 android:paddingBottom="@dimen/margin_standard"
                 android:paddingStart="@dimen/margin_standard"
                 android:text="[ADDRESS]"
-                android:textColor="@color/white"
+                android:textColor="@color/white_ish"
                 android:textSize="15sp" />
 
             <!--<TextView-->
@@ -70,7 +72,7 @@
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_weight=".2"
                 android:src="@drawable/icon_location_pin"
-                android:tint="@color/white" />
+                android:tint="@color/new_red" />
 
 
         </LinearLayout>

@@ -140,15 +140,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         supportStartPostponedEnterTransition();
         supportPostponeEnterTransition();
-
         final Toolbar mToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(mToolbar);
-
-
         bottomNavigationView = findViewById(R.id.SELECTED_MOVIE_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
         Bundle extras = getIntent().getExtras();
 //        extras.getBundle();
 
@@ -194,6 +190,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         mScreeningsList = new ArrayList<>();
 
+
         /* Theaters RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         SelectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
@@ -224,6 +221,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         /* Showtimes RecyclerView */
 
         ShowtimesList = new ArrayList<>();
+
+
     }
 
 
@@ -274,37 +273,34 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void onTheaterClick(int pos, Screening screening) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        boolean qualifiersApproved = screening.getQualifiersApproved();
-
-        ShowtimesRecyclerView = findViewById(R.id.SHOWTIME_RECYCLER);
-        ShowtimesAdapter = new MovieShowtimesAdapter(this, ShowtimesList, screening, this, width, qualifiersApproved);
-        ShowtimesRecyclerView.setAdapter(ShowtimesAdapter);
-        ShowtimesRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-
+//
         if (mAction.getVisibility() == View.VISIBLE) {
             fadeOut(mAction);
             mAction.setVisibility(View.GONE);
         }
 
-        if (ShowtimesRecyclerView.getVisibility() == View.GONE) {
-            ShowtimesRecyclerView.setVisibility(View.VISIBLE);
-            fadeIn(ShowtimesRecyclerView);
-        } else {
-            fadeOut(ShowtimesRecyclerView);
-        }
+//        if (ShowtimesRecyclerView.getVisibility() == View.GONE) {
+//            ShowtimesRecyclerView.setVisibility(View.VISIBLE);
+//            fadeIn(ShowtimesRecyclerView);
+//            ShowtimesAdapter.notifyDataSetChanged();
+//        } else {
+//            ShowtimesRecyclerView.setVisibility(View.GONE);
+//            fadeOut(ShowtimesRecyclerView);
+//            ShowtimesAdapter.notifyDataSetChanged();
+
+//            fadeIn(ShowtimesRecyclerView);
+
 
         ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
-        ShowtimesList.clear();
+        for (int i = 0; i < startTimes.size(); i++) {
+//            if(i )
 
+        }
+        ShowtimesList.clear();
         if (ShowtimesRecyclerView != null) {
             ShowtimesRecyclerView.getRecycledViewPool().clear();
             ShowtimesAdapter.notifyDataSetChanged();
         }
-
         ShowtimesList.addAll(startTimes);
 
     }
@@ -352,7 +348,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     public void reserve(Screening screening, String showtime) {
         mAction.setEnabled(false);
-
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 

@@ -18,9 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -96,6 +100,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @BindView(R.id.coming_soon)
     RecyclerView mComingSoonRecyclerView;
 
+    @BindView(R.id.MoviePass_HEADER)
+    ImageView MovieHeader;
+//    @BindView(R.id.MOVIES_SEARCH)
+//    SearchView MovieSearch;
+
     View progress;
 
     private OnFragmentInteractionListener listener;
@@ -161,6 +170,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         checkLocationPermission();
+
 
         return rootView;
     }
@@ -251,6 +261,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
+
 
                     mMoviesNewReleases.clear();
                     mMoviesTopBoxOffice.clear();
@@ -460,3 +471,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
 }
+
+
+
+
+

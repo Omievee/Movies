@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/dark"
     android:layout_height="match_parent"
+    android:background="@color/test_black"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -28,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:animateLayoutChanges="true"
+                android:foreground="@drawable/poster_gradient"
                 android:scaleType="centerInside"
                 app:layout_collapseMode="parallax"
                 fresco:overlayImage="@drawable/poster_gradient" />
@@ -103,13 +104,13 @@
         android:id="@+id/NESTED_SCROLL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark"
+        android:background="@color/test_black"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dark"
+            android:background="@color/test_black"
             android:orientation="vertical">
 
 
@@ -127,16 +128,16 @@
                     android:gravity="center"
                     android:padding="@dimen/margin_half"
                     android:text="@string/activity_movie_change_location"
-                    android:textColor="@color/lipstick_red"
+                    android:textColor="@color/new_red"
                     android:textSize="13sp" />
 
                 <ImageButton
                     android:id="@+id/Location_Pin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/dark"
+                    android:background="@color/test_black"
                     android:src="@drawable/icon_location_pin"
-                    android:tint="@color/lipstick_red" />
+                    android:tint="@color/new_red" />
 
 
             </LinearLayout>
@@ -171,7 +172,7 @@
         android:visibility="gone"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"
-        app:layout_anchorGravity="right|center" />
+        app:layout_anchorGravity="right|center |top" />
 
 
     <include
