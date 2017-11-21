@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/test_black"
     android:orientation="vertical">
 
 
@@ -17,11 +18,21 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/MovieToolbar_MAINPAGE"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:paddingTop="@dimen/double_margin_standard"
-        android:layout_height="wrap_content">
+        android:paddingTop="@dimen/double_margin_standard">
 
     </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/MovieSearch_Results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/MoviePass_HEADER"
+        android:background="@android:color/transparent"
+        android:visibility="gone">
+
+    </ListView>
 
     <ImageView
         android:id="@+id/MoviePass_HEADER"

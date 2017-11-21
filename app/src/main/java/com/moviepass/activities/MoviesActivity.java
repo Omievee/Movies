@@ -14,9 +14,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -24,13 +27,27 @@ import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.model.Movie;
+import com.moviepass.model.MoviesResponse;
+import com.moviepass.network.RestClient;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
  */
 
 public class MoviesActivity extends BaseActivity {
-
+    String TAG = "found it";
+    public android.support.v7.widget.SearchView searchView;
+    MoviesResponse MoviesResponse;
+    ListView SearchResults;
+    ArrayList<Movie> movieSearchResults;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +74,9 @@ public class MoviesActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        SearchResults = findViewById(R.id.MovieSearch_Results);
 
+        movieSearchResults = new ArrayList<>();
 
     }
 
@@ -211,12 +230,13 @@ public class MoviesActivity extends BaseActivity {
         inflater.inflate(R.menu.options_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        final android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
+        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                Log.d(TAG, "onQueryTextChange: " + searchView.getQuery());
 
                 return true;
             }
@@ -224,7 +244,34 @@ public class MoviesActivity extends BaseActivity {
             @Override
             public boolean onQueryTextChange(String s) {
 
-                Toast.makeText(MoviesActivity.this, "You typed" + s, Toast.LENGTH_SHORT).show();
+                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+                    @Override
+                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            MoviesResponse = response.body();
+                            Movie movie = new Movie();
+                            movieSearchResults.addAll((Collection<? extends Movie>) movie);
+
+                            if (searchView.getQuery() == movie.getTitle()) {
+                                SearchResults.setVisibility(View.VISIBLE);
+
+
+
+
+
+                                Log.d(TAG, "onResponse: " + movie.getTitle().toLowerCase());
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
+
+                    }
+                });
+
+                Log.d(TAG, "onQueryTextChange: " + searchView.getQuery());
                 return true;
             }
         });

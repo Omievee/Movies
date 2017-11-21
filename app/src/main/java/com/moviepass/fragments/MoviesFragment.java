@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,7 +74,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
-
+    String TAG = "MOVIES ARE: ";
 
     public static final int LOCATION_PERMISSIONS = 99;
     android.location.LocationManager LocationManager;
@@ -254,7 +255,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         startActivity(movieIntent, options.toBundle());
     }
 
-    private void loadMovies() {
+    public void loadMovies() {
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -262,6 +263,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
+                    Log.d(TAG, "onResponse: " + mMoviesResponse.toString());
 
                     mMoviesNewReleases.clear();
                     mMoviesTopBoxOffice.clear();
