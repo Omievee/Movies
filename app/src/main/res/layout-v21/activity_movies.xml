@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/MoviePass_HEADER"
-        android:background="@android:color/transparent"
+        android:background="@android:drawable/screen_background_dark_transparent"
         android:visibility="gone">
 
     </ListView>

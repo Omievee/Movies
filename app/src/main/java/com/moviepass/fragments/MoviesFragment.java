@@ -263,8 +263,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
-                    Log.d(TAG, "onResponse: " + mMoviesResponse.toString());
-
                     mMoviesNewReleases.clear();
                     mMoviesTopBoxOffice.clear();
                     mMoviesComingSoon.clear();

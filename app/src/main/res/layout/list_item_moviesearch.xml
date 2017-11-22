@@ -9,8 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/test_blue"
         android:orientation="horizontal"
+        android:background="@android:drawable/screen_background_light_transparent"
+
         android:padding="@dimen/double_margin_standard">
 
 
