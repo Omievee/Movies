@@ -1,183 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    android:orientation="vertical">
 
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/test_blue"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/test_blue"
-            android:elevation="5dp"
-            android:fitsSystemWindows="true"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_minimum">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/CINEMA_BACK"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/margin_half"
-                        android:layout_weight=".1"
-                        android:src="@drawable/iconback"
-                        android:tint="@color/white" />
-
-                    <TextView
-                        android:id="@+id/CINEMA_NAME"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1.5"
-                        android:animateLayoutChanges="true"
-                        android:lines="1"
-                        android:padding="@dimen/margin_half"
-                        android:text="[CINEMA NAME]"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-
-                    <ImageView
-                        android:id="@+id/CINEMA_FEATURE_STAR"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_half"
-                        android:layout_weight=".1"
-                        android:src="@drawable/ioniosstar"
-                        android:visibility="invisible" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/CINEMA_ADDRESS"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/double_margin_standard"
-                        android:layout_weight="1.5"
-                        android:gravity="center_horizontal"
-                        android:lines="1"
-                        android:text="[ CINEMA ADDRESS ]"
-                        android:textColor="@color/white" />
-
-                    <ImageView
-                        android:id="@+id/CINEMA_E-TICKETING"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="@dimen/margin_quarter"
-                        android:layout_weight=".1"
-                        android:padding="@dimen/margin_minimum"
-                        android:src="@drawable/round_badge_eticket"
-                        android:visibility="invisible" />
-
-                    <ImageView
-                        android:id="@+id/CINEMA_RES_SEATS"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="@dimen/margin_quarter"
-                        android:layout_weight=".1"
-                        android:padding="@dimen/margin_minimum"
-                        android:src="@drawable/round_badge_seat"
-                        android:visibility="invisible" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:id="@+id/CINEMA_ZIPCITY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:text="[ CINEMA ADDRESS ]"
-                        android:textColor="@color/white" />
-
-                    <ImageView
-                        android:id="@+id/CINEMA_PIN"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_quarter"
-                        android:src="@drawable/locationiconsmallred" />
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/CINEMA_TOOLBAR"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:elevation="5dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/NESTED_SCROLL"
+    <!--MAIN SKELETON FOR MAIN MOVIES PAGE, FRAME LAYOUT HOUSES LOGO ABOVE ALL ELSE-->
+    <FrameLayout
+        android:id="@+id/theater_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/test_black"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_above="@id/navigation"
+        android:background="@color/test_black" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/CINEMA_TOOLBAR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:paddingTop="@dimen/double_margin_standard">
+
+    </android.support.v7.widget.Toolbar>
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/CINEMA_SELECTED_THEATER_RECYCLER"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.RecyclerView>
-
-
-    </android.support.v4.widget.NestedScrollView>
+    <TextView
+        android:id="@+id/CINEMA_TITLE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="[CINEMA NAME["
+        android:textAlignment="center"
+        android:lines="1"
+        android:textColor="@color/new_red"
+        android:textSize="20sp"
+        android:paddingTop="@dimen/margin_minimum"
+        android:textStyle="bold"
+        app:layout_collapseMode="pin" />
 
 
     <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
+        android:id="@+id/CINEAM_NAV"
+        layout="@layout/element_bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom" />
 
-
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

@@ -23,24 +23,50 @@ public class TheaterFragment extends Fragment {
 
     public static final String THEATER = "theater";
     Theater mTheater;
-    TextView mTheaterName;
-    TextView mTheaterAddress;
+    TextView theaterSelectedName;
+
+
+    public static TheaterFragment newInstance() {
+        return new TheaterFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_theater, container, false);
+        View rootView = inflater.inflate(R.layout.fr_theater, container, false);
         ButterKnife.bind(this, rootView);
 
         Bundle extras = getArguments();
         mTheater = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(THEATER));
 
-        mTheaterName = rootView.findViewById(R.id.theater_name);
-        mTheaterAddress = rootView.findViewById(R.id.theater_address);
 
-        mTheaterName.setText(mTheater.getName());
-        mTheaterAddress.setText(mTheater.getAddress());
+//        theaterSelectedName.setText(mTheater.getTitle());
+
+//        mTheaterName = rootView.findViewById(R.id.theater_name);
+//        mTheaterAddress = rootView.findViewById(R.id.theater_address);
+//
+//        mTheaterName.setText(mTheater.getName());
+//        mTheaterAddress.setText(mTheater.getAddress());
 
         return rootView;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 
 }

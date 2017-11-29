@@ -68,10 +68,9 @@ public class MoviesActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, moviesFragment).commit();
+        ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
