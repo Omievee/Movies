@@ -1,8 +1,10 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -92,6 +94,10 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            holder.mComingSoonMoviePosterDV.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                        }
+
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.activity_splash_star);
                             holder.title.setText(movie.getTitle());
@@ -107,12 +113,14 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         holder.mComingSoonMoviePosterDV.setController(controller);
         android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
-            }
-        });
+
+        //DISABLED COMING SOON THEATER CLICK
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
+//            }
+//        });
     }
 
     @Override

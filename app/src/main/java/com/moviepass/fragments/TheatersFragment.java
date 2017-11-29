@@ -282,6 +282,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mMap = googleMap;
         mMap.setMinZoomPreference(10);
 
+        //SNAP the recyclerview to center in the view
         LinearSnapHelper snapHelper = new LinearSnapHelper() {
             @Override
             public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
@@ -293,7 +294,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 int targetPosition = -1;
 
                 if (layoutManager.canScrollHorizontally()) {
-                    if (velocityX < 0) {
+                    if (velocityX < 5) {
                         targetPosition = position - 1;
                     } else {
                         targetPosition = position + 1;

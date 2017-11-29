@@ -49,6 +49,8 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         final ActionBar actionBar = getSupportActionBar();
 
@@ -187,4 +189,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
             }
         }
     }
+
+
+
 }
