@@ -30,9 +30,9 @@ import butterknife.BindView;
  */
 
 public class TheatersActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
-
-    @BindView(R.id.red)
-    View redView;
+//
+//    @BindView(R.id.red)
+//    View redView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,8 +56,8 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Theaters");
 
-        redView = findViewById(R.id.red);
-        redView.setVisibility(View.INVISIBLE);
+//        redView = findViewById(R.id.red);
+//        redView.setVisibility(View.INVISIBLE);
 
         Fragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -78,7 +78,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
     protected void onResume() {
         super.onResume();
 
-        redView.setVisibility(View.INVISIBLE);
+//        redView.setVisibility(View.INVISIBLE);
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items

@@ -115,9 +115,9 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     @BindView(R.id.SELECTED_MOVIE_IMAGE)
     SimpleDraweeView SELECTED_MOVIEPOSTER;
-
-    @BindView(R.id.theater_select_time)
-    TextView mTheaterSelectTime;
+//
+//    @BindView(R.id.theater_select_time)
+//    TextView mTheaterSelectTime;
 
     @BindView(R.id.SELECTED_RUNTIME)
     TextView SELECTED_RUNTIME;
