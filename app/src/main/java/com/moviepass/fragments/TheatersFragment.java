@@ -22,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -281,6 +282,41 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mMap = googleMap;
         mMap.setMinZoomPreference(10);
 
+        LinearSnapHelper snapHelper = new LinearSnapHelper() {
+            @Override
+            public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+                View centerView = findSnapView(layoutManager);
+                if (centerView != null)
+                    return theatersMapViewRecycler.NO_POSITION;
+
+                int position = layoutManager.getPosition(centerView);
+                int targetPosition = -1;
+
+                if (layoutManager.canScrollHorizontally()) {
+                    if (velocityX < 0) {
+                        targetPosition = position - 1;
+                    } else {
+                        targetPosition = position + 1;
+                    }
+                }
+
+                if (layoutManager.canScrollVertically()) {
+                    if (velocityY < 0) {
+                        targetPosition = position - 1;
+                    } else {
+                        targetPosition = position + 1;
+                    }
+                }
+
+                final int firstItem = 0;
+                final int lastItem = layoutManager.getItemCount() - 1;
+                targetPosition = Math.min(lastItem, Math.max(targetPosition, firstItem));
+                return targetPosition;
+            }
+        };
+
+        snapHelper.attachToRecyclerView(theatersMapViewRecycler);
+
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
@@ -293,7 +329,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             mClusterManager.setRenderer(new TheaterPinRenderer());
             mMap.setOnMarkerClickListener(mClusterManager);
             mClusterManager.setOnClusterClickListener(this);
-
 
 
             if (mRequestingLocationUpdates && checkPermissions()) {
@@ -320,21 +355,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 final LatLng markerPosition = marker.getPosition();
                 int theaterSelected = -1;
 
-                for (int i = 0; i < mTheaters.size()  ; i++) {
-                    if(markerPosition.latitude == mTheaters.get(i).getLat() && markerPosition.longitude == mTheaters.get(i).getLon()){
+                for (int i = 0; i < mTheaters.size(); i++) {
+                    if (markerPosition.latitude == mTheaters.get(i).getLat() && markerPosition.longitude == mTheaters.get(i).getLon()) {
                         theaterSelected = i;
                     }
 
                 }
 
+                //Onclick for individual Markers - adjusts recycler to that specific theater.
                 CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(12).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
                 theatersMapViewAdapter.notifyDataSetChanged();
                 theatersMapViewRecycler.smoothScrollToPosition(theaterSelected);
 
+
                 marker.showInfoWindow();
 
-                return false;
+                return true;
             }
         });
     }
@@ -842,7 +879,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public boolean onClusterClick(final Cluster<TheaterPin> cluster) {
-        Log.d("onClusterClick" ,"POSITION?" + cluster.getPosition());
+        Log.d("onClusterClick", "POSITION?" + cluster.getPosition());
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 cluster.getPosition(), (float) Math.floor(mMap

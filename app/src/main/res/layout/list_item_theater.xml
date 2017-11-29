@@ -3,13 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_theater"
-    android:layout_width="250dp"
+    android:layout_width="300dp"
     android:layout_height="150dp"
-    android:layout_margin="@dimen/margin_half"
-
+    android:layout_margin="@dimen/margin_standard"
     android:elevation="@dimen/basic_elevation"
     android:padding="@dimen/margin_half"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="5dp"
     tools:ignore="MissingPrefix">
 
     <LinearLayout
