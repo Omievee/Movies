@@ -94,9 +94,12 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
+
+                        //Makes foreground of image dark
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             holder.mComingSoonMoviePosterDV.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                         }
+
 
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.activity_splash_star);

@@ -64,7 +64,7 @@
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/SELECTED_RUNTIME"

@@ -53,10 +53,8 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
 
         final ActionBar actionBar = getSupportActionBar();
-
         // Enable the Up button
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Theaters");
 
 //        redView = findViewById(R.id.red);
 //        redView.setVisibility(View.INVISIBLE);
@@ -189,7 +187,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
             }
         }
     }
-
 
 
 }
