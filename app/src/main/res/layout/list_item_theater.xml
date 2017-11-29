@@ -6,6 +6,7 @@
     android:layout_width="250dp"
     android:layout_height="150dp"
     android:layout_margin="@dimen/margin_half"
+
     android:elevation="@dimen/basic_elevation"
     android:padding="@dimen/margin_half"
     app:cardCornerRadius="4dp"
@@ -15,7 +16,7 @@
         android:id="@+id/rel_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/test_blue"
+        android:background="@drawable/showtime_rounded_rectangle"
         android:orientation="vertical">
 
         <TextView
@@ -27,7 +28,7 @@
             android:maxLines="2"
             android:text="@string/fragment_theaters_name"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
+            android:textColor="@color/selector_red_to_white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -39,7 +40,7 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
+            android:textColor="@color/selector_gun_metal_to_white_ish"
             android:textSize="15sp" />
 
 
@@ -51,7 +52,7 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
+            android:textColor="@color/selector_gun_metal_to_white_ish"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -86,7 +87,7 @@
                 android:padding="@dimen/more_spacing"
                 android:text="@string/fragment_theaters_distance"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/white"
+                android:textColor="@color/black_text"
                 android:textSize="14sp" />
 
             <ImageView
