@@ -6,7 +6,6 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +21,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
+import com.moviepass.R;
 import com.moviepass.model.Movie;
 
 import java.util.ArrayList;

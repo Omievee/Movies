@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
 
     <android.support.design.widget.AppBarLayout
@@ -15,10 +15,11 @@
 
         <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/test_blue"
             android:elevation="5dp"
             android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -28,46 +29,35 @@
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical"
-                android:padding="@dimen/margin_minimum">
+                android:padding="@dimen/margin_minimum"
+                app:layout_collapseMode="parallax">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:animateLayoutChanges="true"
-                    android:gravity="center">
+                    app:layout_collapseMode="parallax">
 
                     <ImageView
                         android:id="@+id/CINEMA_BACK"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/margin_half"
+                        android:paddingTop="@dimen/margin_half"
                         android:src="@drawable/iconback"
-                        android:tint="@color/white" />
+                        android:tint="@color/white"
+                        app:layout_collapseMode="parallax" />
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/CINEMA_NAME"-->
-                    <!--android:layout_width="0dp"-->
+
+                    <!--<ImageView-->
+                    <!--android:id="@+id/CINEMA_FEATURE_STAR"-->
+                    <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center_horizontal"-->
-                    <!--android:layout_weight="1.5"-->
-                    <!--android:animateLayoutChanges="true"-->
-                    <!--android:lines="1"-->
-                    <!--android:padding="@dimen/margin_half"-->
-                    <!--android:text="[CINEMA NAME]"-->
-                    <!--android:textAlignment="center"-->
-                    <!--android:textColor="@color/white"-->
-                    <!--android:textSize="25sp"-->
-                    <!--android:textStyle="bold" />-->
-
-
-                    <ImageView
-                        android:id="@+id/CINEMA_FEATURE_STAR"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_half"
-                        android:layout_weight=".1"
-                        android:src="@drawable/ioniosstar"
-                        android:visibility="invisible" />
+                    <!--android:layout_margin="@dimen/margin_half"-->
+                    <!--android:src="@drawable/ioniosstar"-->
+                    <!--android:textAlignment="viewEnd"-->
+                    <!--android:visibility="invisible"-->
+                    <!--app:layout_collapseMode="parallax" />-->
 
 
                 </LinearLayout>
@@ -77,7 +67,8 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="parallax">
 
                     <TextView
                         android:id="@+id/CINEMA_ADDRESS"
@@ -88,7 +79,8 @@
                         android:gravity="center_horizontal"
                         android:lines="1"
                         android:text="[ CINEMA ADDRESS ]"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        app:layout_collapseMode="parallax" />
 
                     <ImageView
                         android:id="@+id/CINEMA_E-TICKETING"
@@ -98,7 +90,8 @@
                         android:layout_weight=".1"
                         android:padding="@dimen/margin_minimum"
                         android:src="@drawable/round_badge_eticket"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"
+                        app:layout_collapseMode="parallax" />
 
                     <ImageView
                         android:id="@+id/CINEMA_RES_SEATS"
@@ -108,7 +101,8 @@
                         android:layout_weight=".1"
                         android:padding="@dimen/margin_minimum"
                         android:src="@drawable/round_badge_seat"
-                        android:visibility="invisible" />
+                        android:visibility="invisible"
+                        app:layout_collapseMode="parallax" />
 
                 </LinearLayout>
 
@@ -117,7 +111,8 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="parallax">
 
 
                     <TextView
@@ -126,14 +121,17 @@
                         android:layout_height="wrap_content"
                         android:lines="1"
                         android:text="[ CINEMA ADDRESS ]"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        app:layout_collapseMode="parallax" />
 
                     <ImageView
                         android:id="@+id/CINEMA_PIN"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/margin_quarter"
-                        android:src="@drawable/locationiconsmallred" />
+                        android:paddingBottom="@dimen/margin_half"
+                        android:src="@drawable/locationiconsmallred"
+                        app:layout_collapseMode="parallax" />
 
                 </LinearLayout>
 
@@ -143,9 +141,10 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/CINEMA_TOOLBAR"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="56dp"
                 android:elevation="5dp"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -156,7 +155,7 @@
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/NESTED_SCROLL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="560dp"
         android:background="@color/test_black"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -164,7 +163,10 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/CINEMA_SELECTED_THEATER_RECYCLER"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+            app:layout_scrollFlags="scroll|enterAlways">
 
         </android.support.v7.widget.RecyclerView>
 

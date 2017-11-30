@@ -316,4 +316,9 @@
     <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
     <string name="xml_settings_preferences_settings_help_version">Version</string>
 
+
+    <!-- ALL PURPOSE STRINGS -->
+    <string name="blank_single_space"> </string>
+    <string name="blank_double_space">  </string>
+
 </resources>

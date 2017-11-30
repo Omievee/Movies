@@ -256,37 +256,37 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         overridePendingTransition(0, 0);
     }
 
-    private void loadMovies() {
-        int theaterId = theater.getTribuneTheaterId();
-
-        RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
-            @Override
-            public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
-                screeningsResponse = response.body();
-
-                if (screeningsResponse != null) {
-
-                    moviesList.clear();
-
-                    if (theaterMoviesRecyclerView != null) {
-                        theaterMoviesRecyclerView.getRecycledViewPool().clear();
-                        theaterMoviesAdapter.notifyDataSetChanged();
-                    }
-
-                    moviesList.addAll(screeningsResponse.getScreenings());
-
-                } else {
-                    /* TODO : FIX IF RESPONSE IS NULL */
-                    Log.d("else", "else" + response.message());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                Log.d("t", t.getMessage());
-            }
-        });
-    }
+//    private void loadMovies() {
+//        int theaterId = theater.getTribuneTheaterId();
+//
+//        RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
+//            @Override
+//            public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
+//                screeningsResponse = response.body();
+//
+//                if (screeningsResponse != null) {
+//
+//                    moviesList.clear();
+//
+//                    if (theaterMoviesRecyclerView != null) {
+//                        theaterMoviesRecyclerView.getRecycledViewPool().clear();
+//                        theaterMoviesAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    moviesList.addAll(screeningsResponse.getScreenings());
+//
+//                } else {
+//                    /* TODO : FIX IF RESPONSE IS NULL */
+//                    Log.d("else", "else" + response.message());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+//                Log.d("t", t.getMessage());
+//            }
+//        });
+//    }
 
     @Override
     public void onBackPressed() {
@@ -433,136 +433,136 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 //        });
 //    }
 
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
+//    public void fadeIn(View view) {
+//        Animation fadeIn = new AlphaAnimation(0, 1);
+//        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+//        fadeIn.setDuration(1000);
+//
+//        AnimationSet animation = new AnimationSet(false); //change to false
+//        animation.addAnimation(fadeIn);
+//        view.setAnimation(animation);
+//    }
+//
+//    public void fadeOut(View view) {
+//        Animation fadeOut = new AlphaAnimation(1, 0);
+//        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+//        fadeOut.setDuration(1000);
+//
+//        AnimationSet animation = new AnimationSet(false); //change to false
+//        animation.addAnimation(fadeOut);
+//        view.setAnimation(animation);
+//    }
 
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-    }
-
-    public void reserve(Screening screening, String showtime) {
-        action.setEnabled(false);
-
-        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
-        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
-
-        /* Standard Check In */
-        String providerName = screening.getProvider().providerName;
-
-        //PerformanceInfo
-        int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
-        String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-        String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
-        int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
-        int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
-        String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-        String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-        String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-        String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-        int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-        String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-        Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
-
-        if (screening.getProvider().ticketType.matches("STANDARD")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
-            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
-            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest, showtime);
-        } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
-            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
-            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest, showtime);
-        } else {
-            Log.d("ticketType", screening.getProvider().ticketType);
-            Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
-            intent.putExtra(SCREENING, Parcels.wrap(screening));
-            intent.putExtra(SHOWTIME, showtime);
-            intent.putExtra(THEATER, Parcels.wrap(theater));
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
-
-                if (reservationResponse != null & response.isSuccessful()) {
-                    reservation = reservationResponse.getReservation();
-                    progress.setVisibility(View.GONE);
-
-                    if (reservationResponse.getE_ticket_confirmation() != null) {
-                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
-                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
-                        showConfirmation(token);
-                    } else {
-                        Log.d("mScreening,", screening.toString());
-
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
-                        showConfirmation(token);
-                    }
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                        //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        progress.setVisibility(View.GONE);
-                        action.setEnabled(true);
-                        Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                    } catch (Exception e) {
-                        Toast.makeText(TheaterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                    Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
-                    progress.setVisibility(View.GONE);
-                    action.setEnabled(true);
-                }
-
-                action.setEnabled(true);
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                progress.setVisibility(View.GONE);
-                action.setEnabled(true);
-
-                String hostname = "Unable to resolve host: No address associated with hostname";
-
-/*                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
-                    Toast.makeText(TheaterActivity.this, R.string.log_out_log_in, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
-                    Toast.makeText(TheaterActivity.this, R.string.data_connection, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
-                    Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
-                } else if(restError!=null){
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
-                    Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                clearSuccessCount(); */
-            }
-        });
-    }
+//    public void reserve(Screening screening, String showtime) {
+//        action.setEnabled(false);
+//
+//        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
+//        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
+//
+//        /* Standard Check In */
+//        String providerName = screening.getProvider().providerName;
+//
+//        //PerformanceInfo
+//        int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
+//        String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
+//        String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
+//        int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
+//        int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
+//        String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
+//        String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
+//        String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
+//        String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
+//        int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
+//        String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
+//        Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+//
+//        if (screening.getProvider().ticketType.matches("STANDARD")) {
+//            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
+//                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
+//            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
+//            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+//            reservationRequest(screening, checkInRequest, showtime);
+//        } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
+//            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
+//                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
+//            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
+//            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+//            reservationRequest(screening, checkInRequest, showtime);
+//        } else {
+//            Log.d("ticketType", screening.getProvider().ticketType);
+//            Intent intent = new Intent(TheaterActivity.this, SelectSeatActivity.class);
+//            intent.putExtra(SCREENING, Parcels.wrap(screening));
+//            intent.putExtra(SHOWTIME, showtime);
+//            intent.putExtra(THEATER, Parcels.wrap(theater));
+//            startActivity(intent);
+//            finish();
+//        }
+//    }
+//
+//    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
+//        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+//            @Override
+//            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
+//                ReservationResponse reservationResponse = response.body();
+//
+//                if (reservationResponse != null & response.isSuccessful()) {
+//                    reservation = reservationResponse.getReservation();
+//                    progress.setVisibility(View.GONE);
+//
+//                    if (reservationResponse.getE_ticket_confirmation() != null) {
+//                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+//                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
+//
+//                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+//                        showConfirmation(token);
+//                    } else {
+//                        Log.d("mScreening,", screening.toString());
+//
+//                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+//                        showConfirmation(token);
+//                    }
+//                } else {
+//                    try {
+//                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+//
+//                        //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
+//                        progress.setVisibility(View.GONE);
+//                        action.setEnabled(true);
+//                        Toast.makeText(TheaterActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+//                    } catch (Exception e) {
+//                        Toast.makeText(TheaterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//                    Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
+//                    progress.setVisibility(View.GONE);
+//                    action.setEnabled(true);
+//                }
+//
+//                action.setEnabled(true);
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+//                progress.setVisibility(View.GONE);
+//                action.setEnabled(true);
+//
+//                String hostname = "Unable to resolve host: No address associated with hostname";
+//
+///*                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
+//                    Toast.makeText(TheaterActivity.this, R.string.log_out_log_in, Toast.LENGTH_LONG).show();
+//                }
+//                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
+//                    Toast.makeText(TheaterActivity.this, R.string.data_connection, Toast.LENGTH_LONG).show();
+//                }
+//                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
+//                    Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
+//                } else if(restError!=null){
+//                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+//                    Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//                }
+//                clearSuccessCount(); */
+//            }
+//        });
+//    }
 
     private void showConfirmation(ScreeningToken token) {
         progress.setVisibility(View.GONE);
@@ -612,7 +612,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
                             if (cardActivationResponse != null && response.isSuccessful()) {
                                 String cardActivationResponseMessage = cardActivationResponse.getMessage();
                                 Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-                                reserve(screening, showtime);
+//                                reserve(screening, showtime);
                             } else {
                                 Toast.makeText(TheaterActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
                             }

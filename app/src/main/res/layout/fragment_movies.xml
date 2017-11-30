@@ -100,8 +100,7 @@
                 <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_releases"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:divider="@null"
                         android:dividerHeight="0dp"
                         android:listSelector="@android:color/transparent"
@@ -122,8 +121,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/top_box_office"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:divider="@null"
                         android:dividerHeight="0dp"
                         android:listSelector="@android:color/transparent"
@@ -144,8 +142,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/coming_soon"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
                         android:divider="@null"
                         android:dividerHeight="0dp"
                         android:listSelector="@android:color/transparent"
