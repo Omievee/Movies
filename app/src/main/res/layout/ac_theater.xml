@@ -36,7 +36,7 @@
         android:textAlignment="center"
         android:lines="1"
         android:textColor="@color/new_red"
-        android:textSize="20sp"
+        android:textSize="23sp"
         android:textStyle="bold"
         app:layout_collapseMode="pin" />
 
