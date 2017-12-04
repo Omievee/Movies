@@ -53,25 +53,21 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.relative_layout)
         CardView ShowtimeCardview;
-        @BindView(R.id.SHOWTIME_CARD)
-        TextView ScreeningShowtimeListItem;
         SparseBooleanArray selectedItems = null;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-
-            ShowtimeCardview = v.findViewById(R.id.relative_layout);
-            ScreeningShowtimeListItem = v.findViewById(R.id.SHOWTIME_CARD);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_showtime, parent, false);
-        int itemWidth = screenWidth / 4;
-        view.setMinimumWidth(itemWidth);
-        return new ViewHolder(view);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_showtime, parent, false);
+//        int itemWidth = screenWidth / 4;
+//        view.setMinimumWidth(itemWidth);
+//        return new ViewHolder(view);
+        return null;
     }
 
     @Override
@@ -83,7 +79,7 @@ public class MovieShowtimesAdapter extends RecyclerView.Adapter<MovieShowtimesAd
         }
 
         final String time = showtimesArrayList.get(position);
-        currentHolder.ScreeningShowtimeListItem.setText(time);
+//        currentHolder.ScreeningShowtimeListItem.setText(time);
 
         if (qualifiersApproved) {
             currentHolder.ShowtimeCardview.setSelected(currentHolder.ShowtimeCardview.isSelected());

@@ -123,9 +123,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     TextView SELECTED_RUNTIME;
 
 
-    @BindView(R.id.SHOWTIME_CARD)
-    TextView ScreeningShowtime;
-
     @BindView(R.id.FAB_LOADCARD)
     FloatingActionButton mAction;
 
@@ -138,7 +135,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
         supportStartPostponedEnterTransition();
         supportPostponeEnterTransition();
-        final Toolbar mToolbar = findViewById(R.id.my_toolbar);
+        final Toolbar mToolbar = findViewById(R.id.SELECTED_TOOLBAR);
+        mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
         bottomNavigationView = findViewById(R.id.SELECTED_MOVIE_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -152,7 +150,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         SELECTED_MOVIE_TITLE = findViewById(R.id.SELECTED_MOVIE_TITLE);
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
-        ScreeningShowtime = findViewById(R.id.SHOWTIME_CARD);
         mAction = findViewById(R.id.FAB_LOADCARD);
 
         mShowtimesList = new ArrayList<>();

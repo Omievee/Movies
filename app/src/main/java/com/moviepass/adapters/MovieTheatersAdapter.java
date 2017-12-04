@@ -118,6 +118,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     @Override
                     public void onClick(View v) {
 
+
                     }
                 });
             }
@@ -132,6 +133,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 } else {
                     holder.showTimesGrid.setVisibility(View.GONE);
                 }
+
+
             }
         });
 

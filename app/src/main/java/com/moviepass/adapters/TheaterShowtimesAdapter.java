@@ -58,15 +58,16 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
             super(v);
             ButterKnife.bind(this, v);
 
-                relativeLayout = v.findViewById(R.id.relative_layout);
-                showtime = v.findViewById(R.id.showtime);
+            relativeLayout = v.findViewById(R.id.relative_layout);
+            showtime = v.findViewById(R.id.showtime);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_showtime, parent, false);
-            return new ViewHolder(view);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_showtime, parent, false);
+//        return new ViewHolder(view);
+        return null;
     }
 
     @Override
@@ -84,7 +85,6 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
         } else {
             holder.itemView.setSelected(false);
         }
-
         final String time = showtimesArrayList.get(position);
 
         holder.showtime.setText(time);
@@ -131,7 +131,9 @@ public class TheaterShowtimesAdapter extends RecyclerView.Adapter<TheaterShowtim
     }
 
     @Override
-    public int getItemCount() { return showtimesArrayList.size(); }
+    public int getItemCount() {
+        return showtimesArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {
