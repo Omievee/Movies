@@ -41,26 +41,9 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-        /* TODO: Set up active reservation later
-        viewPager = findViewById(R.id.pager);
-        setupViewPager(viewPager);
-
-        tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-        setupViewPager(viewPager); */
-
-//        final Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        //TODO: Set up active reservation later
 
         final ActionBar actionBar = getSupportActionBar();
-        // Enable the Up button
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
-//        redView = findViewById(R.id.red);
-//        redView.setVisibility(View.INVISIBLE);
-
         Fragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, theatersFragment).commit();

@@ -172,8 +172,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
 
-        //mMapView.onResume();// needed to get the map to display immediately
-
         mRequestingLocationUpdates = true;
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -519,8 +517,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private void startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
-
         //noinspection MissingPermission
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task task) {
@@ -660,7 +667,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mProgress.setVisibility(View.VISIBLE);
         theatersMapViewRecycler.setVisibility(View.VISIBLE);
 
-        LatLng latlng = new LatLng(latitude, longitude);
+        LatLng latlng = new LatLng(latitude, longitude);g
         CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
         Log.d("loadTheaters", latlng.toString());
         mMap.moveCamera(current);
