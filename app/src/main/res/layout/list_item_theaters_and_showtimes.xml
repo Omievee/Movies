@@ -71,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_weight=".2"
-                android:src="@drawable/icon_location_pin"
+                android:src="@drawable/locationiconsmallred"
                 android:tint="@color/new_red" />
 
 

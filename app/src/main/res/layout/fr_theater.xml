@@ -176,6 +176,7 @@
                 android:background="@color/test_black">
 
             </android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

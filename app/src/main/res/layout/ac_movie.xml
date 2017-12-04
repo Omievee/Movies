@@ -134,9 +134,10 @@
                 <ImageButton
                     android:id="@+id/Location_Pin"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@color/test_black"
-                    android:src="@drawable/icon_location_pin"
+                    android:padding="@dimen/margin_half"
+                    android:src="@drawable/locationiconsmallred"
                     android:tint="@color/new_red" />
 
 
