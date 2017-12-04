@@ -1,20 +1,14 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moviepass.R;
@@ -56,7 +50,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.THEATERS_LISTITEM)
-        CardView TheaterListItem;
+        CardView theaterCardViewListItem;
         @BindView(R.id.THEATER_NAME_LISTITEM)
         TextView TheaterName;
         @BindView(R.id.THEATER_ADDRESS2_LISTITEM)
@@ -75,7 +69,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             super(v);
             ButterKnife.bind(this, v);
 
-            TheaterListItem = v.findViewById(R.id.THEATERS_LISTITEM);
+            theaterCardViewListItem = v.findViewById(R.id.THEATERS_LISTITEM);
             TheaterName = v.findViewById(R.id.THEATER_NAME_LISTITEM);
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
@@ -119,7 +113,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setTextSize(20);
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                showTime.setPadding(30, 30, 30, 30);
+                showTime.setPadding(50, 50, 50, 50);
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -130,7 +124,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
 
         }
-        holder.TheaterListItem.setOnClickListener(new View.OnClickListener() {
+        holder.theaterCardViewListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (holder.showTimesGrid.getVisibility() == View.GONE) {
