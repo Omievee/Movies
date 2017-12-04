@@ -7,6 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +21,7 @@ import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -128,10 +133,24 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.theaterCardViewListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final android.os.Handler handler = new android.os.Handler();
+
                 if (holder.showTimesGrid.getVisibility() == View.GONE) {
-                    holder.showTimesGrid.setVisibility(View.VISIBLE);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            holder.showTimesGrid.setVisibility(View.VISIBLE);
+                            fadeIn(holder.showTimesGrid);
+                        }
+                    }, 250);
                 } else {
-                    holder.showTimesGrid.setVisibility(View.GONE);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            holder.showTimesGrid.setVisibility(View.GONE);
+                            fadeOut(holder.showTimesGrid);
+                        }
+                    }, 250);
                 }
 
 
@@ -154,5 +173,27 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     @Override
     public void onViewRecycled(ViewHolder holder) {
         super.onViewRecycled(holder);
+    }
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
     }
 }

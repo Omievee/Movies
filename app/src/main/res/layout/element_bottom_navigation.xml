@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:elevation="4dp"
-    app:itemBackground="@android:color/transparent"
+    app:itemBackground="@android:color/background_dark"
     app:itemIconTint="@color/drawer_item"
     app:itemTextColor="@color/drawer_item"
     app:menu="@menu/navigation" />

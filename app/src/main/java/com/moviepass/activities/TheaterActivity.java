@@ -136,74 +136,13 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
         theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
-//        theaterAddress = findViewById(R.id.theater_address);
-//        theaterCityThings = findViewById(R.id.theater_city_things);
-//        movieTitle = findViewById(R.id.movie_title);
-//        movieSelectTime = findViewById(R.id.movie_select_time);
-//        belowShowtimes = findViewById(R.id.below_showtimes);
-//        belowShowtimes.setFocusable(true);
-//        belowShowtimes.setFocusableInTouchMode(true);
-//        screenBottom = findViewById(R.id.bottom_of_screen);
-//        screenBottom.setFocusable(true);
-//        screenBottom.setFocusableInTouchMode(true);
-//        action = findViewById(R.id.button_action);
-//        action.setFocusable(true);
-//        action.setFocusableInTouchMode(true);
-//        progress = findViewById(R.id.progress);
 
         theaterSelectedName.setText(theater.getName());
-//        theaterAddress.setText(theater.getAddress());
-//        String cityThings = (theater.getCity() + " " + theater.getState() + ", " + theater.getZip());
-//        theaterCityThings.setText(cityThings);
-
-//        toolbar.setTitle(theater.getName());
-//        actionBar.setTitle(theater.getName());
-
         moviesList = new ArrayList<>();
         showtimesList = new ArrayList<>();
 
         /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-
-//        /* Movies RecyclerView */
-//        LinearLayoutManager moviesLayoutManager =
-//                new LinearLayoutManager(this,
-//                        LinearLayoutManager.VERTICAL,
-//                        false);
-//
-//        theaterMoviesRecyclerView = findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
-//        theaterMoviesRecyclerView.setLayoutManager(moviesLayoutManager);
-//
-//        theaterMoviesAdapter = new TheaterMoviesAdapter(moviesList, this);
-//
-//        theaterMoviesRecyclerView.setAdapter(theaterMoviesAdapter);
-//        theaterMoviesRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-//                new ViewTreeObserver.OnPreDrawListener() {
-//                    @Override
-//                    public boolean onPreDraw() {
-//                        theaterMoviesRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-//
-//                        for (int i = 0; i < theaterMoviesRecyclerView.getChildCount(); i++) {
-//                            View v = theaterMoviesRecyclerView.getChildAt(i);
-//                            v.setAlpha(0.0f);
-////                        v.animate().alpha(1.0f)
-////                                .setDuration(1000)
-////                                .setStartDelay(i * 50)
-////                                .start();
-//                        }
-//
-//                        return true;
-//                    }
-//                });
-
-      //  loadMovies();
-
-//        /* Showtimes RecyclerView */
-//        showtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
-//        showtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-//        redView = findViewById(R.id.red);
-//        redView.setVisibility(View.INVISIBLE);
-//        toolbar.setVisibility(View.VISIBLE);
 
         //TODO: Bring back animations once polished.. Simpler Animations?.. 
 //        if (Build.VERSION.SDK_INT >= 21) {
@@ -256,37 +195,7 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         overridePendingTransition(0, 0);
     }
 
-//    private void loadMovies() {
-//        int theaterId = theater.getTribuneTheaterId();
-//
-//        RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
-//            @Override
-//            public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
-//                screeningsResponse = response.body();
-//
-//                if (screeningsResponse != null) {
-//
-//                    moviesList.clear();
-//
-//                    if (theaterMoviesRecyclerView != null) {
-//                        theaterMoviesRecyclerView.getRecycledViewPool().clear();
-//                        theaterMoviesAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    moviesList.addAll(screeningsResponse.getScreenings());
-//
-//                } else {
-//                    /* TODO : FIX IF RESPONSE IS NULL */
-//                    Log.d("else", "else" + response.message());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-//                Log.d("t", t.getMessage());
-//            }
-//        });
-//    }
+
 
     @Override
     public void onBackPressed() {
@@ -294,39 +203,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 
         Log.d("onBackPressed", "onBackPressed");
 
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            redView = findViewById(R.id.red);
-//
-//            final Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    // previously visible view
-//                    // get the center for the clipping circle
-//                    int cx = redView.getWidth() / 2;
-//                    int cy = redView.getHeight() / 2;
-//
-//                    Log.d("cx", String.valueOf(cx));
-//
-//                    // get the initial radius for the clipping circle
-//                    float initialRadius = (float) Math.hypot(cx, cy);
-//
-//                    // create the animation (the final radius is zero)
-//                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
-//
-//                    // make the view invisible when the animation is done
-//                    anim.addListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            super.onAnimationEnd(animation);
-//                            redView.setVisibility(View.INVISIBLE);
-//                        }
-//                    });
-//
-//                    anim.start();
-//                }
-//            }, 100);
-//        }
     }
 
 //    public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
