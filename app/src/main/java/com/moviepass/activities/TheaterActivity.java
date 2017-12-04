@@ -87,20 +87,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     protected BottomNavigationView bottomNavigationView;
 
     Theater theater;
-    ScreeningsResponse screeningsResponse;
-    Reservation reservation;
     TextView theaterSelectedName;
-    TextView theaterAddress;
-    TextView theaterCityThings;
-    TextView movieTitle;
-    TextView movieSelectTime;
-    View belowShowtimes;
-    View screenBottom;
-    Button action;
     View progress;
-    View redView;
-    Location currentLocation;
-
 
     @BindView(R.id.CINEMA_SELECTED_THEATER_RECYCLER)
     RecyclerView theaterMoviesRecyclerView;
@@ -194,7 +182,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         super.onPause();
         overridePendingTransition(0, 0);
     }
-
 
 
     @Override

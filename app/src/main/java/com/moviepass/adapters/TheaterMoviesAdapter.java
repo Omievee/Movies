@@ -158,7 +158,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
 
         }
-        final TextView finalShowtime = showtime;
         holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
