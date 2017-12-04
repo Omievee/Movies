@@ -82,17 +82,19 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/SHOWTIME_RECYCLER"
-                android:layout_width="wrap_content"
+
+            <GridLayout
+                android:id="@+id/THEATER_SHOWTIMEGRID"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                tools:listitem="@layout/list_item_showtime">
+                android:layout_margin="5dp"
+                android:columnOrderPreserved="false"
+                android:visibility="gone">
 
+            </GridLayout>
 
-            </android.support.v7.widget.RecyclerView>
         </HorizontalScrollView>
+
     </LinearLayout>
 
 

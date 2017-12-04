@@ -1,10 +1,12 @@
 package com.moviepass.fragments;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +48,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -74,6 +78,7 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
     ArrayList<Screening> moviesAtSelectedTheater;
     ArrayList<Screening> showtimesAtSelectedTheater;
+    GridLayout showtimeGrid;
 
 
     public static TheaterFragment newInstance() {
@@ -92,7 +97,6 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         showtimesAtSelectedTheater = new ArrayList<>();
 
 
-
         //ImageViews
         backButton = rootView.findViewById(R.id.CINEMA_BACK);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +106,7 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
             }
         });
+
         eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING); //Inivisble by default
         reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS); //invisible by default
 
@@ -123,6 +128,8 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setNestedScrollingEnabled(false);
+
+
         loadMovies();
 
         return rootView;
@@ -149,7 +156,33 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
     @Override
     public void onScreeningPosterClick(int pos, @NotNull Screening screening, @NotNull List<String> startTimes, @NotNull ImageView shareImageView) {
-
+//        TextView showtime;
+//
+////        showtimesAtSelectedTheater.clear();
+////        showtimesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
+//        showtimeGrid = getView().findViewById(R.id.SHOWTIMEGRID);
+//
+//
+//        showtimeGrid.setRowCount(2);
+//        showtimeGrid.setColumnCount(6);
+//        showtimeGrid.removeAllViews();
+//
+//
+//        if (screening.getStartTimes() != null) {
+//            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+//                showtime = new TextView(getContext());
+//                showtime.setText(screening.getStartTimes().get(i));
+//                fadeIn(showtime);
+//                showtimeGrid.addView(showtime);
+//                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
+//                showtime.setTextSize(20);
+//                showtime.setTextColor(getResources().getColor(R.color.white));
+//                showtime.setBackgroundColor(getResources().getColor(R.color.test_blue));
+//                showtime.setPadding(10, 5, 10, 5);
+//            }
+//
+//        }
+//        Toast.makeText(getContext(), "You clicked" + screening.getTitle(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -192,6 +225,7 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
+
     }
 
     public void fadeOut(View view) {
@@ -203,6 +237,7 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
+
 
 //    public void reserve(Screening screening, String showtime) {
 //        action.setEnabled(false);

@@ -47,14 +47,14 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        final Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
         final ActionBar actionBar = getSupportActionBar();
         // Enable the Up button
-        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setDisplayHomeAsUpEnabled(true);
 
 //        redView = findViewById(R.id.red);
 //        redView.setVisibility(View.INVISIBLE);
@@ -77,8 +77,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
     @Override
     protected void onResume() {
         super.onResume();
-
-//        redView.setVisibility(View.INVISIBLE);
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -94,46 +92,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
         Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
         intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-
         startActivity(intent);
-
-
-        //TODO Bring back animations when polished.. Simpler ones?
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            redView.bringToFront();
-//
-//            int cxFinal = redView.getWidth() / 2;
-//            int cyFinal = redView.getHeight() / 2;
-//
-//            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
-//
-//           Animator anim =
-//                   ViewAnimationUtils.createCircularReveal(redView, cx, cy, 0, finalRadius);
-//
-//            redView.setVisibility(View.VISIBLE);
-//            anim.start();
-//            anim.addListener(new Animator.AnimatorListener() {
-//                @Override
-//                public void onAnimationStart(Animator animator) {
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animator) {
-//                    Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
-//                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-//
-//                    startActivity(intent);
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animator) {
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animator) {
-//                }
-//            });
-//        }
     }
 
     int getContentViewId() {
@@ -190,3 +149,40 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
 
 }
+
+//TODO Bring back animations when polished.. Simpler ones?
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            redView.bringToFront();
+//
+//            int cxFinal = redView.getWidth() / 2;
+//            int cyFinal = redView.getHeight() / 2;
+//
+//            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
+//
+//           Animator anim =
+//                   ViewAnimationUtils.createCircularReveal(redView, cx, cy, 0, finalRadius);
+//
+//            redView.setVisibility(View.VISIBLE);
+//            anim.start();
+//            anim.addListener(new Animator.AnimatorListener() {
+//                @Override
+//                public void onAnimationStart(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animator) {
+//                    Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
+//                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
+//
+//                    startActivity(intent);
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animator) {
+//                }
+//            });
+//        }

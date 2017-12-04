@@ -122,8 +122,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     @BindView(R.id.SELECTED_RUNTIME)
     TextView SELECTED_RUNTIME;
 
-    @BindView(R.id.SHOWTIME_RECYCLER)
-    RecyclerView ShowtimesRecyclerView;
 
     @BindView(R.id.SHOWTIME_CARD)
     TextView ScreeningShowtime;
@@ -155,7 +153,6 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
         ScreeningShowtime = findViewById(R.id.SHOWTIME_CARD);
-        ShowtimesRecyclerView = findViewById(R.id.SHOWTIME_RECYCLER);
         mAction = findViewById(R.id.FAB_LOADCARD);
 
         mShowtimesList = new ArrayList<>();
@@ -273,35 +270,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void onTheaterClick(int pos, Screening screening) {
-//
+
         if (mAction.getVisibility() == View.VISIBLE) {
             fadeOut(mAction);
             mAction.setVisibility(View.GONE);
         }
-
-//        if (ShowtimesRecyclerView.getVisibility() == View.GONE) {
-//            ShowtimesRecyclerView.setVisibility(View.VISIBLE);
-//            fadeIn(ShowtimesRecyclerView);
-//            ShowtimesAdapter.notifyDataSetChanged();
-//        } else {
-//            ShowtimesRecyclerView.setVisibility(View.GONE);
-//            fadeOut(ShowtimesRecyclerView);
-//            ShowtimesAdapter.notifyDataSetChanged();
-
-//            fadeIn(ShowtimesRecyclerView);
-
-
-        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
-        for (int i = 0; i < startTimes.size(); i++) {
-//            if(i )
-
-        }
-        ShowtimesList.clear();
-        if (ShowtimesRecyclerView != null) {
-            ShowtimesRecyclerView.getRecycledViewPool().clear();
-            ShowtimesAdapter.notifyDataSetChanged();
-        }
-        ShowtimesList.addAll(startTimes);
 
     }
 

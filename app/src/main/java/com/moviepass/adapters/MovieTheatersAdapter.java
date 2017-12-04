@@ -1,18 +1,21 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.os.Handler;
+import android.content.res.Resources;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
+import android.text.Layout;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.listeners.MovieTheaterClickListener;
@@ -33,6 +36,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     MovieShowtimesAdapter ShowtimesAdapter;
 
+    View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
     private final MovieTheaterClickListener movieTheaterClickListener;
@@ -57,13 +61,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         TextView TheaterName;
         @BindView(R.id.THEATER_ADDRESS2_LISTITEM)
         TextView TheaterAddressListItem;
-        @BindView(R.id.SHOWTIME_RECYCLER)
-        RecyclerView TheaterShowtimesRecycler;
         @BindView(R.id.THEATER_PIN_LISTITEM)
         ImageView TheaterPin;
-        @BindView(R.id.SHOWTIME_CARD)
-        TextView TheaterShowtimeCard;
-
+        @BindView(R.id.THEATER_SHOWTIMEGRID)
+        GridLayout showTimesGrid;
 
 //        @BindView(R.id.icon_ticket)
 //        ImageView iconTicket;
@@ -77,9 +78,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterListItem = v.findViewById(R.id.THEATERS_LISTITEM);
             TheaterName = v.findViewById(R.id.THEATER_NAME_LISTITEM);
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
-            TheaterShowtimesRecycler = v.findViewById(R.id.SHOWTIME_RECYCLER);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
-            TheaterShowtimeCard = v.findViewById(R.id.SHOWTIME_CARD);
+            showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
 //            iconTicket = v.findViewById(R.id.icon_ticket);
 //            iconSeat = v.findViewById(R.id.icon_seat);
         }
@@ -87,8 +87,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theaters_and_showtimes, parent, false);
-        return new ViewHolder(view);
+        root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theaters_and_showtimes, parent, false);
+        return new ViewHolder(root);
     }
 
 
@@ -97,60 +97,47 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         ShowtimesList = new ArrayList<>();
 
         final Screening screening = screeningsArrayList.get(position);
-        if (position == selectedPosition) {
-            holder.itemView.setSelected(true);
-        } else {
-            holder.itemView.setSelected(false);
-        }
+
 
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
 
-        holder.TheaterListItem.setTag(position);
-        holder.itemView.setSelected(holder.itemView.isSelected());
+        holder.showTimesGrid.setRowCount(1);
+        holder.showTimesGrid.setColumnCount(screening.getStartTimes().size());
+        holder.showTimesGrid.removeAllViews();
+        holder.showTimesGrid.setPadding(40, 10, 40, 10);
+        holder.showTimesGrid.setUseDefaultMargins(false);
+        holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
+        TextView showTime;
+        if (screening.getStartTimes() != null) {
+            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+                showTime = new TextView(root.getContext());
+                showTime.setText(screening.getStartTimes().get(i));
+                holder.showTimesGrid.addView(showTime);
+                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
+                showTime.setTextSize(20);
+                showTime.setTextColor(root.getResources().getColor(R.color.white));
+                showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showTime.setPadding(30, 30, 30, 30);
+                showTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+
+
+        }
         holder.TheaterListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final int currentPosition = holder.getAdapterPosition();
-                Log.d(TAG, "onClick: " + holder.getAdapterPosition());
-                Log.d(TAG, "onClick2: " + holder.getLayoutPosition());
-
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-////                holder.itemView.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//
-//                int width = displayMetrics.widthPixels;
-//                Screening screening = new Screening();
-//                boolean qualifiersApproved = screening.getQualifiersApproved();
-//                holder.TheaterShowtimesRecycler = v.findViewById(R.id.SHOWTIME_RECYCLER);
-//                ShowtimesAdapter = new MovieShowtimesAdapter(v.getContext(), ShowtimesList, screening, this, width, qualifiersApproved);
-//                holder.TheaterShowtimesRecycler.setAdapter(ShowtimesAdapter);
-//                holder.TheaterShowtimesRecycler.setLayoutManager(new LinearLayoutManager(v.getContext(), LinearLayoutManager.HORIZONTAL, false));
-
-                if (holder.TheaterShowtimesRecycler.getVisibility() == View.GONE) {
-                    holder.TheaterShowtimesRecycler.setVisibility(View.VISIBLE);
+                if (holder.showTimesGrid.getVisibility() == View.GONE) {
+                    holder.showTimesGrid.setVisibility(View.VISIBLE);
                 } else {
-                    holder.TheaterShowtimesRecycler.setVisibility(View.GONE);
+                    holder.showTimesGrid.setVisibility(View.GONE);
                 }
-
-//                if (currentPosition != holder.getAdapterPosition()) {
-//                    // Show Ripple and then change color
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // Temporarily save the last selected position
-//                            int lastSelectedPosition = selectedPosition;
-//                            // Save the new selected position
-//                            selectedPosition = currentPosition;
-//                            // update the previous selected row
-//                            notifyItemChanged(lastSelectedPosition);
-//                            // select the clicked row
-//                            holder.itemView.setSelected(true);
-//                        }
-//                    }, 150);
-//
-//                }
-                movieTheaterClickListener.onTheaterClick(holder.getLayoutPosition(), screening);
             }
         });
 

@@ -2,13 +2,20 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -17,6 +24,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
 import com.moviepass.listeners.ScreeningPosterClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 
 import java.util.ArrayList;
@@ -30,14 +38,20 @@ import butterknife.ButterKnife;
  */
 
 public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
+
+    View root;
+    GridLayout showtimeGrid;
     public static final String TAG = "found";
     private final ScreeningPosterClickListener screeningPosterClickListener;
+    ShowtimeClickListener showtimeClickListener;
     private ArrayList<Screening> screeningsArrayList;
     List<String> startTimes;
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
     private int selectedPosition = -1;
+
+    TheaterShowtimesAdapter showtimesAdapter;
 
     public TheaterMoviesAdapter(ArrayList<Screening> screeningsArrayList, ScreeningPosterClickListener screeningPosterClickListener) {
         this.screeningPosterClickListener = screeningPosterClickListener;
@@ -51,8 +65,16 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         TextView cinemaTItle;
         @BindView(R.id.CINEMAPOSTER)
         SimpleDraweeView cinemaPoster;
-        @BindView(R.id.CINEMA_SHOWTIMES)
-        RecyclerView cinemaShowtimesRecycler;
+        @BindView(R.id.SHOWTIMEGRID)
+        GridLayout showtimeGrid;
+//
+//        TextView cardView1, cardView2, cardView3, cardView4,
+//                cardView5, cardView6, cardView7, cardView8,
+//                cardView9, cardView10, cardView11, cardView12,
+//                cardView0, cardView13, cardView14, cardView15;
+
+        LinearLayout showTimesLayout;
+        ListView listView;
 
         public ViewHolder(View v) {
             super(v);
@@ -60,20 +82,39 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaCardViewListItem = v.findViewById(R.id.list_item_cinemaposterCARDVIEW);
             cinemaTItle = v.findViewById(R.id.cinema_movieTitle);
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
-            cinemaShowtimesRecycler = v.findViewById(R.id.CINEMA_SHOWTIMES);
+            showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
+//            showTimesLayout = v.findViewById(R.id.SHOWTIMES_VIEW);
+
+//            cardView0 = v.findViewById(R.id.show0);
+//            cardView1 = v.findViewById(R.id.show1);
+//            cardView2 = v.findViewById(R.id.show2);
+//            cardView3 = v.findViewById(R.id.show3);
+//            cardView4 = v.findViewById(R.id.show4);
+//            cardView5 = v.findViewById(R.id.show5);
+//            cardView6 = v.findViewById(R.id.show6);
+//            cardView7 = v.findViewById(R.id.show7);
+//            cardView8 = v.findViewById(R.id.show8);
+//            cardView9 = v.findViewById(R.id.show9);
+//            cardView10 = v.findViewById(R.id.show10);
+//            cardView11 = v.findViewById(R.id.show11);
+//            cardView12 = v.findViewById(R.id.show12);
+//            cardView13 = v.findViewById(R.id.show13);
+//            cardView14 = v.findViewById(R.id.show14);
+//            cardView15 = v.findViewById(R.id.show15);
+
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_cinemaposter, parent, false);
+        root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_cinemaposter, parent, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(root);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Screening screening = screeningsArrayList.get(position);
         Log.d(TAG, "first titles: " + screening.getTitle());
         startTimes = screening.getStartTimes();
@@ -85,61 +126,44 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
-
-
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build();
-
 
         holder.cinemaPoster.setImageURI(imgUrl);
         holder.cinemaPoster.getHierarchy().setFadeDuration(500);
         holder.cinemaTItle.setText(screening.getTitle());
         holder.cinemaPoster.setController(controller);
 
+        TextView showtime;
+        holder.showtimeGrid.setRowCount(1);
+        holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
+        holder.showtimeGrid.removeAllViews();
+
+        if (screening.getStartTimes() != null) {
+            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+                showtime = new TextView(root.getContext());
+                showtime.setText(screening.getStartTimes().get(i));
+                holder.showtimeGrid.addView(showtime);
+                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
+                showtime.setTextSize(20);
+                showtime.setTextColor(root.getResources().getColor(R.color.white));
+                showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showtime.setPadding(50, 50, 50, 50);
+            }
+
+        }
         holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (holder.cinemaShowtimesRecycler.getVisibility() == View.GONE) {
-                    holder.cinemaShowtimesRecycler.setVisibility(View.VISIBLE);
+                if (holder.showtimeGrid.getVisibility() == View.GONE) {
+                    holder.showtimeGrid.setVisibility(View.VISIBLE);
+                } else {
+                    holder.showtimeGrid.setVisibility(View.GONE);
                 }
-
-//                screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, startTimes, holder.cinemaPoster);
-
             }
         });
 
 
-//        holder.listItemMoviePoster.setTag(position);
-//
-//        ViewCompat.setTransitionName(holder.posterImageView, screening.getImageUrl());
-//
-//        final List<String> startTimes = screening.getStartTimes();
-//
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final int currentPosition = holder.getLayoutPosition();
-//                if (selectedPosition != currentPosition) {
-//
-//                    // Show Ripple and then change color
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            // Temporarily save the last selected position
-//                            int lastSelectedPosition = selectedPosition;
-//                            // Save the new selected position
-//                            selectedPosition = currentPosition;
-//                            // update the previous selected row
-//                            notifyItemChanged(lastSelectedPosition);
-//                            // select the clicked row
-//                            holder.itemView.setSelected(true);
-//                        }
-//                    }, 150);
-//                }
-//
-//            }
-//        });
     }
 
     @Override
@@ -151,5 +175,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }

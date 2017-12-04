@@ -12,8 +12,10 @@ import android.graphics.Camera;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -123,6 +125,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private String mLastUpdateTime;
     private Boolean mRequestingLocationUpdates;
 
+
     GoogleMap mMap;
     MapView mMapView;
 
@@ -134,6 +137,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     CardView mCardView;
     View mProgress;
     RelativeLayout mRelativeLayout;
+    LatLng markerPosition;
+    Marker marker;
 
     ArrayList<Theater> mTheaters;
     private ClusterManager<TheaterPin> mClusterManager;
@@ -277,11 +282,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         // the failure silently
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMinZoomPreference(10);
-
+        mMap.setMyLocationEnabled(true);
         //SNAP the recyclerview to center in the view
         LinearSnapHelper snapHelper = new LinearSnapHelper() {
             @Override
@@ -312,6 +318,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 final int firstItem = 0;
                 final int lastItem = layoutManager.getItemCount() - 1;
                 targetPosition = Math.min(lastItem, Math.max(targetPosition, firstItem));
+
+//                CameraPosition theaterPosition = new CameraPosition.Builder().target().zoom(15).build();
+//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
+
                 return targetPosition;
             }
         };
@@ -352,8 +362,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Log.d(TAG, "onMarkerClick: " + marker.getTitle());
-                final LatLng markerPosition = marker.getPosition();
+                markerPosition = marker.getPosition();
                 int theaterSelected = -1;
 
                 for (int i = 0; i < mTheaters.size(); i++) {
@@ -364,17 +373,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 }
 
                 //Onclick for individual Markers - adjusts recycler to that specific theater.
-                CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(12).build();
+                CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(15).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
                 theatersMapViewAdapter.notifyDataSetChanged();
                 theatersMapViewRecycler.smoothScrollToPosition(theaterSelected);
-
 
                 marker.showInfoWindow();
 
                 return true;
             }
         });
+
+
     }
 
     @Override
@@ -476,12 +486,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                         Location loc = task.getResult();
 
                         if (mRequestingLocationUpdates) {
-                            loadTheaters(loc.getLatitude(), loc.getLongitude());
+                            if (loc != null) {
+                                loadTheaters(loc.getLatitude(), loc.getLongitude());
 
-                            LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
-                            CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+                                LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
+                                CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
 
-                            mMap.moveCamera(current);
+                                mMap.moveCamera(current);
+                            }
                         }
                     }
                 });
