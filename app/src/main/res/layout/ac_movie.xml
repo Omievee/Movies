@@ -173,7 +173,7 @@
         android:visibility="gone"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"
-        app:layout_anchorGravity="right|center |top" />
+        app:layout_anchorGravity="right|center" />
 
 
     <include

@@ -57,6 +57,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private LayoutInflater inflater;
     private Context context;
     private int selectedPosition = -1;
+    boolean selected = false;
+    public TextView showtime = null;
+    String currentSelection;
+
+    View previousView;
+
 
     TheaterShowtimesAdapter showtimesAdapter;
 
@@ -107,119 +113,90 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Screening screening = screeningsArrayList.get(position);
-        Log.d(TAG, "first titles: " + screening.getTitle());
         startTimes = screening.getStartTimes();
 
+        //FRESCO code..
         final Uri imgUrl = Uri.parse(screening.getImageUrl());
-        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
-
-
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build();
-
         holder.cinemaPoster.setImageURI(imgUrl);
         holder.cinemaPoster.getHierarchy().setFadeDuration(500);
         holder.cinemaTItle.setText(screening.getTitle());
         holder.cinemaPoster.setController(controller);
 
-        TextView showtime = null;
+        //onBind set up Gridlayout & begin a loop to create a new TextView for each showtime in the respective Array.
         holder.showtimeGrid.setRowCount(1);
         holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
         holder.showtimeGrid.removeAllViews();
-
-        //Creating a textview for each item in the Array of showtimes for the gridlayout..
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showtime = new TextView(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 holder.showtimeGrid.addView(showtime);
-                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
                 showtime.setTextSize(20);
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showtime.setPadding(50, 50, 50, 50);
-
-
                 final TextView finalShowtime = showtime;
-                holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Handler handler = new Handler();
-                        if (holder.showtimeGrid.getVisibility() == View.GONE) {
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    holder.showtimeGrid.setVisibility(View.VISIBLE);
-                                    fadeIn(holder.showtimeGrid);
-                                }
-                            }, 200);
-
-
-                        } else {
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    holder.showtimeGrid.setVisibility(View.GONE);
-                                    fadeOut(holder.showtimeGrid);
-                                }
-                            }, 200);
-
-                        }
-
-                    }
-                });
-
+                finalShowtime.setSelected(false);
+                //onclick on each showtime will execute the showtimelistener & create reservtion if possible.
                 showtime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (!finalShowtime.isSelected()) {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(true);
+                        } else {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(false);
+                        }
 
-                        Log.d(TAG, "onClick: "+ screening);
-                        Log.d(TAG, "onClick: " + holder.getAdapterPosition());
+//                        finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+//                        finalShowtime.setPadding(50, 50, 50, 50);
+//                        finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+//                        finalShowtime.setPadding(50, 50, 50, 50);
+
+
                     }
                 });
             }
-
-
+            Log.d(TAG, "onBindViewHolder: " + currentSelection);
+            //on click on the cardview displays grid w/ showtimes
+            holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Handler handler = new Handler();
+                    if (holder.showtimeGrid.getVisibility() == View.GONE) {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.showtimeGrid.setVisibility(View.VISIBLE);
+                                fadeIn(holder.showtimeGrid);
+                            }
+                        }, 200);
+                    } else {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.showtimeGrid.setVisibility(View.GONE);
+                                fadeOut(holder.showtimeGrid);
+                            }
+                        }, 100);
+                    }
+                }
+            });
         }
-//        final TextView finalShowtime = showtime;
-//        holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Handler handler = new Handler();
-//                if (holder.showtimeGrid.getVisibility() == View.GONE) {
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            holder.showtimeGrid.setVisibility(View.VISIBLE);
-//                            fadeIn(holder.showtimeGrid);
-//                            finalShowtime.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//
-//                                }
-//                            });
-//
-//                        }
-//                    }, 200);
-//
-//                } else {
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            holder.showtimeGrid.setVisibility(View.GONE);
-//                            fadeOut(holder.showtimeGrid);
-//                        }
-//                    }, 200);
-//
-//                }
-//            }
-//        });
-
-
     }
+
 
     @Override
     public int getItemCount() {
