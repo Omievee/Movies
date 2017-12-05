@@ -72,12 +72,13 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
     TheaterShowtimesAdapter theaterShowtimesAdapter;
+    boolean qualifiersApproved;
 
     BottomNavigationView bottomNavigationView;
-
+    Screening screening = new Screening();
 
     ArrayList<Screening> moviesAtSelectedTheater;
-    ArrayList<Screening> showtimesAtSelectedTheater;
+    ArrayList<String> showtimesAtSelectedTheater;
     GridLayout showtimeGrid;
 
 
@@ -124,7 +125,8 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         //Recycler / Adapter / LLM
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        theaterMoviesAdapter = new TheaterMoviesAdapter(moviesAtSelectedTheater, this);
+        qualifiersApproved = screening.getQualifiersApproved();
+        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this, qualifiersApproved);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setNestedScrollingEnabled(false);

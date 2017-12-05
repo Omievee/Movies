@@ -667,7 +667,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mProgress.setVisibility(View.VISIBLE);
         theatersMapViewRecycler.setVisibility(View.VISIBLE);
 
-        LatLng latlng = new LatLng(latitude, longitude);g
+        LatLng latlng = new LatLng(latitude, longitude);
         CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
         Log.d("loadTheaters", latlng.toString());
         mMap.moveCamera(current);

@@ -47,10 +47,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     View root;
     GridLayout showtimeGrid;
     public static final String TAG = "found";
-    private final ScreeningPosterClickListener screeningPosterClickListener;
+    //    private final ScreeningPosterClickListener screeningPosterClickListener;
     ShowtimeClickListener showtimeClickListener;
     private ArrayList<Screening> screeningsArrayList;
+    ArrayList<String> showtimesArrayList;
     List<String> startTimes;
+    private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
@@ -58,9 +60,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
     TheaterShowtimesAdapter showtimesAdapter;
 
-    public TheaterMoviesAdapter(ArrayList<Screening> screeningsArrayList, ScreeningPosterClickListener screeningPosterClickListener) {
-        this.screeningPosterClickListener = screeningPosterClickListener;
+    public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
+        this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
+        this.qualifiersApproved = qualifiersApproved;
+        this.showtimesArrayList = showtimesArrayList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -88,24 +92,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaTItle = v.findViewById(R.id.cinema_movieTitle);
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
-//            showTimesLayout = v.findViewById(R.id.SHOWTIMES_VIEW);
 
-//            cardView0 = v.findViewById(R.id.show0);
-//            cardView1 = v.findViewById(R.id.show1);
-//            cardView2 = v.findViewById(R.id.show2);
-//            cardView3 = v.findViewById(R.id.show3);
-//            cardView4 = v.findViewById(R.id.show4);
-//            cardView5 = v.findViewById(R.id.show5);
-//            cardView6 = v.findViewById(R.id.show6);
-//            cardView7 = v.findViewById(R.id.show7);
-//            cardView8 = v.findViewById(R.id.show8);
-//            cardView9 = v.findViewById(R.id.show9);
-//            cardView10 = v.findViewById(R.id.show10);
-//            cardView11 = v.findViewById(R.id.show11);
-//            cardView12 = v.findViewById(R.id.show12);
-//            cardView13 = v.findViewById(R.id.show13);
-//            cardView14 = v.findViewById(R.id.show14);
-//            cardView15 = v.findViewById(R.id.show15);
 
         }
     }
@@ -113,7 +100,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_cinemaposter, parent, false);
-
         return new ViewHolder(root);
     }
 
@@ -144,6 +130,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
         holder.showtimeGrid.removeAllViews();
 
+        //Creating a textview for each item in the Array of showtimes for the gridlayout..
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showtime = new TextView(root.getContext());
@@ -154,36 +141,82 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showtime.setPadding(50, 50, 50, 50);
+
+
+                final TextView finalShowtime = showtime;
+                holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Handler handler = new Handler();
+                        if (holder.showtimeGrid.getVisibility() == View.GONE) {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    holder.showtimeGrid.setVisibility(View.VISIBLE);
+                                    fadeIn(holder.showtimeGrid);
+                                }
+                            }, 200);
+
+
+                        } else {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    holder.showtimeGrid.setVisibility(View.GONE);
+                                    fadeOut(holder.showtimeGrid);
+                                }
+                            }, 200);
+
+                        }
+
+                    }
+                });
+
+                showtime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Log.d(TAG, "onClick: "+ screening);
+                        Log.d(TAG, "onClick: " + holder.getAdapterPosition());
+                    }
+                });
             }
 
 
         }
-        holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Handler handler = new Handler();
-                if (holder.showtimeGrid.getVisibility() == View.GONE) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.showtimeGrid.setVisibility(View.VISIBLE);
-                            fadeIn(holder.showtimeGrid);
-
-                        }
-                    }, 200);
-
-                } else {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.showtimeGrid.setVisibility(View.GONE);
-                            fadeOut(holder.showtimeGrid);
-                        }
-                    }, 200);
-
-                }
-            }
-        });
+//        final TextView finalShowtime = showtime;
+//        holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Handler handler = new Handler();
+//                if (holder.showtimeGrid.getVisibility() == View.GONE) {
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            holder.showtimeGrid.setVisibility(View.VISIBLE);
+//                            fadeIn(holder.showtimeGrid);
+//                            finalShowtime.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//
+//                                }
+//                            });
+//
+//                        }
+//                    }, 200);
+//
+//                } else {
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            holder.showtimeGrid.setVisibility(View.GONE);
+//                            fadeOut(holder.showtimeGrid);
+//                        }
+//                    }, 200);
+//
+//                }
+//            }
+//        });
 
 
     }
