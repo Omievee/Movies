@@ -69,7 +69,7 @@ import retrofit2.Response;
  * Created by anubis on 6/8/17.
  */
 
-public class TheaterActivity extends BaseActivity implements ScreeningPosterClickListener, ShowtimeClickListener {
+public class TheaterActivity extends BaseActivity {
 
     public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     public static final String THEATER = "theater";
@@ -90,11 +90,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     TextView theaterSelectedName;
     View progress;
 
-    @BindView(R.id.CINEMA_SELECTED_THEATER_RECYCLER)
-    RecyclerView theaterMoviesRecyclerView;
-//    @BindView(R.id.CINEMA_SELECTED_THEATER_RECYCLER)
-//    RecyclerView showtimesRecyclerView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,10 +100,6 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         final ActionBar actionBar = getSupportActionBar();
-
-//        // Enable the Up button
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setHomeButtonEnabled(true);
 
         Fragment theaterFrag = new TheaterFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -187,12 +178,11 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
         Log.d("onBackPressed", "onBackPressed");
 
     }
 
-//    public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
+    //    public void onScreeningPosterClick(int pos, Screening screening, List<String> startTimes, ImageView sharedImageView) {
 //        /* TODO : Get the screenings for that movie */
 //        boolean qualifiersApproved = screening.getQualifiersApproved();
 //        theaterShowtimesAdapter = new TheaterShowtimesAdapter(this, showtimesList, screening, this, qualifiersApproved);
@@ -253,47 +243,8 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
 //        belowShowtimes.requestFocus();
 //    }
 //
-//    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-//        final String time = showtime;
+//    public void onShowtimeClick(int pos,  Screening screening, String showtime) {
 //
-//        action.setVisibility(View.VISIBLE);
-//
-//        if (action.getVisibility() == View.VISIBLE) {
-//            fadeOut(action);
-//            fadeIn(action);
-//            screenBottom.setVisibility(View.VISIBLE);
-//            screenBottom.requestFocus();
-//        } else {
-//            fadeIn(action);
-//            action.setVisibility(View.VISIBLE);
-//            screenBottom.setVisibility(View.VISIBLE);
-//            screenBottom.requestFocus();
-//        }
-//
-//        String ticketType = screening.getProvider().ticketType;
-//
-//        if (ticketType.matches("STANDARD")) {
-//            String checkIn = "Check In";
-//            action.setText(checkIn);
-//        } else if (ticketType.matches("E_TICKET")) {
-//            String reserve = "Reserve E-Ticket";
-//            action.setText(reserve);
-//        } else {
-//            String selectSeat = "Select Seat";
-//            action.setText(selectSeat);
-//        }
-//
-//        action.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (isPendingSubscription()) {
-//                    showActivateCardDialog(screening, time);
-//                } else {
-//                    progress.setVisibility(View.VISIBLE);
-//                    reserve(screening, time);
-//                }
-//            }
-//        });
 //    }
 
 //    public void fadeIn(View view) {
@@ -553,13 +504,4 @@ public class TheaterActivity extends BaseActivity implements ScreeningPosterClic
         }
     }
 
-    @Override
-    public void onScreeningPosterClick(int pos, @NotNull Screening screening, @NotNull List<String> startTimes, @NotNull ImageView shareImageView) {
-
-    }
-
-    @Override
-    public void onShowtimeClick(int pos, @NotNull Screening screening, @NotNull String showtime) {
-
-    }
 }

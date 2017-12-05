@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,6 +74,8 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
     TheaterMoviesAdapter theaterMoviesAdapter;
     TheaterShowtimesAdapter theaterShowtimesAdapter;
     boolean qualifiersApproved;
+
+    FloatingActionButton fabLoadCard;
 
     BottomNavigationView bottomNavigationView;
     Screening screening = new Screening();
@@ -189,7 +192,46 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
     @Override
     public void onShowtimeClick(int pos, @NotNull Screening screening, @NotNull String showtime) {
+        final String time = showtime;
 
+        action.setVisibility(View.VISIBLE);
+
+        if (action.getVisibility() == View.VISIBLE) {
+            fadeOut(action);
+            fadeIn(action);
+            screenBottom.setVisibility(View.VISIBLE);
+            screenBottom.requestFocus();
+        } else {
+            fadeIn(action);
+            action.setVisibility(View.VISIBLE);
+            screenBottom.setVisibility(View.VISIBLE);
+            screenBottom.requestFocus();
+        }
+
+        String ticketType = screening.getProvider().ticketType;
+
+        if (ticketType.matches("STANDARD")) {
+            String checkIn = "Check In";
+            action.setText(checkIn);
+        } else if (ticketType.matches("E_TICKET")) {
+            String reserve = "Reserve E-Ticket";
+            action.setText(reserve);
+        } else {
+            String selectSeat = "Select Seat";
+            action.setText(selectSeat);
+        }
+
+        action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPendingSubscription()) {
+                    showActivateCardDialog(screening, time);
+                } else {
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
+                }
+            }
+        });
     }
 
     private void loadMovies() {

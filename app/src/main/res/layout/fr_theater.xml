@@ -181,6 +181,8 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+
+
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"
