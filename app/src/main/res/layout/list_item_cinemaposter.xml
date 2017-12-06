@@ -4,8 +4,8 @@
     android:id="@+id/list_item_cinemaposterCARDVIEW"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_standard"
     android:animateLayoutChanges="true"
+    android:layout_margin="@dimen/margin_half"
     android:elevation="5dp"
     android:paddingBottom="5dp"
     fresco:cardCornerRadius="5dp">

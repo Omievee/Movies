@@ -5,9 +5,7 @@
     android:id="@+id/THEATERS_LISTITEM"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
-    android:layout_marginBottom="@dimen/double_margin_standard"
-    android:layout_marginTop="@dimen/margin_standard"
+    android:layout_margin="@dimen/margin_half"
     android:animateLayoutChanges="true"
     android:paddingBottom="@dimen/margin_standard"
     app:cardCornerRadius="5dp">

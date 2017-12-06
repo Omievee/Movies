@@ -158,8 +158,15 @@
 
         </LinearLayout>
 
+
     </android.support.v4.widget.NestedScrollView>
 
+    <include
+        android:id="@+id/SELECTED_MOVIE_BOTTOMNAV"
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
     <com.github.clans.fab.FloatingActionButton
 
@@ -182,13 +189,6 @@
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <include
-        android:id="@+id/SELECTED_MOVIE_BOTTOMNAV"
-        layout="@layout/element_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 
 
 </android.support.design.widget.CoordinatorLayout>
