@@ -150,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
+                android:layout_marginBottom="50dp"
                 android:visibility="visible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:listitem="@layout/list_item_theaters_and_showtimes">
@@ -161,12 +162,6 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <include
-        android:id="@+id/SELECTED_MOVIE_BOTTOMNAV"
-        layout="@layout/element_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 
     <com.github.clans.fab.FloatingActionButton
 
@@ -189,6 +184,14 @@
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+    <include
+        android:id="@+id/SELECTED_MOVIE_BOTTOMNAV"
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
 
 </android.support.design.widget.CoordinatorLayout>
