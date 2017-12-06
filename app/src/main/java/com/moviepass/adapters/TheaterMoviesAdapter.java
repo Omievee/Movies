@@ -2,12 +2,8 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +12,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -28,7 +22,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
-import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 
@@ -169,31 +162,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     }
                 });
             }
-            Log.d(TAG, "onBindViewHolder: " + currentSelection);
-            //on click on the cardview displays grid w/ showtimes
-            holder.cinemaCardViewListItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Handler handler = new Handler();
-                    if (holder.showtimeGrid.getVisibility() == View.GONE) {
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                holder.showtimeGrid.setVisibility(View.VISIBLE);
-                                fadeIn(holder.showtimeGrid);
-                            }
-                        }, 200);
-                    } else {
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                holder.showtimeGrid.setVisibility(View.GONE);
-                                fadeOut(holder.showtimeGrid);
-                            }
-                        }, 100);
-                    }
-                }
-            });
         }
     }
 

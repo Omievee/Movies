@@ -82,13 +82,11 @@ dependencies {
     compile "com.google.android.gms:play-services-location:$play_services_version"
     compile "com.google.android.gms:play-services-maps:$play_services_version"
     compile "com.google.android.gms:play-services-places:$play_services_version"
+    compile "com.android.support:support-v4:26.1.0"
 
     //Support Libraries
-    compile "com.android.support:appcompat-v7:$support_lib_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "com.android.support:design:$support_lib_version"
-    compile "com.android.support:support-v4:$support_lib_version"
-    compile "com.android.support:support-v13:$support_lib_version"
+    compile "com.android.support:support-v13:26.1.0"
     compile 'com.android.support:multidex:1.0.1'
 //    compile 'com.android.support:support-core-utils:26.2.1'
 
@@ -160,5 +158,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
+
+    compile "com.android.support:appcompat-v7:26.1.0"
+    compile "com.android.support:design:26.1.0"
+
 }
 

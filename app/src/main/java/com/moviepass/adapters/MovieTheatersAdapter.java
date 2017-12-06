@@ -16,12 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moviepass.R;
-import com.moviepass.listeners.MovieTheaterClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
-import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,8 +37,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
-    private final MovieTheaterClickListener movieTheaterClickListener;
     private ArrayList<String> ShowtimesList;
+    private ShowtimeClickListener showtimeClickListener;
 
 
     private final int TYPE_ITEM = 0;
@@ -47,9 +46,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     private Context context;
     private int selectedPosition = 0;
 
-    public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, MovieTheaterClickListener movieTheaterClickListener) {
+    public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
         this.screeningsArrayList = screeningsArrayList;
-        this.movieTheaterClickListener = movieTheaterClickListener;
+        this.showtimeClickListener = showtimeClickListener;
 
     }
 
@@ -119,43 +118,29 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(50, 50, 50, 50);
+                final TextView finalShowtime = showTime;
+
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-
+                        if (!finalShowtime.isSelected()) {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(true);
+                        } else {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(false);
+                        }
                     }
                 });
             }
-
-
         }
-        holder.theaterCardViewListItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final android.os.Handler handler = new android.os.Handler();
-
-                if (holder.showTimesGrid.getVisibility() == View.GONE) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.showTimesGrid.setVisibility(View.VISIBLE);
-                            fadeIn(holder.showTimesGrid);
-                        }
-                    }, 250);
-                } else {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.showTimesGrid.setVisibility(View.GONE);
-                            fadeOut(holder.showTimesGrid);
-                        }
-                    }, 250);
-                }
-
-
-            }
-        });
 
     }
 

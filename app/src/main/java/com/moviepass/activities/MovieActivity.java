@@ -11,13 +11,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +41,6 @@ import com.moviepass.UserLocationManagerFused;
 import com.moviepass.adapters.MovieShowtimesAdapter;
 import com.moviepass.adapters.MovieTheatersAdapter;
 import com.moviepass.helpers.BottomNavigationViewHelper;
-import com.moviepass.listeners.MovieTheaterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
@@ -76,7 +73,7 @@ import retrofit2.Response;
  * Created by anubis on 6/9/17.
  */
 
-public class MovieActivity extends BaseActivity implements MovieTheaterClickListener, ShowtimeClickListener {
+public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
     public static final String RESERVATION = "reservation";
@@ -115,16 +112,13 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     @BindView(R.id.SELECTED_MOVIE_IMAGE)
     SimpleDraweeView SELECTED_MOVIEPOSTER;
-//
-//    @BindView(R.id.theater_select_time)
-//    TextView mTheaterSelectTime;
 
     @BindView(R.id.SELECTED_RUNTIME)
     TextView SELECTED_RUNTIME;
 
 
     @BindView(R.id.FAB_LOADCARD)
-    FloatingActionButton mAction;
+    com.github.clans.fab.FloatingActionButton fabLoadCard;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +144,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         SELECTED_MOVIE_TITLE = findViewById(R.id.SELECTED_MOVIE_TITLE);
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
-        mAction = findViewById(R.id.FAB_LOADCARD);
+        fabLoadCard = findViewById(R.id.FAB_LOADCARD);
 
         mShowtimesList = new ArrayList<>();
         ProgressBar = findViewById(R.id.progress);
@@ -266,46 +260,34 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
     }
 
-    public void onTheaterClick(int pos, Screening screening) {
-
-        if (mAction.getVisibility() == View.VISIBLE) {
-            fadeOut(mAction);
-            mAction.setVisibility(View.GONE);
-        }
-
-    }
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-        final String time = showtime;
         Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        final String time = showtime;
 
-        if (mAction.getVisibility() != View.VISIBLE) {
-            mAction.setVisibility(View.VISIBLE);
-            fadeIn(mAction);
+
+        if (fabLoadCard.getVisibility() == View.GONE) {
+            fabLoadCard.setVisibility(View.VISIBLE);
+            fadeIn(fabLoadCard);
         } else {
-            fadeOut(mAction);
-            mAction.setVisibility(View.INVISIBLE);
-            mAction.setVisibility(View.VISIBLE);
-            fadeIn(mAction);
-
+            fabLoadCard.setVisibility(View.GONE);
+            fadeOut(fabLoadCard);
         }
 
         String ticketType = screening.getProvider().ticketType;
 
         if (ticketType.matches("STANDARD")) {
-//            String checkIn = "Check In";
-//            mAction.setText(checkIn);
-//        } else if (ticketType.matches("")) {
-//            String reserve = "Reserve E-Ticket";
-//            mAction.setText(reserve);
-//        } else {
-//            String selectSeat = "Select Seat";
-//            mAction.setText(selectSeat);
-//        }
+            String checkIn = "Check In";
+        } else if (ticketType.matches("E_TICKET")) {
+            String reserve = "Reserve E-Ticket";
+        } else {
+            String selectSeat = "Select Seat";
         }
-        mAction.setOnClickListener(new View.OnClickListener() {
+
+        fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "toasty", Toast.LENGTH_SHORT).show();
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {
@@ -317,7 +299,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void reserve(Screening screening, String showtime) {
-        mAction.setEnabled(false);
+        fabLoadCard.setEnabled(false);
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
@@ -390,11 +372,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
-                        mAction.setEnabled(true);
+                        fabLoadCard.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
-                        mAction.setEnabled(true);
+                        fabLoadCard.setEnabled(true);
                     }
                 }
 
@@ -403,7 +385,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             @Override
             public void failure(RestError restError) {
                 ProgressBar.setVisibility(View.GONE);
-                mAction.setEnabled(true);
+                fabLoadCard.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 

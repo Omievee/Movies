@@ -182,16 +182,16 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-
         android:id="@+id/FAB_LOADCARD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/double_margin_standard"
         android:layout_marginBottom="@dimen/quadruple_margin_standard"
-        android:animateLayoutChanges="true"
+        android:layout_marginEnd="@dimen/double_margin_standard"
         android:background="@drawable/button_red"
         android:elevation="5dp"
         android:visibility="gone"
+        app:fab_colorNormal="@color/new_red"
+        app:fab_colorRipple="@color/white"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"
         app:layout_anchorGravity="right | bottom" />

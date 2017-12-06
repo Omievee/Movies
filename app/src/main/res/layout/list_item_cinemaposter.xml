@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/margin_half"
                 android:columnOrderPreserved="false"
-                android:visibility="gone">
+                android:visibility="visible">
 
             </GridLayout>
 
