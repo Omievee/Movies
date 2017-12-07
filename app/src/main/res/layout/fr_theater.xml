@@ -187,7 +187,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/quadruple_margin_standard"
-        android:layout_marginEnd="@dimen/double_margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
         android:background="@drawable/button_red"
         android:elevation="5dp"
         android:visibility="gone"

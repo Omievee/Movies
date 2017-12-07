@@ -124,6 +124,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.showtimeGrid.setRowCount(1);
         holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
         holder.showtimeGrid.removeAllViews();
+//        Date currentTime = Calendar.getInstance().getTime();
+
+
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showtime = new TextView(root.getContext());
@@ -152,15 +155,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
                             finalShowtime.setSelected(false);
                         }
-
-//                        finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-//                        finalShowtime.setPadding(50, 50, 50, 50);
-//                        finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-//                        finalShowtime.setPadding(50, 50, 50, 50);
-
-
                     }
                 });
+
             }
         }
     }

@@ -54,8 +54,9 @@
                 android:id="@+id/SHOWTIMEGRID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_half"
+                android:paddingEnd="@dimen/double_margin_standard"
                 android:columnOrderPreserved="false"
+                android:layout_margin="@dimen/margin_standard"
                 android:visibility="visible">
 
             </GridLayout>

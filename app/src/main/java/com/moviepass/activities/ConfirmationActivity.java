@@ -1,18 +1,13 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
-import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,7 +16,6 @@ import android.widget.Toast;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -31,16 +25,10 @@ import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.responses.ChangedMindResponse;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -58,20 +46,20 @@ public class ConfirmationActivity extends BaseActivity {
     Reservation reservation;
     Screening screening;
     ScreeningToken screeningToken;
-    FloatingActionMenu fab;
+    FloatingActionMenu fabCancelReservation;
     View progress;
 
     ImageView poster;
     ImageView mask;
-    TextView movieTitle;
+    TextView confirmedMovieTitle;
     TextView theater;
     TextView address;
     TextView cityThings;
-    TextView time;
+    TextView confirmedShowTime;
     TextView date;
     TextView auditorium;
     TextView seat;
-    TextView actionText;
+    TextView confirmedMessage;
     ImageView qrCode;
     RelativeLayout ticketTop;
     RelativeLayout ticketBottom;
@@ -80,14 +68,14 @@ public class ConfirmationActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirmation);
+        setContentView(R.layout.ac_confirmation);
 
-        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        fab = findViewById(R.id.menuActions);
-        progress = findViewById(R.id.progress);
+        fabCancelReservation = findViewById(R.id.FAB_CANCELRES);
+        progress = findViewById(R.id.confirm_progress);
 
         Bundle extras = getIntent().getExtras();
 
@@ -96,58 +84,61 @@ public class ConfirmationActivity extends BaseActivity {
         reservation = screeningToken.getReservation();
         String screeningTime = screeningToken.getTime();
 
-        poster = findViewById(R.id.poster);
-        mask = findViewById(R.id.mask);
-        movieTitle = findViewById(R.id.movie_title);
-        theater = findViewById(R.id.theater);
-        address = findViewById(R.id.address);
-        cityThings = findViewById(R.id.city_things);
-        time = findViewById(R.id.time);
-        date = findViewById(R.id.date);
-        auditorium = findViewById(R.id.auditorium);
-        seat = findViewById(R.id.seat);
-        ticketTop = findViewById(R.id.ticket_top);
-        ticketBottom = findViewById(R.id.ticket_bottom);
-        actionText = findViewById(R.id.action_text);
-        qrCode = findViewById(R.id.qr_code);
+//        poster = findViewById(R.id.poster);
+//        mask = findViewById(R.id.mask);
+        confirmedMovieTitle = findViewById(R.id.CONFIRMED_MOVIE_TITLE);
+        theater = findViewById(R.id.CONFIRMED_THEATER);
+//        address = findViewById(R.id.address);
+//        cityThings = findViewById(R.id.city_things);
+        confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
+//        date = findViewById(R.id.date);
+//        auditorium = findViewById(R.id.auditorium);
+//        seat = findViewById(R.id.seat);
+//        ticketTop = findViewById(R.id.ticket_top);
+//        ticketBottom = findViewById(R.id.ticket_bottom);
+        confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
+//        qrCode = findViewById(R.id.qr_code);
 
-        movieTitle.setText(screening.getTitle());
+        confirmedMovieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
         address.setText(screening.getTheaterAddress());
         cityThings.setVisibility(View.GONE);
-        time.setText(screeningTime);
+        confirmedShowTime.setText(screeningTime);
 
-        try {
-            SimpleDateFormat inputDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            Log.d("screeningGetDate", screening.getDate());
-            Date createdAt = inputDate.parse(screening.getDate());
-
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            String finalDate = sdf.format(createdAt);
-
-            Log.d("finalDate", finalDate);
-
-            date.setText(finalDate);
-
-        } catch (Exception e) {
-            Log.d("exception", e.toString());
-        }
+//        try {
+//            SimpleDateFormat inputDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//            Log.d("screeningGetDate", screening.getDate());
+//            Date createdAt = inputDate.parse(screening.getDate());
+//
+//            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//            String finalDate = sdf.format(createdAt);
+//
+//            Log.d("finalDate", finalDate);
+//
+//            date.setText(finalDate);
+//
+//        } catch (Exception e) {
+//            Log.d("exception", e.toString());
+//        }
 
         /* TODO : Add Auditorum logic */
-        auditorium.setVisibility(View.GONE);
+//        auditorium.setVisibility(View.GONE);
 
-        seat.setText(screeningToken.getSeatName());
+//        if(screeningToken.getSeatName() != null) {
+//            seat.setText(screeningToken.getSeatName());
+//
+//        }
 
-        String imgUrl = screening.getImageUrl();
-        Log.d("imgUrl", imgUrl);
-
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.build()
-                .load(imgUrl)
-                .error(R.drawable.confirmation_ticket_top_red)
-                .centerCrop()
-                .fit()
-                .into(poster);
+//        String imgUrl = screening.getImageUrl();
+//        Log.d("imgUrl", imgUrl);
+//
+//        Picasso.Builder builder = new Picasso.Builder(this);
+//        builder.build()
+//                .load(imgUrl)
+//                .error(R.drawable.confirmation_ticket_top_red)
+//                .centerCrop()
+//                .fit()
+//                .into(poster);
 
         if (screeningToken.getConfirmationCode() != null) {
             String confirmationCode = screeningToken.getConfirmationCode();
@@ -160,13 +151,13 @@ public class ConfirmationActivity extends BaseActivity {
                         getString(R.string.activity_confirmation_confirmation_text) + ". " + confirmationCode + " " +
                         getString(R.string.activity_confirmation_seat_selected) + " " + seatName;
 
-                actionText.setText(fullConfirmationCodeInstructionsWithSeat);
+                confirmedMessage.setText(fullConfirmationCodeInstructionsWithSeat);
             } else {
 
                 String fullConfirmationCodeInstructions = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
                         getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
 
-                actionText.setText(fullConfirmationCodeInstructions);
+                confirmedMessage.setText(fullConfirmationCodeInstructions);
             }
         } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")
                 ) {
@@ -186,10 +177,10 @@ public class ConfirmationActivity extends BaseActivity {
         buttonChangeReservation.setButtonSize(FloatingActionButton.SIZE_MINI);
         buttonChangeReservation.setColorNormalResId(R.color.red);
         buttonChangeReservation.setColorPressedResId(R.color.red_dark);
-        fab.addMenuButton(buttonChangeReservation);
+        fabCancelReservation.addMenuButton(buttonChangeReservation);
 
         if (screeningToken.getConfirmationCode() != null) {
-            fab.setVisibility(View.GONE);
+            fabCancelReservation.setVisibility(View.GONE);
         }
 
         buttonChangeReservation.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +222,7 @@ public class ConfirmationActivity extends BaseActivity {
                     @Override
                     public void failure(RestError restError) {
                         progress.setVisibility(View.GONE);
-                        fab.setEnabled(true);
+                        fabCancelReservation.setEnabled(true);
                         Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });

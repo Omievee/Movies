@@ -772,7 +772,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
                 // Draw multiple people.
-                // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+                // Note: this method runs on the UI thread. Don't spend too much confirmedShowTime in here (like in this example).
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
 
                 for (TheaterPin p : cluster.getItems()) {
