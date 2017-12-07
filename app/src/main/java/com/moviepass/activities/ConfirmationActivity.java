@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.helpers.BottomNavigationViewHelper;
@@ -25,7 +24,6 @@ import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.responses.ChangedMindResponse;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
@@ -61,6 +59,8 @@ public class ConfirmationActivity extends BaseActivity {
     TextView seat;
     TextView confirmedMessage;
     ImageView qrCode;
+    TextView cancelReservation;
+    TextView confirmationCode;
     RelativeLayout ticketTop;
     RelativeLayout ticketBottom;
 
@@ -74,7 +74,6 @@ public class ConfirmationActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        fabCancelReservation = findViewById(R.id.FAB_CANCELRES);
         progress = findViewById(R.id.confirm_progress);
 
         Bundle extras = getIntent().getExtras();
@@ -88,6 +87,7 @@ public class ConfirmationActivity extends BaseActivity {
 //        mask = findViewById(R.id.mask);
         confirmedMovieTitle = findViewById(R.id.CONFIRMED_MOVIE_TITLE);
         theater = findViewById(R.id.CONFIRMED_THEATER);
+        confirmationCode = findViewById(R.id.CONFIRMED_CONFIRMATION_CODE);
 //        address = findViewById(R.id.address);
 //        cityThings = findViewById(R.id.city_things);
         confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
@@ -101,10 +101,10 @@ public class ConfirmationActivity extends BaseActivity {
 
         confirmedMovieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
-        address.setText(screening.getTheaterAddress());
-        cityThings.setVisibility(View.GONE);
+//        address.setText(screening.getTheaterAddress());
+//        cityThings.setVisibility(View.GONE);
         confirmedShowTime.setText(screeningTime);
-
+        cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
 //        try {
 //            SimpleDateFormat inputDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 //            Log.d("screeningGetDate", screening.getDate());
@@ -141,7 +141,7 @@ public class ConfirmationActivity extends BaseActivity {
 //                .into(poster);
 
         if (screeningToken.getConfirmationCode() != null) {
-            String confirmationCode = screeningToken.getConfirmationCode();
+            String code = screeningToken.getConfirmationCode();
 
             if (screeningToken.getSelectedSeat() != null) {
                 String seatName = screeningToken.getSelectedSeat().getSeatName();
@@ -154,36 +154,34 @@ public class ConfirmationActivity extends BaseActivity {
                 confirmedMessage.setText(fullConfirmationCodeInstructionsWithSeat);
             } else {
 
-                String fullConfirmationCodeInstructions = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
-                        getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
-
-                confirmedMessage.setText(fullConfirmationCodeInstructions);
+                confirmationCode.setText(code);
             }
-        } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")
-                ) {
-            String qrUrl = screeningToken.getQrUrl();
+        } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
 
-            Picasso.Builder qrBuilder = new Picasso.Builder(this);
-            qrBuilder.build()
-                    .load(qrUrl)
-                    .centerCrop()
-                    .fit()
-                    .into(qrCode);
+            //TODO QR CODE:
+//            String qrUrl = screeningToken.getQrUrl();
+//
+//            Picasso.Builder qrBuilder = new Picasso.Builder(this);
+//            qrBuilder.build()
+//                    .load(qrUrl)
+//                    .centerCrop()
+//                    .fit()
+//                    .into(qrCode);
         }
-
-        FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
-        buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
-        buttonChangeReservation.setImageResource(R.drawable.icon_reset);
-        buttonChangeReservation.setButtonSize(FloatingActionButton.SIZE_MINI);
-        buttonChangeReservation.setColorNormalResId(R.color.red);
-        buttonChangeReservation.setColorPressedResId(R.color.red_dark);
-        fabCancelReservation.addMenuButton(buttonChangeReservation);
+//
+//        FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
+//        buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
+//        buttonChangeReservation.setImageResource(R.drawable.icon_reset);
+//        buttonChangeReservation.setButtonSize(FloatingActionButton.SIZE_MINI);
+//        buttonChangeReservation.setColorNormalResId(R.color.red);
+//        buttonChangeReservation.setColorPressedResId(R.color.red_dark);
+//        fabCancelReservation.addMenuButton(buttonChangeReservation);
 
         if (screeningToken.getConfirmationCode() != null) {
-            fabCancelReservation.setVisibility(View.GONE);
+            cancelReservation.setVisibility(View.GONE);
         }
 
-        buttonChangeReservation.setOnClickListener(new View.OnClickListener() {
+        cancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 progress.setVisibility(View.VISIBLE);

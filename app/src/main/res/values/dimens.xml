@@ -10,6 +10,7 @@
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="margin_minimum">2dp</dimen>
     <dimen name="double_margin_standard">32dp</dimen>
+    <dimen name="doubledouble_margin_standard">48dp</dimen>
     <dimen name="quadruple_margin_standard">64dp</dimen>
     <dimen name="a_lot_margin_standard">128dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
