@@ -28,6 +28,7 @@
                     android:id="@+id/CONFIRMED_MOVIE_TITLE"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:layout_weight="1"
                     android:elevation="5dp"
                     android:text="[ MOVIE TITLE ]"
@@ -40,11 +41,11 @@
                     android:id="@+id/CONFIRMED_X_BUTTON"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/margin_half"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:layout_weight=".05"
                     android:background="@android:color/transparent"
-                    android:padding="@dimen/margin_minimum"
-                    android:src="@drawable/closeemptyionicons" />
+                    android:src="@drawable/closeemptyionicons1" />
 
             </LinearLayout>
 
@@ -52,6 +53,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
                 android:orientation="horizontal">
 
 
@@ -70,7 +73,9 @@
                     android:id="@+id/CONFIRMED_SHOWTIME"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_minimum"
                     android:layout_weight=".5"
+                    android:gravity="end"
                     android:padding="@dimen/margin_half"
                     android:text="[ 12:00 PM ]"
                     android:textColor="@color/white"
@@ -132,18 +137,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/doubledouble_margin_standard"
-            android:paddingStart="@dimen/doubledouble_margin_standard"
+            android:paddingEnd="@dimen/quadruple_margin_standard"
+            android:paddingStart="@dimen/quadruple_margin_standard"
             android:text="@string/activity_confirmation_confirmation_text"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_half"
             android:background="@drawable/confirmation_code_confirm"
             android:padding="@dimen/margin_half"
@@ -158,9 +164,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/margin_half"
+            android:paddingBottom="@dimen/margin_minimum"
             android:text="Cancel Reservation"
-            android:textColor="@color/red_dark"
+            android:textColor="@color/new_red"
             android:textSize="15sp"
             android:textStyle="bold" />
 

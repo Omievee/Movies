@@ -27,7 +27,7 @@
             android:maxLines="2"
             android:text="@string/fragment_theaters_name"
             android:textAlignment="viewStart"
-            android:textColor="@color/selector_red_to_white"
+            android:textColor="@color/new_red"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -83,6 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
+                android:layout_marginTop="@dimen/margin_half"
                 android:padding="@dimen/more_spacing"
                 android:text="@string/fragment_theaters_distance"
                 android:textAlignment="viewEnd"
@@ -93,10 +94,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".1"
-                android:paddingEnd="5dp"
-                android:src="@drawable/icon_location_pin"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:src="@drawable/locationiconsmallred"
                 android:textAlignment="viewStart"
-                android:tint="@color/red" />
+                android:tint="@color/new_red" />
 
         </LinearLayout>
 
