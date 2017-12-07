@@ -31,6 +31,8 @@
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:layout_weight="1"
                     android:elevation="5dp"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
                     android:text="[ MOVIE TITLE ]"
                     android:textColor="@color/white"
                     android:textSize="25sp"
@@ -43,9 +45,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="@dimen/double_margin_standard"
-                    android:layout_weight=".05"
+                    android:layout_weight=".04"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/closeemptyionicons1" />
+                    android:padding="@dimen/margin_half"
+                    android:src="@drawable/close_white" />
 
             </LinearLayout>
 
@@ -63,6 +66,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
                     android:text="[ MOVIE THEATER ]"
                     android:textColor="@color/white"
                     android:textSize="18sp"
@@ -78,7 +83,7 @@
                     android:gravity="end"
                     android:padding="@dimen/margin_half"
                     android:text="[ 12:00 PM ]"
-                    android:textColor="@color/white"
+                    android:textColor="@color/new_red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -111,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/double_margin_standard">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/CONFIRMED_MASTERCARD"
                 android:layout_width="300dp"
                 android:layout_height="200dp"
@@ -135,6 +140,7 @@
 
 
         <TextView
+            android:id="@+id/CONFIRMED_ZIP_TEXT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/quadruple_margin_standard"
@@ -142,7 +148,8 @@
             android:text="@string/activity_confirmation_confirmation_text"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
@@ -153,10 +160,11 @@
             android:layout_marginTop="@dimen/margin_half"
             android:background="@drawable/confirmation_code_confirm"
             android:padding="@dimen/margin_half"
-            android:text="[ 1234 ]"
+            android:text=" 11204 "
             android:textColor="@color/black_text"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
 
 
         <TextView
@@ -164,8 +172,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_half"
-            android:paddingBottom="@dimen/margin_minimum"
             android:text="Cancel Reservation"
             android:textColor="@color/new_red"
             android:textSize="15sp"

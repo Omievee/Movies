@@ -41,7 +41,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/double_margin_standard"
-        android:src="@drawable/logo_compact"
+        android:src="@drawable/logo"
         android:textAlignment="center"
         android:tint="@color/white"
         android:visibility="visible"

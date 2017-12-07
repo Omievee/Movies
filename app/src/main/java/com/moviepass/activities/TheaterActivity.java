@@ -2,16 +2,12 @@ package com.moviepass.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -19,50 +15,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.fragments.TheaterFragment;
-import com.moviepass.listeners.ScreeningPosterClickListener;
-import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.adapters.TheaterMoviesAdapter;
-import com.moviepass.adapters.TheaterShowtimesAdapter;
 import com.moviepass.helpers.BottomNavigationViewHelper;
-import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
 import com.moviepass.model.Theater;
-import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
-import com.moviepass.network.RestError;
 import com.moviepass.requests.CardActivationRequest;
-import com.moviepass.requests.CheckInRequest;
-import com.moviepass.requests.PerformanceInfoRequest;
-import com.moviepass.requests.TicketInfoRequest;
 import com.moviepass.responses.CardActivationResponse;
-import com.moviepass.responses.ReservationResponse;
-import com.moviepass.responses.ScreeningsResponse;
 
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import butterknife.BindView;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -79,7 +52,6 @@ public class TheaterActivity extends BaseActivity {
     public static final String TOKEN = "token";
 
     TheaterMoviesAdapter theaterMoviesAdapter;
-    TheaterShowtimesAdapter theaterShowtimesAdapter;
 
     ArrayList<Screening> moviesList;
     ArrayList<String> showtimesList;

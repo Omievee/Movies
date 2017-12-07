@@ -57,7 +57,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     View previousView;
 
 
-    TheaterShowtimesAdapter showtimesAdapter;
 
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
         this.showtimeClickListener = showtimeClickListener;

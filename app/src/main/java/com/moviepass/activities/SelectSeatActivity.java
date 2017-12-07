@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +84,7 @@ public class SelectSeatActivity extends BaseActivity {
     TextView mTheaterSelected;
     TextView mScreeningShowtime;
     TextView mSelectedSeat;
-    Button mReserveSeatButton;
+    Button reserveSeatButton;
     View mProgressWheel;
     String mShowtime;
     String mProviderName;
@@ -120,11 +119,12 @@ public class SelectSeatActivity extends BaseActivity {
 
         mCoordinator = findViewById(R.id.mCoordinator);
         mMoviePoster = findViewById(R.id.poster);
-        mSelectedMovieTitle = findViewById(R.id.movie_title);
+        mSelectedMovieTitle = findViewById(R.id.SEATCHART_MOVIETITLE);
         mMovieRunTime = findViewById(R.id.text_run_time);
-        mTheaterSelected = findViewById(R.id.theater_name);
-        mScreeningShowtime = findViewById(R.id.showtime);
-        mSelectedSeat = findViewById(R.id.selected_seats);
+        mTheaterSelected = findViewById(R.id.SEATCHART_THEATER);
+        mScreeningShowtime = findViewById(R.id.SEATCHART_SHOWTIME);
+        mSelectedSeat = findViewById(R.id.SEATCHART_SEAT);
+
         mGridSeatsA = findViewById(R.id.gridSeatsA);
         mGridSeatsB = findViewById(R.id.gridSeatsB);
         mGridSeatsC = findViewById(R.id.gridSeatsC);
@@ -139,11 +139,10 @@ public class SelectSeatActivity extends BaseActivity {
         mGridSeatsL = findViewById(R.id.gridSeatsL);
         mGridSeatsM = findViewById(R.id.gridSeatsM);
 
-        mReserveSeatButton = findViewById(R.id.button_action);
+        reserveSeatButton = findViewById(R.id.SEATCHART_RESERVE);
         mProgressWheel = findViewById(R.id.progress);
 
 
-        mSelectedMovieTitle.setText(mScreening.getTitle());
 
         //TODO: runtime logic;
 //
@@ -160,17 +159,17 @@ public class SelectSeatActivity extends BaseActivity {
 //            String translatedRunTime = hours + " hour " + minutes + " minutes";
 //            mMovieRunTime.setText(translatedRunTime);
 //        }
-
-        mTheaterSelected.setText(mScreening.getTheaterName());
-        mScreeningShowtime.setText(mShowtime);
-        mReserveSeatButton.setText(R.string.activity_select_seat_activity_title);
+//        mSelectedMovieTitle.setText(mScreening.getTitle());
+//        mTheaterSelected.setText(mScreening.getTheaterName());
+//        mScreeningShowtime.setText(mShowtime);
+//        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
 
         //PerformanceInfo
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
 
-        if (mReserveSeatButton.getText().toString().matches(getString(R.string.activity_select_seat_activity_title))) {
-            mReserveSeatButton.setOnClickListener(new View.OnClickListener() {
+        if (reserveSeatButton.getText().toString().matches(getString(R.string.activity_select_seat_activity_title))) {
+            reserveSeatButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     makeSnackbar(getString(R.string.activity_select_seat_select_first));
@@ -311,13 +310,13 @@ public class SelectSeatActivity extends BaseActivity {
                     }
                     final SeatButton button = (SeatButton) sender;
                     selectSeat(button.getSeatName());
-                    mReserveSeatButton.setOnClickListener(new View.OnClickListener() {
+                    reserveSeatButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             SelectedSeat selectedSeat = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
                             reserve(mScreening, mShowtime, selectedSeat);
                             mProgressWheel.setVisibility(View.VISIBLE);
-                            mReserveSeatButton.setEnabled(false);
+                            reserveSeatButton.setEnabled(false);
                         }
                     });
                 }
@@ -379,7 +378,7 @@ public class SelectSeatActivity extends BaseActivity {
     private void selectSeat(String seatName) {
         for (SeatButton button : mSeatButtons) {
             button.setSeatSelected(button.getSeatName().matches(seatName));
-            mReserveSeatButton.setText(R.string.activity_select_seat_reserve);
+            reserveSeatButton.setText(R.string.activity_select_seat_reserve);
         }
     }
 
@@ -407,7 +406,7 @@ public class SelectSeatActivity extends BaseActivity {
                 ReservationResponse reservationResponse = response.body();
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
-                    mReserveSeatButton.setEnabled(true);
+                    reserveSeatButton.setEnabled(true);
                     mProgressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
 
@@ -424,11 +423,11 @@ public class SelectSeatActivity extends BaseActivity {
 
                         Toast.makeText(SelectSeatActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         mProgressWheel.setVisibility(View.GONE);
-                        mReserveSeatButton.setEnabled(true);
+                        reserveSeatButton.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(SelectSeatActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         mProgressWheel.setVisibility(View.GONE);
-                        mReserveSeatButton.setEnabled(true);
+                        reserveSeatButton.setEnabled(true);
                     }
                 }
 
@@ -437,7 +436,7 @@ public class SelectSeatActivity extends BaseActivity {
             @Override
             public void failure(RestError restError) {
                 mProgressWheel.setVisibility(View.GONE);
-                mReserveSeatButton.setEnabled(true);
+                reserveSeatButton.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 

@@ -2,13 +2,11 @@ package com.moviepass.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -30,14 +28,9 @@ import android.widget.Toast;
 import com.moviepass.R;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.UserPreferences;
-import com.moviepass.activities.BaseActivity;
 import com.moviepass.activities.ConfirmationActivity;
 import com.moviepass.activities.SelectSeatActivity;
-import com.moviepass.activities.TheaterActivity;
-import com.moviepass.activities.VerificationActivity;
 import com.moviepass.adapters.TheaterMoviesAdapter;
-import com.moviepass.adapters.TheaterShowtimesAdapter;
-import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Reservation;
@@ -53,7 +46,6 @@ import com.moviepass.requests.PerformanceInfoRequest;
 import com.moviepass.requests.TicketInfoRequest;
 import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ReservationResponse;
-import com.moviepass.responses.RestrictionsResponse;
 import com.moviepass.responses.ScreeningsResponse;
 
 import org.jetbrains.annotations.NotNull;
@@ -61,7 +53,6 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -83,7 +74,6 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
     TextView theaterSelectedAddress, theaterSelectedAddressZip;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
-    TheaterShowtimesAdapter theaterShowtimesAdapter;
     boolean qualifiersApproved;
 
     FloatingActionButton fabLoadCard;

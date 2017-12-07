@@ -31,7 +31,7 @@
     <string name="activity_confirmation_purchase_ticket">You can now use your MoviePass card to purchase your ticket!</string>
     <string name="activity_confirmation_change_reservation">Change Reservation</string>
     <string name="activity_confirmation_pick_up_instructions">Please pick up your ticket.</string>
-    <string name="activity_confirmation_confirmation_text">If asked, provide this zip when purchasing your ticket.</string>
+    <string name="activity_confirmation_confirmation_text">If asked, provide this zip code when purchasing your ticket.</string>
     <string name="activity_confirmation_seat_selected"> Seat: </string>
 
 
