@@ -12,8 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -38,24 +36,14 @@ import butterknife.ButterKnife;
 public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
 
     View root;
-    GridLayout showtimeGrid;
     public static final String TAG = "found";
-    //    private final ScreeningPosterClickListener screeningPosterClickListener;
     ShowtimeClickListener showtimeClickListener;
     private ArrayList<Screening> screeningsArrayList;
     ArrayList<String> showtimesArrayList;
     List<String> startTimes;
     private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
-    private Context context;
-    private int selectedPosition = -1;
-    boolean selected = false;
     public TextView showtime = null;
-    String currentSelection;
-
-    View previousView;
-
 
 
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
@@ -74,14 +62,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         SimpleDraweeView cinemaPoster;
         @BindView(R.id.SHOWTIMEGRID)
         GridLayout showtimeGrid;
-//
-//        TextView cardView1, cardView2, cardView3, cardView4,
-//                cardView5, cardView6, cardView7, cardView8,
-//                cardView9, cardView10, cardView11, cardView12,
-//                cardView0, cardView13, cardView14, cardView15;
 
-        LinearLayout showTimesLayout;
-        ListView listView;
 
         public ViewHolder(View v) {
             super(v);
@@ -135,6 +116,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showtime.setPadding(50, 50, 50, 50);
+//                ViewGroup.MarginLayoutParams llp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT,ViewGroup.MarginLayoutParams.WRAP_CONTENT );
+//                llp.setMargins(10, 0, 10, 0);
+//                showtime.setLayoutParams(llp);
                 final TextView finalShowtime = showtime;
                 finalShowtime.setSelected(false);
                 //onclick on each showtime will execute the showtimelistener & create reservtion if possible.

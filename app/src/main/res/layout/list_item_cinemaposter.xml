@@ -4,8 +4,11 @@
     android:id="@+id/list_item_cinemaposterCARDVIEW"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/double_margin_standard"
+    android:layout_marginEnd="@dimen/margin_half"
+    android:layout_marginStart="@dimen/margin_half"
+    android:layout_marginTop="@dimen/margin_half"
     android:animateLayoutChanges="true"
-    android:layout_margin="@dimen/margin_half"
     android:elevation="5dp"
     android:paddingBottom="5dp"
     fresco:cardCornerRadius="5dp">
@@ -26,8 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:foreground="@drawable/poster_gradient"
-                fresco:failureImage="@drawable/activity_splash_star"
-                fresco:roundedCornerRadius="4dp" />
+                fresco:failureImage="@drawable/activity_splash_star" />
 
 
             <TextView
@@ -55,8 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingEnd="@dimen/double_margin_standard"
-                android:columnOrderPreserved="false"
                 android:layout_margin="@dimen/margin_standard"
+                android:columnOrderPreserved="false"
                 android:visibility="visible">
 
             </GridLayout>

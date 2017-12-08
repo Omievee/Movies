@@ -93,6 +93,7 @@
                 android:id="@+id/SELECTED_TOOLBAR"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
                 android:elevation="5dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -131,7 +132,8 @@
                     android:padding="@dimen/margin_half"
                     android:text="@string/activity_movie_change_location"
                     android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/Location_Pin"
@@ -140,7 +142,8 @@
                     android:background="@color/test_black"
                     android:padding="@dimen/margin_half"
                     android:src="@drawable/locationiconsmallred"
-                    android:tint="@color/new_red" />
+                    android:tint="@color/new_red"
+                    android:visibility="gone" />
 
 
             </LinearLayout>
