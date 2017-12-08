@@ -89,11 +89,9 @@ public class TheaterActivity extends BaseActivity {
         theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
         theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
-
         theaterSelectedName.setText(theater.getName());
         moviesList = new ArrayList<>();
         showtimesList = new ArrayList<>();
-
         backArrow = findViewById(R.id.CINEMA_BACK);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,45 +99,10 @@ public class TheaterActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-        /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
 
         //TODO: Bring back animations once polished.. Simpler Animations?.. 
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            redView = findViewById(R.id.red);
-//
-//            final Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    // previously visible view
-//                    // get the center for the clipping circle
-//                    int cx = redView.getWidth() / 2;
-//                    int cy = redView.getHeight() / 2;
-//
-//                    Log.d("cx", String.valueOf(cx));
-//
-//                    // get the initial radius for the clipping circle
-//                    float initialRadius = (float) Math.hypot(cx, cy);
-//
-//                    // create the animation (the final radius is zero)
-//                    Animator anim = ViewAnimationUtils.createCircularReveal(redView, cx, cy, initialRadius, 0);
-//
-//                    // make the view invisible when the animation is done
-//                    anim.addListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationEnd(Animator animation) {
-//                            super.onAnimationEnd(animation);
-//                            redView.setVisibility(View.INVISIBLE);
-//                            toolbar.setVisibility(View.VISIBLE);
-//                        }
-//                    });
-//
-//                    anim.start();
-//                }
-//
-//            }, 100);
-//        }
+
     }
 
     @Override

@@ -18,16 +18,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,34 +35,25 @@ import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.MovieActivity;
-import com.moviepass.activities.MoviesActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
 import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
-import com.moviepass.model.Provider;
 import com.moviepass.network.Api;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.responses.CardActivationResponse;
 
 import org.parceler.Parcels;
-import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ryan on 4/25/17.
@@ -134,6 +124,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
         mNewReleasesRecyclerView.setItemAnimator(null);
+        fadeIn(mNewReleasesRecyclerView);
 
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
@@ -143,6 +134,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
         mTopBoxOfficeRecyclerView.setItemAnimator(null);
+        fadeIn(mTopBoxOfficeRecyclerView);
 
         mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
 
@@ -153,6 +145,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
         mComingSoonRecyclerView.setItemAnimator(null);
+        fadeIn(mComingSoonRecyclerView);
+
 
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
 
@@ -468,6 +462,29 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onProviderDisabled(String provider) {
 
     }
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
 
 
 }

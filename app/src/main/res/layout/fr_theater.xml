@@ -32,32 +32,32 @@
                 app:layout_collapseMode="parallax">
 
                 <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:animateLayoutChanges="true"-->
-                    <!--app:layout_collapseMode="parallax">-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:animateLayoutChanges="true"-->
+                <!--app:layout_collapseMode="parallax">-->
 
 
-                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:id="@+id/CINEMA_BACK"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_marginStart="@dimen/margin_half"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:paddingTop="@dimen/margin_half"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:src="@drawable/iconback"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:tint="@color/white"&ndash;&gt;-->
-                        <!--&lt;!&ndash;app:layout_collapseMode="parallax" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/CINEMA_BACK"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_marginStart="@dimen/margin_half"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:paddingTop="@dimen/margin_half"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:src="@drawable/iconback"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:tint="@color/white"&ndash;&gt;-->
+                <!--&lt;!&ndash;app:layout_collapseMode="parallax" />&ndash;&gt;-->
 
 
-                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:id="@+id/CINEMA_FEATURE_STAR"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_margin="@dimen/margin_half"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:src="@drawable/ioniosstar"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:textAlignment="viewEnd"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:visibility="invisible"&ndash;&gt;-->
-                    <!--&lt;!&ndash;app:layout_collapseMode="parallax" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/CINEMA_FEATURE_STAR"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_margin="@dimen/margin_half"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:src="@drawable/ioniosstar"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textAlignment="viewEnd"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:visibility="invisible"&ndash;&gt;-->
+                <!--&lt;!&ndash;app:layout_collapseMode="parallax" />&ndash;&gt;-->
 
 
                 <!--</LinearLayout>-->
@@ -65,9 +65,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:animateLayoutChanges="true"
                     android:gravity="center"
-                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:orientation="horizontal"
                     app:layout_collapseMode="parallax">
 
@@ -192,6 +192,7 @@
         android:layout_marginEnd="@dimen/margin_standard"
         android:background="@drawable/button_red"
         android:elevation="5dp"
+        android:src="@drawable/ticketnavwhite"
         android:visibility="gone"
         app:fab_colorNormal="@color/new_red"
         app:fab_colorRipple="@color/white"

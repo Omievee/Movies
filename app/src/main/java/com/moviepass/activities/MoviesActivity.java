@@ -15,9 +15,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.adapters.MovieSearchAdapter;
@@ -28,8 +35,6 @@ import com.moviepass.model.MoviesResponse;
 import com.moviepass.network.RestClient;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +52,8 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
+
+    FloatingActionMenu reservationsMenu;
 
 
     MovieSearchAdapter searchAdapter;
@@ -72,6 +79,9 @@ public class MoviesActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
 
+        FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+        fadeIn(main);
+
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -80,6 +90,22 @@ public class MoviesActivity extends BaseActivity {
         movieSearchNEWRELEASE = new ArrayList<>();
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
+
+        reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
+
+        FloatingActionButton currentRes = new FloatingActionButton(this);
+        currentRes.setLabelText("Current Reservations");
+        currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        FloatingActionButton historyRes = new FloatingActionButton(this);
+        historyRes.setLabelText("Past Reservations");
+        historyRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        historyRes.setShowProgressBackground(true);
+
+        reservationsMenu.addMenuButton(currentRes);
+        reservationsMenu.addMenuButton(historyRes);
+
+
+        fadeIn(reservationsMenu);
 
     }
 
@@ -237,7 +263,7 @@ public class MoviesActivity extends BaseActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
 
-                movieSearchALLMOVIES.clear();
+        movieSearchALLMOVIES.clear();
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -286,12 +312,27 @@ public class MoviesActivity extends BaseActivity {
 
         return true;
     }
-}
 
-//
-//       if (searchView.getQuery() == MoviesResponse.getTopBoxOffice()) {
-//               SearchResults.setVisibility(View.VISIBLE);
-//               searchAdapter.notifyDataSetChanged();
-//               Log.d(TAG, "onResponse: " + movie.getTitle());
-//
-//               }
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
+}
