@@ -6,12 +6,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
 
             <LinearLayout
@@ -97,11 +97,12 @@
                 android:layout_marginTop="@dimen/margin_half"
                 android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
                 android:text="[ SEAT # ]"
-                android:textColor="@color/white_ish"
+                android:textColor="@color/new_red"
                 android:textSize="15sp" />
 
 
         </RelativeLayout>
+
 
         <View
             android:id="@+id/line"
@@ -111,8 +112,34 @@
             android:background="@color/gray_icon" />
 
 
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/ETIX_GET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom |center_horizontal"
+        android:layout_marginBottom="@dimen/quadruple_margin_standard"
+        android:background="@drawable/selectseat_confirm_button"
+        android:text="Get E-Ticket"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <include
+        android:id="@+id/ETIX_NAV"
+        layout="@layout/element_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom" />
+
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </android.support.design.widget.CoordinatorLayout>

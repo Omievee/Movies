@@ -618,6 +618,5 @@ public class SelectSeatActivity extends BaseActivity {
 
 
 
-    //Parameters to request if movieXchange is client..
 
 }

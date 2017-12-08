@@ -248,19 +248,7 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <include
-            android:id="@+id/SEATCHART_NAV"
-            layout="@layout/element_bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom" />
 
-        <include
-            android:id="@+id/progress"
-            layout="@layout/view_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -424,8 +412,21 @@
                 android:padding="0dp" />
 
 
-        </LinearLayout>
 
+        </LinearLayout>
+        <include
+            android:id="@+id/SEATCHART_NAV"
+            layout="@layout/element_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom" />
+
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

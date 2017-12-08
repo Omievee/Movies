@@ -24,10 +24,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ	" />
+            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ " />
 
         <!-- Taplytics -->
         <receiver
@@ -36,19 +35,20 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="tl-6ea3ea4d" />
             </intent-filter>
         </receiver>
+
         <service android:name="com.taplytics.sdk.TLGcmIntentService" />
 
         <receiver android:name="com.taplytics.sdk.TLBootReceiver">
@@ -74,7 +74,6 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -87,13 +86,10 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
-
         <activity android:name="io.card.payment.DataEntryActivity" />
-
         <activity
             android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask">
@@ -106,7 +102,6 @@
                 <data android:scheme="com.moviepass.mobile.braintree" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -118,7 +113,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.BrowseActivity"
             android:theme="@style/AppTheme"
@@ -143,7 +137,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MoviesActivity" />
         </activity>
-
         <activity
             android:name=".activities.MoviesActivity"
             android:launchMode="singleTop"
@@ -151,12 +144,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
-
         <activity
             android:name=".activities.NoDataActivity"
             android:theme="@style/AppTheme" />
@@ -236,6 +228,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="817d4d68505df552813b127d4149583ade2132e1" />
+
+        <activity android:name=".mobile.ETicketConfirmatin" />
+        <activity android:name=".activities.EticketConfirmation"></activity>
     </application>
 
 </manifest>
