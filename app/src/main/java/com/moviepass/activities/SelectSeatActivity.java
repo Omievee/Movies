@@ -185,7 +185,7 @@ public class SelectSeatActivity extends BaseActivity {
         onBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onBackPressed();
+                SelectSeatActivity.super.onBackPressed();
             }
         });
     }
@@ -306,32 +306,6 @@ public class SelectSeatActivity extends BaseActivity {
         Collections.sort(seats);
         for (SeatInfo seat : seats) {
             SeatButton seatButton = new SeatButton(this, seat);
-
-            final int seatRow = seat.getRow();
-            final int seatCol = seat.getColumn();
-            final String finalSeatName = seat.getSeatName();
-
-            seatButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View sender) {
-                    if (finalSeatName != null) {
-                        mSelectedSeat.setText(finalSeatName);
-                    } else {
-                        String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
-                        mSelectedSeat.setText(formattedSeatName);
-                    }
-                    final SeatButton button = (SeatButton) sender;
-                    selectSeat(button.getSeatName());
-                    reserveSeatButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            SelectedSeat selectedSeat = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-                            reserve(screeningObject, selectedShowTime, selectedSeat);
-                            mProgressWheel.setVisibility(View.VISIBLE);
-                            reserveSeatButton.setEnabled(false);
-                        }
-                    });
-                }
-            });
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
             if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
                     (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
@@ -383,6 +357,33 @@ public class SelectSeatActivity extends BaseActivity {
                 mGridSeatsA.addView(seatButton);
                 mSeatButtons.add(seatButton);
             }
+
+            final int seatRow = seat.getRow();
+            final int seatCol = seat.getColumn();
+            final String finalSeatName = seat.getSeatName();
+
+            seatButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View sender) {
+                    if (finalSeatName != null) {
+                        mSelectedSeat.setText(finalSeatName);
+                    } else {
+                        String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
+                        mSelectedSeat.setText(formattedSeatName);
+                    }
+                    final SeatButton button = (SeatButton) sender;
+                    selectSeat(button.getSeatName());
+                    reserveSeatButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            SelectedSeat selectedSeat = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+                            reserve(screeningObject, selectedShowTime, selectedSeat);
+                            mProgressWheel.setVisibility(View.VISIBLE);
+                            reserveSeatButton.setEnabled(false);
+                        }
+                    });
+                }
+            });
+
         }
     }
 
