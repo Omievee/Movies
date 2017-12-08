@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class TheaterActivity extends BaseActivity {
     Theater theater;
     TextView theaterSelectedName;
     View progress;
+    ImageView backArrow;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,13 @@ public class TheaterActivity extends BaseActivity {
         moviesList = new ArrayList<>();
         showtimesList = new ArrayList<>();
 
+        backArrow = findViewById(R.id.CINEMA_BACK);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
 

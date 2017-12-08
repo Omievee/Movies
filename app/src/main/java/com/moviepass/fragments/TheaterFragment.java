@@ -109,14 +109,8 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
 
         //ImageViews
-        backButton = rootView.findViewById(R.id.CINEMA_BACK);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
+//        backButton = rootView.findViewById(R.id.CINEMA_BACK);
 
-            }
-        });
 
         fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
         progress = rootView.findViewById(R.id.progress);
@@ -146,6 +140,15 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
 
         loadMovies();
+//
+//        backButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d(TAG, "backback: ");
+//                getActivity().finish();
+//
+//            }
+//        });
 
         return rootView;
     }

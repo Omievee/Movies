@@ -24,21 +24,39 @@
 
     </android.support.v7.widget.Toolbar>
 
-
-    <TextView
-        android:id="@+id/CINEMA_TITLE"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:text="[CINEMA NAME["
-        android:textAlignment="center"
-        android:lines="1"
-        android:textColor="@color/new_red"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_collapseMode="pin" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/CINEMA_BACK"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_half"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_weight=".1"
+            android:paddingTop="@dimen/margin_half"
+            android:src="@drawable/iconback"
+            android:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/CINEMA_TITLE"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_weight="1.5"
+            android:gravity="center_horizontal"
+            android:lines="1"
+            android:text="[CINEMA NAME]"
+            android:textAlignment="center"
+            android:textColor="@color/new_red"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_collapseMode="pin" />
+
+
+    </LinearLayout>
 
 
     <include
