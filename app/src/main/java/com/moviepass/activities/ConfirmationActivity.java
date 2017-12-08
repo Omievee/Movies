@@ -70,8 +70,6 @@ public class ConfirmationActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         progress = findViewById(R.id.confirm_progress);
-
-
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
         screening = screeningToken.getScreening();
         reservation = screeningToken.getReservation();
@@ -116,6 +114,7 @@ public class ConfirmationActivity extends BaseActivity {
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
                 if (qrUrl != null) {
                     moviepassCC_QR.setImageURI(qrUrl);
+                    confirmationCode.setText(code);
                     loadCardLogo.setVisibility(View.INVISIBLE);
                 }
             }
@@ -191,7 +190,6 @@ public class ConfirmationActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
-
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {
@@ -209,6 +207,7 @@ public class ConfirmationActivity extends BaseActivity {
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
+
     }
 
     void selectBottomNavigationBarItem(int itemId) {
