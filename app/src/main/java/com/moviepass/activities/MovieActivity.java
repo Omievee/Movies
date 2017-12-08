@@ -77,7 +77,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     public static final String MOVIE = "movie";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "mScreening";
+    public static final String SCREENING = "screeningObject";
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
@@ -361,7 +361,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
                     } else {
-                        Log.d("mScreening,", screening.toString());
+                        Log.d("screeningObject,", screening.toString());
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);

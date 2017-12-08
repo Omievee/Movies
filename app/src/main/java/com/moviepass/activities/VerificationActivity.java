@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,7 +45,6 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,7 +59,7 @@ import retrofit2.Response;
 public class VerificationActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "mScreening";
+    public static final String SCREENING = "screeningObject";
 
     Screening screening;
     Reservation reservation;

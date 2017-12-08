@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,12 +71,13 @@ public class SelectSeatActivity extends BaseActivity {
     boolean mLocationAcquired;
     private Location mMyLocation;
 
-    CoordinatorLayout mCoordinator;
+    CoordinatorLayout coordinatorLayout;
     GridLayout mGridSeatsA, mGridSeatsB, mGridSeatsC, mGridSeatsD,
             mGridSeatsE, mGridSeatsF, mGridSeatsG, mGridSeatsH, mGridSeatsI,
             mGridSeatsJ, mGridSeatsK, mGridSeatsL, mGridSeatsM;
     ImageView mMoviePoster;
-    Screening mScreening;
+    ImageView onBackButton;
+    Screening screeningObject;
     TextView mSelectedMovieTitle;
     TextView mMovieRunTime;
     TextView mTheaterSelected;
@@ -86,7 +85,7 @@ public class SelectSeatActivity extends BaseActivity {
     TextView mSelectedSeat;
     Button reserveSeatButton;
     View mProgressWheel;
-    String mShowtime;
+    String selectedShowTime;
     String mProviderName;
     TicketInfoRequest mTicketRequest;
     CheckInRequest mCheckinRequest;
@@ -97,12 +96,12 @@ public class SelectSeatActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_seat);
+        setContentView(R.layout.ac_select_seat);
+//
+//        final Toolbar mToolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(mToolbar);
 
-        final Toolbar mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
-        final ActionBar mActionBar = getSupportActionBar();
+//        final ActionBar mActionBar = getSupportActionBar();
 
         // Enable the Up button
 //        mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -111,25 +110,25 @@ public class SelectSeatActivity extends BaseActivity {
 //        mToolbar.setTitle(R.string.activity_select_seat_activity_title);
 //        mActionBar.setTitle(R.string.activity_select_seat_activity_title);
 
-        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.SEATCHART_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
         Intent intent = getIntent();
-        mScreening = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
-        mShowtime = getIntent().getStringExtra(SHOWTIME);
+        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
+        selectedShowTime = getIntent().getStringExtra(SHOWTIME);
 
-        mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
+        screeningObject = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
 
-        mCoordinator = findViewById(R.id.mCoordinator);
-        mMoviePoster = findViewById(R.id.poster);
+        coordinatorLayout = findViewById(R.id.mCoordinator);
+//        mMoviePoster = findViewById(R.id.poster);
         mSelectedMovieTitle = findViewById(R.id.SEATCHART_MOVIETITLE);
-        mMovieRunTime = findViewById(R.id.text_run_time);
+//        mMovieRunTime = findViewById(R.id.text_run_time);
         mTheaterSelected = findViewById(R.id.SEATCHART_THEATER);
         mScreeningShowtime = findViewById(R.id.SEATCHART_SHOWTIME);
         mSelectedSeat = findViewById(R.id.SEATCHART_SEAT);
-
+        onBackButton = findViewById(R.id.SEATCHART_ONBACK);
         mGridSeatsA = findViewById(R.id.gridSeatsA);
         mGridSeatsB = findViewById(R.id.gridSeatsB);
         mGridSeatsC = findViewById(R.id.gridSeatsC);
@@ -150,11 +149,11 @@ public class SelectSeatActivity extends BaseActivity {
 
         //TODO: runtime logic;
 //
-//        int t = mScreening.getRunningTime();
+//        int t = screeningObject.getRunningTime();
 //        int hours = t / 60; //since both are ints, you get an int
 //        int minutes = t % 60;
 //
-////        if (mScreening.getRunningTime() == 0) {
+////        if (screeningObject.getRunningTime() == 0) {
 //            mMovieRunTime.setVisibility(View.GONE);
 //        } else if (hours > 1) {
 //            String translatedRunTime = hours + " hours " + minutes + " minutes";
@@ -163,9 +162,9 @@ public class SelectSeatActivity extends BaseActivity {
 //            String translatedRunTime = hours + " hour " + minutes + " minutes";
 //            mMovieRunTime.setText(translatedRunTime);
 //        }
-        mSelectedMovieTitle.setText(mScreening.getTitle());
-        mTheaterSelected.setText(mScreening.getTheaterName());
-        mScreeningShowtime.setText(mShowtime);
+        mSelectedMovieTitle.setText(screeningObject.getTitle());
+        mTheaterSelected.setText(screeningObject.getTheaterName());
+        mScreeningShowtime.setText(selectedShowTime);
 
 
         reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
@@ -182,29 +181,36 @@ public class SelectSeatActivity extends BaseActivity {
                 }
             });
         }
+
+        onBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onBackPressed();
+            }
+        });
     }
 
 
     protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest() {
 
-        if (mScreening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-            Log.d(TAG, "who is this?: " + mScreening.getProvider().getProviderName());
-            int normalizedMovieId = mScreening.getMoviepassId();
-            String externalMovieId = mScreening.getProvider().getPerformanceInfo(mShowtime).getExternalMovieId();
-            String format = mScreening.getFormat();
-            int tribuneTheaterId = mScreening.getTribuneTheaterId();
-            int screeningId = mScreening.getProvider().getPerformanceInfo(mShowtime).getScreeningId();
-            int performanceNumber = mScreening.getProvider().getPerformanceInfo(mShowtime).getPerformanceNumber();
-            String sku = mScreening.getProvider().getPerformanceInfo(mShowtime).getSku();
-            Double price = mScreening.getProvider().getPerformanceInfo(mShowtime).getPrice();
-            String dateTime = mScreening.getProvider().getPerformanceInfo(mShowtime).getDateTime();
-            String auditorium = mScreening.getProvider().getPerformanceInfo(mShowtime).getAuditorium();
-            String performanceId = mScreening.getProvider().getPerformanceInfo(mShowtime).getPerformanceId();
-            String sessionId = mScreening.getProvider().getPerformanceInfo(mShowtime).getSessionId();
-            int theater = mScreening.getProvider().getTheater();
-            String cinemaChainId = mScreening.getProvider().getPerformanceInfo(mShowtime).getCinemaChainId();
-            String showtimeId = mScreening.getProvider().getPerformanceInfo(mShowtime).getShowtimeId();
-            TicketType ticketType = mScreening.getProvider().getPerformanceInfo(mShowtime).getTicketType();
+        if (screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
+            Log.d(TAG, "who is this?: " + screeningObject.getProvider().getProviderName());
+            int normalizedMovieId = screeningObject.getMoviepassId();
+            String externalMovieId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId();
+            String format = screeningObject.getFormat();
+            int tribuneTheaterId = screeningObject.getTribuneTheaterId();
+            int screeningId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getScreeningId();
+            int performanceNumber = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPerformanceNumber();
+            String sku = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getSku();
+            Double price = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPrice();
+            String dateTime = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getDateTime();
+            String auditorium = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getAuditorium();
+            String performanceId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPerformanceId();
+            String sessionId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getSessionId();
+            int theater = screeningObject.getProvider().getTheater();
+            String cinemaChainId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getCinemaChainId();
+            String showtimeId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getShowtimeId();
+            TicketType ticketType = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getTicketType();
 
 
             mPerformReq = new PerformanceInfoRequest(
@@ -230,18 +236,18 @@ public class SelectSeatActivity extends BaseActivity {
 
         } else {
             //IF not movieXchange then it will simply request these parameters:
-            int normalizedMovieId = mScreening.getMoviepassId();
-            String externalMovieId = mScreening.getProvider().getPerformanceInfo(mShowtime).getExternalMovieId();
-            String format = mScreening.getFormat();
-            int tribuneTheaterId = mScreening.getTribuneTheaterId();
-            int performanceNumber = mScreening.getProvider().getPerformanceInfo(mShowtime).getPerformanceNumber();
-            String sku = mScreening.getProvider().getPerformanceInfo(mShowtime).getSku();
-            Double price = mScreening.getProvider().getPerformanceInfo(mShowtime).getPrice();
-            String dateTime = mScreening.getProvider().getPerformanceInfo(mShowtime).getDateTime();
-            String auditorium = mScreening.getProvider().getPerformanceInfo(mShowtime).getAuditorium();
-            String performanceId = mScreening.getProvider().getPerformanceInfo(mShowtime).getPerformanceId();
-            String sessionId = mScreening.getProvider().getPerformanceInfo(mShowtime).getSessionId();
-            int theater = mScreening.getProvider().getTheater();
+            int normalizedMovieId = screeningObject.getMoviepassId();
+            String externalMovieId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId();
+            String format = screeningObject.getFormat();
+            int tribuneTheaterId = screeningObject.getTribuneTheaterId();
+            int performanceNumber = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPerformanceNumber();
+            String sku = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getSku();
+            Double price = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPrice();
+            String dateTime = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getDateTime();
+            String auditorium = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getAuditorium();
+            String performanceId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getPerformanceId();
+            String sessionId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getSessionId();
+            int theater = screeningObject.getProvider().getTheater();
 
             mPerformReq = new PerformanceInfoRequest(
                     dateTime,
@@ -319,7 +325,7 @@ public class SelectSeatActivity extends BaseActivity {
                         @Override
                         public void onClick(View view) {
                             SelectedSeat selectedSeat = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-                            reserve(mScreening, mShowtime, selectedSeat);
+                            reserve(screeningObject, selectedShowTime, selectedSeat);
                             mProgressWheel.setVisibility(View.VISIBLE);
                             reserveSeatButton.setEnabled(false);
                         }
@@ -327,8 +333,8 @@ public class SelectSeatActivity extends BaseActivity {
                 }
             });
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
-            if ((mScreening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
-                    (mScreening.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
+            if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
+                    (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
                 if (seat.getSeatName().contains("A")) {
                     mGridSeatsA.addView(seatButton);
                 }
@@ -514,7 +520,7 @@ public class SelectSeatActivity extends BaseActivity {
     }
 
     public void makeSnackbar(String message) {
-        final Snackbar snackbar = Snackbar.make(mCoordinator, message, Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -608,6 +614,7 @@ public class SelectSeatActivity extends BaseActivity {
             }
         }
     }
+
 
 
     //Parameters to request if movieXchange is client..
