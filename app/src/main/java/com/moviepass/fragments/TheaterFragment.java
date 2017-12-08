@@ -322,11 +322,15 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
+            Log.d(TAG, "made it: ");
             Log.d("ticketType", screening.getProvider().ticketType);
-            Intent intent = new Intent(getContext(), SelectSeatActivity.class);
+
+            Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
+
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
+
             startActivity(intent);
             getActivity().finish();
         }

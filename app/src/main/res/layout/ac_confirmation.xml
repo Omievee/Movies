@@ -28,7 +28,7 @@
                     android:id="@+id/CONFIRMED_MOVIE_TITLE"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:layout_marginTop="25dp"
                     android:layout_weight="1"
                     android:elevation="5dp"
                     android:ellipsize="marquee"
@@ -149,7 +149,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
@@ -164,7 +164,7 @@
             android:textColor="@color/black_text"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
 
         <TextView

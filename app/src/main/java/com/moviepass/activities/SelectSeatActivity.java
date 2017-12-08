@@ -64,7 +64,7 @@ public class SelectSeatActivity extends BaseActivity {
     public static final String TAG = "FOUND IT";
 
     public static final String MOVIE = "movie";
-    public static final String SCREENING = "mScreening";
+    public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "theater";
     public static final String TOKEN = "token";
@@ -94,6 +94,7 @@ public class SelectSeatActivity extends BaseActivity {
 
     private ArrayList<SeatButton> mSeatButtons;
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_seat);
@@ -114,8 +115,12 @@ public class SelectSeatActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
+
+        Intent intent = getIntent();
+        mScreening = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         mShowtime = getIntent().getStringExtra(SHOWTIME);
+
+        mScreening = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
 
         mCoordinator = findViewById(R.id.mCoordinator);
         mMoviePoster = findViewById(R.id.poster);
@@ -143,7 +148,6 @@ public class SelectSeatActivity extends BaseActivity {
         mProgressWheel = findViewById(R.id.progress);
 
 
-
         //TODO: runtime logic;
 //
 //        int t = mScreening.getRunningTime();
@@ -159,10 +163,12 @@ public class SelectSeatActivity extends BaseActivity {
 //            String translatedRunTime = hours + " hour " + minutes + " minutes";
 //            mMovieRunTime.setText(translatedRunTime);
 //        }
-//        mSelectedMovieTitle.setText(mScreening.getTitle());
-//        mTheaterSelected.setText(mScreening.getTheaterName());
-//        mScreeningShowtime.setText(mShowtime);
-//        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
+        mSelectedMovieTitle.setText(mScreening.getTitle());
+        mTheaterSelected.setText(mScreening.getTheaterName());
+        mScreeningShowtime.setText(mShowtime);
+
+
+        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
 
         //PerformanceInfo
         checkProviderDoPerformanceInfoRequest();
@@ -173,7 +179,6 @@ public class SelectSeatActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     makeSnackbar(getString(R.string.activity_select_seat_select_first));
-
                 }
             });
         }

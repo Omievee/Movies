@@ -71,7 +71,6 @@ public class ConfirmationActivity extends BaseActivity {
 
         progress = findViewById(R.id.confirm_progress);
 
-        Bundle extras = getIntent().getExtras();
 
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
         screening = screeningToken.getScreening();
@@ -87,12 +86,11 @@ public class ConfirmationActivity extends BaseActivity {
         moviepassCC_QR.setImageDrawable(getDrawable(R.drawable.mpmastercard2));
         confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
         confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
-        qrCode = findViewById(R.id.qr_code);
+//        qrCode = findViewById(R.id.qr_code);
         loadCardLogo = findViewById(R.id.CONFIRMED_LOADED_LOGO);
         confirmedMovieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
         confirmedShowTime.setText(screeningTime);
-
         cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
         cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
@@ -104,6 +102,8 @@ public class ConfirmationActivity extends BaseActivity {
             String code = screeningToken.getConfirmationCode();
             Log.d(TAG, "CODE?: " + code);
             if (screeningToken.getSelectedSeat() != null) {
+                confirmationCode.setText(code);
+
 //                String seatName = screeningToken.getSelectedSeat().getSeatName();
 //                Log.d("seatName", seatName);
 //                String fullConfirmationCodeInstructionsWithSeat = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
@@ -112,85 +112,67 @@ public class ConfirmationActivity extends BaseActivity {
 //                Log.d(TAG, "onCreate: " + code);
 //
 //                confirmedMessage.setText(fullConfirmationCodeInstructionsWithSeat);
-            } else {
-                Log.d(TAG, "onCreate: " + code);
-                confirmationCode.setText(code);
+            } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
+                Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
+                if (qrUrl != null) {
+                    moviepassCC_QR.setImageURI(qrUrl);
+                    loadCardLogo.setVisibility(View.INVISIBLE);
+                }
             }
-        } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
-            final Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
+            cancelReservation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    progress.setVisibility(View.VISIBLE);
+                    ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
 
-            if (qrUrl != null) {
-                moviepassCC_QR.setImageURI(qrUrl);
-                loadCardLogo.setVisibility(View.INVISIBLE);
-            }
-        }
+                    RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
+                        @Override
+                        public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
+                            ChangedMindResponse responseBody = response.body();
+                            progress.setVisibility(View.GONE);
 
-        if (screeningToken.getConfirmationCode() != null)
+                            if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
+                                try {
+                                    JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                    Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
-        {
-            cancelReservation.setVisibility(View.GONE);
-        }
+                                    Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                                } catch (Exception e) {
+                                }
+                            } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
+                                finish();
+                            } else if (responseBody != null && response.isSuccessful()) {
+                                Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                try {
+                                    JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                    Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
-        cancelReservation.setOnClickListener(new View.OnClickListener()
-
-        {
-            @Override
-            public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
-
-                RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
-                    @Override
-                    public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
-                        ChangedMindResponse responseBody = response.body();
-                        progress.setVisibility(View.GONE);
-
-                        if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
-                            try {
-                                JSONObject jObjError = new JSONObject(response.errorBody().string());
-                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-
-                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
-                            } catch (Exception e) {
-                            }
-                        } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
-                            finish();
-                        } else if (responseBody != null && response.isSuccessful()) {
-                            Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
-                            finish();
-                        } else {
-                            try {
-                                JSONObject jObjError = new JSONObject(response.errorBody().string());
-                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-
-                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
+                                    Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                                } catch (Exception e) {
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void failure(RestError restError) {
-                        progress.setVisibility(View.GONE);
-                        fabCancelReservation.setEnabled(true);
-                        Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-
-        cancelX.setOnClickListener(new View.OnClickListener()
-
-        {
-            @Override
-            public void onClick(View v) {
-                Intent backToMain = new Intent(getApplicationContext(), MoviesActivity.class);
-                startActivity(backToMain);
-//                Snackbar.make()
-            }
-        });
+                        @Override
+                        public void failure(RestError restError) {
+                            progress.setVisibility(View.GONE);
+                            fabCancelReservation.setEnabled(true);
+                            Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+            cancelX.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent backToMain = new Intent(getApplicationContext(), MoviesActivity.class);
+                    startActivity(backToMain);
+                }
+            });
+        }
     }
-
     /* Bottom Navigation View */
 
     int getContentViewId() {
