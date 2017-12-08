@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+
+    android:alpha="100"
     android:elevation="4dp"
     app:itemBackground="@android:color/background_dark"
     app:itemIconTint="@color/drawer_item"

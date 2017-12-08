@@ -93,28 +93,42 @@ public class ConfirmationActivity extends BaseActivity {
         cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
 
+        Log.d(TAG, "onCreate: " + screeningToken.getQrUrl());
+        Log.d(TAG, "onCreate: "+ screeningToken.getConfirmationCode());
+        Log.d(TAG, "onCreate: "+ screeningToken.getZipCodeTicket());
+
+
         if (screeningToken.getConfirmationCode() != null) {
 
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode();
             Log.d(TAG, "CODE?: " + code);
-            if (screeningToken.getSelectedSeat() != null) {
-                confirmationCode.setText(code);
+            confirmationCode.setText(code);
 
-//                String seatName = screeningToken.getSelectedSeat().getSeatName();
-//                Log.d("seatName", seatName);
-//                String fullConfirmationCodeInstructionsWithSeat = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
-//                        getString(R.string.activity_confirmation_confirmation_text) + ". " + confirmationCode + " " +
-//                        getString(R.string.activity_confirmation_seat_selected) + " " + seatName;
-//                Log.d(TAG, "onCreate: " + code);
+
+
+//            if (screeningToken.getSelectedSeat() != null) {
 //
-//                confirmedMessage.setText(fullConfirmationCodeInstructionsWithSeat);
-            } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
+//            }
+//
+//
+////                String seatName = screeningToken.getSelectedSeat().getSeatName();
+////                Log.d("seatName", seatName);
+////                String fullConfirmationCodeInstructionsWithSeat = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
+////                        getString(R.string.activity_confirmation_confirmation_text) + ". " + confirmationCode + " " +
+////                        getString(R.string.activity_confirmation_seat_selected) + " " + seatName;
+////                Log.d(TAG, "onCreate: " + code);
+////
+////                confirmedMessage.setText(fullConfirmationCodeInstructionsWithSeat);
+//            }
+// else
+
+            if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
                 if (qrUrl != null) {
+                    cancelReservation.setVisibility(View.GONE);
                     moviepassCC_QR.setImageURI(qrUrl);
-                    confirmationCode.setText(code);
                     loadCardLogo.setVisibility(View.INVISIBLE);
                 }
             }

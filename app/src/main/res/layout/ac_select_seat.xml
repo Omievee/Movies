@@ -57,7 +57,7 @@
                 android:singleLine="true"
                 android:text="[ Movie Title ] "
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -65,12 +65,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginEnd="@dimen/margin_half"
                 android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
                 android:layout_weight="1"
-                android:text="          Seat "
+                android:gravity="center_horizontal"
+                android:text="Seat "
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -98,14 +100,12 @@
                 android:id="@+id/SEATCHART_THEATER"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_half"
                 android:layout_marginStart="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_half"
                 android:layout_weight="2"
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:text="[ THEATER ] "
-                android:textColor="@color/white"
+                android:textColor="@color/white_ish"
                 android:textSize="15sp" />
 
             <TextView
@@ -134,14 +134,13 @@
                 android:id="@+id/SEATCHART_SHOWTIME"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginBottom="@dimen/margin_minimum"
                 android:layout_marginStart="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_half"
                 android:layout_weight="2"
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:text="[ TIME ] "
-                android:textColor="@color/white"
+                android:textColor="@color/white_ish"
                 android:textSize="15sp" />
 
         </LinearLayout>
@@ -228,8 +227,8 @@
             android:id="@+id/TipText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/SEATCHART_RESERVE"
-            android:layout_marginStart="10dp"
+            android:layout_above="@+id/SEATCHART_RESERVE"
+            android:layout_centerHorizontal="true"
             android:text="*Scroll Sideways If Seating Chart Cuts Off"
             android:textColor="@color/white"
             android:textSize="13sp"
