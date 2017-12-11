@@ -40,6 +40,7 @@
             android:key="facebook"
             android:title="@string/xml_account_preferences_account_facebook" />
 
+
         <Preference
             android:id="@+id/log_out"
             android:key="log_out"

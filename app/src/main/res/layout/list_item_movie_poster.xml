@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/list_item_movie_poster"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="165dp"
     android:layout_height="250dp"
-    android:paddingBottom="5dp"
+    android:layout_marginStart="7dp"
     android:elevation="4dp"
-    android:layout_marginLeft="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingBottom="5dp">
 
-    <ImageView
+
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/ticket_top_red_dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ticket_top_red_dark" />
+        fresco:failureImage="@drawable/activity_splash_star"
+        fresco:roundedCornerRadius="4dp" />
+
+    <!--<ImageView-->
+    <!--android:id="@+id/ticket_top_red_dark"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:src="@drawable/ticket_top_red_dark" />-->
 
     <TextView
         android:id="@+id/poster_movie_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/margin_half"
         android:layout_marginRight="@dimen/margin_half"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
         android:gravity="center"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/white" />
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

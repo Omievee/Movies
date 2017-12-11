@@ -3,6 +3,7 @@ package com.moviepass.model;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Parcel
@@ -105,9 +106,8 @@ public class Movie implements ISearchable {
 
         if (this.imageUrl.endsWith(".png") || this.imageUrl.endsWith(".jpg")) {
             return this.imageUrl;
-        } else {
-            return this.imageUrl.concat("/original.jpg");
         }
+        return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {

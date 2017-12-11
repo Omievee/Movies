@@ -16,22 +16,22 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-                Log.d("userId", UserPreferences.getUserId().toString())
-                if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
-                    val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
-                    startActivity(i)
-                    finish()
-                } else {
-                    val i = Intent(this@SplashActivity, MoviesActivity::class.java)
-                    startActivity(i)
-                    finish()
-                }
+            Log.d("userId", UserPreferences.getUserId().toString())
+            if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
+                val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
+                startActivity(i)
+                finish()
+            } else {
+                val i = Intent(this@SplashActivity, MoviesActivity::class.java)
+                startActivity(i)
+                finish()
+            }
         }, SPLASH_TIME_OUT.toLong())
     }
 
     companion object {
         // Splash screen timer
-        private val SPLASH_TIME_OUT = 2500
+        private val SPLASH_TIME_OUT = 1500
     }
 
 }

@@ -28,10 +28,10 @@
     <string name="activity_confirmation_date_placeholder">[8/20/1999]</string>
     <string name="activity_confirmation_auditorium">[Auditorium]</string>
     <string name="activity_confirmation_seat">[Seat]</string>
-    <string name="activity_confirmation_purchase_ticket">You checked in successfully! Use your MoviePass card to purchase your ticket.</string>
+    <string name="activity_confirmation_purchase_ticket">You can now use your MoviePass card to purchase your ticket!</string>
     <string name="activity_confirmation_change_reservation">Change Reservation</string>
     <string name="activity_confirmation_pick_up_instructions">Please pick up your ticket.</string>
-    <string name="activity_confirmation_confirmation_text">Confirmation Code:</string>
+    <string name="activity_confirmation_confirmation_text">If asked, provide this code when purchasing your ticket.</string>
     <string name="activity_confirmation_seat_selected"> Seat: </string>
 
 
@@ -44,7 +44,8 @@
     <string name="activity_movie_holder_running_time">[### minutes]</string>
     <string name="activity_movie_running_time_minutes">minutes</string>
     <string name="activity_movie_reviews">Reviews</string>
-    <string name="activity_movie_theater_select_text">Theaters Nearby</string>
+    <string name="activity_movie_choose_theater_time">Choose Theater &amp; Time</string>
+    <string name="activity_movie_change_location">Change Location</string>
 
     <!-- NoDataActivity -->
     <string name="activity_no_data_activity_header">Oops!</string>
@@ -66,7 +67,7 @@
 
 
     <!-- SelectSeatActivity -->
-    <string name="activity_select_seat_activity_title">Select Your Seat</string>
+    <string name="activity_select_seat_activity_title">SELECT YOUR SEAT</string>
     <string name="activity_select_seat_movie_title">[Title]</string>
     <string name="activity_select_seat_movie_genre">[Genre]</string>
     <string name="activity_select_seat_run_time_placeholder">[Time]</string>
@@ -80,8 +81,9 @@
     <string name="activity_select_seat_selected">Selected</string>
     <string name="activity_select_seat_reserve">Reserve Your Seat</string>
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
-
-
+    <string name="data_connection">Check Your Connection And Try Again</string>
+    <string name="pending_reservation">You have a pending reservation</string>
+    <string name="error">Error: Contact Customer Support</string>
 
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
@@ -104,7 +106,7 @@
     <string name="activity_sign_up_step_one_sign_up">Sign Up</string>
     <string name="activity_sign_up_step_one_sign_up_with_facebook">Sign up with Facebook</string>
     <string name="activity_sign_up_step_one_not_ready">Not ready to sign up? Explore the app</string>
-    
+
     <!-- SignUpFirstOpenActivity -->
     <string name="activity_sign_up_first_open_see_theaters">See theaters in your area</string>
 
@@ -313,5 +315,10 @@
     <string name="xml_settings_preferences_settings_help_faqs">FAQs</string>
     <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
     <string name="xml_settings_preferences_settings_help_version">Version</string>
+
+
+    <!-- ALL PURPOSE STRINGS -->
+    <string name="blank_single_space"> </string>
+    <string name="blank_double_space">  </string>
 
 </resources>

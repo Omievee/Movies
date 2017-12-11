@@ -1,31 +1,21 @@
 package com.moviepass.activities;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v13.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,22 +26,22 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.moviepass.Constants;
-import com.moviepass.UserPreferences;
-import com.moviepass.listeners.MovieTheaterClickListener;
 import com.moviepass.R;
-import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.adapters.MovieShowtimesAdapter;
 import com.moviepass.adapters.MovieTheatersAdapter;
-import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -66,9 +56,8 @@ import com.moviepass.requests.TicketInfoRequest;
 import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ReservationResponse;
 import com.moviepass.responses.ScreeningsResponse;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -76,6 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -83,14 +73,15 @@ import retrofit2.Response;
  * Created by anubis on 6/9/17.
  */
 
-public class MovieActivity extends BaseActivity implements MovieTheaterClickListener, ShowtimeClickListener {
+public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screening";
+    public static final String SCREENING = "screeningObject";
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
+
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -98,78 +89,65 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
     private Location mMyLocation;
+    ArrayList<String> mShowtimesList;
+
 
     Movie movie;
     Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
-    MovieTheatersAdapter mMovieTheatersAdapter;
-    MovieShowtimesAdapter mMovieShowtimesAdapter;
+    MovieTheatersAdapter MovieTheatersAdapter;
+    MovieShowtimesAdapter ShowtimesAdapter;
     ScreeningsResponse mScreeningsResponse;
-    Screening mScreening;
+    Screening Screening;
 
-    ImageView mPoster;
-    TextView mPosterTitle;
-    TextView theaterAddress;
-    TextView mTitle;
-    TextView mGenre;
-    TextView mRunTime;
-    TextView mTheatersNearby;
-    TextView mTheaterSelectTime;
-    Button mAction;
-    View mBelowShowtimes;
-    View mScreenBottom;
-    View progress;
+    TextView THEATER_ADDRESS_LISTITEM;
+    TextView SELECTED_MOVIE_TITLE;
+    View ProgressBar;
 
     ArrayList<Screening> mScreeningsList;
-    ArrayList<String> mShowtimesList;
+    ArrayList<String> ShowtimesList;
 
-    @BindView(R.id.recycler_view_theaters)
-    RecyclerView theatersRecyclerView;
-    @BindView(R.id.recycler_view_showtimes)
-    RecyclerView mShowtimesRecyclerView;
+    @BindView(R.id.SELECTED_THEATERS)
+    RecyclerView SelectedTheatersRecyclerView;
+
+    @BindView(R.id.SELECTED_MOVIE_IMAGE)
+    SimpleDraweeView SELECTED_MOVIEPOSTER;
+
+    @BindView(R.id.SELECTED_RUNTIME)
+    TextView SELECTED_RUNTIME;
+
+
+    @BindView(R.id.FAB_LOADCARD)
+    com.github.clans.fab.FloatingActionButton fabLoadCard;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie);
+        setContentView(R.layout.ac_movie);
         supportPostponeEnterTransition();
 
-        final Toolbar mToolbar = findViewById(R.id.my_toolbar);
+
+        supportStartPostponedEnterTransition();
+        supportPostponeEnterTransition();
+        final Toolbar mToolbar = findViewById(R.id.SELECTED_TOOLBAR);
+        mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
-
-        final ActionBar mActionBar = getSupportActionBar();
-
-        // Enable the Up button
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
-
-        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.SELECTED_MOVIE_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
         Bundle extras = getIntent().getExtras();
+//        extras.getBundle();
+
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
-        mPoster = findViewById(R.id.poster);
-        mPosterTitle = findViewById(R.id.poster_movie_title);
-        mTitle = findViewById(R.id.movie_title);
-        theaterAddress = findViewById(R.id.theater_address);
-        mRunTime = findViewById(R.id.text_run_time);
-        mTheaterSelectTime = findViewById(R.id.theater_select_time);
-        mTheatersNearby = findViewById(R.id.movie_select_text);
-        mAction = findViewById(R.id.button_action);
-        mBelowShowtimes = findViewById(R.id.below_showtimes);
-        mBelowShowtimes.setFocusable(true);
-        mBelowShowtimes.setFocusableInTouchMode(true);
-        mScreenBottom = findViewById(R.id.bottom_of_screen);
-        mScreenBottom.setFocusable(true);
-        mScreenBottom.setFocusableInTouchMode(true);
-        progress = findViewById(R.id.progress);
+        SELECTED_MOVIEPOSTER = findViewById(R.id.SELECTED_MOVIE_IMAGE);
+        SELECTED_MOVIE_TITLE = findViewById(R.id.SELECTED_MOVIE_TITLE);
+        THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
+        SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
+        fabLoadCard = findViewById(R.id.FAB_LOADCARD);
 
-        mToolbar.setTitle(movie.getTitle());
-        mActionBar.setTitle(movie.getTitle());
-
-        theaterAddress.setVisibility(View.GONE);
+        mShowtimesList = new ArrayList<>();
+        ProgressBar = findViewById(R.id.progress);
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -177,76 +155,44 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         currentLocationTasks();
-        progress.setVisibility(View.VISIBLE);
+        ProgressBar.setVisibility(View.VISIBLE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String imageTransitionName = extras.getString(MoviesFragment.EXTRA_MOVIE_IMAGE_TRANSITION_NAME);
-            mPoster.setTransitionName(imageTransitionName);
-        }
+        //FRESCO:
+        ButterKnife.bind(this, SELECTED_MOVIEPOSTER);
 
-        String imgUrl = movie.getImageUrl();
-
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
-
-                mPosterTitle.setText(movie.getTitle());
-            }
-        });
-        builder.build()
-                .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(mPoster, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
-
-
-        mTitle.setText(movie.getTitle());
+        loadMoviePosterData();
+        SELECTED_MOVIE_TITLE.setText(movie.getTitle());
         int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
 
         if (t == 0) {
-            mRunTime.setVisibility(View.GONE);
+            SELECTED_RUNTIME.setVisibility(View.GONE);
         } else if (hours > 1) {
             String translatedRunTime = hours + " hours " + minutes + " minutes";
-            mRunTime.setText(translatedRunTime);
+            SELECTED_RUNTIME.setText(translatedRunTime);
         } else {
             String translatedRunTime = hours + " hour " + minutes + " minutes";
-            mRunTime.setText(translatedRunTime);
+            SELECTED_RUNTIME.setText(translatedRunTime);
         }
 
         mScreeningsList = new ArrayList<>();
 
+
         /* Theaters RecyclerView */
-        LinearLayoutManager moviesLayoutManager
-                = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-        theatersRecyclerView = findViewById(R.id.recycler_view_theaters);
-        theatersRecyclerView.setLayoutManager(moviesLayoutManager);
-
-        mMovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
-
-        theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-        theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+        LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        SelectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
+        SelectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
+        MovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
+        SelectedTheatersRecyclerView.setAdapter(MovieTheatersAdapter);
+        SelectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
-                        theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        SelectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                        for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
-                            View v = theatersRecyclerView.getChildAt(i);
+                        for (int i = 0; i < SelectedTheatersRecyclerView.getChildCount(); i++) {
+                            View v = SelectedTheatersRecyclerView.getChildAt(i);
                             v.setAlpha(0.0f);
                             v.animate().alpha(1.0f)
                                     .setDuration(1000)
@@ -258,62 +204,15 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                     }
                 });
 
-        fadeIn(mTheatersNearby);
+
 
         /* Showtimes RecyclerView */
 
-        mShowtimesList = new ArrayList<>();
+        ShowtimesList = new ArrayList<>();
 
-        mShowtimesRecyclerView = findViewById(R.id.recycler_view_showtimes);
-        mShowtimesRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
     }
 
-    class LocationUpdateBroadCast extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-                if (mLocationBroadCast != null) {
-                    unregisterReceiver(mLocationBroadCast);
-                }
-            } catch (IllegalArgumentException is) {
-                is.printStackTrace();
-            }
-            UserLocationManagerFused.getLocationInstance(MovieActivity.this).stopLocationUpdates();
-            onLocationChanged(UserLocationManagerFused.getLocationInstance(context).mCurrentLocation);
-        }
-    }
-
-    protected void onLocationChanged(Location location) {
-        UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
-
-        if (location != null) {
-            UserLocationManagerFused.getLocationInstance(this).updateLocation(location);
-
-            mMyLocation = location;
-
-            loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), movie.getId());
-
-            mLocationAcquired = true;
-        }
-    }
-
-    public void currentLocationTasks() {
-        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-        UserLocationManagerFused.getLocationInstance(MovieActivity.this).startLocationUpdates();
-        mLocationAcquired = false;
-
-        boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
-        if (!enabled) {
-//            showDialogGPS();
-        } else {
-            Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
-            onLocationChanged(location);
-
-            if (location != null) {
-                UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), MovieActivity.this);
-            }
-        }
-    }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
@@ -349,105 +248,50 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
             is.printStackTrace();
         }
 
-        if (progress.getVisibility() == View.VISIBLE) {
-            progress.setVisibility(View.GONE);
+        if (ProgressBar.getVisibility() == View.VISIBLE) {
+            ProgressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        supportFinishAfterTransition();
+
     }
 
-    public void onTheaterClick(int pos, Screening screening) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-
-        boolean qualifiersApproved = screening.getQualifiersApproved();
-
-        mMovieShowtimesAdapter = new MovieShowtimesAdapter(this, mShowtimesList, screening, this, width, qualifiersApproved);
-        mShowtimesRecyclerView.setAdapter(mMovieShowtimesAdapter);
-
-        if (mTheaterSelectTime.getVisibility() != View.VISIBLE) {
-            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-            mTheaterSelectTime.setVisibility(View.VISIBLE);
-            fadeIn(mTheaterSelectTime);
-        } else {
-            fadeOut(mTheaterSelectTime);
-            String atWhatTime = getResources().getString(R.string.activity_theater_movie_time);
-            mTheaterSelectTime.setText(screening.getTitle() + " " + atWhatTime);
-            fadeIn(mTheaterSelectTime);
-        }
-
-        if (mAction.getVisibility() == View.VISIBLE) {
-            fadeOut(mAction);
-            mAction.setVisibility(View.GONE);
-        }
-
-        if (mShowtimesRecyclerView.getVisibility() != View.VISIBLE) {
-            mShowtimesRecyclerView.setVisibility(View.VISIBLE);
-            fadeIn(mShowtimesRecyclerView);
-        } else {
-            fadeOut(mShowtimesRecyclerView);
-            fadeIn(mShowtimesRecyclerView);
-        }
-
-        mBelowShowtimes.setVisibility(View.VISIBLE);
-
-        ArrayList<String> startTimes = new ArrayList<>(screening.getStartTimes());
-
-        mShowtimesList.clear();
-
-        if (mShowtimesRecyclerView != null) {
-            mShowtimesRecyclerView.getRecycledViewPool().clear();
-            mMovieShowtimesAdapter.notifyDataSetChanged();
-        }
-
-        mShowtimesList.addAll(startTimes);
-
-        mBelowShowtimes.requestFocus();
-    }
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-        final String time = showtime;
         Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        final String time = showtime;
 
-        if (mAction.getVisibility() != View.VISIBLE) {
-            mAction.setVisibility(View.VISIBLE);
-            fadeIn(mAction);
-            mScreenBottom.setVisibility(View.VISIBLE);
-            mScreenBottom.requestFocus();
+
+        if (fabLoadCard.getVisibility() == View.GONE) {
+            fabLoadCard.setVisibility(View.VISIBLE);
+            fadeIn(fabLoadCard);
         } else {
-            fadeOut(mAction);
-            mAction.setVisibility(View.INVISIBLE);
-            mAction.setVisibility(View.VISIBLE);
-            fadeIn(mAction);
-            mScreenBottom.setVisibility(View.VISIBLE);
-            mScreenBottom.requestFocus();
+            fabLoadCard.setVisibility(View.GONE);
+            fadeOut(fabLoadCard);
         }
 
         String ticketType = screening.getProvider().ticketType;
 
         if (ticketType.matches("STANDARD")) {
             String checkIn = "Check In";
-            mAction.setText(checkIn);
-        } else if (ticketType.matches("")) {
+        } else if (ticketType.matches("E_TICKET")) {
             String reserve = "Reserve E-Ticket";
-            mAction.setText(reserve);
         } else {
             String selectSeat = "Select Seat";
-            mAction.setText(selectSeat);
         }
 
-        mAction.setOnClickListener(new View.OnClickListener() {
+        fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(view.getContext(), "toasty", Toast.LENGTH_SHORT).show();
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {
-                    progress.setVisibility(View.VISIBLE);
+                    ProgressBar.setVisibility(View.VISIBLE);
                     reserve(screening, time);
                 }
             }
@@ -455,13 +299,11 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     public void reserve(Screening screening, String showtime) {
-        mAction.setEnabled(false);
-
+        fabLoadCard.setEnabled(false);
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
         /* Standard Check In */
-
         String providerName = screening.getProvider().providerName;
 
         //PerformanceInfo
@@ -477,6 +319,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
         String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
         Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(normalizedMovieId, externalMovieId, format, tribuneTheaterId, screeningId, dateTime);
@@ -509,7 +352,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
-                    progress.setVisibility(View.GONE);
+                    ProgressBar.setVisibility(View.GONE);
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
@@ -518,7 +361,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
                     } else {
-                        Log.d("screening,", screening.toString());
+                        Log.d("screeningObject,", screening.toString());
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
@@ -528,12 +371,12 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        progress.setVisibility(View.GONE);
-                        mAction.setEnabled(true);
+                        ProgressBar.setVisibility(View.GONE);
+                        fabLoadCard.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        progress.setVisibility(View.GONE);
-                        mAction.setEnabled(true);
+                        ProgressBar.setVisibility(View.GONE);
+                        fabLoadCard.setEnabled(true);
                     }
                 }
 
@@ -541,8 +384,8 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
             @Override
             public void failure(RestError restError) {
-                progress.setVisibility(View.GONE);
-                mAction.setEnabled(true);
+                ProgressBar.setVisibility(View.GONE);
+                fabLoadCard.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
@@ -571,7 +414,7 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     }
 
     private void showVerification(ScreeningToken token) {
-        progress.setVisibility(View.GONE);
+        ProgressBar.setVisibility(View.GONE);
         Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
@@ -581,97 +424,194 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
-            @Override
-            public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
-                ScreeningsResponse screenings = response.body();
-                if (screenings != null) {
-                    List<Screening> screeningsList = screenings.getScreenings();
+                    @Override
+                    public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
+                        ScreeningsResponse screenings = response.body();
+                        if (screenings != null) {
+                            List<Screening> screeningsList = screenings.getScreenings();
 
-                    if (screeningsList.size() == 0) {
-                        progress.setVisibility(View.GONE);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
+                            if (screeningsList.size() == 0) {
+                                ProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
+                            } else {
 
-/*                            builder.setTitle(R.string.activity_location_no_theaters_found);
-                        builder.setMessage(R.string.activity_location_try_another_zip_code);
-                        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                                //Initial View to Display RecyclerView Based on User's Current Location
+                                mScreeningsResponse = response.body();
+                                mScreeningsList.clear();
+                                if (MovieTheatersAdapter != null) {
+                                    SelectedTheatersRecyclerView.getRecycledViewPool().clear();
+                                    MovieTheatersAdapter.notifyDataSetChanged();
+                                }
+
+                                if (mScreeningsResponse != null) {
+                                    Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
+                                    mScreeningsList.addAll(mScreeningsResponse.getScreenings());
+                                    SelectedTheatersRecyclerView.setAdapter(MovieTheatersAdapter);
+                                    SelectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                                            new ViewTreeObserver.OnPreDrawListener() {
+
+                                                @Override
+                                                public boolean onPreDraw() {
+                                                    SelectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                                    for (int i = 0; i < SelectedTheatersRecyclerView.getChildCount(); i++) {
+                                                        View v = SelectedTheatersRecyclerView.getChildAt(i);
+                                                        v.setAlpha(0.0f);
+                                                        v.animate().alpha(1.0f)
+                                                                .setDuration(1000)
+                                                                .setStartDelay(i * 50)
+                                                                .start();
+                                                    }
+
+                                                    return true;
+                                                }
+                                            });
+
+                                    ProgressBar.setVisibility(View.GONE);
+                                }
+
                             }
-                        }); */
-
-                        builder.show();
-                    } else {
-
-                        //Initial View to Display RecyclerView Based on User's Current Location
-                        mScreeningsResponse = response.body();
-                        mScreeningsList.clear();
-
-                        if (mMovieTheatersAdapter != null) {
-                            theatersRecyclerView.getRecycledViewPool().clear();
-                            mMovieTheatersAdapter.notifyDataSetChanged();
                         }
-
-                        if (mScreeningsResponse != null) {
-                            Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
-                            mScreeningsList.addAll(mScreeningsResponse.getScreenings());
-                            theatersRecyclerView.setAdapter(mMovieTheatersAdapter);
-                            theatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                                new ViewTreeObserver.OnPreDrawListener() {
-
-                                    @Override
-                                    public boolean onPreDraw() {
-                                        theatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                                        for (int i = 0; i < theatersRecyclerView.getChildCount(); i++) {
-                                            View v = theatersRecyclerView.getChildAt(i);
-                                            v.setAlpha(0.0f);
-                                            v.animate().alpha(1.0f)
-                                                    .setDuration(1000)
-                                                    .setStartDelay(i * 50)
-                                                    .start();
-                                        }
-
-                                        return true;
-                                    }
-                                });
-
-                            progress.setVisibility(View.GONE);
-                        }
-
                     }
-                }
-            }
 
+                    @Override
+                    public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+                        if (t != null) {
+                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                        }
+                    }
+
+                });
+    }
+
+
+//    /* Bottom Navigation View */
+
+    int getContentViewId() {
+        return R.layout.activity_settings;
+    }
+
+    int getNavigationMenuItemId() {
+        return R.id.action_settings;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        bottomNavigationView.postDelayed(new Runnable() {
             @Override
-            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                if (t != null) {
-                    Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+            public void run() {
+                int itemId = item.getItemId();
+                if (itemId == R.id.action_profile) {
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
+                } else if (itemId == R.id.action_settings) {
+                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
+                finish();
             }
+        }, 300);
+        return true;
+    }
+//
+//    else if (itemId == R.id.action_reservations) {
+//        startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
 
-        });
+    private void updateNavigationBarState() {
+        int actionId = getNavigationMenuItemId();
+        selectBottomNavigationBarItem(actionId);
     }
 
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
+    void selectBottomNavigationBarItem(int itemId) {
+        Menu menu = bottomNavigationView.getMenu();
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            boolean shouldBeChecked = item.getItemId() == itemId;
+            if (shouldBeChecked) {
+                item.setChecked(true);
+                break;
+            }
+        }
     }
 
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
+    private void loadMoviePosterData() {
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        SELECTED_MOVIEPOSTER.setImageURI(imgUrl);
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
 
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            supportStartPostponedEnterTransition();
+                            SELECTED_MOVIEPOSTER.setImageResource(R.drawable.activity_splash_star);
+                            SELECTED_MOVIEPOSTER.animate();
+                            SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+                        } else {
+                            supportStartPostponedEnterTransition();
+                            SELECTED_MOVIEPOSTER.animate();
+                            SELECTED_MOVIEPOSTER.setImageURI(imgUrl);
+                            SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+                            SELECTED_MOVIEPOSTER.getHierarchy().setFadeDuration(200);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        supportStartPostponedEnterTransition();
+                        SELECTED_MOVIEPOSTER.setImageResource(R.drawable.activity_splash_star);
+                        SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+                    }
+                })
+                .setUri(imgUrl)
+                .build();
+        SELECTED_MOVIEPOSTER.setController(controller);
     }
+
+
+    class LocationUpdateBroadCast extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (mLocationBroadCast != null) {
+                    unregisterReceiver(mLocationBroadCast);
+                }
+            } catch (IllegalArgumentException is) {
+                is.printStackTrace();
+            }
+            UserLocationManagerFused.getLocationInstance(MovieActivity.this).stopLocationUpdates();
+            onLocationChanged(UserLocationManagerFused.getLocationInstance(context).mCurrentLocation);
+        }
+
+    }
+
+    protected void onLocationChanged(Location location) {
+        UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
+        if (location != null) {
+            UserLocationManagerFused.getLocationInstance(this).updateLocation(location);
+            mMyLocation = location;
+            loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), movie.getId());
+            mLocationAcquired = true;
+        }
+    }
+
+    public void currentLocationTasks() {
+        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+        UserLocationManagerFused.getLocationInstance(MovieActivity.this).startLocationUpdates();
+        mLocationAcquired = false;
+        boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
+        if (!enabled) {
+//            showDialogGPS();
+        } else {
+            Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
+            onLocationChanged(location);
+            if (location != null) {
+                UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), MovieActivity.this);
+            }
+        }
+    }
+
 
     private void showActivateCardDialog(final Screening screening, final String showtime) {
         View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
@@ -694,27 +634,27 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
 
                 if (digits.length() == 4) {
                     CardActivationRequest request = new CardActivationRequest(digits);
-                    progress.setVisibility(View.VISIBLE);
+                    ProgressBar.setVisibility(View.VISIBLE);
 
                     RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
                         @Override
                         public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                             CardActivationResponse cardActivationResponse = response.body();
-                            progress.setVisibility(View.GONE);
+                            ProgressBar.setVisibility(View.GONE);
 
                             if (cardActivationResponse != null && response.isSuccessful()) {
                                 String cardActivationResponseMessage = cardActivationResponse.getMessage();
                                 Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-;                               reserve(screening, showtime);
+
+                                reserve(screening, showtime);
                             } else {
                                 Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
                             }
-
                         }
 
                         @Override
                         public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-                            progress.setVisibility(View.GONE);
+                            ProgressBar.setVisibility(View.GONE);
 
                             showActivateCardDialog(screening, showtime);
                         }
@@ -734,166 +674,23 @@ public class MovieActivity extends BaseActivity implements MovieTheaterClickList
         alert.show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // Check for the integer request code originally supplied to startResolutionForResult().
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.i(TAG, "User agreed to make required location settings changes.");
-                        // Nothing to do. startLocationupdates() gets called in onResume again.
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i(TAG, "User chose not to make required location settings changes.");
-//                        updateUI();
-                        break;
-                }
-                break;
-        }
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
     }
 
-    /* PERMISSIONS */
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
 
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
     }
-
-    private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-/*            showSnackbar(R.string.permission_rationale,
-                    android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(MovieActivity.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    }); */
-        } else {
-            Log.i(TAG, "Requesting permission");
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
-            // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(MovieActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult");
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length <= 0) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
-                Log.i(TAG, "User interaction was cancelled.");
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-/*                if (mRequestingLocationUpdates) {
-                    Log.i(TAG, "Permission granted, updates requested, starting location updates");
-                } */
-            } else {
-                // Permission denied.
-
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
-
-                // Additionally, it is important to remember that a permission might have been
-                // rejected without asking the user for permission (device policy or "Never ask
-                // again" prompts). Therefore, a user interface affordance is typically implemented
-                // when permissions are denied. Otherwise, your app could appear unresponsive to
-                // touches or interactions which have required permissions.
-/*                showSnackbar(R.string.permission_denied_explanation,
-                        R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        }); */
-            }
-        }
-    }
-
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
-    }
-
-    /* Bottom Navigation View */
-
-    int getContentViewId() {
-        return R.layout.activity_settings;
-    }
-
-    int getNavigationMenuItemId() {
-        return R.id.action_settings;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                } else if (itemId == R.id.action_theaters) {
-                    startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState(){
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
-    }
-
 }

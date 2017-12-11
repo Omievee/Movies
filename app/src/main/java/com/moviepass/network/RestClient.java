@@ -57,8 +57,10 @@ public class RestClient {
         return sAuthenticatedAPI;
     }
 
-    public static Api getUnauthenticated() { return sUnauthenticatedAPI; }
-    
+    public static Api getUnauthenticated() {
+        return sUnauthenticatedAPI;
+    }
+
     public static void setupAuthenticatedWebClient(Context context) {
 
         sAuthenticatedInstance = null;
@@ -93,7 +95,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent","MoviePass/Android/20170706");
+                        .addHeader("User-Agent", "MoviePass/Android/20170706");
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -106,7 +108,7 @@ public class RestClient {
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-        sAuthenticatedAPI  = sAuthenticatedInstance.create(Api.class);
+        sAuthenticatedAPI = sAuthenticatedInstance.create(Api.class);
     }
 
     public static void setupUnauthenticatedWebClient(Context context) {
@@ -140,7 +142,7 @@ public class RestClient {
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent","MoviePass/Android/20170703");
+                        .addHeader("User-Agent", "MoviePass/Android/20170703");
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -151,6 +153,6 @@ public class RestClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
-        sUnauthenticatedAPI  = sUnauthenticatedInstance.create(Api.class);
+        sUnauthenticatedAPI = sUnauthenticatedInstance.create(Api.class);
     }
 }

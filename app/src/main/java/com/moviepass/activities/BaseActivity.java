@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.crash.FirebaseCrash;
 import com.moviepass.Constants;
 import com.moviepass.R;
@@ -94,6 +95,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
         checkRestrictions();
+
+        Fresco.initialize(this);
+
     }
 
     @Override
@@ -157,9 +161,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                         Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
                         intent.putExtra("reservationId", reservationId);
-                        intent.putExtra("movieTitle", movieTitle);
+                        intent.putExtra("mSelectedMovieTitle", movieTitle);
                         intent.putExtra("tribuneMovieId", tribuneMovieId);
-                        intent.putExtra("theaterName", theaterName);
+                        intent.putExtra("mTheaterSelected", theaterName);
                         intent.putExtra("tribuneTheaterId", tribuneTheaterId);
                         intent.putExtra("showtime", showtime);
                         startActivity(intent);
@@ -402,7 +406,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 startActivity(
-                        new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        new Intent(android.Provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             }
         });
         alert = builder.create();

@@ -1,5 +1,7 @@
 package com.moviepass.model;
 
+import com.moviepass.activities.TicketType;
+
 import org.parceler.Parcel;
 
 /**
@@ -22,30 +24,73 @@ public class PerformanceInfo {
     String sessionId;
     int normalizedMovieId;
 
+    public TicketType getTicketType() {
+        return ticketType;
+    }
+
+    TicketType ticketType;
+
+
+    public String getCinemaChainId() {
+        return cinemaChainId;
+    }
+
+    public String getShowtimeId() {
+        return showtimeId;
+    }
+
+    String cinemaChainId;
+    String showtimeId;
+
+
     public PerformanceInfo() {
     }
 
-    public String getExternalMovieId() { return externalMovieId; }
+    public String getExternalMovieId() {
+        return externalMovieId;
+    }
 
-    public String getDateTime() { return dateTime; }
+    public String getDateTime() {
+        return dateTime;
+    }
 
-    public int getNormalizedMovieId() { return normalizedMovieId; }
+    public int getNormalizedMovieId() {
+        return normalizedMovieId;
+    }
 
-    public int getScreeningId() { return screeningId; }
+    public int getScreeningId() {
+        return screeningId;
+    }
 
-    public String getFormat() { return format; }
+    public String getFormat() {
+        return format;
+    }
 
-    public int getTribuneTheaterId() { return tribuneTheaterId; }
+    public int getTribuneTheaterId() {
+        return tribuneTheaterId;
+    }
 
-    public int getPerformanceNumber() { return  performanceNumber; }
+    public int getPerformanceNumber() {
+        return performanceNumber;
+    }
 
-    public String getSku() { return sku; }
+    public String getSku() {
+        return sku;
+    }
 
-    public Double getPrice() { return price; }
+    public Double getPrice() {
+        return price;
+    }
 
-    public String getAuditorium() { return auditorium; }
+    public String getAuditorium() {
+        return auditorium;
+    }
 
-    public String getPerformanceId() { return performanceId; }
+    public String getPerformanceId() {
+        return performanceId;
+    }
 
-    public String getSessionId() { return sessionId; }
+    public String getSessionId() {
+        return sessionId;
+    }
 }

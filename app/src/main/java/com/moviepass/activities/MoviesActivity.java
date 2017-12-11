@@ -1,27 +1,62 @@
 package com.moviepass.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.adapters.MovieSearchAdapter;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.model.Movie;
+import com.moviepass.model.MoviesResponse;
+import com.moviepass.network.RestClient;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
  */
 
 public class MoviesActivity extends BaseActivity {
+    String TAG = "found it";
+    public android.support.v7.widget.SearchView searchView;
+    MoviesResponse MoviesResponse;
+    ListView SearchResults;
+    ArrayList<Movie> movieSearchNEWRELEASE;
+    ArrayList<Movie> movieSearchTOPBOXOFFICE;
+    ArrayList<Movie> movieSearchALLMOVIES;
+
+    FloatingActionMenu reservationsMenu;
+
+
+    MovieSearchAdapter searchAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,27 +71,49 @@ public class MoviesActivity extends BaseActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupViewPager(viewPager); */
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.MovieToolbar_MAINPAGE);
         setSupportActionBar(toolbar);
-
-        final ActionBar actionBar = getSupportActionBar();
-
-        // Enable the Up button
-        actionBar.setTitle("Movies");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, moviesFragment).commit();
+        ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
+
+        FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+        fadeIn(main);
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        SearchResults = findViewById(R.id.MovieSearch_Results);
+
+        movieSearchNEWRELEASE = new ArrayList<>();
+        movieSearchALLMOVIES = new ArrayList<>();
+        movieSearchTOPBOXOFFICE = new ArrayList<>();
+
+        reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
+
+        FloatingActionButton currentRes = new FloatingActionButton(this);
+        currentRes.setLabelText("Current Reservations");
+        currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        FloatingActionButton historyRes = new FloatingActionButton(this);
+        historyRes.setLabelText("Past Reservations");
+        historyRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        historyRes.setShowProgressBackground(true);
+
+        reservationsMenu.addMenuButton(currentRes);
+        reservationsMenu.addMenuButton(historyRes);
+
+
+        fadeIn(reservationsMenu);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         updateNavigationBarState();
+
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -109,8 +166,7 @@ public class MoviesActivity extends BaseActivity {
                             Intent intent = new Intent(MoviesActivity.this, ProfileActivity.class);
                             startActivity(intent);
                         }
-                    } else if (itemId == R.id.action_reservations) {
-                        startActivity(new Intent(MoviesActivity.this, ReservationsActivity.class));
+
                     } else if (itemId == R.id.action_movies) {
                     } else if (itemId == R.id.action_theaters) {
                         startActivity(new Intent(MoviesActivity.this, TheatersActivity.class));
@@ -119,11 +175,14 @@ public class MoviesActivity extends BaseActivity {
                     }
                 }
             }
-        }, 300);
+        }, 50);
         return true;
     }
+//
+//    else if (itemId == R.id.action_reservations) {
+//        startActivity(new Intent(MoviesActivity.this, ReservationsActivity.class));
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
     }
@@ -192,4 +251,88 @@ public class MoviesActivity extends BaseActivity {
         alert = builder.create();
         alert.show();
     }
+
+    //Search For Movies
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
+
+        movieSearchALLMOVIES.clear();
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+                    @Override
+                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            MoviesResponse = response.body();
+                            SearchResults.setAdapter(searchAdapter);
+                            movieSearchALLMOVIES.clear();
+
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
+
+                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
+                                Log.d(TAG, "Title1 : " + movieSearchALLMOVIES.get(i).getTitle());
+                                Log.d(TAG, "search1: " + searchView.getQuery().toString());
+                                if (searchView.getQuery().toString().equalsIgnoreCase(movieSearchALLMOVIES.get(i).getTitle())) {
+                                    Toast.makeText(MoviesActivity.this, "success", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "search 2: " + searchView.getQuery().toString());
+                                    SearchResults.setVisibility(View.VISIBLE);
+                                    Log.d(TAG, "Title2 : " + movieSearchALLMOVIES.get(i).getTitle());
+                                    searchAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
+                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return true;
+            }
+        });
+
+
+        return true;
+    }
+
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
 }

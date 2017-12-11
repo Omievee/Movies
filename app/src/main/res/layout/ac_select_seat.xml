@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mCoordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_blue"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/LAYOUT1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/SEATCHART_ONBACK"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_standard"
+                android:src="@drawable/iconback" />
+
+            <TextView
+                android:id="@+id/SEATCHART_HEADER"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/double_margin_standard"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/margin_half"
+                android:text="Choose Seats"
+                android:textColor="@color/white"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LAYOUT2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LAYOUT1"
+            android:background="@color/charcoal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/SEATCHART_MOVIETITLE"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_weight="2"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="[ Movie Title ] "
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/SEATCHART_SEATNumber"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="Seat "
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/SEATCHART_SEATNumber2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_standard"
+                android:layout_weight="1"
+                android:text="[ Seat Number ] "
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LAYOUT3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LAYOUT2"
+            android:background="@color/charcoal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/SEATCHART_THEATER"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_weight="2"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="[ THEATER ] "
+                android:textColor="@color/white_ish"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/SEATCHART_SEAT"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="[ A# ] "
+                android:textColor="@color/new_red"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LAYOUT4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LAYOUT3"
+            android:background="@color/charcoal">
+
+            <TextView
+                android:id="@+id/SEATCHART_SHOWTIME"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_minimum"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_weight="2"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="[ TIME ] "
+                android:textColor="@color/white_ish"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image_screen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/double_margin_standard"
+            android:layout_below="@id/LAYOUT4"
+            android:layout_marginTop="@dimen/margin_half"
+            android:scaleType="fitXY"
+            android:src="@drawable/image_screen" />
+
+        <LinearLayout
+            android:id="@+id/Seating_Rubric"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/double_margin_standard"
+            android:layout_below="@id/image_screen"
+            android:layout_marginTop="@dimen/margin_half"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/available_seat_example"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:src="@drawable/icon_seat_available" />
+
+            <TextView
+                android:id="@+id/available_seat_example_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="@string/activity_select_seat_available"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/unavailable_seat_example"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:src="@drawable/icon_seat_unavailable" />
+
+            <TextView
+                android:id="@+id/unavailable_seat_example_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="@string/activity_select_seat_unavailable"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/selected_seat_example"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:src="@drawable/icon_seat_selected" />
+
+            <TextView
+                android:id="@+id/selected_seat_example_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="@string/activity_select_seat_selected"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+
+        <HorizontalScrollView
+            android:id="@+id/HorizScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Seating_Rubric"
+            android:gravity="center">
+
+
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/TipText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/SEATCHART_RESERVE"
+            android:layout_centerHorizontal="true"
+            android:text="*Scroll Sideways If Seating Chart Cuts Off"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="italic" />
+
+
+        <Button
+            android:id="@+id/SEATCHART_RESERVE"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_above="@+id/SEATCHART_NAV"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/selectseat_confirm_button"
+            android:text="@string/activity_theater_button_action"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Seating_Rubric"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:textAlignment="center">
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:padding="0dp" />
+
+            <GridLayout
+                android:id="@+id/gridSeatsB"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+            <GridLayout
+                android:id="@+id/gridSeatsC"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+            <GridLayout
+                android:id="@+id/gridSeatsD"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsJ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+            <GridLayout
+                android:id="@+id/gridSeatsM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="0dp"
+                android:animateLayoutChanges="true"
+                android:columnCount="30"
+                android:padding="0dp" />
+
+
+
+        </LinearLayout>
+        <include
+            android:id="@+id/SEATCHART_NAV"
+            layout="@layout/element_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom" />
+
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

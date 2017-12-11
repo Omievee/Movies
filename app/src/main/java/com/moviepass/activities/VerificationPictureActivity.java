@@ -523,8 +523,8 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                         try {
                             String reservationId = String.valueOf(intent.getIntExtra("reservationId", 0));
                             String showTime = String.valueOf(intent.getStringExtra("showtime"));
-                            String movieTitle = URLEncoder.encode(intent.getStringExtra("movieTitle"), "UTF-8");
-                            String theaterName = URLEncoder.encode(intent.getStringExtra("theaterName"), "UTF-8");
+                            String movieTitle = URLEncoder.encode(intent.getStringExtra("mSelectedMovieTitle"), "UTF-8");
+                            String theaterName = URLEncoder.encode(intent.getStringExtra("mTheaterSelected"), "UTF-8");
                             URLEncoder.encode(Build.MODEL, "UTF-8");
                             String reservationKind = URLEncoder.encode(String.valueOf("STANDARD"), "UTF-8");
                             String movieId = String.valueOf(intent.getStringExtra("tribuneMovieId"));

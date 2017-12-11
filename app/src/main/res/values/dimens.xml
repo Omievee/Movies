@@ -1,12 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="parallax_toolbar_size">48dp</dimen>
+    <dimen name="less_spacing">5dp</dimen>
+    <dimen name="more_spacing">10dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="button_height">48dp</dimen>
     <dimen name="margin_quarter">4dp</dimen>
     <dimen name="margin_half">8dp</dimen>
     <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_minimum">2dp</dimen>
     <dimen name="double_margin_standard">32dp</dimen>
+    <dimen name="doubledouble_margin_standard">48dp</dimen>
     <dimen name="quadruple_margin_standard">64dp</dimen>
     <dimen name="a_lot_margin_standard">128dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
@@ -14,7 +18,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <dimen name="basic_elevation">4dp</dimen>
-
+    <dimen name="magin_MAX">200dp</dimen>
+    <dimen name="BND_space">40dp</dimen>
     <dimen name="design_bottom_navigation_text_size" tools:override="true">11sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
 

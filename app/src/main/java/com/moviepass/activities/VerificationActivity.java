@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,7 +45,6 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,7 +59,7 @@ import retrofit2.Response;
 public class VerificationActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screening";
+    public static final String SCREENING = "screeningObject";
 
     Screening screening;
     Reservation reservation;
@@ -178,8 +175,8 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
         } else {
             Intent intent = getIntent();
 
-            String movieTitle = intent.getStringExtra("movieTitle");
-            String theaterName = intent.getStringExtra("theaterName");
+            String movieTitle = intent.getStringExtra("mSelectedMovieTitle");
+            String theaterName = intent.getStringExtra("mTheaterSelected");
             String showtime = intent.getStringExtra("showtime");
 
             posterTitle.setText(movieTitle);
@@ -245,8 +242,8 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                     intent.putExtra(SCREENING, Parcels.wrap(screening));
                     startActivity(intent);
                 } else {
-                    String movieTitle = getIntent().getStringExtra("movieTitle");
-                    String theaterName = getIntent().getStringExtra("theaterName");
+                    String movieTitle = getIntent().getStringExtra("mSelectedMovieTitle");
+                    String theaterName = getIntent().getStringExtra("mTheaterSelected");
                     String showtime = getIntent().getStringExtra("showtime");
                     int reservationId = getIntent().getIntExtra("reservationId", 0);
                     String tribuneMovieId = getIntent().getStringExtra("tribuneMovieId");
@@ -254,9 +251,9 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
 
                     Intent intent = new Intent(VerificationActivity.this, VerificationPictureActivity.class);
                     intent.putExtra("reservationId", reservationId);
-                    intent.putExtra("movieTitle", movieTitle);
+                    intent.putExtra("mSelectedMovieTitle", movieTitle);
                     intent.putExtra("tribuneMovieId", tribuneMovieId);
-                    intent.putExtra("theaterName", theaterName);
+                    intent.putExtra("mTheaterSelected", theaterName);
                     intent.putExtra("tribuneTheaterId", tribuneTheaterId);
                     intent.putExtra("showtime", showtime);
                     startActivity(intent);

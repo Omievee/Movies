@@ -2,6 +2,8 @@ package com.moviepass.activities;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,35 +32,18 @@ import butterknife.BindView;
  */
 
 public class TheatersActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
-
-    @BindView(R.id.red)
-    View redView;
+//
+//    @BindView(R.id.red)
+//    View redView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-        /* TODO: Set up active reservation later
-        viewPager = findViewById(R.id.pager);
-        setupViewPager(viewPager);
-
-        tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-        setupViewPager(viewPager); */
-
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //TODO: Set up active reservation later
 
         final ActionBar actionBar = getSupportActionBar();
-
-        // Enable the Up button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Theaters");
-
-        redView = findViewById(R.id.red);
-        redView.setVisibility(View.INVISIBLE);
-
         Fragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, theatersFragment).commit();
@@ -77,8 +62,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
     @Override
     protected void onResume() {
         super.onResume();
-
-        redView.setVisibility(View.INVISIBLE);
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -94,11 +77,65 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
         Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
         intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-
         startActivity(intent);
+    }
+
+    int getContentViewId() {
+        return R.layout.activity_theaters;
+    }
+
+    int getNavigationMenuItemId() {
+        return R.id.action_theaters;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        bottomNavigationView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int itemId = item.getItemId();
+                if (itemId == R.id.action_profile) {
+                    if (UserPreferences.getUserId() == 0) {
+                        Intent intent = new Intent(TheatersActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(TheatersActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                    }
+//                } else if (itemId == R.id.action_reservations) {
+//                    startActivity(new Intent(TheatersActivity.this, ReservationsActivity.class));
+                } else if (itemId == R.id.action_movies) {
+                    startActivity(new Intent(TheatersActivity.this, MoviesActivity.class));
+                } else if (itemId == R.id.action_theaters) {
+                } else if (itemId == R.id.action_settings) {
+                    startActivity(new Intent(TheatersActivity.this, SettingsActivity.class));
+                }
+            }
+        }, 300);
+        return true;
+    }
+
+    private void updateNavigationBarState() {
+        int actionId = getNavigationMenuItemId();
+        selectBottomNavigationBarItem(actionId);
+    }
+
+    void selectBottomNavigationBarItem(int itemId) {
+        Menu menu = bottomNavigationView.getMenu();
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            boolean shouldBeChecked = item.getItemId() == itemId;
+            if (shouldBeChecked) {
+                item.setChecked(true);
+                break;
+            }
+        }
+    }
 
 
-        //TODO Bring back animations when polished.. Simpler ones?
+}
+
+//TODO Bring back animations when polished.. Simpler ones?
 //        if (Build.VERSION.SDK_INT >= 21) {
 //            redView.bringToFront();
 //
@@ -134,57 +171,3 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 //                }
 //            });
 //        }
-    }
-
-    int getContentViewId() {
-        return R.layout.activity_theaters;
-    }
-
-    int getNavigationMenuItemId() {
-        return R.id.action_theaters;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    if (UserPreferences.getUserId() == 0) {
-                        Intent intent = new Intent(TheatersActivity.this, LogInActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(TheatersActivity.this, ProfileActivity.class);
-                        startActivity(intent);
-                    }
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(TheatersActivity.this, ReservationsActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                    startActivity(new Intent(TheatersActivity.this, MoviesActivity.class));
-                } else if (itemId == R.id.action_theaters) {
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(TheatersActivity.this, SettingsActivity.class));
-                }
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState() {
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
-    }
-}

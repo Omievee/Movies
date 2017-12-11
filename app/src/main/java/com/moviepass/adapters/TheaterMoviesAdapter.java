@@ -2,20 +2,22 @@ package com.moviepass.adapters;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.v13.view.ViewCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
-import com.moviepass.listeners.ScreeningPosterClickListener;
+import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,128 +31,126 @@ import butterknife.ButterKnife;
 
 public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
 
-    private final ScreeningPosterClickListener screeningPosterClickListener;
+    View root;
+    public static final String TAG = "found";
+    ShowtimeClickListener showtimeClickListener;
     private ArrayList<Screening> screeningsArrayList;
-
+    ArrayList<String> showtimesArrayList;
+    List<String> startTimes;
+    private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
-    private Context context;
-    private int selectedPosition = -1;
+    public TextView showtime = null;
 
-    public TheaterMoviesAdapter(ArrayList<Screening> screeningsArrayList, ScreeningPosterClickListener screeningPosterClickListener) {
-        this.screeningPosterClickListener = screeningPosterClickListener;
+
+    public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
+        this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
+        this.qualifiersApproved = qualifiersApproved;
+        this.showtimesArrayList = showtimesArrayList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.list_item_movie_poster)
-        RelativeLayout listItemMoviePoster;
-        @BindView(R.id.poster_movie_title)
-        TextView title;
-        @BindView(R.id.ticket_top_red_dark)
-        ImageView posterImageView;
+        @BindView(R.id.list_item_cinemaposterCARDVIEW)
+        CardView cinemaCardViewListItem;
+        @BindView(R.id.cinema_movieTitle)
+        TextView cinemaTItle;
+        @BindView(R.id.CINEMAPOSTER)
+        SimpleDraweeView cinemaPoster;
+        @BindView(R.id.SHOWTIMEGRID)
+        GridLayout showtimeGrid;
+
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+            cinemaCardViewListItem = v.findViewById(R.id.list_item_cinemaposterCARDVIEW);
+            cinemaTItle = v.findViewById(R.id.cinema_movieTitle);
+            cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
+            showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
 
-            listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
-            title = v.findViewById(R.id.poster_movie_title);
-            posterImageView = v.findViewById(R.id.ticket_top_red_dark);
+
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
-        return new ViewHolder(view);
+        root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_cinemaposter, parent, false);
+        return new ViewHolder(root);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Screening screening = screeningsArrayList.get(position);
+        startTimes = screening.getStartTimes();
 
-        if (position == selectedPosition) {
-            holder.itemView.setSelected(true);
-        } else {
-            holder.itemView.setSelected(false);
-        }
+        //FRESCO code..
+        final Uri imgUrl = Uri.parse(screening.getImageUrl());
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request).build();
+        holder.cinemaPoster.setImageURI(imgUrl);
+        holder.cinemaPoster.getHierarchy().setFadeDuration(500);
+        holder.cinemaTItle.setText(screening.getTitle());
+        holder.cinemaPoster.setController(controller);
 
-        String imgUrl = screening.getImageUrl();
+        //onBind set up Gridlayout & begin a loop to create a new TextView for each showtime in the respective Array.
+        holder.showtimeGrid.setRowCount(1);
+        holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
+        holder.showtimeGrid.removeAllViews();
+//        Date currentTime = Calendar.getInstance().getTime();
 
-        if (imgUrl.isEmpty()) {
-            Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    exception.printStackTrace();
 
-                    holder.title.setText(screening.getTitle());
-                }
-            });
-            builder.build()
-                    .load(R.drawable.ticket_top_red_dark)
-                    .placeholder(R.drawable.ticket_top_red_dark)
-                    .error(R.drawable.ticket_top_red_dark)
-                    .into(holder.posterImageView);
-            holder.title.setText(screening.getTitle());
-        } else {
-            Picasso.Builder builder = new Picasso.Builder(holder.itemView.getContext());
-            builder.listener(new Picasso.Listener() {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                    exception.printStackTrace();
-
-                    holder.title.setText(screening.getTitle());
-                }
-            });
-            builder.build()
-                    .load(imgUrl)
-                    .placeholder(R.drawable.ticket_top_red_dark)
-                    .error(R.drawable.ticket_top_red_dark)
-                    .into(holder.posterImageView);
-        }
-
-        holder.listItemMoviePoster.setTag(position);
-
-        ViewCompat.setTransitionName(holder.posterImageView, screening.getImageUrl());
-
-        final List<String> startTimes = screening.getStartTimes();
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final int currentPosition = holder.getLayoutPosition();
-                if (selectedPosition != currentPosition) {
-
-                    // Show Ripple and then change color
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Temporarily save the last selected position
-                            int lastSelectedPosition = selectedPosition;
-                            // Save the new selected position
-                            selectedPosition = currentPosition;
-                            // update the previous selected row
-                            notifyItemChanged(lastSelectedPosition);
-                            // select the clicked row
-                            holder.itemView.setSelected(true);
+        if (screening.getStartTimes() != null) {
+            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+                showtime = new TextView(root.getContext());
+                showtime.setText(screening.getStartTimes().get(i));
+                holder.showtimeGrid.addView(showtime);
+                showtime.setTextSize(20);
+                showtime.setTextColor(root.getResources().getColor(R.color.white));
+                showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showtime.setPadding(50, 50, 50, 50);
+//                ViewGroup.MarginLayoutParams llp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT,ViewGroup.MarginLayoutParams.WRAP_CONTENT );
+//                llp.setMargins(10, 0, 10, 0);
+//                showtime.setLayoutParams(llp);
+                final TextView finalShowtime = showtime;
+                finalShowtime.setSelected(false);
+                //onclick on each showtime will execute the showtimelistener & create reservtion if possible.
+                showtime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!finalShowtime.isSelected()) {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(true);
+                        } else {
+                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                            finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            finalShowtime.setSelected(false);
                         }
-                    }, 150);
-                }
+                    }
+                });
 
-                screeningPosterClickListener.onScreeningPosterClick(holder.getAdapterPosition(), screening, startTimes, holder.posterImageView);
             }
-        });
+        }
     }
 
+
     @Override
-    public int getItemCount() { return screeningsArrayList.size(); }
+    public int getItemCount() {
+        return screeningsArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }

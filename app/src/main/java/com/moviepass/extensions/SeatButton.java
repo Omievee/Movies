@@ -63,7 +63,6 @@ public class SeatButton extends AppCompatImageButton {
 
     public void setSeatSelected(Boolean selected) {
         mSelected = selected;
-
         if (mSelected) {
             switch (mSeatInfo.getSeatType()) {
                 case SeatTypeCompanion:
@@ -72,7 +71,6 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeCanReserveRight:
                     this.setImageResource(R.drawable.icon_seat_selected);
                     break;
-
                 case SeatTypeWheelchair:
                     this.setImageResource(R.drawable.icon_seat_wheelchair_selected);
                     break;
@@ -100,11 +98,13 @@ public class SeatButton extends AppCompatImageButton {
         }
     }
 
-    public String getSeatName() {
+    public String getSeatName()
+    {
         return mSeatInfo.getSeatName();
     }
 
-    public SeatInfo getSeatInfo() {
+    public SeatInfo getSeatInfo()
+    {
         return mSeatInfo;
     }
 }

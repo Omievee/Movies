@@ -1,26 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/test_black"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="@dimen/basic_elevation"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <!--MAIN SKELETON FOR MAIN MOVIES PAGE, FRAME LAYOUT HOUSES LOGO ABOVE ALL ELSE-->
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/MAIN_CONTAINER"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@id/navigation"/>
+        android:layout_above="@id/navigation"
+        android:background="@color/test_black" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/MovieToolbar_MAINPAGE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:paddingTop="@dimen/double_margin_standard">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/MovieSearch_Results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/MoviePass_HEADER"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:visibility="gone">
+
+    </ListView>
+
+    <ImageView
+        android:id="@+id/MoviePass_HEADER"
+        android:layout_width="@dimen/magin_MAX"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:src="@drawable/logo"
+        android:textAlignment="center"
+        android:tint="@color/white"
+        android:visibility="visible"
+        app:layout_collapseMode="pin" />
+
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/FAB_RESERVATION_MENU"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/quadruple_margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:elevation="5dp"
+        android:visibility="visible"
+        app:fab_colorNormal="@color/new_red"
+        app:fab_colorRipple="@color/white"
+        app:fab_size="normal"
+        app:menu_icon="@drawable/ticketnavwhite" />
 
     <include
         android:id="@+id/navigation"

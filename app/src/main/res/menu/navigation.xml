@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_profile"
-        android:enabled="true"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/menu_bottom_navigation_main_profile" />
-    <item
-        android:id="@+id/action_reservations"
-        android:enabled="true"
-        android:icon="@drawable/ic_e_tickets"
-        android:title="@string/menu_bottom_navigation_main_reservations" />
+
+    <!--<item-->
+    <!--android:id="@+id/action_reservations"-->
+    <!--android:enabled="true"-->
+    <!--android:icon="@drawable/ic_e_tickets"-->
+    <!--android:title="@string/menu_bottom_navigation_main_reservations" />-->
 
     <item
         android:id="@+id/action_movies"
         android:enabled="true"
-        android:icon="@drawable/ic_movies"
+        android:icon="@drawable/cameranavwhite"
+        android:iconTint="@color/white"
         android:title="@string/menu_bottom_navigation_main_movies" />
 
     <item
         android:id="@+id/action_theaters"
         android:enabled="true"
-        android:icon="@drawable/ic_theaters"
+        android:icon="@drawable/locationiconsmallred"
+        android:iconTint="@color/white"
         android:title="@string/menu_bottom_navigation_main_theaters" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:icon="@drawable/profilenavwhite"
+        android:iconTint="@color/white"
+        android:title="@string/menu_bottom_navigation_main_profile" />
 
     <item
         android:id="@+id/action_settings"
         android:enabled="true"
-        android:icon="@drawable/ic_settings"
+        android:icon="@drawable/iconsettingswhite"
+        android:iconTint="@color/white"
         android:title="@string/menu_bottom_navigation_main_settings" />
 
 </menu>

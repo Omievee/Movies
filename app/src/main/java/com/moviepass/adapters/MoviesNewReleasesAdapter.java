@@ -1,21 +1,28 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.meg7.widget.SvgImageView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.model.Movie;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -27,7 +34,7 @@ import butterknife.ButterKnife;
  */
 
 public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewReleasesAdapter.ViewHolder> {
-
+    public static final String TAG = "found it...";
     private final MoviePosterClickListener moviePosterClickListener;
     private ArrayList<Movie> moviesArrayList;
 
@@ -47,14 +54,15 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         @BindView(R.id.poster_movie_title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
-        ImageView posterImageView;
+        SimpleDraweeView mNewReleasePosterDV;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
-            posterImageView = v.findViewById(R.id.ticket_top_red_dark);
+            mNewReleasePosterDV = v.findViewById(R.id.ticket_top_red_dark);
+
         }
     }
 
@@ -68,42 +76,72 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        Log.d(TAG, " NEW MOVIE: " + imgUrl.toString());
+        holder.mNewReleasePosterDV.setImageURI(imgUrl);
+        holder.title.setText("");
+        holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
-        String imgUrl = movie.getImageUrl();
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .setSource(imgUrl)
+                .build();
 
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+                        if (imgUrl.toString().contains("updateMovieThumb")) {
+                            holder.mNewReleasePosterDV.setImageResource(R.drawable.activity_splash_star);
+                            holder.title.setText(movie.getTitle());
+                        }
+                    }
 
-                holder.title.setText(movie.getTitle());
-            }
-        });
-        builder.build()
-                .load(imgUrl)
-                .placeholder(R.drawable.ticket_top_red_dark)
-                .error(R.drawable.ticket_top_red_dark)
-                .into(holder.posterImageView);
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        holder.title.setText(movie.getTitle());
+                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                    }
+                })
+                .build();
 
-        holder.listItemMoviePoster.setTag(position);
 
-        ViewCompat.setTransitionName(holder.posterImageView, movie.getImageUrl());
+        holder.mNewReleasePosterDV.setController(controller);
 
+
+//        class onImagesLoaded extends BaseControllerListener<ImageInfo> {
+//            @Override
+//            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+//                super.onFinalImageSet(id, imageInfo, animatable);
+//            }
+//
+//            @Override
+//            public void onFailure(String id, Throwable throwable) {
+//                super.onFailure(id, throwable);
+//            }
+//        }
+
+
+        ViewCompat.setTransitionName(holder.mNewReleasePosterDV, movie.getImageUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.posterImageView);
+                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
             }
         });
     }
 
     @Override
-    public int getItemCount() { return moviesArrayList.size(); }
+    public int getItemCount() {
+        return moviesArrayList.size();
+    }
 
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }

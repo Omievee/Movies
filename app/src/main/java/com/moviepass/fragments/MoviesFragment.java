@@ -1,12 +1,21 @@
 package com.moviepass.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v13.view.ViewCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -14,6 +23,10 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,31 +46,29 @@ import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.responses.CardActivationResponse;
 
 import org.parceler.Parcels;
-import org.reactivestreams.Subscriber;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment implements MoviePosterClickListener {
+public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
 
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
+    String TAG = "MOVIES ARE: ";
+
+    public static final int LOCATION_PERMISSIONS = 99;
+    android.location.LocationManager LocationManager;
+    String Provider;
 
     Api api;
 
@@ -79,6 +90,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     RecyclerView mTopBoxOfficeRecyclerView;
     @BindView(R.id.coming_soon)
     RecyclerView mComingSoonRecyclerView;
+
+    @BindView(R.id.MoviePass_HEADER)
+    ImageView MovieHeader;
+//    @BindView(R.id.MOVIES_SEARCH)
+//    SearchView MovieSearch;
 
     View progress;
 
@@ -108,16 +124,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
         mNewReleasesRecyclerView.setItemAnimator(null);
+        fadeIn(mNewReleasesRecyclerView);
 
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
         /* Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
         mTopBoxOfficeRecyclerView.setItemAnimator(null);
+        fadeIn(mTopBoxOfficeRecyclerView);
 
         mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
 
@@ -128,6 +145,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
         mComingSoonRecyclerView.setItemAnimator(null);
+        fadeIn(mComingSoonRecyclerView);
+
 
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
 
@@ -136,6 +155,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (isPendingSubscription()) {
             showActivateCardDialog();
         }
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+        LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Provider = LocationManager.getBestProvider(criteria, true);
+//        Location location = LocationManager.getLastKnownLocation(Provider);
+
+
+        checkLocationPermission();
+
 
         return rootView;
     }
@@ -164,7 +194,15 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
     @Override
-    public void onResume() { super.onResume(); }
+    public void onResume() {
+        super.onResume();
+        if (checkLocationPermission()) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //Request location updates:
+                Toast.makeText(getActivity(), "GPS Location Is Required", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public void onPause() {
@@ -198,6 +236,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         listener = null;
     }
 
+    //TODO:
     public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
@@ -210,44 +249,44 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         startActivity(movieIntent, options.toBundle());
     }
 
-    private void loadMovies() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue( new Callback<MoviesResponse>() {
+    public void loadMovies() {
+        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                 if (response.body() != null && response.isSuccessful()) {
                     mMoviesResponse = response.body();
 
-                        mMoviesNewReleases.clear();
-                        mMoviesTopBoxOffice.clear();
-                        mMoviesComingSoon.clear();
+                    mMoviesNewReleases.clear();
+                    mMoviesTopBoxOffice.clear();
+                    mMoviesComingSoon.clear();
 
-                        if (mMoviesNewReleasesAdapter != null) {
-                            mNewReleasesRecyclerView.getRecycledViewPool().clear();
-                            mMoviesNewReleasesAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesNewReleasesAdapter != null) {
+                        mNewReleasesRecyclerView.getRecycledViewPool().clear();
+                        mMoviesNewReleasesAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesTopBoxOfficeAdapter != null) {
-                            mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
-                            mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesTopBoxOfficeAdapter != null) {
+                        mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
+                        mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesComingSoonAdapter != null) {
-                            mComingSoonRecyclerView.getRecycledViewPool().clear();
-                            mMoviesComingSoonAdapter.notifyDataSetChanged();
-                        }
+                    if (mMoviesComingSoonAdapter != null) {
+                        mComingSoonRecyclerView.getRecycledViewPool().clear();
+                        mMoviesComingSoonAdapter.notifyDataSetChanged();
+                    }
 
-                        if (mMoviesResponse != null) {
-                            mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
-                            mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+                    if (mMoviesResponse != null) {
+                        mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
+                        mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
 
-                            mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
-                            mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+                        mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
+                        mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
 
-                            mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
-                            mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+                        mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
+                        mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
 
-                        }
+                    }
 
 
                 } else {
@@ -313,7 +352,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         @Override
                         public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                             progress.setVisibility(View.GONE);
-
                             showActivateCardDialog();
                         }
                     });
@@ -336,4 +374,122 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
 
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("GPS Services Are Required For MoviePass to Run Properlly")
+                        .setMessage(" Allow GPS Location Access? ")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        LOCATION_PERMISSIONS);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_PERMISSIONS);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                        LocationManager.requestLocationUpdates(Provider, 400, 1, this);
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        }
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
+
+
 }
+
+
+
+
+

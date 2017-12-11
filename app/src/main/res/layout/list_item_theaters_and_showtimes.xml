@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/THEATERS_LISTITEM"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_half"
+    android:animateLayoutChanges="true"
+    android:paddingBottom="@dimen/margin_standard"
+    app:cardCornerRadius="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/test_blue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/THEATER_NAME_LISTITEM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_standard"
+            android:text="[MOVIE THEATER NAME]"
+            android:textColor="@color/white_ish"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <!--<TextView-->
+        <!--android:id="@+id/THEATER_ADDRESS_LISTITEM"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="@dimen/margin_standard"-->
+        <!--android:text="[ADDRESS]"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="15sp" />-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/THEATER_ADDRESS2_LISTITEM"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingBottom="@dimen/margin_standard"
+                android:paddingStart="@dimen/margin_standard"
+                android:text="[ADDRESS]"
+                android:textColor="@color/white_ish"
+                android:textSize="15sp" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/THEATER_DISTANCE_LISTITEM"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1"-->
+            <!--android:paddingStart="@dimen/margin_standard"-->
+            <!--android:text="[DISTANCE]"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15sp" />-->
+
+            <ImageView
+                android:id="@+id/THEATER_PIN_LISTITEM"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_weight=".2"
+                android:src="@drawable/locationiconsmallred" />
+
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:animateLayoutChanges="true">
+
+
+            <GridLayout
+                android:id="@+id/THEATER_SHOWTIMEGRID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:columnOrderPreserved="false"
+                android:padding="@dimen/margin_half"
+                android:visibility="visible">
+
+            </GridLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

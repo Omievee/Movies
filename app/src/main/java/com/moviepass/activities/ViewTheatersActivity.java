@@ -94,7 +94,7 @@ import retrofit2.Response;
  */
 
 public class ViewTheatersActivity extends AppCompatActivity implements OnMapReadyCallback, TheatersClickListener,
-        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>  {
+        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin> {
 
     public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -132,7 +132,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
     View mProgress;
     RelativeLayout mRelativeLayout;
 
-    ArrayList<Theater> mTheaters;
+    public ArrayList<Theater> mTheaters;
     private ClusterManager<TheaterPin> mClusterManager;
 
     boolean isRecyclerViewShown;
@@ -175,7 +175,6 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
 
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
-
         LinearLayoutManager mLayoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -186,9 +185,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
         itemAnimator.setAddDuration(250);
         itemAnimator.setRemoveDuration(250);
         mRecyclerView.setItemAnimator(itemAnimator);
-
         mTheatersAdapter = new TheatersAdapter(mTheaters, this);
-
         mSearchLocation.setVisibility(View.GONE);
         mSearchLocation.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
             @Override
@@ -240,7 +237,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
 
             @Override
             public void onError(Status status) {
-                Toast.makeText(getApplicationContext(), status.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
         places.setHint(getResources().getString(R.string.fragment_theaters_search));
@@ -359,7 +356,6 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 updateLocationUI();
@@ -373,6 +369,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH24:mm:ss");
 
                 try {
+
                     Date now = new Date();
                     Date lastUpdate = simpleDateFormat.parse(mLastUpdateTime);
 
@@ -421,7 +418,6 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
 
     private void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -441,7 +437,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onComplete(@NonNull Task task) {
 
-                if (task.isSuccessful() && task.getResult() != null){
+                if (task.isSuccessful() && task.getResult() != null) {
                     Log.d("MainActivity", "Result: " + task.getResult());
                     // Location mCurrentLocation = task.getResult();
 
@@ -570,7 +566,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
                 .setAction(getString(actionStringId), listener).show();
     }
 
-    private void loadTheaters(Double latitude, final Double longitude) {
+    public void loadTheaters(Double latitude, final Double longitude) {
         mMap.clear();
         mTheaters.clear();
         mProgress.setVisibility(View.VISIBLE);
@@ -776,7 +772,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
                 // Draw multiple people.
-                // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
+                // Note: this method runs on the UI thread. Don't spend too much confirmedShowTime in here (like in this example).
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
 
                 for (TheaterPin p : cluster.getItems()) {
@@ -851,7 +847,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1
                         ? RelativeLayout.LayoutParams.WRAP_CONTENT
-                        : (int)(targetedHeight * interpolatedTime);
+                        : (int) (targetedHeight * interpolatedTime);
                 v.requestLayout();
             }
 
@@ -861,7 +857,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
             }
         };
 
-        a.setDuration((int)(targetedHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration((int) (targetedHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
 
@@ -874,7 +870,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
                 if (interpolatedTime == 1) {
                     v.setVisibility(View.GONE);
                 } else {
-                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
                     v.requestLayout();
                 }
             }
@@ -885,7 +881,7 @@ public class ViewTheatersActivity extends AppCompatActivity implements OnMapRead
             }
         };
 
-        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
     }
 }

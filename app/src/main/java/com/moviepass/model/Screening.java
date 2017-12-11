@@ -225,8 +225,10 @@ public class Screening {
         return true;
     }
 
+    public String getProviderName() {
+        return provider.getProviderName();
+    }
 
-//    public String getProviderName() { return provider.getProviderName(); }
 
     public Provider getProvider() { return provider; }
 }

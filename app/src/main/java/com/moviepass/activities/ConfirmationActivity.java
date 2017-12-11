@@ -1,27 +1,21 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -31,16 +25,9 @@ import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
 import com.moviepass.requests.ChangedMindRequest;
 import com.moviepass.responses.ChangedMindResponse;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -50,151 +37,102 @@ import retrofit2.Response;
  */
 
 public class ConfirmationActivity extends BaseActivity {
-
+    public static final String TAG = " found it ";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screening";
+    public static final String SCREENING = "screeningObject";
     public static final String TOKEN = "token";
 
     Reservation reservation;
     Screening screening;
     ScreeningToken screeningToken;
-    FloatingActionMenu fab;
+    FloatingActionMenu fabCancelReservation;
     View progress;
 
-    ImageView poster;
-    ImageView mask;
-    TextView movieTitle;
+    ImageView cancelX;
+    TextView confirmedMovieTitle;
     TextView theater;
-    TextView address;
-    TextView cityThings;
-    TextView time;
-    TextView date;
-    TextView auditorium;
-    TextView seat;
-    TextView actionText;
+    TextView confirmedShowTime;
+    TextView confirmedMessage;
     ImageView qrCode;
-    RelativeLayout ticketTop;
-    RelativeLayout ticketBottom;
-
+    TextView cancelReservation;
+    TextView confirmationCode;
+    SimpleDraweeView moviepassCC_QR;
+    ImageView loadCardLogo;
+    TextView confirmedZipText;
     protected BottomNavigationView bottomNavigationView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirmation);
+        setContentView(R.layout.ac_confirmation);
 
-        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        fab = findViewById(R.id.menuActions);
-        progress = findViewById(R.id.progress);
-
-        Bundle extras = getIntent().getExtras();
-
+        progress = findViewById(R.id.confirm_progress);
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
         screening = screeningToken.getScreening();
         reservation = screeningToken.getReservation();
         String screeningTime = screeningToken.getTime();
 
-        poster = findViewById(R.id.poster);
-        mask = findViewById(R.id.mask);
-        movieTitle = findViewById(R.id.movie_title);
-        theater = findViewById(R.id.theater);
-        address = findViewById(R.id.address);
-        cityThings = findViewById(R.id.city_things);
-        time = findViewById(R.id.time);
-        date = findViewById(R.id.date);
-        auditorium = findViewById(R.id.auditorium);
-        seat = findViewById(R.id.seat);
-        ticketTop = findViewById(R.id.ticket_top);
-        ticketBottom = findViewById(R.id.ticket_bottom);
-        actionText = findViewById(R.id.action_text);
-        qrCode = findViewById(R.id.qr_code);
 
-        movieTitle.setText(screening.getTitle());
+        confirmedZipText = findViewById(R.id.CONFIRMED_ZIP_TEXT);
+        confirmedMovieTitle = findViewById(R.id.CONFIRMED_MOVIE_TITLE);
+        theater = findViewById(R.id.CONFIRMED_THEATER);
+        confirmationCode = findViewById(R.id.CONFIRMED_CONFIRMATION_CODE);
+        moviepassCC_QR = findViewById(R.id.CONFIRMED_MASTERCARD);
+        moviepassCC_QR.setImageDrawable(getDrawable(R.drawable.mpmastercard2));
+        confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
+        confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
+//        qrCode = findViewById(R.id.qr_code);
+        loadCardLogo = findViewById(R.id.CONFIRMED_LOADED_LOGO);
+        confirmedMovieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
-        address.setText(screening.getTheaterAddress());
-        cityThings.setVisibility(View.GONE);
-        time.setText(screeningTime);
+        confirmedShowTime.setText(screeningTime);
+        cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
+        cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
-        try {
-            SimpleDateFormat inputDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            Log.d("screeningGetDate", screening.getDate());
-            Date createdAt = inputDate.parse(screening.getDate());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-            String finalDate = sdf.format(createdAt);
+        Log.d(TAG, "Qurl: " + screeningToken.getQrUrl());
+        Log.d(TAG, "confirm code: " + screeningToken.getConfirmationCode());
+        Log.d(TAG, "zip: " + screeningToken.getZipCodeTicket());
 
-            Log.d("finalDate", finalDate);
-
-            date.setText(finalDate);
-
-        } catch (Exception e) {
-            Log.d("exception", e.toString());
-        }
-
-        /* TODO : Add Auditorum logic */
-        auditorium.setVisibility(View.GONE);
-
-        seat.setText(screeningToken.getSeatName());
-
-        String imgUrl = screening.getImageUrl();
-        Log.d("imgUrl", imgUrl);
-
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.build()
-                .load(imgUrl)
-                .error(R.drawable.confirmation_ticket_top_red)
-                .centerCrop()
-                .fit()
-                .into(poster);
 
         if (screeningToken.getConfirmationCode() != null) {
-            String confirmationCode = screeningToken.getConfirmationCode();
+            confirmedZipText.setVisibility(View.VISIBLE);
+            confirmationCode.setVisibility(View.VISIBLE);
+            String code = screeningToken.getConfirmationCode();
+            Log.d(TAG, "CODE?: " + code);
+            confirmationCode.setText(code);
 
-            if (screeningToken.getSelectedSeat() != null) {
-                String seatName = screeningToken.getSelectedSeat().getSeatName();
+            if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
+                Log.d(TAG, "made it: ");
+                Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
+                if (qrUrl != null) {
+                    cancelReservation.setVisibility(View.GONE);
+                    //TODO :  QR?
+//                    loadCardLogo.setVisibility(View.INVISIBLE);
+//
+//
+//                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(qrUrl)
+//                            .setProgressiveRenderingEnabled(true)
+//                            .setSource(qrUrl)
+//                            .build();
+//
+//                    DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                            .setImageRequest(request).build();
+//
+//                    moviepassCC_QR.setImageURI(qrUrl);
+//                    moviepassCC_QR.setController(controller);
 
-                Log.d("seatName", seatName);
-                String fullConfirmationCodeInstructionsWithSeat = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
-                        getString(R.string.activity_confirmation_confirmation_text) + ". " + confirmationCode + " " +
-                        getString(R.string.activity_confirmation_seat_selected) + " " + seatName;
-
-                actionText.setText(fullConfirmationCodeInstructionsWithSeat);
-            } else {
-
-                String fullConfirmationCodeInstructions = getString(R.string.activity_confirmation_pick_up_instructions) + " " +
-                    getString(R.string.activity_confirmation_confirmation_text) + " " + confirmationCode;
-
-                actionText.setText(fullConfirmationCodeInstructions);
+                }
             }
-        } else if (screeningToken.getQrUrl() != null && !screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")
-                ) {
-            String qrUrl = screeningToken.getQrUrl();
 
-            Picasso.Builder qrBuilder = new Picasso.Builder(this);
-            qrBuilder.build()
-                    .load(qrUrl)
-                    .centerCrop()
-                    .fit()
-                    .into(qrCode);
         }
-
-        FloatingActionButton buttonChangeReservation = new FloatingActionButton(this);
-        buttonChangeReservation.setLabelText(getText(R.string.activity_confirmation_change_reservation).toString());
-        buttonChangeReservation.setImageResource(R.drawable.icon_reset);
-        buttonChangeReservation.setButtonSize(FloatingActionButton.SIZE_MINI);
-        buttonChangeReservation.setColorNormalResId(R.color.red);
-        buttonChangeReservation.setColorPressedResId(R.color.red_dark);
-        fab.addMenuButton(buttonChangeReservation);
-
-        if (screeningToken.getConfirmationCode() != null) {
-            fab.setVisibility(View.GONE);
-        }
-
-        buttonChangeReservation.setOnClickListener(new View.OnClickListener() {
+        cancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "CLICKED: ");
                 progress.setVisibility(View.VISIBLE);
                 ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
 
@@ -231,10 +169,17 @@ public class ConfirmationActivity extends BaseActivity {
                     @Override
                     public void failure(RestError restError) {
                         progress.setVisibility(View.GONE);
-                        fab.setEnabled(true);
+                        fabCancelReservation.setEnabled(true);
                         Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+            }
+        });
+        cancelX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent backToMain = new Intent(getApplicationContext(), MoviesActivity.class);
+                startActivity(backToMain);
             }
         });
     }
@@ -257,8 +202,6 @@ public class ConfirmationActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
-                } else if (itemId == R.id.action_reservations) {
-                    startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {
@@ -268,11 +211,15 @@ public class ConfirmationActivity extends BaseActivity {
             }
         }, 300);
         return true;
+
+//        else if (itemId == R.id.action_reservations) {
+//            startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
     }
 
-    private void updateNavigationBarState(){
+    private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
+
     }
 
     void selectBottomNavigationBarItem(int itemId) {
