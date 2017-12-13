@@ -206,7 +206,7 @@ public class ProfileBillingAddressFragment extends Fragment {
 
     public void updateAddress(String etAddress, String etAddress2, String etCity, String etState, String etZip) {
 
-        String type = "billingAddress";
+        String type = "signup2SameAddressSwitch";
         int userId = UserPreferences.getUserId();
 
         AddressChangeRequest request = new AddressChangeRequest(etAddress, etAddress2, etCity, etState, etZip, type);

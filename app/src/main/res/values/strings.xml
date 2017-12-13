@@ -56,14 +56,16 @@
     <string name="activity_onboarding_button_log_in">Log in</string>
     <string name="activity_onboarding_button_sign_up">Sign up</string>
     <string name="activity_onboarding_not_ready">Not ready to Sign Up? Explore the app</string>
-    <string name="activity_onboarding_header_1">MoviePass Supports Over 90% of Theaters Nationwide</string>
-    <string name="activity_onboarding_header_2">Get Your Card</string>
+    <string name="activity_onboarding_header_1">A Movie A Day!</string>
+    <string name="activity_onboarding_header_2">Over 4000 Theaters!</string>
     <string name="activity_onboarding_header_3">Choose Your Movie and Showtime</string>
-    <string name="activity_onboarding_header_4">Grab Your Seat</string>
-    <string name="activity_onboarding_body_1">From large multiplexes to independent art house theaters, see new and classic releases in over 4,000 theaters across the United States</string>
-    <string name="activity_onboarding_body_2">You can begin seeing MoviePass at any participating e-ticketing theater. Otherwise, your first month will begin once you receive your MoviePass card.</string>
+    <string name="activity_onboarding_header_4">Check In, Swipe Card, Get Ticket</string>
+    <string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>
+    <string name="activity_onboarding_body_1">See a movie a day in theaters for just $9.95 per month!</string>
+    <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
     <string name="activity_onboarding_body_3">Use the MoviePass app to check in to the movie and showtime you want to see.</string>
-    <string name="activity_onboarding_body_4">Once you check in, you\'ll either receive your e-ticket immediately or you can use your MoviePass card to purchase your ticket at the kiosk or box office.</string>
+    <string name="activity_onboarding_body_4">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+    <string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>
 
 
     <!-- SelectSeatActivity -->
@@ -89,7 +91,7 @@
     <string name="activity_sign_in_welcome_back">Welcome back</string>
     <string name="activity_sign_in_email">Email</string>
     <string name="activity_sign_in_password">Password</string>
-    <string name="activity_sign_in_log_in">Log in</string>
+    <string name="activity_sign_in_log_in">Sign in</string>
     <string name="activity_sign_in_log_in_with_facebook">Log in with Facebook</string>
     <string name="activity_sign_in_dont_have_an_account">Don\'t have an account?</string>
     <string name="activity_sign_in_forgot_password">Forgot password?</string>
@@ -97,6 +99,7 @@
     <string name="activity_sign_in_forgot_password_body">Please enter your email address</string>
     <string name="activity_sign_in_enter_valid_email">Please enter a valid email address</string>
     <string name="activity_sign_in_enter_valid_credentials">Please check your credentials and try again</string>
+    <string name="activity_sign_in_useFingerprint">Scan your finger to sign in.</string>
 
 
     <!-- SignUpActivity -->
@@ -208,11 +211,11 @@
     <string name="fragment_sign_up_step_one_first_name">First Name</string>
     <string name="fragment_sign_up_step_one_last_name">Last Name</string>
     <string name="fragment_sign_up_step_one_address">Address</string>
-    <string name="fragment_sign_up_step_one_address_two">Address Line 2</string>
+    <string name="fragment_sign_up_step_one_address_two">Address 2</string>
     <string name="fragment_sign_up_step_one_city">City</string>
     <string name="fragment_sign_up_step_one_state">State</string>
     <string name="fragment_sign_up_step_one_zip">Zip</string>
-    <string name="fragment_sign_up_step_one_next">Next step: payment details</string>
+    <string name="fragment_sign_up_step_one_next">Next</string>
     <string name="fragment_sign_up_step_one_valid_first_name">Please enter a valid first name</string>
     <string name="fragment_sign_up_step_one_valid_last_name">Please enter a valid last name</string>
     <string name="fragment_sign_up_step_one_valid_address">Please enter a valid address</string>
@@ -222,18 +225,23 @@
     <string name="fragment_sign_up_step_one_valid_zip">Please enter a valid zip code</string>
 
     <!-- SignUpStepTwoFragment -->
-    <string name="fragment_sign_up_step_two_header">Your first month will not begin until you receive your MoviePass card</string>
+    <string name="fragment_sign_up_step_two_header">You will be charged $9.95 today, and your first month of service will begin when you receive your MoviePass card in the mail.</string>
+    <string name="fragment_sign_up_step_two_header2">$9.95 / month</string>
+
     <string name="fragment_sign_up_step_two_copy">Please allow 7 business days for shipping</string>
     <string name="fragment_sign_up_step_two_price">$[##.##]/month</string>
     <string name="fragment_sign_up_step_two_selected_card_copy">Selected Card: </string>
     <string name="fragment_sign_up_step_two_selected_card_masked">[xxxx]</string>
     <string name="fragment_sign_up_step_two_billing_address">My billing address is the same as my shipping address</string>
-    <string name="fragment_sign_up_step_two_terms">I agree with the</string>
-    <string name="fragment_sign_up_step_two_terms_link">terms and conditions</string>
+    <string name="fragment_sign_up_step_three_terms">I agree with the MoviePass  </string>
+    <string name="fragment_sign_up_step_three_terms_link">Terms of Service</string>
+    <string name="fragment_sign_up_step_three_terms2"> and </string>
+    <string name="fragment_sign_up_step_three_terms_link2">Privacy Policy</string>
     <string name="fragment_sign_up_step_two_must_agree_to_terms">You must agree with the terms and conditions to sign up</string>
     <string name="fragment_sign_up_step_two_success_header">Success!</string>
     <string name="fragment_sign_up_step_two_success_body">You signed up successfully! Keep an eye out for your card in the mail. You can start seeing movies in e-ticketing theaters immediately.</string>
-    <string name="fragment_sign_up_step_two_finish">Finish</string>
+    <string name="fragment_sign_up_step_two_finish">Next</string>
+    <string name="fragment_sign_up_step_three_submit">Submit</string>
 
 
     <!-- TheatersFragment -->
@@ -316,9 +324,14 @@
     <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
     <string name="xml_settings_preferences_settings_help_version">Version</string>
 
+    <!-- FINGERPRINT SCANNER -->
+
 
     <!-- ALL PURPOSE STRINGS -->
     <string name="blank_single_space"> </string>
     <string name="blank_double_space">  </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -101,7 +101,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
 
 
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.activity_splash_star);
+                            holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.film_reel_icon);
                             holder.title.setText(movie.getTitle());
                         }
                     }

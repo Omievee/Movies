@@ -1,18 +1,12 @@
 package com.moviepass.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -37,35 +31,35 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
     View redView;
     View progress;
 
-    Button butonSignUp;
+    TextView signupNowButton;
     Button buttonSignUpFacebook;
     TextView seeMap;
 
-    EditText inputEmail;
-    EditText inputPassword;
+    EditText signupEmailInput;
+    EditText signupPasswordInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_first_open);
+        setContentView(R.layout.ac_signup_first_open);
 
-        redView = findViewById(R.id.red);
+//        redView = findViewById(R.id.red);
         relativeLayout = findViewById(R.id.relative_layout);
-        inputEmail = findViewById(R.id.input_email);
-        inputPassword = findViewById(R.id.input_password);
-        butonSignUp = findViewById(R.id.button_sign_up);
+        signupEmailInput = findViewById(R.id.SIGNUP_EMAIL);
+        signupPasswordInput = findViewById(R.id.SIGNUP_PASSSWORD);
+        signupNowButton = findViewById(R.id.SIGNUP_BUTTON);
         progress = findViewById(R.id.progress);
 //        seeMap = findViewById(R.id.see_map);
 
 //        openAnimation();
 
-        butonSignUp.setOnClickListener(new View.OnClickListener() {
+        signupNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 progress.setVisibility(View.VISIBLE);
 
-                final String email = inputEmail.getText().toString().trim();
-                final String password = inputPassword.getText().toString().trim();
+                final String email = signupEmailInput.getText().toString().trim();
+                final String password = signupPasswordInput.getText().toString().trim();
 
                 if (isValidEmail(email) && isValidPassword(password)) {
                     /* TODO : animate this */

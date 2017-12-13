@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- divider -->
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -32,13 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_above="@+id/dots"
-                android:layout_marginBottom="@dimen/margin_standard"
-                android:alpha="0.12"
-                android:background="@android:color/white" />
 
             <LinearLayout
                 android:id="@+id/dots"
@@ -82,6 +74,15 @@
                     android:layout_marginRight="@dimen/margin_standard"
                     android:background="@drawable/indicator_unselected" />
 
+
+                <ImageView
+                    android:id="@+id/intro_indicator_4"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:background="@drawable/indicator_unselected" />
+
                 <!-- Your other 2 indicators here -->
 
             </LinearLayout>
@@ -99,25 +100,30 @@
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/double_margin_standard">
 
-                <Button
-                    android:id="@+id/button_sign_up"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:background="@drawable/button_red"
-                    android:text="@string/activity_onboarding_button_sign_up"
-                    android:textColor="@android:color/white" />
+                <TextView
+                    android:id="@+id/ONBOARDING_JOIN_NOW"
+                    android:layout_width="200dp"
+                    android:layout_height="@dimen/basic_button_height"
+                    android:background="@drawable/selectseat_confirm_button"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="@dimen/margin_half"
+                    android:paddingLeft="@dimen/doubledouble_margin_standard"
+                    android:paddingRight="@dimen/doubledouble_margin_standard"
+                    android:paddingTop="@dimen/margin_half"
+                    android:text="Sign Up Now"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/button_log_in"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginLeft="@dimen/margin_standard"
-                    android:layout_toRightOf="@+id/button_sign_up"
-                    android:background="@drawable/button_red_outline"
-                    android:text="@string/activity_onboarding_button_log_in"
-                    android:tint="@android:color/white" />
+                <!--<Button-->
+                <!--android:id="@+id/button_log_in"-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginLeft="@dimen/margin_standard"-->
+                <!--android:layout_toRightOf="@+id/button_sign_up"-->
+                <!--android:background="@drawable/button_red_outline"-->
+                <!--android:text="@string/activity_onboarding_button_log_in"-->
+                <!--android:tint="@android:color/white" />-->
 
             </RelativeLayout>
 
@@ -139,7 +145,18 @@
             android:layout_width="200dp"
             android:layout_height="75dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_half"
             android:src="@drawable/moviepass_logo_red" />
+
+        <TextView
+            android:id="@+id/ONBOARDING_SIGN_IN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:text="Sign In"
+            android:textSize="18sp" />
 
     </FrameLayout>
 

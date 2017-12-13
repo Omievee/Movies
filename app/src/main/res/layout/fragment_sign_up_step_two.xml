@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout
     android:id="@+id/relative_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -145,26 +144,26 @@
                 android:layout_below="@+id/full_billing_address"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/checkbox_terms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fragment_sign_up_step_two_terms"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:textColorHighlight="@color/white"
-                    android:textColorLink="@color/white"
-                    android:shadowColor="@color/white"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="5dp" />
+                <!--<CheckBox-->
+                    <!--android:id="@+id/checkbox_terms"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/fragment_sign_up_step_two_terms"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textColorHint="@color/white"-->
+                    <!--android:textColorHighlight="@color/white"-->
+                    <!--android:textColorLink="@color/white"-->
+                    <!--android:shadowColor="@color/white"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_marginLeft="12dp"-->
+                    <!--android:layout_marginRight="5dp" />-->
 
-                <TextView
-                    android:id="@+id/terms_link"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/red"
-                    android:text="@string/fragment_sign_up_step_two_terms_link"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/terms_link"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/red"-->
+                    <!--android:text="@string/fragment_sign_up_step_two_terms_link"/>-->
 
             </LinearLayout>
 

@@ -1,45 +1,36 @@
 package com.moviepass.activities;
 
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 public class OnboardingActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     View mRedView;
-    Button mButtonSignUp;
-    Button mButtonLogIn;
+    TextView onboardingJoinNow;
+    TextView onboardingSignIn;
     TextView mNotReady;
 
-    ImageView zero, one, two, three;
+    ImageView zero, one, two, three, four;
     private ViewPager mViewPager;
 
     final ArgbEvaluator evaluator = new ArgbEvaluator();
@@ -52,30 +43,31 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboarding);
+        setContentView(R.layout.ac_onboarding);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mCoordinator = findViewById(R.id.main_content);
-        mRedView = findViewById(R.id.red);
-        mButtonLogIn = findViewById(R.id.button_log_in);
-        mButtonSignUp = findViewById(R.id.button_sign_up);
+//        mRedView = findViewById(R.id.red);
+        onboardingSignIn = findViewById(R.id.ONBOARDING_SIGN_IN);
+        onboardingJoinNow = findViewById(R.id.ONBOARDING_JOIN_NOW);
 //        mNotReady = findViewById(R.id.not_ready);
 
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
+        four = findViewById(R.id.intro_indicator_4);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mRedView.setVisibility(View.INVISIBLE);
+//        mRedView.setVisibility(View.INVISIBLE);
 
-        indicators = new ImageView[]{zero, one, two, three};
+        indicators = new ImageView[]{zero, one, two, three, four};
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -100,6 +92,8 @@ public class OnboardingActivity extends AppCompatActivity {
                         break;
                     case 3:
                         break;
+                    case 4:
+                        break;
                 }
             }
 
@@ -111,7 +105,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         });
 
-        mButtonLogIn.setOnClickListener(new View.OnClickListener() {
+        onboardingSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OnboardingActivity.this, LogInActivity.class);
@@ -119,7 +113,7 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        mButtonSignUp.setOnClickListener(new View.OnClickListener() {
+        onboardingJoinNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
@@ -128,7 +122,7 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         /*
-        mButtonSignUp.setOnTouchListener(new View.OnTouchListener() {
+        onboardingJoinNow.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (Build.VERSION.SDK_INT >= 21 ) {
@@ -221,14 +215,15 @@ public class OnboardingActivity extends AppCompatActivity {
 
         ImageView img;
 
-        int[] bgs = new int[] {R.drawable.image_onboarding_1, R.drawable.image_onboarding_2,
+        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_2,
                 R.drawable.image_onboarding_3, R.drawable.image_onboarding_4};
 
-        int[] headers = new int[] {R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
-                R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4};
+        int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
+                R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
 
-        int[] bodies = new int[] {R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
-                R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4};
+        int[] bodies = new int[]{R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
+                R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4, R.string.activity_onboarding_body_5};
+
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
@@ -276,8 +271,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 4;
+            return 5;
         }
 
         @Override
@@ -291,6 +285,8 @@ public class OnboardingActivity extends AppCompatActivity {
                     return getResources().getString(R.string.activity_onboarding_header_3);
                 case 3:
                     return getResources().getString(R.string.activity_onboarding_header_4);
+                case 4:
+                    return getResources().getString(R.string.activity_onboarding_header_5);
             }
             return null;
         }
