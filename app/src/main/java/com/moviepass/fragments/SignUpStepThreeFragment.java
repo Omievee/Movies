@@ -50,14 +50,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     CoordinatorLayout coordinatorLayout;
 
     TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
-            confirmEditAddress, confirmEditBilling, confirmCCNum,  confirmTermsText, confirmsPricacyText, confirmSubmit;
+            confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
     Switch confirmTermsAgreementSwitch;
 
     String num, month, year, ccv;
     View progress;
-
-
-
 
 
     public SignUpStepThreeFragment() {
@@ -85,6 +82,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmSubmit = rootview.findViewById(R.id.CONFIRM_SUBMIT);
 
         Log.d(TAG, "vc: " + confirmCCNum.getId());
+        Log.d(TAG, "OnFragmentInteraction: " + num);
 
         //ToS & Privacy Links
         confirmTermsText.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +132,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             }
         });
 
-
         return rootview;
     }
 
@@ -143,10 +140,9 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         num = ccNum;
         month = ccExMonth;
         year = ccExYear;
-        ccv = ccCVV;
 
-        confirmCCNum.setText(num);
-        Log.d(TAG, "OnFragmentInteraction: " + ccNum);
+        Log.d(TAG, "OnFragmentInteraction: " + num);
+
     }
 
     @Override
@@ -335,34 +331,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         snackbar.show();
     }
 
-
 }
 
 
-//            if (canContinue()) {
-//                bStreet = signup2Address.getText().toString();
-//                bStreet2 = signup2Address2.getText().toString();
-//                bCity = signup2City.getText().toString();
-//                bState = signup2State.getSelectedItem().toString();
-//                bZip = signup2Zip.getText().toString();
-//
-//                completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-//                        sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, amc3dMarkup);
-//            } else {
-//                if (!isAddressValid()) {
-//                    progress.setVisibility(View.GONE);
-//                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_address));
-//                } else if (!isAddress2Valid()) {
-//                    progress.setVisibility(View.GONE);
-//                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_address_two));
-//                } else if (!isCityValid()) {
-//                    progress.setVisibility(View.GONE);
-//                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_city));
-//                } else if (!isStateValid()) {
-//                    progress.setVisibility(View.GONE);
-//                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_state));
-//                } else {
-//                    progress.setVisibility(View.GONE);
-//                    makeSnackbar(getString(R.string.fragment_sign_up_step_one_valid_zip));
-//                }
-//            }

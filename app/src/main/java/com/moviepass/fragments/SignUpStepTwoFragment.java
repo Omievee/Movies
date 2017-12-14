@@ -54,7 +54,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     public static final String TAG = "foudnit";
 
-    private OnFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
 
     CoordinatorLayout coordinatorLayout;
     ImageButton signup2ScanCardIcon;
@@ -162,14 +162,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 }
             }
         });
-
-//
-//        final String getTextNum = signup2CCNum.getText().toString();
-//        final String getTextExp = signup2CCExp.getText().toString();
-//        final String getTextCVV = signup2CC_CVV.getText().toString();
-//        final String getTextZip = signup2Zip.getText().toString();
-//        final String getTextCity = signup2City.getText().toString();
-//        final String getTextAddress = signup2Address.getText().toString();
 
         signup2CCExp.addTextChangedListener(new TextWatcher() {
             @Override
@@ -405,7 +397,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                                 Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
                             } else {
                                 signup2NextButton.setEnabled(true);
-//                                ((SignUpActivity) getActivity()).setPage("b");
+                                ((SignUpActivity) getActivity()).setPage();
                             }
 
                         }

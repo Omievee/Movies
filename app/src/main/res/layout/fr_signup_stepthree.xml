@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_half"
                 android:orientation="horizontal"
-                android:paddingEnd="80dp"
+                android:paddingEnd="90dp"
                 android:paddingStart="@dimen/a_lot_margin_standard">
 
                 <TextView
