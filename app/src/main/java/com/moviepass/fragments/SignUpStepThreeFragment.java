@@ -24,6 +24,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.activities.SignUpActivity;
 import com.moviepass.activities.TheatersActivity;
 import com.moviepass.model.ProspectUser;
 import com.moviepass.model.User;
@@ -34,60 +35,39 @@ import com.moviepass.responses.SignUpResponse;
 
 import org.json.JSONObject;
 
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNonceCreatedListener,
-        BraintreeCancelListener, BraintreeErrorListener {
-
+        BraintreeCancelListener, BraintreeErrorListener, SignUpStepTwoFragment.OnFragmentInteractionListener {
+    public static final String CCX = "ccx";
+    public static final String CCCVV = "cccvv";
+    public static final String CCNUM = "cc";
+    View rootview;
+    public static final String TAG = "foundit";
     CoordinatorLayout coordinatorLayout;
+
     TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
-            confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
+            confirmEditAddress, confirmEditBilling, confirmCCNum,  confirmTermsText, confirmsPricacyText, confirmSubmit;
     Switch confirmTermsAgreementSwitch;
 
+    String num, month, year, ccv;
     View progress;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
 
 
     public SignUpStepThreeFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static SignUpStepThreeFragment newInstance(String param1, String param2) {
-        SignUpStepThreeFragment fragment = new SignUpStepThreeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//
-//
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fr_signup_stepthree, container, false);
+        rootview = inflater.inflate(R.layout.fr_signup_stepthree, container, false);
 
         coordinatorLayout = rootview.findViewById(R.id.CONFIRM_COORD);
         progress = rootview.findViewById(R.id.step3_progress);
@@ -98,11 +78,13 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmEditAddress = rootview.findViewById(R.id.CONFIRM_EDIT_ADDRESS);
         confirmEditBilling = rootview.findViewById(R.id.CONFIRM_EDIT_BILLING);
 
-        confirmCCNum = rootview.findViewById(R.id.CONFIRM_CCNUM);
+        confirmCCNum = rootview.findViewById(R.id.CONFIRM_NUMBER);
         confirmTermsText = rootview.findViewById(R.id.CONFIRM_ToS);
         confirmsPricacyText = rootview.findViewById(R.id.CONFIRM_PRIVACY);
         confirmTermsAgreementSwitch = rootview.findViewById(R.id.CONFIRM_SWITCH);
         confirmSubmit = rootview.findViewById(R.id.CONFIRM_SUBMIT);
+
+        Log.d(TAG, "vc: " + confirmCCNum.getId());
 
         //ToS & Privacy Links
         confirmTermsText.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +107,26 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             }
         });
 
+
+        confirmFullName.setText(ProspectUser.firstName + " " + ProspectUser.lastName);
+        confirmFullAddress.setText(ProspectUser.address + " " + ProspectUser.address2);
+        confirmCityStateZip.setText(ProspectUser.city + ", " + ProspectUser.state + " " + ProspectUser.zip);
+
+
+        confirmEditBilling.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(1);
+
+            }
+        });
+
+        confirmEditAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(0);
+            }
+        });
         confirmSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,14 +135,19 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         });
 
 
-        confirmFullName.setText(ProspectUser.firstName + " " + ProspectUser.lastName);
-        confirmFullAddress.setText(ProspectUser.address + " " + ProspectUser.address2);
-        confirmCityStateZip.setText(ProspectUser.city + ", " + ProspectUser.state + " " + ProspectUser.zip);
-
-
         return rootview;
     }
 
+    @Override
+    public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
+        num = ccNum;
+        month = ccExMonth;
+        year = ccExYear;
+        ccv = ccCVV;
+
+        confirmCCNum.setText(num);
+        Log.d(TAG, "OnFragmentInteraction: " + ccNum);
+    }
 
     @Override
     public void onCancel(int requestCode) {
@@ -205,7 +212,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                     RestClient.authToken = user.getAuthToken();
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
-//TODO: check intent -->
+                    //TODO: check intent -->
                     Intent i = new Intent(getActivity(), TheatersActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -222,8 +229,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
 
-    @OnClick(R.id.CONFIRM_SUBMIT)
-    public void beginRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
+    public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
         progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
@@ -330,9 +336,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
 
-
-
 }
+
 
 //            if (canContinue()) {
 //                bStreet = signup2Address.getText().toString();

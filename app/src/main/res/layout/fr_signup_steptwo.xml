@@ -85,7 +85,7 @@
                     <LinearLayout
                         android:id="@+id/LAYOUT_3"
                         android:layout_width="match_parent"
-                        android:layout_height="85dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="@dimen/margin_half">
 
@@ -93,21 +93,25 @@
                             android:id="@+id/SIGNUP2_CCNUM"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:layout_gravity="bottom"
                             android:layout_marginEnd="@dimen/margin_half"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
                             android:hint="Credit Card Number"
+                            android:inputType="number"
+                            android:maxLength="16"
                             android:textColor="@color/white"
                             android:textColorHighlight="@color/white"
+
                             android:textColorHint="@color/gray_icon" />
 
                         <ImageButton
                             android:id="@+id/SIGNUP2_SCANCARD_ICON"
-                            android:layout_width="80dp"
-                            android:layout_height="70dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:background="@color/test_blue"
-                            android:src="@drawable/scanicon2" />
+                            android:scaleType="center"
+                            android:src="@drawable/scanicon1" />
 
                     </LinearLayout>
 
@@ -115,8 +119,9 @@
                         android:id="@+id/LAYOUT_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/margin_half">
+                        android:layout_marginEnd="@dimen/margin_half"
+                        android:layout_marginStart="@dimen/margin_half"
+                        android:orientation="horizontal">
 
 
                         <EditText
@@ -128,6 +133,7 @@
                             android:backgroundTint="@color/white"
                             android:hint="Expiration mm/yy"
                             android:inputType="date"
+                            android:maxLength="5"
                             android:textColor="@color/white" />
 
 
@@ -135,12 +141,12 @@
                             android:id="@+id/SIGNUP2_CVV"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-
                             android:layout_marginTop="@dimen/margin_half"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
                             android:hint="Security code (CVV)"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:textColor="@color/white" />
 
                     </LinearLayout>
@@ -153,7 +159,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_2"
-                    android:layout_marginTop="@dimen/margin_half"
                     android:orientation="horizontal"
                     android:padding="@dimen/margin_half">
 

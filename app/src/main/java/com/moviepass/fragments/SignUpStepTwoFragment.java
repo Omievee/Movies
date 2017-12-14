@@ -1,6 +1,7 @@
 package com.moviepass.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,7 +10,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +36,6 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
-import com.moviepass.model.ProspectUser;
 
 import butterknife.ButterKnife;
 import io.card.payment.CardIOActivity;
@@ -49,6 +51,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     BraintreeFragment mBraintreeFragment;
 
     ArrayAdapter<CharSequence> statesAdapter;
+
+    public static final String TAG = "foudnit";
+
+    private OnFragmentInteractionListener mListener;
 
     CoordinatorLayout coordinatorLayout;
     ImageButton signup2ScanCardIcon;
@@ -91,33 +97,35 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fr_signup_steptwo, container, false);
-        ButterKnife.bind(this, rootView);
+        return inflater.inflate(R.layout.fr_signup_steptwo, container, false);
+    }
 
-        coordinatorLayout = rootView.findViewById(R.id.coord_main);
-        progress = rootView.findViewById(R.id.progress);
-        signup2ScanCardIcon = rootView.findViewById(R.id.SIGNUP2_SCANCARD_ICON);
-        selectedCreditCardText = rootView.findViewById(R.id.credit_card_number_copy);
-        selectedCreditCardMasked = rootView.findViewById(R.id.credit_card_number);
-//        price = rootView.findViewById(R.id.price);
-        signup2Address = rootView.findViewById(R.id.SIGNUP2_ADDRESS);
-        signup2Address2 = rootView.findViewById(R.id.SIGNUP2_ADDRESS2);
-        signup2City = rootView.findViewById(R.id.SIGNUP2_CITY);
-        signup2State = rootView.findViewById(R.id.state);
-        signup2Zip = rootView.findViewById(R.id.SIGNUP2_ZIP);
 
-//        terms = rootView.findViewById(R.id.checkbox_terms);
-//        termsLink = rootView.findViewById(R.id.terms_link);
-        signup2SameAddressSwitch = rootView.findViewById(R.id.SIGNUP2_SWITCH);
-        fullBillingAddress = rootView.findViewById(R.id.LAYOUT_6);
-        fullBillingAddress2 = rootView.findViewById(R.id.LAYOUT_7);
-        signup2NextButton = rootView.findViewById(R.id.button_next2);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
-        signupYesNo = rootView.findViewById(R.id.signup_yes_no);
-        signup2CCName = rootView.findViewById(R.id.SIGNUP2_NAME);
-        signup2CCNum = rootView.findViewById(R.id.SIGNUP2_CCNUM);
-        signup2CC_CVV = rootView.findViewById(R.id.SIGNUP2_CVV);
-        signup2CCExp = rootView.findViewById(R.id.SIGNUP2_EXPIRATION);
+        coordinatorLayout = view.findViewById(R.id.coord_main);
+        progress = view.findViewById(R.id.progress);
+        signup2ScanCardIcon = view.findViewById(R.id.SIGNUP2_SCANCARD_ICON);
+        selectedCreditCardText = view.findViewById(R.id.credit_card_number_copy);
+        selectedCreditCardMasked = view.findViewById(R.id.credit_card_number);
+        signup2Address = view.findViewById(R.id.SIGNUP2_ADDRESS);
+        signup2Address2 = view.findViewById(R.id.SIGNUP2_ADDRESS2);
+        signup2City = view.findViewById(R.id.SIGNUP2_CITY);
+        signup2State = view.findViewById(R.id.state);
+        signup2Zip = view.findViewById(R.id.SIGNUP2_ZIP);
+
+        signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
+        fullBillingAddress = view.findViewById(R.id.LAYOUT_6);
+        fullBillingAddress2 = view.findViewById(R.id.LAYOUT_7);
+        signup2NextButton = view.findViewById(R.id.button_next2);
+
+        signupYesNo = view.findViewById(R.id.signup_yes_no);
+        signup2CCName = view.findViewById(R.id.SIGNUP2_NAME);
+        signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
+        signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
+        signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
 
 
         signup2ScanCardIcon.setOnClickListener(new View.OnClickListener() {
@@ -155,52 +163,76 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }
         });
 
-
-        final String getTextNum = signup2CCNum.getText().toString();
-        final String getTextExp = signup2CCExp.getText().toString();
-        final String getTextCVV = signup2CC_CVV.getText().toString();
-        final String getTextZip = signup2Zip.getText().toString();
-        final String getTextCity = signup2City.getText().toString();
-        final String getTextAddress = signup2Address.getText().toString();
-        signup2NextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                if (TextUtils.isEmpty(getTextName) || TextUtils.isEmpty(getTextNum) || TextUtils.isEmpty(getTextExp) || TextUtils.isEmpty(getTextCVV)) {
-//                    Toast.makeText(getActivity(), " Please fill out all required fields. ", Toast.LENGTH_SHORT).show();
 //
-//                }
-                signup2NextButton.setEnabled(true);
-                ((SignUpActivity) getActivity()).setPage();
+//        final String getTextNum = signup2CCNum.getText().toString();
+//        final String getTextExp = signup2CCExp.getText().toString();
+//        final String getTextCVV = signup2CC_CVV.getText().toString();
+//        final String getTextZip = signup2Zip.getText().toString();
+//        final String getTextCity = signup2City.getText().toString();
+//        final String getTextAddress = signup2Address.getText().toString();
+
+        signup2CCExp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0 && (s.length() % 3) == 0) {
+                    final char c = s.charAt(s.length() - 1);
+                    if ('/' == c) {
+                        s.delete(s.length() - 1, s.length());
+                    }
+                }
+                if (s.length() > 0 && (s.length() % 3) == 0) {
+                    char c = s.charAt(s.length() - 1);
+                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf("/")).length <= 2) {
+                        s.insert(s.length() - 1, String.valueOf("/"));
+                    }
+                }
+
+            }
         });
 
-        return rootView;
+
+        signup2NextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (infoIsGood()) {
+                    String ccNum = signup2CCNum.getText().toString().substring(12, 16);
+                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
+                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
+                    String ccCVV = signup2CC_CVV.getText().toString();
+                    mListener.OnFragmentInteraction(ccNum, ccEx, ccEx2, ccCVV);
+
+                    ((SignUpActivity) getActivity()).setPage();
+                } else {
+                    makeSnackbar("Fill out all required fields.");
+                }
+            }
+        });
 
     }
 
-    public boolean infoIsGood() {
-        final String getTextName = signup2CCName.getText().toString();
 
-        if (signup2CCNum.length() == 16 && !TextUtils.isEmpty(getTextName && signup2CCExp.) {
+    public boolean infoIsGood() {
+        if (signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
+                !signup2CC_CVV.getText().toString().isEmpty() && !signup2CCName.getText().toString().isEmpty()) {
+            return true;
+        } else if (!signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
+                !signup2CC_CVV.getText().toString().isEmpty() && !signup2CCName.getText().toString().isEmpty()
+                && !signup2Address.getText().toString().isEmpty() && !signup2City.getText().toString().isEmpty() && !signup2State.getSelectedItem().toString().equals("State")
+                && signup2Zip.getText().toString().length() == 5) {
             return true;
         }
         return false;
-    }
 
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//        String priceAmount = ((SignUpActivity) getActivity()).getPrice();
-//        if (priceAmount != null) {
-//            Log.d("priceAmount", priceAmount);
-//        }
-//
-//        String formattedPriceText = "$" + priceAmount + "/month";
-//
-//        price.setText(formattedPriceText);
     }
 
     public void creditCardClick() {
@@ -479,6 +511,24 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         f.setArguments(b);
 
         return f;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
     }
 
 

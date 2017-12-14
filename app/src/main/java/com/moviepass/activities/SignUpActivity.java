@@ -26,7 +26,7 @@ import com.moviepass.model.Plan;
  * Created by anubis on 6/15/17.
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnFragmentInteractionListener {
 
     String email;
     String password;
@@ -42,11 +42,13 @@ public class SignUpActivity extends AppCompatActivity {
     String addressZip;
     String price;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
     ImageView zero, one, two;
     ImageView[] indicators;
+    SignUpStepTwoFragment signUpStepTwoFragment;
+    SignUpStepThreeFragment signUpStepThreeFragment;
 
     int page = 0;
 
@@ -59,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_signup);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        viewpagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mCoordinator = findViewById(R.id.SIGNUP_MAINLAYOUT);
 
@@ -69,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(viewpagerAdapter);
 
         indicators = new ImageView[]{zero, one, two};
 
@@ -82,6 +84,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
+
+        signUpStepTwoFragment = new SignUpStepTwoFragment();
+        signUpStepThreeFragment = new SignUpStepThreeFragment();
+
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -123,6 +129,13 @@ public class SignUpActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    @Override
+    public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
+        viewpagerAdapter.OnFragmentInteraction(ccNum, ccExMonth, ccExYear, ccCVV);
+
+    }
+
+
     public static class PlaceholderFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number";
@@ -151,7 +164,9 @@ public class SignUpActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements SignUpStepTwoFragment.OnFragmentInteractionListener {
 
         private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -178,7 +193,13 @@ public class SignUpActivity extends AppCompatActivity {
             }
             return fragment;
         }
+
+        @Override
+        public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
+            signUpStepThreeFragment.OnFragmentInteraction(ccNum, ccExMonth, ccExYear, ccCVV);
+        }
     }
+
 
     /* Disallow swiping */
     public static class NonSwipeableViewPager extends ViewPager {
@@ -355,4 +376,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+
 }
+
