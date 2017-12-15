@@ -1,25 +1,25 @@
-package com.moviepass.activities;
-
-import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import com.moviepass.R;
-import com.moviepass.fragments.HistoryFragment;
-import com.moviepass.helpers.BottomNavigationViewHelper;
-
-/**
- * Created by anubis on 6/9/17.
- */
+//package com.moviepass.activities;
+//
+//import android.support.v4.app.FragmentTransaction;
+//import android.content.Intent;
+//import android.os.Bundle;
+//import android.support.annotation.NonNull;
+//import android.support.design.widget.BottomNavigationView;
+//import android.support.design.widget.TabLayout;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.view.ViewPager;
+//import android.support.v7.app.ActionBar;
+//import android.support.v7.widget.Toolbar;
+//import android.view.Menu;
+//import android.view.MenuItem;
+//
+//import com.moviepass.R;
+//import com.moviepass.fragments.HistoryFragment;
+//import com.moviepass.helpers.BottomNavigationViewHelper;
+//
+///**
+// * Created by anubis on 6/9/17.
+// */
 //
 //public class ReservationsActivity extends BaseActivity {
 //
@@ -32,7 +32,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_reservations);
 //
-//        /* TODO: REPLACE WITH FAB ACTIVITY W/ ACTIVE RESERVATIONS
+//        /* TODO: Set up active reservation later
 //        viewPager = findViewById(R.id.pager);
 //        setupViewPager(viewPager);
 //
@@ -99,7 +99,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-////        updateNavigationBarState();
+//        updateNavigationBarState();
 //    }
 //
 //    // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -113,9 +113,9 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //        return R.layout.activity_reservations;
 //    }
 //
-////    int getNavigationMenuItemId() {
-////        return R.id.action_reservations;
-////    }
+//    int getNavigationMenuItemId() {
+//        return R.id.action_reservations;
+//    }
 //
 //    @Override
 //    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
@@ -125,7 +125,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //                int itemId = item.getItemId();
 //                if (itemId == R.id.action_profile) {
 //                    startActivity(new Intent(ReservationsActivity.this, ProfileActivity.class));
-//
+//                } else if (itemId == R.id.action_reservations) {
 //                } else if (itemId == R.id.action_movies) {
 //                    startActivity(new Intent(ReservationsActivity.this, MoviesActivity.class));
 //                } else if (itemId == R.id.action_theaters) {
@@ -138,11 +138,10 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //        return true;
 //    }
 //
-//    // } else if (itemId == R.id.action_reservations)
-////    private void updateNavigationBarState() {
-////        int actionId = getNavigationMenuItemId();
-////        selectBottomNavigationBarItem(actionId);
-////    }
+//    private void updateNavigationBarState(){
+//        int actionId = getNavigationMenuItemId();
+//        selectBottomNavigationBarItem(actionId);
+//    }
 //
 //    void selectBottomNavigationBarItem(int itemId) {
 //        Menu menu = bottomNavigationView.getMenu();
@@ -155,3 +154,5 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 //            }
 //        }
 //    }
+//
+//}

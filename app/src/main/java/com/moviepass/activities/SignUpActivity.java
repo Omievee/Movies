@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.moviepass.R;
 import com.moviepass.fragments.SignUpStepOneFragment;
+import com.moviepass.fragments.SignUpStepThreeFragment;
 import com.moviepass.fragments.SignUpStepTwoFragment;
 import com.moviepass.model.Plan;
 
@@ -25,7 +26,7 @@ import com.moviepass.model.Plan;
  * Created by anubis on 6/15/17.
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnCreditCardEntered {
 
     String email;
     String password;
@@ -41,11 +42,13 @@ public class SignUpActivity extends AppCompatActivity {
     String addressZip;
     String price;
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
-    ImageView zero, one;
+    ImageView zero, one, two;
     ImageView[] indicators;
+    SignUpStepTwoFragment signUpStepTwoFragment;
+    SignUpStepThreeFragment signUpStepThreeFragment;
 
     int page = 0;
 
@@ -56,20 +59,21 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.ac_signup);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        viewpagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mCoordinator = findViewById(R.id.main_content);
+        mCoordinator = findViewById(R.id.SIGNUP_MAINLAYOUT);
 
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
+        two = findViewById(R.id.intro_indicator_2);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager = findViewById(R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP);
+        mViewPager.setAdapter(viewpagerAdapter);
 
-        indicators = new ImageView[]{zero, one};
+        indicators = new ImageView[]{zero, one, two};
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
@@ -80,6 +84,12 @@ public class SignUpActivity extends AppCompatActivity {
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
+
+        signUpStepTwoFragment = new SignUpStepTwoFragment();
+        signUpStepThreeFragment = new SignUpStepThreeFragment();
+
+
+
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -96,6 +106,8 @@ public class SignUpActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
+                        break;
+                    case 2:
                         break;
                 }
             }
@@ -119,6 +131,26 @@ public class SignUpActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    @Override
+    public void OnCreditCardEntered(final String ccNum, final int ccExMonth, final int ccExYear, final String ccCVV) {
+        viewpagerAdapter.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
+        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
+        final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
+        f.confirmCCNum.setText(" - " +ccNum.substring(12, 16) + "]");
+        f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(f.confirmTermsAgreementSwitch.isChecked()){
+                    f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+                }else {
+                    f.makeSnackbar("You must agree to the Terms of Service.");
+                }
+            }
+        });
+    }
+
+
     public static class PlaceholderFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number";
@@ -137,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.activity_sign_up, container, false);
+            View rootView = inflater.inflate(R.layout.ac_signup, container, false);
 
             return rootView;
         }
@@ -147,7 +179,9 @@ public class SignUpActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    private class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements SignUpStepTwoFragment.OnCreditCardEntered {
 
         private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -155,23 +189,32 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
         public Fragment getItem(int pos) {
             Fragment fragment = null;
-            switch(pos) {
+            switch (pos) {
                 case 0:
                     fragment = new SignUpStepOneFragment();
                     break;
                 case 1:
                     fragment = new SignUpStepTwoFragment();
                     break;
+                case 2:
+                    fragment = new SignUpStepThreeFragment();
+                    break;
             }
             return fragment;
         }
+
+        @Override
+        public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {
+            signUpStepThreeFragment.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
+        }
     }
+
 
     /* Disallow swiping */
     public static class NonSwipeableViewPager extends ViewPager {
@@ -211,7 +254,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Detects the direction of swipe. Right or left.
         // Returns true if swipe is in right direction
-        public boolean detectSwipeToRight(MotionEvent event){
+        public boolean detectSwipeToRight(MotionEvent event) {
 
             int initialXValue = 0; // as we have to detect swipe to right
             final int SWIPE_THRESHOLD = 100; // detect swipe
@@ -220,7 +263,7 @@ public class SignUpActivity extends AppCompatActivity {
             try {
                 float diffX = event.getX() - initialXValue;
 
-                if (Math.abs(diffX) > SWIPE_THRESHOLD ) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD) {
                     if (diffX > 0) {
                         // swipe from left to right detected ie.SwipeRight
                         result = false;
@@ -229,14 +272,12 @@ public class SignUpActivity extends AppCompatActivity {
                         result = true;
                     }
                 }
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 exception.printStackTrace();
             }
             return result;
         }
     }
-
 
     void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
@@ -270,7 +311,6 @@ public class SignUpActivity extends AppCompatActivity {
     public void setPlan(Plan plan) {
         mPlan = plan;
 
-        mViewPager.setCurrentItem(2);
     }
 
     /* Fragment Three */
@@ -314,12 +354,16 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void setPrice(String frag_price) {
-        Log.d("setPrice", frag_price);
-        price = frag_price;
-        Log.d("setPricePrice", price);
+    public void setPage() {
 
-        mViewPager.setCurrentItem(1);
+        String TAG = "found";
+
+        Log.d(TAG, "setPage: " + mViewPager.getCurrentItem());
+        if (mViewPager.getCurrentItem() == 0) {
+            mViewPager.setCurrentItem(1);
+        } else if (mViewPager.getCurrentItem() == 1) {
+            mViewPager.setCurrentItem(2);
+        }
     }
 
     public String getPrice() {
@@ -337,7 +381,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     /* Handle Back Button Behavior */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (mViewPager.getCurrentItem() == 1) {
             mViewPager.setCurrentItem(0);
         } else if (mViewPager.getCurrentItem() == 2) {
@@ -347,4 +391,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+
 }
+

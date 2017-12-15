@@ -21,13 +21,13 @@
             android:scaleType="fitCenter"
             android:src="@drawable/moviepass_logo_red" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:text="@string/activity_sign_up_step_one_get_started"
-            android:textSize="16sp" />
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:text="@string/activity_sign_up_step_one_get_started"-->
+        <!--android:textSize="16sp" />-->
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:textColorHint="@color/white">
 
             <EditText
-                android:id="@+id/input_email"
+                android:id="@+id/SIGNUP_EMAIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_up_step_one_email"
@@ -57,7 +57,7 @@
             app:passwordToggleEnabled="true">
 
             <EditText
-                android:id="@+id/input_password"
+                android:id="@+id/SIGNUP_PASSSWORD"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_up_step_one_password"
@@ -68,17 +68,19 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/button_sign_up"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+        <TextView
+            android:id="@+id/SIGNUP_BUTTON"
+            android:layout_width="200dp"
+            android:layout_height="@dimen/basic_button_height"
             android:layout_below="@+id/inputPassword"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:background="@drawable/button_red"
-            android:elevation="2dp"
+            android:background="@drawable/selectseat_confirm_button"
+            android:elevation="5dp"
             android:gravity="center"
             android:text="@string/activity_sign_up_step_one_sign_up"
-            android:textSize="15sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <!-- <com.facebook.login.widget.LoginButton -->
         <!-- <Button
@@ -124,3 +126,4 @@
         android:layout_height="match_parent" />
 
 </RelativeLayout>
+

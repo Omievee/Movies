@@ -22,6 +22,7 @@
     <dimen name="BND_space">40dp</dimen>
     <dimen name="design_bottom_navigation_text_size" tools:override="true">11sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">12sp</dimen>
+    <dimen name="basic_button_height">45dp</dimen>
 
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>

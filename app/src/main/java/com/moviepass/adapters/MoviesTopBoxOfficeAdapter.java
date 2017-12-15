@@ -1,11 +1,9 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
-import com.moviepass.activities.MovieActivity;
 import com.moviepass.model.Movie;
 
 import java.util.ArrayList;
@@ -95,7 +92,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mTopBoxMovieDV.setImageResource(R.drawable.activity_splash_star);
+                            holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
                             holder.title.setText(movie.getTitle());
                         }
                     }

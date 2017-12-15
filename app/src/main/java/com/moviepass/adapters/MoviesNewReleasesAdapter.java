@@ -15,13 +15,14 @@ import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.moviepass.R;
 import com.moviepass.MoviePosterClickListener;
+import com.moviepass.R;
 import com.moviepass.model.Movie;
 
 import java.util.ArrayList;
@@ -94,7 +95,9 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mNewReleasePosterDV.setImageResource(R.drawable.activity_splash_star);
+                            holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
+                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
                             holder.title.setText(movie.getTitle());
                         }
                     }

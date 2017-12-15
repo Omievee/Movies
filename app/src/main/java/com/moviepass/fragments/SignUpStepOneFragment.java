@@ -1,7 +1,5 @@
 package com.moviepass.fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -11,15 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
-import com.moviepass.model.Plan;
 import com.moviepass.model.ProspectUser;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
@@ -27,8 +25,6 @@ import com.moviepass.network.RestError;
 import com.moviepass.requests.PersonalInfoRequest;
 import com.moviepass.responses.PersonalInfoResponse;
 import com.moviepass.responses.RegistrationPlanResponse;
-
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,17 +38,17 @@ public class SignUpStepOneFragment extends Fragment {
 
     ArrayAdapter<CharSequence> statesAdapter;
 
-    RelativeLayout relativeLayout;
-    EditText etFirstName;
-    EditText etLastName;
-    EditText etAddress;
-    EditText etAddress2;
-    EditText etCity;
-    Spinner state;
-    EditText etZip;
-    Button next;
+    RelativeLayout signup1CoordMain;
+    EditText signup1FirstName;
+    EditText signup1LastName;
+    EditText signup1Address;
+    EditText signup1Address2;
+    EditText signup1City;
+    Spinner signup1State;
+    EditText signup1Zip;
+    TextView signup1NextButton;
     View progress;
-
+    ImageView indicator0, indicator1, indicator2;
     String states[] = new String[]{
             "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL",
             "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA",
@@ -66,24 +62,25 @@ public class SignUpStepOneFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_sign_up_step_one, container, false);
+        View rootView = inflater.inflate(R.layout.fr_signup_stepone, container, false);
 
-        relativeLayout = rootView.findViewById(R.id.relative_layout);
-        etFirstName = rootView.findViewById(R.id.et_first_name);
-        etLastName = rootView.findViewById(R.id.et_last_name);
-        etAddress = rootView.findViewById(R.id.et_address);
-        etAddress2 = rootView.findViewById(R.id.et_address_two);
-        etCity = rootView.findViewById(R.id.et_city);
-        state = rootView.findViewById(R.id.state);
-        etZip = rootView.findViewById(R.id.et_zip);
-        next = rootView.findViewById(R.id.button_next);
+        signup1CoordMain = rootView.findViewById(R.id.relative_layout);
+        signup1FirstName = rootView.findViewById(R.id.et_first_name);
+        signup1LastName = rootView.findViewById(R.id.et_last_name);
+        signup1Address = rootView.findViewById(R.id.et_address);
+        signup1Address2 = rootView.findViewById(R.id.et_address_two);
+        signup1City = rootView.findViewById(R.id.et_city);
+        signup1State = rootView.findViewById(R.id.state);
+        signup1Zip = rootView.findViewById(R.id.et_zip);
+        signup1NextButton = rootView.findViewById(R.id.button_next);
         progress = getActivity().findViewById(R.id.progress);
+
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
         statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        state.setAdapter(statesAdapter);
+        signup1State.setAdapter(statesAdapter);
 
         if (!isViewShown) {
             setButtonActions();
@@ -108,7 +105,7 @@ public class SignUpStepOneFragment extends Fragment {
         super.setMenuVisibility(visible);
         if (getView() != null) {
             if (visible) {
-                next.setOnClickListener(new View.OnClickListener() {
+                signup1NextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (canContinue()) {
@@ -147,7 +144,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isFirstNameValid() {
-        if (etFirstName.length() > 1 && etFirstName.length() <= 26 && !etFirstName.getText().toString().matches(".*\\d+.*")) {
+        if (signup1FirstName.length() > 1 && signup1FirstName.length() <= 26 && !signup1FirstName.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             pos = 0;
@@ -156,7 +153,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isLastNameValid() {
-        if (etLastName.length() > 1 && etLastName.length() <= 26 && !etLastName.getText().toString().matches(".*\\d+.*")) {
+        if (signup1LastName.length() > 1 && signup1LastName.length() <= 26 && !signup1LastName.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             pos = 0;
@@ -165,7 +162,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isAddressValid() {
-        if (etAddress.length() > 2 && etAddress.length() <= 26) {
+        if (signup1Address.length() > 2 && signup1Address.length() <= 26) {
             return true;
         } else {
             return false;
@@ -173,17 +170,17 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isAddress2Valid() {
-        if ((etAddress2.length() > 0 && etAddress2.length() <= 26)
-                || etAddress2.getText().toString().equals("")) {
+        if ((signup1Address2.length() > 0 && signup1Address2.length() <= 26)
+                || signup1Address2.getText().toString().equals("")) {
             return true;
         } else {
-            Log.d("mAddress2", etAddress2.getText().toString());
+            Log.d("mAddress2", signup1Address2.getText().toString());
             return false;
         }
     }
 
     public boolean isCityValid() {
-        if (etCity.length() > 2 && etCity.length() <= 26 && !etCity.getText().toString().matches(".*\\d+.*")) {
+        if (signup1City.length() > 2 && signup1City.length() <= 26 && !signup1City.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
             return false;
@@ -191,8 +188,8 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isStateValid() {
-        if (!state.getSelectedItem().toString().equals("State")) {
-            Log.d("mStateValue: ", state.getSelectedItem().toString());
+        if (!signup1State.getSelectedItem().toString().equals("State")) {
+            Log.d("mStateValue: ", signup1State.getSelectedItem().toString());
             return true;
         } else {
             return false;
@@ -200,7 +197,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isZipValid() {
-        if (etZip.length() == 5) {
+        if (signup1Zip.length() == 5) {
             return true;
         } else {
             return false;
@@ -208,7 +205,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public void makeSnackbar(int message) {
-        final Snackbar snackbar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,24 +216,24 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public void processSignUpInfo() {
-        ((SignUpActivity) getActivity()).setFirstName(etFirstName.getText().toString());
-        ((SignUpActivity) getActivity()).setLastName(etLastName.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress(etAddress.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress2(etAddress2.getText().toString());
-        ((SignUpActivity) getActivity()).setCity(etCity.getText().toString());
-        ((SignUpActivity) getActivity()).setState(state.getSelectedItem().toString());
-        ((SignUpActivity) getActivity()).setAddressZip(etZip.getText().toString());
+        ((SignUpActivity) getActivity()).setFirstName(signup1FirstName.getText().toString());
+        ((SignUpActivity) getActivity()).setLastName(signup1LastName.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress(signup1Address.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress2(signup1Address2.getText().toString());
+        ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
+        ((SignUpActivity) getActivity()).setState(signup1State.getSelectedItem().toString());
+        ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
 
         String email = ((SignUpActivity) getActivity()).getEmail();
         String password = ((SignUpActivity) getActivity()).getPassword();
 
-        ProspectUser.firstName = etFirstName.getText().toString();
-        ProspectUser.lastName = etLastName.getText().toString();
-        ProspectUser.address = etAddress.getText().toString();
-        ProspectUser.address2 = etAddress2.getText().toString();
-        ProspectUser.city = etCity.getText().toString();
-        ProspectUser.state = state.getSelectedItem().toString();
-        ProspectUser.zip = etZip.getText().toString();
+        ProspectUser.firstName = signup1FirstName.getText().toString();
+        ProspectUser.lastName = signup1LastName.getText().toString();
+        ProspectUser.address = signup1Address.getText().toString();
+        ProspectUser.address2 = signup1Address2.getText().toString();
+        ProspectUser.city = signup1City.getText().toString();
+        ProspectUser.state = signup1State.getSelectedItem().toString();
+        ProspectUser.zip = signup1Zip.getText().toString();
 
         PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
                 ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
@@ -254,7 +251,7 @@ public class SignUpStepOneFragment extends Fragment {
                         if (registrationPlanResponse != null) {
                             String price = (registrationPlanResponse.getPrice());
 
-                            ((SignUpActivity) getActivity()).setPrice(price);
+                            ((SignUpActivity) getActivity()).setPage();
                             Log.d("SUSOFprice", price);
                         } else if (response.errorBody() != null) {
                             Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
@@ -276,7 +273,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     private void setButtonActions() {
-        next.setOnClickListener(new View.OnClickListener() {
+        signup1NextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (canContinue()) {

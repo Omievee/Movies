@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/test_blue"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/logo_compact"
-        android:layout_marginTop="@dimen/margin_standard"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"/>
+        android:layout_marginTop="@dimen/margin_standard"
+        android:gravity="center_horizontal"
+        android:src="@drawable/logo_compact" />
 
     <view
-        class="com.moviepass.activities.SignUpActivity$NonSwipeableViewPager"
         android:id="@+id/container"
+        class="com.moviepass.activities.SignUpActivity$NonSwipeableViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/logo"
@@ -55,12 +55,12 @@
                 android:id="@+id/dots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/quadruple_margin_standard"
-                android:layout_alignParentBottom="true">
+                android:paddingBottom="@dimen/quadruple_margin_standard">
 
                 <ImageView
                     android:id="@+id/intro_indicator_0"

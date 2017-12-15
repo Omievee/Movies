@@ -13,7 +13,7 @@
         android:id="@+id/ticket_top_red_dark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        fresco:failureImage="@drawable/activity_splash_star"
+        fresco:failureImageScaleType="centerInside"
         fresco:roundedCornerRadius="4dp" />
 
     <!--<ImageView-->
@@ -28,6 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/margin_half"
+        android:ellipsize="marquee"
+        android:lines="2"
         android:layout_marginRight="@dimen/margin_half"
         android:gravity="center"
         android:textAlignment="center"

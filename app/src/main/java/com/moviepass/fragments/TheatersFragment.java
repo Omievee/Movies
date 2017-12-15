@@ -576,7 +576,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         } else {
             Log.i(TAG, "Requesting permission");
             // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
+            // sets the permission in a given signup1State or the user denied the permission
             // previously and checked "Never ask again".
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},

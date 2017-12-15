@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/test_blue">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/progress"
         android:layout_toRightOf="@+id/progress"
-        android:layout_toEndOf="@+id/progress">
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <ImageView
             android:id="@+id/logo"
@@ -25,68 +25,85 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textSize="16sp"
             android:gravity="center_vertical"
-            android:text="@string/activity_sign_in_welcome_back"/>
+            android:text="@string/activity_sign_in_welcome_back"
+            android:textSize="20sp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="24dp"
             android:textColorHint="@color/white">
 
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
                 android:hint="@string/activity_sign_in_email"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColorHint="@color/white"
+                android:textSize="18sp" />
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:textColorHint="@color/white">
 
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
                 android:hint="@string/activity_sign_in_password"
+
+                android:inputType="textPassword"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white" />
+                android:textColorHint="@color/white"
+                android:textSize="18sp" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/button_log_in"
+            android:layout_width="200dp"
             android:layout_height="@dimen/button_height"
-            android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:elevation="2dp"
             android:layout_below="@+id/input_password"
-            android:background="@drawable/button_red"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/selectseat_confirm_button"
+            android:elevation="2dp"
             android:text="@string/activity_sign_in_log_in"
+
             android:textSize="15sp" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook_log_in"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="@dimen/button_height"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_half"
-            android:layout_marginBottom="@dimen/margin_half"
-            android:paddingTop="@dimen/margin_standard"
-            android:paddingBottom="@dimen/margin_standard"/>
+            android:layout_marginTop="@dimen/doubledouble_margin_standard"
+            android:paddingBottom="@dimen/margin_standard"
+            android:paddingTop="@dimen/margin_standard" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard">
+
+            <ImageView
+                android:id="@+id/FINGER_SCANNER_ICON"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_fingerprint_black"
+                android:tint="@color/white"
+                android:visibility="invisible" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -94,8 +111,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"
         android:layout_marginBottom="16dp"
+        android:gravity="bottom"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
@@ -104,6 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:text="@string/activity_sign_in_dont_have_an_account"
             android:textColor="@color/red"
             android:textSize="15sp" />
