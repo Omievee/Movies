@@ -58,14 +58,24 @@
     <string name="activity_onboarding_not_ready">Not ready to Sign Up? Explore the app</string>
     <string name="activity_onboarding_header_1">A Movie A Day!</string>
     <string name="activity_onboarding_header_2">Over 4000 Theaters!</string>
-    <string name="activity_onboarding_header_3">Choose Your Movie and Showtime</string>
-    <string name="activity_onboarding_header_4">Check In, Swipe Card, Get Ticket</string>
-    <string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>
+    <string name="activity_onboarding_header_3">Any Movie</string>
+    <!--<string name="activity_onboarding_header_4">Check In, Swipe Card, Get Ticket</string>-->
+    <string name="activity_onboarding_header_4">Sign Up &amp; Get Your Card</string>
+
+    <!--<string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>-->
+    <string name="activity_onboarding_header_5">How It Works</string>
+
     <string name="activity_onboarding_body_1">See a movie a day in theaters for just $9.95 per month!</string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
-    <string name="activity_onboarding_body_3">Use the MoviePass app to check in to the movie and showtime you want to see.</string>
-    <string name="activity_onboarding_body_4">Use the app to check into a theater, then swipe your card to get your ticket!</string>
-    <string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>
+    <!--<string name="activity_onboarding_body_3">Use the MoviePass app to check in to the movie and showtime you want to see.</string>-->
+    <string name="activity_onboarding_body_3">From Hollywood blockbusters, to independent films, you can see any 2D movie from its first day of release.</string>
+
+    <!--<string name="activity_onboarding_body_4">Use the app to check into a theater, then swipe your card to get your ticket!</string>-->
+    <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the mail, and you\'re ready to go to the movies!</string>
+
+    <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
+    <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+
 
 
     <!-- SelectSeatActivity -->

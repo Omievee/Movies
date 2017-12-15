@@ -215,8 +215,8 @@ public class OnboardingActivity extends AppCompatActivity {
 
         ImageView img;
 
-        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_2,
-                R.drawable.image_onboarding_3, R.drawable.image_onboarding_4};
+        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_3,
+                R.drawable.signupimage2, R.drawable.howitworks2};
 
         int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
                 R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
