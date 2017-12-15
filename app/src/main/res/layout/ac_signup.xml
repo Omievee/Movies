@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/margin_standard"
+        android:tint="@color/new_red"
         android:gravity="center_horizontal"
         android:src="@drawable/logo_compact" />
 

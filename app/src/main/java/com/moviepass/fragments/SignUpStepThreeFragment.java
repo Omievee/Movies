@@ -49,7 +49,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     public static final String TAG = "foundit";
     CoordinatorLayout coordinatorLayout;
 
-    TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
+    public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
             confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
     Switch confirmTermsAgreementSwitch;
 
@@ -141,6 +141,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         month = ccExMonth;
         year = ccExYear;
 
+//        confirmCCNum.setText(num);
         Log.d(TAG, "OnFragmentInteraction: " + num);
 
     }
