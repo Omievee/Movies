@@ -52,9 +52,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     ArrayAdapter<CharSequence> statesAdapter;
 
+    public static final String CREDITCARD_DATA = "card data";
+
     public static final String TAG = "foudnit";
 
-    OnFragmentInteractionListener mListener;
+    OnCreditCardEntered creditCardDataListener;
 
     CoordinatorLayout coordinatorLayout;
     ImageButton signup2ScanCardIcon;
@@ -198,10 +200,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             public void onClick(View view) {
                 if (infoIsGood()) {
                     String ccNum = signup2CCNum.getText().toString().substring(12, 16);
-                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
-                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
+                    int ccEx = Integer.parseInt(signup2CCExp.getText().toString().substring(0, 2));
+                    int ccEx2 = Integer.parseInt(signup2CCExp.getText().toString().substring(3, 5));
                     String ccCVV = signup2CC_CVV.getText().toString();
-                    mListener.OnFragmentInteraction(ccNum, ccEx, ccEx2, ccCVV);
+                    creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
 
                     ((SignUpActivity) getActivity()).setPage();
                 } else {
@@ -508,19 +510,23 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnCreditCardEntered) {
+
+            creditCardDataListener = (OnCreditCardEntered) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement "
+                    + OnCreditCardEntered.class.getCanonicalName());
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        creditCardDataListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
+    public interface OnCreditCardEntered {
+        void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV);
     }
 
 

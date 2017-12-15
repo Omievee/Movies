@@ -41,7 +41,7 @@ import retrofit2.Response;
 
 
 public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNonceCreatedListener,
-        BraintreeCancelListener, BraintreeErrorListener, SignUpStepTwoFragment.OnFragmentInteractionListener {
+        BraintreeCancelListener, BraintreeErrorListener, SignUpStepTwoFragment.OnCreditCardEntered {
     public static final String CCX = "ccx";
     public static final String CCCVV = "cccvv";
     public static final String CCNUM = "cc";
@@ -51,7 +51,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
     public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
             confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
-    Switch confirmTermsAgreementSwitch;
+    public Switch confirmTermsAgreementSwitch;
 
     String num, month, year, ccv;
     View progress;
@@ -82,7 +82,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmSubmit = rootview.findViewById(R.id.CONFIRM_SUBMIT);
 
         Log.d(TAG, "vc: " + confirmCCNum.getId());
-        Log.d(TAG, "OnFragmentInteraction: " + num);
+        Log.d(TAG, "1: " + num);
 
         //ToS & Privacy Links
         confirmTermsText.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             @Override
             public void onClick(View v) {
                 ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(1);
-
             }
         });
 
@@ -125,24 +124,13 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                 ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(0);
             }
         });
-        confirmSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                beginRegistration();
-            }
-        });
 
         return rootview;
     }
 
     @Override
-    public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
-        num = ccNum;
-        month = ccExMonth;
-        year = ccExYear;
-
-//        confirmCCNum.setText(num);
-        Log.d(TAG, "OnFragmentInteraction: " + num);
+    public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {//        confirmCCNum.setText(num);
+        Log.d(TAG, "2: " + num);
 
     }
 
@@ -226,7 +214,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
 
-    public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
+    public void beginRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
         progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
@@ -301,7 +289,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                             confirmSubmit.setEnabled(true);
 
                         } catch (Exception e) {
-                            makeSnackbar(e.getMessage());
+                            makeSnackbar("Internal Failure: Error 5");
+                            Log.d(TAG, "try/catch try: " + e.getMessage());
                         }
                     }
                 }
@@ -311,6 +300,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                     progress.setVisibility(View.GONE);
                     confirmSubmit.setEnabled(true);
                     makeSnackbar(t.getMessage());
+                    Log.d(TAG, "failed: " + t.getMessage());
+
                 }
             });
         } else {

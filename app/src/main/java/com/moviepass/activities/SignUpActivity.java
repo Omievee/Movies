@@ -26,7 +26,7 @@ import com.moviepass.model.Plan;
  * Created by anubis on 6/15/17.
  */
 
-public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnFragmentInteractionListener {
+public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnCreditCardEntered {
 
     String email;
     String password;
@@ -89,6 +89,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepThreeFragment = new SignUpStepThreeFragment();
 
 
+
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -130,9 +132,22 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     }
 
     @Override
-    public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
-        viewpagerAdapter.OnFragmentInteraction(ccNum, ccExMonth, ccExYear, ccCVV);
-
+    public void OnCreditCardEntered(final String ccNum, final int ccExMonth, final int ccExYear, final String ccCVV) {
+        viewpagerAdapter.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
+        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
+        final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
+        f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
+        f.confirmCCNum.setText(" - " +ccNum + "]");
+        f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(f.confirmTermsAgreementSwitch.isChecked()){
+                    f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+                }else {
+                    f.makeSnackbar("You must agree to the Terms of Service.");
+                }
+            }
+        });
     }
 
 
@@ -166,7 +181,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
      */
 
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter implements SignUpStepTwoFragment.OnFragmentInteractionListener {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements SignUpStepTwoFragment.OnCreditCardEntered {
 
         private SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -195,8 +210,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
 
         @Override
-        public void OnFragmentInteraction(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
-            signUpStepThreeFragment.OnFragmentInteraction(ccNum, ccExMonth, ccExYear, ccCVV);
+        public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {
+            signUpStepThreeFragment.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
         }
     }
 

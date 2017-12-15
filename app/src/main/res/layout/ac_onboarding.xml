@@ -156,6 +156,7 @@
             android:layout_marginEnd="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_standard"
             android:text="Sign In"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
     </FrameLayout>
