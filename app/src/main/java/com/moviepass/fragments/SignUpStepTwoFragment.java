@@ -199,12 +199,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             @Override
             public void onClick(View view) {
                 if (infoIsGood()) {
-                    String ccNum = signup2CCNum.getText().toString().substring(12, 16);
+                    String ccNum = signup2CCNum.getText().toString();
                     int ccEx = Integer.parseInt(signup2CCExp.getText().toString().substring(0, 2));
                     int ccEx2 = Integer.parseInt(signup2CCExp.getText().toString().substring(3, 5));
                     String ccCVV = signup2CC_CVV.getText().toString();
                     creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
-
                     ((SignUpActivity) getActivity()).setPage();
                 } else {
                     makeSnackbar("Fill out all required fields.");

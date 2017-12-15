@@ -131,9 +131,9 @@
                             android:layout_marginTop="@dimen/margin_half"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
-                            android:hint="Expiration mm/yy"
+                            android:hint="Expiration MM/YYYY"
                             android:inputType="date"
-                            android:maxLength="5"
+                            android:maxLength="7"
                             android:textColor="@color/white" />
 
 

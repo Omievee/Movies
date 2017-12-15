@@ -24,6 +24,7 @@ import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.activities.MoviesActivity;
 import com.moviepass.activities.SignUpActivity;
 import com.moviepass.activities.TheatersActivity;
 import com.moviepass.model.ProspectUser;
@@ -130,7 +131,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
     @Override
     public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {//        confirmCCNum.setText(num);
-        Log.d(TAG, "2: " + num);
+        Log.d(TAG, "OnCreditCardEntered: " + ccNum + " " +ccExMonth +" " + ccExYear +" " + ccCVV);
 
     }
 
@@ -197,8 +198,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                     RestClient.authToken = user.getAuthToken();
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
-                    //TODO: check intent -->
-                    Intent i = new Intent(getActivity(), TheatersActivity.class);
+                    Intent i = new Intent(getActivity(), MoviesActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     progress.setVisibility(View.GONE);
@@ -218,8 +218,10 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
-        String month = String.valueOf(cardExpMonth);
-        String year = String.valueOf(cardExpYear);
+        String month =  String.valueOf(cardExpMonth);
+        //TODO: UPDATE IN 2099 to avoid signup failures
+        String year = "20"+String.valueOf(cardExpYear);
+        Log.d(TAG, "beginRegistration: " + year);
         String cvv = String.valueOf(cardCvv);
 
         final String bStreet;
@@ -268,6 +270,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             final SignUpRequest request = new SignUpRequest(creditCardNumber, month, year, cvv,
                     sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
                     email, firstName, lastName, password, amc3dMarkup);
+
+            Log.d(TAG, "completeRegistration: " + month + year + creditCardNumber);
 
             RestClient.getUnauthenticated().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
                 @Override

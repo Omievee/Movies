@@ -137,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
         f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
-        f.confirmCCNum.setText(" - " +ccNum + "]");
+        f.confirmCCNum.setText(" - " +ccNum.substring(12, 16) + "]");
         f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
