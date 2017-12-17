@@ -1,14 +1,19 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -96,6 +101,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.cinemaTItle.setText(screening.getTitle());
         holder.cinemaPoster.setController(controller);
 
+
         //onBind set up Gridlayout & begin a loop to create a new TextView for each showtime in the respective Array.
         holder.showtimeGrid.setRowCount(1);
         holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
@@ -120,22 +126,35 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!finalShowtime.isSelected()) {
-                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-                            finalShowtime.setPadding(50, 50, 50, 50);
-                            String selectedShowTime = finalShowtime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                            finalShowtime.setSelected(true);
+                        if (screening.getFormat().equals("2D")) {
+                            if (!finalShowtime.isSelected()) {
+                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                                finalShowtime.setPadding(50, 50, 50, 50);
+                                String selectedShowTime = finalShowtime.getText().toString();
+                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                                finalShowtime.setSelected(true);
+                            } else {
+                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                                finalShowtime.setPadding(50, 50, 50, 50);
+                                String selectedShowTime = finalShowtime.getText().toString();
+                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                                finalShowtime.setSelected(false);
+                            }
                         } else {
                             finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                             finalShowtime.setPadding(50, 50, 50, 50);
-                            String selectedShowTime = finalShowtime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                            finalShowtime.setSelected(false);
+                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
+            }
+
+            if (!screening.getFormat().equals("2D")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+
+                }
             }
         }
     }

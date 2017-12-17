@@ -334,6 +334,9 @@
     <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
     <string name="xml_settings_preferences_settings_help_version">Version</string>
 
+
+
+    <string name="Not_Supportd">This screening is not supported.</string>
     <!-- FINGERPRINT SCANNER -->
 
 

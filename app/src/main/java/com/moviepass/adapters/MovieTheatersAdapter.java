@@ -14,6 +14,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.listeners.ShowtimeClickListener;
@@ -122,19 +123,23 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        if (!finalShowtime.isSelected()) {
-                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-                            finalShowtime.setPadding(50, 50, 50, 50);
-                            String selectedShowTime = finalShowtime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                            finalShowtime.setSelected(true);
+                        if (screening.getFormat().equals("2D")) {
+                            if (!finalShowtime.isSelected()) {
+                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                                finalShowtime.setPadding(50, 50, 50, 50);
+                                String selectedShowTime = finalShowtime.getText().toString();
+                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                                finalShowtime.setSelected(true);
+                            } else {
+                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                                finalShowtime.setPadding(50, 50, 50, 50);
+                                String selectedShowTime = finalShowtime.getText().toString();
+                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                                finalShowtime.setSelected(false);
+                            }
                         } else {
-                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                            finalShowtime.setPadding(50, 50, 50, 50);
-                            String selectedShowTime = finalShowtime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                            finalShowtime.setSelected(false);
+                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
