@@ -5,8 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:background="@color/test_blue"
+    android:foreground="@drawable/poster_gradient"
     android:padding="@dimen/margin_half"
-    app:cardBackgroundColor="@color/test_blue">
+    app:cardBackgroundColor="@color/gun_metal">
 
     <LinearLayout
         android:layout_width="match_parent"

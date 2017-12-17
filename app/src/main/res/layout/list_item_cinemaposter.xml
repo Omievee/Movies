@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:foreground="@drawable/poster_gradient"
-                fresco:failureImage="@drawable/activity_splash_star" />
+                fresco:failureImage="@drawable/film_reel_icon" />
 
 
             <TextView

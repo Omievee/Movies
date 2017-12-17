@@ -2,6 +2,7 @@ package com.moviepass.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import com.moviepass.activities.MovieActivity;
  * Created by omievee on 12/16/17.
  */
 
-public class SynopsisFragment extends DialogFragment {
+public class SynopsisFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = " found it";
     public TextView synopsisText, synopsisTitle;

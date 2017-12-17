@@ -8,6 +8,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        android:background="@color/gray_icon"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -15,7 +16,6 @@
         <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
             android:elevation="5dp"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"

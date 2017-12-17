@@ -100,7 +100,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.showtimeGrid.setRowCount(1);
         holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
         holder.showtimeGrid.removeAllViews();
-//        Date currentTime = Calendar.getInstance().getTime();
 
 
         if (screening.getStartTimes() != null) {

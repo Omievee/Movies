@@ -99,7 +99,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
-
         holder.showTimesGrid.setRowCount(1);
         holder.showTimesGrid.setColumnCount(screening.getStartTimes().size());
         holder.showTimesGrid.removeAllViews();
