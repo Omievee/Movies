@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +40,8 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserLocationManagerFused;
-import com.moviepass.adapters.MovieShowtimesAdapter;
 import com.moviepass.adapters.MovieTheatersAdapter;
+import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
@@ -76,6 +78,7 @@ import retrofit2.Response;
 public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
+    public static final String TITLE = "title";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screeningObject";
     public static final String SHOWTIME = "showtime";
@@ -92,33 +95,35 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ArrayList<String> mShowtimesList;
 
 
-    Movie movie;
+    public Movie movie;
     Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
-    MovieTheatersAdapter MovieTheatersAdapter;
-    MovieShowtimesAdapter ShowtimesAdapter;
-    ScreeningsResponse mScreeningsResponse;
+    MovieTheatersAdapter movieTheatersAdapter;
+    ScreeningsResponse screeningsResponse;
     Screening Screening;
 
     TextView THEATER_ADDRESS_LISTITEM;
-    TextView SELECTED_MOVIE_TITLE;
+    TextView selectedMovieTitle;
     View ProgressBar;
+    ImageButton selectedMovieSynopsis;
 
-    ArrayList<Screening> mScreeningsList;
-    ArrayList<String> ShowtimesList;
+    ArrayList<Screening> selectedScreeningsList;
+    ArrayList<String> selectedShowtimesList;
 
     @BindView(R.id.SELECTED_THEATERS)
-    RecyclerView SelectedTheatersRecyclerView;
+    RecyclerView selectedTheatersRecyclerView;
 
     @BindView(R.id.SELECTED_MOVIE_IMAGE)
-    SimpleDraweeView SELECTED_MOVIEPOSTER;
+    SimpleDraweeView selectedMoviePoster;
 
     @BindView(R.id.SELECTED_RUNTIME)
-    TextView SELECTED_RUNTIME;
-
+    TextView selectedRuntime;
 
     @BindView(R.id.FAB_LOADCARD)
     com.github.clans.fab.FloatingActionButton fabLoadCard;
+
+    @BindView(R.id.SELECTED_SYNOPSIS)
+    ImageButton selectedSynopsis;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,12 +145,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
-        SELECTED_MOVIEPOSTER = findViewById(R.id.SELECTED_MOVIE_IMAGE);
-        SELECTED_MOVIE_TITLE = findViewById(R.id.SELECTED_MOVIE_TITLE);
+        selectedMoviePoster = findViewById(R.id.SELECTED_MOVIE_IMAGE);
+        selectedMovieTitle = findViewById(R.id.SELECTED_MOVIE_TITLE);
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
-        SELECTED_RUNTIME = findViewById(R.id.SELECTED_RUNTIME);
+        selectedRuntime = findViewById(R.id.SELECTED_RUNTIME);
         fabLoadCard = findViewById(R.id.FAB_LOADCARD);
-
+        selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
         ProgressBar = findViewById(R.id.progress);
 
@@ -157,42 +162,43 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         currentLocationTasks();
         ProgressBar.setVisibility(View.VISIBLE);
 
+
         //FRESCO:
-        ButterKnife.bind(this, SELECTED_MOVIEPOSTER);
+        ButterKnife.bind(this, selectedMoviePoster);
 
         loadMoviePosterData();
-        SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+        selectedMovieTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
 
         if (t == 0) {
-            SELECTED_RUNTIME.setVisibility(View.GONE);
+            selectedRuntime.setVisibility(View.GONE);
         } else if (hours > 1) {
             String translatedRunTime = hours + " hours " + minutes + " minutes";
-            SELECTED_RUNTIME.setText(translatedRunTime);
+            selectedRuntime.setText(translatedRunTime);
         } else {
             String translatedRunTime = hours + " hour " + minutes + " minutes";
-            SELECTED_RUNTIME.setText(translatedRunTime);
+            selectedRuntime.setText(translatedRunTime);
         }
 
-        mScreeningsList = new ArrayList<>();
+        selectedScreeningsList = new ArrayList<>();
 
 
         /* Theaters RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        SelectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
-        SelectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-        MovieTheatersAdapter = new MovieTheatersAdapter(mScreeningsList, this);
-        SelectedTheatersRecyclerView.setAdapter(MovieTheatersAdapter);
-        SelectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+        selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
+        selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
+        movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, this);
+        selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
+        selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
-                        SelectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
 
-                        for (int i = 0; i < SelectedTheatersRecyclerView.getChildCount(); i++) {
-                            View v = SelectedTheatersRecyclerView.getChildAt(i);
+                        for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
+                            View v = selectedTheatersRecyclerView.getChildAt(i);
                             v.setAlpha(0.0f);
                             v.animate().alpha(1.0f)
                                     .setDuration(1000)
@@ -208,9 +214,29 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         /* Showtimes RecyclerView */
 
-        ShowtimesList = new ArrayList<>();
+        selectedShowtimesList = new ArrayList<>();
 
 
+        selectedSynopsis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: inflate fragment
+                String synopsis = movie.getSynopsis();
+                String title = movie.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
+
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+                Log.d(TAG, "syno: " + movie.getSynopsis());
+
+
+            }
+        });
     }
 
 
@@ -436,25 +462,25 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             } else {
 
                                 //Initial View to Display RecyclerView Based on User's Current Location
-                                mScreeningsResponse = response.body();
-                                mScreeningsList.clear();
-                                if (MovieTheatersAdapter != null) {
-                                    SelectedTheatersRecyclerView.getRecycledViewPool().clear();
-                                    MovieTheatersAdapter.notifyDataSetChanged();
+                                screeningsResponse = response.body();
+                                selectedScreeningsList.clear();
+                                if (movieTheatersAdapter != null) {
+                                    selectedTheatersRecyclerView.getRecycledViewPool().clear();
+                                    movieTheatersAdapter.notifyDataSetChanged();
                                 }
 
-                                if (mScreeningsResponse != null) {
-                                    Log.d("getScreenings", mScreeningsResponse.getScreenings().toString());
-                                    mScreeningsList.addAll(mScreeningsResponse.getScreenings());
-                                    SelectedTheatersRecyclerView.setAdapter(MovieTheatersAdapter);
-                                    SelectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                                if (screeningsResponse != null) {
+                                    Log.d("getScreenings", screeningsResponse.getScreenings().toString());
+                                    selectedScreeningsList.addAll(screeningsResponse.getScreenings());
+                                    selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
+                                    selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                                             new ViewTreeObserver.OnPreDrawListener() {
 
                                                 @Override
                                                 public boolean onPreDraw() {
-                                                    SelectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                                                    for (int i = 0; i < SelectedTheatersRecyclerView.getChildCount(); i++) {
-                                                        View v = SelectedTheatersRecyclerView.getChildAt(i);
+                                                    selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                                    for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
+                                                        View v = selectedTheatersRecyclerView.getChildAt(i);
                                                         v.setAlpha(0.0f);
                                                         v.animate().alpha(1.0f)
                                                                 .setDuration(1000)
@@ -536,7 +562,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     private void loadMoviePosterData() {
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        SELECTED_MOVIEPOSTER.setImageURI(imgUrl);
+        selectedMoviePoster.setImageURI(imgUrl);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
@@ -545,28 +571,28 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             supportStartPostponedEnterTransition();
-                            SELECTED_MOVIEPOSTER.setImageResource(R.drawable.activity_splash_star);
-                            SELECTED_MOVIEPOSTER.animate();
-                            SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+                            selectedMoviePoster.setImageResource(R.drawable.activity_splash_star);
+                            selectedMoviePoster.animate();
+                            selectedMovieTitle.setText(movie.getTitle());
                         } else {
                             supportStartPostponedEnterTransition();
-                            SELECTED_MOVIEPOSTER.animate();
-                            SELECTED_MOVIEPOSTER.setImageURI(imgUrl);
-                            SELECTED_MOVIE_TITLE.setText(movie.getTitle());
-                            SELECTED_MOVIEPOSTER.getHierarchy().setFadeDuration(200);
+                            selectedMoviePoster.animate();
+                            selectedMoviePoster.setImageURI(imgUrl);
+                            selectedMovieTitle.setText(movie.getTitle());
+                            selectedMoviePoster.getHierarchy().setFadeDuration(200);
                         }
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         supportStartPostponedEnterTransition();
-                        SELECTED_MOVIEPOSTER.setImageResource(R.drawable.activity_splash_star);
-                        SELECTED_MOVIE_TITLE.setText(movie.getTitle());
+                        selectedMoviePoster.setImageResource(R.drawable.activity_splash_star);
+                        selectedMovieTitle.setText(movie.getTitle());
                     }
                 })
                 .setUri(imgUrl)
                 .build();
-        SELECTED_MOVIEPOSTER.setController(controller);
+        selectedMoviePoster.setController(controller);
     }
 
 
