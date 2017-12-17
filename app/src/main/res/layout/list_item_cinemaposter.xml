@@ -31,17 +31,34 @@
                 android:foreground="@drawable/poster_gradient"
                 fresco:failureImage="@drawable/film_reel_icon" />
 
-
-            <TextView
-                android:id="@+id/cinema_movieTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:padding="@dimen/margin_standard"
-                android:text="[ MOVIE TITLE ] "
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cinema_movieTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_standard"
+                    android:text="[ MOVIE TITLE ] "
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/cinema_Synopsis"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/margin_half"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/infoicon2"
+                    android:tint="@color/white" />
+
+            </LinearLayout>
         </FrameLayout>
 
         <HorizontalScrollView
@@ -56,9 +73,9 @@
                 android:id="@+id/SHOWTIMEGRID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/double_margin_standard"
                 android:layout_margin="@dimen/margin_standard"
                 android:columnOrderPreserved="false"
+                android:paddingEnd="@dimen/double_margin_standard"
                 android:visibility="visible">
 
             </GridLayout>

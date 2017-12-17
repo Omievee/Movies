@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +24,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
+import com.moviepass.activities.TheaterActivity;
+import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.listeners.ShowtimeClickListener;
+import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
 
 import java.util.ArrayList;
@@ -36,6 +42,9 @@ import butterknife.ButterKnife;
 
 public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
 
+    public static final String MOVIE = "movie";
+    public static final String TITLE = "title";
+
     View root;
     public static final String TAG = "found";
     ShowtimeClickListener showtimeClickListener;
@@ -45,6 +54,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
     public TextView showtime = null;
+    Context context;
 
 
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
@@ -52,6 +62,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         this.screeningsArrayList = screeningsArrayList;
         this.qualifiersApproved = qualifiersApproved;
         this.showtimesArrayList = showtimesArrayList;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -63,7 +74,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         SimpleDraweeView cinemaPoster;
         @BindView(R.id.SHOWTIMEGRID)
         GridLayout showtimeGrid;
-
+        @BindView(R.id.cinema_Synopsis)
+        ImageButton synopsis;
 
         public ViewHolder(View v) {
             super(v);
@@ -72,7 +84,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaTItle = v.findViewById(R.id.cinema_movieTitle);
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
-
+            synopsis = v.findViewById(R.id.cinema_Synopsis);
 
         }
     }
@@ -87,6 +99,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Screening screening = screeningsArrayList.get(position);
+
         startTimes = screening.getStartTimes();
 
         //FRESCO code..
@@ -156,6 +169,24 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
                 }
             }
+
+            holder.synopsis.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Movie movie = new Movie();
+                    String synopsis = movie.getSynopsis();
+                    String title = movie.getTitle();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MOVIE, synopsis);
+                    bundle.putString(TITLE, title);
+
+                    SynopsisFragment fragobj = new SynopsisFragment();
+                    fragobj.setArguments(bundle);
+                    FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+                    fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+                }
+            });
         }
     }
 

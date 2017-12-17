@@ -65,7 +65,7 @@ import retrofit2.Response;
  * Created by anubis on 6/8/17.
  */
 
-public class TheaterFragment extends Fragment implements ScreeningPosterClickListener, ShowtimeClickListener {
+public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public static final String TAG = "found it";
     Theater theaterObject;
     ScreeningsResponse screeningsResponse;
@@ -115,9 +115,15 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
         fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
         progress = rootView.findViewById(R.id.progress);
 
-        eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING); //Inivisble by default
-        reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS); //invisible by default
+        eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
+        reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS);
 
+        if (theaterObject.ticketTypeIsStandard()) {
+            eTicketingIcon.setVisibility(View.INVISIBLE);
+            reserveSeatIcon.setVisibility(View.INVISIBLE);
+        } else if (theaterObject.ticketTypeIsETicket()) {
+            reserveSeatIcon.setVisibility(View.INVISIBLE);
+        }
         //Textviews
         theaterSelectedAddress = rootView.findViewById(R.id.CINEMA_ADDRESS);
         theaterSelectedAddressZip = rootView.findViewById(R.id.CINEMA_ZIPCITY);
@@ -173,37 +179,6 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
 
     @Override
-    public void onScreeningPosterClick(int pos, @NotNull Screening screening, @NotNull List<String> startTimes, @NotNull ImageView shareImageView) {
-//        TextView showtime;
-//
-////        showtimesAtSelectedTheater.clear();
-////        showtimesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
-//        showtimeGrid = getView().findViewById(R.id.SHOWTIMEGRID);
-//
-//
-//        showtimeGrid.setRowCount(2);
-//        showtimeGrid.setColumnCount(6);
-//        showtimeGrid.removeAllViews();
-//
-//
-//        if (screening.getStartTimes() != null) {
-//            for (int i = 0; i < screening.getStartTimes().size(); i++) {
-//                showtime = new TextView(getContext());
-//                showtime.setText(screening.getStartTimes().get(i));
-//                fadeIn(showtime);
-//                showtimeGrid.addView(showtime);
-//                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
-//                showtime.setTextSize(20);
-//                showtime.setTextColor(getResources().getColor(R.color.white));
-//                showtime.setBackgroundColor(getResources().getColor(R.color.test_blue));
-//                showtime.setPadding(10, 5, 10, 5);
-//            }
-//
-//        }
-//        Toast.makeText(getContext(), "You clicked" + screening.getTitle(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull String showtime) {
         final String time = showtime;
 
@@ -218,18 +193,9 @@ public class TheaterFragment extends Fragment implements ScreeningPosterClickLis
 
         String ticketType = screening.getProvider().ticketType;
 
-        if (ticketType.matches("STANDARD")) {
-            String checkIn = "Check In";
-        } else if (ticketType.matches("E_TICKET")) {
-            String reserve = "Reserve E-Ticket";
-        } else {
-            String selectSeat = "Select Seat";
-        }
-
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "toasty", Toast.LENGTH_SHORT).show();
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {

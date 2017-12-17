@@ -220,7 +220,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: inflate fragment
                 String synopsis = movie.getSynopsis();
                 String title = movie.getTitle();
                 Bundle bundle = new Bundle();
