@@ -1,6 +1,8 @@
 package com.moviepass.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -138,11 +140,18 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                                 finalShowtime.setSelected(false);
                             }
                         } else {
-                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
                             Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
+                if (!screening.getFormat().equals("2D")) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.theaterCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+
+                    }
+                }
             }
         }
 

@@ -195,9 +195,9 @@
         android:layout_marginBottom="@dimen/quadruple_margin_standard"
         android:layout_marginEnd="@dimen/margin_standard"
         android:animateLayoutChanges="true"
-        android:background="@drawable/button_red"
         android:elevation="5dp"
         android:visibility="gone"
+        app:fab_colorNormal="@color/new_red"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"
         app:layout_anchorGravity="right | bottom" />

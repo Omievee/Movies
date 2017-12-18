@@ -312,7 +312,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "toasty", Toast.LENGTH_SHORT).show();
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {

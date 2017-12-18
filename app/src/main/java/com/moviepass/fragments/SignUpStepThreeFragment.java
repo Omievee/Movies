@@ -239,6 +239,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String sCity = ProspectUser.city;
         String sState = ProspectUser.state;
         String sZip = ProspectUser.zip;
+
+
         boolean amc3dMarkup = false;
 
         if (!confirmTermsAgreementSwitch.isChecked()) {

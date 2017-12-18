@@ -38,6 +38,7 @@ public class SignUpStepOneFragment extends Fragment {
 
     ArrayAdapter<CharSequence> statesAdapter;
 
+    public static final String TAG = "Found0";
     RelativeLayout signup1CoordMain;
     EditText signup1FirstName;
     EditText signup1LastName;
@@ -145,8 +146,12 @@ public class SignUpStepOneFragment extends Fragment {
 
     public boolean isFirstNameValid() {
         if (signup1FirstName.length() > 1 && signup1FirstName.length() <= 26 && !signup1FirstName.getText().toString().matches(".*\\d+.*")) {
+            Log.d(TAG, "true: ");
+
             return true;
         } else {
+            Log.d(TAG, "false: ");
+
             pos = 0;
             return false;
         }

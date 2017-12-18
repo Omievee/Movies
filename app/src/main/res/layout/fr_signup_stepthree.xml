@@ -18,7 +18,7 @@
             android:id="@+id/CONFIRM_SHIPTO"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_standard"
             android:orientation="vertical">
 
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/CONFIRM_SHIPTO"
-            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_half"
             android:orientation="horizontal">
 
@@ -89,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/CONFIRM_SHIPTO2"
-            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_standard"
             android:orientation="vertical">
 
@@ -110,8 +110,8 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".7"
-                    android:text="[XXXX - XXXX - XXXX "
+                    android:layout_weight=".5"
+                    android:text="[XXXX - XXXX - XXXX"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -120,8 +120,8 @@
                     android:id="@+id/CONFIRM_NUMBER"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".6"
-                    android:text="- 1234 ]"
+                    android:layout_weight=".2"
+                    android:text="-1234 ]"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -129,9 +129,10 @@
                     android:id="@+id/CONFIRM_EDIT_BILLING"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/margin_standard"
                     android:layout_weight=".3"
                     android:text="Edit"
-                    android:textAlignment="center"
+                    android:textAlignment="viewEnd"
                     android:textColor="@color/new_red"
                     android:textSize="18sp" />
 
@@ -163,17 +164,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
-                android:orientation="horizontal"
-                android:paddingEnd="90dp"
-                android:paddingStart="@dimen/a_lot_margin_standard">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight=".5"
                     android:text="Total "
-                    android:textAlignment="center"
+                    android:textAlignment="viewEnd"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -184,7 +185,7 @@
                     android:layout_marginEnd="@dimen/margin_standard"
                     android:layout_weight=".8"
                     android:text="$9.95/month "
-                    android:textAlignment="center"
+                    android:textAlignment="viewStart"
                     android:textColor="@color/new_red"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -219,35 +220,42 @@
             android:layout_below="@id/CONFIRM_DETAILS_MSG"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_standard"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_half"
-                android:gravity="center_horizontal"
+                android:layout_weight=".1"
+                android:maxLines="1"
                 android:padding="@dimen/margin_minimum"
                 android:text="@string/fragment_sign_up_step_three_terms"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/CONFIRM_ToS"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_weight=".07"
+                android:maxLines="1"
                 android:padding="@dimen/margin_minimum"
                 android:text="@string/fragment_sign_up_step_three_terms_link"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textColor="@color/new_red"
                 android:textSize="15sp" />
 
+
             <Switch
                 android:id="@+id/CONFIRM_SWITCH"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:textAlignment="viewStart" />
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_weight=".03"
+                android:textAlignment="center" />
 
 
         </LinearLayout>
@@ -257,6 +265,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/CONFIRM_TERMS_TEXT"
             android:layout_marginStart="@dimen/margin_half"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
 
@@ -264,19 +273,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_half"
-                android:padding="@dimen/margin_minimum"
+                android:padding="@dimen/margin_half"
                 android:text="@string/fragment_sign_up_step_three_terms2"
+                android:textAlignment="viewStart"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/CONFIRM_PRIVACY"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="start"
+                android:layout_marginEnd="@dimen/quadruple_margin_standard"
+                android:layout_weight=".006"
                 android:padding="@dimen/margin_minimum"
                 android:text="@string/fragment_sign_up_step_three_terms_link2"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textColor="@color/new_red"
                 android:textSize="15sp" />
 

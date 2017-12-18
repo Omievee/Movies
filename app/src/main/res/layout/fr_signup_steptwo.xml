@@ -77,6 +77,9 @@
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/white"
                             android:hint="Name On Card"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/white"
                             android:textColorHighlight="@color/white"
                             android:textColorHint="@color/gray_icon" />
@@ -99,7 +102,10 @@
                             android:backgroundTint="@color/white"
                             android:hint="Credit Card Number"
                             android:inputType="number"
+                            android:lines="1"
                             android:maxLength="16"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/white"
                             android:textColorHighlight="@color/white"
 
@@ -131,9 +137,12 @@
                             android:layout_marginTop="@dimen/margin_half"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
-                            android:hint="Expiration MM/YYYY"
+                            android:hint="Expiration MM/YY"
                             android:inputType="date"
-                            android:maxLength="7"
+                            android:lines="1"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/white" />
 
 
@@ -146,7 +155,10 @@
                             android:backgroundTint="@color/white"
                             android:hint="Security code (CVV)"
                             android:inputType="number"
+                            android:lines="1"
                             android:maxLength="4"
+                            android:maxLines="1"
+                            android:singleLine="true"
                             android:textColor="@color/white" />
 
                     </LinearLayout>
@@ -205,11 +217,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-
                         android:hint="@string/fragment_sign_up_step_one_address"
                         android:inputType="text"
+                        android:lines="1"
                         android:maxLength="26"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHighlight="@color/white"
                         android:textColorHint="@color/gray_icon" />
@@ -219,13 +232,14 @@
                         android:id="@+id/SIGNUP2_ADDRESS2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:layout_marginTop="@dimen/margin_standard"
                         android:backgroundTint="@color/white"
                         android:hint="@string/fragment_sign_up_step_one_address_two"
                         android:inputType="text"
+                        android:lines="1"
                         android:maxLength="26"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:textColor="@color/white"
                         android:textColorHighlight="@color/white"
                         android:textColorHint="@color/gray_icon" />
