@@ -110,7 +110,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight=".5"
+                    android:layout_weight=".4"
                     android:text="[XXXX - XXXX - XXXX"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -273,10 +273,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_half"
-                android:padding="@dimen/margin_half"
+                android:padding="3dp"
                 android:text="@string/fragment_sign_up_step_three_terms2"
                 android:textAlignment="viewStart"
-                android:textColor="@color/white"
                 android:textSize="15sp" />
 
             <TextView
