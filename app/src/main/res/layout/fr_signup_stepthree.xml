@@ -221,12 +221,6 @@
             android:layout_marginTop="@dimen/margin_standard"
             android:orientation="horizontal">
 
-            <Switch
-                android:id="@+id/CONFIRM_SWITCH"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewStart" />
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -248,6 +242,13 @@
                 android:textColor="@color/new_red"
                 android:textSize="15sp" />
 
+            <Switch
+                android:id="@+id/CONFIRM_SWITCH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:textAlignment="viewStart" />
+
 
         </LinearLayout>
 
@@ -255,7 +256,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/CONFIRM_TERMS_TEXT"
-            android:layout_marginStart="@dimen/doubledouble_margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
             android:orientation="horizontal">
 
 

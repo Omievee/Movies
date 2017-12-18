@@ -32,6 +32,15 @@
             android:layout_height="wrap_content">
 
 
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_above="@id/dots"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginBottom="@dimen/double_margin_standard"-->
+                <!--android:text="Check to see which theaters are near you"-->
+                <!--android:textSize="18sp" />-->
+
             <LinearLayout
                 android:id="@+id/dots"
                 android:layout_width="wrap_content"
@@ -146,8 +155,8 @@
             android:layout_height="75dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:tint="@color/new_red"
-            android:src="@drawable/moviepass_logo_red" />
+            android:src="@drawable/moviepass_logo_red"
+            android:tint="@color/new_red" />
 
         <TextView
             android:id="@+id/ONBOARDING_SIGN_IN"

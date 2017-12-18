@@ -54,7 +54,7 @@ public class LogInActivity extends AppCompatActivity {
     @BindView(R.id.input_email)
     EditText mInputEmail;
     @BindView(R.id.input_password)
-    EditText mInputPassword;
+    android.support.design.widget.TextInputEditText mInputPassword;
     @BindView(R.id.button_log_in)
     Button mButtonLogIn;
     @BindView(R.id.forgot_password)

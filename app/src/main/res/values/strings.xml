@@ -113,7 +113,7 @@
 
 
     <!-- SignUpActivity -->
-    <string name="activity_sign_up_step_one_get_started">Sign up to get started</string>
+    <string name="activity_sign_up_step_one_get_started">Sign up and get your MoviePass!</string>
     <string name="activity_sign_up_step_one_email">Email</string>
     <string name="activity_sign_up_step_one_password">Password</string>
     <string name="activity_sign_up_step_one_sign_up">Sign Up</string>

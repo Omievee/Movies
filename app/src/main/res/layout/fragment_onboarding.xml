@@ -22,7 +22,6 @@
             android:background="@drawable/image_onboarding_1"
             android:scaleType="fitCenter" />
 
-
     </FrameLayout>
 
 

@@ -1,10 +1,12 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,22 +38,20 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
     TextView seeMap;
 
     EditText signupEmailInput;
-    EditText signupPasswordInput;
+    android.support.design.widget.TextInputEditText signupPasswordInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_signup_first_open);
 
-//        redView = findViewById(R.id.red);
         relativeLayout = findViewById(R.id.relative_layout);
         signupEmailInput = findViewById(R.id.SIGNUP_EMAIL);
         signupPasswordInput = findViewById(R.id.SIGNUP_PASSSWORD);
         signupNowButton = findViewById(R.id.SIGNUP_BUTTON);
         progress = findViewById(R.id.progress);
-//        seeMap = findViewById(R.id.see_map);
 
-//        openAnimation();
+    
 
         signupNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +60,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
                 final String email = signupEmailInput.getText().toString().trim();
                 final String password = signupPasswordInput.getText().toString().trim();
+
 
                 if (isValidEmail(email) && isValidPassword(password)) {
                     /* TODO : animate this */
@@ -172,7 +173,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         if (target == null || target.length() < 4 || target.length() > 20) {
             return false;
         } else {
-            return  true;
+            return true;
         }
     }
 
