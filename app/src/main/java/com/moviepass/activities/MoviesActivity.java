@@ -270,12 +270,12 @@ public class MoviesActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String s) {
 
+                searchAdapter.notifyDataSetChanged();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(final String s) {
-
                 RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
                     @Override
                     public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -287,19 +287,15 @@ public class MoviesActivity extends BaseActivity {
                             movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
                             movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
                             movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
-
                             for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
-                                if (movieSearchALLMOVIES.get(i).getTitle().contains(searchView.getQuery().toString())) {
+                                if (!s.isEmpty()) {
+                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
+                                        SearchResults.setVisibility(View.VISIBLE);
 
-                                    
-
-                                    Log.d(TAG, "TRUE: " + movieSearchALLMOVIES.size());
-
-
-                                    SearchResults.setVisibility(View.VISIBLE);
-                                    searchAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
+
                         }
                     }
 

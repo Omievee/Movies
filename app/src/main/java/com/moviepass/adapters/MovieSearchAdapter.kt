@@ -25,7 +25,6 @@ class MovieSearchAdapter(context: Context, internal var movieSearchList: List<Mo
 //    constructor(context: Context, resource: Int, objects: List<Movie>) : super(context, resource, objects)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-
         var rowView: View
 
         if (convertView == null) {
