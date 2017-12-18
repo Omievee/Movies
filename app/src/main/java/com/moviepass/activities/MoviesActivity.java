@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -267,6 +269,13 @@ public class MoviesActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String s) {
+
                 RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
                     @Override
                     public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -280,18 +289,17 @@ public class MoviesActivity extends BaseActivity {
                             movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
 
                             for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
-                                Log.d(TAG, "Title1 : " + movieSearchALLMOVIES.get(i).getTitle());
-                                Log.d(TAG, "search1: " + searchView.getQuery().toString());
-                                if (searchView.getQuery().toString().equalsIgnoreCase(movieSearchALLMOVIES.get(i).getTitle())) {
-                                    Toast.makeText(MoviesActivity.this, "success", Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "search 2: " + searchView.getQuery().toString());
+                                if (movieSearchALLMOVIES.get(i).getTitle().contains(searchView.getQuery().toString())) {
+
+                                    
+
+                                    Log.d(TAG, "TRUE: " + movieSearchALLMOVIES.size());
+
+
                                     SearchResults.setVisibility(View.VISIBLE);
-                                    Log.d(TAG, "Title2 : " + movieSearchALLMOVIES.get(i).getTitle());
                                     searchAdapter.notifyDataSetChanged();
                                 }
                             }
-
-
                         }
                     }
 
@@ -302,17 +310,11 @@ public class MoviesActivity extends BaseActivity {
                 });
                 return true;
             }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return true;
-            }
         });
 
 
         return true;
     }
-
 
 
     public void fadeIn(View view) {
