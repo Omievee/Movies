@@ -366,11 +366,15 @@ public class SelectSeatActivity extends BaseActivity {
                 public void onClick(View sender) {
                     if (finalSeatName != null) {
                         mSelectedSeat.setText(finalSeatName);
+                        Log.d(TAG, "seat: ");
                     } else {
                         String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
                         mSelectedSeat.setText(formattedSeatName);
+
                     }
+
                     final SeatButton button = (SeatButton) sender;
+                    Log.d(TAG, "seat: ");
                     selectSeat(button.getSeatName());
                     reserveSeatButton.setOnClickListener(new View.OnClickListener() {
                         @Override

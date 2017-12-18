@@ -3,7 +3,7 @@
     android:id="@+id/shape">
     <stroke
         android:width="2dp"
-        android:color="@color/test_blue"
+        android:color="@color/showtime_selector"
        />
     <padding
         android:bottom="10dp"
@@ -13,5 +13,5 @@
     <corners android:radius="6dp" />
 
     <solid
-        android:color="@color/test_black"/>
+        android:color="@color/showtime_selector"/>
 </shape>

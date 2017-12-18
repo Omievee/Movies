@@ -85,7 +85,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
             synopsis = v.findViewById(R.id.cinema_Synopsis);
-
         }
     }
 
@@ -128,11 +127,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 holder.showtimeGrid.addView(showtime);
                 showtime.setTextSize(20);
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
-                showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showtime.setBackground((root.getResources().getDrawable(R.drawable.showtime_background)));
+//                showtime.setBackgroundColor(root.getResources().getColor(R.color.showtime_selector));
                 showtime.setPadding(50, 50, 50, 50);
-//                ViewGroup.MarginLayoutParams llp = new ViewGroup.MarginLayoutParams(ViewGroup.MarginLayoutParams.WRAP_CONTENT,ViewGroup.MarginLayoutParams.WRAP_CONTENT );
-//                llp.setMargins(10, 0, 10, 0);
-//                showtime.setLayoutParams(llp);
                 final TextView finalShowtime = showtime;
                 finalShowtime.setSelected(false);
                 //onclick on each showtime will execute the showtimelistener & create reservtion if possible.
@@ -140,23 +137,24 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     @Override
                     public void onClick(View v) {
                         if (screening.getFormat().equals("2D")) {
-                            if (!finalShowtime.isSelected()) {
-                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-                                finalShowtime.setPadding(50, 50, 50, 50);
-                                String selectedShowTime = finalShowtime.getText().toString();
-                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                                finalShowtime.setSelected(true);
-                            } else {
-                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                                finalShowtime.setPadding(50, 50, 50, 50);
-                                String selectedShowTime = finalShowtime.getText().toString();
-                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                                finalShowtime.setSelected(false);
-                            }
+//                            if (finalShowtime.isSelected()) {
+//                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+//                                finalShowtime.setPadding(50, 50, 50, 50);
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+//                                finalShowtime.setSelected(false);
+
                         } else {
                             finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                             finalShowtime.setPadding(50, 50, 50, 50);
                             Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
+//                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+//                            finalShowtime.setPadding(50, 50, 50, 50);
+//                            String selectedShowTime = finalShowtime.getText().toString();
+//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+//                            finalShowtime.setSelected(true);
+
+
                         }
                     }
                 });
@@ -188,6 +186,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 }
             });
         }
+
     }
 
 
