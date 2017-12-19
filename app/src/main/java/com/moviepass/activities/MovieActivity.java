@@ -232,8 +232,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 fragobj.show(fm, "fr_dialogfragment_synopsis");
 
                 Log.d(TAG, "syno: " + movie.getSynopsis());
-
-
             }
         });
     }

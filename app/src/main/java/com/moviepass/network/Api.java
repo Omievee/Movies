@@ -2,9 +2,9 @@ package com.moviepass.network;
 
 import com.moviepass.model.MoviePassCard;
 import com.moviepass.model.MoviesResponse;
-import com.moviepass.model.Plan;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
+import com.moviepass.requests.ActiveReservationRequest;
 import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.CancellationRequest;
 import com.moviepass.requests.CardActivationRequest;
@@ -93,6 +93,10 @@ public interface Api {
     /* Reservations */
     @POST("/api/v3/reservations")
     Call<ReservationResponse> checkIn(@Body CheckInRequest request);
+
+    @GET("rest/v1/reservations/last")
+    Call<ReservationResponse> getLast(@Body ActiveReservationRequest reservation);
+
 
     @PUT("/api/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);

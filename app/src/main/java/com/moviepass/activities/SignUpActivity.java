@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.moviepass.R;
+import com.moviepass.fragments.ConfirmationSignUpFragment;
 import com.moviepass.fragments.SignUpStepOneFragment;
 import com.moviepass.fragments.SignUpStepThreeFragment;
 import com.moviepass.fragments.SignUpStepTwoFragment;
@@ -89,8 +90,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepThreeFragment = new SignUpStepThreeFragment();
 
 
-
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -108,6 +107,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                     case 1:
                         break;
                     case 2:
+                        break;
+                    case 3:
                         break;
                 }
             }
@@ -137,13 +138,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
         f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
-        f.confirmCCNum.setText(" - " +ccNum.substring(12, 16) + "]");
+        f.confirmCCNum.setText(" - " + ccNum.substring(12, 16) + "]");
         f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(f.confirmTermsAgreementSwitch.isChecked()){
+                if (f.confirmTermsAgreementSwitch.isChecked()) {
                     f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
-                }else {
+                } else {
                     f.makeSnackbar("You must agree to the Terms of Service.");
                 }
             }
@@ -189,7 +190,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -205,6 +206,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                 case 2:
                     fragment = new SignUpStepThreeFragment();
                     break;
+                case 3:
+                    fragment = new ConfirmationSignUpFragment();
+                    break;
+
             }
             return fragment;
         }
@@ -363,6 +368,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(1);
         } else if (mViewPager.getCurrentItem() == 1) {
             mViewPager.setCurrentItem(2);
+        } else if (mViewPager.getCurrentItem() == 2) {
+            mViewPager.setCurrentItem(3);
         }
     }
 

@@ -195,7 +195,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                         s.insert(s.length() - 1, String.valueOf("/"));
                     }
                 }
-
             }
         });
 
@@ -230,9 +229,9 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             return true;
         }
         return false;
-
     }
 
+    //TODO: Inspect why it crashes for samsung devices vvvvvvv
     public void creditCardClick() {
         if (Build.VERSION.SDK_INT >= 21) {
             Log.d(TAG, "true: ");

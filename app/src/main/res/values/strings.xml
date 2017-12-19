@@ -77,7 +77,6 @@
     <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
 
 
-
     <!-- SelectSeatActivity -->
     <string name="activity_select_seat_activity_title">SELECT YOUR SEAT</string>
     <string name="activity_select_seat_movie_title">[Title]</string>
@@ -333,7 +332,6 @@
     <string name="xml_settings_preferences_settings_help_faqs">FAQs</string>
     <string name="xml_settings_preferences_settings_help_contact">Contact Support</string>
     <string name="xml_settings_preferences_settings_help_version">Version</string>
-
 
 
     <string name="Not_Supportd">This screening is not supported.</string>
