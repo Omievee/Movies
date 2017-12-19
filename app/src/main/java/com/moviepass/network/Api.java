@@ -64,7 +64,7 @@ public interface Api {
 
     /* Cards */
     @GET("/api/v4/cards")
-    Call<List<MoviePassCard>> getMoviePassCards( );
+    Call<List<MoviePassCard>> getMoviePassCards();
 
     @POST("/api/v2/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
@@ -75,7 +75,7 @@ public interface Api {
 
     @GET("/api/v5/screenings")
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat")
-            double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+                                                           double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
     @POST("/register/create/json")
@@ -89,7 +89,6 @@ public interface Api {
 
     @POST("/api/v1/register/create/mobile")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
-
 
     /* Reservations */
     @POST("/api/v3/reservations")
@@ -109,7 +108,7 @@ public interface Api {
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
     @GET("/api/v2/reservations")
-    Call<HistoryResponse>  getReservations();
+    Call<HistoryResponse> getReservations();
 
     /* Theaters */
     @GET("/api/v3/theaters/near")
@@ -120,7 +119,7 @@ public interface Api {
 
     /* User */
     @GET("/api/v2/auth/restrictions")
-    Call<RestrictionsResponse> getRestrictions( );
+    Call<RestrictionsResponse> getRestrictions();
 
     @GET("/api/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);

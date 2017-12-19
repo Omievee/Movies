@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -196,6 +197,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: ");
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {
@@ -279,6 +281,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
+            Log.d(TAG, "made it: ");
+
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
                     tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
@@ -291,7 +295,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
-            Log.d(TAG, "made it: ");
             Log.d("ticketType", screening.getProvider().ticketType);
 
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
@@ -321,28 +324,47 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
+
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("title", screening.getTitle());
+//                        bundle.putString("theater", screening.getTheaterName());
+//                        bundle.putString("showtime", showtime);
+//                        bundle.putString("confimation", confirmationCode);
+//                        HistoryFragment history = new HistoryFragment();
+//                        history.setArguments(bundle);
+
                     } else {
                         Log.d("mScreening,", screening.toString());
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
+                        Log.d(TAG, "reservation?: " + screening.getTitle() + screening.getTheaterName() + showtime);
+
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString("title", screening.getTitle());
+//                        bundle.putString("theater", screening.getTheaterName());
+//                        bundle.putString("showtime", showtime);
+////                        bundle.putString("confimation", confirmationCode);
+//                        HistoryFragment history = new HistoryFragment();
+//                        history.setArguments(bundle);
+
                     }
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
                         progress.setVisibility(View.GONE);
                         fabLoadCard.setEnabled(true);
                         Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "toast1: " + jObjError.getString("message"));
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "toast: " + e.getMessage());
                     }
                     Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
                     progress.setVisibility(View.GONE);
                     fabLoadCard.setEnabled(true);
                 }
-
                 fabLoadCard.setEnabled(true);
             }
 

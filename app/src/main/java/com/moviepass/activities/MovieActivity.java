@@ -293,6 +293,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         if (fabLoadCard.getVisibility() == View.GONE) {
             fabLoadCard.setVisibility(View.VISIBLE);
+            Log.d(TAG, "made it: ");
+
             fadeIn(fabLoadCard);
         } else {
             fabLoadCard.setVisibility(View.GONE);
@@ -393,11 +395,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
+                        Log.d(TAG, "try/catch: ");
                         fabLoadCard.setEnabled(true);
                     } catch (Exception e) {
+                        Log.d(TAG, "exception: ");
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
                         fabLoadCard.setEnabled(true);

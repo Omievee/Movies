@@ -52,6 +52,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     ArrayAdapter<CharSequence> statesAdapter;
 
+    View view;
+
     public static final String CREDITCARD_DATA = "card data";
 
     public static final String TAG = "foudnit";
@@ -99,13 +101,16 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fr_signup_steptwo, container, false);
+
+        view = inflater.inflate(R.layout.fr_signup_steptwo, container, false);
+        return view;
     }
 
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
 
         coordinatorLayout = view.findViewById(R.id.coord_main);
         progress = view.findViewById(R.id.progress);
@@ -229,8 +234,9 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     }
 
     public void creditCardClick() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            Log.d(TAG, "true: ");
+            if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
                 scanCard();
             } else {

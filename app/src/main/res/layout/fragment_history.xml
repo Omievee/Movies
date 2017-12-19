@@ -1,32 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="250dp"
+    android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
-    android:layout_gravity="center_horizontal">
+    app:cardBackgroundColor="@color/test_black">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/history_recycler_view"
-        android:layout_width="wrap_content"
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/history_recycler_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--android:divider="@null"-->
+    <!--android:dividerHeight="0dp"-->
+    <!--android:focusable="false"-->
+    <!--android:focusableInTouchMode="false"-->
+    <!--android:listSelector="@android:color/transparent"-->
+    <!--tools:listitem="@layout/list_item_history" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:listSelector="@android:color/transparent"
-        tools:listitem="@layout/list_item_history" />
+        android:orientation="horizontal">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/PendingRes_IMage"
+            android:layout_width="95dp"
+            android:layout_height="150dp"
+            android:layout_margin="@dimen/double_margin_standard"
+            app:roundedCornerRadius="4dp"
+            fresco:failureImage="@drawable/film_reel_icon"
+            fresco:failureImageScaleType="centerInside" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/PendingRes_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="[ Pending Title ]"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+
+            <TextView
+                android:id="@+id/PendingRes_Location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="[ Pending Location ]"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/PendingRes_Time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="[ Pending Time ]"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/PendingRes_Code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="[ Code ]"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/no_history"
+        android:id="@+id/PEndingRes_Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_margin="@dimen/margin_standard"
+        android:background="@drawable/selectseat_confirm_button"
+        android:padding="@dimen/margin_half"
+        android:text="Cancel Reservation"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/fragment_history_no_history"
-        android:layout_margin="@dimen/margin_standard"
-        android:textSize="@dimen/bt_default_text_size"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

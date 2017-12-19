@@ -45,7 +45,6 @@ public class ConfirmationActivity extends BaseActivity {
     Reservation reservation;
     Screening screening;
     ScreeningToken screeningToken;
-    FloatingActionMenu fabCancelReservation;
     View progress;
 
     ImageView cancelX;
@@ -115,7 +114,7 @@ public class ConfirmationActivity extends BaseActivity {
 //
 //
 //                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(qrUrl)
-//                            .setProgressiveRenderingEnabled(true)
+//                            .setProgressiveRenderingEnabled(true)zx
 //                            .setSource(qrUrl)
 //                            .build();
 //
@@ -141,6 +140,7 @@ public class ConfirmationActivity extends BaseActivity {
                     public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
                         ChangedMindResponse responseBody = response.body();
                         progress.setVisibility(View.GONE);
+
 
                         if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
                             try {
@@ -169,7 +169,6 @@ public class ConfirmationActivity extends BaseActivity {
                     @Override
                     public void failure(RestError restError) {
                         progress.setVisibility(View.GONE);
-                        fabCancelReservation.setEnabled(true);
                         Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });

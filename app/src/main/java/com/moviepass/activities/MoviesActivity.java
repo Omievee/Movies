@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +31,9 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.adapters.MovieSearchAdapter;
+import com.moviepass.fragments.HistoryFragment;
 import com.moviepass.fragments.MoviesFragment;
+import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
@@ -93,9 +96,10 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
+
         reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
 
-        FloatingActionButton currentRes = new FloatingActionButton(this);
+        final FloatingActionButton currentRes = new FloatingActionButton(this);
         currentRes.setLabelText("Current Reservations");
         currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
         FloatingActionButton historyRes = new FloatingActionButton(this);
@@ -105,6 +109,18 @@ public class MoviesActivity extends BaseActivity {
 
         reservationsMenu.addMenuButton(currentRes);
         reservationsMenu.addMenuButton(historyRes);
+
+        currentRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HistoryFragment fragobj = new HistoryFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fragment_history");
+
+                reservationsMenu.close(true);
+
+            }
+        });
 
 
         fadeIn(reservationsMenu);
@@ -311,7 +327,6 @@ public class MoviesActivity extends BaseActivity {
 
         return true;
     }
-
 
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
