@@ -274,7 +274,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
     private void displaySuccess() {
         Toast.makeText(getActivity(), "Ya did it", Toast.LENGTH_SHORT).show();
-//        ((SignUpActivity) getActivity()).setPage();
+        ((SignUpActivity) getActivity()).setPage();
 
 //        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 //

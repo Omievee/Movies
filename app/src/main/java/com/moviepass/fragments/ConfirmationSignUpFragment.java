@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class ConfirmationSignUpFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+//    private OnFragmentInteractionListener mListener;
     View rootView;
 
     ImageButton confirmLogIn;

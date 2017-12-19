@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.moviepass.R;
@@ -43,10 +44,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String addressZip;
     String price;
 
+
     SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
-    ImageView zero, one, two;
+    ImageView zero, one, two, logo;
+    FrameLayout frame;
     ImageView[] indicators;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
@@ -82,6 +85,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         zip = null;
         price = null;
         mPlan = null;
+
+        logo = findViewById(R.id.logo);
+        frame = findViewById(R.id.frame_layout);
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -370,6 +376,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(2);
         } else if (mViewPager.getCurrentItem() == 2) {
             mViewPager.setCurrentItem(3);
+            logo.setVisibility(View.GONE);
+            frame.setVisibility(View.GONE);
+
         }
     }
 
