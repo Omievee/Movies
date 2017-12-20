@@ -14,7 +14,7 @@ import com.moviepass.R;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.network.RestClient;
-import com.moviepass.responses.HistoryResponse;
+import com.moviepass.responses.ActiveReservationResponse;
 
 import java.util.ArrayList;
 
@@ -27,11 +27,14 @@ import retrofit2.Response;
  * Created by anubis on 7/31/17.
  */
 
-public class HistoryFragment extends BottomSheetDialogFragment {
+public class PendingReservationFragment extends BottomSheetDialogFragment {
 
     ArrayList<Movie> historyArrayList;
     ArrayList<Reservation> currentReservationItem;
 
+    ActiveReservationResponse reservationResponse
+
+            ;
     public static final String TAG = "found";
 
     View progress;
@@ -43,6 +46,9 @@ public class HistoryFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, rootView);
+
+
+
 
 
         progress = rootView.findViewById(R.id.progress);
@@ -70,47 +76,58 @@ public class HistoryFragment extends BottomSheetDialogFragment {
 
                 Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
             }
+
         });
 
-        getHistory();
+        getPendingReservation();
+
+
+        //getPendingReservation();
     }
 
-    private void getHistory() {
-        historyArrayList.clear();
-//        progress.setVisibility(View.VISIBLE);
-
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-            @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-//                    progress.setVisibility(View.GONE);
-                    HistoryResponse historyResponse = response.body();
-                    historyArrayList.addAll(historyResponse.getHistory());
-
-                    for (int i = 0; i < historyArrayList.size(); i++) {
-                        Log.d(TAG, "history: " + historyResponse.getHistory().get(i).getTitle());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
+//    private void getHistory() {
+//        historyArrayList.clear();
+////        progress.setVisibility(View.VISIBLE);
+//
+//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+//            @Override
+//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+//                if (response.body() != null && response.isSuccessful()) {
+////                    progress.setVisibility(View.GONE);
+//                    HistoryResponse historyResponse = response.body();
+//                    historyArrayList.addAll(historyResponse.getHistory());
+//
+//                    for (int i = 0; i < historyArrayList.size(); i++) {
+//                        Log.d(TAG, "history: " + historyResponse.getHistory().get(i).getTitle());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
     private void getPendingReservation() {
+        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
 
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
             @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    ActiveReservationResponse active = response.body();
+
+                    Log.d(TAG, "made it: ");
+//                    Log.d(TAG, "onResponse: " + active.getReservationMovieTitle());
+                }
 
             }
 
             @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
 
             }
         });

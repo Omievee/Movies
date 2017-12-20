@@ -226,7 +226,9 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
                         Log.d("subId", response.body().getSubId());
 
-                        displaySuccess();
+                        //transition to final viewpager pag & show confirmation
+                        ((SignUpActivity) getActivity()).setPage();
+
                     } else {
                         try {
                             JSONObject jObjError = new JSONObject(response.body().getGlobal());
@@ -271,70 +273,4 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         snackbar.show();
     }
 
-
-    private void displaySuccess() {
-        Toast.makeText(getActivity(), "Ya did it", Toast.LENGTH_SHORT).show();
-        ((SignUpActivity) getActivity()).setPage();
-
-//        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-//
-//        View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
-//
-//        alert.setView(layout);
-//        alert.setTitle(getString(R.string.fragment_sign_up_step_two_success_header));
-//        alert.setMessage(getString(R.string.fragment_sign_up_step_two_success_body));
-//        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-////                login();
-//            }
-//        });
-//
-//        AlertDialog dialog = alert.create();
-//        /*dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(email, InputMethodManager.SHOW_IMPLICIT);
-//            }
-//        }); */
-//
-//        dialog.show();
-//        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-    }
-
-//    private void login() {
-//        String email = ProspectUser.email;
-//        String password = ProspectUser.password;
-//
-//        LogInRequest request = new LogInRequest(email, password);
-//        String deviceId = DeviceID.getID(getActivity());
-//
-//        RestClient.getUnauthenticated().login(deviceId, request).enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                User user = response.body();
-//                if (user != null) {
-//                    RestClient.userId = user.getId();
-//                    RestClient.deviceUuid = user.getDeviceUuid();
-//                    RestClient.authToken = user.getAuthToken();
-//
-//                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
-//                    Intent i = new Intent(getActivity(), MoviesActivity.class);
-//                    i.putExtra("launch", true);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    progress.setVisibility(View.GONE);
-//                    startActivity(i);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                /* TODO : handle failure */
-//            }
-//        });
-//    }
-
 }
-
-

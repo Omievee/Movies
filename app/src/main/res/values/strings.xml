@@ -155,7 +155,7 @@
     <string name="adapter_movie_showtimes_adapter">This screening is not a supported MoviePass screening.</string>
 
     <!-- Fragments -->
-    <!-- HistoryFragment -->
+    <!--<PendingReservationFragmentment>&ndash;&gt;-->
     <string name="fragment_history_no_history">Start seeing movies to begin your reservation history</string>
 
     <!-- MoviesFragment -->

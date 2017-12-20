@@ -53,6 +53,7 @@ public class ReservationResponse {
 
         public void setBarCodeUrl(String barCodeUrl) {
             this.barCodeUrl = barCodeUrl;
+
         }
     }
 }

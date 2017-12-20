@@ -16,7 +16,9 @@ import android.widget.Toast;
 import com.moviepass.DeviceID;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.activities.LogInActivity;
 import com.moviepass.activities.MoviesActivity;
+import com.moviepass.activities.SignUpActivity;
 import com.moviepass.model.ProspectUser;
 import com.moviepass.model.User;
 import com.moviepass.network.RestClient;
@@ -51,6 +53,8 @@ public class ConfirmationSignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
+
+
         confirmLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,15 +86,17 @@ public class ConfirmationSignUpFragment extends Fragment {
                     Intent i = new Intent(getActivity(), MoviesActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    progress.setVisibility(View.GONE);
                     startActivity(i);
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getActivity(), "Server Timeout: Please login manually", Toast.LENGTH_SHORT).show();
 
-                /* TODO : handle failure */
+
+                Intent failure = new Intent(getActivity(), LogInActivity.class);
+                startActivity(failure);
             }
         });
     }

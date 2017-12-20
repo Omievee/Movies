@@ -330,7 +330,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 //                        bundle.putString("theater", screening.getTheaterName());
 //                        bundle.putString("showtime", showtime);
 //                        bundle.putString("confimation", confirmationCode);
-//                        HistoryFragment history = new HistoryFragment();
+//                        PendingReservationFragment history = new PendingReservationFragment();
 //                        history.setArguments(bundle);
 
                     } else {
@@ -345,7 +345,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 //                        bundle.putString("theater", screening.getTheaterName());
 //                        bundle.putString("showtime", showtime);
 ////                        bundle.putString("confimation", confirmationCode);
-//                        HistoryFragment history = new HistoryFragment();
+//                        PendingReservationFragment history = new PendingReservationFragment();
 //                        history.setArguments(bundle);
 
                     }

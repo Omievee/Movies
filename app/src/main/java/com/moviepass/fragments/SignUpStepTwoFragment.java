@@ -233,16 +233,15 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     //TODO: Inspect why it crashes for samsung devices vvvvvvv
     public void creditCardClick() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            Log.d(TAG, "true: ");
-            if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
-                scanCard();
-            } else {
-                scanCard();
-            }
-        } else {
+
+        if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
             scanCard();
+
+        } else {
+
+            scanCard();
+
         }
     }
 

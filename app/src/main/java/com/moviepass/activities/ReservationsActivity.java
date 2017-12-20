@@ -14,7 +14,7 @@
 //import android.view.MenuItem;
 //
 //import com.moviepass.R;
-//import com.moviepass.fragments.HistoryFragment;
+//import com.moviepass.fragments.PendingReservationFragment;
 //import com.moviepass.helpers.BottomNavigationViewHelper;
 //
 ///**
@@ -49,7 +49,7 @@
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setTitle("History");
 //
-//        Fragment historyFragment = new HistoryFragment();
+//        Fragment historyFragment = new PendingReservationFragment();
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.container, historyFragment).commit();
 //
@@ -62,7 +62,7 @@
 //    private void setupViewPager(ViewPager viewPager){
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 //        adapter.addFragment(new ActiveReservationFragment(), "Active");
-//        adapter.addFragment(new HistoryFragment(), "History");
+//        adapter.addFragment(new PendingReservationFragment(), "History");
 //        viewPager.setAdapter(adapter);
 //    }
 //

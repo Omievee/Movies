@@ -4,7 +4,6 @@ import com.moviepass.model.MoviePassCard;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.model.TheatersResponse;
 import com.moviepass.model.User;
-import com.moviepass.requests.ActiveReservationRequest;
 import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.requests.CancellationRequest;
 import com.moviepass.requests.CardActivationRequest;
@@ -20,6 +19,7 @@ import com.moviepass.requests.PersonalInfoRequest;
 import com.moviepass.requests.SignUpRequest;
 import com.moviepass.requests.VerificationLostRequest;
 import com.moviepass.requests.VerificationRequest;
+import com.moviepass.responses.ActiveReservationResponse;
 import com.moviepass.responses.CancellationResponse;
 import com.moviepass.responses.CardActivationResponse;
 import com.moviepass.responses.ChangedMindResponse;
@@ -94,8 +94,11 @@ public interface Api {
     @POST("/api/v3/reservations")
     Call<ReservationResponse> checkIn(@Body CheckInRequest request);
 
+
+    // TODO
     @GET("rest/v1/reservations/last")
-    Call<ReservationResponse> getLast(@Body ActiveReservationRequest reservation);
+    Call<ActiveReservationResponse> getLast(@Body ActiveReservationResponse activeReservation);
+
 
 
     @PUT("/api/v1/reservations")
@@ -120,6 +123,7 @@ public interface Api {
 
     @GET("/api/v5/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
+
 
     /* User */
     @GET("/api/v2/auth/restrictions")

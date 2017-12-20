@@ -11,9 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,9 +28,8 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.adapters.MovieSearchAdapter;
-import com.moviepass.fragments.HistoryFragment;
+import com.moviepass.fragments.PendingReservationFragment;
 import com.moviepass.fragments.MoviesFragment;
-import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
@@ -113,7 +109,7 @@ public class MoviesActivity extends BaseActivity {
         currentRes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HistoryFragment fragobj = new HistoryFragment();
+                PendingReservationFragment fragobj = new PendingReservationFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 fragobj.show(fm, "fragment_history");
 
