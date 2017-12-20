@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class ConfirmationSignUpFragment extends Fragment {
 
-//    private OnFragmentInteractionListener mListener;
+    //    private OnFragmentInteractionListener mListener;
     View rootView;
 
     ImageButton confirmLogIn;
@@ -54,22 +54,12 @@ public class ConfirmationSignUpFragment extends Fragment {
         confirmLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "toasty", Toast.LENGTH_SHORT).show();
+
+                login();
             }
         });
 
     }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-////
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 
 
     private void login() {
