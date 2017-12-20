@@ -48,9 +48,6 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
         ButterKnife.bind(this, rootView);
 
 
-
-
-
         progress = rootView.findViewById(R.id.progress);
         pendingReservationTitle = rootView.findViewById(R.id.PendingRes_Title);
         pendingReservationTheater = rootView.findViewById(R.id.PendingRes_Location);
@@ -79,10 +76,9 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
         });
 
-        getPendingReservation();
+//        getPendingReservation();
 
 
-        //getPendingReservation();
     }
 
 //    private void getHistory() {
@@ -111,25 +107,25 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 //
 //    }
 
-    private void getPendingReservation() {
-        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
-
-        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
-            @Override
-            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    ActiveReservationResponse active = response.body();
-
-                    Log.d(TAG, "made it: ");
-//                    Log.d(TAG, "onResponse: " + active.getReservationMovieTitle());
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
-
-            }
-        });
-    }
+//    private void getPendingReservation() {
+//        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
+//
+//        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
+//            @Override
+//            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
+//                if (response.body() != null && response.isSuccessful()) {
+//                    ActiveReservationResponse active = response.body();
+//
+//                    Log.d(TAG, "made it: ");
+////                    Log.d(TAG, "onResponse: " + active.getReservationMovieTitle());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 }

@@ -355,6 +355,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
                         progress.setVisibility(View.GONE);
                         fabLoadCard.setEnabled(true);
+
+                        //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
+                        if (jObjError.getString("message").equals("You do not have an active card")) {
+
+                            ActivateMoviePassCard();
+
+                        }
                         Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         Log.d(TAG, "toast1: " + jObjError.getString("message"));
                     } catch (Exception e) {
@@ -362,6 +369,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         Log.d(TAG, "toast: " + e.getMessage());
                     }
                     Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
+
                     progress.setVisibility(View.GONE);
                     fabLoadCard.setEnabled(true);
                 }
@@ -401,6 +409,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         }
     }
 
+//    public boolean isMPCardActive() {
+//
+//    }
 
     private void showActivateCardDialog(final Screening screening, final String showtime) {
         View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
@@ -437,7 +448,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                             } else {
                                 Toast.makeText(getContext(), R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
                             }
-
                         }
 
                         @Override
@@ -468,6 +478,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         getActivity().finish();
+    }
+
+
+
+
+    private void ActivateMoviePassCard() {
+
     }
 
 }

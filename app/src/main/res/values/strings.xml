@@ -282,9 +282,9 @@
     <string name="list_item_history_time_placeholder">[Time]</string>
     <string name="list_item_history_date_placeholder">[Date]</string>
 
-    <!-- List Item Movie Poster -->
+    <!-- Linst Item Movie Poster -->
     <string name="list_item_movie_poster_title_placeholder">[Title]</string>
-    <string name="list_item_movie_poster_genre_placeholder">[Genre]</string>
+    <string name="list_item_movie_poster_gere_placeholder">[Genre]</string>
     <string name="list_item_movie_poster_run_time_placeholder">[Time]</string>
     <string name="title_activity_onboarding">OnboardingActivity</string>
     <string name="action_settings">Settings</string>
@@ -335,7 +335,12 @@
 
 
     <string name="Not_Supportd">This screening is not supported.</string>
-    <!-- FINGERPRINT SCANNER -->
+    <!-- Activate card activity-->
+    <string name="Activate_Header">Activate your card</string>
+    <string name="Activate_Body">Click the camera below to take a picture of your MoviePass card.</string>
+    <string name="Active_Camera_ManualEntry">Input manually</string>
+    <string name="Activate_Footer">Don\'t have your card yet?</string>
+    <string name="Activate_Footer2">You can still check in to theaters that support e-ticketing, or explore the app while waiting for your card to arrive.</string>
 
 
     <!-- ALL PURPOSE STRINGS -->

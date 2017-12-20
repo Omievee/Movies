@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/MAIN_CONTENT"
+    android:id="@+id/MOVIES_MAINCONTENT"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -58,9 +58,9 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/MAINPAGE_TOOLBAR"
-                android:paddingTop="@dimen/margin_half"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
+                android:paddingTop="@dimen/margin_half"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -96,58 +96,56 @@
                     android:textStyle="bold" />
 
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/new_releases"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@android:color/transparent"
+                    android:orientation="horizontal"
+                    tools:listitem="@layout/list_item_movie_poster_withbottom" />
+
+                <TextView
+                    android:id="@+id/top_box_office_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_standard"
+                    android:gravity="center_vertical"
+                    android:text="@string/fragment_movies_top_box_office"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
-                        android:id="@+id/new_releases"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@android:color/transparent"
-                        android:orientation="horizontal"
-                        tools:listitem="@layout/list_item_movie_poster_withbottom" />
-
-                    <TextView
-                        android:id="@+id/top_box_office_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_standard"
-                        android:gravity="center_vertical"
-                        android:text="@string/fragment_movies_top_box_office"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/top_box_office"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@android:color/transparent"
-                        tools:listitem="@layout/list_item_movie_poster_withbottom" />
+                    android:id="@+id/top_box_office"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@android:color/transparent"
+                    tools:listitem="@layout/list_item_movie_poster_withbottom" />
 
 
-                    <TextView
-                        android:id="@+id/coming_soon_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_standard"
-                        android:gravity="center_vertical"
-                        android:text="@string/fragment_movies_coming_soon"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/coming_soon_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_standard"
+                    android:gravity="center_vertical"
+                    android:text="@string/fragment_movies_coming_soon"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/coming_soon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@android:color/transparent"
-                        tools:listitem="@layout/list_item_movie_poster_withbottom" />
-
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/coming_soon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@android:color/transparent"
+                    tools:listitem="@layout/list_item_movie_poster_withbottom" />
 
 
             </LinearLayout>
@@ -161,6 +159,20 @@
 
 
     </android.support.v4.widget.NestedScrollView>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/FAB_RESERVATION_MENU"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/double_margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:elevation="5dp"
+        android:visibility="visible"
+        app:fab_colorRipple="@color/white"
+        app:fab_size="normal"
+        app:menu_colorNormal="@color/new_red"
+        app:menu_icon="@drawable/ticketnavwhite" />
 
 
 </android.support.design.widget.CoordinatorLayout>

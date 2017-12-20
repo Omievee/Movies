@@ -6,11 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,7 +57,6 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
 
-    FloatingActionMenu reservationsMenu;
 
 
     MovieSearchAdapter searchAdapter;
@@ -83,6 +85,10 @@ public class MoviesActivity extends BaseActivity {
         FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
         fadeIn(main);
 
+
+
+        Log.d(TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
+
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -92,34 +98,6 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
-
-        reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
-
-        final FloatingActionButton currentRes = new FloatingActionButton(this);
-        currentRes.setLabelText("Current Reservations");
-        currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
-        FloatingActionButton historyRes = new FloatingActionButton(this);
-        historyRes.setLabelText("Past Reservations");
-        historyRes.setButtonSize(FloatingActionButton.SIZE_MINI);
-        historyRes.setShowProgressBackground(true);
-
-        reservationsMenu.addMenuButton(currentRes);
-        reservationsMenu.addMenuButton(historyRes);
-
-        currentRes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PendingReservationFragment fragobj = new PendingReservationFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fragment_history");
-
-                reservationsMenu.close(true);
-
-            }
-        });
-
-
-        fadeIn(reservationsMenu);
 
     }
 

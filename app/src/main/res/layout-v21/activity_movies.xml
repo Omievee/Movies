@@ -48,20 +48,20 @@
         app:layout_collapseMode="pin" />
 
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/FAB_RESERVATION_MENU"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:elevation="5dp"
-        android:visibility="visible"
-        app:menu_colorNormal="@color/new_red"
-        app:fab_colorRipple="@color/white"
-        app:fab_size="normal"
-        app:menu_icon="@drawable/ticketnavwhite" />
+    <!--<com.github.clans.fab.FloatingActionMenu-->
+        <!--android:id="@+id/FAB_RESERVATION_MENU"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
+        <!--android:layout_marginEnd="@dimen/margin_standard"-->
+        <!--android:elevation="5dp"-->
+        <!--android:visibility="visible"-->
+        <!--app:menu_colorNormal="@color/new_red"-->
+        <!--app:fab_colorRipple="@color/white"-->
+        <!--app:fab_size="normal"-->
+        <!--app:menu_icon="@drawable/ticketnavwhite" />-->
 
     <include
         android:id="@+id/navigation"

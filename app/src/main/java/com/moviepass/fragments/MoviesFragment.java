@@ -10,10 +10,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,9 +34,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
+import com.moviepass.activities.ActivateMoviePassCard;
 import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
@@ -71,6 +77,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     String Provider;
 
     Api api;
+    FloatingActionMenu reservationsMenu;
 
     private MoviesNewReleasesAdapter mMoviesNewReleasesAdapter;
     private MoviesTopBoxOfficeAdapter mMoviesTopBoxOfficeAdapter;
@@ -125,7 +132,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
         mNewReleasesRecyclerView.setItemAnimator(null);
         fadeIn(mNewReleasesRecyclerView);
-
+        reservationsMenu = rootView.findViewById(R.id.FAB_RESERVATION_MENU);
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
         /* Top Box Office RecyclerView */
@@ -166,6 +173,48 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         checkLocationPermission();
 
+
+        if (UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+            Snackbar snack = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
+            snack.getView().setLayoutParams(params);
+            snack.show();
+            View sb = snack.getView();
+            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+            snack.setActionTextColor(getResources().getColor(R.color.white));
+            snack.setAction("Activate MoviePass card now                     ", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
+                    startActivity(activateCard);
+                }
+            });
+            reservationsMenu.setVisibility(View.GONE);
+        }
+
+        final FloatingActionButton currentRes = new FloatingActionButton(getActivity());
+        currentRes.setLabelText("Current Reservations");
+        currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        FloatingActionButton historyRes = new FloatingActionButton(getActivity());
+        historyRes.setLabelText("Past Reservations");
+        historyRes.setButtonSize(FloatingActionButton.SIZE_MINI);
+        historyRes.setShowProgressBackground(true);
+
+        reservationsMenu.addMenuButton(currentRes);
+        reservationsMenu.addMenuButton(historyRes);
+
+        currentRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PendingReservationFragment fragobj = new PendingReservationFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                fragobj.show(fm, "fragment_history");
+
+                reservationsMenu.close(true);
+
+            }
+        });
 
         return rootView;
     }
@@ -484,7 +533,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
-
 
 
 }

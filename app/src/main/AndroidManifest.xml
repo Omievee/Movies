@@ -13,7 +13,6 @@
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -235,7 +234,8 @@
             android:value="817d4d68505df552813b127d4149583ade2132e1" />
 
         <activity android:name=".mobile.ETicketConfirmatin" />
-        <activity android:name=".activities.EticketConfirmation"></activity>
+        <activity android:name=".activities.EticketConfirmation" />
+        <activity android:name=".activities.ActivateMoviePassCard"></activity>
     </application>
 
 </manifest>

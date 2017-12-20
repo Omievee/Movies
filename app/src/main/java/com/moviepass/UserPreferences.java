@@ -74,6 +74,8 @@ public class UserPreferences {
         editor.putString(Constants.ZIP_CODE, zipCode);
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
+
+
     }
 
     public static Location getLocation() {

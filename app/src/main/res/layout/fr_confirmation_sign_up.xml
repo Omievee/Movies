@@ -77,7 +77,9 @@
                     android:textAlignment="center"
                     android:textColor="@color/new_red"
                     android:textSize="17sp"
-                    android:textStyle="bold" />
+
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/Text1"
@@ -87,7 +89,8 @@
                     android:layout_marginStart="@dimen/double_margin_standard"
                     android:alpha=".8"
                     android:text="Once your card arrives, log in to the MoviePass app and activate your card."
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -95,6 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_half">
+
 
                 <TextView
                     android:id="@+id/Number2"
@@ -106,7 +110,8 @@
                     android:textAlignment="center"
                     android:textColor="@color/new_red"
                     android:textSize="17sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/text2"
@@ -115,8 +120,10 @@
                     android:layout_gravity="top"
                     android:layout_marginStart="@dimen/double_margin_standard"
                     android:alpha=".8"
+
                     android:text="You'll then be able to use your MoviePass card to purchase tickets at theaters!"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
