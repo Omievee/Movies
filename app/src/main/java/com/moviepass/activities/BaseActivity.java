@@ -25,6 +25,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -219,6 +223,27 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             return false;
         }
     }
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
 
     /*
 

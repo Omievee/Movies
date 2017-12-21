@@ -15,6 +15,15 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <ImageView
+        android:id="@+id/tutorial_first"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:src="@drawable/mpmastercard2"
+        android:scaleType="fitCenter" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -48,6 +57,7 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:background="@drawable/indicator_unselected"
                 android:visibility="gone" />
 
@@ -56,6 +66,7 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
                 android:background="@drawable/indicator_unselected" />
 
             <ImageView
@@ -86,9 +97,9 @@
             android:id="@+id/tutorial_firstSwipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
             android:text="@string/tutorial_First_See_How"
             android:textColor="@color/new_red"
             android:textSize="25sp" />

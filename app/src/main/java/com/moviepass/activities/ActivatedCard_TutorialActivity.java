@@ -1,6 +1,7 @@
 package com.moviepass.activities;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,8 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +26,7 @@ import android.widget.TextView;
 
 import com.moviepass.R;
 
-public class ActivatedCard_TutorialActivity extends AppCompatActivity {
+public class ActivatedCard_TutorialActivity extends BaseActivity {
 
 
     ImageView zero, one, two, three, four, ccImage;
@@ -85,11 +91,20 @@ public class ActivatedCard_TutorialActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         dots.setVisibility(View.GONE);
+                        fadeOut(dots);
                         skip.setVisibility(View.GONE);
+                        fadeOut(skip);
+                        seehow.setVisibility(View.VISIBLE);
+                        fadeIn(seehow);
+                        ccImage.setVisibility(View.VISIBLE);
+                        fadeIn(ccImage);
                         break;
                     case 1:
+                        ccImage.setVisibility(View.GONE);
                         dots.setVisibility(View.VISIBLE);
+                        fadeIn(dots);
                         skip.setVisibility(View.VISIBLE);
+                        fadeIn(skip);
                         seehow.setVisibility(View.GONE);
                         break;
                     case 2:
@@ -117,6 +132,11 @@ public class ActivatedCard_TutorialActivity extends AppCompatActivity {
                     i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
             );
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
     public class tutorialAdapter extends FragmentPagerAdapter {
@@ -164,7 +184,7 @@ public class ActivatedCard_TutorialActivity extends AppCompatActivity {
 
         ImageView img;
 
-        int[] tutorialImages = new int[]{R.drawable.mpmastercard1, R.drawable.tutorial_1, R.drawable.tutorial_2,
+        int[] tutorialImages = new int[]{R.drawable.blank_png, R.drawable.tutorial_1, R.drawable.tutorial_2,
                 R.drawable.tutorial_3, R.drawable.tutorial_4};
 
         int[] tutorialHeaders = new int[]{R.string.tutorial_First_Header, R.string.tutorial_header_1,
@@ -191,8 +211,6 @@ public class ActivatedCard_TutorialActivity extends AppCompatActivity {
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(tutorialHeaders[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
-            ImageView firstImage = rootView.findViewById(R.id.tutorial_first);
-            firstImage.setVisibility(View.GONE);
 
             TextView bodyText = rootView.findViewById(R.id.tutorial_body);
             bodyText.setText(tutorialBodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
