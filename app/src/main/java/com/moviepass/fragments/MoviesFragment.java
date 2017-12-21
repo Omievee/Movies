@@ -40,6 +40,7 @@ import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.ActivateMoviePassCard;
+import com.moviepass.activities.ActivatedCard_TutorialActivity;
 import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
@@ -70,7 +71,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
-    String TAG = "MOVIES ARE: ";
 
     public static final int LOCATION_PERMISSIONS = 99;
     android.location.LocationManager LocationManager;
@@ -174,20 +174,26 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         checkLocationPermission();
 
 
-        if (UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
-            Snackbar snack = Snackbar.make(rootView, "", Snackbar.LENGTH_INDEFINITE);
+        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
             snack.getView().setLayoutParams(params);
             snack.show();
             View sb = snack.getView();
+            snack.getView().setHovered(true);
+            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             sb.setBackgroundColor(getResources().getColor(R.color.new_red));
             snack.setActionTextColor(getResources().getColor(R.color.white));
-            snack.setAction("Activate MoviePass card now                     ", new View.OnClickListener() {
+            snack.setAction("Ok", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
-                    startActivity(activateCard);
+                    Intent intent = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
+                    startActivity(intent);
+
+
+//                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
+//                    startActivity(activateCard);
                 }
             });
             reservationsMenu.setVisibility(View.GONE);

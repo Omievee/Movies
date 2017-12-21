@@ -108,6 +108,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                         progress.setVisibility(View.GONE);
+                        Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
+
                     }
                 });
             }
@@ -166,6 +168,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                             @Override
                             public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
+                                Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
+
 
                             }
                         });

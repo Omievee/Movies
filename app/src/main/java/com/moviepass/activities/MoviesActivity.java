@@ -87,7 +87,7 @@ public class MoviesActivity extends BaseActivity {
 
 
 
-        Log.d(TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
+        Log.d(TAG, "Status?: " + UserPreferences.getRestrictionSubscriptionStatus());
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);

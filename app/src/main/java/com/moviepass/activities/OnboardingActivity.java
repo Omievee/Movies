@@ -26,15 +26,12 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    View mRedView;
     TextView onboardingJoinNow;
     TextView onboardingSignIn;
-    TextView mNotReady;
 
     ImageView zero, one, two, three, four;
     private ViewPager mViewPager;
 
-    final ArgbEvaluator evaluator = new ArgbEvaluator();
     ImageView[] indicators;
 
     int page = 0;
@@ -51,10 +48,8 @@ public class OnboardingActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mCoordinator = findViewById(R.id.main_content);
-//        mRedView = findViewById(R.id.red);
         onboardingSignIn = findViewById(R.id.ONBOARDING_SIGN_IN);
         onboardingJoinNow = findViewById(R.id.ONBOARDING_JOIN_NOW);
-//        mNotReady = findViewById(R.id.not_ready);
 
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
@@ -121,76 +116,14 @@ public class OnboardingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        /*
-        onboardingJoinNow.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (Build.VERSION.SDK_INT >= 21 ) {
-
-                    mRedView.bringToFront();
-
-                    int[] location = new int[2];
-                    view.getLocationOnScreen(location);
-
-                    int cx = location[0] + view.getWidth() / 2;
-                    int cy = location[1] + view.getHeight() / 2;
-
-                    int cxFinal = mRedView.getWidth() / 2;
-                    int cyFinal = mRedView.getHeight() / 2;
-
-                    float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
-
-                    Animator anim =
-                            ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
-
-                    mRedView.setVisibility(View.VISIBLE);
-                    anim.start();
-                    anim.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-                            startActivity(intent);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-                        }
-                    });
-                } else {
-                    Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-                    startActivity(intent);
-                }
-
-
-                return false;
-            }
-        });
-
-        /* mNotReady.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OnboardingActivity.this, BrowseActivity.class);
-                startActivity(intent);
-            }
-        }); */
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_onboarding, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_onboarding, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -301,11 +234,4 @@ public class OnboardingActivity extends AppCompatActivity {
         }
     }
 
-    public boolean shouldAskForPermissions() {
-        return Build.VERSION.SDK_INT >= 23;
-    }
-
-    public void askPermissions() {
-        /* TODO : ASK PERMISSIONS PLEASE */
-    }
 }

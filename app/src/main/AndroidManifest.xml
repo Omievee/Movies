@@ -235,7 +235,8 @@
 
         <activity android:name=".mobile.ETicketConfirmatin" />
         <activity android:name=".activities.EticketConfirmation" />
-        <activity android:name=".activities.ActivateMoviePassCard"></activity>
+        <activity android:name=".activities.ActivateMoviePassCard" />
+        <activity android:name=".activities.ActivatedCard_TutorialActivity"></activity>
     </application>
 
 </manifest>
