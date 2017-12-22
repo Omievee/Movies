@@ -188,12 +188,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
-                    startActivity(intent);
-
-
-//                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
-//                    startActivity(activateCard);
+                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
+                    startActivity(activateCard);
                 }
             });
             reservationsMenu.setVisibility(View.GONE);

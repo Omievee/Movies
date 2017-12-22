@@ -79,36 +79,43 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                 activateDigits.setVisibility(View.VISIBLE);
             }
         });
-        digits = activateDigits.getText().toString();
+        Log.d(Constants.TAG, "onCreate: ");
 
 
         activateSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 progress.setVisibility(View.VISIBLE);
-                CardActivationRequest request = new CardActivationRequest(digits);
+                digits = activateDigits.getText().toString();
+
+                final CardActivationRequest request = new CardActivationRequest(digits);
+                Log.d(Constants.TAG, "onClick: " + digits);
                 RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
                     @Override
                     public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                         CardActivationResponse cardActivationResponse = response.body();
 
+                        Log.d(Constants.TAG, "onResponse: " + request.toString());
                         if (cardActivationResponse != null && response.isSuccessful()) {
                             progress.setVisibility(View.GONE);
 
-                            Intent intent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
-                            Toast.makeText(ActivateMoviePassCard.this, "Card Activated!", Toast.LENGTH_SHORT).show();
-
+                            Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
                             startActivity(intent);
+
+
                         } else {
                             progress.setVisibility(View.GONE);
-                            Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
+                            Log.d(Constants.TAG, "fail: ");
+                            Toast.makeText(ActivateMoviePassCard.this, "Incorrect card number", Toast.LENGTH_SHORT).show();
+
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                         progress.setVisibility(View.GONE);
-                        Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
+                        Toast.makeText(ActivateMoviePassCard.this, "Server Error. Try again later", Toast.LENGTH_SHORT).show();
+
 
                     }
                 });
@@ -160,7 +167,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                                     Toast.makeText(ActivateMoviePassCard.this, "Card Activated!", Toast.LENGTH_SHORT).show();
 
                                     startActivity(intent);
-                                }else {
+                                } else {
                                     Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
                                 }
                             }

@@ -7,19 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +23,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
 
     ImageView zero, one, two, three, four, ccImage;
-    TextView skip, seehow;
+    TextView skip, seehow, topNumber;
     ViewPager tutorialViewPager;
 
     int page = 0;
@@ -64,6 +57,9 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         indicators = new ImageView[]{zero, one, two, three, four};
         activityLayout = findViewById(R.id.TUTORIAL_MAIN_ACTIVITY);
 
+
+        topNumber = findViewById(R.id.tutorial_topnumber);
+        topNumber.setGravity(Gravity.CENTER_HORIZONTAL);
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +94,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                         fadeIn(seehow);
                         ccImage.setVisibility(View.VISIBLE);
                         fadeIn(ccImage);
+                        topNumber.setVisibility(View.GONE);
                         break;
                     case 1:
                         ccImage.setVisibility(View.GONE);
@@ -106,12 +103,25 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                         skip.setVisibility(View.VISIBLE);
                         fadeIn(skip);
                         seehow.setVisibility(View.GONE);
+                        topNumber.setVisibility(View.VISIBLE);
+                        topNumber.setText("1");
+                        topNumber.setGravity(Gravity.CENTER);
+                        skip.setText("Skip");
+
                         break;
                     case 2:
+                        skip.setText("Skip");
+
+                        topNumber.setText("2");
                         break;
                     case 3:
+                        topNumber.setText("3");
+                        skip.setText("Skip");
+
                         break;
                     case 4:
+                        skip.setText("Done");
+                        topNumber.setText("4");
                         break;
                 }
             }
@@ -183,6 +193,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         }
 
         ImageView img;
+        TextView num;
 
         int[] tutorialImages = new int[]{R.drawable.blank_png, R.drawable.tutorial_1, R.drawable.tutorial_2,
                 R.drawable.tutorial_3, R.drawable.tutorial_4};
@@ -192,6 +203,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         int[] tutorialBodies = new int[]{R.string.tutorial_First_Body, R.string.tutorial_body_1, R.string.tutorial_body_2,
                 R.string.tutorial_body_3, R.string.tutorial_body_4};
+
+        int[] topNumbers = new int[]{R.string.one, R.string.two, R.string.three, R.string.four};
 
 
         public static ActivatedCard_TutorialActivity.PlaceholderFragment newInstance(int sectionNumber) {
@@ -219,6 +232,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             img = rootView.findViewById(R.id.tutorial_images);
             img.setVisibility(View.VISIBLE);
 
+
             img.setBackgroundResource(tutorialImages[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
 
@@ -226,5 +240,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //Disable on back functionality
+    }
 }

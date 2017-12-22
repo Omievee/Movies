@@ -82,9 +82,14 @@
     <string name="tutorial_First_Body">You can now use your MoviePass card to purchase tickets at the theater!</string>
     <string name="tutorial_First_See_How">See how it works > </string>
 
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+
     <string name="tutorial_header_1">Search the App for Movies, Theaters  &amp; Showtimes</string>
     <string name="tutorial_body_1">There are no advanced reservations; same-day ticket sales only</string>
-    <string name="tutorial_header_2">Go to a Theater, select a screening, click "Check In"</string>
+    <string name="tutorial_header_2">Go to a Theater, select a screening, click \"Check In\"</string>
     <string name="tutorial_body_2">You must be within 100 yards of the theater in order to check in</string>
     <string name="tutorial_header_3">Use your MoviePass card to purchase your ticket!</string>
     <string name="tutorial_body_3"> </string>

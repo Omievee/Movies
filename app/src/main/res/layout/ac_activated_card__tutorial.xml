@@ -15,14 +15,30 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <TextView
+        android:id="@+id/tutorial_topnumber"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal |top"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@drawable/onboarding_confirmation_steps_circles"
+        android:gravity="center"
+        android:text="1"
+        android:textAlignment="center"
+        android:textColor="@color/new_red"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+
     <ImageView
         android:id="@+id/tutorial_first"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:adjustViewBounds="true"
-        android:src="@drawable/mpmastercard2"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/mpmastercard2" />
 
     <RelativeLayout
         android:layout_width="match_parent"
