@@ -155,6 +155,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                 activateSubmitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        digits = activateDigits.getText().toString();
+
                         CardActivationRequest request = new CardActivationRequest(digits);
                         RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
                             @Override

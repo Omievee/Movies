@@ -32,11 +32,10 @@
         <ImageView
             android:id="@+id/CINEMA_BACK"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/double_margin_standard"
             android:layout_weight=".1"
-            android:paddingTop="@dimen/margin_half"
             android:src="@drawable/iconback"
             android:tint="@color/white" />
 
@@ -44,9 +43,9 @@
             android:id="@+id/CINEMA_TITLE"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/margin_standard"
             android:layout_marginTop="@dimen/double_margin_standard"
             android:layout_weight="1.5"
-            android:layout_marginEnd="@dimen/margin_standard"
             android:gravity="center_horizontal"
             android:lines="1"
             android:text="[CINEMA NAME]"

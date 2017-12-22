@@ -29,6 +29,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,6 +103,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ScreeningsResponse screeningsResponse;
     Screening Screening;
 
+    ImageView backButton;
     TextView THEATER_ADDRESS_LISTITEM;
     TextView selectedMovieTitle;
     View ProgressBar;
@@ -124,6 +126,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     @BindView(R.id.SELECTED_SYNOPSIS)
     ImageButton selectedSynopsis;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,6 +157,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
         ProgressBar = findViewById(R.id.progress);
+
+        backButton = findViewById(R.id.selected_back);
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -217,6 +223,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedShowtimesList = new ArrayList<>();
 
 
+
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,6 +241,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 Log.d(TAG, "syno: " + movie.getSynopsis());
             }
         });
+
+
     }
 
 
