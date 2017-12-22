@@ -97,18 +97,6 @@ public class SelectSeatActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_select_seat);
-//
-//        final Toolbar mToolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(mToolbar);
-
-//        final ActionBar mActionBar = getSupportActionBar();
-
-        // Enable the Up button
-//        mActionBar.setDisplayHomeAsUpEnabled(true);
-//        mActionBar.setHomeButtonEnabled(true);
-//
-//        mToolbar.setTitle(R.string.activity_select_seat_activity_title);
-//        mActionBar.setTitle(R.string.activity_select_seat_activity_title);
 
         bottomNavigationView = findViewById(R.id.SEATCHART_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -122,9 +110,7 @@ public class SelectSeatActivity extends BaseActivity {
         screeningObject = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
 
         coordinatorLayout = findViewById(R.id.mCoordinator);
-//        mMoviePoster = findViewById(R.id.poster);
         mSelectedMovieTitle = findViewById(R.id.SEATCHART_MOVIETITLE);
-//        mMovieRunTime = findViewById(R.id.text_run_time);
         mTheaterSelected = findViewById(R.id.SEATCHART_THEATER);
         mScreeningShowtime = findViewById(R.id.SEATCHART_SHOWTIME);
         mSelectedSeat = findViewById(R.id.SEATCHART_SEAT);
@@ -619,8 +605,6 @@ public class SelectSeatActivity extends BaseActivity {
             }
         }
     }
-
-
 
 
 }

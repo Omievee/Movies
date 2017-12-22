@@ -3,6 +3,7 @@ package com.moviepass.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,15 +36,17 @@ import butterknife.ButterKnife;
 
 public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdapter.ViewHolder> {
     public static final String TAG = "Showtimes/";
-
+    Screening screening;
     MovieShowtimesAdapter ShowtimesAdapter;
 
+    int counter;
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
 
+    public AppCompatButton showTime;
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
@@ -97,7 +101,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ShowtimesList = new ArrayList<>();
 
-        final Screening screening = screeningsArrayList.get(position);
+        screening = screeningsArrayList.get(position);
 
 
         holder.TheaterName.setText(screening.getTheaterName());
@@ -109,47 +113,47 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.showTimesGrid.setUseDefaultMargins(false);
         holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
-        TextView showTime;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                showTime = new TextView(root.getContext());
+                showTime = new AppCompatButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
                 holder.showTimesGrid.addView(showTime);
                 Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
                 showTime.setTextSize(20);
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                showTime.setPadding(50, 50, 50, 50);
-                final TextView finalShowtime = showTime;
+                showTime.setPadding(20, 10, 20, 10);
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.setMargins(0, 0, 70, 0);
+                showTime.setLayoutParams(params);
 
-                showTime.setOnClickListener(new View.OnClickListener() {
+                final AppCompatButton finalShowtime = showTime;
+
+                finalShowtime.setSelected(false);
+
+
+                finalShowtime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        finalShowtime.setBackgroundDrawable(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+                        showTime.setPadding(20, 10, 20, 10);
+
                         if (screening.getFormat().equals("2D")) {
-                            if (!finalShowtime.isSelected()) {
-                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-                                finalShowtime.setPadding(50, 50, 50, 50);
-                                String selectedShowTime = finalShowtime.getText().toString();
-                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                                finalShowtime.setSelected(true);
-                            } else {
-                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                                finalShowtime.setPadding(50, 50, 50, 50);
-                                String selectedShowTime = finalShowtime.getText().toString();
-                                showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-                                finalShowtime.setSelected(false);
-                            }
+                            String selectedShowTime = finalShowtime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
                         } else {
                             holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
                             Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
+
+
 
                 if (!screening.getFormat().equals("2D")) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.theaterCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-
                     }
                 }
             }
@@ -194,4 +198,19 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
+
+    private void selectShowtime(String time) {
+        for (Screening showtime : screeningsArrayList) ;
+
+    }
+
+    private void setSelectedShowtime(Boolean selected) {
+        if (selected) {
+            showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+        } else {
+            showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+        }
+    }
+
+
 }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -53,7 +54,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     List<String> startTimes;
     private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
-    public TextView showtime = null;
+    Button showtime;
     Context context;
 
 
@@ -122,14 +123,16 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                showtime = new TextView(root.getContext());
+                showtime = new Button(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 holder.showtimeGrid.addView(showtime);
                 showtime.setTextSize(20);
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
                 showtime.setBackground((root.getResources().getDrawable(R.drawable.showtime_background)));
 //                showtime.setBackgroundColor(root.getResources().getColor(R.color.showtime_selector));
-                showtime.setPadding(50, 50, 50, 50);
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.setMargins(0, 0, 70, 0);
+                showtime.setLayoutParams(params);
                 final TextView finalShowtime = showtime;
                 finalShowtime.setSelected(false);
                 //onclick on each showtime will execute the showtimelistener & create reservtion if possible.
