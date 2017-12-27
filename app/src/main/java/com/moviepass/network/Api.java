@@ -94,7 +94,6 @@ public interface Api {
     @POST("/api/v3/reservations")
     Call<ReservationResponse> checkIn(@Body CheckInRequest request);
 
-
     // TODO
     @GET("rest/v1/reservations/last")
     Call<ActiveReservationResponse> getLast(@Body ActiveReservationResponse activeReservation);

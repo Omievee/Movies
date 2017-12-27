@@ -46,7 +46,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
 
-    public AppCompatButton showTime;
+    public Button showTime;
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
@@ -104,6 +104,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         screening = screeningsArrayList.get(position);
 
 
+
+
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
         holder.showTimesGrid.setRowCount(1);
@@ -115,10 +117,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                showTime = new AppCompatButton(root.getContext());
+
+
+                showTime = new Button(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
                 holder.showTimesGrid.addView(showTime);
-                Log.d(TAG, "showtimes: " + screening.getStartTimes().get(i));
                 showTime.setTextSize(20);
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
@@ -127,19 +130,17 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 params.setMargins(0, 0, 70, 0);
                 showTime.setLayoutParams(params);
 
-                final AppCompatButton finalShowtime = showTime;
-
-                finalShowtime.setSelected(false);
-
+                final Button finalShowtime = showTime;
 
                 finalShowtime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        finalShowtime.setBackgroundDrawable(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+
+                        showTime.setBackgroundDrawable(root.getResources().getDrawable(R.drawable.showtime_background_selected));
                         showTime.setPadding(20, 10, 20, 10);
 
                         if (screening.getFormat().equals("2D")) {
-                            String selectedShowTime = finalShowtime.getText().toString();
+                            String selectedShowTime = showTime.getText().toString();
                             showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
                         } else {
                             holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));

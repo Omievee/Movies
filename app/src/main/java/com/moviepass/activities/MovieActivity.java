@@ -291,7 +291,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
 
-    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
+    public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
         Log.d(TAG, "onShowtimeClick: " + screening.getTitle());
         Log.d(TAG, "onShowtimeClick: " + showtime);
         final String time = showtime;
@@ -299,23 +299,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         if (fabLoadCard.getVisibility() == View.GONE) {
             fabLoadCard.setVisibility(View.VISIBLE);
-            Log.d(TAG, "made it: ");
-
             fadeIn(fabLoadCard);
+
         } else {
+
             fabLoadCard.setVisibility(View.GONE);
             fadeOut(fabLoadCard);
         }
 
         String ticketType = screening.getProvider().ticketType;
 
-        if (ticketType.matches("STANDARD")) {
-            String checkIn = "Check In";
-        } else if (ticketType.matches("E_TICKET")) {
-            String reserve = "Reserve E-Ticket";
-        } else {
-            String selectSeat = "Select Seat";
-        }
 
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -335,16 +328,15 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
+        Log.d(TAG, "showtime: " + showtime);
+        Log.d(TAG, "provider: " + screening.getProvider());
+        Log.d(TAG, "perfominfo: " + screening.getProvider().getPerformanceInfo(showtime));
+
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
-
-
         //PerformanceInfo
-
-        Log.d(TAG, "reserve: " + screening.getProvider().getPerformanceInfo(showtime));
-
-
         int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
+
         String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
         int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
@@ -364,8 +356,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
+            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber, tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);

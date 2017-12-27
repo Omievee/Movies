@@ -114,19 +114,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         holder.mNewReleasePosterDV.setController(controller);
 
 
-//        class onImagesLoaded extends BaseControllerListener<ImageInfo> {
-//            @Override
-//            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-//                super.onFinalImageSet(id, imageInfo, animatable);
-//            }
-//
-//            @Override
-//            public void onFailure(String id, Throwable throwable) {
-//                super.onFailure(id, throwable);
-//            }
-//        }
-
-
         ViewCompat.setTransitionName(holder.mNewReleasePosterDV, movie.getImageUrl());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
