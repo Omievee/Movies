@@ -231,9 +231,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         return false;
     }
 
-    //TODO: Inspect why it crashes for samsung devices vvvvvvv
+    //TODO: Inspect why it crashes for non OREO devices
     public void creditCardClick() {
-
         if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
             scanCard();

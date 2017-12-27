@@ -294,6 +294,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
+
         } else {
             Log.d("ticketType", screening.getProvider().ticketType);
 
@@ -322,16 +323,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
                         String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
 
+
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
 
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("title", screening.getTitle());
-//                        bundle.putString("theater", screening.getTheaterName());
-//                        bundle.putString("showtime", showtime);
-//                        bundle.putString("confimation", confirmationCode);
-//                        PendingReservationFragment history = new PendingReservationFragment();
-//                        history.setArguments(bundle);
 
                     } else {
                         Log.d("mScreening,", screening.toString());
@@ -340,13 +335,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         showConfirmation(token);
                         Log.d(TAG, "reservation?: " + screening.getTitle() + screening.getTheaterName() + showtime);
 
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("title", screening.getTitle());
-//                        bundle.putString("theater", screening.getTheaterName());
-//                        bundle.putString("showtime", showtime);
-////                        bundle.putString("confimation", confirmationCode);
-//                        PendingReservationFragment history = new PendingReservationFragment();
-//                        history.setArguments(bundle);
 
                     }
                 } else {
@@ -479,8 +467,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         startActivity(confirmationIntent);
         getActivity().finish();
     }
-
-
 
 
     private void ActivateMoviePassCard() {

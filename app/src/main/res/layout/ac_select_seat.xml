@@ -18,10 +18,11 @@
 
             <ImageView
                 android:id="@+id/SEATCHART_ONBACK"
-                android:layout_width="wrap_content"
+                android:layout_width="25dp"
                 android:layout_height="match_parent"
-                android:padding="@dimen/margin_standard"
-                android:src="@drawable/iconback" />
+                android:layout_marginStart="@dimen/margin_half"
+                android:src="@drawable/iconback"
+                android:tint="@color/white" />
 
             <TextView
                 android:id="@+id/SEATCHART_HEADER"

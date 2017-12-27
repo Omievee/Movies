@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.moviepass.Constants;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
@@ -173,8 +175,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         checkLocationPermission();
 
+        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionHasActiveCard());
+        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
 
-        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+
+        //Check for active moviepass card or not
+        if (!UserPreferences.getRestrictionHasActiveCard()) {
             Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
             snack.getView().setLayoutParams(params);
@@ -196,7 +202,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
         final FloatingActionButton currentRes = new FloatingActionButton(getActivity());
-        currentRes.setLabelText("Current Reservations");
+        currentRes.setLabelText("Current Reservation");
         currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
         FloatingActionButton historyRes = new FloatingActionButton(getActivity());
         historyRes.setLabelText("Past Reservations");
@@ -212,7 +218,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 PendingReservationFragment fragobj = new PendingReservationFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fragobj.show(fm, "fragment_history");
-
                 reservationsMenu.close(true);
 
             }

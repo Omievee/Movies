@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/ETIC"
     android:background="@color/test_blue">
 
     <LinearLayout
@@ -22,10 +23,11 @@
 
                 <ImageView
                     android:id="@+id/Etix_ONBACK"
-                    android:layout_width="wrap_content"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/margin_standard"
-                    android:src="@drawable/iconback" />
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:src="@drawable/iconback"
+                    android:tint="@color/white" />
 
                 <TextView
                     android:id="@+id/Etix_HEADER"
@@ -44,8 +46,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/ETIX_MOVIEPOSTER"
-                android:layout_width="83dp"
-                android:layout_height="125dp"
+                android:layout_width="103dp"
+                android:layout_height="155dp"
                 android:layout_below="@id/LAYOUT1"
                 android:layout_margin="@dimen/margin_standard" />
 
@@ -61,7 +63,7 @@
                 android:singleLine="true"
                 android:text="[ MOVIE TITLE ]"
                 android:textColor="@color/white_ish"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/ETIX_THEATER"
@@ -74,7 +76,7 @@
                 android:singleLine="true"
                 android:text="[ THEATER ]"
                 android:textColor="@color/white_ish"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/ETIX_SHOWTIME"
@@ -86,7 +88,7 @@
                 android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
                 android:text="[ 12:00PM ]"
                 android:textColor="@color/white_ish"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/ETIX_SEAT"
@@ -98,7 +100,7 @@
                 android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
                 android:text="[ SEAT # ]"
                 android:textColor="@color/new_red"
-                android:textSize="15sp" />
+                android:textSize="18sp" />
 
 
         </RelativeLayout>
@@ -119,9 +121,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom |center_horizontal"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard"
+        android:layout_marginBottom="75dp"
         android:background="@drawable/selectseat_confirm_button"
-        android:text="Get E-Ticket"
+        android:text="Confirm E-Ticket"
+        android:padding="@dimen/margin_standard"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -136,7 +139,7 @@
 
 
     <include
-        android:id="@+id/progress"
+        android:id="@+id/etixprogress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

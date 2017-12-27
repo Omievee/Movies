@@ -66,6 +66,7 @@ public class SelectSeatActivity extends BaseActivity {
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "theater";
     public static final String TOKEN = "token";
+    public static final String SEAT = "seat";
 
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
@@ -106,8 +107,7 @@ public class SelectSeatActivity extends BaseActivity {
         Intent intent = getIntent();
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
-
-        screeningObject = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
+        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
 
         coordinatorLayout = findViewById(R.id.mCoordinator);
         mSelectedMovieTitle = findViewById(R.id.SEATCHART_MOVIETITLE);
@@ -365,10 +365,21 @@ public class SelectSeatActivity extends BaseActivity {
                     reserveSeatButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            SelectedSeat selectedSeat = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-                            reserve(screeningObject, selectedShowTime, selectedSeat);
+
+                            SelectedSeat seatSelected = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+                            Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
+
+                            intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
+                            intent.putExtra(SHOWTIME, selectedShowTime);
+                            intent.putExtra(SEAT, Parcels.wrap(seatSelected));
+
+                            startActivity(intent);
+
+
+//TODO: come back to this..
+//                            SelectedSeat seatObject = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+//                            reserve(screeningObject, selectedShowTime, seatObject);
                             mProgressWheel.setVisibility(View.VISIBLE);
-                            reserveSeatButton.setEnabled(false);
                         }
                     });
                 }
@@ -511,14 +522,18 @@ public class SelectSeatActivity extends BaseActivity {
     }
 
     public void makeSnackbar(String message) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
+        final Snackbar snackbar = Snackbar.make(findViewById(R.id.mCoordinator), message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("OK", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 snackbar.dismiss();
             }
         });
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackbar.getView().getLayoutParams();
+        snackbar.getView().setLayoutParams(params);
         snackbar.show();
+
+
     }
 
     //TODO: Fix on backbutton from theaters..

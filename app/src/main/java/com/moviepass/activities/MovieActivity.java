@@ -128,7 +128,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ImageButton selectedSynopsis;
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,7 +222,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedShowtimesList = new ArrayList<>();
 
 
-
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -294,7 +292,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        Log.d(TAG, "onShowtimeClick: " + screening.getTitle());
+        Log.d(TAG, "onShowtimeClick: " + showtime);
         final String time = showtime;
 
 
@@ -339,7 +338,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
 
+
         //PerformanceInfo
+
+        Log.d(TAG, "reserve: " + screening.getProvider().getPerformanceInfo(showtime));
+
+
         int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
         String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();

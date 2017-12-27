@@ -110,6 +110,7 @@ public class ConfirmationActivity extends BaseActivity {
                 if (qrUrl != null) {
                     cancelReservation.setVisibility(View.GONE);
                     //TODO :  QR?
+                    
 //                    loadCardLogo.setVisibility(View.INVISIBLE);
 //
 //
