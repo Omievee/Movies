@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ACTIVATE"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ACTIVATE"
     android:background="@color/test_blue"
     tools:context="com.moviepass.activities.ActivateMoviePassCard">
 
@@ -35,7 +35,7 @@
                 android:id="@+id/ACTIVATECARD_INTRUCTIONS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/quadruple_margin_standard"
+                android:layout_marginTop="@dimen/double_margin_standard"
                 android:alpha=".8"
                 android:text="@string/Activate_Body"
                 android:textAlignment="center"
@@ -45,7 +45,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/a_lot_margin_standard"
+                android:layout_marginTop="@dimen/quadruple_margin_standard"
                 android:orientation="vertical">
 
                 <ImageView
@@ -74,9 +74,9 @@
                     android:layout_marginBottom="@dimen/double_margin_standard"
                     android:hint="1234"
                     android:inputType="number"
-                    android:maxLines="1"
-                    android:maxLength="4"
                     android:letterSpacing=".5"
+                    android:maxLength="4"
+                    android:maxLines="1"
                     android:textColor="@color/white"
                     android:textSize="35sp"
                     android:visibility="gone" />

@@ -39,10 +39,12 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

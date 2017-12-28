@@ -92,7 +92,7 @@
     <string name="tutorial_header_2">Go to a Theater, select a screening, click \"Check In\"</string>
     <string name="tutorial_body_2">You must be within 100 yards of the theater in order to check in</string>
     <string name="tutorial_header_3">Use your MoviePass card to purchase your ticket!</string>
-    <string name="tutorial_body_3"> </string>
+    <string name="tutorial_body_3">You have 30 minutes to swipe your card at a kiosk, or with a ticket agent</string>
     <string name="tutorial_header_4">Movie sold out? Changed your mind?</string>
     <string name="tutorial_body_4">Press cancel reservation, and pick something new</string>
 
