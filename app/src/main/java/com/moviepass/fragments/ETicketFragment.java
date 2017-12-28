@@ -115,7 +115,6 @@ public class ETicketFragment extends DialogFragment {
         public void onProgress(List<PatternLockView.Dot> progressPattern) {
 
         }
-
         @Override
         public void onComplete(List<PatternLockView.Dot> pattern) {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {

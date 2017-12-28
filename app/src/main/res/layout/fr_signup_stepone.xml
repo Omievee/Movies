@@ -27,15 +27,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/copy"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="@dimen/margin_half">
 
             <EditText
                 android:id="@+id/et_first_name"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_first_name"
                 android:lines="1"
@@ -48,9 +47,9 @@
 
             <EditText
                 android:id="@+id/et_last_name"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_last_name"
                 android:lines="1"
@@ -68,7 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAYOUT1"
-            android:layout_marginTop="@dimen/margin_standard"
             android:orientation="vertical"
             android:padding="@dimen/margin_half">
 
@@ -80,11 +78,11 @@
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_address"
                 android:inputType="text"
-                android:maxLength="26"
-                android:textColor="@color/white"
                 android:lines="1"
+                android:maxLength="26"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/gray_icon" />
 
@@ -97,13 +95,14 @@
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_address_two"
                 android:inputType="text"
-                android:maxLength="26"
                 android:lines="1"
+                android:maxLength="26"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/gray_icon" />
+
 
         </LinearLayout>
 
@@ -120,11 +119,10 @@
                 android:id="@+id/et_city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3"
+                android:layout_weight=".5"
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_city"
                 android:inputType="text"
-                android:maxLength="26"
                 android:lines="1"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -132,10 +130,10 @@
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/gray_icon" />
 
-
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/state"
-                android:layout_width="160dp"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
                 android:layout_height="42dp"
                 android:hint="@string/fragment_sign_up_step_one_state"
                 android:prompt="@string/fragment_sign_up_step_one_state"
@@ -149,12 +147,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:backgroundTint="@color/white"
-                android:lines="1"
-                android:maxLines="1"
-                android:singleLine="true"
                 android:hint="@string/fragment_sign_up_step_one_zip"
                 android:inputType="number"
+                android:lines="1"
                 android:maxLength="5"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
                 android:textColorHint="@color/gray_icon" />
