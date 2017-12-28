@@ -111,6 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/double_margin_standard"
+                android:layout_marginTop="@dimen/double_margin_standard"
                 android:alpha=".8"
                 android:text="@string/Activate_Footer2"
                 android:textAlignment="center"

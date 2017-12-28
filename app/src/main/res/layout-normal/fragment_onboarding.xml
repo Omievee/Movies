@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/section_img"
-            android:layout_width="175dp"
-            android:layout_height="175dp"
+            android:layout_width="195dp"
+            android:layout_height="195dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:background="@drawable/image_onboarding_1"

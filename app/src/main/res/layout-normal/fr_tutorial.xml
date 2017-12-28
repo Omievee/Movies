@@ -24,13 +24,13 @@
             android:lineSpacingExtra="2dp"
             android:text="Add a long description here about your app's important feature."
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
 
         <ImageView
             android:id="@+id/tutorial_images"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="235dp"
+            android:layout_height="235dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:layout_marginBottom="@dimen/margin_half"

@@ -32,9 +32,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     ArrayList<Movie> historyArrayList;
     ArrayList<Reservation> currentReservationItem;
 
-    ActiveReservationResponse reservationResponse
-
-            ;
+    ActiveReservationResponse reservationResponse;
     public static final String TAG = "found";
 
     View progress;
@@ -62,7 +60,6 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
         return rootView;
     }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -76,7 +73,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
         });
 
-//        getPendingReservation();
+        getPendingReservation();
 
 
     }
@@ -107,25 +104,25 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 //
 //    }
 
-//    private void getPendingReservation() {
-//        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
-//
-//        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
-//            @Override
-//            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-//                    ActiveReservationResponse active = response.body();
-//
-//                    Log.d(TAG, "made it: ");
-////                    Log.d(TAG, "onResponse: " + active.getReservationMovieTitle());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+    private void getPendingReservation() {
+        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
+        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
+            @Override
+            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
+                Log.d(TAG, "pre if: ");
+
+                if (response.body() != null && response.isSuccessful()) {
+                    ActiveReservationResponse active = response.body();
+
+                    Log.d(TAG, "made it: ");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
+
+            }
+        });
+    }
 }
