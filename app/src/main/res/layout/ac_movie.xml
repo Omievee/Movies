@@ -203,7 +203,7 @@
         android:layout_marginEnd="@dimen/margin_standard"
         android:animateLayoutChanges="true"
         android:elevation="5dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:fab_colorNormal="@color/new_red"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"

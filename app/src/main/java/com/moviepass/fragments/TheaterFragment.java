@@ -201,13 +201,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {
-
-                    Log.d(TAG, "onClick: " + screening);
-                    Log.d(TAG, "onClick:  " + time);
-                    Log.d(TAG, "onClick: " + screening.getProvider().getPerformanceInfo(time));
-                    Log.d(TAG, "onClick: " + screening.getProvider().getPerformanceInfo(showtime));
-//                    progress.setVisibility(View.VISIBLE);
-//                    reserve(screening, time);
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
                 }
             }
         });

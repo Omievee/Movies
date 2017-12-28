@@ -153,6 +153,15 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         selectedRuntime = findViewById(R.id.SELECTED_RUNTIME);
         fabLoadCard = findViewById(R.id.FAB_LOADCARD);
+        fabLoadCard.setImageDrawable(getDrawable(R.drawable.ticketnavwhite));
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
+        fabLoadCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MovieActivity.this, "Please select a showtime", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
         ProgressBar = findViewById(R.id.progress);
@@ -292,29 +301,17 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
-        Log.d(TAG, "onShowtimeClick: " + screening.getTitle());
-        Log.d(TAG, "onShowtimeClick: " + showtime);
         final String time = showtime;
 
-
-        if (fabLoadCard.getVisibility() == View.GONE) {
-            fabLoadCard.setVisibility(View.VISIBLE);
-            fadeIn(fabLoadCard);
-
-        } else {
-
-            fabLoadCard.setVisibility(View.GONE);
-            fadeOut(fabLoadCard);
-        }
-
-        String ticketType = screening.getProvider().ticketType;
-
-
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (isPendingSubscription()) {
+
                     showActivateCardDialog(screening, time);
+
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(screening, time);
