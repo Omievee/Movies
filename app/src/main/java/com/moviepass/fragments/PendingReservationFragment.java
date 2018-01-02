@@ -2,6 +2,7 @@ package com.moviepass.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,17 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.moviepass.R;
+import com.moviepass.UserPreferences;
 import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.ActiveReservationResponse;
+import com.moviepass.responses.CancellationResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -58,6 +64,23 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
         historyArrayList = new ArrayList<>();
         currentReservationItem = new ArrayList<>();
 
+//        pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RestClient.getAuthenticated().requestCancellation().enqueue(new Callback<CancellationResponse>() {
+//                    @Override
+//                    public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<CancellationResponse> call, Throwable t) {
+//
+//                    }
+//                });
+//            }
+//        });
+
         return rootView;
     }
 
@@ -81,8 +104,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
 
     private void getPendingReservation() {
-        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
-        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
+
+        RestClient.getAuthenticated().getLast().enqueue(new Callback<ActiveReservationResponse>() {
             @Override
             public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
                 Log.d(TAG, "pre if: ");
@@ -90,7 +113,24 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                 if (response.body() != null && response.isSuccessful()) {
                     ActiveReservationResponse active = response.body();
 
-                    Log.d(TAG, "made it: ");
+                    pendingReservationTitle.setText(active.getTitle());
+                    pendingReservationTheater.setText(active.getTheater());
+                    String reservationTime = active.getShowtime().substring(11, 16);
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+
+                    try {
+                        Date date = sdf.parse(reservationTime);
+                        Log.d(TAG, "onResponse: " + sdf.format(date));
+                        pendingReservationTime.setText(sdf.format(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    Log.d(TAG, "title it: " + active.getTitle());
+                    Log.d(TAG, "theater it: " + active.getTheater());
+                    Log.d(TAG, "seat it: " + active.getSeat());
+                    Log.d(TAG, "showtime it: " + active.getShowtime());
                 }
 
             }

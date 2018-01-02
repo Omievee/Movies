@@ -97,7 +97,7 @@ public interface Api {
 
     // TODO
     @GET("rest/v1/reservations/last")
-    Call<ActiveReservationResponse> getLast(@Body ActiveReservationResponse activeReservation);
+    Call<ActiveReservationResponse> getLast();
 
 
 

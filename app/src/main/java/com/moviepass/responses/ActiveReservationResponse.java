@@ -6,10 +6,35 @@ package com.moviepass.responses;
 
 public class ActiveReservationResponse {
 
-    String reservationMovieTitle;
-    String reservationTheater;
-    String reservationConfirmationCode;
-    String reservationTime;
+
+    String title;
+    String theater;
+    String seat;
+    String redemption_code;
+    String showtime;
+
+    public String getTheater() {
+        return theater;
+    }
+
+    public String getSeat() {
+        return seat;
+    }
+
+    public String getRedemption_code() {
+        return redemption_code;
+    }
+
+    public String getShowtime() {
+        return showtime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+
+
     int reservationId;
 
 
@@ -17,21 +42,7 @@ public class ActiveReservationResponse {
         this.reservationId = reservationId;
     }
 
-    public String getReservationMovieTitle() {
-        return reservationMovieTitle;
-    }
 
-    public String getReservationTheater() {
-        return reservationTheater;
-    }
-
-    public String getReservationConfirmationCode() {
-        return reservationConfirmationCode;
-    }
-
-    public String getReservationTime() {
-        return reservationTime;
-    }
 
     public int getReservationId() {
         return reservationId;
