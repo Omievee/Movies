@@ -90,55 +90,55 @@ public class ActivateMoviePassCard extends AppCompatActivity {
             }
         });
 
+//CODE FOR TEST
+//        activateSubmitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
 
         activateSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-                startActivity(intent);
+            public void onClick(final View v) {
+                progress.setVisibility(View.VISIBLE);
+                digits = activateDigits.getText().toString();
+
+                final CardActivationRequest request = new CardActivationRequest(digits);
+                Log.d(Constants.TAG, "onClick: " + digits);
+                RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
+                    @Override
+                    public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                        CardActivationResponse cardActivationResponse = response.body();
+
+                        Log.d(Constants.TAG, "onResponse: " + request.toString());
+                        if (cardActivationResponse != null && response.isSuccessful()) {
+                            progress.setVisibility(View.GONE);
+
+                            Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
+                            startActivity(intent);
+
+
+                        } else {
+                            progress.setVisibility(View.GONE);
+                            Log.d(Constants.TAG, "fail: ");
+                            Toast.makeText(ActivateMoviePassCard.this, "Incorrect card number", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                        progress.setVisibility(View.GONE);
+                        Toast.makeText(ActivateMoviePassCard.this, "Server Error. Try again later", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });
             }
         });
-
-
-//        activateSubmitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(final View v) {
-//                progress.setVisibility(View.VISIBLE);
-//                digits = activateDigits.getText().toString();
-//
-//                final CardActivationRequest request = new CardActivationRequest(digits);
-//                Log.d(Constants.TAG, "onClick: " + digits);
-//                RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
-//                    @Override
-//                    public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-//                        CardActivationResponse cardActivationResponse = response.body();
-//
-//                        Log.d(Constants.TAG, "onResponse: " + request.toString());
-//                        if (cardActivationResponse != null && response.isSuccessful()) {
-//                            progress.setVisibility(View.GONE);
-//
-//                            Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-//                            startActivity(intent);
-//
-//
-//                        } else {
-//                            progress.setVisibility(View.GONE);
-//                            Log.d(Constants.TAG, "fail: ");
-//                            Toast.makeText(ActivateMoviePassCard.this, "Incorrect card number", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-//                        progress.setVisibility(View.GONE);
-//                        Toast.makeText(ActivateMoviePassCard.this, "Server Error. Try again later", Toast.LENGTH_SHORT).show();
-//
-//
-//                    }
-//                });
-//            }
-//        });
 
 
     }

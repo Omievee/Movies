@@ -3,13 +3,12 @@
     android:id="@+id/shape">
     <stroke
         android:width="2dp"
-        android:color="@color/showtime_color" />
+        android:color="@color/test_black" />
     <padding
         android:bottom="10dp"
         android:left="10dp"
         android:right="10dp"
         android:top="10dp" />
     <corners android:radius="6dp" />
-
-    <solid android:color="@color/showtime_color" />
+    <solid android:color="@color/test_black" />
 </shape>

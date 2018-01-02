@@ -179,7 +179,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         //Check for active moviepass card or not
-        if (UserPreferences.getRestrictionHasActiveCard()) {
+        if (!UserPreferences.getRestrictionHasActiveCard()) {
             Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
             snack.getView().setLayoutParams(params);

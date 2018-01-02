@@ -1,15 +1,12 @@
 package com.moviepass.adapters;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -24,12 +21,10 @@ import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.listeners.ShowtimeClickListener;
-import com.moviepass.model.PerformanceInfo;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,12 +36,8 @@ import butterknife.ButterKnife;
 public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdapter.ViewHolder> {
     public static final String TAG = "Showtimes/";
     Screening screening;
-    ArrayList<Integer> counter = new ArrayList<>();
-    private int ID;
-    int i;
-
-    private int enabledShowtime;
-    private int enabledTheater;
+    private int selectedEnabledHorz;
+    private int selectedEnabledVert = RecyclerView.NO_POSITION;
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
@@ -83,9 +74,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
-//            iconTicket = v.findViewById(R.id.icon_ticket);
-//            iconSeat = v.findViewById(R.id.icon_seat);
+
         }
+
     }
 
     @Override
@@ -97,9 +88,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        ShowtimesList = new ArrayList<>();
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
+        ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
 
 
@@ -113,17 +104,15 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
         if (screening.getStartTimes() != null) {
-            for (i = 0; i < screening.getStartTimes().size(); i++) {
+            for (int i = 0; i < screening.getStartTimes().size(); i++) {
 
                 showTime = new Button(root.getContext());
                 showTime.setId(i);
 
-
-                Log.d(TAG, "onBindViewHolder: " + counter.size());
-
                 showTime.setText(screening.getStartTimes().get(i));
                 holder.showTimesGrid.addView(showTime);
                 showTime.setTextSize(20);
+
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(20, 10, 20, 10);
@@ -133,27 +122,34 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
                 final Button selectedShowtime = showTime;
 
+                selectedShowtime.setSelected(selectedEnabledVert == position);
+
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        selectedShowtime.setSelected(true);
-                        enabledShowtime = selectedShowtime.getId();
-
-
-                        //
-                        for (int j = 0; j < screening.getStartTimes().size(); j++) {
-                            if (enabledShowtime != j) {
-                                holder.itemView.findViewById(j).setSelected(false);
-                            }
-                        }
                         if (screening.getFormat().equals("2D")) {
-                            String selectedShowTime = showTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            selectedShowtime.setSelected(true);
+                            selectedEnabledHorz = selectedShowtime.getId();
+
+                            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+                                if (selectedEnabledHorz != i)
+                                     holder.itemView.findViewById(i).setSelected(false);
+//                                notifyItemChanged(selectedEnabledHorz);
+                                selectedShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+
+                            }
+//                            selectedEnabledVert = holder.getLayoutPosition();
+                            String showtimeSelection = selectedShowtime.getText().toString();
+                            Log.d(TAG, "onClick: " + showtimeSelection);
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, showtimeSelection);
+
                         } else {
                             holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
                             Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
+
                     }
+
                 });
 
 

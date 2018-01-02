@@ -60,6 +60,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
         return rootView;
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -78,31 +79,6 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
     }
 
-//    private void getHistory() {
-//        historyArrayList.clear();
-////        progress.setVisibility(View.VISIBLE);
-//
-//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-//            @Override
-//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-////                    progress.setVisibility(View.GONE);
-//                    HistoryResponse historyResponse = response.body();
-//                    historyArrayList.addAll(historyResponse.getHistory());
-//
-//                    for (int i = 0; i < historyArrayList.size(); i++) {
-//                        Log.d(TAG, "history: " + historyResponse.getHistory().get(i).getTitle());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-//
-//            }
-//        });
-//
-//    }
 
     private void getPendingReservation() {
         ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
