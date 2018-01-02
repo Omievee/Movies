@@ -1,14 +1,21 @@
 package com.moviepass.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.os.Process;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -18,6 +25,7 @@ import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
+import com.moviepass.adapters.PlacesAutoCompleteAdapter;
 import com.moviepass.model.ProspectUser;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
@@ -25,6 +33,8 @@ import com.moviepass.network.RestError;
 import com.moviepass.requests.PersonalInfoRequest;
 import com.moviepass.responses.PersonalInfoResponse;
 import com.moviepass.responses.RegistrationPlanResponse;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,13 +46,19 @@ import retrofit2.Response;
 
 public class SignUpStepOneFragment extends Fragment {
 
+    private static String tag = SignUpStepOneFragment.class.getSimpleName();
+
     ArrayAdapter<CharSequence> statesAdapter;
+    public PlacesAutoCompleteAdapter placesAdapter;
+    HandlerThread handlerThread;
+    Handler handler;
+
 
     public static final String TAG = "Found0";
     RelativeLayout signup1CoordMain;
     EditText signup1FirstName;
     EditText signup1LastName;
-    EditText signup1Address;
+    public AutoCompleteTextView signUpAutoCompletePlace;
     EditText signup1Address2;
     EditText signup1City;
     Spinner signup1State;
@@ -61,14 +77,19 @@ public class SignUpStepOneFragment extends Fragment {
     int pos;
     private boolean isViewShown = false;
 
+    public SignUpStepOneFragment() {
+
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_signup_stepone, container, false);
 
         signup1CoordMain = rootView.findViewById(R.id.relative_layout);
         signup1FirstName = rootView.findViewById(R.id.et_first_name);
         signup1LastName = rootView.findViewById(R.id.et_last_name);
-        signup1Address = rootView.findViewById(R.id.et_address);
+        signUpAutoCompletePlace = rootView.findViewById(R.id.Autocomplete_TextView);
         signup1Address2 = rootView.findViewById(R.id.et_address_two);
         signup1City = rootView.findViewById(R.id.et_city);
         signup1State = rootView.findViewById(R.id.state);
@@ -76,14 +97,82 @@ public class SignUpStepOneFragment extends Fragment {
         signup1NextButton = rootView.findViewById(R.id.button_next);
         progress = getActivity().findViewById(R.id.progress);
 
+        placesAdapter = new PlacesAutoCompleteAdapter(getActivity(), R.layout.list_item_autocomplete_places);
+        signUpAutoCompletePlace.setAdapter(placesAdapter);
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
+        if (handlerThread == null) {
+            // Initialize and start the HandlerThread
+            // which is basically a Thread with a Looper
+            // attached (hence a MessageQueue)
+            handlerThread = new HandlerThread("this", Process.THREAD_PRIORITY_BACKGROUND);
+            handlerThread.start();
+
+            // Initialize the Handler
+            handler = new Handler(handlerThread.getLooper()) {
+                @Override
+                public void handleMessage(Message msg) {
+                    if (msg.what == 1) {
+                        ArrayList<String> results = placesAdapter.placesResults;
+                        Log.d(TAG, "handleMessage: " + placesAdapter.placesResults.size());
+                        if (results != null && results.size() > 0) {
+                            placesAdapter.notifyDataSetChanged();
+                        } else {
+                            placesAdapter.notifyDataSetInvalidated();
+                        }
+                    }
+                }
+            };
+        }
+
+
+        signUpAutoCompletePlace.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                final String value = s.toString();
+
+                handler.removeCallbacksAndMessages(null);
+
+                // Now add a new one
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        placesAdapter.placesResults = placesAdapter.api.autocomplete(value);
+                        Log.d(TAG, "run: " + placesAdapter.api.autocomplete(value).toString());
+
+                        handler.sendEmptyMessage(1);
+                    }
+                }, 300);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        getActivity().
+
+                getWindow().
+
+                setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        statesAdapter = ArrayAdapter.createFromResource(
+
+                getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
         statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         signup1State.setAdapter(statesAdapter);
 
-        if (!isViewShown) {
+        if (!isViewShown)
+
+        {
             setButtonActions();
         }
 
@@ -167,7 +256,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean isAddressValid() {
-        if (signup1Address.length() > 2 && signup1Address.length() <= 26) {
+        if (signUpAutoCompletePlace.length() > 2 && signUpAutoCompletePlace.length() <= 26) {
             return true;
         } else {
             return false;
@@ -223,7 +312,7 @@ public class SignUpStepOneFragment extends Fragment {
     public void processSignUpInfo() {
         ((SignUpActivity) getActivity()).setFirstName(signup1FirstName.getText().toString());
         ((SignUpActivity) getActivity()).setLastName(signup1LastName.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress(signup1Address.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress(signUpAutoCompletePlace.getText().toString());
         ((SignUpActivity) getActivity()).setAddress2(signup1Address2.getText().toString());
         ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
         ((SignUpActivity) getActivity()).setState(signup1State.getSelectedItem().toString());
@@ -234,7 +323,7 @@ public class SignUpStepOneFragment extends Fragment {
 
         ProspectUser.firstName = signup1FirstName.getText().toString();
         ProspectUser.lastName = signup1LastName.getText().toString();
-        ProspectUser.address = signup1Address.getText().toString();
+        ProspectUser.address = signUpAutoCompletePlace.getText().toString();
         ProspectUser.address2 = signup1Address2.getText().toString();
         ProspectUser.city = signup1City.getText().toString();
         ProspectUser.state = signup1State.getSelectedItem().toString();
@@ -304,4 +393,13 @@ public class SignUpStepOneFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handlerThread.quit();
+        }
+    }
 }
+

@@ -166,7 +166,6 @@ dependencies {
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
 
-    //MultiSelect
 
 }
 

@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.moviepass.R;
 import com.moviepass.fragments.ConfirmationSignUpFragment;
 import com.moviepass.fragments.SignUpStepOneFragment;
@@ -28,7 +31,7 @@ import com.moviepass.model.Plan;
  * Created by anubis on 6/15/17.
  */
 
-public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnCreditCardEntered {
+public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFragment.OnCreditCardEntered, PlaceSelectionListener{
 
     String email;
     String password;
@@ -51,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     ImageView zero, one, two, logo;
     FrameLayout frame;
     ImageView[] indicators;
+    SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
 
@@ -94,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         signUpStepTwoFragment = new SignUpStepTwoFragment();
         signUpStepThreeFragment = new SignUpStepThreeFragment();
+        signUpStepOneFragment = new SignUpStepOneFragment();
 
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -156,6 +161,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             }
         });
     }
+
+
 
 
     public static class PlaceholderFragment extends Fragment {
@@ -405,6 +412,16 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onPlaceSelected(Place place) {
+//            signUpStepOneFragment.signUpAutoCompletePlace.
+    }
+
+    @Override
+    public void onError(Status status) {
+
     }
 
 

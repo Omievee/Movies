@@ -71,8 +71,8 @@
             android:padding="@dimen/margin_half">
 
 
-            <EditText
-                android:id="@+id/et_address"
+            <AutoCompleteTextView
+                android:id="@+id/Autocomplete_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"

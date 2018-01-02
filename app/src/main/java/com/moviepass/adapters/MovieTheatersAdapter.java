@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,15 +38,17 @@ import butterknife.ButterKnife;
 public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdapter.ViewHolder> {
     public static final String TAG = "Showtimes/";
     Screening screening;
-    private int selectedEnabledHorz;
-    private int selectedEnabledVert = RecyclerView.NO_POSITION;
+
+    private static int lastCheckedPos = 0;
+
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
-
     public Button showTime;
+
+    int counter;
 
 
     public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
@@ -103,50 +107,53 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.showTimesGrid.setUseDefaultMargins(false);
         holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
+
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-
                 showTime = new Button(root.getContext());
-                showTime.setId(i);
-
+                showTime.setId(counter++);
                 showTime.setText(screening.getStartTimes().get(i));
                 holder.showTimesGrid.addView(showTime);
                 showTime.setTextSize(20);
-
                 showTime.setTextColor(root.getResources().getColor(R.color.white));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(20, 10, 20, 10);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.setMargins(0, 0, 70, 0);
                 showTime.setLayoutParams(params);
-
                 final Button selectedShowtime = showTime;
 
-                selectedShowtime.setSelected(selectedEnabledVert == position);
+
+
 
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
+
                     public void onClick(View view) {
-                        if (screening.getFormat().equals("2D")) {
-                            selectedShowtime.setSelected(true);
-                            selectedEnabledHorz = selectedShowtime.getId();
+                        selectedShowtime.setSelected(true);
 
-                            for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                                if (selectedEnabledHorz != i)
-                                     holder.itemView.findViewById(i).setSelected(false);
-//                                notifyItemChanged(selectedEnabledHorz);
-                                selectedShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
 
-                            }
-//                            selectedEnabledVert = holder.getLayoutPosition();
-                            String showtimeSelection = selectedShowtime.getText().toString();
-                            Log.d(TAG, "onClick: " + showtimeSelection);
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, showtimeSelection);
-
-                        } else {
-                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
-                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
-                        }
+//                        Log.d(TAG, "onClick: 0"+ prevId);
+//                        if (screening.getFormat().equals("2D")) {
+//                            selectedShowtime.setSelected(true);
+//                            selectedEnabledHorz = selectedShowtime.getId();
+//
+//                            for (int i = 0; i < screening.getStartTimes().size(); i++) {
+//                                if (selectedEnabledHorz != i)
+//                                     holder.itemView.findViewById(i).setSelected(false);
+////                                notifyItemChanged(selectedEnabledHorz);
+//                                selectedShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
+//
+//                            }w
+////                            selectedEnabledVert = holder.getLayoutPosition();
+//                            String showtimeSelection = selectedShowtime.getText().toString();
+//                            Log.d(TAG, "onClick: " + showtimeSelection);
+//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, showtimeSelection);
+//
+//                        } else {
+//                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
+//                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
+//                        }
 
                     }
 
@@ -161,6 +168,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 }
             }
         }
+
     }
 
 
@@ -180,26 +188,5 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         super.onViewRecycled(holder);
     }
 
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-    }
 
 }

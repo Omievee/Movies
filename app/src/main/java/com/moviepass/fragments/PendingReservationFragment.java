@@ -113,10 +113,12 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                         noPending.setVisibility(View.VISIBLE);
                     }
 
-                    Log.d(TAG, "title it: " + active.getTitle());
-                    Log.d(TAG, "theater it: " + active.getTheater());
-                    Log.d(TAG, "seat it: " + active.getSeat());
-                    Log.d(TAG, "showtime it: " + active.getShowtime());
+                    Log.d(TAG, "title : " + active.getTitle());
+                    Log.d(TAG, "theater : " + active.getTheater());
+                    Log.d(TAG, "seat : " + active.getSeat());
+                    Log.d(TAG, "showtime : " + active.getShowtime());
+                    Log.d(TAG, "eticket : " + active.geteTicket());
+
                 }
 
             }

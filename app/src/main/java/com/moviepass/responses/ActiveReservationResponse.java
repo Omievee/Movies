@@ -12,6 +12,11 @@ public class ActiveReservationResponse {
     String seat;
     String redemption_code;
     String showtime;
+    String eTicket;
+
+    public String geteTicket() {
+        return eTicket;
+    }
 
     public String getTheater() {
         return theater;
