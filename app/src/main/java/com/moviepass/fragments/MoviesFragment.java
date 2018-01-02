@@ -216,7 +216,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onClick(View v) {
                 PendingReservationFragment fragobj = new PendingReservationFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                fragobj.show(fm, "fragment_history");
+                fragobj.show(fm, "fragment_pendingreservation");
                 reservationsMenu.close(true);
 
             }
