@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -64,7 +62,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     ImageButton signup2ScanCardIcon;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
-    TextView price;
     TextView selectedCreditCardText;
     TextView selectedCreditCardMasked;
     EditText signup2Address;
@@ -73,8 +70,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     EditText signup2City;
     Spinner signup2State;
     EditText signup2Zip;
-    CheckBox terms;
-    //    TextView termsLink;
     Switch signup2SameAddressSwitch;
     LinearLayout fullBillingAddress, fullBillingAddress2;
     View progress;
@@ -129,7 +124,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2NextButton = view.findViewById(R.id.button_next2);
 
         signupYesNo = view.findViewById(R.id.signup_yes_no);
-        signup2CCName = view.findViewById(R.id.SIGNUP2_NAME);
+//        signup2CCName = view.findViewById(R.id.SIGNUP2_NAME);
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
         signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
@@ -155,7 +150,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 if (((Switch) v).isChecked()) {
                     fullBillingAddress.setVisibility(View.GONE);
                     fullBillingAddress2.setVisibility(View.GONE);
-                    signupYesNo.setText("Yes!");
+                    signupYesNo.setText("YES");
                 } else {
                     signupYesNo.setText("No");
                     fullBillingAddress.setVisibility(View.VISIBLE);
@@ -220,7 +215,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     public boolean infoIsGood() {
         if (signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
-                !signup2CC_CVV.getText().toString().isEmpty() && !signup2CCName.getText().toString().isEmpty()) {
+                !signup2CC_CVV.getText().toString().isEmpty()) {
             return true;
         } else if (!signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
                 !signup2CC_CVV.getText().toString().isEmpty() && !signup2CCName.getText().toString().isEmpty()

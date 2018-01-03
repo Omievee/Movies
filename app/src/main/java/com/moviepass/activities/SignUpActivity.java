@@ -131,7 +131,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -296,11 +295,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
     }
 
-    void updateIndicators(int position) {
+    public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
-            indicators[i].setBackgroundResource(
-                    i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
-            );
+            indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
         }
     }
 
