@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/doubledouble_margin_standard"
+            android:layout_marginTop="@dimen/double_margin_standard"
             android:text="@string/fragment_sign_up_step_one_header"
             android:textSize="18sp" />
 
@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/copy"
+            android:layout_marginTop="@dimen/doubledouble_margin_standard"
             android:orientation="vertical"
             android:padding="@dimen/margin_half">
 
@@ -71,20 +72,20 @@
             android:padding="@dimen/margin_half">
 
 
-            <AutoCompleteTextView
-                android:id="@+id/Autocomplete_TextView"
+            <TextView
+                android:id="@+id/first_Addreess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_address"
-                android:inputType="text"
                 android:lines="1"
-                android:maxLength="26"
                 android:maxLines="1"
+                android:paddingStart="5dp"
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textColorHint="@color/gray_icon" />
+                android:textColorHint="@color/gray_icon"
+                android:textSize="20sp" />
 
 
             <EditText
@@ -93,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:backgroundTint="@color/white"
-                android:hint="@string/fragment_sign_up_step_one_address_two"
+                android:hint="Apartment / Suite"
                 android:inputType="text"
                 android:lines="1"
                 android:maxLength="26"
@@ -115,33 +116,50 @@
             android:orientation="horizontal"
             android:padding="@dimen/margin_half">
 
-            <EditText
+            <TextView
                 android:id="@+id/et_city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:backgroundTint="@color/white"
                 android:hint="@string/fragment_sign_up_step_one_city"
+                android:paddingStart="5dp"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:textColorHint="@color/gray_icon"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/state"
+                android:layout_width="0dp"
+                android:layout_height="42dp"
+                android:layout_weight=".3"
+                android:backgroundTint="@color/white"
+                android:hint="State"
                 android:inputType="text"
                 android:lines="1"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textColorHint="@color/gray_icon" />
+                android:textColorHint="@color/gray_icon"
+                android:textSize="20sp" />
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/state"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:layout_height="42dp"
-                android:hint="@string/fragment_sign_up_step_one_state"
-                android:prompt="@string/fragment_sign_up_step_one_state"
-                android:textColor="@color/white"
-                android:textColorHint="@color/gray_icon" />
+            <!--<android.support.v7.widget.AppCompatSpinner-->
+            <!--android:id="@+id/state"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="42dp"-->
+            <!--android:layout_weight=".3"-->
+            <!--android:hint="@string/fragment_sign_up_step_one_state"-->
+            <!--android:prompt="@string/fragment_sign_up_step_one_state"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textColorHint="@color/gray_icon" />-->
 
 
-            <EditText
+            <TextView
                 android:id="@+id/et_zip"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -155,7 +173,8 @@
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textColorHint="@color/gray_icon" />
+                android:textColorHint="@color/gray_icon"
+                android:textSize="20sp" />
 
 
         </LinearLayout>

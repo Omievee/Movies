@@ -125,6 +125,7 @@ public interface Api {
     @GET("/api/v2/auth/restrictions")
     Call<RestrictionsResponse> getRestrictions();
 
+
     @GET("/api/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 

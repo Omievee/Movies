@@ -32,6 +32,7 @@ public class Constants {
     public static final String PREFS_LATITUDE = "lat";
     public static final String PREFS_LONGITUDE = "lng";
     public static final String LOCATION_UPDATE_INTENT_FILTER = "LOCATION_UPDATE_INTENT_FILTER";
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 00;
 
     //Address things
     public static final String CITY_AND_STATE = "city_state";

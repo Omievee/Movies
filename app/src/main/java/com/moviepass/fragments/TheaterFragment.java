@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -32,7 +31,6 @@ import com.moviepass.UserPreferences;
 import com.moviepass.activities.ConfirmationActivity;
 import com.moviepass.activities.SelectSeatActivity;
 import com.moviepass.adapters.TheaterMoviesAdapter;
-import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -54,7 +52,6 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -263,6 +260,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
 
+
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
 
@@ -322,7 +320,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
                         String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
