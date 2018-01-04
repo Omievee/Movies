@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -27,13 +27,14 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
             android:text="@string/activity_sign_up_step_one_get_started"
+            android:textColor="@color/white"
             android:textSize="18sp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/doubledouble_margin_standard"
             android:textColorHint="@color/white">
 
             <EditText
@@ -52,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_standard"
             android:textColorHint="@color/white"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/new_red">
@@ -75,7 +76,7 @@
             android:layout_height="@dimen/basic_button_height"
             android:layout_below="@+id/inputPassword"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/quadruple_margin_standard"
             android:background="@drawable/selectseat_confirm_button"
             android:elevation="5dp"
             android:gravity="center"

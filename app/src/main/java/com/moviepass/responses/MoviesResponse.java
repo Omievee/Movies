@@ -7,10 +7,10 @@ public class MoviesResponse {
     List<Movie> newReleases;
     List<Movie> topBoxOffice;
     List<Movie> comingSoon;
-    List<Movie> featuredFilm;
+    List<Movie> featured;
 
-    public List<Movie> getFeaturedFilm() {
-        return featuredFilm;
+    public List<Movie> getFeatured() {
+        return featured;
     }
 
 

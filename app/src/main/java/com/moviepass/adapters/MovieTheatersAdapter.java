@@ -97,7 +97,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         screening = screeningsArrayList.get(position);
 
 
-
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
         holder.showTimesGrid.setRowCount(1);
@@ -106,7 +105,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.showTimesGrid.setPadding(40, 10, 40, 10);
         holder.showTimesGrid.setUseDefaultMargins(false);
         holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
-
 
 
         if (screening.getStartTimes() != null) {
@@ -125,16 +123,15 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
                 final Button selectedShowtime = showTime;
 
+                Log.d(TAG, "format: " + screening.getTheaterName().toString() + " " + screening.getFormat());
+
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
-
                     public void onClick(View view) {
-                        selectedShowtime.setSelected(true);
                         currentTime = selectedShowtime;
                         if (screening.getFormat().equals("2D")) {
                             showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowtime.getText().toString());
                         } else {
-                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
                             Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
                         }
 
@@ -145,7 +142,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
             }
 
-            if (!screening.getFormat().equals("2D")) {
+            if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     holder.theaterCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                 }
