@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
+import com.moviepass.model.PerformanceInfo;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
@@ -101,12 +104,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter movieTheatersAdapter;
     ScreeningsResponse screeningsResponse;
-    Screening Screening;
 
     ImageView backButton;
     TextView THEATER_ADDRESS_LISTITEM;
     TextView selectedMovieTitle;
-    View ProgressBar;
     ImageButton selectedMovieSynopsis;
 
     ArrayList<Screening> selectedScreeningsList;
@@ -127,7 +128,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @BindView(R.id.SELECTED_SYNOPSIS)
     ImageButton selectedSynopsis;
 
-
+    @BindView(R.id.progress)
+    View ProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,9 +146,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         bottomNavigationView = findViewById(R.id.SELECTED_MOVIE_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        Bundle extras = getIntent().getExtras();
-//        extras.getBundle();
-
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
 
         selectedMoviePoster = findViewById(R.id.SELECTED_MOVIE_IMAGE);
@@ -154,9 +153,23 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         selectedRuntime = findViewById(R.id.SELECTED_RUNTIME);
         fabLoadCard = findViewById(R.id.FAB_LOADCARD);
+        fabLoadCard.setImageDrawable(getDrawable(R.drawable.ticketnavwhite));
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
+        ProgressBar = findViewById(R.id.progress);
+
+        Log.d(TAG, "before: ");
+        ProgressBar.setVisibility(View.VISIBLE);
+        Log.d(TAG, "after: ");
+
+        fabLoadCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MovieActivity.this, "Please select a showtime", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
-        ProgressBar = findViewById(R.id.progress);
 
         backButton = findViewById(R.id.selected_back);
 
@@ -166,7 +179,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         currentLocationTasks();
-        ProgressBar.setVisibility(View.VISIBLE);
 
 
         //FRESCO:
@@ -219,9 +231,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         /* Showtimes RecyclerView */
-
         selectedShowtimesList = new ArrayList<>();
-
 
 
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +247,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 fragobj.setArguments(bundle);
                 FragmentManager fm = getSupportFragmentManager();
                 fragobj.show(fm, "fr_dialogfragment_synopsis");
-
                 Log.d(TAG, "syno: " + movie.getSynopsis());
             }
         });
@@ -280,9 +289,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             is.printStackTrace();
         }
 
-        if (ProgressBar.getVisibility() == View.VISIBLE) {
-            ProgressBar.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -293,54 +299,38 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
 
-    public void onShowtimeClick(int pos, final Screening screening, String showtime) {
-        Animation animShow = AnimationUtils.loadAnimation(this, R.anim.slide_up);
-        final String time = showtime;
+    public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
+
+        movieTheatersAdapter.currentTime.setSelected(true);
 
 
-        if (fabLoadCard.getVisibility() == View.GONE) {
-            fabLoadCard.setVisibility(View.VISIBLE);
-            Log.d(TAG, "made it: ");
-
-            fadeIn(fabLoadCard);
-        } else {
-            fabLoadCard.setVisibility(View.GONE);
-            fadeOut(fabLoadCard);
-        }
-
-        String ticketType = screening.getProvider().ticketType;
-
-        if (ticketType.matches("STANDARD")) {
-            String checkIn = "Check In";
-        } else if (ticketType.matches("E_TICKET")) {
-            String reserve = "Reserve E-Ticket";
-        } else {
-            String selectSeat = "Select Seat";
-        }
-
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isPendingSubscription()) {
-                    showActivateCardDialog(screening, time);
+                    showActivateCardDialog(screening, showtime);
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
-                    reserve(screening, time);
+                    reserve(screening, showtime);
                 }
             }
         });
     }
 
     public void reserve(Screening screening, String showtime) {
-        fabLoadCard.setEnabled(false);
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
+        Log.d(TAG, "showtime: " + showtime);
+        Log.d(TAG, "provider: " + screening.getProvider());
+        Log.d(TAG, "perfominfo: " + screening.getProvider().getPerformanceInfo(showtime));
+
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
-
         //PerformanceInfo
         int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
+
         String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
         int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
@@ -360,8 +350,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
+            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber, tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
@@ -385,7 +374,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
-                    ProgressBar.setVisibility(View.GONE);
+
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
@@ -462,10 +451,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
                         ScreeningsResponse screenings = response.body();
                         if (screenings != null) {
-                            List<Screening> screeningsList = screenings.getScreenings();
 
+                            List<Screening> screeningsList = screenings.getScreenings();
                             if (screeningsList.size() == 0) {
-                                ProgressBar.setVisibility(View.GONE);
                                 Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
                             } else {
 
@@ -501,6 +489,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                             });
 
                                     ProgressBar.setVisibility(View.GONE);
+                                    fabLoadCard.setVisibility(View.VISIBLE);
                                 }
 
                             }
@@ -547,9 +536,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }, 300);
         return true;
     }
-//
-//    else if (itemId == R.id.action_reservations) {
-//        startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
 
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
@@ -579,7 +565,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             supportStartPostponedEnterTransition();
-                            selectedMoviePoster.setImageResource(R.drawable.activity_splash_star);
+                            selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
                             selectedMoviePoster.animate();
                             selectedMovieTitle.setText(movie.getTitle());
                         } else {
@@ -708,23 +694,5 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         alert.show();
     }
 
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
 
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-    }
 }

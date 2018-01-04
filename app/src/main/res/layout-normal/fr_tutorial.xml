@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/quadruple_margin_standard">
 
+
         <TextView
             android:id="@+id/tutorial_body"
             style="@style/TextAppearance.AppCompat.Body1"
@@ -24,13 +25,13 @@
             android:lineSpacingExtra="2dp"
             android:text="Add a long description here about your app's important feature."
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
 
         <ImageView
             android:id="@+id/tutorial_images"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="235dp"
+            android:layout_height="235dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:layout_marginBottom="@dimen/margin_half"
@@ -54,16 +55,6 @@
     </FrameLayout>
 
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom"-->
-    <!--android:layout_marginTop="80dp"-->
-    <!--android:gravity="center"-->
-    <!--android:orientation="vertical">-->
-
-
-    <!--</LinearLayout>-->
 
 </RelativeLayout>
 

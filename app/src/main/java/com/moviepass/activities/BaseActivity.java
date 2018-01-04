@@ -92,7 +92,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             JSONObject attributes = new JSONObject();
             attributes.put("email", UserPreferences.getUserEmail());
             attributes.put("name", UserPreferences.getUserName());
-
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 

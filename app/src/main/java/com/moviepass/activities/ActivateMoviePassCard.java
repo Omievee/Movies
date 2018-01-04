@@ -1,8 +1,14 @@
 package com.moviepass.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +41,10 @@ public class ActivateMoviePassCard extends AppCompatActivity {
     EditText activateDigits;
     ImageView activateScanCardIcon, activateXOut;
     String digits;
+    private final static int REQUEST_CAMERA_CODE = 0;
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +89,15 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                 activateDigits.setVisibility(View.VISIBLE);
             }
         });
-        Log.d(Constants.TAG, "onCreate: ");
+
+//CODE FOR TEST
+//        activateSubmitButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         activateSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -126,12 +144,21 @@ public class ActivateMoviePassCard extends AppCompatActivity {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.M)
     public void scanCard() {
-        Intent scanIntent = new Intent(ActivateMoviePassCard.this, CardIOActivity.class);
 
-        scanIntent.putExtra(CardIOActivity.EXTRA_UNBLUR_DIGITS, 4);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
 
-        startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
+            Intent scanIntent = new Intent(ActivateMoviePassCard.this, CardIOActivity.class);
+            scanIntent.putExtra(CardIOActivity.EXTRA_UNBLUR_DIGITS, 4);
+            startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
+        } else {
+            Intent scanIntent = new Intent(ActivateMoviePassCard.this, CardIOActivity.class);
+            scanIntent.putExtra(CardIOActivity.EXTRA_UNBLUR_DIGITS, 4);
+            startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
+        }
+
     }
 
     @Override
@@ -162,12 +189,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                                 CardActivationResponse cardActivationResponse = response.body();
-
                                 if (cardActivationResponse != null && response.isSuccessful()) {
-
                                     Intent intent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
-                                    Toast.makeText(ActivateMoviePassCard.this, "Card Activated!", Toast.LENGTH_SHORT).show();
-
                                     startActivity(intent);
                                 } else {
                                     Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
@@ -177,7 +200,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                             @Override
                             public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                                 progress.setVisibility(View.GONE);
-                                Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);
+                                Snackbar.make(findViewById(R.id.ACTIVATE), "Server Error; Please try again. ", Snackbar.LENGTH_LONG);
 
 
                             }

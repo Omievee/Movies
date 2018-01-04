@@ -51,6 +51,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     ImageView zero, one, two, logo;
     FrameLayout frame;
     ImageView[] indicators;
+    SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
 
@@ -94,6 +95,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         signUpStepTwoFragment = new SignUpStepTwoFragment();
         signUpStepThreeFragment = new SignUpStepThreeFragment();
+        signUpStepOneFragment = new SignUpStepOneFragment();
 
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -124,7 +126,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
             }
         });
+
+
     }
+
 
     @Override
     protected void onStart() {
@@ -144,7 +149,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
         f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
-        f.confirmCCNum.setText(" - " + ccNum.substring(12, 16) + "]");
+        f.confirmCCNum.setText(" - " + ccNum.substring(12, 16));
         f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,11 +295,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
     }
 
-    void updateIndicators(int position) {
+    public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
-            indicators[i].setBackgroundResource(
-                    i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
-            );
+            indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
         }
     }
 
@@ -319,10 +322,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         return zip;
     }
 
-    public void setPlan(Plan plan) {
-        mPlan = plan;
 
-    }
 
     /* Fragment Three */
 

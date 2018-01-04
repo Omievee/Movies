@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
@@ -57,7 +58,7 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
 
-
+    SimpleDraweeView featuredFilmHeader;
 
     MovieSearchAdapter searchAdapter;
 
@@ -65,14 +66,6 @@ public class MoviesActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-
-        /* TODO: Set up active reservation later
-        viewPager = findViewById(R.id.pager);
-        setupViewPager(viewPager);
-
-        tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-        setupViewPager(viewPager); */
 
         final Toolbar toolbar = findViewById(R.id.MovieToolbar_MAINPAGE);
         setSupportActionBar(toolbar);
@@ -87,7 +80,8 @@ public class MoviesActivity extends BaseActivity {
 
 
 
-        Log.d(TAG, "Status?: " + UserPreferences.getRestrictionSubscriptionStatus());
+
+
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -300,26 +294,6 @@ public class MoviesActivity extends BaseActivity {
 
 
         return true;
-    }
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
     }
 
 }

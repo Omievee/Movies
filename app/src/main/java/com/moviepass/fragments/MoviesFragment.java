@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +35,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.moviepass.Constants;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.ActivateMoviePassCard;
-import com.moviepass.activities.ActivatedCard_TutorialActivity;
 import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
@@ -84,12 +86,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private MoviesComingSoonAdapter mMoviesComingSoonAdapter;
 
     MoviesFragment mMoviesFragment;
-    MoviesResponse mMoviesResponse;
+    MoviesResponse moviesResponse;
     ArrayList<Movie> mMovieArrayList;
 
-    ArrayList<Movie> mMoviesTopBoxOffice;
-    ArrayList<Movie> mMoviesComingSoon;
-    ArrayList<Movie> mMoviesNewReleases;
+    ArrayList<Movie> TopBoxOffice;
+    ArrayList<Movie> comingSoon;
+    ArrayList<Movie> newReleases;
 
     @BindView(R.id.new_releases)
     RecyclerView mNewReleasesRecyclerView;
@@ -100,6 +102,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     @BindView(R.id.MoviePass_HEADER)
     ImageView MovieHeader;
+
+    @BindView(R.id.MAINPAGE_FEATURED)
+    SimpleDraweeView featuredFilmHeader;
+
 //    @BindView(R.id.MOVIES_SEARCH)
 //    SearchView MovieSearch;
 
@@ -120,11 +126,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         Api api;
 
-        mMoviesNewReleases = new ArrayList<>();
-        mMoviesTopBoxOffice = new ArrayList<>();
-        mMoviesComingSoon = new ArrayList<>();
+        newReleases = new ArrayList<>();
+        TopBoxOffice = new ArrayList<>();
+        comingSoon = new ArrayList<>();
 
-        /* New Releases RecyclerView */
+        /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -133,35 +139,35 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mNewReleasesRecyclerView.setItemAnimator(null);
         fadeIn(mNewReleasesRecyclerView);
         reservationsMenu = rootView.findViewById(R.id.FAB_RESERVATION_MENU);
-        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
+        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleases, this);
 
-        /* Top Box Office RecyclerView */
+        /** Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
         mTopBoxOfficeRecyclerView.setItemAnimator(null);
         fadeIn(mTopBoxOfficeRecyclerView);
+        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), TopBoxOffice, this);
 
-        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
-
-        /* Coming Soon RecyclerView */
+        /** Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
         mComingSoonRecyclerView.setItemAnimator(null);
         fadeIn(mComingSoonRecyclerView);
+        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), comingSoon, this);
 
 
-        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
+        progress.setVisibility(View.VISIBLE);
+
 
         loadMovies();
 
-        if (isPendingSubscription()) {
-            showActivateCardDialog();
-        }
+//        if (isPendingSubscription()) {
+//            showActivateCardDialog();
+//        }
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -172,9 +178,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         checkLocationPermission();
+        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionHasActiveCard());
+        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
 
 
-        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+        //Check for active moviepass card or not
+        if (!UserPreferences.getRestrictionHasActiveCard()) {
             Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
             snack.getView().setLayoutParams(params);
@@ -196,7 +205,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
         final FloatingActionButton currentRes = new FloatingActionButton(getActivity());
-        currentRes.setLabelText("Current Reservations");
+        currentRes.setLabelText("Current Reservation");
         currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
         FloatingActionButton historyRes = new FloatingActionButton(getActivity());
         historyRes.setLabelText("Past Reservations");
@@ -211,8 +220,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onClick(View v) {
                 PendingReservationFragment fragobj = new PendingReservationFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                fragobj.show(fm, "fragment_history");
-
+                fragobj.show(fm, "fragment_pendingreservation");
                 reservationsMenu.close(true);
 
             }
@@ -236,7 +244,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (mComingSoonRecyclerView != null) {
             mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
         }
-
     }
 
     @Override
@@ -296,7 +303,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 getActivity(),
                 sharedImageView,
                 ViewCompat.getTransitionName(sharedImageView));
-
         startActivity(movieIntent, options.toBundle());
     }
 
@@ -306,11 +312,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                 if (response.body() != null && response.isSuccessful()) {
-                    mMoviesResponse = response.body();
+                    progress.setVisibility(View.GONE);
+                    moviesResponse = response.body();
 
-                    mMoviesNewReleases.clear();
-                    mMoviesTopBoxOffice.clear();
-                    mMoviesComingSoon.clear();
+                    Log.d(Constants.TAG, "onResponse: " + moviesResponse.getFeatured());
+
+                    newReleases.clear();
+                    TopBoxOffice.clear();
+                    comingSoon.clear();
 
                     if (mMoviesNewReleasesAdapter != null) {
                         mNewReleasesRecyclerView.getRecycledViewPool().clear();
@@ -327,14 +336,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         mMoviesComingSoonAdapter.notifyDataSetChanged();
                     }
 
-                    if (mMoviesResponse != null) {
-                        mMoviesNewReleases.addAll(mMoviesResponse.getNewReleases());
+                    if (moviesResponse != null) {
+                        newReleases.addAll(moviesResponse.getNewReleases());
                         mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
 
-                        mMoviesTopBoxOffice.addAll(mMoviesResponse.getTopBoxOffice());
+                        TopBoxOffice.addAll(moviesResponse.getTopBoxOffice());
                         mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
 
-                        mMoviesComingSoon.addAll(mMoviesResponse.getComingSoon());
+                        comingSoon.addAll(moviesResponse.getComingSoon());
                         mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
 
                     }
@@ -342,7 +351,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
-
                 }
             }
 

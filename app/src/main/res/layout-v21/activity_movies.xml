@@ -39,6 +39,7 @@
         android:layout_width="@dimen/magin_MAX"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:alpha=".7"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/double_margin_standard"
         android:src="@drawable/logo"
@@ -47,21 +48,6 @@
         android:visibility="visible"
         app:layout_collapseMode="pin" />
 
-
-    <!--<com.github.clans.fab.FloatingActionMenu-->
-        <!--android:id="@+id/FAB_RESERVATION_MENU"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
-        <!--android:layout_marginEnd="@dimen/margin_standard"-->
-        <!--android:elevation="5dp"-->
-        <!--android:visibility="visible"-->
-        <!--app:menu_colorNormal="@color/new_red"-->
-        <!--app:fab_colorRipple="@color/white"-->
-        <!--app:fab_size="normal"-->
-        <!--app:menu_icon="@drawable/ticketnavwhite" />-->
 
     <include
         android:id="@+id/navigation"

@@ -1,11 +1,13 @@
 package com.moviepass.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +18,10 @@ import com.moviepass.model.Reservation;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.ActiveReservationResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -24,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by anubis on 7/31/17.
+ * Created by omievee
  */
 
 public class PendingReservationFragment extends BottomSheetDialogFragment {
@@ -32,19 +37,17 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     ArrayList<Movie> historyArrayList;
     ArrayList<Reservation> currentReservationItem;
 
-    ActiveReservationResponse reservationResponse
-
-            ;
+    ActiveReservationResponse reservationResponse;
     public static final String TAG = "found";
 
     View progress;
     TextView pendingReservationTitle, pendingReservationTheater, pendingReservationTime, pendingReservationCode, pendingResrvationCANCELBUTTON;
     SimpleDraweeView pendingPosterImage;
-
+    LinearLayout pendingLayout, noPending;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_pendingreservation, container, false);
         ButterKnife.bind(this, rootView);
 
 
@@ -55,10 +58,9 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
         pendingReservationTime = rootView.findViewById(R.id.PendingRes_Time);
         pendingPosterImage = rootView.findViewById(R.id.PendingRes_IMage);
         pendingResrvationCANCELBUTTON = rootView.findViewById(R.id.PEndingRes_Cancel);
+        pendingLayout = rootView.findViewById(R.id.Pending_Data);
+        noPending = rootView.findViewById(R.id.NoPending);
 
-
-        historyArrayList = new ArrayList<>();
-        currentReservationItem = new ArrayList<>();
 
         return rootView;
     }
@@ -66,6 +68,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        progress.setVisibility(View.VISIBLE);
 
         pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,56 +79,55 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
         });
 
-//        getPendingReservation();
+        getPendingReservation();
 
 
     }
 
-//    private void getHistory() {
-//        historyArrayList.clear();
-////        progress.setVisibility(View.VISIBLE);
-//
-//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-//            @Override
-//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-////                    progress.setVisibility(View.GONE);
-//                    HistoryResponse historyResponse = response.body();
-//                    historyArrayList.addAll(historyResponse.getHistory());
-//
-//                    for (int i = 0; i < historyArrayList.size(); i++) {
-//                        Log.d(TAG, "history: " + historyResponse.getHistory().get(i).getTitle());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-//
-//            }
-//        });
-//
-//    }
 
-//    private void getPendingReservation() {
-//        ActiveReservationResponse activeReservation = new ActiveReservationResponse(reservationResponse.getReservationId());
-//
-//        RestClient.getAuthenticated().getLast(activeReservation).enqueue(new Callback<ActiveReservationResponse>() {
-//            @Override
-//            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-//                    ActiveReservationResponse active = response.body();
-//
-//                    Log.d(TAG, "made it: ");
-////                    Log.d(TAG, "onResponse: " + active.getReservationMovieTitle());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
+    private void getPendingReservation() {
+        RestClient.getAuthenticated().getLast().enqueue(new Callback<ActiveReservationResponse>() {
+            @Override
+            public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    ActiveReservationResponse active = response.body();
+                    progress.setVisibility(View.GONE);
+
+                    if(active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
+                        pendingLayout.setVisibility(View.VISIBLE);
+                        noPending.setVisibility(View.GONE);
+
+                        pendingReservationTitle.setText(active.getTitle());
+                        pendingReservationTheater.setText(active.getTheater());
+                        String reservationTime = active.getShowtime().substring(11, 16);
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+                        try {
+                            Date date = sdf.parse(reservationTime);
+                            pendingReservationTime.setText(sdf.format(date));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    }else {
+                        pendingLayout.setVisibility(View.GONE);
+                        noPending.setVisibility(View.VISIBLE);
+                    }
+
+                    Log.d(TAG, "title : " + active.getTitle());
+                    Log.d(TAG, "theater : " + active.getTheater());
+                    Log.d(TAG, "seat : " + active.getSeat());
+                    Log.d(TAG, "showtime : " + active.getShowtime());
+                    Log.d(TAG, "eticket : " + active.geteTicket());
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Server error; Try again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
 }

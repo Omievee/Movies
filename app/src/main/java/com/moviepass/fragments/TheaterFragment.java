@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -32,7 +31,6 @@ import com.moviepass.UserPreferences;
 import com.moviepass.activities.ConfirmationActivity;
 import com.moviepass.activities.SelectSeatActivity;
 import com.moviepass.adapters.TheaterMoviesAdapter;
-import com.moviepass.listeners.ScreeningPosterClickListener;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -54,7 +52,6 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -180,7 +177,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     @Override
-    public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull String showtime) {
+    public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull final String showtime) {
         final String time = showtime;
 
 
@@ -263,6 +260,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
 
+
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
 
@@ -294,6 +292,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
+
         } else {
             Log.d("ticketType", screening.getProvider().ticketType);
 
@@ -325,13 +324,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
 
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("title", screening.getTitle());
-//                        bundle.putString("theater", screening.getTheaterName());
-//                        bundle.putString("showtime", showtime);
-//                        bundle.putString("confimation", confirmationCode);
-//                        PendingReservationFragment history = new PendingReservationFragment();
-//                        history.setArguments(bundle);
 
                     } else {
                         Log.d("mScreening,", screening.toString());
@@ -340,13 +332,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         showConfirmation(token);
                         Log.d(TAG, "reservation?: " + screening.getTitle() + screening.getTheaterName() + showtime);
 
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString("title", screening.getTitle());
-//                        bundle.putString("theater", screening.getTheaterName());
-//                        bundle.putString("showtime", showtime);
-////                        bundle.putString("confimation", confirmationCode);
-//                        PendingReservationFragment history = new PendingReservationFragment();
-//                        history.setArguments(bundle);
 
                     }
                 } else {
@@ -479,8 +464,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         startActivity(confirmationIntent);
         getActivity().finish();
     }
-
-
 
 
     private void ActivateMoviePassCard() {

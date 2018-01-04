@@ -1,5 +1,6 @@
 package com.moviepass.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -8,14 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.activities.SignUpActivity;
 import com.moviepass.model.ProspectUser;
@@ -26,9 +31,15 @@ import com.moviepass.requests.PersonalInfoRequest;
 import com.moviepass.responses.PersonalInfoResponse;
 import com.moviepass.responses.RegistrationPlanResponse;
 
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by anubis on 7/11/17.
@@ -36,39 +47,30 @@ import retrofit2.Response;
 
 public class SignUpStepOneFragment extends Fragment {
 
-    ArrayAdapter<CharSequence> statesAdapter;
-
     public static final String TAG = "Found0";
     RelativeLayout signup1CoordMain;
-    EditText signup1FirstName;
-    EditText signup1LastName;
-    EditText signup1Address;
-    EditText signup1Address2;
-    EditText signup1City;
-    Spinner signup1State;
-    EditText signup1Zip;
+    public EditText signup1FirstName, signup1LastName;
+    public TextView signUpAddress1, signup1Address2, signup1City, signup1Zip, signup1State;
     TextView signup1NextButton;
     View progress;
-    ImageView indicator0, indicator1, indicator2;
-    String states[] = new String[]{
-            "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL",
-            "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA",
-            "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE",
-            "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI",
-            "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY", "State"
-    };
+
 
     int pos;
     private boolean isViewShown = false;
 
+    public SignUpStepOneFragment() {
+
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_signup_stepone, container, false);
 
         signup1CoordMain = rootView.findViewById(R.id.relative_layout);
         signup1FirstName = rootView.findViewById(R.id.et_first_name);
         signup1LastName = rootView.findViewById(R.id.et_last_name);
-        signup1Address = rootView.findViewById(R.id.et_address);
+        signUpAddress1 = rootView.findViewById(R.id.first_Addreess);
         signup1Address2 = rootView.findViewById(R.id.et_address_two);
         signup1City = rootView.findViewById(R.id.et_city);
         signup1State = rootView.findViewById(R.id.state);
@@ -76,18 +78,74 @@ public class SignUpStepOneFragment extends Fragment {
         signup1NextButton = rootView.findViewById(R.id.button_next);
         progress = getActivity().findViewById(R.id.progress);
 
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
-        statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        signup1State.setAdapter(statesAdapter);
+
+//        statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
+//        statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+//        signup1State.setAdapter(statesAdapter);
 
         if (!isViewShown) {
             setButtonActions();
         }
 
+
+        signUpAddress1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPlaceAutocompleteActivityIntent();
+            }
+        });
+
+
         return rootView;
+    }
+
+    private void callPlaceAutocompleteActivityIntent() {
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+
+            startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+
+                String local = place.getAddress().toString();
+                List<String> localList = Arrays.asList(local.split(",",-1));
+
+                for (int i = 0; i < localList.size(); i++) {
+                    signUpAddress1.setText(localList.get(0));
+                    Log.d(TAG, "onActivityResult: " + localList.get(i));
+                    signup1City.setText(localList.get(1));
+                    String State = localList.get(2).substring(0, 3);
+                    String zip = localList.get(2).substring(4, 9);
+                    signup1State.setText(State);
+                    signup1Zip.setText(zip);
+
+
+                }
+
+
+                Log.i(Constants.TAG, "Place:" + place.toString());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                Log.i(Constants.TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
     }
 
     public static SignUpStepOneFragment newInstance(String text) {
@@ -116,16 +174,6 @@ public class SignUpStepOneFragment extends Fragment {
                                 makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
                             } else if (!isLastNameValid()) {
                                 makeSnackbar(R.string.fragment_sign_up_step_one_valid_last_name);
-                            } else if (!isAddressValid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_address);
-                            } else if (!isAddress2Valid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_address_two);
-                            } else if (!isCityValid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_city);
-                            } else if (!isStateValid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_state);
-                            } else {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_zip);
                             }
                         }
                     }
@@ -137,7 +185,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean canContinue() {
-        if (isFirstNameValid() && isLastNameValid() && isAddressValid() && isAddress2Valid() && isCityValid() && isStateValid() && isZipValid()) {
+        if (isFirstNameValid() && isLastNameValid()) {
             return true;
         } else {
             return false;
@@ -166,48 +214,48 @@ public class SignUpStepOneFragment extends Fragment {
         }
     }
 
-    public boolean isAddressValid() {
-        if (signup1Address.length() > 2 && signup1Address.length() <= 26) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isAddress2Valid() {
-        if ((signup1Address2.length() > 0 && signup1Address2.length() <= 26)
-                || signup1Address2.getText().toString().equals("")) {
-            return true;
-        } else {
-            Log.d("mAddress2", signup1Address2.getText().toString());
-            return false;
-        }
-    }
-
-    public boolean isCityValid() {
-        if (signup1City.length() > 2 && signup1City.length() <= 26 && !signup1City.getText().toString().matches(".*\\d+.*")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isStateValid() {
-        if (!signup1State.getSelectedItem().toString().equals("State")) {
-            Log.d("mStateValue: ", signup1State.getSelectedItem().toString());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isZipValid() {
-        if (signup1Zip.length() == 5) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public boolean isAddressValid() {
+//        if (signUpAddress1.length() > 2 && signUpAddress1.length() <= 26) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    public boolean isAddress2Valid() {
+//        if ((signup1Address2.length() > 0 && signup1Address2.length() <= 26)
+//                || signup1Address2.getText().toString().equals("")) {
+//            return true;
+//        } else {
+//            Log.d("mAddress2", signup1Address2.getText().toString());
+//            return false;
+//        }
+//    }
+//
+//    public boolean isCityValid() {
+//        if (signup1City.length() > 2 && signup1City.length() <= 26 && !signup1City.getText().toString().matches(".*\\d+.*")) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    public boolean isStateValid() {
+//        if (!signup1State.getSelectedItem().toString().equals("State")) {
+//            Log.d("mStateValue: ", signup1State.getSelectedItem().toString());
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+//
+//    public boolean isZipValid() {
+//        if (signup1Zip.length() == 5) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     public void makeSnackbar(int message) {
         final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_INDEFINITE);
@@ -223,10 +271,10 @@ public class SignUpStepOneFragment extends Fragment {
     public void processSignUpInfo() {
         ((SignUpActivity) getActivity()).setFirstName(signup1FirstName.getText().toString());
         ((SignUpActivity) getActivity()).setLastName(signup1LastName.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress(signup1Address.getText().toString());
+        ((SignUpActivity) getActivity()).setAddress(signUpAddress1.getText().toString());
         ((SignUpActivity) getActivity()).setAddress2(signup1Address2.getText().toString());
         ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
-        ((SignUpActivity) getActivity()).setState(signup1State.getSelectedItem().toString());
+        ((SignUpActivity) getActivity()).setState(signup1State.getText().toString());
         ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
 
         String email = ((SignUpActivity) getActivity()).getEmail();
@@ -234,10 +282,10 @@ public class SignUpStepOneFragment extends Fragment {
 
         ProspectUser.firstName = signup1FirstName.getText().toString();
         ProspectUser.lastName = signup1LastName.getText().toString();
-        ProspectUser.address = signup1Address.getText().toString();
+        ProspectUser.address = signUpAddress1.getText().toString();
         ProspectUser.address2 = signup1Address2.getText().toString();
         ProspectUser.city = signup1City.getText().toString();
-        ProspectUser.state = signup1State.getSelectedItem().toString();
+        ProspectUser.state = signup1State.getText().toString();
         ProspectUser.zip = signup1Zip.getText().toString();
 
         PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
@@ -265,7 +313,7 @@ public class SignUpStepOneFragment extends Fragment {
 
                     @Override
                     public void failure(RestError restError) {
-
+                        Toast.makeText(getActivity(), "System Error; Please Try again", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -288,20 +336,12 @@ public class SignUpStepOneFragment extends Fragment {
                         makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
                     } else if (!isLastNameValid()) {
                         makeSnackbar(R.string.fragment_sign_up_step_one_valid_last_name);
-                    } else if (!isAddressValid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_address);
-                    } else if (!isAddress2Valid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_address_two);
-                    } else if (!isCityValid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_city);
-                    } else if (!isStateValid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_state);
-                    } else {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_zip);
                     }
                 }
             }
         });
     }
 
+
 }
+

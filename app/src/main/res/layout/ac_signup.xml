@@ -16,12 +16,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-    <!--<fragment-->
-        <!--android:id="@+id/place_autocomplete_fragment"-->
-        <!--android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center" />-->
+
 
     <ImageView
         android:id="@+id/logo"
@@ -32,6 +27,8 @@
         android:gravity="center_horizontal"
         android:src="@drawable/logo_compact"
         android:tint="@color/new_red" />
+
+
 
     <!-- divider -->
 

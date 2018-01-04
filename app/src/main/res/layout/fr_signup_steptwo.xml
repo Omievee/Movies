@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/a_lot_margin_standard">
+        android:layout_marginTop="120dp">
 
 
         <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_standard">
+            android:padding="@dimen/margin_minimum">
 
 
             <TextView
@@ -48,6 +48,7 @@
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/Scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAYOUT_1"
@@ -64,26 +65,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_half">
-
-
-                        <EditText
-                            android:id="@+id/SIGNUP2_NAME"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/white"
-                            android:hint="Name On Card"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white"
-                            android:textColorHint="@color/gray_icon" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/LAYOUT_3"
@@ -113,11 +94,11 @@
 
                         <ImageButton
                             android:id="@+id/SIGNUP2_SCANCARD_ICON"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
                             android:background="@color/test_blue"
                             android:scaleType="center"
-                            android:src="@drawable/scanicon1" />
+                            android:src="@drawable/scanicon2" />
 
                     </LinearLayout>
 
@@ -127,6 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_half"
                         android:layout_marginStart="@dimen/margin_half"
+                        android:layout_marginTop="@dimen/margin_minimum"
                         android:orientation="horizontal">
 
 
@@ -134,7 +116,7 @@
                             android:id="@+id/SIGNUP2_EXPIRATION"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_half"
+                            android:layout_marginTop="@dimen/margin_minimum"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
                             android:hint="Expiration MM/YY"
@@ -150,7 +132,7 @@
                             android:id="@+id/SIGNUP2_CVV"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_half"
+                            android:layout_marginTop="@dimen/margin_minimum"
                             android:layout_weight="1"
                             android:backgroundTint="@color/white"
                             android:hint="Security code (CVV)"
@@ -171,6 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_2"
+                    android:layout_marginTop="@dimen/margin_half"
                     android:orientation="horizontal"
                     android:padding="@dimen/margin_half">
 
@@ -188,7 +171,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight=".2"
-                        android:text="Yes!"
+                        android:text="YES"
                         android:textSize="18sp" />
 
                     <Switch
@@ -200,6 +183,19 @@
 
 
                 </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/LAYOUT_5"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_half"
+
+                    android:gravity="center_horizontal"
+                    android:text="You will be able to review all details before being charged."
+                    android:textSize="15sp" />
+
 
                 <LinearLayout
                     android:id="@+id/LAYOUT_6"
@@ -251,7 +247,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_6"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:orientation="horizontal"
                     android:padding="@dimen/margin_half"
                     android:visibility="gone">

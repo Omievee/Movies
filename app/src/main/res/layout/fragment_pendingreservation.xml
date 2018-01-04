@@ -8,21 +8,30 @@
     android:gravity="center_horizontal"
     app:cardBackgroundColor="@color/test_black">
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/history_recycler_view"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical"-->
-    <!--android:divider="@null"-->
-    <!--android:dividerHeight="0dp"-->
-    <!--android:focusable="false"-->
-    <!--android:focusableInTouchMode="false"-->
-    <!--android:listSelector="@android:color/transparent"-->
-    <!--tools:listitem="@layout/list_item_history" />-->
     <LinearLayout
+        android:id="@+id/NoPending"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You currently have no active reservations"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:padding="@dimen/margin_half"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Pending_Data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/PendingRes_IMage"
@@ -92,7 +101,8 @@
         android:padding="@dimen/margin_half"
         android:text="Cancel Reservation"
         android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:visibility="invisible" />
 
 
     <include

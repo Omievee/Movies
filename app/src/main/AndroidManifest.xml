@@ -30,7 +30,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ " />
+            android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ" />
 
         <!-- Taplytics -->
         <receiver
@@ -39,10 +39,12 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -72,6 +74,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.geo.API_KEY"-->
+            <!--android:value="AIzaSyC81JfZSGh2har_uezCrmuXyMJssw-uRoA"/>-->
 
         <!-- Facebook -->
         <activity

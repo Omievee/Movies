@@ -1,27 +1,59 @@
 package com.moviepass.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.moviepass.R;
+import com.moviepass.UserLocationManagerFused;
+import com.moviepass.fragments.ETicketFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
+import com.moviepass.model.PerformanceInfo;
+import com.moviepass.model.Reservation;
+import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
+import com.moviepass.model.SelectedSeat;
+import com.moviepass.network.RestCallback;
+import com.moviepass.network.RestClient;
+import com.moviepass.network.RestError;
+import com.moviepass.requests.CheckInRequest;
+import com.moviepass.requests.PerformanceInfoRequest;
+import com.moviepass.requests.SelectedSeatRequest;
+import com.moviepass.requests.TicketInfoRequest;
+import com.moviepass.responses.ReservationResponse;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EticketConfirmation extends BaseActivity {
 
     TextView etixConfirm, etixTitle, etixTheater, etixShowtime, etixSeat;
     SimpleDraweeView etixPoster;
     ImageView etixOnBack;
+    Screening screeningObject;
+    SelectedSeat seatObject;
+    String selectedShowTime;
+    View progressWheel;
 
+
+
+    public static final String SEAT = "seat";
     public static final String TAG = "FOUND IT";
 
     public static final String MOVIE = "movie";
@@ -56,12 +88,47 @@ public class EticketConfirmation extends BaseActivity {
         });
 
 
+        //set details for confirmation page..
+        Intent intent = getIntent();
+        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
+        selectedShowTime = getIntent().getStringExtra(SHOWTIME);
+        seatObject = Parcels.unwrap(getIntent().getParcelableExtra(SEAT));
+        screeningObject = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
+
+        etixTitle.setText(screeningObject.getTitle());
+        etixShowtime.setText(selectedShowTime);
+        etixTheater.setText(screeningObject.getTheaterName());
+        etixSeat.setText("Seat " + seatObject.getSeatName());
+        progressWheel = findViewById(R.id.etixprogress);
+
+        Uri uri = Uri.parse(screeningObject.getImageUrl());
+
+        etixPoster.setImageURI(uri);
+
+//        context = get;
+
         etixConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
+
+                Bundle bundle = new Bundle();
+                //new variables for data objects
+                Screening screening = screeningObject;
+                SelectedSeat seat = new SelectedSeat(seatObject.getSelectedSeatRow(), seatObject.getSelectedSeatColumn(), seatObject.getSeatName());
+
+                bundle.putParcelable(SCREENING, Parcels.wrap(screening));
+                bundle.putString(SHOWTIME, selectedShowTime);
+                bundle.putParcelable(SEAT, Parcels.wrap(seat));
+
+
+                ETicketFragment fragobj = new ETicketFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fr_eticketconfirm_noticedialog");
             }
         });
+
     }
 
 
@@ -111,13 +178,5 @@ public class EticketConfirmation extends BaseActivity {
             }
         }
     }
-
-    private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(EticketConfirmation.this, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
-        finish();
-    }
-
 
 }

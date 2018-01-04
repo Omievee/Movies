@@ -97,9 +97,7 @@ public interface Api {
 
     // TODO
     @GET("rest/v1/reservations/last")
-    Call<ActiveReservationResponse> getLast(@Body ActiveReservationResponse activeReservation);
-
-
+    Call<ActiveReservationResponse> getLast();
 
     @PUT("/api/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
@@ -107,7 +105,6 @@ public interface Api {
     @POST("/api/v3/seats")
     Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater,
                                         @Body PerformanceInfoRequest request);
-
     @POST("/api/v1/reservations/{reservationId}/verification")
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
@@ -124,10 +121,10 @@ public interface Api {
     @GET("/api/v5/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
-
     /* User */
     @GET("/api/v2/auth/restrictions")
     Call<RestrictionsResponse> getRestrictions();
+
 
     @GET("/api/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);

@@ -34,8 +34,7 @@
                     android:animateLayoutChanges="true"
                     android:foreground="@drawable/poster_gradient"
                     android:scaleType="centerInside"
-                    app:layout_collapseMode="parallax"
-                    fresco:overlayImage="@drawable/poster_gradient" />
+                    app:layout_collapseMode="parallax" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -111,8 +110,7 @@
                     android:layout_marginStart="@dimen/margin_half"
                     android:layout_marginTop="@dimen/margin_half"
                     android:src="@drawable/iconback"
-                    android:tint="@color/white"
-                     />
+                    android:tint="@color/white" />
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -223,6 +221,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </android.support.design.widget.CoordinatorLayout>
