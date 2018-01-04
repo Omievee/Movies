@@ -324,7 +324,7 @@
     <!-- XML -->
     <!-- Profile Preferences -->
     <string name="xml_account_preferences_account">Account</string>
-    <string name="xml_account_preferences_account_account_information">Account Information</string>
+    <string name="xml_account_preferences_account_account_information">Account Details</string>
     <string name="xml_account_preferences_account_subscription_information">Subscription Information</string>
     <string name="xml_account_preferences_account_billing_address">Billing Address</string>
     <string name="xml_account_preferences_account_shipping_address">Shipping Address</string>

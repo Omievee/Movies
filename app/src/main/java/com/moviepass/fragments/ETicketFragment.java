@@ -86,7 +86,6 @@ public class ETicketFragment extends DialogFragment {
 
         lockView = rootView.findViewById(R.id.LOCKVIEW);
 
-
         return rootView;
     }
 

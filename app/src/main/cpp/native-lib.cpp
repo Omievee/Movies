@@ -9,7 +9,6 @@ extern "C" {
     Java_com_moviepass_network_RestClient_getEndPoint(JNIEnv *env, jclass) {
         jstring str = env->NewStringUTF("https://android.moviepass.com");
 //        jstring str = env->NewStringUTF("http://stg.moviepass.com");
-
         return str;
     }
 

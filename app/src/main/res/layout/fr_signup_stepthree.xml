@@ -240,9 +240,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-
-                />
+                android:layout_gravity="end" />
 
 
         </RelativeLayout>
@@ -294,6 +292,7 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
+
 
     <include
         android:id="@+id/step3_progress"

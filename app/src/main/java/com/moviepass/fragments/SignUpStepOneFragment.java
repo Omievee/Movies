@@ -252,7 +252,7 @@ public class SignUpStepOneFragment extends Fragment {
 //    public boolean isZipValid() {
 //        if (signup1Zip.length() == 5) {
 //            return true;
-//        } else {
+//        } else {f
 //            return false;
 //        }
 //    }

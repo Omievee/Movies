@@ -40,8 +40,8 @@ public class ProfileActivity extends BaseActivity {
         final ActionBar actionBar = getSupportActionBar();
 
         // Enable the Up button
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Profile");
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitle("Profile");
 
 
         FragmentManager fragmentManager = getFragmentManager();

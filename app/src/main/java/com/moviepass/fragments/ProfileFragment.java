@@ -274,8 +274,8 @@ public class ProfileFragment extends PreferenceFragment {
     public void onResume() {
         super.onResume();
 
-        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Profile");
+//        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        toolbar.setTitle("Profile");
     }
 
     @Override

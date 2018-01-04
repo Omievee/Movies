@@ -52,20 +52,23 @@ public interface Api {
     String HEADER_UUID = "device_uuid";
     String HEADER_UUIDD = "deviceUuid";
 
-    /* Authentication */
+    /* LogIn */
     @POST("/api/v1/auth/login")
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
+    /* ForgotPassword */
     @GET("/api/v1/auth/passwordReset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
 
+    /* FB Login */
     @POST("/api/v1/auth/fb_login")
     Call<User> loginWithFacebook(@Header(HEADER_UUID) String deviceId, @Body FacebookSignInRequest request);
 
-    /* Cards */
+    /* Get Cards? */
     @GET("/api/v4/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
+    /* Activate MP Card */
     @POST("/api/v2/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
@@ -73,9 +76,9 @@ public interface Api {
     @GET("/api/v4/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
+    /* Screenings for Movies (details) */
     @GET("/api/v5/screenings")
-    Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat")
-                                                           double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+    Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
     @POST("/register/create/json")
@@ -84,40 +87,50 @@ public interface Api {
     @GET("/api/v2/register/amc_upgradeability/{zip}")
     Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
 
+    /* Personal Info */
     @POST("/register/create/json")
     Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
 
+    /* SignUp */
     @POST("/api/v1/register/create/mobile")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
-    /* Reservations */
+    /* Check In */
     @POST("/api/v3/reservations")
     Call<ReservationResponse> checkIn(@Body CheckInRequest request);
 
 
-    // TODO
+    /* GET PENDING RESERVATION */
     @GET("rest/v1/reservations/last")
     Call<ActiveReservationResponse> getLast();
 
+    /* Cancel Reservation  */
     @PUT("/api/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
+    /* History  */
+    @GET("/api/v2/reservations")
+    Call<HistoryResponse> getReservations();
+
+    /* Get Seats */
     @POST("/api/v3/seats")
-    Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater,
-                                        @Body PerformanceInfoRequest request);
+    Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Body PerformanceInfoRequest request);
+
+    /* Verify Ticket Photo */
     @POST("/api/v1/reservations/{reservationId}/verification")
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
+    /* lost Ticket */
     @POST("/api/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
-    @GET("/api/v2/reservations")
-    Call<HistoryResponse> getReservations();
+
 
     /* Theaters */
     @GET("/api/v3/theaters/near")
     Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
 
+    /* Theater screenings (details) */
     @GET("/api/v5/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
@@ -125,19 +138,23 @@ public interface Api {
     @GET("/api/v2/auth/restrictions")
     Call<RestrictionsResponse> getRestrictions();
 
-
+    /* user Data */
     @GET("/api/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 
+    /* User Address */
     @PUT("/api/v1/users/{userId}")
     Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
+    /* Billing Update */
     @PUT("/api/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
+    /* FB Link to */
     @POST("/api/v1/users/link_to_facebook")
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
+    /* Cancel Subscription */
     @POST("/api/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 }
