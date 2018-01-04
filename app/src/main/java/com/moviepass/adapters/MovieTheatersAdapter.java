@@ -6,14 +6,9 @@ import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -26,7 +21,6 @@ import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +31,7 @@ import butterknife.ButterKnife;
 
 public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdapter.ViewHolder> {
     public static final String TAG = "Showtimes/";
-    Screening screening;
+    public Screening screening;
 
     private static int lastCheckedPos = 0;
 
@@ -47,8 +41,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
     public Button showTime;
-
-    int counter;
+    public Button currentTime;
+    public int counter;
 
 
     public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
@@ -69,6 +63,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         @BindView(R.id.THEATER_SHOWTIMEGRID)
         GridLayout showTimesGrid;
 
+        @BindView(R.id.progress)
+        View progress;
+
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
@@ -78,7 +75,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
-
+            progress = v.findViewById(R.id.progress);
         }
 
     }
@@ -86,6 +83,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theaters_and_showtimes, parent, false);
+
+
         return new ViewHolder(root);
     }
 
@@ -98,6 +97,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         screening = screeningsArrayList.get(position);
 
 
+
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
         holder.showTimesGrid.setRowCount(1);
@@ -108,10 +108,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
 
+
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new Button(root.getContext());
-                showTime.setId(counter++);
+                showTime.setId(i);
                 showTime.setText(screening.getStartTimes().get(i));
                 holder.showTimesGrid.addView(showTime);
                 showTime.setTextSize(20);
@@ -121,39 +122,21 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.setMargins(0, 0, 70, 0);
                 showTime.setLayoutParams(params);
+
                 final Button selectedShowtime = showTime;
-
-
-
 
                 showTime.setOnClickListener(new View.OnClickListener() {
                     @Override
 
                     public void onClick(View view) {
                         selectedShowtime.setSelected(true);
-
-
-//                        Log.d(TAG, "onClick: 0"+ prevId);
-//                        if (screening.getFormat().equals("2D")) {
-//                            selectedShowtime.setSelected(true);
-//                            selectedEnabledHorz = selectedShowtime.getId();
-//
-//                            for (int i = 0; i < screening.getStartTimes().size(); i++) {
-//                                if (selectedEnabledHorz != i)
-//                                     holder.itemView.findViewById(i).setSelected(false);
-////                                notifyItemChanged(selectedEnabledHorz);
-//                                selectedShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-//
-//                            }w
-////                            selectedEnabledVert = holder.getLayoutPosition();
-//                            String showtimeSelection = selectedShowtime.getText().toString();
-//                            Log.d(TAG, "onClick: " + showtimeSelection);
-//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, showtimeSelection);
-//
-//                        } else {
-//                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
-//                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
-//                        }
+                        currentTime = selectedShowtime;
+                        if (screening.getFormat().equals("2D")) {
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowtime.getText().toString());
+                        } else {
+                            holder.theaterCardViewListItem.setForeground(root.getResources().getDrawable(R.drawable.poster_gradient));
+                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
+                        }
 
                     }
 

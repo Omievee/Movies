@@ -111,8 +111,7 @@
                     android:layout_marginStart="@dimen/margin_half"
                     android:layout_marginTop="@dimen/margin_half"
                     android:src="@drawable/iconback"
-                    android:tint="@color/white"
-                     />
+                    android:tint="@color/white" />
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -203,7 +202,7 @@
         android:layout_marginEnd="@dimen/margin_standard"
         android:animateLayoutChanges="true"
         android:elevation="5dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:fab_colorNormal="@color/new_red"
         app:fab_size="normal"
         app:layout_anchor="@+id/NESTED_SCROLL"
@@ -223,6 +222,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </android.support.design.widget.CoordinatorLayout>

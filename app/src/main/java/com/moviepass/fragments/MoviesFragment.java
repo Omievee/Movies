@@ -126,7 +126,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         mMoviesTopBoxOffice = new ArrayList<>();
         mMoviesComingSoon = new ArrayList<>();
 
-        /* New Releases RecyclerView */
+        /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -137,27 +137,27 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         reservationsMenu = rootView.findViewById(R.id.FAB_RESERVATION_MENU);
         mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), mMoviesNewReleases, this);
 
-        /* Top Box Office RecyclerView */
+        /** Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
         mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
         mTopBoxOfficeRecyclerView.setItemAnimator(null);
         fadeIn(mTopBoxOfficeRecyclerView);
-
         mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), mMoviesTopBoxOffice, this);
 
-        /* Coming Soon RecyclerView */
+        /** Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-
         mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
         mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
         mComingSoonRecyclerView.setItemAnimator(null);
         fadeIn(mComingSoonRecyclerView);
-
-
         mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), mMoviesComingSoon, this);
+
+
+        progress.setVisibility(View.VISIBLE);
+
 
         loadMovies();
 
@@ -310,6 +310,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
                 if (response.body() != null && response.isSuccessful()) {
+
+                    progress.setVisibility(View.GONE);
                     mMoviesResponse = response.body();
 
                     mMoviesNewReleases.clear();
@@ -346,7 +348,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
-
                 }
             }
 
