@@ -1,17 +1,26 @@
 package com.moviepass.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
@@ -25,6 +34,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /*
  * Created by anubis on 9/2/17.
  */
@@ -36,7 +48,8 @@ public class ProfileAccountInformationFragment extends Fragment {
     Switch billingSwitch;
     LinearLayout shippingDetails, bilingDetails, billing2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard,
-            userBillingChange, userNewAddress, userNewAddress2, userNewCity, userNewState, userNewZip;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip;
+    EditText userNewAddress2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +86,12 @@ public class ProfileAccountInformationFragment extends Fragment {
         userPlanCancel = rootView.findViewById(R.id.PLan_cancel);
         userBIllingCard = rootView.findViewById(R.id.USER_BILLING);
         userBillingChange = rootView.findViewById(R.id.Billing_Change);
+
+        userNewAddress = rootView.findViewById(R.id.AddressShipping2);
+        userNewAddress2 = rootView.findViewById(R.id.AddressShipping_EDIT);
+        userNewCity = rootView.findViewById(R.id.city2);
+        userNewState = rootView.findViewById(R.id.state2);
+        userNewZip = rootView.findViewById(R.id.zip2);
 
         return rootView;
     }
@@ -132,6 +151,27 @@ public class ProfileAccountInformationFragment extends Fragment {
                 }
             }
         });
+
+        userPlanCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        userBillingChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        userNewAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callPlaceAutocompleteActivityIntent();
+            }
+        });
     }
 
     private void loadUserInfo() {
@@ -174,11 +214,11 @@ public class ProfileAccountInformationFragment extends Fragment {
                         userPlanPrice.setText(planList.get(1));
 
                     }
-
+                    
                     progress.setVisibility(View.GONE);
-
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine1());
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine2());
+
 
 //                    Preference namePreference = findPreference("name");
 //                    namePreference.setSummary(firstName + " " + lastName);
@@ -193,5 +233,51 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             }
         });
+    }
+
+
+    private void callPlaceAutocompleteActivityIntent() {
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+
+            startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+
+                String address = place.getAddress().toString();
+                List<String> localList = Arrays.asList(address.split(",", -1));
+
+                for (int i = 0; i < localList.size(); i++) {
+
+                    userNewAddress.setText(localList.get(0));
+                    userNewCity.setText(localList.get(1));
+                    String State = localList.get(2).substring(0, 3);
+                    String zip = localList.get(2).substring(4, 9);
+                    userNewState.setText(State);
+                    userNewZip.setText(zip);
+                }
+
+
+                Log.i(Constants.TAG, "Place:" + place.toString());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                Log.i(Constants.TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+
+            }
+        }
     }
 }

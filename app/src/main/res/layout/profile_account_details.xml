@@ -368,7 +368,7 @@
                 android:layout_marginTop="@dimen/margin_standard"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_half"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -508,7 +508,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:layout_marginEnd="55dp"
+                            android:layout_marginEnd="45dp"
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="YES"
                             android:textAlignment="center"
@@ -544,12 +544,12 @@
                             android:textSize="15sp" />
 
                         <TextView
-                            android:id="@+id/AddressShipping-2"
+                            android:id="@+id/AddressShipping2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_standard"
                             android:animateLayoutChanges="true"
-                            android:text="[Shipping]"
+                            android:text="Click to enter a new address"
                             android:textColor="@color/white"
                             android:textSize="18sp" />
 
@@ -568,21 +568,16 @@
                             android:textColor="@color/white"
                             android:textSize="15sp" />
 
-                        <TextView
-                            android:id="@+id/AddressShipping2"
+                        <EditText
+                            android:id="@+id/AddressShipping_EDIT"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_standard"
                             android:animateLayoutChanges="true"
-                            android:text="[Address 2]"
+                            android:hint="Suite / Apt"
                             android:textColor="@color/white"
                             android:textSize="18sp" />
 
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="1dp"
-                            android:animateLayoutChanges="true"
-                            android:background="@color/white" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -631,7 +626,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:text="[City]"
+                                android:hint="City"
+
                                 android:textColor="@color/white"
                                 android:textSize="18sp" />
 
@@ -642,8 +638,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:text="[ST]"
                                 android:textColor="@color/white"
+                                android:hint="State"
                                 android:textSize="18sp" />
 
                             <TextView
@@ -652,8 +648,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:text="Zip"
                                 android:textColor="@color/white"
+                                android:hint="Zip Code"
                                 android:textSize="18sp" />
 
                             <View
