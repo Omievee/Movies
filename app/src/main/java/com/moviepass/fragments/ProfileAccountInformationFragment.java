@@ -47,7 +47,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     Switch billingSwitch;
     LinearLayout shippingDetails, bilingDetails, billing2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
     EditText userNewAddress2;
 
     @Override
@@ -92,6 +92,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userNewState = rootView.findViewById(R.id.state2);
         userNewZip = rootView.findViewById(R.id.zip2);
 
+        userEditShipping = rootView.findViewById(R.id.EDITSHIPPING);
         yesNo = rootView.findViewById(R.id.YesNo);
         return rootView;
     }
@@ -172,6 +173,22 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 callPlaceAutocompleteActivityIntent();
+            }
+        });
+
+        userEditShipping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                        .build();
+
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+                    startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
             }
         });
     }
@@ -279,6 +296,21 @@ public class ProfileAccountInformationFragment extends Fragment {
                 Log.i(Constants.TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
 
+            }
+        } else if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                String address = place.getAddress().toString();
+                List<String> localList = Arrays.asList(address.split(",", -1));
+
+                for (int i = 0; i < localList.size(); i++) {
+                    userAddress.setText(localList.get(0));
+                    userCity.setText(localList.get(1));
+                    String State = localList.get(2).substring(0, 3);
+                    String zip = localList.get(2).substring(4, 9);
+                    userState.setText(State);
+                    userZip.setText(zip);
+                }
             }
         }
     }
