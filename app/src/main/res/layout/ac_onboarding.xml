@@ -112,7 +112,7 @@
                     android:id="@+id/ONBOARDING_JOIN_NOW"
                     android:layout_width="200dp"
                     android:layout_height="@dimen/basic_button_height"
-                    android:background="@drawable/selectseat_confirm_button"
+                    android:background="@drawable/mpbutton1"
                     android:gravity="center_horizontal"
                     android:paddingBottom="@dimen/margin_half"
                     android:paddingLeft="@dimen/doubledouble_margin_standard"

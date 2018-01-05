@@ -78,7 +78,7 @@
             android:layout_below="@+id/input_password"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
-            android:background="@drawable/selectseat_confirm_button"
+            android:background="@drawable/mpbutton1"
             android:elevation="2dp"
             android:text="@string/activity_sign_in_log_in"
 

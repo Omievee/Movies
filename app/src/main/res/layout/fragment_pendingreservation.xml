@@ -97,7 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="@dimen/margin_standard"
-        android:background="@drawable/selectseat_confirm_button"
+        android:background="@drawable/mpbutton1"
         android:padding="@dimen/margin_half"
         android:text="Cancel Reservation"
         android:textColor="@color/white"

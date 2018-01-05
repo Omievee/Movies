@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -128,6 +127,9 @@ public class ProfileFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+
+        /** CURRENT */
 
         Preference billingAddress = findPreference("billing_address");
         billingAddress.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

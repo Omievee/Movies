@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ETIC"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ETIC"
     android:background="@color/test_blue">
 
     <LinearLayout
@@ -122,9 +122,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom |center_horizontal"
         android:layout_marginBottom="75dp"
-        android:background="@drawable/selectseat_confirm_button"
-        android:text="Confirm E-Ticket"
+        android:background="@drawable/mpbutton1"
         android:padding="@dimen/margin_standard"
+        android:text="Confirm E-Ticket"
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />

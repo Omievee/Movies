@@ -3,7 +3,6 @@ package com.moviepass.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
@@ -47,8 +47,8 @@ public class ProfileShippingAddressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile_shipping_address, container, false);
 
-        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Shipping Address");
+//        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        toolbar.setTitle("Shipping Address");
 
         relativeLayout = rootView.findViewById(R.id.relative_layout);
         int padding_in_dp = 16;  // 6 dps
@@ -109,7 +109,7 @@ public class ProfileShippingAddressFragment extends Fragment {
     }
 
     private void loadUserInfo() {
-        int userId = UserPreferences.getUserId();
+        final int userId = UserPreferences.getUserId();
 
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
             @Override
@@ -120,11 +120,13 @@ public class ProfileShippingAddressFragment extends Fragment {
                     String addressLine1 = userInfoResponse.getShippingAddressLine1();
                     String addressLine2 = userInfoResponse.getShippingAddressLine2();
 
+
+                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getBillingCard());
+                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getNextBillingDate());
                     address.setText(addressLine1);
 
                     try {
                         String[] data = addressLine2.split(",");
-
                         city.setText(data[0].trim());
                         int statePosition = statesAdapter.getPosition(data[1].trim());
                         state.setSelection(statePosition);

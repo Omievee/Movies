@@ -244,7 +244,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/margin_standard"
             android:animateLayoutChanges="true"
-            android:background="@drawable/selectseat_confirm_button"
+            android:background="@drawable/mpbutton1"
             android:padding="@dimen/margin_standard"
             android:text="@string/activity_theater_button_action"
             android:textSize="15sp"

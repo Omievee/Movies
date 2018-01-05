@@ -1,7 +1,6 @@
 package com.moviepass.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ public class NoDataActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isOnline()) {
                     finish();
-
                     /* Intent intent = new Intent(NoDataActivity.this, TheatersActivity.class);
                     startActivity(intent); */
                 } else {

@@ -6,33 +6,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.adapters.MovieSearchAdapter;
-import com.moviepass.fragments.PendingReservationFragment;
 import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Movie;
@@ -77,8 +66,6 @@ public class MoviesActivity extends BaseActivity {
 
         FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
         fadeIn(main);
-
-
 
 
 

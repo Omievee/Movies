@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
@@ -23,15 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +41,6 @@ import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Movie;
-import com.moviepass.model.PerformanceInfo;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
@@ -131,6 +123,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @BindView(R.id.progress)
     View ProgressBar;
 
+    TextView filmRating;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +151,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         fabLoadCard.setImageDrawable(getDrawable(R.drawable.ticketnavwhite));
         fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
         ProgressBar = findViewById(R.id.progress);
+
+        filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
         Log.d(TAG, "before: ");
         ProgressBar.setVisibility(View.VISIBLE);
@@ -228,8 +225,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     }
                 });
 
-
-
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
 
@@ -251,6 +246,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             }
         });
 
+        filmRating.setText("Rated: " + movie.getRating());
 
     }
 
@@ -471,7 +467,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                                     selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                                             new ViewTreeObserver.OnPreDrawListener() {
-
                                                 @Override
                                                 public boolean onPreDraw() {
                                                     selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
