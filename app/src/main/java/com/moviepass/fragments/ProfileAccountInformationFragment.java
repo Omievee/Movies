@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -47,7 +46,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     ImageView downArraow, backArrow, downArrow2;
     Switch billingSwitch;
     LinearLayout shippingDetails, bilingDetails, billing2;
-    TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard,
+    TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
             userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip;
     EditText userNewAddress2;
 
@@ -93,6 +92,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userNewState = rootView.findViewById(R.id.state2);
         userNewZip = rootView.findViewById(R.id.zip2);
 
+        yesNo = rootView.findViewById(R.id.YesNo);
         return rootView;
     }
 
@@ -109,7 +109,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
 
         progress.setVisibility(View.VISIBLE);
-
         loadUserInfo();
 
         downArraow.setOnClickListener(new View.OnClickListener() {
@@ -145,8 +144,10 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (billing2.getVisibility() == View.GONE) {
+                    yesNo.setText("NO");
                     billing2.setVisibility(View.VISIBLE);
                 } else {
+                    yesNo.setText("YES");
                     billing2.setVisibility(View.GONE);
                 }
             }
@@ -155,13 +156,14 @@ public class ProfileAccountInformationFragment extends Fragment {
         userPlanCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+
             }
         });
 
         userBillingChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
             }
         });
@@ -214,7 +216,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                         userPlanPrice.setText(planList.get(1));
 
                     }
-                    
+
                     progress.setVisibility(View.GONE);
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine1());
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine2());
@@ -279,5 +281,18 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             }
         }
+    }
+
+    public void creditCardClick() {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//                requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
+//                scan_card();
+//            } else {
+//                scan_card();
+//            }
+//        } else {
+//            scan_card();
+//        }
     }
 }

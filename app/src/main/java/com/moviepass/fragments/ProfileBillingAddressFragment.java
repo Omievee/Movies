@@ -210,7 +210,6 @@ public class ProfileBillingAddressFragment extends Fragment {
         int userId = UserPreferences.getUserId();
 
         AddressChangeRequest request = new AddressChangeRequest(etAddress, etAddress2, etCity, etState, etZip, type);
-
         RestClient.getAuthenticated().updateAddress(userId, request).enqueue( new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {

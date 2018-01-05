@@ -331,6 +331,7 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
                     final String month = String.valueOf(scanResult.expiryMonth);
                     final String year = String.valueOf(scanResult.expiryYear);
 
+
                     update.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
