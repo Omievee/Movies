@@ -20,15 +20,16 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navigation"
-        android:layout_below="@+id/toolbar" >
+        android:layout_above="@id/navigation">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_standard"
-        android:src="@drawable/logo_compact" />
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingEnd="@dimen/margin_standard"
+            android:paddingStart="@dimen/margin_standard"
+            android:paddingTop="@dimen/margin_half"
+            android:src="@drawable/logo_compact" />
 
     </FrameLayout>
 

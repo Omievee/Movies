@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -20,10 +19,8 @@ import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviePassCardAdapter;
 import com.moviepass.model.MoviePassCard;
-import com.moviepass.model.Screening;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.CardActivationRequest;
 import com.moviepass.responses.CardActivationResponse;
@@ -60,13 +57,12 @@ public class ProfileMoviePassCardFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_profile_moviepass_card, container, false);
         ButterKnife.bind(this, rootView);
 
-        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("MoviePass Card");
+//        final Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+//        toolbar.setTitle("MoviePass Card");
 
         moviePassCardArrayList = new ArrayList<>();
 
-        LinearLayoutManager mLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
         moviepassCardRecyclerView = rootView.findViewById(R.id.recycler_view);
         moviepassCardRecyclerView.setLayoutManager(mLayoutManager);
