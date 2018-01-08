@@ -315,7 +315,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     progress.setVisibility(View.GONE);
                     moviesResponse = response.body();
 
-                    Log.d(Constants.TAG, "onResponse: " + moviesResponse.getFeatured());
+                    Log.d(Constants.TAG, "featured: " + moviesResponse.getFeatured());
+                    Log.d(Constants.TAG, "now playing:  " + moviesResponse.getNowPlaying());
 
                     newReleases.clear();
                     TopBoxOffice.clear();

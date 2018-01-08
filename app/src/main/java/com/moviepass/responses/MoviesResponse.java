@@ -9,6 +9,12 @@ public class MoviesResponse {
     List<Movie> comingSoon;
     List<Movie> featured;
 
+    public List<Movie> getNowPlaying() {
+        return nowPlaying;
+    }
+
+    List<Movie> nowPlaying;
+
     public List<Movie> getFeatured() {
         return featured;
     }

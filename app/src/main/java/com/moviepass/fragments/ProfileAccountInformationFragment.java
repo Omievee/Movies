@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -34,6 +35,7 @@ import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
+import com.moviepass.requests.AddressChangeRequest;
 import com.moviepass.responses.UserInfoResponse;
 
 import java.util.Arrays;
@@ -54,13 +56,15 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountInformationFragment extends Fragment {
 
+    UserInfoResponse userInfoResponse;
+    String addressSection, billingSection, creditCardSection;
     View rootView, progress;
     ImageView downArraow, backArrow, downArrow2;
     Switch billingSwitch;
     RelativeLayout userOldBilling;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userSave;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
     ImageButton userScanCard;
 
@@ -121,6 +125,8 @@ public class ProfileAccountInformationFragment extends Fragment {
         userOldBilling = rootView.findViewById(R.id.old_billing);
         newBillingData = rootView.findViewById(R.id.profile_newBilling);
         newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
+
+        userSave = rootView.findViewById(R.id.saveChanges);
         return rootView;
 
 
@@ -139,6 +145,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         progress.setVisibility(View.VISIBLE);
         loadUserInfo();
+
 
         downArraow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +269,14 @@ public class ProfileAccountInformationFragment extends Fragment {
                 }
             }
         });
+//        if (userNewBillingExp.isDirty() || userNewBillingCVV.isDirty() || userNewBillingCC.isDirty() ||
+//                userNewAddress.isDirty() || userNewState.isDirty() || userNewCity.isDirty() || userNewZip.isDirty() ||
+//                userNewAddress2.isDirty() || userCity.isDirty() || userState.isDirty() || userZip.isDirty() || userAddress.isDirty() || userAddress2.isDirty()) {
+//            userSave.setTextColor(getResources().getColor(R.color.new_red));
+//            saveChanges();
+//        }
+
+
     }
 
     private void loadUserInfo() {
@@ -269,7 +284,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                UserInfoResponse userInfoResponse = response.body();
+                userInfoResponse = response.body();
                 if (userInfoResponse != null) {
 
                     // Plan Info
@@ -295,6 +310,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userBIllingCard.setText(userInfoResponse.getBillingCard());
                     userBillingDate.setText(userInfoResponse.getNextBillingDate());
 
+
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
 
                     String plan = userInfoResponse.getPlan();
@@ -308,6 +324,9 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine1());
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine2());
+                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getBillingAddressLine1());
+                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getBillingAddressLine2());
+
 
                 }
             }
@@ -352,6 +371,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     String zip = localList.get(2).substring(4, 9);
                     userNewState.setText(State);
                     userNewZip.setText(zip);
+
+                    saveChanges();
                 }
 
 
@@ -370,12 +391,21 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                 for (int i = 0; i < localList.size(); i++) {
                     userAddress.setText(localList.get(0));
-                    userCity.setText(localList.get(1));
-                    String State = localList.get(2).substring(0, 3);
+                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(0));
+                    userCity.setText(localList.get(1).trim());
+                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(1).trim());
+
+                    String State = localList.get(2).substring(0, 3).trim();
+                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(2));
+
                     String zip = localList.get(2).substring(4, 9);
                     userState.setText(State);
                     userZip.setText(zip);
+
+
                 }
+                saveChanges();
+
             }
         } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
@@ -391,6 +421,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userNewBillingExp.setText(month + " / " + year);
                     userNewBillingCVV.setText(scanResult.cvv);
                 }
+                saveChanges();
+
             }
         }
     }
@@ -414,6 +446,51 @@ public class ProfileAccountInformationFragment extends Fragment {
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
         startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
+    }
+
+    public void saveChanges() {
+        userSave.setTextColor(getResources().getColor(R.color.new_red));
+        userSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progress.setVisibility(View.VISIBLE);
+                int userId = UserPreferences.getUserId();
+
+                if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
+
+                    String newAddress = userAddress.getText().toString();
+                    String newAddress2 = userAddress2.getText().toString();
+                    String newCity = userCity.getText().toString();
+                    String newZip = userZip.getText().toString();
+                    String newState = userState.getText().toString();
+
+                    String type = "shippingAddress";
+
+
+                    AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
+                    RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, Response<Object> response) {
+                            progress.setVisibility(View.GONE);
+
+                            loadUserInfo();
+                            Toast.makeText(getActivity(), "Shipping address has been updated", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+
+                            Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                            Log.d("update BillAdd Error", t.toString());
+                        }
+                    });
+                }
+
+            }
+        });
+
+
     }
 }
 
