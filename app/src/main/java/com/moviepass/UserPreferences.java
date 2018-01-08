@@ -3,7 +3,6 @@ package com.moviepass;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.util.StringBuilderPrinter;
 
 /**
  * Created by ryan on 4/26/17.
@@ -74,7 +73,6 @@ public class UserPreferences {
         editor.putString(Constants.ZIP_CODE, zipCode);
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
-
 
     }
 

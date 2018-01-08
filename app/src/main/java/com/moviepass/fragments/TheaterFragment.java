@@ -344,8 +344,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
 
-                            ActivateMoviePassCard();
-
+                            Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
                         }
                         Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         Log.d(TAG, "toast1: " + jObjError.getString("message"));
@@ -466,8 +465,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
 
-    private void ActivateMoviePassCard() {
 
-    }
 
 }

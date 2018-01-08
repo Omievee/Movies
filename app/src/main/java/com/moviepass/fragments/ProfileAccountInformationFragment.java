@@ -75,8 +75,6 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Nullable
@@ -127,6 +125,8 @@ public class ProfileAccountInformationFragment extends Fragment {
         newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
 
         userSave = rootView.findViewById(R.id.saveChanges);
+
+
         return rootView;
 
 
@@ -277,6 +277,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 //        }
 
 
+
     }
 
     private void loadUserInfo() {
@@ -322,11 +323,11 @@ public class ProfileAccountInformationFragment extends Fragment {
                     }
 
                     progress.setVisibility(View.GONE);
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine1());
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine2());
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getBillingAddressLine1());
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getBillingAddressLine2());
 
+
+
+                    Log.d(Constants.TAG, "onCreateView: " + userAddress.getText().toString());
+                    Log.d(Constants.TAG, "onCreateView: " + userInfoResponse.getShippingAddressLine1());
 
                 }
             }
@@ -371,8 +372,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     String zip = localList.get(2).substring(4, 9);
                     userNewState.setText(State);
                     userNewZip.setText(zip);
-
-                    saveChanges();
                 }
 
 
@@ -404,7 +403,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
 
                 }
-                saveChanges();
 
             }
         } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
@@ -421,10 +419,12 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userNewBillingExp.setText(month + " / " + year);
                     userNewBillingCVV.setText(scanResult.cvv);
                 }
-                saveChanges();
 
             }
         }
+
+        saveChanges();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -454,43 +454,55 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 progress.setVisibility(View.VISIBLE);
-                int userId = UserPreferences.getUserId();
 
-                if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
+                updateShippingAddress();
 
-                    String newAddress = userAddress.getText().toString();
-                    String newAddress2 = userAddress2.getText().toString();
-                    String newCity = userCity.getText().toString();
-                    String newZip = userZip.getText().toString();
-                    String newState = userState.getText().toString();
-
-                    String type = "shippingAddress";
-
-
-                    AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
-                    RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            progress.setVisibility(View.GONE);
-
-                            loadUserInfo();
-                            Toast.makeText(getActivity(), "Shipping address has been updated", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
-                            progress.setVisibility(View.GONE);
-
-                            Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
-                            Log.d("update BillAdd Error", t.toString());
-                        }
-                    });
-                }
 
             }
         });
+    }
 
+    public void updateShippingAddress() {
+        int userId = UserPreferences.getUserId();
+        if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
+
+
+            String newAddress = userAddress.getText().toString();
+            String newAddress2 = userAddress2.getText().toString();
+            String newCity = userCity.getText().toString();
+            String newZip = userZip.getText().toString();
+            String newState = userState.getText().toString();
+
+            String type = "shippingAddress";
+
+
+            AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
+            RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                    progress.setVisibility(View.GONE);
+
+                    loadUserInfo();
+                    Toast.makeText(getActivity(), "Shipping address has been updated", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    progress.setVisibility(View.GONE);
+
+                    Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                    Log.d("update BillAdd Error", t.toString());
+                }
+            });
+        }
+        if (userNewBillingCC.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
+
+        }
+    }
+
+    public void updateBillingAddress (){
 
     }
 }
+
 

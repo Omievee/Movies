@@ -182,8 +182,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
 
 
-        //Check for active moviepass card or not
-        if (!UserPreferences.getRestrictionHasActiveCard()) {
+        //Check for active moviepass subscription or not
+        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
             Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
             snack.getView().setLayoutParams(params);
@@ -201,6 +201,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     startActivity(activateCard);
                 }
             });
+
             reservationsMenu.setVisibility(View.GONE);
         }
 

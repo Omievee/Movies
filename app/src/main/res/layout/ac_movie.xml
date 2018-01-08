@@ -30,7 +30,7 @@
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/SELECTED_MOVIE_IMAGE"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="250dp"
                     android:animateLayoutChanges="true"
                     android:foreground="@drawable/poster_gradient"
                     android:scaleType="centerInside"

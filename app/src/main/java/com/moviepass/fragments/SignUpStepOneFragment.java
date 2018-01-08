@@ -81,10 +81,6 @@ public class SignUpStepOneFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
-//        statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
-//        statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-//        signup1State.setAdapter(statesAdapter);
-
         if (!isViewShown) {
             setButtonActions();
         }
@@ -123,17 +119,16 @@ public class SignUpStepOneFragment extends Fragment {
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
                 String local = place.getAddress().toString();
-                List<String> localList = Arrays.asList(local.split(",",-1));
+                List<String> localList = Arrays.asList(local.split(",", -1));
 
                 for (int i = 0; i < localList.size(); i++) {
                     signUpAddress1.setText(localList.get(0));
                     Log.d(TAG, "onActivityResult: " + localList.get(i));
-                    signup1City.setText(localList.get(1));
-                    String State = localList.get(2).substring(0, 3);
-                    String zip = localList.get(2).substring(4, 9);
+                    signup1City.setText(localList.get(1).trim());
+                    String State = localList.get(2).substring(0, 3).trim();
+                    String zip = localList.get(2).substring(4, 9).trim();
                     signup1State.setText(State);
                     signup1Zip.setText(zip);
-
 
                 }
 
@@ -213,49 +208,6 @@ public class SignUpStepOneFragment extends Fragment {
             return false;
         }
     }
-
-//    public boolean isAddressValid() {
-//        if (signUpAddress1.length() > 2 && signUpAddress1.length() <= 26) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public boolean isAddress2Valid() {
-//        if ((signup1Address2.length() > 0 && signup1Address2.length() <= 26)
-//                || signup1Address2.getText().toString().equals("")) {
-//            return true;
-//        } else {
-//            Log.d("mAddress2", signup1Address2.getText().toString());
-//            return false;
-//        }
-//    }
-//
-//    public boolean isCityValid() {
-//        if (signup1City.length() > 2 && signup1City.length() <= 26 && !signup1City.getText().toString().matches(".*\\d+.*")) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public boolean isStateValid() {
-//        if (!signup1State.getSelectedItem().toString().equals("State")) {
-//            Log.d("mStateValue: ", signup1State.getSelectedItem().toString());
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    public boolean isZipValid() {
-//        if (signup1Zip.length() == 5) {
-//            return true;
-//        } else {f
-//            return false;
-//        }
-//    }
 
     public void makeSnackbar(int message) {
         final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_INDEFINITE);

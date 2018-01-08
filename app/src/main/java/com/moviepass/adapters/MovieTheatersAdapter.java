@@ -9,16 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moviepass.R;
+import com.moviepass.extensions.Selectable;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
-import com.nex3z.togglebuttongroup.button.CircularToggle;
 
 import java.util.ArrayList;
 
@@ -33,10 +36,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public static final String TAG = "Showtimes/";
     public Screening screening;
 
-    public  static int lastCheckedPos = -1;
+    public static int lastCheckedPos = -1;
 
     public String selectedTheater;
     public String check;
+    int counter;
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
@@ -44,8 +48,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     private ShowtimeClickListener showtimeClickListener;
 
     public SingleSelectToggleGroup group;
-    public CircularToggle showTime;
-    public CircularToggle currentTime;
+    //    public Button showTime;
+    public Button currentTime;
 
 
     public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
@@ -53,7 +57,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         this.showtimeClickListener = showtimeClickListener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder  {
+        public static final int SINGLE_SELECTION = 1;
+        Selectable showtimeSelected;
+        AdapterView.OnItemSelectedListener onItemSelectedListener;
+
         @BindView(R.id.THEATERS_LISTITEM)
         CardView theaterCardViewListItem;
         @BindView(R.id.THEATER_NAME_LISTITEM)
@@ -63,10 +71,14 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         @BindView(R.id.THEATER_PIN_LISTITEM)
         ImageView TheaterPin;
         @BindView(R.id.THEATER_SHOWTIMEGRID)
-        SingleSelectToggleGroup showTimesGrid;
+        GridLayout showTimesGrid;
+
+        @BindView(R.id.SHOWTIME_MOVIE)
+        CheckedTextView showTime;
 
         @BindView(R.id.progress)
         View progress;
+
 
         public ViewHolder(View v) {
             super(v);
@@ -76,9 +88,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterName = v.findViewById(R.id.THEATER_NAME_LISTITEM);
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
-            showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
+            showTime = v.findViewById(R.id.SHOWTIME_MOVIE);
             progress = v.findViewById(R.id.progress);
+            showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
         }
+
 
     }
 
@@ -101,37 +115,67 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         holder.TheaterName.setText(screening.getTheaterName());
         holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
-//        holder.showTimesGrid.setRowCount(1);
-//        holder.showTimesGrid.setColumnCount(screening.getStartTimes().size());
+        holder.showTimesGrid.setRowCount(1);
+        holder.showTimesGrid.setColumnCount(screening.getStartTimes().size());
+        holder.showTime.setTextSize(20);
         holder.showTimesGrid.removeAllViews();
         holder.showTimesGrid.setPadding(40, 10, 40, 10);
-//        holder.showTimesGrid.setUseDefaultMargins(false);
-//        holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+        holder.showTimesGrid.setUseDefaultMargins(false);
+        holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
 
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                showTime = new CircularToggle(root.getContext());
-                showTime.setId(i);
-                showTime.setText(screening.getStartTimes().get(i));
-                holder.showTimesGrid.addView(showTime);
-                showTime.setTextSize(20);
-                showTime.setTextColor(root.getResources().getColor(R.color.white));
-                showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                showTime.setPadding(20, 10, 20, 10);
+                holder.showTime.setText(screening.getStartTimes().get(i));
+
+                holder.showTime = new CheckedTextView(root.getContext());
+                holder.showTime.setId(i);
+                holder.showTimesGrid.addView(holder.showTime);
+                holder.showTime.setTextColor(root.getResources().getColor(R.color.white));
+                holder.showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                holder.showTime.setPadding(20, 10, 20, 10);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.setMargins(0, 0, 70, 0);
-                showTime.setLayoutParams(params);
+                holder.showTime.setLayoutParams(params);
 
-
-                final CircularToggle selectedShowtime = showTime;
+//                final Button selectedShowtime = showTime;
 
                 final Screening select = screening;
-                int lastSelectedPosition = lastCheckedPos;
                 lastCheckedPos = holder.getLayoutPosition();
 
-                final SingleSelectToggleGroup lastGroup = holder.showTimesGrid;
-                Log.d(TAG, "onBindViewHolder: " + lastGroup);
+
+                final CheckedTextView selected = holder.showTime;
+
+                holder.showTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: " +        selected.getText().toString());
+                    }
+                });
+
+//                showTime.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        currentTime = selectedShowtime;
+//                        currentTime.setSelected(true);
+//                        Log.d(TAG, "onClick: " + currentTime.isSelected());
+//                        if (screening.getFormat().equals("2D")) {
+//                            if (lastCheckedPos != holder.getLayoutPosition()) {
+//                                // Temporarily save the last selected position
+//                                int lastSelectedPosition = lastCheckedPos;
+//                                // Save the new selected position
+//                                lastCheckedPos = holder.getLayoutPosition();
+//                                // update the previous selected row
+//                                notifyItemChanged(lastSelectedPosition);
+//                            }
+//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), select, selectedShowtime.getText().toString());
+//                        } else {
+//                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//
+//                });
 
 
                 if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
@@ -141,44 +185,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 }
             }
         }
-
-//                showTime.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//                    @Override\
-//                    public <T extends View & Checkable> void onCheckedChanged(T view, boolean isChecked) {
-//                        Log.d(TAG, "onCheckedChanged: " + selectedShowtime.isChecked());
-//                    }
-//                });
-
-//                showTime.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        currentTime = selectedShowtime;
-//                        currentTime.setChecked(true);
-//                        Log.d(TAG, "onClick: " + currentTime.isChecked());
-//
-//
-//
-////                        if (screening.getFormat().equals("2D")) {
-////                            if (lastCheckedPos != holder.getLayoutPosition()) {
-////
-//                                // Temporarily save the last selected position
-//                                int lastSelectedPosition = lastCheckedPos;
-//                                // Save the new selected position
-//                                lastCheckedPos = holder.getLayoutPosition();
-//                                // update the previous selected row
-//                                notifyItemChanged(lastSelectedPosition);
-//                                // select the clicked row
-//                                showTime.setSelected(false);
-////                            }
-////                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), select, selectedShowtime.getText().toString());
-////                        } else {
-////                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
-////                        }
-//
-//                    }
-//
-//                });
-
 
     }
 
@@ -198,6 +204,24 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public void onViewRecycled(ViewHolder holder) {
         super.onViewRecycled(holder);
     }
+
+//
+//    public class SelectableViewHolder extends RecyclerView.ViewHolder {
+//        ShowtimeButton showtimeButton;
+//        AdapterView.OnItemSelectedListener itemSelectedListener;
+//        Selectable item;
+//
+//
+//        public static final int SINGLE_SELECT = 1;
+//
+//        public SelectableViewHolder(View itemView) {
+//            super(itemView);
+//        }
+//
+//
+//
+//
+//    }
 
 
 }

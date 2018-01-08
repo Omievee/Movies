@@ -300,6 +300,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, showtime);
                 } else {
