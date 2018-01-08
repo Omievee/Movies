@@ -296,10 +296,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
-
-        movieTheatersAdapter.currentTime.setSelected(true);
-
-
         fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override

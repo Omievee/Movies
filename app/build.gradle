@@ -166,6 +166,8 @@ dependencies {
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
 
+    //Switch button
+    compile 'com.nex3z:toggle-button-group:1.1.2'
 
 }
 

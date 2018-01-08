@@ -86,7 +86,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             Manifest.permission.CAMERA
     };
 
-    private final static int REQUEST_CAMERA_CODE = 0;
 
     private native static String getSandboxTokenizationKey();
 
@@ -228,7 +227,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     public void creditCardClick() {
         if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
+            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
             scanCard();
 
         } else {
@@ -241,7 +240,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public void scanCard() {
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
 
-        // customize these values to suit your needs.
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
@@ -386,7 +384,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     }
                     signup2CCExp.setText(month + " / " + year);
                     signup2CC_CVV.setText(scanResult.cvv);
-
 
                     signup2NextButton.setOnClickListener(new View.OnClickListener() {
                         @Override

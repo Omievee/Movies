@@ -20,6 +20,8 @@
         android:name="android.hardware.WIFI"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".application.Application"
         android:allowBackup="true"
@@ -39,12 +41,10 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,9 +74,10 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        <!--<meta-data-->
-            <!--android:name="com.google.android.geo.API_KEY"-->
-            <!--android:value="AIzaSyC81JfZSGh2har_uezCrmuXyMJssw-uRoA"/>-->
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.geo.API_KEY" -->
+        <!-- android:value="AIzaSyC81JfZSGh2har_uezCrmuXyMJssw-uRoA"/> -->
+
 
         <!-- Facebook -->
         <activity
@@ -241,7 +242,7 @@
         <activity android:name=".mobile.ETicketConfirmatin" />
         <activity android:name=".activities.EticketConfirmation" />
         <activity android:name=".activities.ActivateMoviePassCard" />
-        <activity android:name=".activities.ActivatedCard_TutorialActivity"></activity>
+        <activity android:name=".activities.ActivatedCard_TutorialActivity" />
     </application>
 
 </manifest>

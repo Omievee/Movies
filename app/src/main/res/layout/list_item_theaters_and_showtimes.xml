@@ -82,7 +82,7 @@
             android:animateLayoutChanges="true">
 
 
-            <GridLayout
+            <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
                 android:id="@+id/THEATER_SHOWTIMEGRID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,12 +91,11 @@
                 android:padding="@dimen/margin_half"
                 android:visibility="visible">
 
-            </GridLayout>
+            </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
 
         </HorizontalScrollView>
 
     </LinearLayout>
-
 
 
 </android.support.v7.widget.CardView>

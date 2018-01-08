@@ -1,16 +1,26 @@
 package com.moviepass.fragments;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -29,6 +39,8 @@ import com.moviepass.responses.UserInfoResponse;
 import java.util.Arrays;
 import java.util.List;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,10 +57,16 @@ public class ProfileAccountInformationFragment extends Fragment {
     View rootView, progress;
     ImageView downArraow, backArrow, downArrow2;
     Switch billingSwitch;
-    LinearLayout shippingDetails, bilingDetails, billing2;
+    RelativeLayout userOldBilling;
+    LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
             userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
-    EditText userNewAddress2;
+    EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
+    ImageButton userScanCard;
+
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +112,18 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         userEditShipping = rootView.findViewById(R.id.EDITSHIPPING);
         yesNo = rootView.findViewById(R.id.YesNo);
+
+        userNewBillingCC = rootView.findViewById(R.id.profile_ccnum);
+        userNewBillingCVV = rootView.findViewById(R.id.profile_cvv);
+        userNewBillingExp = rootView.findViewById(R.id.profile_expiration);
+        userScanCard = rootView.findViewById(R.id.profile_scanicon);
+
+        userOldBilling = rootView.findViewById(R.id.old_billing);
+        newBillingData = rootView.findViewById(R.id.profile_newBilling);
+        newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
         return rootView;
+
+
     }
 
     @Override
@@ -107,7 +136,6 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         progress.setVisibility(View.VISIBLE);
         loadUserInfo();
@@ -161,13 +189,6 @@ public class ProfileAccountInformationFragment extends Fragment {
             }
         });
 
-        userBillingChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
 
         userNewAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +209,56 @@ public class ProfileAccountInformationFragment extends Fragment {
                     startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
                 } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                     // TODO: Handle the error.
+                }
+            }
+        });
+
+        userBillingChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                userOldBilling.setVisibility(View.GONE);
+                newBillingData.setVisibility(View.VISIBLE);
+                newBillingData2.setVisibility(View.VISIBLE);
+
+
+                userScanCard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            creditCardClick();
+                        }
+                    }
+                });
+
+            }
+        });
+
+
+        userNewBillingExp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0 && (s.length() % 3) == 0) {
+                    final char c = s.charAt(s.length() - 1);
+                    if ('/' == c) {
+                        s.delete(s.length() - 1, s.length());
+                    }
+                }
+                if (s.length() > 0 && (s.length() % 3) == 0) {
+                    char c = s.charAt(s.length() - 1);
+                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf("/")).length <= 2) {
+                        s.insert(s.length() - 1, String.valueOf("/"));
+                    }
                 }
             }
         });
@@ -238,12 +309,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine1());
                     Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getShippingAddressLine2());
 
-
-//                    Preference namePreference = findPreference("name");
-//                    namePreference.setSummary(firstName + " " + lastName);
-//
-//                    Preference emailPreference = findPreference("email");
-//                    emailPreference.setSummary(email);
                 }
             }
 
@@ -312,19 +377,43 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userZip.setText(zip);
                 }
             }
+        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
+            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+                userNewBillingCC.setText(scanResult.getRedactedCardNumber());
+
+                if (scanResult.isExpiryValid()) {
+                    String month = String.valueOf(scanResult.expiryMonth);
+                    String year = String.valueOf(scanResult.expiryYear);
+                    if (year.length() > 4) {
+                        year = year.substring(4);
+                    }
+                    userNewBillingExp.setText(month + " / " + year);
+                    userNewBillingCVV.setText(scanResult.cvv);
+                }
+            }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void creditCardClick() {
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//                requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
-//                scan_card();
-//            } else {
-//                scan_card();
-//            }
-//        } else {
-//            scan_card();
-//        }
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+            scan_card();
+        } else {
+            scan_card();
+        }
+    }
+
+
+    public void scan_card() {
+        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+
+        // customize these values to suit your needs.
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
+        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
+        startActivityForResult(scanIntent, Constants.CARD_SCAN_REQUEST_CODE);
     }
 }
+
