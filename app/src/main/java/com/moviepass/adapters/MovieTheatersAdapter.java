@@ -5,14 +5,9 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.moviepass.R;
-import com.moviepass.extensions.Selectable;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
@@ -64,10 +58,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public static final int SINGLE_SELECTION = 1;
-        Selectable showtimeSelected;
-        AdapterView.OnItemSelectedListener onItemSelectedListener;
-
         @BindView(R.id.THEATERS_LISTITEM)
         CardView theaterCardViewListItem;
         @BindView(R.id.THEATER_NAME_LISTITEM)
@@ -78,6 +68,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         ImageView TheaterPin;
         @BindView(R.id.THEATER_SHOWTIMEGRID)
         RadioGroup showTimesGrid;
+        @BindView(R.id.Not_Supported)
+        TextView notSupported;
 
 //        @BindView(R.id.SHOWTIME_MOVIE)
 //        RadioButton showTime;
@@ -94,9 +86,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterName = v.findViewById(R.id.THEATER_NAME_LISTITEM);
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
-//            showTime = v.findViewById(R.id.SHOWTIME_MOVIE);
             progress = v.findViewById(R.id.progress);
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
+            notSupported = v.findViewById(R.id.Not_Supported);
         }
 
 
@@ -122,10 +114,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         HOLDER.TheaterName.setText(screening.getTheaterName());
         HOLDER.TheaterAddressListItem.setText(screening.getTheaterAddress());
-//        HOLDER.showTime.setTextSize(20);
         HOLDER.showTimesGrid.removeAllViews();
         HOLDER.showTimesGrid.setPadding(40, 10, 40, 10);
 
+
+        final Screening selectedScreening = screening;
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -146,68 +139,25 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         RadioButton checked = group.findViewById(checkedId);
-                        if (currentTime != null) {
-                            currentTime.setChecked(false);
+                        if (screening.getFormat().equals("2D")) {
+                            if (currentTime != null) {
+                                currentTime.setChecked(false);
+                            }
+                            currentTime = checked;
+                            String selectedShowTime = currentTime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        } else {
+                            Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
                         }
-                        currentTime = checked;
+
                     }
                 });
-
-//                HOLDER.showTime.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//
-////                        selected.setSelected(true);
-////
-////                        EnabledButton = selected.getId();
-////                        Log.d(TAG, "Enabled button: " + EnabledButton);
-//////
-////                        for (int i = 0; i < screening.getStartTimes().size(); i++) {
-////                            HOLDER.showTime.setId(i);
-////                            if (EnabledButton != HOLDER.showTime.getId()) {
-////                                HOLDER.itemView.findViewById(i).setSelected(false);
-//////                                    // Temporarily save the last selected position
-//////                                    int lastSelectedPosition = lastCheckedPos;
-//////                                    // Save the new selected position
-//////                                    lastCheckedPos = HOLDER.getLayoutPosition();
-//////                                    // update the previous selected row
-//////                                    notifyItemChanged(lastSelectedPosition);
-//////                                }
-////
-////                                Log.d(TAG, "holder ID: " + HOLDER.itemView.findViewById(i).toString());
-////                            }
-////                        }
-//                    }
-//                });
-
-//                showTime.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        currentTime = selectedShowtime;
-//                        currentTime.setSelected(true);
-//                        Log.d(TAG, "onClick: " + currentTime.isSelected());
-//                        if (screening.getFormat().equals("2D")) {
-//                            if (lastCheckedPos != holder.getLayoutPosition()) {
-//                                // Temporarily save the last selected position
-//                                int lastSelectedPosition = lastCheckedPos;
-//                                // Save the new selected position
-//                                lastCheckedPos = holder.getLayoutPosition();
-//                                // update the previous selected row
-//                                notifyItemChanged(lastSelectedPosition);
-//                            }
-//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), select, selectedShowtime.getText().toString());
-//                        } else {
-//                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    }
-//
-//                });
 
 
                 if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        currentTime.setClickable(false);
+                        holder.notSupported.setVisibility(View.VISIBLE);
                         holder.theaterCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
                 }

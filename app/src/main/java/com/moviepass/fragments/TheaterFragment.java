@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -74,7 +69,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
 
-    FloatingActionButton fabLoadCard;
+    com.github.clans.fab.FloatingActionButton fabLoadCard;
 
     BottomNavigationView bottomNavigationView;
     Screening screening = new Screening();
@@ -105,12 +100,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         moviesAtSelectedTheater = new ArrayList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
 
-
-        //ImageViews
-//        backButton = rootView.findViewById(R.id.CINEMA_BACK);
-
-
         fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
+        fabLoadCard.setImageDrawable(getResources().getDrawable(R.drawable.ticketnavwhite));
+        fabLoadCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Please select a showtime", Toast.LENGTH_SHORT).show();
+            }
+        });
         progress = rootView.findViewById(R.id.progress);
 
         eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
@@ -144,15 +142,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
         loadMovies();
-//
-//        backButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(TAG, "backback: ");
-//                getActivity().finish();
-//
-//            }
-//        });
 
         return rootView;
     }
@@ -179,22 +168,22 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     @Override
     public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull final String showtime) {
         final String time = showtime;
+        fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
+//
+//
+//        if (fabLoadCard.getVisibility() == View.GONE) {
+//            fabLoadCard.setVisibility(View.VISIBLE);
+//            fadeIn(fabLoadCard);
+//        } else {
+//            fabLoadCard.setVisibility(View.GONE);
+//            fadeOut(fabLoadCard);
+//        }
 
-
-        if (fabLoadCard.getVisibility() == View.GONE) {
-            fabLoadCard.setVisibility(View.VISIBLE);
-            fadeIn(fabLoadCard);
-        } else {
-            fabLoadCard.setVisibility(View.GONE);
-            fadeOut(fabLoadCard);
-        }
-
-        String ticketType = screening.getProvider().ticketType;
+//        String ticketType = screening.getProvider().ticketType;
 
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: ");
                 if (isPendingSubscription()) {
                     showActivateCardDialog(screening, time);
                 } else {
@@ -229,28 +218,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                 Log.d("t", t.getMessage());
             }
         });
-    }
-
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
     }
 
 
@@ -292,12 +259,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
-
         } else {
             Log.d("ticketType", screening.getProvider().ticketType);
 
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
-
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
@@ -463,8 +428,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         startActivity(confirmationIntent);
         getActivity().finish();
     }
-
-
 
 
 }

@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:background="@color/test_blue">
 
+
         <FrameLayout
             android:id="@+id/FRAME"
             android:layout_width="match_parent"
@@ -30,6 +31,17 @@
                 android:layout_height="200dp"
                 android:foreground="@drawable/poster_gradient"
                 fresco:failureImage="@drawable/film_reel_icon" />
+
+            <TextView
+                android:id="@+id/Not_Supported"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="This screening is not supported"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,6 +59,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
+
                 <ImageButton
                     android:id="@+id/cinema_Synopsis"
                     android:layout_width="40dp"
@@ -57,6 +70,7 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/infoicon2"
                     android:tint="@color/white" />
+
 
             </LinearLayout>
         </FrameLayout>
@@ -69,16 +83,14 @@
             android:layout_gravity="center"
             android:animateLayoutChanges="true">
 
-            <GridLayout
+            <RadioGroup
                 android:id="@+id/SHOWTIMEGRID"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_standard"
-                android:columnOrderPreserved="false"
-                android:paddingEnd="@dimen/double_margin_standard"
-                android:visibility="visible">
+                android:layout_margin="@dimen/margin_half"
+                android:orientation="horizontal">
 
-            </GridLayout>
+            </RadioGroup>
 
 
         </HorizontalScrollView>

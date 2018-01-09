@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +16,9 @@ import android.widget.Toast;
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
-import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserLocationManagerFused;
 import com.moviepass.activities.ConfirmationActivity;
-import com.moviepass.activities.EticketConfirmation;
-import com.moviepass.activities.SelectSeatActivity;
 import com.moviepass.activities.TicketType;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
@@ -235,7 +229,7 @@ public class ETicketFragment extends DialogFragment {
     }
 
     private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SelectedSeat selectedSeat) {
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+            RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();

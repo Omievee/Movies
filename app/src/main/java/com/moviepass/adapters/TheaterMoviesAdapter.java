@@ -4,20 +4,15 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -25,10 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.moviepass.R;
-import com.moviepass.activities.TheaterActivity;
-import com.moviepass.fragments.SynopsisFragment;
 import com.moviepass.listeners.ShowtimeClickListener;
-import com.moviepass.model.Movie;
 import com.moviepass.model.Screening;
 
 import java.util.ArrayList;
@@ -54,7 +46,10 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     List<String> startTimes;
     private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
-    Button showtime;
+    public RadioButton showtime;
+    public RadioButton currentTime;
+    RadioButton checked;
+
     Context context;
 
 
@@ -74,9 +69,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         @BindView(R.id.CINEMAPOSTER)
         SimpleDraweeView cinemaPoster;
         @BindView(R.id.SHOWTIMEGRID)
-        GridLayout showtimeGrid;
+        RadioGroup showtimeGrid;
         @BindView(R.id.cinema_Synopsis)
         ImageButton synopsis;
+        @BindView(R.id.Not_Supported)
+        TextView notSupported;
 
         public ViewHolder(View v) {
             super(v);
@@ -86,6 +83,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
             synopsis = v.findViewById(R.id.cinema_Synopsis);
+            notSupported = v.findViewById(R.id.Not_Supported);
         }
     }
 
@@ -113,82 +111,67 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.cinemaPoster.getHierarchy().setFadeDuration(500);
         holder.cinemaTItle.setText(screening.getTitle());
         holder.cinemaPoster.setController(controller);
-
-
-        //onBind set up Gridlayout & begin a loop to create a new TextView for each showtime in the respective Array.
-        holder.showtimeGrid.setRowCount(1);
-        holder.showtimeGrid.setColumnCount(screening.getStartTimes().size());
         holder.showtimeGrid.removeAllViews();
-
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                showtime = new Button(root.getContext());
+
+                showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 holder.showtimeGrid.addView(showtime);
                 showtime.setTextSize(20);
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
+                showtime.setPadding(30, 20, 30, 20);
                 showtime.setBackground((root.getResources().getDrawable(R.drawable.showtime_background)));
-//                showtime.setBackgroundColor(root.getResources().getColor(R.color.showtime_selector));
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 70, 0);
                 showtime.setLayoutParams(params);
-                final TextView finalShowtime = showtime;
-                finalShowtime.setSelected(false);
-                //onclick on each showtime will execute the showtimelistener & create reservtion if possible.
-                showtime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (screening.getFormat().equals("2D")) {
-//                            if (finalShowtime.isSelected()) {
-//                                finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-//                                finalShowtime.setPadding(50, 50, 50, 50);
-                            String selectedShowTime = finalShowtime.getText().toString();
+                showtime.setButtonDrawable(null);
+                currentTime = showtime;
+                if (screening.getFormat().equals("2D")) {
+                    holder.showtimeGrid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                            checked = group.findViewById(checkedId);
+
+                            if (currentTime != null) {
+                                currentTime.setChecked(false);
+                            }
+                            currentTime = checked;
+                            String selectedShowTime = currentTime.getText().toString();
                             showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-//                                finalShowtime.setSelected(false);
-
-                        } else {
-                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                            finalShowtime.setPadding(50, 50, 50, 50);
-                            Toast.makeText(holder.itemView.getContext(), R.string.Not_Supportd, Toast.LENGTH_SHORT).show();
-//                            finalShowtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background_selected));
-//                            finalShowtime.setPadding(50, 50, 50, 50);
-//                            String selectedShowTime = finalShowtime.getText().toString();
-//                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
-//                            finalShowtime.setSelected(true);
-
-
                         }
+
+                    });
+                }
+
+                if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        currentTime.setClickable(false);
+                        holder.notSupported.setVisibility(View.VISIBLE);
+                        holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
-                });
-
-            }
-
-            if (!screening.getFormat().equals("2D")) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-
                 }
             }
-
-            holder.synopsis.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Movie movie = new Movie();
-                    String synopsis = movie.getSynopsis();
-                    String title = movie.getTitle();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(MOVIE, synopsis);
-                    bundle.putString(TITLE, title);
-
-                    SynopsisFragment fragobj = new SynopsisFragment();
-                    fragobj.setArguments(bundle);
-                    FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-                    fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-                }
-            });
         }
+//                holder.synopsis.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Movie movie = new Movie();
+//                        String synopsis = movie.getSynopsis();
+//                        String title = movie.getTitle();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString(MOVIE, synopsis);
+//                        bundle.putString(TITLE, title);
+//
+//                        SynopsisFragment fragobj = new SynopsisFragment();
+//                        fragobj.setArguments(bundle);
+//                        FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+//                        fragobj.show(fm, "fr_dialogfragment_synopsis");
+//
+//                    }
+//                });
 
     }
 

@@ -10,8 +10,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -42,7 +40,6 @@ import com.moviepass.Constants;
 import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.moviepass.activities.ActivateMoviePassCard;
 import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
@@ -183,27 +180,27 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         //Check for active moviepass subscription or not
-        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
-            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
-            snack.getView().setLayoutParams(params);
-            snack.show();
-            View sb = snack.getView();
-            snack.getView().setHovered(true);
-            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-            snack.setActionTextColor(getResources().getColor(R.color.white));
-            snack.setAction("Ok", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
-                    startActivity(activateCard);
-                }
-            });
-
-            reservationsMenu.setVisibility(View.GONE);
-        }
+//        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+//            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+//            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
+//            snack.getView().setLayoutParams(params);
+//            snack.show();
+//            View sb = snack.getView();
+//            snack.getView().setHovered(true);
+//            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+//            snack.setActionTextColor(getResources().getColor(R.color.white));
+//            snack.setAction("Ok", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
+//                    startActivity(activateCard);
+//                }
+//            });
+//
+//            reservationsMenu.setVisibility(View.GONE);
+//        }
 
         final FloatingActionButton currentRes = new FloatingActionButton(getActivity());
         currentRes.setLabelText("Current Reservation");

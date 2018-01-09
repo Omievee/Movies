@@ -256,8 +256,7 @@ public class SelectSeatActivity extends BaseActivity {
     }
 
 
-    protected void getSeats(final int tribuneTheaterId,
-                            final int theater, PerformanceInfoRequest performanceInfoRequest) {
+    protected void getSeats(final int tribuneTheaterId, final int theater, PerformanceInfoRequest performanceInfoRequest) {
         mProgressWheel.setVisibility(View.VISIBLE);
 
         RestClient.getAuthenticated().getSeats(tribuneTheaterId, String.valueOf(theater), performanceInfoRequest).enqueue(new Callback<SeatingsInfoResponse>() {
@@ -411,8 +410,7 @@ public class SelectSeatActivity extends BaseActivity {
 
 
     //TODO:
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest,
-                                    final String showtime, final SelectedSeat selectedSeat) {
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SelectedSeat selectedSeat) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -422,7 +420,6 @@ public class SelectSeatActivity extends BaseActivity {
                     reserveSeatButton.setEnabled(true);
                     mProgressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
-
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 

@@ -214,16 +214,6 @@
         </LinearLayout>
 
 
-        <HorizontalScrollView
-            android:id="@+id/HorizScroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/Seating_Rubric"
-            android:gravity="center">
-
-
-        </HorizontalScrollView>
-
         <TextView
             android:id="@+id/TipText"
             android:layout_width="wrap_content"
@@ -251,169 +241,162 @@
             android:textStyle="bold" />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:id="@+id/HorizScroll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/Seating_Rubric"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            android:textAlignment="center">
+            android:gravity="center_horizontal">
 
 
-            <GridLayout
-                android:id="@+id/gridSeatsA"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
+                android:layout_marginTop="16dp"
                 android:animateLayoutChanges="true"
-                android:padding="0dp" />
-
-            <GridLayout
-                android:id="@+id/gridSeatsB"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
-
-            <GridLayout
-                android:id="@+id/gridSeatsC"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
-
-            <GridLayout
-                android:id="@+id/gridSeatsD"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                android:orientation="vertical"
+                android:paddingStart="@dimen/margin_standard">
 
 
-            <GridLayout
-                android:id="@+id/gridSeatsE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                <GridLayout
+                    android:id="@+id/gridSeatsA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true" />
 
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                <GridLayout
+                    android:id="@+id/gridSeatsB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
+                <GridLayout
+                    android:id="@+id/gridSeatsC"
+                    android:layout_width="wrap_content"
 
-            <GridLayout
-                android:id="@+id/gridSeatsF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                <GridLayout
+                    android:id="@+id/gridSeatsD"
+                    android:layout_width="wrap_content"
 
-
-            <GridLayout
-                android:id="@+id/gridSeatsG"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
-
-
-            <GridLayout
-                android:id="@+id/gridSeatsH"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
 
-            <GridLayout
-                android:id="@+id/gridSeatsI"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <GridLayout
+                    android:id="@+id/gridSeatsE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
 
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
-
-
-            <GridLayout
-                android:id="@+id/gridSeatsJ"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
 
-            <GridLayout
-                android:id="@+id/gridSeatsK"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                <GridLayout
+                    android:id="@+id/gridSeatsF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
 
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
-
-
-            <GridLayout
-                android:id="@+id/gridSeatsL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
 
-            <GridLayout
-                android:id="@+id/gridSeatsM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="0dp"
-                android:animateLayoutChanges="true"
-                android:columnCount="30"
-                android:padding="0dp" />
+                <GridLayout
+                    android:id="@+id/gridSeatsG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
 
 
-        </LinearLayout>
+                <GridLayout
+                    android:id="@+id/gridSeatsH"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30"
+                    android:padding="0dp" />
+
+
+                <GridLayout
+                    android:id="@+id/gridSeatsI"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
+
+
+                <GridLayout
+                    android:id="@+id/gridSeatsJ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
+
+
+                <GridLayout
+                    android:id="@+id/gridSeatsK"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
+
+
+                <GridLayout
+                    android:id="@+id/gridSeatsL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
+
+
+                <GridLayout
+                    android:id="@+id/gridSeatsM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true"
+                    android:columnCount="30" />
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <include
             android:id="@+id/SEATCHART_NAV"

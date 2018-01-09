@@ -194,7 +194,6 @@
 
 
     <com.github.clans.fab.FloatingActionButton
-
         android:id="@+id/FAB_LOADCARD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
