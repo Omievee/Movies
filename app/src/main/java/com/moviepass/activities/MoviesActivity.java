@@ -212,7 +212,7 @@ public class MoviesActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                finish(); // finish activity
+                finishAffinity(); // finish activity
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

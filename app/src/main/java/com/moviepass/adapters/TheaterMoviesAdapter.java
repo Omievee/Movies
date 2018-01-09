@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,6 +134,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
 
+                            Log.d(TAG, "onCheckedChanged: " );
                             checked = group.findViewById(checkedId);
 
                             if (currentTime != null) {
@@ -155,23 +157,25 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 }
             }
         }
-//                holder.synopsis.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Movie movie = new Movie();
-//                        String synopsis = movie.getSynopsis();
-//                        String title = movie.getTitle();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString(MOVIE, synopsis);
-//                        bundle.putString(TITLE, title);
+
+        //TODO:
+//        holder.synopsis.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Movie movie = new Movie();
+//                String synopsis = movie.getSynopsis();
+//                String title = movie.getTitle();
+//                Bundle bundle = new Bundle();
+//                bundle.putString(MOVIE, synopsis);
+//                bundle.putString(TITLE, title);
 //
-//                        SynopsisFragment fragobj = new SynopsisFragment();
-//                        fragobj.setArguments(bundle);
-//                        FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-//                        fragobj.show(fm, "fr_dialogfragment_synopsis");
+//                SynopsisFragment fragobj = new SynopsisFragment();
+//                fragobj.setArguments(bundle);
+//                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+//                fragobj.show(fm, "fr_dialogfragment_synopsis");
 //
-//                    }
-//                });
+//            }
+//        });
 
     }
 

@@ -256,6 +256,7 @@ public class ProfileFragment extends PreferenceFragment {
 
                 Intent intent = new Intent(getActivity(), LogInActivity.class);
                 startActivity(intent);
+                getActivity().finish();
 
                 return true;
             }
