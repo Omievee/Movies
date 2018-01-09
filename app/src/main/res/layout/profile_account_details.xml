@@ -119,7 +119,6 @@
                 <!--android:textColor="@color/white"-->
                 <!--android:textSize="15sp" />-->
 
-
                 <!--<TextView-->
                 <!--android:id="@+id/USER_PASSWORD"-->
                 <!--android:layout_width="match_parent"-->

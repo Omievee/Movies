@@ -14,14 +14,16 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moviepass.R;
 import com.moviepass.extensions.Selectable;
 import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
-import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public static final String TAG = "Showtimes/";
     public Screening screening;
 
+
+    ViewHolder HOLDER;
+    private int EnabledButton;
+
     public static int lastCheckedPos = -1;
 
     public String selectedTheater;
@@ -47,9 +53,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
 
-    public SingleSelectToggleGroup group;
     //    public Button showTime;
-    public Button currentTime;
+    public RadioButton currentTime = null;
+    public RadioButton showTime;
 
 
     public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
@@ -57,7 +63,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         this.showtimeClickListener = showtimeClickListener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder  {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public static final int SINGLE_SELECTION = 1;
         Selectable showtimeSelected;
         AdapterView.OnItemSelectedListener onItemSelectedListener;
@@ -71,10 +77,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         @BindView(R.id.THEATER_PIN_LISTITEM)
         ImageView TheaterPin;
         @BindView(R.id.THEATER_SHOWTIMEGRID)
-        GridLayout showTimesGrid;
+        RadioGroup showTimesGrid;
 
-        @BindView(R.id.SHOWTIME_MOVIE)
-        CheckedTextView showTime;
+//        @BindView(R.id.SHOWTIME_MOVIE)
+//        RadioButton showTime;
 
         @BindView(R.id.progress)
         View progress;
@@ -88,7 +94,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             TheaterName = v.findViewById(R.id.THEATER_NAME_LISTITEM);
             TheaterAddressListItem = v.findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
             TheaterPin = v.findViewById(R.id.THEATER_PIN_LISTITEM);
-            showTime = v.findViewById(R.id.SHOWTIME_MOVIE);
+//            showTime = v.findViewById(R.id.SHOWTIME_MOVIE);
             progress = v.findViewById(R.id.progress);
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
         }
@@ -108,50 +114,72 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        HOLDER = holder;
 
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
 
 
-        holder.TheaterName.setText(screening.getTheaterName());
-        holder.TheaterAddressListItem.setText(screening.getTheaterAddress());
-        holder.showTimesGrid.setRowCount(1);
-        holder.showTimesGrid.setColumnCount(screening.getStartTimes().size());
-        holder.showTime.setTextSize(20);
-        holder.showTimesGrid.removeAllViews();
-        holder.showTimesGrid.setPadding(40, 10, 40, 10);
-        holder.showTimesGrid.setUseDefaultMargins(false);
-        holder.showTimesGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+        HOLDER.TheaterName.setText(screening.getTheaterName());
+        HOLDER.TheaterAddressListItem.setText(screening.getTheaterAddress());
+//        HOLDER.showTime.setTextSize(20);
+        HOLDER.showTimesGrid.removeAllViews();
+        HOLDER.showTimesGrid.setPadding(40, 10, 40, 10);
 
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-                holder.showTime.setText(screening.getStartTimes().get(i));
-
-                holder.showTime = new CheckedTextView(root.getContext());
-                holder.showTime.setId(i);
-                holder.showTimesGrid.addView(holder.showTime);
-                holder.showTime.setTextColor(root.getResources().getColor(R.color.white));
-                holder.showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                holder.showTime.setPadding(20, 10, 20, 10);
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.setMargins(0, 0, 70, 0);
-                holder.showTime.setLayoutParams(params);
-
-//                final Button selectedShowtime = showTime;
-
+                showTime = new RadioButton(root.getContext());
+                showTime.setText(screening.getStartTimes().get(i));
+                showTime.setTextSize(20);
+                HOLDER.showTimesGrid.addView(showTime);
+                showTime.setTextColor(root.getResources().getColor(R.color.white));
+                showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showTime.setPadding(30, 20, 30, 20);
+                showTime.setButtonDrawable(null);
+                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 0, 50, 0);
+                showTime.setLayoutParams(params);
                 final Screening select = screening;
-                lastCheckedPos = holder.getLayoutPosition();
-
-
-                final CheckedTextView selected = holder.showTime;
-
-                holder.showTime.setOnClickListener(new View.OnClickListener() {
+                currentTime = showTime;
+                HOLDER.showTimesGrid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        Log.d(TAG, "onClick: " +        selected.getText().toString());
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        RadioButton checked = group.findViewById(checkedId);
+                        if (currentTime != null) {
+                            currentTime.setChecked(false);
+                        }
+                        currentTime = checked;
                     }
                 });
+
+//                HOLDER.showTime.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//
+////                        selected.setSelected(true);
+////
+////                        EnabledButton = selected.getId();
+////                        Log.d(TAG, "Enabled button: " + EnabledButton);
+//////
+////                        for (int i = 0; i < screening.getStartTimes().size(); i++) {
+////                            HOLDER.showTime.setId(i);
+////                            if (EnabledButton != HOLDER.showTime.getId()) {
+////                                HOLDER.itemView.findViewById(i).setSelected(false);
+//////                                    // Temporarily save the last selected position
+//////                                    int lastSelectedPosition = lastCheckedPos;
+//////                                    // Save the new selected position
+//////                                    lastCheckedPos = HOLDER.getLayoutPosition();
+//////                                    // update the previous selected row
+//////                                    notifyItemChanged(lastSelectedPosition);
+//////                                }
+////
+////                                Log.d(TAG, "holder ID: " + HOLDER.itemView.findViewById(i).toString());
+////                            }
+////                        }
+//                    }
+//                });
 
 //                showTime.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -196,7 +224,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
     @Override
     public int getItemViewType(int position) {
-
         return position;
     }
 
@@ -204,6 +231,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public void onViewRecycled(ViewHolder holder) {
         super.onViewRecycled(holder);
     }
+
 
 //
 //    public class SelectableViewHolder extends RecyclerView.ViewHolder {
