@@ -192,7 +192,8 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //TODO
+
+
             }
         });
 
@@ -499,6 +500,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         });
     }
 
+    //TODO: save shipping & billing info when changed..
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {

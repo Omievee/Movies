@@ -147,7 +147,7 @@ public interface Api {
     Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
     /* Billing Update */
-    @PUT("/api/v1/users/{userId}")
+    @PUT("/rest/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
     /* FB Link to */
