@@ -157,6 +157,7 @@
                 android:id="@+id/MIDDLE"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/doubledouble_margin_standard"
+                android:animateLayoutChanges="true"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:background="@color/charcoal">
 
@@ -359,6 +360,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/doubledouble_margin_standard"
                 android:layout_marginTop="@dimen/margin_standard"
+                android:animateLayoutChanges="true"
                 android:background="@color/charcoal">
 
 
@@ -392,6 +394,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/margin_half"
                 android:visibility="gone">
+
 
                 <TextView
                     android:layout_width="wrap_content"
