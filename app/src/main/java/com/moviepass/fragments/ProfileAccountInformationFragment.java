@@ -2,6 +2,8 @@ package com.moviepass.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -59,6 +61,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountInformationFragment extends Fragment {
 
+    ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
     View rootView, progress;
@@ -129,7 +132,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
 
         userSave = rootView.findViewById(R.id.saveChanges);
-
+        cancelSubscription = new ProfileCancellationFragment();
 
         return rootView;
 
@@ -192,7 +195,26 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                FragmentManager manager = getActivity().getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.container, cancelSubscription);
+                transaction.addToBackStack(null);
+                transaction.commit();
 
+
+//                    @Override
+//                    public boolean onPreferenceClick(Preference preference) {
+//                        FragmentManager fragmentManager = getActivity().getFragmentManager();
+//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+//                        transaction.replace(R.id.container, profileAccountInformationFragment);
+//                        transaction.addToBackStack(null);
+//                        transaction.commit();
+//
+//                        return true;
+//                    }
+//                });
 
             }
         });

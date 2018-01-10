@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_blue">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/ACCOUNTHEADER"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_half">
+
+            <ImageView
+                android:id="@+id/accountback"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/iconback"
+                android:tint="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Cancel Subscription"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/CANCEL_OPTIONS"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/doubledouble_margin_standard"
+            android:layout_below="@id/ACCOUNTHEADER"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:animateLayoutChanges="true"
+            android:background="@color/charcoal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/margin_half"
+                android:text="Reason for Cancellation"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/cancel_down"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:paddingTop="@dimen/margin_half"
+                android:src="@drawable/icondown"
+                android:textAlignment="center"
+                android:tint="@color/white" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/EDIT_CARD"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/CANCEL_OPTIONS"
+            android:layout_margin="@dimen/margin_standard"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="5dp">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:counterEnabled="true"
+                app:counterMaxLength="250">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Additional comments (optional)"
+                    android:maxLength="250"
+                    android:padding="@dimen/margin_half"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/gray_dark" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:id="@+id/notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/EDIT_CARD"
+            android:layout_margin="@dimen/margin_half"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/cancel_sub_notice"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/exception"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notice"
+            android:layout_marginTop="@dimen/margin_half"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/cancel_sub_exception"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/cancelbutton"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/cancel_sub_active"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+
+        <Button
+            android:id="@+id/cancelbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:background="@drawable/mpbutton1"
+            android:text="Cancel Subscription" />
+
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
