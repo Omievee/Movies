@@ -13,11 +13,12 @@ import com.helpshift.All;
 import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
-import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
-import com.taplytics.sdk.Taplytics;
+
 import io.fabric.sdk.android.Fabric;
+
+//import com.taplytics.sdk.Taplytics;
 
 
 public class Application extends MultiDexApplication {
@@ -49,7 +50,7 @@ public class Application extends MultiDexApplication {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        Taplytics.startTaplytics(this, "setUserAttributes");
+//        Taplytics.startTaplytics(this, "setUserAttributes");
 
         UserPreferences.load(this);
 

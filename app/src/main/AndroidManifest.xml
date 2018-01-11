@@ -171,6 +171,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.ProfileActivity"
+            android:windowSoftInputMode="adjustPan"
+
             android:parentActivityName=".activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data

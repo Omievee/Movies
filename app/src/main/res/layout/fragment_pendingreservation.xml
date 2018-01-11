@@ -91,9 +91,9 @@
 
     </LinearLayout>
 
-    <TextView
+    <Button
         android:id="@+id/PEndingRes_Cancel"
-        android:layout_width="wrap_content"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="@dimen/margin_standard"
@@ -101,8 +101,8 @@
         android:padding="@dimen/margin_half"
         android:text="Cancel Reservation"
         android:textColor="@color/white"
-        android:textSize="15sp"
-        android:visibility="invisible" />
+        android:textSize="13sp"
+        android:visibility="visible" />
 
 
     <include

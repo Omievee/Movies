@@ -75,24 +75,28 @@
             android:layout_height="150dp"
             android:layout_below="@id/CANCEL_OPTIONS"
             android:layout_margin="@dimen/margin_standard"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/white_ish"
             app:cardCornerRadius="5dp">
 
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Additional comments (optional)"
+                android:textColorHint="@color/gray_dark"
                 app:counterEnabled="true"
-                app:counterMaxLength="250">
+                app:counterMaxLength="250"
+                app:counterTextAppearance="@style/MyOverflowText"
+                app:hintEnabled="true">
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Additional comments (optional)"
                     android:maxLength="250"
                     android:padding="@dimen/margin_half"
                     android:textColor="@color/black_text"
-                    android:textColorHint="@color/gray_dark" />
+                    android:textColorHighlight="@color/gray_icon"
+                    android:textColorHint="@color/gray_icon" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -122,7 +126,7 @@
             android:lineSpacingExtra="6dp"
             android:text="@string/cancel_sub_exception"
             android:textAlignment="center"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textStyle="italic" />
 
         <TextView
@@ -140,13 +144,14 @@
 
         <Button
             android:id="@+id/cancelbutton"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/margin_standard"
             android:background="@drawable/mpbutton1"
-            android:text="Cancel Subscription" />
+            android:text="Cancel Subscription"
+            android:textSize="15sp" />
 
 
     </RelativeLayout>

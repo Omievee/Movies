@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -14,10 +13,6 @@ import com.helpshift.support.Support;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.taplytics.sdk.Taplytics;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -45,13 +40,13 @@ public class SettingsFragment extends PreferenceFragment {
 
                 UserPreferences.setPushPermission(pushValue);
 
-                //SEND isChecked TO TAPLYTICS
-                try {
-                    JSONObject attributes = new JSONObject();
-                    attributes.put("pushPermission", pushValue);
-                    Taplytics.setUserAttributes(attributes);
-                } catch (JSONException e){
-                }
+//                //SEND isChecked TO TAPLYTICS
+//                try {
+//                    JSONObject attributes = new JSONObject();
+//                    attributes.put("pushPermission", pushValue);
+//                    Taplytics.setUserAttributes(attributes);
+//                } catch (JSONException e){
+//                }
 
                 Log.d("push", "pushValue: " + UserPreferences.getPushPermission());
 

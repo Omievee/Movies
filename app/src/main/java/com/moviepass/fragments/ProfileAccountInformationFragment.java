@@ -168,10 +168,8 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (shippingDetails.getVisibility() == View.GONE) {
-                    shippingDetails.setVisibility(View.VISIBLE);
                     expand(shippingDetails);
                 } else {
-                    shippingDetails.setVisibility(View.GONE);
                     collapse(shippingDetails);
 
                 }
@@ -183,10 +181,10 @@ public class ProfileAccountInformationFragment extends Fragment {
             public void onClick(View v) {
                 if (billing2.getVisibility() == View.GONE) {
                     yesNo.setText("NO");
-                    billing2.setVisibility(View.VISIBLE);
+                    expand(billing2);
                 } else {
                     yesNo.setText("YES");
-                    billing2.setVisibility(View.GONE);
+                    collapse(billing2);
                 }
             }
         });
@@ -203,18 +201,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 transaction.commit();
 
 
-//                    @Override
-//                    public boolean onPreferenceClick(Preference preference) {
-//                        FragmentManager fragmentManager = getActivity().getFragmentManager();
-//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-//                        transaction.replace(R.id.container, profileAccountInformationFragment);
-//                        transaction.addToBackStack(null);
-//                        transaction.commit();
-//
-//                        return true;
-//                    }
-//                });
 
             }
         });
@@ -267,12 +253,10 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (bilingDetails.getVisibility() == View.GONE) {
-                    bilingDetails.setVisibility(View.VISIBLE);
                     expand(bilingDetails);
                     userBIllingCard.hasFocus();
                 } else {
                     collapse(bilingDetails);
-                    bilingDetails.setVisibility(View.GONE);
                 }
             }
         });
