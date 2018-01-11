@@ -105,7 +105,7 @@ public interface Api {
     Call<ActiveReservationResponse> getLast();
 
     /* Cancel Reservation  */
-    @PUT("/api/v1/reservations")
+    @PUT("/rest/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
     /* History  */
@@ -139,7 +139,7 @@ public interface Api {
     Call<RestrictionsResponse> getRestrictions();
 
     /* user Data */
-    @GET("/api/v1/users/{userId}")
+    @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 
     /* User Address */
@@ -155,6 +155,6 @@ public interface Api {
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
     /* Cancel Subscription */
-    @POST("/api/v1/subscriptions/cancellation")
+    @POST("/rest/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 }

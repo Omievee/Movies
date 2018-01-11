@@ -63,6 +63,7 @@
     </string-array>
 
     <integer-array name="cancel_reason_codes">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>

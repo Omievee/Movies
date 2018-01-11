@@ -166,8 +166,9 @@ dependencies {
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
 
-    //Radio button
-    compile 'com.github.ceryle:RadioRealButton:v2.1.1'
+
+    //Spinner
+    compile 'com.jaredrummler:material-spinner:1.2.4'
 
 }
 

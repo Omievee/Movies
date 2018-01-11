@@ -20,7 +20,7 @@
             android:padding="@dimen/margin_half">
 
             <ImageView
-                android:id="@+id/accountback"
+                android:id="@+id/cancelBack"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/iconback"
@@ -38,42 +38,29 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/CANCEL_OPTIONS"
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/SPINNER"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/doubledouble_margin_standard"
+            android:layout_height="wrap_content"
             android:layout_below="@id/ACCOUNTHEADER"
             android:layout_marginTop="@dimen/double_margin_standard"
-            android:animateLayoutChanges="true"
-            android:background="@color/charcoal">
+            android:hint="Reason for Cancellation"
+            android:textSize="20sp"
+            app:ms_arrow_tint="@color/white"
+            app:ms_background_color="@color/charcoal"
+            app:ms_hint_color="@color/white"
+            app:ms_text_color="@color/white">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/margin_half"
-                android:text="Reason for Cancellation"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
 
-            <ImageView
-                android:id="@+id/cancel_down"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:paddingTop="@dimen/margin_half"
-                android:src="@drawable/icondown"
-                android:textAlignment="center"
-                android:tint="@color/white" />
-
-        </RelativeLayout>
+        </com.jaredrummler.materialspinner.MaterialSpinner>
 
         <android.support.v7.widget.CardView
             android:id="@+id/EDIT_CARD"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_below="@id/CANCEL_OPTIONS"
+
+            android:layout_below="@id/SPINNER"
             android:layout_margin="@dimen/margin_standard"
             app:cardBackgroundColor="@color/white_ish"
             app:cardCornerRadius="5dp">
@@ -81,7 +68,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:hint="Additional comments (optional)"
                 android:textColorHint="@color/gray_dark"
                 app:counterEnabled="true"
@@ -90,6 +77,7 @@
                 app:hintEnabled="true">
 
                 <EditText
+                    android:id="@+id/CancelComments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="250"
@@ -155,5 +143,13 @@
 
 
     </RelativeLayout>
+
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </android.support.design.widget.CoordinatorLayout>
