@@ -1,11 +1,6 @@
 package com.moviepass.fragments;
 
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.icu.text.DateFormat;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -22,7 +17,6 @@ import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
-import com.moviepass.requests.CancellationRequest;
 import com.moviepass.responses.UserInfoResponse;
 
 import java.text.SimpleDateFormat;
@@ -143,41 +137,41 @@ public class ProfileCancellationFragment extends Fragment {
 
                     final String lastActiveDay = nextBillingDate.toString();
 
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-                    View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
-
-                    alert.setView(layout);
-                    alert.setTitle(R.string.fragment_profile_cancellation_fragment_header);
-                    alert.setMessage("The last day your account will remain active is on: " + lastActiveDay);
-
-                    alert.setPositiveButton("Cancel Subscription", new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.N)
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            Calendar c = Calendar.getInstance();
-                            DateFormat df = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
-                            String requestDate = df.format(c.getTime());
-
-                            String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
-                            int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
-                            mapReasons = new HashMap<>();
-
-                            for (int i = 0; i < cancelReasons.length - 1; i++) {
-                                mapReasons.put(cancelReasons[i], cancelCodes[i]);
-                            }
-
-                            cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
-                            String angryComments = cancelComments.getText().toString();
-
-
-                            CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
-
-
-                        }
-                    });
-                    alert.show();
+//                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+//
+//                    View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
+//
+//                    alert.setView(layout);
+//                    alert.setTitle(R.string.fragment_profile_cancellation_fragment_header);
+//                    alert.setMessage("The last day your account will remain active is on: " + lastActiveDay);
+//
+//                    alert.setPositiveButton("Cancel Subscription", new DialogInterface.OnClickListener() {
+//                        @TargetApi(Build.VERSION_CODES.N)
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                            Calendar c = Calendar.getInstance();
+//                            DateFormat df = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+//                            String requestDate = df.format(c.getTime());
+//
+//                            String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
+//                            int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
+//                            mapReasons = new HashMap<>();
+//
+//                            for (int i = 0; i < cancelReasons.length - 1; i++) {
+//                                mapReasons.put(cancelReasons[i], cancelCodes[i]);
+//                            }
+//
+//                            cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
+//                            String angryComments = cancelComments.getText().toString();
+//
+//
+//                            CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
+//
+//
+//                        }
+//                    });
+//                    alert.show();
 
                 }
             }
