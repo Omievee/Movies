@@ -15,13 +15,12 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.moviepass.Constants;
 import com.moviepass.R;
-import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
-import com.moviepass.responses.UserInfoResponse;
+import com.moviepass.requests.CancellationRequest;
+import com.moviepass.responses.CancellationResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
@@ -111,77 +110,46 @@ public class ProfileCancellationFragment extends Fragment {
 
     }
 
+
     public void cancelFlow() {
-        int userId = UserPreferences.getUserId();
-        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String requestDate = df.format(c.getTime());
+
+        String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
+        int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
+        mapReasons = new HashMap<>();
+
+        for (int i = 0; i < cancelReasons.length - 1; i++) {
+            mapReasons.put(cancelReasons[i], cancelCodes[i]);
+        }
+
+        cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
+        String angryComments = cancelComments.getText().toString();
+
+
+        CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
+        RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
             @Override
-            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                UserInfoResponse userInfoUpdateResponse = response.body();
-                if (userInfoUpdateResponse != null) {
-                    progress.setVisibility(View.GONE);
-                    String nextBillingDate = userInfoUpdateResponse.getNextBillingDate();
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                    try {
-                        Date date = format.parse(nextBillingDate);
-
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(date);
-                        cal.add(Calendar.DATE, -1);
-                        Date lastDay = cal.getTime();
-                        format = new SimpleDateFormat("MM/dd/yyyy");
-                        nextBillingDate = format.format(lastDay);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+            public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
+                CancellationResponse cancellationResponse = response.body();
+                progress.setVisibility(View.GONE);
+                if (cancellationResponse != null && response.isSuccessful()) {
+                    if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
+                        Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
                     }
-
-                    final String lastActiveDay = nextBillingDate.toString();
-
-//                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-//
-//                    View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
-//
-//                    alert.setView(layout);
-//                    alert.setTitle(R.string.fragment_profile_cancellation_fragment_header);
-//                    alert.setMessage("The last day your account will remain active is on: " + lastActiveDay);
-//
-//                    alert.setPositiveButton("Cancel Subscription", new DialogInterface.OnClickListener() {
-//                        @TargetApi(Build.VERSION_CODES.N)
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//
-//                            Calendar c = Calendar.getInstance();
-//                            DateFormat df = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
-//                            String requestDate = df.format(c.getTime());
-//
-//                            String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
-//                            int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
-//                            mapReasons = new HashMap<>();
-//
-//                            for (int i = 0; i < cancelReasons.length - 1; i++) {
-//                                mapReasons.put(cancelReasons[i], cancelCodes[i]);
-//                            }
-//
-//                            cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
-//                            String angryComments = cancelComments.getText().toString();
-//
-//
-//                            CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
-//
-//
-//                        }
-//                    });
-//                    alert.show();
-
                 }
             }
 
+
             @Override
-            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+            public void onFailure(Call<CancellationResponse> call, Throwable t) {
 
             }
         });
-    }
+
 //        RestClient.getAuthenticated().getUserData(RestClient.userId).enqueue(new Callback<UserInfoResponse>() {
 //            @Override
 //            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
@@ -311,4 +279,77 @@ public class ProfileCancellationFragment extends Fragment {
 //        });
 //        snackbar.show();
 //    }
+    }
 }
+
+//
+//    int userId = UserPreferences.getUserId();
+//        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+//        @Override
+//        public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+//            UserInfoResponse userInfoUpdateResponse = response.body();
+//            if (userInfoUpdateResponse != null) {
+//                progress.setVisibility(View.GONE);
+//                String nextBillingDate = userInfoUpdateResponse.getNextBillingDate();
+//                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//
+//                try {
+//                    Date date = format.parse(nextBillingDate);
+//
+//                    Calendar cal = Calendar.getInstance();
+//                    cal.setTime(date);
+//                    cal.add(Calendar.DATE, -1);
+//                    Date lastDay = cal.getTime();
+//                    format = new SimpleDateFormat("MM/dd/yyyy");
+//                    nextBillingDate = format.format(lastDay);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//
+//                final String lastActiveDay = nextBillingDate.toString();
+//
+////                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+////
+////                    View layout = View.inflate(getActivity(), R.layout.dialog_generic, null);
+////
+////                    alert.setView(layout);
+////                    alert.setTitle(R.string.fragment_profile_cancellation_fragment_header);
+////                    alert.setMessage("The last day your account will remain active is on: " + lastActiveDay);
+////
+////                    alert.setPositiveButton("Cancel Subscription", new DialogInterface.OnClickListener() {
+////                        @TargetApi(Build.VERSION_CODES.N)
+////                        @Override
+////                        public void onClick(DialogInterface dialog, int which) {
+////
+////                            Calendar c = Calendar.getInstance();
+////                            DateFormat df = new android.icu.text.SimpleDateFormat("yyyy-MM-dd");
+////                            String requestDate = df.format(c.getTime());
+////
+////                            String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
+////                            int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
+////                            mapReasons = new HashMap<>();
+////
+////                            for (int i = 0; i < cancelReasons.length - 1; i++) {
+////                                mapReasons.put(cancelReasons[i], cancelCodes[i]);
+////                            }
+////
+////                            cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
+////                            String angryComments = cancelComments.getText().toString();
+////
+////
+////                            CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
+////
+////
+////                        }
+////                    });
+////                    alert.show();
+//
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+//
+//        }
+//    });
+//}
