@@ -230,7 +230,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         });
 
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .setCountry("US")
                 .build();
 
@@ -250,7 +250,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 Toast.makeText(getActivity().getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-        places.setHint("Search a city");
+        places.setHint("Search a new location");
 
         //Hide Keyboard when not in use
         getActivity().getWindow().setSoftInputMode(
