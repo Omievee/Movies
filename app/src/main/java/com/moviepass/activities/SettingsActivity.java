@@ -18,7 +18,6 @@ import com.moviepass.BuildConfig;
 import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.moviepass.fragments.SettingsFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
 /**
@@ -26,8 +25,6 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
  */
 
 public class SettingsActivity extends BaseActivity {
-
-    SettingsFragment settingsFragment = new SettingsFragment();
     protected BottomNavigationView bottomNavigationView;
 
     RelativeLayout help;
@@ -79,11 +76,11 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (pushSwitch.isChecked()) {
-                    UserPreferences.setPushPermission(false);
-                } else {
                     UserPreferences.setPushPermission(true);
+                } else {
+                    UserPreferences.setPushPermission(false);
                 }
-                Log.d(Constants.TAG, "onCreate: " + pushSwitch.isChecked());
+                Log.d(Constants.TAG, "psuh: " + UserPreferences.getPushPermission());
 
 
 //                //SEND isChecked TO TAPLYTICS
@@ -161,3 +158,18 @@ public class SettingsActivity extends BaseActivity {
 
 
 }
+
+////        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+////            public boolean onPreferenceClick(Preference preference) {
+////                //open browser or intent here
+////
+////                HashMap config = new HashMap ();
+////                config.put("gotoConversationAfterContactUs", true);
+////                config.put("hideNameAndEmail", true);
+////                config.put("showSearchOnNewConversation", true);
+////
+////                Support.showConversation(getActivity(), config);
+////
+////                return true;
+////            }
+////        });

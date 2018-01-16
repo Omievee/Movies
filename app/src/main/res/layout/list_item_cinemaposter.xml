@@ -60,16 +60,16 @@
                     android:textStyle="bold" />
 
 
-                <ImageButton
-                    android:id="@+id/cinema_Synopsis"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:background="@android:color/transparent"
-                    android:padding="@dimen/margin_half"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/infoicon2"
-                    android:tint="@color/white" />
+                <!--<ImageButton-->
+                    <!--android:id="@+id/cinema_Synopsis"-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:layout_marginTop="@dimen/margin_half"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:padding="@dimen/margin_half"-->
+                    <!--android:scaleType="fitCenter"-->
+                    <!--android:src="@drawable/infoicon2"-->
+                    <!--android:tint="@color/white" />-->
 
 
             </LinearLayout>

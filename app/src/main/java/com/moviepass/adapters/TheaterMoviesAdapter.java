@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -71,8 +70,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         SimpleDraweeView cinemaPoster;
         @BindView(R.id.SHOWTIMEGRID)
         RadioGroup showtimeGrid;
-        @BindView(R.id.cinema_Synopsis)
-        ImageButton synopsis;
+
         @BindView(R.id.Not_Supported)
         TextView notSupported;
 
@@ -83,7 +81,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaTItle = v.findViewById(R.id.cinema_movieTitle);
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
-            synopsis = v.findViewById(R.id.cinema_Synopsis);
             notSupported = v.findViewById(R.id.Not_Supported);
         }
     }
@@ -120,12 +117,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 holder.showtimeGrid.addView(showtime);
-                showtime.setTextSize(20);
+                showtime.setTextSize(16);
                 showtime.setTextColor(root.getResources().getColor(R.color.white));
                 showtime.setPadding(30, 20, 30, 20);
                 showtime.setBackground((root.getResources().getDrawable(R.drawable.showtime_background)));
                 RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 70, 0);
+                params.setMargins(0, 0, 50, 30);
                 showtime.setLayoutParams(params);
                 showtime.setButtonDrawable(null);
                 currentTime = showtime;
