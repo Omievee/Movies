@@ -36,10 +36,9 @@
 
     <ImageView
         android:id="@+id/MoviePass_HEADER"
-        android:layout_width="@dimen/magin_MAX"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:alpha=".7"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/double_margin_standard"
         android:src="@drawable/logo"

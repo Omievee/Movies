@@ -57,7 +57,7 @@ public interface Api {
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
-    @GET("/api/v1/auth/passwordReset/{emailAddress}")
+    @GET("/rest/v1/auth/passwordReset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
 
     /* FB Login */
@@ -65,15 +65,15 @@ public interface Api {
     Call<User> loginWithFacebook(@Header(HEADER_UUID) String deviceId, @Body FacebookSignInRequest request);
 
     /* Get Cards? */
-    @GET("/api/v4/cards")
+    @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
     /* Activate MP Card */
-    @POST("/api/v2/cards/activate")
+    @POST("/rest/v1/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
     /* Movies */
-    @GET("/api/v4/movies")
+    @GET("/rest/v1/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
     /* Screenings for Movies (details) */
@@ -92,11 +92,11 @@ public interface Api {
     Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
 
     /* SignUp */
-    @POST("/api/v1/register/create/mobile")
+    @POST("/rest/v1/register/create/mobile")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
     /* Check In */
-    @POST("/api/v3/reservations")
+    @POST("/rest/v1/reservations")
     Call<ReservationResponse> checkIn(@Body CheckInRequest request);
 
 
@@ -113,18 +113,16 @@ public interface Api {
     Call<HistoryResponse> getReservations();
 
     /* Get Seats */
-    @POST("/api/v3/seats")
+    @POST("/rest/v1/seats")
     Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Body PerformanceInfoRequest request);
 
     /* Verify Ticket Photo */
-    @POST("/api/v1/reservations/{reservationId}/verification")
+    @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
     /* lost Ticket */
     @POST("/api/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
-
-
 
     /* Theaters */
     @GET("/api/v3/theaters/near")

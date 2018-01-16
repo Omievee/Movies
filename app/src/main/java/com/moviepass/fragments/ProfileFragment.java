@@ -253,11 +253,9 @@ public class ProfileFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference preference) {
                 UserPreferences.clearUserId();
                 UserPreferences.clearFbToken();
-
                 Intent intent = new Intent(getActivity(), LogInActivity.class);
                 startActivity(intent);
                 getActivity().finish();
-
                 return true;
             }
         });

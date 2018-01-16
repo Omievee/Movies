@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -70,7 +71,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         RadioGroup showTimesGrid;
         @BindView(R.id.Not_Supported)
         TextView notSupported;
-
+        @BindView(R.id.ONE)
+        LinearLayout cardview;
 //        @BindView(R.id.SHOWTIME_MOVIE)
 //        RadioButton showTime;
 
@@ -89,6 +91,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             progress = v.findViewById(R.id.progress);
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
             notSupported = v.findViewById(R.id.Not_Supported);
+            cardview = v.findViewById(R.id.ONE);
         }
 
 
@@ -124,14 +127,14 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
-                showTime.setTextSize(20);
+                showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
-                showTime.setTextColor(root.getResources().getColor(R.color.white));
+                showTime.setTextColor(root.getResources().getColor(R.color.white_ish));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(30, 20, 30, 20);
                 showTime.setButtonDrawable(null);
                 RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 50, 0);
+                params.setMargins(0, 0, 50, 30);
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
@@ -158,7 +161,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         currentTime.setClickable(false);
                         holder.notSupported.setVisibility(View.VISIBLE);
-                        holder.theaterCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                        holder.cardview.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
                 }
             }

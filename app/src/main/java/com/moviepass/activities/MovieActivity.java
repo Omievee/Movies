@@ -64,6 +64,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -220,7 +221,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     .setStartDelay(i * 50)
                                     .start();
                         }
-
                         return true;
                     }
                 });
@@ -247,6 +247,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         });
 
         filmRating.setText("Rated: " + movie.getRating());
+
+        Blurry.with(MovieActivity.this).radius(10).sampling(8)
+                .async()
+                .capture(findViewById(R.id.SELECTED_MOVIE_IMAGE))
+                .into((ImageView) findViewById(R.id.imgBgBlur));
 
     }
 

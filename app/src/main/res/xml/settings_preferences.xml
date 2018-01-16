@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/xml_settings_preferences_settings">
+    <PreferenceCategory android:layout="@layout/settings_pref" />
 
-        <SwitchPreference
-            android:id="@+id/push"
-            android:key="push"
-            android:title="@string/xml_settings_preferences_settings_push" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:title="@string/xml_settings_preferences_settings_help">
-
-        <Preference
-            android:id="@+id/faqs"
-            android:key="faqs"
-            android:title="@string/xml_settings_preferences_settings_help_faqs" />
-
-        <Preference
-            android:id="@+id/contact_support"
-            android:key="contact_support"
-            android:title="@string/xml_settings_preferences_settings_help_contact" />
-
-        <Preference
-            android:selectable="false"
-            android:enabled="true"
-            android:key="version"
-            android:title="@string/xml_settings_preferences_settings_help_version" />
+    <SwitchPreference
+        android:id="@android:id/widget_frame"
+        android:key="push"
+        android:summary="Be the first to hear about new movies, features, and promotions from MoviePass"
+        android:title="Notifications" />
 
 
-    </PreferenceCategory>
+    <Preference
+        android:id="@+id/settings_FAQ"
+        android:key="faqs"
+        android:title="Help" />
+
+
+    <!--<Preference-->
+    <!--android:id="@+id/contact_support"-->
+    <!--android:key="contact_support"-->
+    <!--android:title="@string/xml_settings_preferences_settings_help_contact" />-->
+
+
+    <Preference
+        android:enabled="true"
+        android:key="version"
+        android:selectable="false"
+        android:title="@string/xml_settings_preferences_settings_help_version" />
+
+    <Preference
+        android:id="@+id/log_out"
+        android:key="log_out"
+        android:title="Sign out" />
+
 
 </PreferenceScreen>

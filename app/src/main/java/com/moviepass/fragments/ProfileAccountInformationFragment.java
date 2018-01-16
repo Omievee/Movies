@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -70,7 +71,9 @@ public class ProfileAccountInformationFragment extends Fragment {
     RelativeLayout userOldBilling, shippingClick, billingClick;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userSave;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
+
+    Button userSave;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
     ImageButton userScanCard;
     String MONTH, YEAR;
@@ -90,7 +93,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         progress = rootView.findViewById(R.id.progress);
         shippingDetails = rootView.findViewById(R.id.ShippingDetails);
-        backArrow = rootView.findViewById(R.id.accountback);
+//        backArrow = rootView.findViewById(R.id.accountback);
         bilingDetails = rootView.findViewById(R.id.billingdetails);
         billingSwitch = rootView.findViewById(R.id.SWITCH);
         billing2 = rootView.findViewById(R.id.Billing2);
@@ -156,13 +159,13 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         /* All click listeners => */
 
-
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+//
+//        backArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
 
         shippingClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +202,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 transaction.replace(R.id.container, cancelSubscription);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
 
 
             }
@@ -310,6 +312,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     // Plan Info
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
+                    Log.d(Constants.TAG, "onResponse: " + lastName);
+                    Log.d(Constants.TAG, "onResponse: " + firstName);
                     String email = userInfoResponse.getEmail();
 
                     userName.setText(firstName + " " + lastName);
@@ -420,7 +424,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userState.setText(State);
                     userZip.setText(zip);
 
-
                 }
                 saveChanges();
 
@@ -489,17 +492,17 @@ public class ProfileAccountInformationFragment extends Fragment {
             public void onClick(View v) {
                 progress.setVisibility(View.VISIBLE);
 
-//                updateShippingAddress();
+                updateShippingAddress();
 
-                String newCC = userNewBillingCC.getText().toString();
-                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-                Log.d(Constants.TAG, "onClick: " + ccExMonth);
-                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-                String newExp = ccExMonth + "/" + ccExYr;
-                String newCVV = userNewBillingCVV.getText().toString();
-
-
-                updateCreditCard(newCC, newExp, newCVV);
+//                String newCC = userNewBillingCC.getText().toString();
+//                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+//                Log.d(Constants.TAG, "onClick: " + ccExMonth);
+//                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+//                String newExp = ccExMonth + "/" + ccExYr;
+//                String newCVV = userNewBillingCVV.getText().toString();
+//
+//
+//                updateCreditCard(newCC, newExp, newCVV);
 
 
             }
@@ -540,9 +543,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 }
             });
         }
-//        if (userNewBillingCC.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
-//
-//        }
+
     }
 
 
@@ -569,7 +570,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userOldBilling.setVisibility(View.VISIBLE);
                     newBillingData.setVisibility(View.GONE);
                     newBillingData2.setVisibility(View.GONE);
-
 
                     loadUserInfo();
 

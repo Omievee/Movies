@@ -17,16 +17,12 @@ import com.moviepass.Constants;
 import com.moviepass.R;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.CancellationRequest;
-import com.moviepass.responses.CancellationResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by anubis on 9/1/17.
@@ -44,7 +40,7 @@ public class ProfileCancellationFragment extends Fragment {
     String cancelReasons;
     private HashMap<String, Integer> cancelMap;
     final String nextBillingDate = null;
-    Integer cancelSubscriptionReason;
+    long cancelSubscriptionReason;
 
 
     @Override
@@ -112,8 +108,6 @@ public class ProfileCancellationFragment extends Fragment {
 
 
     public void cancelFlow() {
-
-
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String requestDate = df.format(c.getTime());
@@ -122,33 +116,41 @@ public class ProfileCancellationFragment extends Fragment {
         int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
         mapReasons = new HashMap<>();
 
+        Log.d(Constants.TAG, "cancelFlow: " + cancelReasons);
+        Log.d(Constants.TAG, "cancelFlow: " + cancelCodes);
+
+
         for (int i = 0; i < cancelReasons.length - 1; i++) {
-            mapReasons.put(cancelReasons[i], cancelCodes[i]);
+            for (int j = 0; j < cancelCodes.length - 1; j++) {
+                mapReasons.put(cancelReasons[i], cancelCodes[j]);
+                Log.d(Constants.TAG, "cancelFlow: " + mapReasons.get(i));
+
+            }
         }
 
-        cancelSubscriptionReason = mapReasons.get(spinnerCancelReason);
         String angryComments = cancelComments.getText().toString();
 
-
+//
         CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
-        RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
-            @Override
-            public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
-                CancellationResponse cancellationResponse = response.body();
-                progress.setVisibility(View.GONE);
-                if (cancellationResponse != null && response.isSuccessful()) {
-                    if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
-                        Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<CancellationResponse> call, Throwable t) {
-
-            }
-        });
+//        RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
+//            @Override
+//            public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
+//                CancellationResponse cancellationResponse = response.body();
+//                progress.setVisibility(View.GONE);
+//                if (cancellationResponse != null && response.isSuccessful()) {
+//                    if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
+//                        Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
+//                    }
+//                    Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onFailure(Call<CancellationResponse> call, Throwable t) {
+//
+//            }
+//        });
 
 //        RestClient.getAuthenticated().getUserData(RestClient.userId).enqueue(new Callback<UserInfoResponse>() {
 //            @Override

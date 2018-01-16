@@ -6,6 +6,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +26,10 @@ import com.moviepass.MoviePosterClickListener;
 import com.moviepass.R;
 import com.moviepass.model.Movie;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,6 +60,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
         SimpleDraweeView mComingSoonMoviePosterDV;
+        @BindView(R.id.RELEASEDATE)
+        TextView comingSoon;
 
         public ViewHolder(View v) {
             super(v);
@@ -63,6 +69,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
             mComingSoonMoviePosterDV = v.findViewById(R.id.ticket_top_red_dark);
+            comingSoon = v.findViewById(R.id.RELEASEDATE);
         }
     }
 
@@ -90,13 +97,32 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
+                        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+                        try {
+                            Date date = format.parse(movie.getReleaseDate().substring(0, 10));
+                            Log.d(TAG, "onFinalImageSet: " + date);
+
+                            format = new SimpleDateFormat("MM/dd");
+                            Log.d(TAG, "new date: " + format.format(date));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        format = new SimpleDateFormat("MM/dd/yyyy");
+                        String releaseDate = movie.getReleaseDate().substring(0, 10);
+
+
+
+                        holder.comingSoon.setText(movie.getReleaseDate());
 
                         //Makes foreground of image dark
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             holder.mComingSoonMoviePosterDV.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+
                         }
 
 

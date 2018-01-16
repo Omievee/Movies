@@ -3,23 +3,147 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/test_black"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="@dimen/basic_elevation"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <FrameLayout
-        android:id="@+id/container"
+    <RelativeLayout
+        android:id="@+id/HEADER"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/navigation"
-        android:layout_below="@+id/toolbar" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:text="Settings"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/NOTIFS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/HEADER"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:background="@color/test_blue"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_half">
+
+
+        <TextView
+            android:id="@+id/NOTIF_TITLE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_half"
+            android:text="Notifications"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/NOTIF_SUM"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/NOTIF_TITLE"
+            android:layout_marginTop="@dimen/margin_half"
+            android:lineSpacingExtra="3dp"
+            android:paddingStart="@dimen/margin_half"
+            android:text="Be the first to hear about new movies, features, and promotions from MoviePass"
+            android:textSize="13sp" />
+
+
+        <Switch
+            android:id="@+id/PushSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:checked="true" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/HELP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/NOTIFS"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:background="@color/test_blue"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_half">
+
+        <TextView
+            android:id="@+id/HELP_TEXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:paddingStart="@dimen/margin_half"
+            android:text="Help"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/arrowforward"
+            android:tint="@color/white" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/SIGNOUT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/HELP"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:background="@color/test_blue"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_half">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:paddingStart="@dimen/margin_half"
+            android:text="Sign Out"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/VERSIOn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="55dp"
+        android:padding="@dimen/margin_half"
+        />
+
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_marginTop="@dimen/quadruple_margin_standard"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_above="@id/navigation"-->
+    <!--android:layout_below="@+id/toolbar" />-->
 
     <include
         android:id="@+id/navigation"

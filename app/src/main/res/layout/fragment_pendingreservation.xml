@@ -11,17 +11,17 @@
     <LinearLayout
         android:id="@+id/NoPending"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_margin_standard">
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/margin_half"
             android:text="You currently have no active reservations"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:padding="@dimen/margin_half"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -102,7 +102,7 @@
         android:text="Cancel Reservation"
         android:textColor="@color/white"
         android:textSize="13sp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 
     <include

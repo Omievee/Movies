@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +94,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
-                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
                             holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
                             holder.title.setText(movie.getTitle());
                         }

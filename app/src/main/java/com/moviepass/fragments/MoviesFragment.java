@@ -44,6 +44,7 @@ import com.moviepass.activities.MovieActivity;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
 import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
+import com.moviepass.adapters.NowPlayingMoviesAdapter;
 import com.moviepass.model.Movie;
 import com.moviepass.model.MoviesResponse;
 import com.moviepass.network.Api;
@@ -78,9 +79,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     Api api;
     FloatingActionMenu reservationsMenu;
 
-    private MoviesNewReleasesAdapter mMoviesNewReleasesAdapter;
-    private MoviesTopBoxOfficeAdapter mMoviesTopBoxOfficeAdapter;
-    private MoviesComingSoonAdapter mMoviesComingSoonAdapter;
+    private MoviesNewReleasesAdapter newRealeasesAdapter;
+    private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
+    private MoviesComingSoonAdapter comingSoonAdapter;
+    private NowPlayingMoviesAdapter nowPlayingAdapter;
 
     MoviesFragment mMoviesFragment;
     MoviesResponse moviesResponse;
@@ -89,16 +91,21 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     ArrayList<Movie> TopBoxOffice;
     ArrayList<Movie> comingSoon;
     ArrayList<Movie> newReleases;
+    ArrayList<Movie> featured;
+    ArrayList<Movie> nowPlaying;
+
 
     @BindView(R.id.new_releases)
-    RecyclerView mNewReleasesRecyclerView;
+    RecyclerView newReleasesRecycler;
     @BindView(R.id.top_box_office)
-    RecyclerView mTopBoxOfficeRecyclerView;
+    RecyclerView topBoxOfficeRecycler;
     @BindView(R.id.coming_soon)
-    RecyclerView mComingSoonRecyclerView;
+    RecyclerView comingSoonRecycler;
+    @BindView(R.id.now_playing)
+    RecyclerView nowPlayingRecycler;
 
-    @BindView(R.id.MoviePass_HEADER)
-    ImageView MovieHeader;
+    @BindView(R.id.MAINPAGE_FEATURED)
+    SimpleDraweeView MovieHeader;
 
     @BindView(R.id.MAINPAGE_FEATURED)
     SimpleDraweeView featuredFilmHeader;
@@ -126,52 +133,59 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newReleases = new ArrayList<>();
         TopBoxOffice = new ArrayList<>();
         comingSoon = new ArrayList<>();
+        featured = new ArrayList<>();
+        nowPlaying = new ArrayList<>();
 
         /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mNewReleasesRecyclerView = rootView.findViewById(R.id.new_releases);
-        mNewReleasesRecyclerView.setLayoutManager(newReleasesLayoutManager);
-        mNewReleasesRecyclerView.setItemAnimator(null);
-        fadeIn(mNewReleasesRecyclerView);
+        newReleasesRecycler = rootView.findViewById(R.id.new_releases);
+        newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
+        newReleasesRecycler.setItemAnimator(null);
+        fadeIn(newReleasesRecycler);
         reservationsMenu = rootView.findViewById(R.id.FAB_RESERVATION_MENU);
-        mMoviesNewReleasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleases, this);
+        newRealeasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleases, this);
 
         /** Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
-        mTopBoxOfficeRecyclerView = rootView.findViewById(R.id.top_box_office);
-        mTopBoxOfficeRecyclerView.setLayoutManager(topBoxOfficeLayoutManager);
-        mTopBoxOfficeRecyclerView.setItemAnimator(null);
-        fadeIn(mTopBoxOfficeRecyclerView);
-        mMoviesTopBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), TopBoxOffice, this);
+        topBoxOfficeRecycler = rootView.findViewById(R.id.top_box_office);
+        topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
+        topBoxOfficeRecycler.setItemAnimator(null);
+        fadeIn(topBoxOfficeRecycler);
+        topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), TopBoxOffice, this);
 
         /** Coming Soon RecyclerView */
         LinearLayoutManager comingSoonLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mComingSoonRecyclerView = rootView.findViewById(R.id.coming_soon);
-        mComingSoonRecyclerView.setLayoutManager(comingSoonLayoutManager);
-        mComingSoonRecyclerView.setItemAnimator(null);
-        fadeIn(mComingSoonRecyclerView);
-        mMoviesComingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), comingSoon, this);
+        comingSoonRecycler = rootView.findViewById(R.id.coming_soon);
+        comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
+        comingSoonRecycler.setItemAnimator(null);
+        fadeIn(comingSoonRecycler);
+        comingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), comingSoon, this);
 
+        /** NOW PLAYING */
+        Log.d(Constants.TAG, "nowpkay: ");
+        LinearLayoutManager nowplayingManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
+        nowPlayingRecycler.setLayoutManager(nowplayingManager);
+        fadeIn(nowPlayingRecycler);
+        nowPlayingAdapter = new NowPlayingMoviesAdapter(getActivity(), nowPlaying, this);
 
         progress.setVisibility(View.VISIBLE);
 
 
         loadMovies();
 
-//        if (isPendingSubscription()) {
-//            showActivateCardDialog();
-//        }
+        //Featured Film:
+
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
 
         LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Provider = LocationManager.getBestProvider(criteria, true);
-//        Location location = LocationManager.getLastKnownLocation(Provider);
 
 
         checkLocationPermission();
@@ -179,7 +193,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
 
 
-        //Check for active moviepass subscription or not
+        //TODO: Check for active moviepass subscription or not
 //        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
 //            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
 //            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
@@ -231,16 +245,20 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (mMoviesNewReleasesAdapter != null) {
-            mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+        if (newRealeasesAdapter != null) {
+            newReleasesRecycler.setAdapter(newRealeasesAdapter);
         }
 
-        if (mTopBoxOfficeRecyclerView != null) {
-            mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+        if (topBoxOfficeRecycler != null) {
+            topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
         }
 
-        if (mComingSoonRecyclerView != null) {
-            mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+        if (comingSoonRecycler != null) {
+            comingSoonRecycler.setAdapter(comingSoonAdapter);
+        }
+        if (nowPlayingRecycler != null) {
+            Log.d(Constants.TAG, "onViewCreated: ");
+            nowPlayingRecycler.setAdapter(nowPlayingAdapter);
         }
     }
 
@@ -313,38 +331,52 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     progress.setVisibility(View.GONE);
                     moviesResponse = response.body();
 
-                    Log.d(Constants.TAG, "featured: " + moviesResponse.getFeatured());
-                    Log.d(Constants.TAG, "now playing:  " + moviesResponse.getNowPlaying());
+                    Log.d(Constants.TAG, "featured: " + moviesResponse.getFeatured().toString());
+                    Log.d(Constants.TAG, "now playing:  " + moviesResponse.getNowPlaying().toString());
+                    Log.d(Constants.TAG, "coming soon: " + moviesResponse.getComingSoon().toString());
+                    Log.d(Constants.TAG, "new relase: " + moviesResponse.getNewReleases().toString());
+                    Log.d(Constants.TAG, "top box: " + moviesResponse.getTopBoxOffice().toString());
 
                     newReleases.clear();
                     TopBoxOffice.clear();
                     comingSoon.clear();
+                    featured.clear();
+                    nowPlaying.clear();
 
-                    if (mMoviesNewReleasesAdapter != null) {
-                        mNewReleasesRecyclerView.getRecycledViewPool().clear();
-                        mMoviesNewReleasesAdapter.notifyDataSetChanged();
+
+                    if (newRealeasesAdapter != null) {
+                        newReleasesRecycler.getRecycledViewPool().clear();
+                        newRealeasesAdapter.notifyDataSetChanged();
                     }
 
-                    if (mMoviesTopBoxOfficeAdapter != null) {
-                        mTopBoxOfficeRecyclerView.getRecycledViewPool().clear();
-                        mMoviesTopBoxOfficeAdapter.notifyDataSetChanged();
+                    if (topBoxOfficeAdapter != null) {
+                        topBoxOfficeRecycler.getRecycledViewPool().clear();
+                        topBoxOfficeAdapter.notifyDataSetChanged();
                     }
 
-                    if (mMoviesComingSoonAdapter != null) {
-                        mComingSoonRecyclerView.getRecycledViewPool().clear();
-                        mMoviesComingSoonAdapter.notifyDataSetChanged();
+                    if (comingSoonAdapter != null) {
+                        comingSoonRecycler.getRecycledViewPool().clear();
+                        comingSoonAdapter.notifyDataSetChanged();
+                    }
+
+                    if (nowPlayingAdapter != null) {
+                        nowPlayingRecycler.getRecycledViewPool().clear();
+                        nowPlayingAdapter.notifyDataSetChanged();
                     }
 
                     if (moviesResponse != null) {
                         newReleases.addAll(moviesResponse.getNewReleases());
-                        mNewReleasesRecyclerView.setAdapter(mMoviesNewReleasesAdapter);
+                        newReleasesRecycler.setAdapter(newRealeasesAdapter);
 
                         TopBoxOffice.addAll(moviesResponse.getTopBoxOffice());
-                        mTopBoxOfficeRecyclerView.setAdapter(mMoviesTopBoxOfficeAdapter);
+                        topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
 
                         comingSoon.addAll(moviesResponse.getComingSoon());
-                        mComingSoonRecyclerView.setAdapter(mMoviesComingSoonAdapter);
+                        comingSoonRecycler.setAdapter(comingSoonAdapter);
 
+                        nowPlaying.addAll(moviesResponse.getNowPlaying());
+                        nowPlayingRecycler.setAdapter(nowPlayingAdapter);
+                        Log.d(Constants.TAG, "onResponse: " + nowPlayingRecycler.getAdapter());
                     }
 
 

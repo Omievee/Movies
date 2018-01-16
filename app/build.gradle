@@ -169,6 +169,7 @@ dependencies {
 
     //Spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
+    compile 'jp.wasabeef:blurry:2.1.1'
 
 }
 
