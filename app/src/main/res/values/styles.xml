@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/dark</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:colorBackground">@color/dark</item>
     </style>
 
@@ -14,12 +15,14 @@
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
     <style name="MoviePassThemeTransparentStatusBar" parent="AppTheme">
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
@@ -32,6 +35,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@color/idk_gray</item>
         <item name="android:colorBackground">@color/idk_gray</item>
@@ -42,12 +46,14 @@
     </style>
 
     <style name="MyOverflowText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:textColor">@color/new_red</item>
     </style>
 
     <!-- Red theme -->
     <style name="RedTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/red_dark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -66,6 +72,7 @@
     <style name="ToolBarStyle" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:textColor">@android:color/white</item>
