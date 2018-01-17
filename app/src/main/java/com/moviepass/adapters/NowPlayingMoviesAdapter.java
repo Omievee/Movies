@@ -72,9 +72,6 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-//                            holder.moviePoster.setImageResource(R.drawable.filmreel1);
-//                            holder.moviePoster.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
-//                            holder.moviePoster.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
                             holder.movieTitle.setText(nowPlaying.getTitle());
                         }
                     }
