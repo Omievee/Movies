@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:elevation="5dp"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorAccent"
+            app:contentScrim="@color/test_black"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">

@@ -95,9 +95,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-//                            holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
-//                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
-//                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
+
                             holder.title.setText(movie.getTitle());
                         }
                     }
@@ -105,6 +103,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.title.setText(movie.getTitle());
+                        holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
                         holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     }
                 })

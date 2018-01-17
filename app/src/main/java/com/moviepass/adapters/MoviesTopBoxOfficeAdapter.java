@@ -77,7 +77,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 
 
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        Log.d(TAG, "Top box: " + imgUrl.toString() );
+        Log.d(TAG, "Top box: " + imgUrl.toString());
 
         holder.mTopBoxMovieDV.setImageURI(imgUrl);
         holder.mTopBoxMovieDV.getHierarchy().setFadeDuration(500);
@@ -91,8 +91,8 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
+                        if (imgUrl.toString().contains("default")) {
+//                            holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
                             holder.title.setText(movie.getTitle());
                         }
                     }
@@ -100,6 +100,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.title.setText(movie.getTitle());
+                        holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
                         holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     }
                 })

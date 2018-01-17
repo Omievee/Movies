@@ -71,10 +71,10 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.moviePoster.setImageResource(R.drawable.filmreel1);
-                            holder.moviePoster.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
-                            holder.moviePoster.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
+                        if (imgUrl.toString().contains("default")) {
+//                            holder.moviePoster.setImageResource(R.drawable.filmreel1);
+//                            holder.moviePoster.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
+//                            holder.moviePoster.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
                             holder.movieTitle.setText(nowPlaying.getTitle());
                         }
                     }
@@ -82,6 +82,7 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.movieTitle.setText(nowPlaying.getTitle());
+                        holder.moviePoster.setImageResource(R.drawable.filmreel1);
                         holder.movieTitle.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     }
                 })

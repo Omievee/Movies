@@ -175,7 +175,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
 
-        backButton = findViewById(R.id.selected_back);
+//        backButton = findViewById(R.id.selected_back);
+//        backButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(MovieActivity.this, "yo", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -460,7 +466,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             List<Screening> screeningsList = screenings.getScreenings();
                             if (screeningsList.size() == 0) {
                                 Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
-
+                                ProgressBar.setVisibility(View.GONE);
                             } else {
 
                                 //Initial View to Display RecyclerView Based on User's Current Location
