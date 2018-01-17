@@ -44,6 +44,7 @@ import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.activities.ActivateMoviePassCard;
 import com.moviepass.activities.MovieActivity;
+import com.moviepass.adapters.FeaturedAdapter;
 import com.moviepass.adapters.MoviesComingSoonAdapter;
 import com.moviepass.adapters.MoviesNewReleasesAdapter;
 import com.moviepass.adapters.MoviesTopBoxOfficeAdapter;
@@ -86,6 +87,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
     private NowPlayingMoviesAdapter nowPlayingAdapter;
+    private FeaturedAdapter featuredAdapter;
 
     MoviesFragment mMoviesFragment;
     MoviesResponse moviesResponse;
@@ -107,11 +109,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @BindView(R.id.now_playing)
     RecyclerView nowPlayingRecycler;
 
-    @BindView(R.id.MAINPAGE_FEATURED)
-    SimpleDraweeView MovieHeader;
+    @BindView(R.id.FeaturedRE)
+    RecyclerView featuredRecycler;
 
-    @BindView(R.id.MAINPAGE_FEATURED)
-    SimpleDraweeView featuredFilmHeader;
 
 //    @BindView(R.id.MOVIES_SEARCH)
 //    SearchView MovieSearch;
@@ -175,6 +175,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingRecycler.setLayoutManager(nowplayingManager);
         fadeIn(nowPlayingRecycler);
         nowPlayingAdapter = new NowPlayingMoviesAdapter(getActivity(), nowPlaying, this);
+
+        /** FEATURED */
+        LinearLayoutManager featuredManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
+        featuredRecycler.setLayoutManager(featuredManager);
+        fadeIn(featuredRecycler);
+        featuredAdapter = new FeaturedAdapter(getActivity(), featured, this);
+
 
         progress.setVisibility(View.VISIBLE);
 
@@ -262,6 +270,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (nowPlayingRecycler != null) {
             Log.d(Constants.TAG, "onViewCreated: ");
             nowPlayingRecycler.setAdapter(nowPlayingAdapter);
+        }
+
+        if(featuredRecycler != null) {
+            featuredRecycler.setAdapter(featuredAdapter);
         }
     }
 
@@ -379,6 +391,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                         nowPlaying.addAll(moviesResponse.getNowPlaying());
                         nowPlayingRecycler.setAdapter(nowPlayingAdapter);
+
+                        featured.addAll(moviesResponse.getFeatured());
+                        featuredRecycler.setAdapter(featuredAdapter);
                         Log.d(Constants.TAG, "onResponse: " + nowPlayingRecycler.getAdapter());
                     }
 

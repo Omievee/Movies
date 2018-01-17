@@ -63,7 +63,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
             title = v.findViewById(R.id.poster_movie_title);
             mNewReleasePosterDV = v.findViewById(R.id.ticket_top_red_dark);
-
         }
     }
 
