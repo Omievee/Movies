@@ -78,7 +78,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         final Movie movie = moviesArrayList.get(position);
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
-        holder.title.setText("");
+//        holder.title.setText("");
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -95,7 +95,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
                             holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
-                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
+                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
                             holder.title.setText(movie.getTitle());
                         }
                     }

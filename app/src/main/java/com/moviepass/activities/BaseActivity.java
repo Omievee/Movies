@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.moviepass.UserPreferences;
+import com.moviepass.fragments.SynopsisFragment;
+import com.moviepass.mobile.NoInternetFragment;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.RestrictionsResponse;
 
@@ -79,12 +82,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-
         checkRestrictions();
-
         if (!isOnline()) {
-            Intent intent = new Intent(BaseActivity.this, NoDataActivity.class);
-            startActivity(intent);
+            NoInternetFragment fragobj = new NoInternetFragment();
+            FragmentManager fm = getSupportFragmentManager();
+            fragobj.show(fm, "fr_no_internet");
+//            Intent intent = new Intent(BaseActivity.this, NoDataActivity.class);
+//            startActivity(intent);
         }
     }
 
