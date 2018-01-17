@@ -76,7 +76,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onStart() {
         super.onStart();
-//        updateNavigationBarState();
     }
 
     @Override
@@ -87,8 +86,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             NoInternetFragment fragobj = new NoInternetFragment();
             FragmentManager fm = getSupportFragmentManager();
             fragobj.show(fm, "fr_no_internet");
-//            Intent intent = new Intent(BaseActivity.this, NoDataActivity.class);
-//            startActivity(intent);
         }
     }
 
