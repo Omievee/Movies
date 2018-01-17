@@ -26,7 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> remotes/origin/Nowifi
     </FrameLayout>
 
 

@@ -552,7 +552,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
     private void loadMoviePosterData() {
-        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+
+        final Uri imgUrl = Uri.parse(movie.getLandscapeImageUrl());
         selectedMoviePoster.setImageURI(imgUrl);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
@@ -560,6 +561,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
 
+                        Log.d(TAG, "onFinalImageSet: " + imgUrl.toString());
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             supportStartPostponedEnterTransition();
                             selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
@@ -577,7 +579,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         supportStartPostponedEnterTransition();
-                        selectedMoviePoster.setImageResource(R.drawable.activity_splash_star);
+                        selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
                         selectedMovieTitle.setText(movie.getTitle());
                     }
                 })
