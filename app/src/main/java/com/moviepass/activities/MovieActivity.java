@@ -61,6 +61,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -473,8 +474,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                                 if (screeningsResponse != null) {
                                     Log.d("getScreenings", screeningsResponse.getScreenings().toString());
-
                                     selectedScreeningsList.addAll(screeningsResponse.getScreenings());
+
                                     theatersList.addAll(screeningsResponse.getTheaters());
 
                                     selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);

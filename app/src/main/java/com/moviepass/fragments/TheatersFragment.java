@@ -182,7 +182,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
-
         LinearLayoutManager mLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
@@ -716,6 +715,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                                     if (mTheatersResponse != null) {
                                         mTheaters.addAll(mTheatersResponse.getTheaters());
+                                        for (int i = 0; i <mTheaters.size(); i++) {
+
+                                            Log.d(TAG, "onResponse: " + mTheaters.get(i).getName());
+
+                                        }
                                         theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
                                         theatersMapViewRecycler.setTranslationY(0);
                                         theatersMapViewRecycler.setAlpha(1.0f);

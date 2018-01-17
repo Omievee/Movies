@@ -1,6 +1,9 @@
 package com.moviepass.responses;
 
+import android.support.annotation.NonNull;
+
 import com.moviepass.model.Screening;
+import com.moviepass.model.SeatInfo;
 import com.moviepass.model.Theater;
 
 import org.parceler.Parcel;
@@ -12,7 +15,7 @@ import java.util.List;
  */
 
 @Parcel
-public class ScreeningsResponse {
+public class ScreeningsResponse implements Comparable {
 
     public String availability;
     public List<Screening> screenings;
@@ -24,5 +27,11 @@ public class ScreeningsResponse {
 
     public List<Screening> getScreenings() {
         return screenings;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+
+        return 0;
     }
 }

@@ -24,6 +24,8 @@ import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -83,6 +85,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         @BindView(R.id.THEATER_DISTANCE_LISTITEM)
         TextView distance;
 
+        @BindView(R.id.THEATER_ADDRESS_LISTITEM)
+        TextView address1;
+
         @BindView(R.id.progress)
         View progress;
 
@@ -100,6 +105,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             notSupported = v.findViewById(R.id.Not_Supported);
             cardview = v.findViewById(R.id.ONE);
             distance = v.findViewById(R.id.THEATER_DISTANCE_LISTITEM);
+            address1 = v.findViewById(R.id.THEATER_ADDRESS_LISTITEM);
         }
 
 
@@ -124,11 +130,17 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         Theater theater = theaterArrayList.get(position);
 
         int theaterID = screeningsArrayList.get(position).getTribuneTheaterId();
+        String theaterName = screeningsArrayList.get(position).getTheaterName();
+
 
         for (int i = 0; i < theaterArrayList.size(); i++) {
             if (theaterArrayList.get(i).getTribuneTheaterId() == theaterID) {
                 double distance = theaterArrayList.get(i).getDistance();
+                String name = theaterArrayList.get(i).getName();
+                String address = theaterArrayList.get(i).getCity() + " " + theaterArrayList.get(i).getState() + " " + theaterArrayList.get(i).getZip();
                 HOLDER.distance.setText(String.valueOf(distance));
+                HOLDER.TheaterName.setText(name);
+                HOLDER.address1.setText(address);
                 final Uri uri = Uri.parse("geo:" + theaterArrayList.get(i).getLat() + "," + theaterArrayList.get(i).getLon() + "?q=" + Uri.encode(theaterArrayList.get(i).getName()));
 
                 HOLDER.distance.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +160,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 });
             }
         }
-        HOLDER.TheaterName.setText(screening.getTheaterName());
+//        HOLDER.TheaterName.setText(screening.getTheaterName());
         HOLDER.TheaterAddressListItem.setText(screening.getTheaterAddress());
         HOLDER.showTimesGrid.removeAllViews();
         HOLDER.showTimesGrid.setPadding(40, 10, 40, 10);
