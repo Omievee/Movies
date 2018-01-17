@@ -212,7 +212,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             public boolean onOpen() {
                 mSearchLocation.open(true);
                 mSearchLocation.setVisibility(View.VISIBLE);
-
                 mSearchClose.setVisibility(View.GONE);
                 return false;
             }
@@ -251,6 +250,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         });
         places.setHint("Search a new location");
+
+
+
+
 
         //Hide Keyboard when not in use
         getActivity().getWindow().setSoftInputMode(

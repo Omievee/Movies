@@ -1,47 +1,33 @@
 package com.moviepass.activities;
 
-import android.animation.Animator;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
 
 import com.moviepass.R;
 import com.moviepass.UserPreferences;
-import com.moviepass.fragments.MoviesFragment;
 import com.moviepass.fragments.TheatersFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 import com.moviepass.model.Theater;
 
 import org.parceler.Parcels;
 
-import butterknife.BindView;
-
 /**
  * Created by anubis on 8/4/17.
  */
 
 public class TheatersActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
-//
-//    @BindView(R.id.red)
-//    View redView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-        //TODO: Set up active reservation later
 
         final ActionBar actionBar = getSupportActionBar();
         Fragment theatersFragment = new TheatersFragment();
@@ -59,17 +45,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         updateNavigationBarState();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
-    @Override
-    public void onPause() {
-        super.onPause();
-        overridePendingTransition(0, 0);
-    }
 
     @Override
     public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
@@ -102,8 +77,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
                         Intent intent = new Intent(TheatersActivity.this, ProfileActivity.class);
                         startActivity(intent);
                     }
-//                } else if (itemId == R.id.action_reservations) {
-//                    startActivity(new Intent(TheatersActivity.this, ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(TheatersActivity.this, MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {
