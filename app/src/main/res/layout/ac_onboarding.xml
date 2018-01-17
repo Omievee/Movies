@@ -32,13 +32,13 @@
 
 
             <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_above="@id/dots"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginBottom="@dimen/double_margin_standard"-->
-                <!--android:text="Check to see which theaters are near you"-->
-                <!--android:textSize="18sp" />-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_above="@id/dots"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginBottom="@dimen/double_margin_standard"-->
+            <!--android:text="Check to see which theaters are near you"-->
+            <!--android:textSize="18sp" />-->
 
             <LinearLayout
                 android:id="@+id/dots"
@@ -108,43 +108,18 @@
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/double_margin_standard">
 
-                <TextView
+                <Button
                     android:id="@+id/ONBOARDING_JOIN_NOW"
                     android:layout_width="200dp"
-                    android:layout_height="@dimen/basic_button_height"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/mpbutton1"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="@dimen/margin_half"
-                    android:paddingLeft="@dimen/doubledouble_margin_standard"
-                    android:paddingRight="@dimen/doubledouble_margin_standard"
-                    android:paddingTop="@dimen/margin_half"
                     android:text="Sign Up Now"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
-                <!--<Button-->
-                <!--android:id="@+id/button_log_in"-->
-                <!--android:layout_width="150dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_marginLeft="@dimen/margin_standard"-->
-                <!--android:layout_toRightOf="@+id/button_sign_up"-->
-                <!--android:background="@drawable/button_red_outline"-->
-                <!--android:text="@string/activity_onboarding_button_log_in"-->
-                <!--android:tint="@android:color/white" />-->
 
             </RelativeLayout>
 
-            <!-- <TextView
-                android:id="@+id/not_ready"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center_horizontal"
-                android:paddingBottom="@dimen/double_margin_standard"
-                android:text="@string/activity_onboarding_not_ready"
-                android:textColor="@color/red"
-                android:textSize="14sp" /> -->
 
         </RelativeLayout>
 
@@ -157,14 +132,15 @@
             android:src="@drawable/moviepass_logo_red"
             android:tint="@color/new_red" />
 
-        <TextView
+        <Button
             android:id="@+id/ONBOARDING_SIGN_IN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_standard"
+            android:background="@android:color/transparent"
             android:text="Sign In"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

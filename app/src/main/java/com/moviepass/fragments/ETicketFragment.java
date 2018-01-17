@@ -152,7 +152,6 @@ public class ETicketFragment extends DialogFragment {
 
 
         if (screening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-
             int normalizedMovieId = screening.getMoviepassId();
             String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
             String format = screening.getFormat();

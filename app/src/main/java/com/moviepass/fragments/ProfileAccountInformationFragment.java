@@ -2,6 +2,8 @@ package com.moviepass.fragments;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,6 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,6 +41,7 @@ import com.moviepass.R;
 import com.moviepass.UserPreferences;
 import com.moviepass.network.RestClient;
 import com.moviepass.requests.AddressChangeRequest;
+import com.moviepass.requests.CreditCardChangeRequest;
 import com.moviepass.responses.UserInfoResponse;
 
 import java.util.Arrays;
@@ -56,18 +62,21 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountInformationFragment extends Fragment {
 
+    ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
     View rootView, progress;
     ImageView downArraow, backArrow, downArrow2;
     Switch billingSwitch;
-    RelativeLayout userOldBilling;
+    RelativeLayout userOldBilling, shippingClick, billingClick;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userSave;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
+
+    Button userSave;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
     ImageButton userScanCard;
-
+    String MONTH, YEAR;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
@@ -83,10 +92,8 @@ public class ProfileAccountInformationFragment extends Fragment {
         rootView = inflater.inflate(R.layout.profile_account_details, container, false);
 
         progress = rootView.findViewById(R.id.progress);
-        downArraow = rootView.findViewById(R.id.DOWN);
         shippingDetails = rootView.findViewById(R.id.ShippingDetails);
-        backArrow = rootView.findViewById(R.id.accountback);
-        downArrow2 = rootView.findViewById(R.id.DOWN2);
+//        backArrow = rootView.findViewById(R.id.accountback);
         bilingDetails = rootView.findViewById(R.id.billingdetails);
         billingSwitch = rootView.findViewById(R.id.SWITCH);
         billing2 = rootView.findViewById(R.id.Billing2);
@@ -115,6 +122,9 @@ public class ProfileAccountInformationFragment extends Fragment {
         userEditShipping = rootView.findViewById(R.id.EDITSHIPPING);
         yesNo = rootView.findViewById(R.id.YesNo);
 
+        shippingClick = rootView.findViewById(R.id.MIDDLE);
+        billingClick = rootView.findViewById(R.id.END);
+
         userNewBillingCC = rootView.findViewById(R.id.profile_ccnum);
         userNewBillingCVV = rootView.findViewById(R.id.profile_cvv);
         userNewBillingExp = rootView.findViewById(R.id.profile_expiration);
@@ -125,7 +135,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
 
         userSave = rootView.findViewById(R.id.saveChanges);
-
+        cancelSubscription = new ProfileCancellationFragment();
 
         return rootView;
 
@@ -147,31 +157,24 @@ public class ProfileAccountInformationFragment extends Fragment {
         loadUserInfo();
 
 
-        downArraow.setOnClickListener(new View.OnClickListener() {
+        /* All click listeners => */
+
+//
+//        backArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+
+        shippingClick.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (shippingDetails.getVisibility() == View.GONE) {
-                    shippingDetails.setVisibility(View.VISIBLE);
+                    expand(shippingDetails);
                 } else {
-                    shippingDetails.setVisibility(View.GONE);
-                }
-            }
-        });
+                    collapse(shippingDetails);
 
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        downArrow2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bilingDetails.getVisibility() == View.GONE) {
-                    bilingDetails.setVisibility(View.VISIBLE);
-                } else {
-                    bilingDetails.setVisibility(View.GONE);
                 }
             }
         });
@@ -181,10 +184,10 @@ public class ProfileAccountInformationFragment extends Fragment {
             public void onClick(View v) {
                 if (billing2.getVisibility() == View.GONE) {
                     yesNo.setText("NO");
-                    billing2.setVisibility(View.VISIBLE);
+                    expand(billing2);
                 } else {
                     yesNo.setText("YES");
-                    billing2.setVisibility(View.GONE);
+                    collapse(billing2);
                 }
             }
         });
@@ -192,6 +195,14 @@ public class ProfileAccountInformationFragment extends Fragment {
         userPlanCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                FragmentManager manager = getActivity().getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.container, cancelSubscription);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
 
             }
         });
@@ -228,7 +239,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 newBillingData.setVisibility(View.VISIBLE);
                 newBillingData2.setVisibility(View.VISIBLE);
 
-
                 userScanCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -238,6 +248,18 @@ public class ProfileAccountInformationFragment extends Fragment {
                     }
                 });
 
+            }
+        });
+
+        billingClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bilingDetails.getVisibility() == View.GONE) {
+                    expand(bilingDetails);
+                    userBIllingCard.hasFocus();
+                } else {
+                    collapse(bilingDetails);
+                }
             }
         });
 
@@ -277,7 +299,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 //        }
 
 
-
     }
 
     private void loadUserInfo() {
@@ -291,6 +312,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     // Plan Info
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
+                    Log.d(Constants.TAG, "onResponse: " + lastName);
+                    Log.d(Constants.TAG, "onResponse: " + firstName);
                     String email = userInfoResponse.getEmail();
 
                     userName.setText(firstName + " " + lastName);
@@ -325,9 +348,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
 
 
-
                     Log.d(Constants.TAG, "onCreateView: " + userAddress.getText().toString());
-                    Log.d(Constants.TAG, "onCreateView: " + userInfoResponse.getShippingAddressLine1());
+                    Log.d(Constants.TAG, "onCreateView: " + userInfoResponse.getBillingCard());
 
                 }
             }
@@ -373,6 +395,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userNewState.setText(State);
                     userNewZip.setText(zip);
                 }
+                saveChanges();
 
 
                 Log.i(Constants.TAG, "Place:" + place.toString());
@@ -401,29 +424,43 @@ public class ProfileAccountInformationFragment extends Fragment {
                     userState.setText(State);
                     userZip.setText(zip);
 
-
                 }
+                saveChanges();
 
             }
         } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-                userNewBillingCC.setText(scanResult.getRedactedCardNumber());
+
+                String cardNumber = scanResult.getFormattedCardNumber();
+                cardNumber = cardNumber.replace(" ", "");
+                userNewBillingCC.setText(cardNumber);
+
+
+                Log.d(Constants.TAG, "onActivityResult: " + scanResult.getCardType().name);
+                Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryYear);
+                Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryMonth);
+
 
                 if (scanResult.isExpiryValid()) {
                     String month = String.valueOf(scanResult.expiryMonth);
+                    Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryYear);
                     String year = String.valueOf(scanResult.expiryYear);
-                    if (year.length() > 4) {
-                        year = year.substring(4);
+                    if (month.length() < 2) {
+                        MONTH = "0" + month;
+                    } else {
+                        MONTH = month;
                     }
-                    userNewBillingExp.setText(month + " / " + year);
+                    YEAR = year.substring(2, 4);
+                    Log.d(Constants.TAG, "onActivityResult: " + YEAR);
+                    userNewBillingExp.setText(MONTH + "/" + YEAR);
                     userNewBillingCVV.setText(scanResult.cvv);
                 }
+                saveChanges();
 
             }
         }
 
-        saveChanges();
 
     }
 
@@ -457,11 +494,22 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                 updateShippingAddress();
 
+//                String newCC = userNewBillingCC.getText().toString();
+//                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+//                Log.d(Constants.TAG, "onClick: " + ccExMonth);
+//                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+//                String newExp = ccExMonth + "/" + ccExYr;
+//                String newCVV = userNewBillingCVV.getText().toString();
+//
+//
+//                updateCreditCard(newCC, newExp, newCVV);
+
 
             }
         });
     }
 
+    //TODO: save shipping & billing info when changed..
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
@@ -495,13 +543,102 @@ public class ProfileAccountInformationFragment extends Fragment {
                 }
             });
         }
-        if (userNewBillingCC.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
 
-        }
     }
 
-    public void updateBillingAddress (){
 
+    public void updateCreditCard(String creditCardNumber, String expirationDate, String cvv) {
+        progress.setVisibility(View.VISIBLE);
+
+        int userId = UserPreferences.getUserId();
+        CreditCardChangeRequest request = new CreditCardChangeRequest(creditCardNumber, expirationDate, cvv);
+
+        RestClient.getAuthenticated().updateBillingCard(userId, request).enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                progress.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    progress.setVisibility(View.GONE);
+
+//                    final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_payment_information_updated, Snackbar.LENGTH_LONG);
+//                    snackbar.show();
+
+                    userNewBillingCC.clearComposingText();
+                    userNewBillingCVV.clearComposingText();
+                    userNewBillingExp.clearComposingText();
+                    userOldBilling.setVisibility(View.VISIBLE);
+                    newBillingData.setVisibility(View.GONE);
+                    newBillingData2.setVisibility(View.GONE);
+
+                    loadUserInfo();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+                if (getActivity() != null) {
+                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    progress.setVisibility(View.GONE);
+                }
+
+            }
+        });
+    }
+
+
+    /* ANIMATION FOR COLLAPSE & EXPAND VIEWS */
+    public static void expand(final View v) {
+        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+
+        Animation animate = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+
+
+        };
+
+        animate.setDuration((long) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(animate);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                } else {
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((long) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
     }
 }
 

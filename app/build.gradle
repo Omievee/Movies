@@ -151,10 +151,10 @@ dependencies {
     // SearchView
     compile 'com.lapism:searchview:4.0'
     // Taplytics
-    compile 'com.taplytics.sdk:taplytics:+@aar'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+//    compile 'com.taplytics.sdk:taplytics:+@aar'
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
     testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
@@ -166,8 +166,10 @@ dependencies {
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
 
-    //Radio button
-    compile 'com.github.ceryle:RadioRealButton:v2.1.1'
+
+    //Spinner
+    compile 'com.jaredrummler:material-spinner:1.2.4'
+    compile 'jp.wasabeef:blurry:2.1.1'
 
 }
 

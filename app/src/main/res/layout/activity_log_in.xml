@@ -81,7 +81,6 @@
             android:background="@drawable/mpbutton1"
             android:elevation="2dp"
             android:text="@string/activity_sign_in_log_in"
-
             android:textSize="15sp" />
 
         <com.facebook.login.widget.LoginButton

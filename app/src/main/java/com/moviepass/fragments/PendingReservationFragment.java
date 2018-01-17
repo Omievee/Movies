@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,9 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     public static final String TAG = "found";
 
     View progress;
-    TextView pendingReservationTitle, pendingReservationTheater, pendingReservationTime, pendingReservationCode, pendingResrvationCANCELBUTTON;
+    TextView pendingReservationTitle, pendingReservationTheater, pendingReservationTime, pendingReservationCode;
+
+    Button pendingResrvationCANCELBUTTON;
     SimpleDraweeView pendingPosterImage;
     LinearLayout pendingLayout, noPending;
 
@@ -69,6 +72,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progress.setVisibility(View.VISIBLE);
+
 
         pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
             @Override

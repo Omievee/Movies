@@ -2,65 +2,32 @@ package com.moviepass.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.firebase.crash.FirebaseCrash;
-import com.moviepass.Constants;
-import com.moviepass.R;
-import com.moviepass.UserLocationManagerFused;
 import com.moviepass.UserPreferences;
-import com.moviepass.fragments.BrowseFragment;
-import com.moviepass.fragments.ETicketFragment;
-import com.moviepass.fragments.BrowseFragment;
-import com.moviepass.fragments.MoviesFragment;
-import com.moviepass.fragments.NotificationFragment;
-import com.moviepass.fragments.ProfileFragment;
-import com.moviepass.fragments.SettingsFragment;
-import com.moviepass.fragments.TheatersFragment;
-import com.moviepass.helpers.BottomNavigationViewHelper;
-import com.moviepass.model.Movie;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.RestrictionsResponse;
-import com.taplytics.sdk.Taplytics;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+//import com.taplytics.sdk.Taplytics;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -88,14 +55,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            JSONObject attributes = new JSONObject();
-            attributes.put("email", UserPreferences.getUserEmail());
-            attributes.put("name", UserPreferences.getUserName());
-            Taplytics.setUserAttributes(attributes);
-        } catch (JSONException e) {
-
-        }
+//        try {
+//            JSONObject attributes = new JSONObject();
+//            attributes.put("email", UserPreferences.getUserEmail());
+//            attributes.put("name", UserPreferences.getUserName());
+//            Taplytics.setUserAttributes(attributes);
+//        } catch (JSONException e) {
+//
+//        }
 
         checkRestrictions();
 

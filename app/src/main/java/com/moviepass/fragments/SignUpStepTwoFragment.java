@@ -74,6 +74,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     LinearLayout fullBillingAddress, fullBillingAddress2;
     View progress;
 
+    String MONTH, YEAR;
     EditText signup2CCNum, signup2CCName, signup2CCExp, signup2CC_CVV;
 
     TextView signup2NextButton;
@@ -379,10 +380,13 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 if (scanResult.isExpiryValid()) {
                     String month = String.valueOf(scanResult.expiryMonth);
                     String year = String.valueOf(scanResult.expiryYear);
-                    if (year.length() > 4) {
-                        year = year.substring(4);
+                    if (month.length() < 2) {
+                        MONTH = "0" + month;
+                    } else {
+                        MONTH = month;
                     }
-                    signup2CCExp.setText(month + " / " + year);
+                    YEAR = year.substring(2, 4);
+                    signup2CCExp.setText(MONTH + "/" + YEAR);
                     signup2CC_CVV.setText(scanResult.cvv);
 
                     signup2NextButton.setOnClickListener(new View.OnClickListener() {

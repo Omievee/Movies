@@ -228,7 +228,7 @@
 
         <Button
             android:id="@+id/SEATCHART_RESERVE"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="@dimen/button_height"
             android:layout_above="@+id/SEATCHART_NAV"
             android:layout_centerHorizontal="true"

@@ -1,8 +1,10 @@
 package com.moviepass.fragments;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -63,7 +65,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     Theater theaterObject;
     ScreeningsResponse screeningsResponse;
     RecyclerView theaterSelectedRecyclerView;
-    ImageView backButton, eTicketingIcon, reserveSeatIcon;
+    ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
     TextView theaterSelectedAddress, theaterSelectedAddressZip;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
@@ -100,6 +102,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         moviesAtSelectedTheater = new ArrayList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
 
+        cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
         fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
         fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
         fabLoadCard.setImageDrawable(getResources().getDrawable(R.drawable.ticketnavwhite));
@@ -127,6 +130,24 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         theaterSelectedAddressZip.setText(theaterObject.getCity() + " " + theaterObject.getState() + " " + theaterObject.getZip());
 
 
+        final Uri uri = Uri.parse("geo:" + theaterObject.getLat() +","+ theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
+
+        cinemaPin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW,Uri.parse(String.valueOf(uri)));
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    getActivity().startActivity(mapIntent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getActivity(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+
+                } catch (Exception x) {
+                    x.getMessage();
+                }
+
+            }
+        });
 
         /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(getContext()).startLocationUpdates();

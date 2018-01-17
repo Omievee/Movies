@@ -44,6 +44,8 @@
             android:key="log_out"
             android:title="@string/xml_account_preferences_account_log_out" />
 
+
+
     </PreferenceCategory>
 
 </PreferenceScreen>

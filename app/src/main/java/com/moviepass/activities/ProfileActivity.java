@@ -3,9 +3,6 @@ package com.moviepass.activities;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.moviepass.R;
-import com.moviepass.fragments.ProfileFragment;
+import com.moviepass.fragments.ProfileAccountInformationFragment;
 import com.moviepass.helpers.BottomNavigationViewHelper;
 
 /**
@@ -26,7 +23,7 @@ import com.moviepass.helpers.BottomNavigationViewHelper;
 public class ProfileActivity extends BaseActivity {
     public static final String TAG = "Found it";
 
-    ProfileFragment profileFragment = new ProfileFragment();
+    ProfileAccountInformationFragment profileFragment = new ProfileAccountInformationFragment();
     protected BottomNavigationView bottomNavigationView;
 
     @Override
@@ -39,9 +36,6 @@ public class ProfileActivity extends BaseActivity {
 
         final ActionBar actionBar = getSupportActionBar();
 
-        // Enable the Up button
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        toolbar.setTitle("Profile");
 
 
         FragmentManager fragmentManager = getFragmentManager();

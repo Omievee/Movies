@@ -28,16 +28,28 @@ public class RestrictionsResponse {
         return subscriptionStatus;
     }
 
-    public boolean getFacebookPresent() {return facebook; }
+    public boolean getFacebookPresent() {
+        return facebook;
+    }
 
-    public boolean get3dEnabled() { return has3d; }
+    public boolean get3dEnabled() {
+        return has3d;
+    }
 
-    public boolean getAllFormatsEnabled() { return hasAllFormats; }
+    public boolean getAllFormatsEnabled() {
+        return hasAllFormats;
+    }
 
-    public boolean getProofOfPurchaseRequired() { return proofOfPurchaseRequired; }
+    public boolean getProofOfPurchaseRequired() {
+        return proofOfPurchaseRequired;
+    }
 
-    public PopInfo getPopInfo() {return popInfo; }
+    public PopInfo getPopInfo() {
+        return popInfo;
+    }
 
-    public boolean getHasActiveCard() {return hasActiveCard; }
+    public boolean getHasActiveCard() {
+        return hasActiveCard;
+    }
 
 }
