@@ -19,6 +19,12 @@ public class Movie implements ISearchable {
     protected boolean viewed;
     protected long createdAt;
     protected String imageUrl;
+
+    public String getLandscapeImageUrl() {
+        return landscapeImageUrl;
+    }
+
+    protected String landscapeImageUrl;
     protected List<Review> reviews;
 
     public Movie() {

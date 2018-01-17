@@ -22,6 +22,12 @@ public class Screening {
     String format;
     int id;
     String imageUrl;
+
+    public String getLandscapeImageUrl() {
+        return landscapeImageUrl;
+    }
+
+    String landscapeImageUrl;
     String kind;
     int moviepassId;
     String programType;
