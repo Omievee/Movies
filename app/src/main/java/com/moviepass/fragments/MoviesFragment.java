@@ -204,28 +204,28 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
 
 
-        //TODO: Check for active moviepass subscription or not
-        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
-            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
-            snack.getView().setLayoutParams(params);
-            snack.show();
-            View sb = snack.getView();
-            snack.getView().setHovered(true);
-            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-            snack.setActionTextColor(getResources().getColor(R.color.white));
-            snack.setAction("Ok", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
-                    startActivity(activateCard);
-                }
-            });
-
-            reservationsMenu.setVisibility(View.GONE);
-        }
+//        //TODO: Check for active moviepass subscription or not
+//        if (!UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
+//            Snackbar snack = Snackbar.make(rootView, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+//            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snack.getView().getLayoutParams();
+//            snack.getView().setLayoutParams(params);
+//            snack.show();
+//            View sb = snack.getView();
+//            snack.getView().setHovered(true);
+//            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+//            snack.setActionTextColor(getResources().getColor(R.color.white));
+//            snack.setAction("Ok", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    Intent activateCard = new Intent(getActivity(), ActivateMoviePassCard.class);
+//                    startActivity(activateCard);
+//                }
+//            });
+//
+//            reservationsMenu.setVisibility(View.GONE);
+//        }
 
         final FloatingActionButton currentRes = new FloatingActionButton(getActivity());
         currentRes.setLabelText("Current Reservation");
