@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 //            Taplytics.setUserAttributes(attributes);
 //        } catch (JSONException e) {
 //
-//        }
+//        }git stat
 
         checkRestrictions();
 
