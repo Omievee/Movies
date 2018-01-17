@@ -8,10 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-<<<<<<< HEAD
-=======
 import android.support.v4.app.FragmentManager;
->>>>>>> remotes/origin/Nowifi
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,12 +18,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.moviepass.Constants;
 import com.moviepass.UserPreferences;
-<<<<<<< HEAD
-=======
-import com.moviepass.fragments.SynopsisFragment;
-import com.moviepass.mobile.NoInternetFragment;
->>>>>>> remotes/origin/Nowifi
+import com.moviepass.fragments.NoInternetFragment;
 import com.moviepass.network.RestClient;
 import com.moviepass.responses.RestrictionsResponse;
 
@@ -44,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public final static int REQUEST_LOCATION_CODE = 1000;
     public final static int REQUEST_STORAGE_CODE = 1001;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1004;
-
+    public RestrictionsResponse restriction;
     private static String LOCATION_PERMISSIONS[] = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -101,12 +95,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         overridePendingTransition(0, 0);
     }
 
-    private void checkRestrictions() {
+    public void checkRestrictions() {
         RestClient.getAuthenticated().getRestrictions().enqueue(new Callback<RestrictionsResponse>() {
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    RestrictionsResponse restriction = response.body();
+                    restriction = response.body();
 
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
@@ -115,6 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean verificationRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
 
+                    Log.d(Constants.TAG, "RESTRICTION: " + restriction);
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         final Movie movie = moviesArrayList.get(position);
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
+        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
 //        holder.title.setText("");
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
@@ -92,14 +94,10 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
-                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
-<<<<<<< HEAD
-                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_blue));
-=======
-                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
->>>>>>> remotes/origin/Nowifi
+                        if (imgUrl.toString().contains("default")) {
+//                            holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
+//                            holder.mNewReleasePosterDV.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER);
+//                            holder.mNewReleasePosterDV.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
                             holder.title.setText(movie.getTitle());
                         }
                     }

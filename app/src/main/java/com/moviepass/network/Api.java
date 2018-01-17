@@ -84,7 +84,7 @@ public interface Api {
     @POST("/register/create/json")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
-    @GET("/api/v2/register/amc_upgradeability/{zip}")
+    @GET("/rest/v1/register/amc_upgradeability/{zip}")
     Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
 
     /* Personal Info */
@@ -109,7 +109,7 @@ public interface Api {
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
     /* History  */
-    @GET("/api/v2/reservations")
+    @GET("/rest/v1/reservations")
     Call<HistoryResponse> getReservations();
 
     /* Get Seats */
@@ -121,19 +121,19 @@ public interface Api {
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
     /* lost Ticket */
-    @POST("/api/v1/reservations/{reservationId}/verification")
+    @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
     /* Theaters */
-    @GET("/api/v3/theaters/near")
+    @GET("/rest/v1/theaters/near")
     Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
 
     /* Theater screenings (details) */
-    @GET("/api/v5/theaters/{id}/screenings")
+    @GET("/rest/v1/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
     /* User */
-    @GET("/api/v2/auth/restrictions")
+    @GET("/rest/v1/auth/restrictions")
     Call<RestrictionsResponse> getRestrictions();
 
     /* user Data */

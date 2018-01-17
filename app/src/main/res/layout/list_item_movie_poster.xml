@@ -17,7 +17,8 @@
             android:id="@+id/ticket_top_red_dark"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            fresco:failureImageScaleType="fitXY"
+            fresco:failureImageScaleType="centerInside"
+            fresco:actualImageScaleType="fitCenter"
             fresco:roundedCornerRadius="4dp" />
 
         <TextView
@@ -26,10 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-<<<<<<< HEAD
-
-=======
->>>>>>> remotes/origin/Nowifi
     </FrameLayout>
 
 

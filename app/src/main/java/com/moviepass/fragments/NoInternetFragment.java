@@ -1,4 +1,4 @@
-package com.moviepass.mobile;
+package com.moviepass.fragments;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -48,6 +48,7 @@ public class NoInternetFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (isOnline()) {
+                    getActivity().recreate();
                     dismiss();
                 } else {
                     Toast.makeText(getActivity(), "Unable to detect an active network connection", Toast.LENGTH_SHORT).show();

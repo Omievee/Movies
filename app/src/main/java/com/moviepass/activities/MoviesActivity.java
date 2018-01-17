@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,8 +69,6 @@ public class MoviesActivity extends BaseActivity {
         fadeIn(main);
 
 
-
-
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -78,6 +77,7 @@ public class MoviesActivity extends BaseActivity {
         movieSearchNEWRELEASE = new ArrayList<>();
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
+
 
 
     }
@@ -151,9 +151,6 @@ public class MoviesActivity extends BaseActivity {
         }, 50);
         return true;
     }
-//
-//    else if (itemId == R.id.action_reservations) {
-//        startActivity(new Intent(MoviesActivity.this, ReservationsActivity.class));
 
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();

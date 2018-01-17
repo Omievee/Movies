@@ -250,13 +250,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         });
         places.setHint("Search a new location");
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> remotes/origin/Nowifi
 
         //Hide Keyboard when not in use
         getActivity().getWindow().setSoftInputMode(

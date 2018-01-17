@@ -75,7 +75,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     // Kotlin
-    kapt "com.android.databinding:compiler:2.3.1"
+    kapt "com.android.databinding:compiler:3.0.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
@@ -88,7 +88,7 @@ dependencies {
     //Support Libraries
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:support-v13:26.1.0"
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
 //    compile 'com.android.support:support-core-utils:26.2.1'
 
     // Google Maps Utilities
@@ -134,9 +134,9 @@ dependencies {
     compile 'org.parceler:parceler-api:1.1.6'
     kapt 'org.parceler:parceler:1.1.6'
     // OKHttp3
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     // Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -165,7 +165,6 @@ dependencies {
 
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
-
 
     //Spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
