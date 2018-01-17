@@ -22,11 +22,6 @@ public class Screening {
     String format;
     int id;
     String imageUrl;
-
-    public String getLandscapeImageUrl() {
-        return landscapeImageUrl;
-    }
-
     String landscapeImageUrl;
     String kind;
     int moviepassId;
@@ -43,18 +38,32 @@ public class Screening {
     String theaterAddress;
     String theaterName;
     String title;
+
     int tribuneTheaterId;
+
 
     public Screening() {
     }
 
-    public String getImageUrl() { return imageUrl; }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-    public int getRunningTime() { return runningTime; }
+    public int getRunningTime() {
+        return runningTime;
+    }
 
-    public String getTitle() { return title; }
+    public String getTitle() {
+        return title;
+    }
 
-    public int getMoviepassId() { return moviepassId; }
+    public int getMoviepassId() {
+        return moviepassId;
+    }
+
+    public String getLandscapeImageUrl() {
+        return landscapeImageUrl;
+    }
 
     public void setMoviepassId(int moviepassId) {
         this.moviepassId = moviepassId;
@@ -92,9 +101,13 @@ public class Screening {
         this.endTimes = endTimes;
     }
 
-    public LinkedHashMap<String, Boolean> getAvailabilities() { return availabilities; }
+    public LinkedHashMap<String, Boolean> getAvailabilities() {
+        return availabilities;
+    }
 
-    public void setAvailabilities(LinkedHashMap<String, Boolean> availabilities) { this.availabilities = availabilities; }
+    public void setAvailabilities(LinkedHashMap<String, Boolean> availabilities) {
+        this.availabilities = availabilities;
+    }
 
     public String getDate() {
         return date;
@@ -200,25 +213,35 @@ public class Screening {
         return (format.toLowerCase().contains("r3d") ||
                 format.toLowerCase().contains("real3d") ||
                 format.toLowerCase().contains("3d") ||
-                qualifiers.toLowerCase().contains("real3d")); }
+                qualifiers.toLowerCase().contains("real3d"));
+    }
 
-    public boolean is2D() { return format.toLowerCase().matches("2d"); }
+    public boolean is2D() {
+        return format.toLowerCase().matches("2d");
+    }
 
     public boolean isImax() {
         return format.toLowerCase().contains("imax") || qualifiers.toLowerCase().matches("imax");
     }
 
-    public boolean isEtx() { return format.toLowerCase().matches("etx") || qualifiers.toLowerCase().contains("etx"); }
-
-    public boolean isRpx() { return format.toLowerCase().contains("rpx") || qualifiers.toLowerCase().contains("rpx"); }
-
-    public boolean isLargeFormat() { return
-            format.toLowerCase().matches("etx") || qualifiers.toLowerCase().contains("etx") ||
-                    format.toLowerCase().contains("imax") || qualifiers.toLowerCase().matches("imax") ||
-                    format.toLowerCase().contains("rpx") || qualifiers.toLowerCase().contains("rpx");
+    public boolean isEtx() {
+        return format.toLowerCase().matches("etx") || qualifiers.toLowerCase().contains("etx");
     }
 
-    public boolean isTheatreEvent() { return programType.toLowerCase().matches("theatre event"); }
+    public boolean isRpx() {
+        return format.toLowerCase().contains("rpx") || qualifiers.toLowerCase().contains("rpx");
+    }
+
+    public boolean isLargeFormat() {
+        return
+                format.toLowerCase().matches("etx") || qualifiers.toLowerCase().contains("etx") ||
+                        format.toLowerCase().contains("imax") || qualifiers.toLowerCase().matches("imax") ||
+                        format.toLowerCase().contains("rpx") || qualifiers.toLowerCase().contains("rpx");
+    }
+
+    public boolean isTheatreEvent() {
+        return programType.toLowerCase().matches("theatre event");
+    }
 
     public boolean isApproved() {
 
@@ -236,5 +259,7 @@ public class Screening {
     }
 
 
-    public Provider getProvider() { return provider; }
+    public Provider getProvider() {
+        return provider;
+    }
 }

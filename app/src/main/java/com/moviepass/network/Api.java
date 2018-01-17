@@ -77,7 +77,7 @@ public interface Api {
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
     /* Screenings for Movies (details) */
-    @GET("/api/v5/screenings")
+    @GET("/rest/v1/screenings")
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
@@ -141,7 +141,7 @@ public interface Api {
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 
     /* User Address */
-    @PUT("/api/v1/users/{userId}")
+    @PUT("/rest/v1/users/{userId}")
     Call<Object> updateAddress(@Path("userId") int userId, @Body AddressChangeRequest address);
 
     /* Billing Update */
@@ -149,7 +149,7 @@ public interface Api {
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
     /* FB Link to */
-    @POST("/api/v1/users/link_to_facebook")
+    @POST("/rest/v1/users/link_to_facebook")
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
     /* Cancel Subscription */

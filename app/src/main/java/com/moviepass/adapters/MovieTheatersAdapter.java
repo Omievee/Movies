@@ -1,10 +1,14 @@
 package com.moviepass.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import com.moviepass.listeners.ShowtimeClickListener;
 import com.moviepass.model.Screening;
 import com.moviepass.model.Theater;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -53,8 +58,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public RadioButton showTime;
 
 
-    public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
+    public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ArrayList<Theater> theaterArrayList, ShowtimeClickListener showtimeClickListener) {
         this.screeningsArrayList = screeningsArrayList;
+        this.theaterArrayList = theaterArrayList;
         this.showtimeClickListener = showtimeClickListener;
     }
 
@@ -73,8 +79,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         TextView notSupported;
         @BindView(R.id.ONE)
         LinearLayout cardview;
-//        @BindView(R.id.SHOWTIME_MOVIE)
-//        RadioButton showTime;
+
+        @BindView(R.id.THEATER_DISTANCE_LISTITEM)
+        TextView distance;
 
         @BindView(R.id.progress)
         View progress;
@@ -92,6 +99,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             showTimesGrid = v.findViewById(R.id.THEATER_SHOWTIMEGRID);
             notSupported = v.findViewById(R.id.Not_Supported);
             cardview = v.findViewById(R.id.ONE);
+            distance = v.findViewById(R.id.THEATER_DISTANCE_LISTITEM);
         }
 
 
@@ -113,14 +121,37 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
+        Theater theater = theaterArrayList.get(position);
 
+        int theaterID = screeningsArrayList.get(position).getTribuneTheaterId();
 
+        for (int i = 0; i < theaterArrayList.size(); i++) {
+            if (theaterArrayList.get(i).getTribuneTheaterId() == theaterID) {
+                double distance = theaterArrayList.get(i).getDistance();
+                HOLDER.distance.setText(String.valueOf(distance));
+                final Uri uri = Uri.parse("geo:" + theaterArrayList.get(i).getLat() + "," + theaterArrayList.get(i).getLon() + "?q=" + Uri.encode(theaterArrayList.get(i).getName()));
+
+                HOLDER.distance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            HOLDER.itemView.getContext().startActivity(mapIntent);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(HOLDER.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception x) {
+                            x.getMessage();
+                        }
+                    }
+                });
+            }
+        }
         HOLDER.TheaterName.setText(screening.getTheaterName());
         HOLDER.TheaterAddressListItem.setText(screening.getTheaterAddress());
         HOLDER.showTimesGrid.removeAllViews();
         HOLDER.showTimesGrid.setPadding(40, 10, 40, 10);
-
-
         final Screening selectedScreening = screening;
 
         if (screening.getStartTimes() != null) {

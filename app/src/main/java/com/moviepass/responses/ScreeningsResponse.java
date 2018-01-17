@@ -1,6 +1,7 @@
 package com.moviepass.responses;
 
 import com.moviepass.model.Screening;
+import com.moviepass.model.Theater;
 
 import org.parceler.Parcel;
 
@@ -15,6 +16,11 @@ public class ScreeningsResponse {
 
     public String availability;
     public List<Screening> screenings;
+    public List<Theater> theaters;
+
+    public List<Theater> getTheaters() {
+        return theaters;
+    }
 
     public List<Screening> getScreenings() {
         return screenings;

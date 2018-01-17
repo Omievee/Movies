@@ -44,6 +44,7 @@ import com.moviepass.model.Movie;
 import com.moviepass.model.Reservation;
 import com.moviepass.model.Screening;
 import com.moviepass.model.ScreeningToken;
+import com.moviepass.model.Theater;
 import com.moviepass.network.RestCallback;
 import com.moviepass.network.RestClient;
 import com.moviepass.network.RestError;
@@ -60,6 +61,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -98,12 +100,15 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     MovieTheatersAdapter movieTheatersAdapter;
     ScreeningsResponse screeningsResponse;
 
+
     ImageView backButton;
     TextView THEATER_ADDRESS_LISTITEM;
     TextView selectedMovieTitle;
     ImageButton selectedMovieSynopsis;
 
     ArrayList<Screening> selectedScreeningsList;
+    ArrayList<Theater> theatersList;
+
     ArrayList<String> selectedShowtimesList;
 
     @BindView(R.id.SELECTED_THEATERS)
@@ -199,13 +204,14 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
 
         selectedScreeningsList = new ArrayList<>();
+        theatersList = new ArrayList<>();
 
 
         /* Theaters RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
         selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-        movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, this);
+        movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, theatersList, this);
         selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
         selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
@@ -453,11 +459,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             List<Screening> screeningsList = screenings.getScreenings();
                             if (screeningsList.size() == 0) {
                                 Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
+
                             } else {
 
                                 //Initial View to Display RecyclerView Based on User's Current Location
                                 screeningsResponse = response.body();
                                 selectedScreeningsList.clear();
+                                theatersList.clear();
                                 if (movieTheatersAdapter != null) {
                                     selectedTheatersRecyclerView.getRecycledViewPool().clear();
                                     movieTheatersAdapter.notifyDataSetChanged();
@@ -465,7 +473,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                                 if (screeningsResponse != null) {
                                     Log.d("getScreenings", screeningsResponse.getScreenings().toString());
+
                                     selectedScreeningsList.addAll(screeningsResponse.getScreenings());
+                                    theatersList.addAll(screeningsResponse.getTheaters());
+
                                     selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                                     selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                                             new ViewTreeObserver.OnPreDrawListener() {
