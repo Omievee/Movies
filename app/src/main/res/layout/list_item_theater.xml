@@ -8,6 +8,7 @@
     android:layout_margin="@dimen/margin_standard"
     android:elevation="@dimen/basic_elevation"
     android:padding="@dimen/margin_half"
+    app:cardBackgroundColor="@color/test_black"
     app:cardCornerRadius="5dp"
     tools:ignore="MissingPrefix">
 
@@ -15,7 +16,6 @@
         android:id="@+id/rel_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/showtime_rounded_rectangle"
         android:orientation="vertical">
 
         <TextView
@@ -27,7 +27,7 @@
             android:maxLines="2"
             android:text="@string/fragment_theaters_name"
             android:textAlignment="viewStart"
-            android:textColor="@color/new_red"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -39,7 +39,7 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/selector_gun_metal_to_white_ish"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
 
@@ -51,7 +51,7 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/selector_gun_metal_to_white_ish"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <LinearLayout
@@ -82,19 +82,19 @@
                 android:id="@+id/theater_distance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
                 android:layout_marginTop="@dimen/margin_half"
+                android:layout_weight=".5"
                 android:padding="@dimen/more_spacing"
                 android:text="@string/fragment_theaters_distance"
                 android:textAlignment="viewEnd"
-                android:textColor="@color/black_text"
+                android:textColor="@color/white"
                 android:textSize="14sp" />
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".1"
                 android:layout_marginTop="@dimen/margin_standard"
+                android:layout_weight=".1"
                 android:src="@drawable/locationiconsmallred"
                 android:textAlignment="viewStart"
                 android:tint="@color/new_red" />

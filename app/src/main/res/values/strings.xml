@@ -67,10 +67,10 @@
 
     <string name="activity_onboarding_body_1">See a movie a day in theaters for just $9.95 per month!</string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
-    <!--<string name="activity_onboarding_body_3">Use the MoviePass app to check in to the movie and showtime you want to see.</string>-->
+    <!--<string name="activity_onboarding_body_3">Use the MoviePass apptestheck in to the movie and showtime you want to see.</string>-->
     <string name="activity_onboarding_body_3">From Hollywood blockbusters, to independent films, you can see any 2D movie from its first day of release.</string>
 
-    <!--<string name="activity_onboarding_body_4">Use the app to check into a theater, then swipe your card to get your ticket!</string>-->
+    <!--<string name="activity_onboarding_body_4">Use the apptestheck into a theater, then swipe your card to get your ticket!</string>-->
     <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the mail, and you\'re ready to go to the movies!</string>
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->

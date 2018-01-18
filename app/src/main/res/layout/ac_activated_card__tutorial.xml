@@ -6,12 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_blue"
-    tools:context="com.moviepass.activities.ActivatedCard_TutorialActivity">
+    tools:context="com.mobile.activities.ActivatedCard_TutorialActivity">
 
 
     <android.support.v4.view.ViewPager
         android:id="@+id/tutorial_container"
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

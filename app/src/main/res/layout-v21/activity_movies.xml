@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/COORDPARENT"
     android:layout_height="match_parent"
     android:background="@color/test_black"
     android:orientation="vertical">
@@ -28,25 +29,24 @@
         android:id="@+id/MovieSearch_Results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/MoviePass_HEADER"
         android:background="@android:drawable/screen_background_dark_transparent"
         android:visibility="gone">
 
     </ListView>
 
-    <ImageView
-        android:id="@+id/MoviePass_HEADER"
-        android:layout_width="150dp"
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/FAB_RESERVATION_MENU"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:src="@drawable/logo"
-        android:textAlignment="center"
-        android:tint="@color/white"
-        android:visibility="visible"
-        app:layout_collapseMode="pin" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="5dp"
+        android:elevation="5dp"
+        app:fab_colorRipple="@color/white"
+        app:fab_size="normal"
+        app:layout_anchorGravity="bottom"
+        app:menu_colorNormal="@color/new_red"
+        app:menu_icon="@drawable/ticketnavwhite" />
 
     <include
         android:id="@+id/navigation"

@@ -19,6 +19,7 @@
                 android:id="@+id/LAYOUT1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -90,17 +91,36 @@
                 android:textColor="@color/white_ish"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/ETIX_SEAT"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ETIX_SHOWTIME"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_half"
-                android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
-                android:text="[ SEAT # ]"
-                android:textColor="@color/new_red"
-                android:textSize="18sp" />
+
+                android:layout_toEndOf="@id/ETIX_MOVIEPOSTER">
+
+
+                <TextView
+                    android:id="@+id/SEAT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:text="Seat: "
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/ETIX_SEAT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:layout_toRightOf="@id/SEAT"
+                    android:text="A1"
+                    android:textColor="@color/new_red"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
 
 
         </RelativeLayout>
@@ -124,10 +144,10 @@
         android:layout_marginBottom="75dp"
         android:background="@drawable/mpbutton1"
         android:padding="@dimen/margin_standard"
-        android:text="Confirm E-Ticket"
+        android:text="Get E-Ticket"
         android:textAlignment="center"
-        android:textColor="@color/white"
         android:textAllCaps="false"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold" />
 

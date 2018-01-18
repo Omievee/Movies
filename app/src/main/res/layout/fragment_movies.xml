@@ -1,34 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/MOVIES_MAINCONTENT"
+    style="@style/Theme.AppCompat.NoActionBar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <!--LAYOUT FOR IMAGE TRANSITION - APP, Collapse, <IMAGE>, Toolbar
-    LAYOUT FOR MAIN MOVIES PAGE WITH RECYCLERS & SUCH..
-    -->
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/MAINPAGE_APPBAR"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
-        <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/MAINPAGE_collapsing_toolbar"
+        <FrameLayout
+            android:id="@+id/FRAME"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="5dp"
-            android:fitsSystemWindows="true"
-            app:contentScrim="@color/test_black"
-            app:expandedTitleMarginEnd="64dp"
-            app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:layout_height="wrap_content">
 
 
             <android.support.v7.widget.RecyclerView
@@ -39,26 +26,59 @@
 
             </android.support.v7.widget.RecyclerView>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/MAINPAGE_TOOLBAR"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:paddingTop="@dimen/margin_half"
-                app:popupTheme="@style/ThemeOverlay.AppCompat" />
+            <ImageView
+                android:id="@+id/MoviePass_HEADER"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:src="@drawable/logo"
+                android:textAlignment="center"
+                android:tint="@color/white"
+                android:visibility="visible"
+                app:layout_collapseMode="pin" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+
+        </FrameLayout>
+
+        <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:id="@+id/MAINPAGE_APPBAR"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
+
+        <!--<android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/MAINPAGE_collapsing_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:elevation="5dp"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--app:contentScrim="@color/test_black"-->
+        <!--app:expandedTitleMarginEnd="64dp"-->
+        <!--app:expandedTitleMarginStart="48dp"-->
+        <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
 
 
-    </android.support.design.widget.AppBarLayout>
+        <!---->
+        <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/MAINPAGE_TOOLBAR"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:paddingTop="@dimen/margin_half"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat" />-->
 
-    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+
+
+        <!--</android.support.design.widget.AppBarLayout>-->
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_below="@id/FRAME"
+            android:layout_marginTop="@dimen/margin_standard"
             android:animateLayoutChanges="true">
 
             <LinearLayout
@@ -154,36 +174,27 @@
 
             </LinearLayout>
 
-            <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-
 
         </RelativeLayout>
 
+        <!--<com.github.clans.fab.FloatingActionMenu-->
+        <!--android:id="@+id/FAB_RESERVATION_MENU"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginEnd="@dimen/margin_half"-->
+        <!--android:elevation="5dp"-->
+        <!--app:fab_colorRipple="@color/white"-->
+        <!--app:fab_size="normal"-->
+        <!--app:menu_colorNormal="@color/new_red"-->
+        <!--app:menu_icon="@drawable/ticketnavwhite" />-->
 
-    </android.support.v4.widget.NestedScrollView>
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/FAB_RESERVATION_MENU"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginEnd="@dimen/margin_half"
-        android:elevation="5dp"
-        android:visibility="visible"
-        app:fab_colorRipple="@color/white"
-        app:fab_size="normal"
-        app:menu_colorNormal="@color/new_red"
-        app:menu_icon="@drawable/ticketnavwhite" />
-
-
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    </RelativeLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
-
+</ScrollView>

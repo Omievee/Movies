@@ -23,10 +23,10 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <RelativeLayout
-                android:background="@color/test_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
+                android:background="@color/test_blue"
                 android:padding="@dimen/margin_half"
                 app:layout_collapseMode="parallax">
 
@@ -65,7 +65,7 @@
                     android:id="@+id/FIRST"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
                     android:animateLayoutChanges="true"
                     app:layout_collapseMode="parallax">
 
@@ -80,28 +80,6 @@
                         android:textColor="@color/white"
                         app:layout_collapseMode="parallax" />
 
-                    <ImageView
-                        android:id="@+id/CINEMA_E-TICKETING"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="@dimen/double_margin_standard"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_e_tickets"
-                        android:tint="@color/white"
-                        android:visibility="visible"
-                        app:layout_collapseMode="parallax" />
-
-                    <ImageView
-                        android:id="@+id/CINEMA_RES_SEATS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/iconseatcopy"
-                        android:tint="@color/white"
-                        android:visibility="visible"
-                        app:layout_collapseMode="parallax" />
 
                 </RelativeLayout>
 
@@ -110,8 +88,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/FIRST"
                     android:animateLayoutChanges="true"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
                     app:layout_collapseMode="parallax">
 
 
@@ -119,6 +95,8 @@
                         android:id="@+id/CINEMA_ZIPCITY"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerInParent="true"
                         android:layout_marginStart="@dimen/margin_standard"
                         android:lines="1"
                         android:text="[ CINEMA ADDRESS 2]"
@@ -129,9 +107,35 @@
                         android:id="@+id/CINEMA_PIN"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/CINEMA_ZIPCITY"
-                        android:paddingStart="@dimen/margin_standard"
+                        android:paddingStart="@dimen/margin_half"
+                        android:layout_centerInParent="true"
+                        android:layout_toEndOf="@id/CINEMA_ZIPCITY"
                         android:src="@drawable/locationiconsmallred"
+                        app:layout_collapseMode="parallax" />
+
+
+                    <ImageView
+                        android:id="@+id/CINEMA_E-TICKETING"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/ic_e_tickets"
+                        android:tint="@color/white"
+                        android:visibility="visible"
+                        app:layout_collapseMode="parallax" />
+
+                    <ImageView
+                        android:id="@+id/CINEMA_RES_SEATS"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/iconseatcopy"
+                        android:tint="@color/white"
+                        android:visibility="visible"
                         app:layout_collapseMode="parallax" />
 
                 </RelativeLayout>

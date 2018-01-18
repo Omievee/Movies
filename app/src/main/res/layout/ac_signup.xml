@@ -10,7 +10,7 @@
 
     <view
         android:id="@+id/MAIN_FRAGMENT_CONTAINER_SIGNUP"
-        class="com.moviepass.activities.SignUpActivity$NonSwipeableViewPager"
+        class="com.mobile.activities.SignUpActivity$NonSwipeableViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

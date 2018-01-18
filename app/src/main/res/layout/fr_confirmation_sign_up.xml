@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_blue"
-    tools:context="com.moviepass.fragments.ConfirmationSignUpFragment">
+    tools:context="com.mobile.fragments.ConfirmationSignUpFragment">
 
     <FrameLayout
         android:id="@+id/frame_layout"

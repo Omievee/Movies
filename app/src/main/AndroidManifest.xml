@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".application.Application"
+        android:name="com.mobile.application.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -113,7 +113,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SplashActivity"
+            android:name="com.mobile.activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/RedTheme">
@@ -124,31 +124,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.BrowseActivity"
+            android:name="com.mobile.activities.BrowseActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustNothing" />
         <activity
-            android:name=".activities.ConfirmationActivity"
+            android:name="com.mobile.activities.ConfirmationActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.LogInActivity"
-            android:parentActivityName=".activities.OnboardingActivity"
+            android:name="com.mobile.activities.LogInActivity"
+            android:parentActivityName="com.mobile.activities.OnboardingActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.OnboardingActivity" />
+                android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
         <activity
-            android:name=".activities.MovieActivity"
-            android:parentActivityName=".activities.MoviesActivity"
+            android:name="com.mobile.activities.MovieActivity"
+            android:parentActivityName="com.mobile.activities.MoviesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MoviesActivity" />
+                android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
-            android:name=".activities.MoviesActivity"
+            android:name="com.mobile.activities.MoviesActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -160,91 +160,88 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activities.NoDataActivity"
+            android:name="com.mobile.activities.NoDataActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.NotificationsActivity"
+            android:name="com.mobile.activities.NotificationsActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.OnboardingActivity"
+            android:name="com.mobile.activities.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.ProfileActivity"
+            android:name="com.mobile.activities.ProfileActivity"
             android:windowSoftInputMode="adjustPan"
 
-            android:parentActivityName=".activities.MoviesActivity"
+            android:parentActivityName="com.mobile.activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MoviesActivity" />
+                android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
-            android:name=".activities.ReservationsActivity"
-            android:parentActivityName=".activities.MoviesActivity"
+            android:name="com.mobile.activities.ReservationsActivity"
+            android:parentActivityName="com.mobile.activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MoviesActivity" />
+                android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
-            android:name=".activities.SelectSeatActivity"
+            android:name="com.mobile.activities.SelectSeatActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.MoviesActivity"
+            android:name="com.mobile.activities.SettingsActivity"
+            android:parentActivityName="com.mobile.activities.MoviesActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MoviesActivity" />
+                android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
-            android:name=".activities.SignUpFirstOpenActivity"
-            android:parentActivityName=".activities.OnboardingActivity"
+            android:name="com.mobile.activities.SignUpFirstOpenActivity"
+            android:parentActivityName="com.mobile.activities.OnboardingActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.OnboardingActivity" />
+                android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
         <activity
-            android:name=".activities.SignUpActivity"
+            android:name="com.mobile.activities.SignUpActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".activities.TheaterActivity"
-            android:parentActivityName=".activities.TheatersActivity"
+            android:name="com.mobile.activities.TheaterActivity"
+            android:parentActivityName="com.mobile.activities.TheatersActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.TheatersActivity" />
+                android:value="com.mobile.activities.TheatersActivity" />
         </activity>
         <activity
-            android:name=".activities.TheatersActivity"
-            android:parentActivityName=".activities.MoviesActivity"
+            android:name="com.mobile.activities.TheatersActivity"
+            android:parentActivityName="com.mobile.activities.MoviesActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MoviesActivity" />
+                android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
-            android:name=".activities.VerificationActivity"
+            android:name="com.mobile.activities.VerificationActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.VerificationPictureActivity"
+            android:name="com.mobile.activities.VerificationPictureActivity"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ViewTheatersActivity"
-            android:theme="@style/AppTheme" />
+
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="817d4d68505df552813b127d4149583ade2132e1" />
 
-        <activity android:name=".mobile.ETicketConfirmatin" />
-        <activity android:name=".activities.EticketConfirmation" />
-        <activity android:name=".activities.ActivateMoviePassCard" />
-        <activity android:name=".activities.ActivatedCard_TutorialActivity" />
+        <activity android:name="com.mobile.activities.EticketConfirmation" />
+        <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
+        <activity android:name="com.mobile.activities.ActivatedCard_TutorialActivity" />
     </application>
 
 </manifest>

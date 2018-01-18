@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/margin_standard"
     android:paddingRight="@dimen/margin_standard"
     android:paddingBottom="@dimen/margin_standard"
-    tools:context="com.moviepass.fragments.ProfilePaymentInformationFragment">
+    tools:context="com.mobile.fragments.ProfilePaymentInformationFragment">
 
     <TextView
         android:id="@+id/header"

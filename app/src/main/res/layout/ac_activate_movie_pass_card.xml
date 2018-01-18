@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/ACTIVATE"
     android:background="@color/test_blue"
-    tools:context="com.moviepass.activities.ActivateMoviePassCard">
+    tools:context="com.mobile.activities.ActivateMoviePassCard">
 
 
     <FrameLayout

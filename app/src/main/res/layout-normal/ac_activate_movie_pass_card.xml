@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_blue"
-    tools:context="com.moviepass.activities.ActivateMoviePassCard">
+    tools:context="com.mobile.activities.ActivateMoviePassCard">
 
 
     <FrameLayout
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_half"
             android:layout_marginStart="@dimen/margin_half"
-            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/doubledouble_margin_standard"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -123,7 +123,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_margin="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_marginEnd="@dimen/margin_half"
             android:src="@drawable/close_white" />
 
 
