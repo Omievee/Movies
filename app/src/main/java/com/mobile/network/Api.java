@@ -81,6 +81,9 @@ public interface Api {
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
+//    @POST("/register/create/json")
+//    Call<Object> registerCredentials(@Body CredentialsRequest request);
+
     @POST("/register/create/json")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 

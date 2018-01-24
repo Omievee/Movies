@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal"
-    app:cardBackgroundColor="@color/test_black">
+    android:background="@color/test_black"
+    android:gravity="center_horizontal">
 
     <LinearLayout
         android:id="@+id/NoPending"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/double_margin_standard">
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:orientation="vertical"
+        android:visibility="gone">
 
 
         <TextView
@@ -24,93 +26,146 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dp" />
+
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/Pending_Data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_below="@id/NoPending"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/PendingRes_IMage"
-            android:layout_width="95dp"
-            android:layout_height="150dp"
-            android:layout_margin="@dimen/double_margin_standard"
-            app:roundedCornerRadius="4dp"
-            fresco:failureImage="@drawable/film_reel_icon"
-            fresco:failureImageScaleType="centerInside" />
-
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/REL1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/double_margin_standard"
-            android:orientation="vertical">
-
+            android:layout_marginTop="@dimen/margin_half"
+            android:background="@color/charcoal"
+            android:padding="@dimen/margin_half">
 
             <TextView
                 android:id="@+id/PendingRes_Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_standard"
-                android:text="[ Pending Title ]"
+                android:elevation="5dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="[ MOVIE TITLE ]"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
-
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/PendingRes_Location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/PendingRes_Title"
+                android:layout_marginTop="@dimen/margin_half"
                 android:text="[ Pending Location ]"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
+
 
             <TextView
                 android:id="@+id/PendingRes_Time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/PendingRes_Title"
+                android:layout_marginTop="@dimen/margin_half"
                 android:text="[ Pending Time ]"
-                android:textColor="@color/white"
+                android:textColor="@color/new_red"
                 android:textSize="18dp" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/CONFIRMED_READY_MESSAGE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/REL1"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:text="@string/activity_confirmation_purchase_ticket"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/PendingRes_IMage"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/CONFIRMED_READY_MESSAGE"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:src="@drawable/mpmastercard2" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PendingRes_IMage"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/CONFIRMED_ZIP_TEXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:paddingEnd="@dimen/quadruple_margin_standard"
+                android:paddingStart="@dimen/quadruple_margin_standard"
+                android:text="@string/activity_confirmation_confirmation_text"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/PendingRes_Code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/CONFIRMED_ZIP_TEXT"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:background="@drawable/confirmation_code_confirm"
                 android:text="[ Code ]"
                 android:textColor="@color/white"
                 android:textSize="18dp"
-                android:visibility="invisible" />
+                android:visibility="visible" />
 
-        </LinearLayout>
 
-    </LinearLayout>
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/PEndingRes_Cancel"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_margin="@dimen/margin_standard"
+        android:layout_below="@id/Pending_Data"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_half"
         android:background="@drawable/mpbutton1"
         android:padding="@dimen/margin_half"
         android:text="Cancel Reservation"
         android:textColor="@color/white"
         android:textSize="13sp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-
-</android.support.v7.widget.CardView>
+</RelativeLayout>

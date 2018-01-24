@@ -1,5 +1,7 @@
 package com.mobile.responses;
 
+import com.mobile.model.Reservation;
+
 /**
  * Created by o_vicarra on 12/20/17.
  */
@@ -13,6 +15,12 @@ public class ActiveReservationResponse {
     String redemption_code;
     String showtime;
     String eTicket;
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    Reservation reservation;
 
     public String geteTicket() {
         return eTicket;
@@ -36,21 +44,6 @@ public class ActiveReservationResponse {
 
     public String getTitle() {
         return title;
-    }
-
-
-
-    int reservationId;
-
-
-    public ActiveReservationResponse(int reservationId) {
-        this.reservationId = reservationId;
-    }
-
-
-
-    public int getReservationId() {
-        return reservationId;
     }
 
 

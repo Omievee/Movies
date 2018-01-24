@@ -8,16 +8,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.mobile.activities.ConfirmationActivity;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
+import com.mobile.requests.ChangedMindRequest;
 import com.mobile.responses.ActiveReservationResponse;
+import com.mobile.responses.ChangedMindResponse;
 import com.moviepass.R;
+
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,13 +49,14 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
     ActiveReservationResponse reservationResponse;
     public static final String TAG = "found";
-
+    int reservation;
     View progress;
     TextView pendingReservationTitle, pendingReservationTheater, pendingReservationTime, pendingReservationCode;
 
     Button pendingResrvationCANCELBUTTON;
-    SimpleDraweeView pendingPosterImage;
-    LinearLayout pendingLayout, noPending;
+    ImageView pendingPosterImage;
+    LinearLayout noPending;
+    RelativeLayout pendingLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,10 +87,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
         pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(getActivity(), "Canceled", Toast.LENGTH_SHORT).show();
+                cancelPending();
             }
-
         });
 
         getPendingReservation();
@@ -97,9 +105,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                     ActiveReservationResponse active = response.body();
                     progress.setVisibility(View.GONE);
 
-                    Log.d(TAG, "onResponse: " + active.toString());
-
-                    if(active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
+                    pendingResrvationCANCELBUTTON.setVisibility(View.VISIBLE);
+                    if (active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
                         pendingLayout.setVisibility(View.VISIBLE);
                         noPending.setVisibility(View.GONE);
 
@@ -114,16 +121,23 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                             e.printStackTrace();
                         }
 
-                    }else {
+                    } else {
                         pendingLayout.setVisibility(View.GONE);
                         noPending.setVisibility(View.VISIBLE);
                     }
+
+                    reservation = active.getReservation().getId();
 
                     Log.d(TAG, "title : " + active.getTitle());
                     Log.d(TAG, "theater : " + active.getTheater());
                     Log.d(TAG, "seat : " + active.getSeat());
                     Log.d(TAG, "showtime : " + active.getShowtime());
                     Log.d(TAG, "eticket : " + active.geteTicket());
+                    Log.d(TAG, "reservation ID: " + active.getReservation().getId());
+
+
+                } else {
+                    progress.setVisibility(View.GONE);
 
                 }
 
@@ -132,7 +146,48 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
             @Override
             public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server error; Try again", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    private void cancelPending() {
+        progress.setVisibility(View.VISIBLE);
+        ChangedMindRequest request = new ChangedMindRequest(reservation);
+        RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
+            @Override
+            public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
+                ChangedMindResponse responseBody = response.body();
+                progress.setVisibility(View.GONE);
+
+
+                if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+
+                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                    }
+                } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
+                    dismiss();
+                } else if (responseBody != null && response.isSuccessful()) {
+                    Toast.makeText(getActivity(), responseBody.getMessage(), Toast.LENGTH_LONG).show();
+                    dismiss();
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+
+                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RestError restError) {
+                progress.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -138,7 +138,6 @@ public class ConfirmationActivity extends BaseActivity {
                 Log.d(TAG, "CLICKED: ");
                 progress.setVisibility(View.VISIBLE);
                 ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
-
                 RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
                     @Override
                     public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {

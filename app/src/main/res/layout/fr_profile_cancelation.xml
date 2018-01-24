@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:orientation="vertical">
 
 
@@ -145,8 +146,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/warning"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:layout_marginBottom="@dimen/margin_half"
+                    android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:background="@drawable/mpbutton1"
                     android:text="Cancel Subscription"
                     android:textSize="15sp" />

@@ -4,10 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -95,28 +97,30 @@ public class MoviesActivity extends BaseActivity {
 
         View parentLayout = findViewById(R.id.COORDPARENT);
 
+        Log.d(TAG, "OMIE: " + UserPreferences.getRestrictionSubscriptionStatus());
 
-//        if (UserPreferences.getIsSubscriptionActivationRequired()) {
-//            Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-//            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-//            params.setMargins(0, 0, 0, 180);
-//            snack.getView().setLayoutParams(params);
-//            snack.show();
-//            View sb = snack.getView();
-//            snack.getView().setHovered(true);
-//            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-//            snack.setActionTextColor(getResources().getColor(R.color.white));
-//            snack.setAction("Ok", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-//                    startActivity(activateCard);
-//                }
-//            });
-//
-//            reservationsMenu.setVisibility(View.GONE);
-//        }
+
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
+            params.setMargins(0, 0, 0, 180);
+            snack.getView().setLayoutParams(params);
+            snack.show();
+            View sb = snack.getView();
+            snack.getView().setHovered(true);
+            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+            snack.setActionTextColor(getResources().getColor(R.color.white));
+            snack.setAction("Ok", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+                    startActivity(activateCard);
+                }
+            });
+
+            reservationsMenu.setVisibility(View.GONE);
+        }
 
     }
 
