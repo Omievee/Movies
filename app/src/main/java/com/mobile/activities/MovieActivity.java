@@ -159,9 +159,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
-        Log.d(TAG, "before: ");
         ProgressBar.setVisibility(View.VISIBLE);
-        Log.d(TAG, "after: ");
 
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,16 +251,26 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 fragobj.setArguments(bundle);
                 FragmentManager fm = getSupportFragmentManager();
                 fragobj.show(fm, "fr_dialogfragment_synopsis");
-                Log.d(TAG, "syno: " + movie.getSynopsis());
+            }
+        });
+        selectedMoviePoster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String synopsis = movie.getSynopsis();
+                String title = movie.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
+
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
             }
         });
 
         filmRating.setText("Rated: " + movie.getRating());
 
-        Blurry.with(MovieActivity.this).radius(10).sampling(8)
-                .async()
-                .capture(findViewById(R.id.SELECTED_MOVIE_IMAGE))
-                .into((ImageView) findViewById(R.id.imgBgBlur));
 
     }
 

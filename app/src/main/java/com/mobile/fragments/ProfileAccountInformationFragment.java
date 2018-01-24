@@ -71,7 +71,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     RelativeLayout userOldBilling, shippingClick, billingClick;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping;
+            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userMPCardNum, userMPExpirNum;
 
     Button userSave;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
@@ -136,6 +136,9 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         userSave = rootView.findViewById(R.id.saveChanges);
         cancelSubscription = new ProfileCancellationFragment();
+
+        userMPCardNum = rootView.findViewById(R.id.MPCardNum);
+        userMPExpirNum = rootView.findViewById(R.id.MPExpirNum);
 
         return rootView;
 
@@ -349,6 +352,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                         userPlanPrice.setText(planList.get(1));
 
                     }
+
+                    Log.d(Constants.TAG, "onResponse: " + response.body());
 
                     progress.setVisibility(View.GONE);
 

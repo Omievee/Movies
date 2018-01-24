@@ -131,7 +131,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
-        Theater theater = theaterArrayList.get(position);
 
         int theaterID = screeningsArrayList.get(position).getTribuneTheaterId();
         String theaterName = screeningsArrayList.get(position).getTheaterName();

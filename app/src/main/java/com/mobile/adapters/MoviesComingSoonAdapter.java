@@ -133,16 +133,17 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-                        holder.title.setText(movie.getTitle());
+//                        holder.title.setText(movie.getTitle());
                         try {
                             Date date = fm.parse(dateComingSoon);
 
-                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");  
+                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
                             holder.comingSoon.setText(out.format(date));
-
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        holder.mComingSoonMoviePosterDV.setImageURI(imgUrl + "/original.jpg");
+                        holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
                 })
                 .build();

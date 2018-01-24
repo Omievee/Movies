@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -70,18 +71,14 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
-
     com.github.clans.fab.FloatingActionButton fabLoadCard;
-
-    BottomNavigationView bottomNavigationView;
     Screening screening = new Screening();
-
     ArrayList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
-    GridLayout showtimeGrid;
     View progress;
     Reservation reservation;
 
+    public static final String POLICY = "policy";
     public static final String TOKEN = "token";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
@@ -96,12 +93,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final View rootView = inflater.inflate(R.layout.fr_theater, container, false);
         ButterKnife.bind(this, rootView);
 
-        Bundle extras = getArguments();
         //Object & Lists
         theaterObject = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(THEATER));
         moviesAtSelectedTheater = new ArrayList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
-
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
         fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
         fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
@@ -113,7 +108,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             }
         });
         progress = rootView.findViewById(R.id.progress);
-
         eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
         reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS);
 
@@ -130,13 +124,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         theaterSelectedAddressZip.setText(theaterObject.getCity() + " " + theaterObject.getState() + " " + theaterObject.getZip());
 
 
-        final Uri uri = Uri.parse("geo:" + theaterObject.getLat() +","+ theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
+        final Uri uri = Uri.parse("geo:" + theaterObject.getLat() + "," + theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
 
         cinemaPin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW,Uri.parse(String.valueOf(uri)));
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
                     mapIntent.setPackage("com.google.android.apps.maps");
                     getActivity().startActivity(mapIntent);
                 } catch (ActivityNotFoundException e) {
@@ -164,6 +158,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         loadMovies();
 
+        if (theaterObject.getName().contains("Flix Brewhouse")) {
+            String theater = theaterObject.getName();
+            Bundle bundle = new Bundle();
+            bundle.putString(POLICY, theater);
+
+            TheaterPolicy fragobj = new TheaterPolicy();
+            fragobj.setArguments(bundle);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fragobj.show(fm, "fr_theaterpolicy");
+        }
+        Log.d(TAG, "onCreateView: " + theaterObject.getName().contains("Flix Brewhouse"));
+
         return rootView;
     }
 
@@ -190,18 +196,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull final String showtime) {
         final String time = showtime;
         fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
-//
-//
-//        if (fabLoadCard.getVisibility() == View.GONE) {
-//            fabLoadCard.setVisibility(View.VISIBLE);
-//            fadeIn(fabLoadCard);
-//        } else {
-//            fabLoadCard.setVisibility(View.GONE);
-//            fadeOut(fabLoadCard);
-//        }
-
-//        String ticketType = screening.getProvider().ticketType;
-
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,7 +230,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
             @Override
             public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                Log.d("t", t.getMessage());
             }
         });
     }
@@ -267,8 +260,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
-            Log.d(TAG, "made it: ");
-
             PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
                     tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
             TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
@@ -281,8 +272,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
-            Log.d("ticketType", screening.getProvider().ticketType);
-
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
@@ -312,13 +301,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
                     } else {
-                        Log.d("mScreening,", screening.toString());
-
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
-                        Log.d(TAG, "reservation?: " + screening.getTitle() + screening.getTheaterName() + showtime);
-
-
                     }
                 } else {
                     try {
@@ -333,13 +317,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                             Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
                         }
                         Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "toast1: " + jObjError.getString("message"));
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "toast: " + e.getMessage());
                     }
-                    Log.d("resResponse:", "else onResponse:" + "onRespnse fail");
-
                     progress.setVisibility(View.GONE);
                     fabLoadCard.setEnabled(true);
                 }
@@ -378,10 +358,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             return false;
         }
     }
-
-//    public boolean isMPCardActive() {
-//
-//    }
 
     private void showActivateCardDialog(final Screening screening, final String showtime) {
         View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);

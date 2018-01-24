@@ -88,26 +88,28 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
+                .setOldController(holder.mNewReleasePosterDV.getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-
                             holder.title.setText(movie.getTitle());
                         }
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-                        holder.title.setText(movie.getTitle());
-                        holder.mNewReleasePosterDV.setImageResource(R.drawable.filmreel1);
-                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                        holder.mNewReleasePosterDV.setImageURI(imgUrl + "/original.jpg");
+//                        holder.title.setText(movie.getTitle());
+//                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                     }
                 })
                 .build();
 
-
+        if (imgUrl.toString().contains("default")) {
+            holder.mNewReleasePosterDV.refreshDrawableState();
+        }
         holder.mNewReleasePosterDV.setController(controller);
 
 

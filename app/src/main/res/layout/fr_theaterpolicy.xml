@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_blue"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/margin_half"
+        android:src="@drawable/close_white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginBottom="@dimen/double_margin_standard"
+            android:padding="@dimen/margin_standard">
+
+
+            <TextView
+                android:id="@+id/TheaterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[ Theater Name ] "
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:text="@string/Theater_Age_policy"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/Policy_One"
+                android:alpha=".7"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:text="@string/Theater_Late_policy"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:lineSpacingExtra="5dp"
+                android:text="@string/Policy_two"
+                android:alpha=".7"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

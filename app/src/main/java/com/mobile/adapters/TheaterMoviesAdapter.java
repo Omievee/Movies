@@ -132,11 +132,16 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             String translatedRunTime = hours + " hour " + minutes + " minutes";
             holder.movieTime.setText(translatedRunTime);
         }
+
+
+        if(screening.getTitle().equals("Check In if Movie Missing")){
+            holder.movieRating.setVisibility(View.GONE);
+            holder.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+        }
+
         holder.movieRating.setText("Rated: " +screening.getRating());
         holder.showtimeGrid.removeAllViews();
 
-        Log.d(TAG, "rating: " + screening.getRating());
-        Log.d(TAG, "runtime: " + screening.getRunningTime());
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -158,7 +163,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                            Log.d(TAG, "onCheckedChanged: ");
                             checked = group.findViewById(checkedId);
 
                             if (currentTime != null) {

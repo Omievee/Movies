@@ -38,6 +38,7 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_marginEnd="@dimen/margin_half"
             android:padding="@dimen/margin_half"
             android:src="@drawable/iconback"
             android:tint="@color/white" />
@@ -50,7 +51,7 @@
             android:lines="1"
             android:text="[CINEMA NAME]"
             android:textAlignment="center"
-            android:textColor="@color/new_red"
+            android:textColor="@color/white"
             android:textSize="23sp"
             android:textStyle="bold"
             app:layout_collapseMode="pin" />

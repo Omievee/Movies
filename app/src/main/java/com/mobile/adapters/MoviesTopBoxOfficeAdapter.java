@@ -74,11 +74,7 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
         holder.title.setText("");
-
-
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        Log.d(TAG, "Top box: " + imgUrl.toString());
-
         holder.mTopBoxMovieDV.setImageURI(imgUrl);
         holder.mTopBoxMovieDV.getHierarchy().setFadeDuration(500);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -92,16 +88,19 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-//                            holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
                             holder.title.setText(movie.getTitle());
                         }
+
+
+                        Log.d(TAG, "onFinalImageSet: " + imgUrl);
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-                        holder.title.setText(movie.getTitle());
-                        holder.mTopBoxMovieDV.setImageResource(R.drawable.film_reel_icon);
-                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+//                        holder.title.setText(movie.getTitle());
+//                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+                        holder.mTopBoxMovieDV.setImageURI(imgUrl + "/original.jpg");
+                        Log.d(TAG, "onFailure: " + imgUrl);
                     }
                 })
 
@@ -114,10 +113,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
             @Override
             public void onClick(View v) {
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mTopBoxMovieDV);
-//                Intent intent = new Intent(context, MovieActivity.class);
-//                intent.putExtra("Movie Selected", holder.getAdapterPosition());
-
-
             }
         });
     }

@@ -51,9 +51,11 @@ public class SettingsActivity extends BaseActivity {
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 ApiConfig apiConfig = new ApiConfig.Builder()
                         .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
+                        .setGotoConversationAfterContactUs(true)
+                        .setRequireEmail(false)
+                        .setEnableTypingIndicator(true)
                         .build();
 
                 Support.showFAQs(SettingsActivity.this, apiConfig);

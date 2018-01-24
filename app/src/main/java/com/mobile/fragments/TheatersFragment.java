@@ -718,7 +718,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         mTheaters.addAll(mTheatersResponse.getTheaters());
                                         for (int i = 0; i <mTheaters.size(); i++) {
 
-                                            Log.d(TAG, "onResponse: " + mTheaters.get(i).getName());
 
                                         }
                                         theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
