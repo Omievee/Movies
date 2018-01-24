@@ -33,7 +33,7 @@
                 fresco:failureImage="@drawable/film_reel_icon" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -43,11 +43,36 @@
                     android:id="@+id/cinema_movieTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
                     android:text="[ MOVIE TITLE ] "
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/cinema_movieRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cinema_movieTitle"
+                    android:layout_marginBottom="@dimen/margin_half"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:text="Runtime "
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/cinema_movieTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/cinema_movieTitle"
+                    android:layout_marginBottom="@dimen/margin_half"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:layout_toEndOf="@id/cinema_movieRating"
+                    android:text="Rating "
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
 
 
                 <!--<ImageButton-->
@@ -62,7 +87,7 @@
                 <!--android:tint="@color/white" />-->
 
 
-            </LinearLayout>
+            </RelativeLayout>
         </FrameLayout>
 
         <HorizontalScrollView

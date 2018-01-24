@@ -29,7 +29,6 @@ public class Screening {
     Provider provider;
     String qualifiers;
     boolean qualifiersApproved;
-    String rating;
     String releaseDate;
     int runningTime;
     String screen;
@@ -38,6 +37,12 @@ public class Screening {
     String theaterAddress;
     String theaterName;
     String title;
+    String rating;
+
+    public String getRating() {
+        return rating;
+    }
+
 
     int tribuneTheaterId;
 

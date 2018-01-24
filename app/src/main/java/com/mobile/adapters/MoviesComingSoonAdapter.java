@@ -94,27 +94,24 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
         holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
+        final String dateComingSoon = movie.getReleaseDate().substring(0, 10);
+        Log.d(TAG, "onBindViewHolder: " + dateComingSoon);
+        final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
 
-        Log.d(TAG, "coming soon: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
+                .setTapToRetryEnabled(true)
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        String dateComingSoon = movie.getReleaseDate().substring(0, 10);
 
-                        Date date = new Date(dateComingSoon);
-                        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(holder.itemView.getContext());
-                        Log.d(TAG, "onFinalImageSet: " + date);
-                        holder.comingSoon.setText( dateFormat.format(date));
-
-                        //Makes foreground of image darkx
+                        //Makes foreground of image dark
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                         }
@@ -122,11 +119,30 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                             holder.title.setText(movie.getTitle());
                         }
 
+                        try {
+                            Date date = fm.parse(dateComingSoon);
+
+                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+                            holder.comingSoon.setText(out.format(date));
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.title.setText(movie.getTitle());
+                        try {
+                            Date date = fm.parse(dateComingSoon);
+
+                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");  
+                            holder.comingSoon.setText(out.format(date));
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 })
                 .build();

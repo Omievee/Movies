@@ -71,6 +71,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         @BindView(R.id.SHOWTIMEGRID)
         RadioGroup showtimeGrid;
 
+        @BindView(R.id.cinema_movieRating)
+        TextView movieRating;
+
+        @BindView(R.id.cinema_movieTime)
+        TextView movieTime;
+
         @BindView(R.id.Not_Supported)
         TextView notSupported;
 
@@ -82,6 +88,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             cinemaPoster = v.findViewById(R.id.CINEMAPOSTER);
             showtimeGrid = v.findViewById(R.id.SHOWTIMEGRID);
             notSupported = v.findViewById(R.id.Not_Supported);
+            movieRating = v.findViewById(R.id.cinema_movieRating);
+            movieTime = v.findViewById(R.id.cinema_movieTime);
         }
     }
 
@@ -103,13 +111,32 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .build();
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build();
         holder.cinemaPoster.setImageURI(imgUrl);
         holder.cinemaPoster.getHierarchy().setFadeDuration(500);
         holder.cinemaTItle.setText(screening.getTitle());
         holder.cinemaPoster.setController(controller);
+
+        int t = screening.getRunningTime();
+        int hours = t / 60; //since both are ints, you get an int
+        int minutes = t % 60;
+
+        if (t == 0) {
+            holder.movieTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            holder.movieTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            holder.movieTime.setText(translatedRunTime);
+        }
+        holder.movieRating.setText("Rated: " +screening.getRating());
         holder.showtimeGrid.removeAllViews();
+
+        Log.d(TAG, "rating: " + screening.getRating());
+        Log.d(TAG, "runtime: " + screening.getRunningTime());
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {

@@ -220,7 +220,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                 case 3:
                     fragment = new ConfirmationSignUpFragment();
                     break;
-
             }
             return fragment;
         }

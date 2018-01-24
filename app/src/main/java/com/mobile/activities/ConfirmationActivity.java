@@ -96,18 +96,17 @@ public class ConfirmationActivity extends BaseActivity {
         Log.d(TAG, "zip: " + screeningToken.getZipCodeTicket());
 
 
-        if (screeningToken.getScreening().isEtx()) {
-            cancelReservation.setVisibility(View.GONE);
-        }
-
         if (screeningToken.getConfirmationCode() != null) {
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode();
-            Log.d(TAG, "CODE?: " + code);
-            confirmationCode.setText(code);
+            String zip = screeningToken.getZipCodeTicket();
 
-
+            if (code == null) {
+                confirmationCode.setText(zip);
+            } else {
+                confirmationCode.setText(code);
+            }
             if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
                 Log.d(TAG, "made it: ");
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
