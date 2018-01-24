@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,10 +27,14 @@ import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +67,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         SimpleDraweeView mComingSoonMoviePosterDV;
         @BindView(R.id.RELEASEDATE)
         TextView comingSoon;
+        @BindView(R.id.frame)
+        FrameLayout frame;
 
         public ViewHolder(View v) {
             super(v);
@@ -70,6 +77,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
             title = v.findViewById(R.id.poster_movie_title);
             mComingSoonMoviePosterDV = v.findViewById(R.id.ticket_top_red_dark);
             comingSoon = v.findViewById(R.id.RELEASEDATE);
+            frame = v.findViewById(R.id.frame);
         }
     }
 
@@ -82,9 +90,7 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
-
         holder.title.setText("");
-
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
         holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
@@ -101,35 +107,21 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
-                        try {
-                            Date date = format.parse(movie.getReleaseDate().substring(0, 10));
-                            Log.d(TAG, "onFinalImageSet: " + date);
+                        String dateComingSoon = movie.getReleaseDate().substring(0, 10);
 
-                            format = new SimpleDateFormat("MM/dd");
-                            Log.d(TAG, "new date: " + format.format(date));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        Date date = new Date(dateComingSoon);
+                        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(holder.itemView.getContext());
+                        Log.d(TAG, "onFinalImageSet: " + date);
+                        holder.comingSoon.setText( dateFormat.format(date));
 
-                        format = new SimpleDateFormat("MM/dd/yyyy");
-                        String releaseDate = movie.getReleaseDate().substring(0, 10);
-
-
-
-                        holder.comingSoon.setText(movie.getReleaseDate());
-
-                        //Makes foreground of image dark
+                        //Makes foreground of image darkx
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            holder.mComingSoonMoviePosterDV.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-
+                            holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                         }
-
-
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
-                            holder.mComingSoonMoviePosterDV.setImageResource(R.drawable.film_reel_icon);
+                        if (imgUrl.toString().contains("default")) {
                             holder.title.setText(movie.getTitle());
                         }
+
                     }
 
                     @Override
