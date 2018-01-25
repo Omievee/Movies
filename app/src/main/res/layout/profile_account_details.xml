@@ -128,15 +128,6 @@
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/MPExpir"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:text="Expiration:"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
 
                     <TextView
                         android:id="@+id/MPCardNum"
@@ -145,30 +136,14 @@
                         android:layout_below="@id/MPCArd"
                         android:layout_marginTop="@dimen/margin_standard"
                         android:text="[####]"
+                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                     <View
                         android:id="@+id/view2"
-                        android:layout_width="150dp"
+                        android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@id/MPCardNum"
-                        android:background="@color/white" />
-
-                    <TextView
-                        android:id="@+id/MPExpirNum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/view2"
-                        android:layout_centerHorizontal="true"
-                        android:text="[####]"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:layout_width="100dp"
-                        android:layout_height="1dp"
-                        android:layout_alignStart="@id/MPExpir"
-                        android:layout_below="@id/MPExpirNum"
-                        android:layout_centerHorizontal="true"
                         android:background="@color/white" />
 
 

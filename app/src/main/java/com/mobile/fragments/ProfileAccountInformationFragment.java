@@ -138,7 +138,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         cancelSubscription = new ProfileCancellationFragment();
 
         userMPCardNum = rootView.findViewById(R.id.MPCardNum);
-        userMPExpirNum = rootView.findViewById(R.id.MPExpirNum);
 
         return rootView;
 
@@ -354,11 +353,8 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     }
 
-                    Log.d(Constants.TAG, "onResponse: " + response.body());
 
                     progress.setVisibility(View.GONE);
-
-
 
                 }
             }

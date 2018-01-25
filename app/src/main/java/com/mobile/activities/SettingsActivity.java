@@ -1,5 +1,7 @@
 package com.mobile.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.LegalFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
@@ -27,10 +30,13 @@ import com.moviepass.R;
 public class SettingsActivity extends BaseActivity {
     protected BottomNavigationView bottomNavigationView;
 
+    LegalFragment legalFragment = new LegalFragment();
+
     RelativeLayout help;
-    RelativeLayout signout;
+    RelativeLayout signout, legal;
     Switch pushSwitch;
     TextView version;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +47,8 @@ public class SettingsActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-
         String versionName = BuildConfig.VERSION_NAME;
+        legal = findViewById(R.id.Legal);
         version = findViewById(R.id.VERSIOn);
         pushSwitch = findViewById(R.id.PushSwitch);
         help = findViewById(R.id.HELP);
@@ -67,7 +73,6 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 UserPreferences.clearUserId();
                 UserPreferences.clearFbToken();
-
                 Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
                 startActivity(intent);
                 finishAffinity();
@@ -95,6 +100,19 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
+
+        legal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager manager = getFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.settingsContainer, legalFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
     }
 
     @Override
