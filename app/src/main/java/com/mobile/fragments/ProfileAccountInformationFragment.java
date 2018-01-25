@@ -343,7 +343,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                     }
 
 
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
+                    Log.d(Constants.TAG, "MP#: " + userInfoResponse.getMoviePassCardNumber());
+                    userMPCardNum.setText(userInfoResponse.getMoviePassCardNumber());
 
                     String plan = userInfoResponse.getPlan();
                     List<String> planList = Arrays.asList(plan.split(" ", -1));
@@ -358,8 +359,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
 
 
-                    Log.d(Constants.TAG, "onCreateView: " + userAddress.getText().toString());
-                    Log.d(Constants.TAG, "onCreateView: " + userInfoResponse.getBillingCard());
 
                 }
             }

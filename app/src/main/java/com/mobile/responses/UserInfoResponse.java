@@ -17,6 +17,12 @@ public class UserInfoResponse {
     String shippingAddressLine1;
     String shippingAddressLine2;
     String plan;
+    String moviePassCardNumber;
+
+    public String getMoviePassCardNumber() {
+        return moviePassCardNumber;
+    }
+
 
     public UserInfoResponse() {
 

@@ -132,7 +132,6 @@
                         android:id="@+id/MPExpir"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:animateLayoutChanges="true"
                         android:text="Expiration:"
                         android:textColor="@color/white"
@@ -149,11 +148,11 @@
                         android:textSize="18sp" />
 
                     <View
-                        android:layout_width="100dp"
+                        android:id="@+id/view2"
+                        android:layout_width="150dp"
                         android:layout_height="1dp"
                         android:layout_below="@id/MPCardNum"
-                        android:background="@color/white"
-                        android:id="@+id/view2" />
+                        android:background="@color/white" />
 
                     <TextView
                         android:id="@+id/MPExpirNum"
@@ -167,8 +166,8 @@
                     <View
                         android:layout_width="100dp"
                         android:layout_height="1dp"
-                        android:layout_below="@id/MPExpirNum"
                         android:layout_alignStart="@id/MPExpir"
+                        android:layout_below="@id/MPExpirNum"
                         android:layout_centerHorizontal="true"
                         android:background="@color/white" />
 
