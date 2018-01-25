@@ -199,8 +199,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             public void onClick(View view) {
                 if (infoIsGood()) {
                     String ccNum = signup2CCNum.getText().toString();
-                    int ccEx = Integer.parseInt(signup2CCExp.getText().toString().substring(0, 2));
-                    int ccEx2 = Integer.parseInt(signup2CCExp.getText().toString().substring(3, 5));
+                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
+                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
                     String ccCVV = signup2CC_CVV.getText().toString();
                     creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
                     ((SignUpActivity) getActivity()).setPage();
@@ -417,7 +417,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     }
 
     public interface OnCreditCardEntered {
-        void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV);
+        void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
     }
 
 

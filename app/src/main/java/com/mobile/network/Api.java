@@ -57,7 +57,7 @@ public interface Api {
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
-    @GET("/rest/v1/auth/passwordReset/{emailAddress}")
+    @GET("/rest/v1/users/passwordReset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
 
     /* FB Login */
@@ -84,18 +84,18 @@ public interface Api {
 //    @POST("/register/create/json")
 //    Call<Object> registerCredentials(@Body CredentialsRequest request);
 
-    @POST("/register/create/json")
+    @POST("/rest/v1/prospects")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
     @GET("/rest/v1/register/amc_upgradeability/{zip}")
     Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
 
-    /* Personal Info */
-    @POST("/register/create/json")
-    Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
+//    /* Personal Info */
+//    @POST("/rest/v1/registration")
+//    Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
 
     /* SignUp */
-    @POST("/rest/v1/register/create/mobile")
+    @POST("/rest/v1/registration")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
     /* Check In */
@@ -111,6 +111,7 @@ public interface Api {
     @PUT("/rest/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
+    //TODO
     /* History  */
     @GET("/rest/v1/reservations")
     Call<HistoryResponse> getReservations();
@@ -155,6 +156,7 @@ public interface Api {
     @POST("/rest/v1/users/link_to_facebook")
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
+    //TODO
     /* Cancel Subscription */
     @POST("/rest/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);

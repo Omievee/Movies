@@ -497,17 +497,16 @@ public class ProfileAccountInformationFragment extends Fragment {
             public void onClick(View v) {
                 progress.setVisibility(View.VISIBLE);
 
-                updateShippingAddress();
+//                updateShippingAddress();
 
-//                String newCC = userNewBillingCC.getText().toString();
-//                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-//                Log.d(Constants.TAG, "onClick: " + ccExMonth);
-//                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-//                String newExp = ccExMonth + "/" + ccExYr;
-//                String newCVV = userNewBillingCVV.getText().toString();
-//
-//
-//                updateCreditCard(newCC, newExp, newCVV);
+                String newCC = userNewBillingCC.getText().toString();
+                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+                Log.d(Constants.TAG, "onClick: " + ccExMonth);
+                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+                String newExp = ccExMonth + "/" + ccExYr;
+                String newCVV = userNewBillingCVV.getText().toString();
+
+                updateCreditCard(newCC, newExp, newCVV);
 
 
             }
@@ -554,10 +553,8 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     public void updateCreditCard(String creditCardNumber, String expirationDate, String cvv) {
         progress.setVisibility(View.VISIBLE);
-
         int userId = UserPreferences.getUserId();
         CreditCardChangeRequest request = new CreditCardChangeRequest(creditCardNumber, expirationDate, cvv);
-
         RestClient.getAuthenticated().updateBillingCard(userId, request).enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
@@ -566,6 +563,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     progress.setVisibility(View.GONE);
 
+                    Log.d(Constants.TAG, "SUCCESS: ");
 //                    final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_payment_information_updated, Snackbar.LENGTH_LONG);
 //                    snackbar.show();
 

@@ -97,7 +97,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepThreeFragment = new SignUpStepThreeFragment();
         signUpStepOneFragment = new SignUpStepOneFragment();
 
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -144,7 +143,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     }
 
     @Override
-    public void OnCreditCardEntered(final String ccNum, final int ccExMonth, final int ccExYear, final String ccCVV) {
+    public void OnCreditCardEntered(final String ccNum, final String ccExMonth, final String ccExYear, final String ccCVV) {
         viewpagerAdapter.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
         String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
@@ -225,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
 
         @Override
-        public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {
+        public void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
             signUpStepThreeFragment.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
         }
     }

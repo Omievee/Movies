@@ -7,7 +7,6 @@
     android:background="@color/test_blue"
     tools:context="com.mobile.fragments.SignUpStepTwoFragment">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -108,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_half"
                         android:layout_marginStart="@dimen/margin_half"
-                        android:layout_marginTop="@dimen/margin_minimum"
+                        android:layout_marginTop="@dimen/margin_standard"
                         android:orientation="horizontal">
 
 
@@ -153,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_2"
-                    android:layout_marginTop="@dimen/margin_half"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:orientation="horizontal"
                     android:padding="@dimen/margin_half">
 
@@ -186,12 +185,12 @@
 
 
                 <TextView
+                    android:id="@+id/paymentmsg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_5"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_half"
-
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:gravity="center_horizontal"
                     android:text="You will be able to review all details before being charged."
                     android:textSize="15sp" />
@@ -201,7 +200,7 @@
                     android:id="@+id/LAYOUT_6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/LAYOUT_5"
+                    android:layout_below="@id/paymentmsg"
                     android:layout_marginTop="@dimen/margin_standard"
                     android:orientation="vertical"
                     android:padding="@dimen/margin_half"

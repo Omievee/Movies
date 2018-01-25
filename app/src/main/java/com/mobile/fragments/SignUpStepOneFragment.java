@@ -164,7 +164,9 @@ public class SignUpStepOneFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (canContinue()) {
-                            processSignUpInfo();
+//                            processSignUpInfo();
+                            ((SignUpActivity) getActivity()).setPage();
+
                         } else {
                             if (!isFirstNameValid()) {
                                 makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
@@ -181,7 +183,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean canContinue() {
-        if (isFirstNameValid() && isLastNameValid()) {
+        if (isFirstNameValid() && isLastNameValid() && isAddressValid()) {
             return true;
         } else {
             return false;
@@ -210,6 +212,15 @@ public class SignUpStepOneFragment extends Fragment {
         }
     }
 
+    public boolean isAddressValid() {
+        if (signUpAddress1.getText().toString().equals("")) {
+            Toast.makeText(getActivity(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void makeSnackbar(int message) {
         final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("OK", new View.OnClickListener() {
@@ -229,6 +240,7 @@ public class SignUpStepOneFragment extends Fragment {
         ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
         ((SignUpActivity) getActivity()).setState(signup1State.getText().toString());
         ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
+        ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
 
         String email = ((SignUpActivity) getActivity()).getEmail();
         String password = ((SignUpActivity) getActivity()).getPassword();
@@ -241,41 +253,46 @@ public class SignUpStepOneFragment extends Fragment {
         ProspectUser.state = signup1State.getText().toString();
         ProspectUser.zip = signup1Zip.getText().toString();
 
-        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
-                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
-                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.zip);
+        ((SignUpActivity) getActivity()).setPage();
 
-        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
-            @Override
-            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
-                RestClient.getUnauthenticated().getPlans(ProspectUser.zip).enqueue(new RestCallback<RegistrationPlanResponse>() {
-                    @Override
-                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
-                        progress.setVisibility(View.GONE);
-                        RegistrationPlanResponse registrationPlanResponse = response.body();
+        Log.d(TAG, "processSignUpInfo: " + ProspectUser.gender + " " + ProspectUser.dateOfBirth);
 
-                        if (registrationPlanResponse != null) {
-                            String price = (registrationPlanResponse.getPrice());
 
-                            ((SignUpActivity) getActivity()).setPage();
-                            Log.d("SUSOFprice", price);
-                        } else if (response.errorBody() != null) {
-                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RestError restError) {
-                        Toast.makeText(getActivity(), "System Error; Please Try again", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<PersonalInfoResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
+//                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
+//                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.zip);
+//
+//        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
+//            @Override
+//            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
+//                RestClient.getUnauthenticated().getPlans(ProspectUser.zip).enqueue(new RestCallback<RegistrationPlanResponse>() {
+//                    @Override
+//                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
+//                        progress.setVisibility(View.GONE);
+//                        RegistrationPlanResponse registrationPlanResponse = response.body();
+//
+//                        if (registrationPlanResponse != null) {
+//                            String price = (registrationPlanResponse.getPrice());
+//
+//                            ((SignUpActivity) getActivity()).setPage();
+//                            Log.d("SUSOFprice", price);
+//                        } else if (response.errorBody() != null) {
+//                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RestError restError) {
+//                        Toast.makeText(getActivity(), "System Error; Please Try again", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PersonalInfoResponse> call, Throwable t) {
+//                Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private void setButtonActions() {
@@ -289,6 +306,9 @@ public class SignUpStepOneFragment extends Fragment {
                         makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
                     } else if (!isLastNameValid()) {
                         makeSnackbar(R.string.fragment_sign_up_step_one_valid_last_name);
+                    } else if (signUpAddress1.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }

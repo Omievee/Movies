@@ -1,5 +1,6 @@
 package com.mobile.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -8,14 +9,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.mobile.Constants;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CredentialsRequest;
+import com.mobile.requests.PersonalInfoRequest;
 import com.moviepass.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,16 +36,16 @@ import retrofit2.Response;
  */
 
 public class SignUpFirstOpenActivity extends AppCompatActivity {
-
+    MaterialSpinner spinnerGender;
     RelativeLayout relativeLayout;
-    View redView;
     View progress;
-
+    static final int DATE_DIALOG_ID = 0;
     Button signupNowButton;
-    Button buttonSignUpFacebook;
     TextView seeMap;
-
-    EditText signupEmailInput;
+    EditText DOB;
+    int month, year, day;
+    Calendar myCalendar;
+    EditText signupEmailInput, signupEmailConfirm;
     android.support.design.widget.TextInputEditText signupPasswordInput;
 
     @Override
@@ -48,106 +58,145 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         signupPasswordInput = findViewById(R.id.SIGNUP_PASSSWORD);
         signupNowButton = findViewById(R.id.SIGNUP_BUTTON);
         progress = findViewById(R.id.progress);
+        DOB = findViewById(R.id.DOB);
+        signupEmailConfirm = findViewById(R.id.SIGNUP_EMAIL_confirm);
+        spinnerGender = findViewById(R.id.SPINNER);
 
-    
+        spinnerGender.setItems("Gender", "Male", "Female", "Other");
+
+        myCalendar = Calendar.getInstance();
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, day);
+                updateLabel();
+            }
+        };
+
+        DOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(SignUpFirstOpenActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
 
         signupNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progress.setVisibility(View.VISIBLE);
+                Log.d(Constants.TAG, "onClick: " + DOB.getText().toString());
+                if (!signupEmailInput.getText().toString().trim().equals(signupEmailConfirm.getText().toString().trim())) {
+                    Toast.makeText(view.getContext(), "Emails do not match", Toast.LENGTH_SHORT).show();
+                } else if (DOB.getText().toString().equals("") || spinnerGender.getText().toString().equals("Gender")) {
+                    Toast.makeText(SignUpFirstOpenActivity.this, "All fields are required", Toast.LENGTH_SHORT).show();
+                } else {
+                    progress.setVisibility(View.VISIBLE);
+                    final String email1 = signupEmailInput.getText().toString().trim();
+                    final String password = signupPasswordInput.getText().toString().trim();
+                    final String gender = spinnerGender.getText().toString().trim();
+                    final String birthday = DOB.getText().toString().trim();
+                    if (isValidEmail(email1) && isValidPassword(password)) {
+                        final CredentialsRequest request = new CredentialsRequest(email1);
+                        RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
+                            @Override
+                            public void onResponse(Call<Object> call, Response<Object> response) {
+                                progress.setVisibility(View.GONE);
+                                if (response != null && response.isSuccessful()) {
+                                    if (response.body().toString().contains(" userExists=1.0")) {
+                                        Toast.makeText(SignUpFirstOpenActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        ProspectUser.email = email1;
+                                        ProspectUser.password = password;
+                                        ProspectUser.gender = gender;
+                                        ProspectUser.dateOfBirth = birthday;
 
-                final String email = signupEmailInput.getText().toString().trim();
-                final String password = signupPasswordInput.getText().toString().trim();
+                                        Intent intent = new Intent(SignUpFirstOpenActivity.this, SignUpActivity.class);
+                                        intent.putExtra("email1", email1);
+                                        intent.putExtra("password", password);
+                                        intent.putExtra("gender", gender);
+                                        intent.putExtra("dateOfBirth", birthday);
+                                        startActivity(intent);
+                                    }
 
-
-                if (isValidEmail(email) && isValidPassword(password)) {
-                    /* TODO : animate this */
-
-                    CredentialsRequest request = new CredentialsRequest(email, password, password);
-                    Log.d("request", email + " " + password);
-
-                    RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            progress.setVisibility(View.GONE);
-
-                            if (response != null && response.isSuccessful()) {
-                                ProspectUser.email = email;
-                                ProspectUser.password = password;
-
-                                Intent intent = new Intent(SignUpFirstOpenActivity.this, SignUpActivity.class);
-                                intent.putExtra("email", email);
-                                intent.putExtra("password", password);
-                                startActivity(intent);
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
+                            @Override
+                            public void onFailure(Call<Object> call, Throwable t) {
                             /* TODO : Handle failure situation */
-                        }
-                    });
-                } else if (!isValidEmail(email)) {
-                    Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid email address", Snackbar.LENGTH_INDEFINITE);
-                    snackbar.setAction("OK", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    });
+                            }
+                        });
+                    } else if (!isValidEmail(email1)) {
+                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid email1 address", Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
 
-                    // Changing message text color
-                    snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-                    snackbar.show();
-                } else if (!isValidPassword(password)) {
-                    if (password.length() < 4) {
-                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create a password longer than four characters", Snackbar.LENGTH_INDEFINITE);
-                        snackbar.setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                progress.setVisibility(View.GONE);
-                            }
-                        });
                         // Changing message text color
                         snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
                         snackbar.show();
-                    } else if (password.length() > 20) {
-                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password shorter than twenty characters", Snackbar.LENGTH_INDEFINITE);
-                        snackbar.setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                progress.setVisibility(View.GONE);
-                            }
-                        });
-                        // Changing message text color
-                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-                        snackbar.show();
-                    } else if (password.contains(" ")) {
-                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password without spaces", Snackbar.LENGTH_INDEFINITE);
-                        snackbar.setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                progress.setVisibility(View.GONE);
-                            }
-                        });
-                        // Changing message text color
-                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-                        snackbar.show();
-                    } else {
-                        Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
-                        snackbar.setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                progress.setVisibility(View.GONE);
-                            }
-                        });
-                        // Changing message text color
-                        snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-                        snackbar.show();
+                    } else if (!isValidPassword(password)) {
+                        if (password.length() < 4) {
+                            Snackbar snackbar = Snackbar.make(relativeLayout, "Please create a password longer than four characters", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                            // Changing message text color
+                            snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                            snackbar.show();
+                        } else if (password.length() > 20) {
+                            Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password shorter than twenty characters", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                            // Changing message text color
+                            snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                            snackbar.show();
+                        } else if (password.contains(" ")) {
+                            Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password without spaces", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                            // Changing message text color
+                            snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                            snackbar.show();
+                        } else {
+                            Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
+                            snackbar.setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                            // Changing message text color
+                            snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
+                            snackbar.show();
+                        }
                     }
                 }
             }
         });
+    }
+
+
+
+
 
         /* seeMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +206,13 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }); */
+
+
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        DOB.setText(sdf.format(myCalendar.getTime()));
     }
 
     public static boolean isValidEmail(CharSequence target) {
@@ -222,4 +278,6 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();
     }
+
+
 }

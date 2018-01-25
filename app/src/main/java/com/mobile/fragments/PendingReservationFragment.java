@@ -82,8 +82,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progress.setVisibility(View.VISIBLE);
-
-
+        pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
         pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,10 +104,11 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                     ActiveReservationResponse active = response.body();
                     progress.setVisibility(View.GONE);
 
-                    pendingResrvationCANCELBUTTON.setVisibility(View.VISIBLE);
                     if (active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
                         pendingLayout.setVisibility(View.VISIBLE);
                         noPending.setVisibility(View.GONE);
+                        pendingResrvationCANCELBUTTON.setVisibility(View.VISIBLE);
+
 
                         pendingReservationTitle.setText(active.getTitle());
                         pendingReservationTheater.setText(active.getTheater());
@@ -124,10 +124,10 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                     } else {
                         pendingLayout.setVisibility(View.GONE);
                         noPending.setVisibility(View.VISIBLE);
+                        pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
+
                     }
-
                     reservation = active.getReservation().getId();
-
                     Log.d(TAG, "title : " + active.getTitle());
                     Log.d(TAG, "theater : " + active.getTheater());
                     Log.d(TAG, "seat : " + active.getSeat());
@@ -138,6 +138,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
                 } else {
                     progress.setVisibility(View.GONE);
+                    pendingLayout.setVisibility(View.GONE);
+                    noPending.setVisibility(View.VISIBLE);
 
                 }
 

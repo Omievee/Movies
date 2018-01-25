@@ -110,7 +110,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean hasActiveCard = restriction.getHasActiveCard();
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
 
-                    Log.d(Constants.TAG, "RESTRICTION: " + restriction);
+
+                    Log.d(Constants.TAG, "RESTRICTION: " + subscriptionActivationRequired);
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
@@ -119,7 +120,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                             UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
                             UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
 
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard);
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard, subscriptionActivationRequired);
+                        Log.d(Constants.TAG, "required?: " + subscriptionActivationRequired);
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity

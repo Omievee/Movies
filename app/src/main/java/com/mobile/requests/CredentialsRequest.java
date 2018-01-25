@@ -7,21 +7,10 @@ package com.mobile.requests;
 public class CredentialsRequest {
 
     String step = "CREDENTIALS";
-    PersonalInfo personalInfo;
+    String email;
 
-    public CredentialsRequest(String email, String password, String confirmPassword) {
-        this.personalInfo = new PersonalInfo(email, password, confirmPassword);
+    public CredentialsRequest(String email) {
+        this.email = email;
     }
 
-    class PersonalInfo {
-        String email;
-        String password;
-        String confirmPassword;
-
-        public PersonalInfo(String email, String password, String confirm) {
-            this.email = email;
-            this.password = password;
-            this.confirmPassword = confirm;
-        }
-    }
 }

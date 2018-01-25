@@ -121,7 +121,7 @@ public class UserPreferences {
     }
 
     public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
-                                       boolean verificationRequired, boolean hasActiveCard) {
+                                       boolean verificationRequired, boolean hasActiveCard, boolean subscriptionRequired) {
         SharedPreferences.Editor editor = sPrefs.edit();
 
         editor.putString(Constants.SUBSCRIPTION_STATUS, status);
@@ -130,6 +130,7 @@ public class UserPreferences {
         editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
         editor.putBoolean(Constants.VERIFICATION_REQUIRED, verificationRequired);
         editor.putBoolean(Constants.ACTIVE_CARD, hasActiveCard);
+        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, subscriptionRequired);
         editor.apply();
     }
 

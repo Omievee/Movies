@@ -121,7 +121,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
     @Override
-    public void OnCreditCardEntered(String ccNum, int ccExMonth, int ccExYear, String ccCVV) {//        confirmCCNum.setText(num);
+    public void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {//        confirmCCNum.setText(num);
         Log.d(TAG, "OnCreditCardEntered: " + ccNum + " " + ccExMonth + " " + ccExYear + " " + ccCVV);
 
     }
@@ -144,13 +144,14 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
 
-    public void beginRegistration(String cardNumber, int cardExpMonth, int cardExpYear, String cardCvv) {
+    public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
         progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
         String month = String.valueOf(cardExpMonth);
         //TODO: UPDATE IN 2099 to avoid signup failures
-        String year = "20" + String.valueOf(cardExpYear);
+        String year = "20" + cardExpYear;
+//        int YEAR = Integer.valueOf(year);
         Log.d(TAG, "beginRegistration: " + year);
         String cvv = String.valueOf(cardCvv);
 
@@ -200,10 +201,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             progress.setVisibility(View.VISIBLE);
 
             confirmSubmit.setEnabled(false);
-
             final SignUpRequest request = new SignUpRequest(creditCardNumber, month, year, cvv,
                     sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
                     email, firstName, lastName, password, amc3dMarkup);
+
+            Log.d(TAG, "NAMES: " + firstName + "  " + lastName);
 
 
             RestClient.getUnauthenticated().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
@@ -262,5 +264,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         });
         snackbar.show();
     }
+
 
 }

@@ -29,19 +29,19 @@ public class SignUpRequest {
     }
 
     //CC & FB
-    public SignUpRequest(String number, String month, String year, String ccv,
-                         String sStreet, String sStreet2, String sCity, String sState,
-                         String sZip, String bStreet, String bStreet2, String bCity,
-                         String bState, String bZip, String email, String firstName,
-                         String lastName, String password, boolean amc3dMarkup, String facebookToken) {
-
-        this.amc3dMarkup = amc3dMarkup;
-        this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
-        this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
-        this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName);
-        this.facebookToken = facebookToken;
-    }
+//    public SignUpRequest(String number, String month, String year, String ccv,
+//                         String sStreet, String sStreet2, String sCity, String sState,
+//                         String sZip, String bStreet, String bStreet2, String bCity,
+//                         String bState, String bZip, String email, String firstName,
+//                         String lastName, String password, boolean amc3dMarkup, String facebookToken) {
+//
+//        this.amc3dMarkup = amc3dMarkup;
+//        this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
+//        this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
+//        this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
+//        this.personalInfo = new PersonalInfo(email, password, firstName, lastName);
+//        this.facebookToken = facebookToken;
+//    }
 
     //Paypal & facebook
     public SignUpRequest(String nonce,

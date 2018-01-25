@@ -10,6 +10,8 @@ public class ProspectUser {
     public static String password;
     public static String firstName;
     public static String lastName;
+    public static String gender;
+    public static String dateOfBirth;
     public static String address;
     public static String address2;
     public static String city;
