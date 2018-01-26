@@ -358,15 +358,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public void setAddressZip(String frag_addressZip) {
         addressZip = frag_addressZip;
-
         Log.d("currentItem", String.valueOf(mViewPager.getCurrentItem()));
 
     }
 
     public void setPage() {
-
         String TAG = "found";
-
         Log.d(TAG, "setPage: " + mViewPager.getCurrentItem());
         if (mViewPager.getCurrentItem() == 0) {
             mViewPager.setCurrentItem(1);

@@ -16,6 +16,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
+import com.mobile.responses.CancellationResponse;
 import com.moviepass.R;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +24,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 9/1/17.
@@ -71,7 +75,6 @@ public class ProfileCancellationFragment extends Fragment {
         spinnerCancelReason.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-
                 cancelReasons = (String) view.getItems().get(position);
                 if (cancelReasons.equals("Reason for Cancellation")) {
                     Toast.makeText(getActivity(), "Please make a selection", Toast.LENGTH_SHORT).show();
@@ -124,33 +127,30 @@ public class ProfileCancellationFragment extends Fragment {
             for (int j = 0; j < cancelCodes.length - 1; j++) {
                 mapReasons.put(cancelReasons[i], cancelCodes[j]);
                 Log.d(Constants.TAG, "cancelFlow: " + mapReasons.get(i));
-
             }
         }
-
         String angryComments = cancelComments.getText().toString();
 
-//
         CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
-//        RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
-//            @Override
-//            public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
-//                CancellationResponse cancellationResponse = response.body();
-//                progress.setVisibility(View.GONE);
-//                if (cancellationResponse != null && response.isSuccessful()) {
-//                    if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
-//                        Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
-//                    }
-//                    Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//
-//            @Override
-//            public void onFailure(Call<CancellationResponse> call, Throwable t) {
-//
-//            }
-//        });
+        RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
+            @Override
+            public void onResponse(Call<CancellationResponse> call, Response<CancellationResponse> response) {
+                CancellationResponse cancellationResponse = response.body();
+                progress.setVisibility(View.GONE);
+                if (cancellationResponse != null && response.isSuccessful()) {
+                    if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
+                        Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
+                    }
+                    Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<CancellationResponse> call, Throwable t) {
+
+            }
+        });
 
 //        RestClient.getAuthenticated().getUserData(RestClient.userId).enqueue(new Callback<UserInfoResponse>() {
 //            @Override

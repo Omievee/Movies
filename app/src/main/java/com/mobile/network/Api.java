@@ -53,7 +53,7 @@ public interface Api {
     String HEADER_UUIDD = "deviceUuid";
 
     /* LogIn */
-    @POST("/api/v1/auth/login")
+    @POST("/rest/v1/session")
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
@@ -81,18 +81,11 @@ public interface Api {
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
-//    @POST("/register/create/json")
-//    Call<Object> registerCredentials(@Body CredentialsRequest request);
-
     @POST("/rest/v1/prospects")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
     @GET("/rest/v1/register/amc_upgradeability/{zip}")
     Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
-
-//    /* Personal Info */
-//    @POST("/rest/v1/registration")
-//    Call<PersonalInfoResponse> registerPersonalInfo(@Body PersonalInfoRequest request);
 
     /* SignUp */
     @POST("/rest/v1/registration")

@@ -103,22 +103,17 @@ public class ActivateMoviePassCard extends AppCompatActivity {
             public void onClick(final View v) {
                 progress.setVisibility(View.VISIBLE);
                 digits = activateDigits.getText().toString();
-
                 final CardActivationRequest request = new CardActivationRequest(digits);
-                Log.d(Constants.TAG, "onClick: " + digits);
                 RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
                     @Override
                     public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                         CardActivationResponse cardActivationResponse = response.body();
-
-                        Log.d(Constants.TAG, "onResponse: " + request.toString());
                         if (cardActivationResponse != null && response.isSuccessful()) {
-                            progress.setVisibility(View.GONE);
+                            Log.d(Constants.TAG, "onResponse: " + digits);
 
+                            progress.setVisibility(View.GONE);
                             Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
                             startActivity(intent);
-
-
                         } else {
                             progress.setVisibility(View.GONE);
                             Log.d(Constants.TAG, "fail: ");

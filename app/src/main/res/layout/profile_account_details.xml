@@ -128,7 +128,6 @@
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
-
                     <TextView
                         android:id="@+id/MPCardNum"
                         android:layout_width="wrap_content"

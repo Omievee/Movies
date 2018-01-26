@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
@@ -44,10 +45,6 @@ import retrofit2.Response;
 
 public class PendingReservationFragment extends BottomSheetDialogFragment {
 
-    ArrayList<Movie> historyArrayList;
-    ArrayList<Reservation> currentReservationItem;
-
-    ActiveReservationResponse reservationResponse;
     public static final String TAG = "found";
     int reservation;
     View progress;
@@ -103,7 +100,6 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                 if (response.body() != null && response.isSuccessful()) {
                     ActiveReservationResponse active = response.body();
                     progress.setVisibility(View.GONE);
-
                     if (active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
                         pendingLayout.setVisibility(View.VISIBLE);
                         noPending.setVisibility(View.GONE);
@@ -121,6 +117,12 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                             e.printStackTrace();
                         }
 
+                        if (active.getRedemption_code() != null) {
+                            pendingReservationCode.setText(active.getRedemption_code());
+                        } else {
+                            pendingReservationCode.setText("11204");
+                        }
+
                     } else {
                         pendingLayout.setVisibility(View.GONE);
                         noPending.setVisibility(View.VISIBLE);
@@ -128,19 +130,10 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
 
                     }
                     reservation = active.getReservation().getId();
-                    Log.d(TAG, "title : " + active.getTitle());
-                    Log.d(TAG, "theater : " + active.getTheater());
-                    Log.d(TAG, "seat : " + active.getSeat());
-                    Log.d(TAG, "showtime : " + active.getShowtime());
-                    Log.d(TAG, "eticket : " + active.geteTicket());
-                    Log.d(TAG, "reservation ID: " + active.getReservation().getId());
-
-
                 } else {
                     progress.setVisibility(View.GONE);
                     pendingLayout.setVisibility(View.GONE);
                     noPending.setVisibility(View.VISIBLE);
-
                 }
 
             }

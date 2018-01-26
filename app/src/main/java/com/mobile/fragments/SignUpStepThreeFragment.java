@@ -211,28 +211,21 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             RestClient.getUnauthenticated().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
                 @Override
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-
                     Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
 
                     if (response.isSuccessful()) {
-
-                        Log.d("subId", response.body().getSubId());
-
                         //transition to final viewpager pag & show confirmation
                         ((SignUpActivity) getActivity()).setPage();
 
                     } else {
                         try {
                             JSONObject jObjError = new JSONObject(response.body().getGlobal());
-
-                            //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
                             makeSnackbar(jObjError.toString());
                             progress.setVisibility(View.GONE);
                             confirmSubmit.setEnabled(true);
-
                         } catch (Exception e) {
-                            makeSnackbar("Internal Failure: Error 5");
-                            Log.d(TAG, "try/catch try: " + e.getMessage());
+                            progress.setVisibility(View.GONE);
+                            makeSnackbar("Error processing payment");
                         }
                     }
                 }

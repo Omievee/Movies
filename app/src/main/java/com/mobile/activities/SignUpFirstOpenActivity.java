@@ -209,10 +209,14 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
+        String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-        DOB.setText(sdf.format(myCalendar.getTime()));
+        if (myCalendar.get(Calendar.YEAR) <= 2000) {
+            DOB.setText(sdf.format(myCalendar.getTime()));
+        } else {
+            DOB.setText("");
+            Toast.makeText(this, "Must be 18 years of age or older", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static boolean isValidEmail(CharSequence target) {
