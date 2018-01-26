@@ -1,5 +1,7 @@
 package com.mobile.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +10,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.clans.fab.FloatingActionButton;
@@ -26,9 +32,14 @@ import com.mobile.fragments.PendingReservationFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.network.RestClient;
 import com.moviepass.R;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
@@ -262,62 +273,85 @@ public class MoviesActivity extends BaseActivity {
         alert.show();
     }
 
-    //Search For Movies
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.options_menu, menu);
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
 //
-//        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//        searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
-//
-//        movieSearchALLMOVIES.clear();
-//        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+//        final MenuItem searchItem = menu.findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//
-//                searchAdapter.notifyDataSetChanged();
-//                return true;
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
 //            }
 //
 //            @Override
-//            public boolean onQueryTextChange(final String s) {
-//                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
-//                    @Override
-//                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-//                        if (response.body() != null && response.isSuccessful()) {
-//                            MoviesResponse = response.body();
-//                            SearchResults.setAdapter(searchAdapter);
-//                            movieSearchALLMOVIES.clear();
-//
-//                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
-//                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
-//                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
-//                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
-//                                if (!s.isEmpty()) {
-//                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
-//                                        SearchResults.setVisibility(View.VISIBLE);
-//
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
-//                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                return true;
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
 //            }
 //        });
 //
-//
 //        return true;
 //    }
+
+
+
+//Search For Movies
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
+
+        movieSearchALLMOVIES.clear();
+        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+                searchAdapter.notifyDataSetChanged();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(final String s) {
+                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+                    @Override
+                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            MoviesResponse = response.body();
+                            SearchResults.setAdapter(searchAdapter);
+                            movieSearchALLMOVIES.clear();
+
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
+                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
+                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
+                                if (!s.isEmpty()) {
+                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
+                                        SearchResults.setVisibility(View.VISIBLE);
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
+                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            }
+        });
+
+
+        return true;
+    }
 //
 //    public void test() {
 //        RestClient.getAuthenticated().getRestrictions().enqueue(new Callback<RestrictionsResponse>() {

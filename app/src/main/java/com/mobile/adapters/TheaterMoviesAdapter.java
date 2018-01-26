@@ -144,16 +144,17 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         }
 
 
-        if(screening.getTitle().equals("Check In if Movie Missing")){
+        if (screening.getTitle().equals("Check In if Movie Missing")) {
             holder.movieRating.setVisibility(View.GONE);
             holder.synopsis.setVisibility(View.GONE);
             holder.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
         }
-        if(screening.getSynopsis() == null){
+
+        if (screening.getSynopsis().equals("")) {
             holder.synopsis.setVisibility(View.GONE);
         }
 
-        holder.movieRating.setText("Rated: " +screening.getRating());
+        holder.movieRating.setText("Rated: " + screening.getRating());
         holder.showtimeGrid.removeAllViews();
 
 

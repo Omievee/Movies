@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,9 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,6 +37,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
@@ -200,7 +205,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
 //        //TODO: Check for active moviepass subscription or not
-
 
 
         return rootView;
@@ -560,6 +564,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private static void setTranslucentStatusBarKiKat(Window window) {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
+
 
 
 }

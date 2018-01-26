@@ -104,7 +104,7 @@ public interface Api {
     @PUT("/rest/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
-    //TODO
+    //TODO:
     /* History  */
     @GET("/rest/v1/reservations")
     Call<HistoryResponse> getReservations();
@@ -149,7 +149,6 @@ public interface Api {
     @POST("/rest/v1/users/link_to_facebook")
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
-    //TODO
     /* Cancel Subscription */
     @POST("/api/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);

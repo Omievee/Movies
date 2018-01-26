@@ -171,13 +171,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
 
-//        backButton = findViewById(R.id.selected_back);
-//        backButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MovieActivity.this, "yo", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
 
         //Start location tasks
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
@@ -237,6 +231,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
 
+        if (movie.getSynopsis().equals("")) {
+            selectedSynopsis.setVisibility(View.GONE);
+            selectedMoviePoster.setClickable(false);
+        }
 
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,7 +268,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         });
 
         filmRating.setText("Rated: " + movie.getRating());
-
 
     }
 

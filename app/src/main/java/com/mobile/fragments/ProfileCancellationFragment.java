@@ -156,7 +156,7 @@ public class ProfileCancellationFragment extends Fragment {
                     if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
                         Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
                     }
-//       
+                    getActivity().finish();
                     Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
                 }
             }

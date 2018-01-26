@@ -116,12 +116,12 @@
 
                     <ImageView
                         android:id="@+id/CINEMA_E-TICKETING"
-                        android:layout_width="30dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="20dp"
+                        android:layout_marginEnd="30dp"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/ic_e_tickets"
+                        android:src="@drawable/ticketnavwhite"
                         android:tint="@color/white"
                         android:visibility="visible"
                         app:layout_collapseMode="parallax" />
