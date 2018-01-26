@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.DeviceID;
@@ -29,14 +30,11 @@ public class ConfirmationSignUpFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
     View rootView;
-
-    ImageButton confirmLogIn;
-
+    TextView confirmLogIn;
 
     public ConfirmationSignUpFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,23 +48,18 @@ public class ConfirmationSignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
-
-
         confirmLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 login();
             }
         });
-
     }
 
 
     private void login() {
         String email = ProspectUser.email;
         String password = ProspectUser.password;
-
         LogInRequest request = new LogInRequest(email, password);
         String deviceId = DeviceID.getID(getActivity());
 
@@ -90,8 +83,6 @@ public class ConfirmationSignUpFragment extends Fragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Timeout: Please login manually", Toast.LENGTH_SHORT).show();
-
-
                 Intent failure = new Intent(getActivity(), LogInActivity.class);
                 startActivity(failure);
             }

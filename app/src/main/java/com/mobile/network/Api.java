@@ -151,6 +151,6 @@ public interface Api {
 
     //TODO
     /* Cancel Subscription */
-    @POST("/rest/v1/subscriptions/cancellation")
+    @POST("/api/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 }

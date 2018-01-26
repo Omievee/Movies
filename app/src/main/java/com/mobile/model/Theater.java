@@ -22,6 +22,11 @@ public class Theater {
     double lat;
     String theaterChainName;
     String ticketType;
+    String synopsis;
+
+    public String getSynopsis() {
+        return synopsis;
+    }
 
     public Theater() {
     }

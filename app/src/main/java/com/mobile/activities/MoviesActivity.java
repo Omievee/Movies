@@ -96,9 +96,8 @@ public class MoviesActivity extends BaseActivity {
         });
 
         View parentLayout = findViewById(R.id.COORDPARENT);
-
-        Log.d(TAG, "OMIE: " + UserPreferences.getRestrictionSubscriptionStatus());
-        Log.d(TAG, "onCreate: " + UserPreferences.getIsSubscriptionActivationRequired());
+        checkRestrictions();
+        Log.d(TAG, "mp activation??: " + UserPreferences.getIsSubscriptionActivationRequired());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();

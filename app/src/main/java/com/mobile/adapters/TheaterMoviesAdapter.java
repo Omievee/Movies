@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -19,8 +23,12 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.mobile.activities.TheaterActivity;
+import com.mobile.fragments.SynopsisFragment;
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.model.Movie;
 import com.mobile.model.Screening;
+import com.mobile.model.Theater;
 import com.moviepass.R;
 
 import java.util.ArrayList;
@@ -70,7 +78,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         SimpleDraweeView cinemaPoster;
         @BindView(R.id.SHOWTIMEGRID)
         RadioGroup showtimeGrid;
-
+        @BindView(R.id.cinema_Synopsis)
+        ImageButton synopsis;
         @BindView(R.id.cinema_movieRating)
         TextView movieRating;
 
@@ -90,6 +99,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             notSupported = v.findViewById(R.id.Not_Supported);
             movieRating = v.findViewById(R.id.cinema_movieRating);
             movieTime = v.findViewById(R.id.cinema_movieTime);
+            synopsis = v.findViewById(R.id.cinema_Synopsis);
         }
     }
 
@@ -136,7 +146,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         if(screening.getTitle().equals("Check In if Movie Missing")){
             holder.movieRating.setVisibility(View.GONE);
+            holder.synopsis.setVisibility(View.GONE);
             holder.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+        }
+        if(screening.getSynopsis() == null){
+            holder.synopsis.setVisibility(View.GONE);
         }
 
         holder.movieRating.setText("Rated: " +screening.getRating());
@@ -187,23 +201,22 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         }
 
         //TODO:
-//        holder.synopsis.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Movie movie = new Movie();
-//                String synopsis = movie.getSynopsis();
-//                String title = movie.getTitle();
-//                Bundle bundle = new Bundle();
-//                bundle.putString(MOVIE, synopsis);
-//                bundle.putString(TITLE, title);
-//
-//                SynopsisFragment fragobj = new SynopsisFragment();
-//                fragobj.setArguments(bundle);
-//                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-//                fragobj.show(fm, "fr_dialogfragment_synopsis");
-//
-//            }
-//        });
+        holder.synopsis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String synopsis = screening.getSynopsis();
+                String title = screening.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
+
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+            }
+        });
 
     }
 

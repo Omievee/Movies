@@ -261,6 +261,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(this);
@@ -716,7 +717,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                                     if (mTheatersResponse != null) {
                                         mTheaters.addAll(mTheatersResponse.getTheaters());
-                                        for (int i = 0; i <mTheaters.size(); i++) {
+                                        for (int i = 0; i < mTheaters.size(); i++) {
 
 
                                         }

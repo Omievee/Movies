@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,6 +15,9 @@ import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
+import com.mobile.activities.LogInActivity;
+import com.mobile.activities.SettingsActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
@@ -77,6 +81,7 @@ public class ProfileCancellationFragment extends Fragment {
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
                 cancelReasons = (String) view.getItems().get(position);
                 if (cancelReasons.equals("Reason for Cancellation")) {
+                    buttonCancel.setEnabled(false);
                     Toast.makeText(getActivity(), "Please make a selection", Toast.LENGTH_SHORT).show();
                 } else {
                     buttonCancel.setEnabled(true);
@@ -96,7 +101,7 @@ public class ProfileCancellationFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
+//                progress.setVisibility(View.VISIBLE);
                 cancelFlow();
             }
         });
@@ -115,22 +120,32 @@ public class ProfileCancellationFragment extends Fragment {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String requestDate = df.format(c.getTime());
 
-        String[] cancelReasons = (String[]) spinnerCancelReason.getItems().toArray();
-        int[] cancelCodes = getResources().getIntArray(R.array.cancel_reason_codes);
-        mapReasons = new HashMap<>();
-
-        Log.d(Constants.TAG, "cancelFlow: " + cancelReasons);
-        Log.d(Constants.TAG, "cancelFlow: " + cancelCodes);
-
-
-        for (int i = 0; i < cancelReasons.length - 1; i++) {
-            for (int j = 0; j < cancelCodes.length - 1; j++) {
-                mapReasons.put(cancelReasons[i], cancelCodes[j]);
-                Log.d(Constants.TAG, "cancelFlow: " + mapReasons.get(i));
-            }
+        String cancelReason = spinnerCancelReason.getText().toString();
+        switch (cancelReason) {
+            case "Price":
+                cancelSubscriptionReason = 1;
+                break;
+            case "Theater selection":
+                cancelSubscriptionReason = 2;
+                break;
+            case "Ease of use":
+                cancelSubscriptionReason = 3;
+                break;
+            case "Lack of use":
+                cancelSubscriptionReason = 4;
+                break;
+            case "Other":
+                cancelSubscriptionReason = 7;
+                break;
+            default:
+                cancelSubscriptionReason = 8;
+                break;
         }
+
         String angryComments = cancelComments.getText().toString();
 
+        Log.d(Constants.TAG, "date: " + requestDate);
+        Log.d(Constants.TAG, "comments: " + angryComments);
         CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
         RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
             @Override
@@ -141,6 +156,7 @@ public class ProfileCancellationFragment extends Fragment {
                     if (cancellationResponse.getMessage().equals("You have already canceled your account")) {
                         Toast.makeText(getActivity(), "This account has already been canceled", Toast.LENGTH_SHORT).show();
                     }
+//       
                     Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -193,7 +209,6 @@ public class ProfileCancellationFragment extends Fragment {
 //
 //                            //map of cancel reasons
 //                            String cancelReason = spinnerCancelReason.getSelectedItem().toString();
-//
 //                            String[] cancelReasons = getResources().getStringArray(R.array.cancel_reasons);
 //                            int[] cancelReasonCodes = getResources().getIntArray(R.array.cancel_reason_codes);
 //

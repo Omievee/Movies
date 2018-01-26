@@ -38,6 +38,11 @@ public class Screening {
     String theaterName;
     String title;
     String rating;
+    String synopsis;
+
+    public String getSynopsis() {
+        return synopsis;
+    }
 
     public String getRating() {
         return rating;

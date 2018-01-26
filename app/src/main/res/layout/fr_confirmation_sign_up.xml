@@ -37,12 +37,6 @@
                 android:src="@drawable/moviepass_logo_red"
                 android:tint="@color/new_red" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Thanks for subsciribing to MoviePass!"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,36 +57,38 @@
 
 
             <RelativeLayout
+                android:id="@+id/Explore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/doubledouble_margin_standard"
                 android:layout_margin="@dimen/margin_half">
 
 
                 <TextView
-                    android:id="@+id/Text1"
+                    android:id="@+id/CONFIRM_GOTOLOGIN"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="top"
                     android:layout_marginStart="@dimen/double_margin_standard"
-                    android:alpha=".8"
-                    android:text="Once your card arrives, log in to the MoviePass app and activate your card."
-                    android:textSize="15sp"
-                    android:visibility="gone" />
+                    android:text="Explore the app "
+                    android:textColor="@color/new_red"
+                    android:textSize="20sp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_toRightOf="@id/CONFIRM_GOTOLOGIN"
+                    android:src="@drawable/arrowforward"
+                    android:tint="@color/new_red" />
 
             </RelativeLayout>
 
 
         </LinearLayout>
 
-
-        <ImageButton
-            android:id="@+id/CONFIRM_GOTOLOGIN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/double_margin_standard"
-            android:background="@color/test_blue"
-            android:src="@drawable/close_white" />
 
     </FrameLayout>
 
