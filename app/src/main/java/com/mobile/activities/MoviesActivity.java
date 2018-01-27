@@ -28,6 +28,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
+import com.mobile.fragments.PastReservations;
 import com.mobile.fragments.PendingReservationFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
@@ -103,6 +104,16 @@ public class MoviesActivity extends BaseActivity {
                 fragobj.show(fm, "fragment_pendingreservation");
                 reservationsMenu.close(true);
 
+            }
+        });
+
+        historyRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PastReservations fragobj = new PastReservations();
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fr_history");
+                reservationsMenu.close(true);
             }
         });
 
@@ -295,8 +306,7 @@ public class MoviesActivity extends BaseActivity {
 //    }
 
 
-
-//Search For Movies
+    //Search For Movies
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

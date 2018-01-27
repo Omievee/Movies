@@ -10,7 +10,12 @@ import java.util.List;
 
 public class HistoryResponse {
 
+    public Movie getMovie() {
+        return movie;
+    }
+
     public List<Movie> movies;
+    public Movie movie;
 
     public List<Movie> getHistory() {
         return movies;

@@ -170,7 +170,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), comingSoon, this);
 
         /** NOW PLAYING */
-        Log.d(Constants.TAG, "nowpkay: ");
         LinearLayoutManager nowplayingManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
         nowPlayingRecycler.setLayoutManager(nowplayingManager);

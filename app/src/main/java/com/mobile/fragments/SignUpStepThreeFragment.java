@@ -64,8 +64,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmFullAddress = rootview.findViewById(R.id.CONFIRM_FULL_ADDRESS);
         confirmCityStateZip = rootview.findViewById(R.id.CONFIRM_CITYSTATEZIP);
 
-        confirmEditAddress = rootview.findViewById(R.id.CONFIRM_EDIT_ADDRESS);
-        confirmEditBilling = rootview.findViewById(R.id.CONFIRM_EDIT_BILLING);
+//        confirmEditAddress = rootview.findViewById(R.id.CONFIRM_EDIT_ADDRESS);
+//        confirmEditBilling = rootview.findViewById(R.id.CONFIRM_EDIT_BILLING);
 
         confirmCCNum = rootview.findViewById(R.id.CONFIRM_NUMBER);
         confirmTermsText = rootview.findViewById(R.id.CONFIRM_ToS);
@@ -103,19 +103,19 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmCityStateZip.setText(ProspectUser.city + ", " + ProspectUser.state + " " + ProspectUser.zip);
 
 
-        confirmEditBilling.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(1);
-            }
-        });
-
-        confirmEditAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(0);
-            }
-        });
+//        confirmEditBilling.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(1);
+//            }
+//        });
+//
+//        confirmEditAddress.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(0);
+//            }
+//        });
 
         return rootview;
     }
