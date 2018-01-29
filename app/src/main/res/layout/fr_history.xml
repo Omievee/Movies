@@ -13,15 +13,17 @@
         android:text="History"
         android:textColor="@color/white"
         android:textSize="20sp"
+        android:layout_margin="@dimen/margin_standard"
         android:textStyle="bold" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyReycler"
         android:layout_width="match_parent"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:background="@color/test_black">
+        android:layout_marginTop="@dimen/quadruple_margin_standard"
+        android:background="@color/test_blue">
 
     </android.support.v7.widget.RecyclerView>
 

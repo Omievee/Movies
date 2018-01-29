@@ -104,6 +104,7 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                         pendingLayout.setVisibility(View.VISIBLE);
                         noPending.setVisibility(View.GONE);
                         pendingResrvationCANCELBUTTON.setVisibility(View.VISIBLE);
+                        pendingLayout.setVisibility(View.VISIBLE);
 
 
                         pendingReservationTitle.setText(active.getTitle());

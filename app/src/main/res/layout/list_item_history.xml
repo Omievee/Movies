@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:foreground="@drawable/poster_gradient"
             fresco:actualImageScaleType="focusCrop"
-            fresco:placeholderImage="@drawable/filmreel1" />
+            fresco:placeholderImage="@drawable/film_reel_icon" />
 
         <RelativeLayout
             android:id="@+id/rel"

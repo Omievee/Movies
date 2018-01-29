@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.ReyclerDecor.SeparatorDecoration;
 import com.mobile.adapters.HistoryAdapter;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
@@ -65,6 +67,8 @@ public class PastReservations extends BottomSheetDialogFragment {
         historyRecycler.setAdapter(historyAdapter);
         progress.setVisibility(View.VISIBLE);
 
+        SeparatorDecoration decor = new SeparatorDecoration(getContext(), getResources().getColor(R.color.test_black), 1.5f);
+        historyRecycler.addItemDecoration(decor);
         loadHIstory();
     }
 

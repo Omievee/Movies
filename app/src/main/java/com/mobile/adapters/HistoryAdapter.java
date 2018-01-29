@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -24,7 +22,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.model.Movie;
 import com.moviepass.R;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -121,7 +118,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         /* TODO : do something with auditorium on history */
         long createdAt = movie.getCreatedAt();
-        Log.d(Constants.TAG, "onBindViewHolder: " + createdAt);
+        Log.d(Constants.TAG, "Created??: " + createdAt);
         Date date = new Date(createdAt);
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm a", Locale.getDefault());
