@@ -77,7 +77,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         final Movie movie = moviesArrayList.get(position);
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
-        Log.d(TAG, "onBindViewHolder: " + imgUrl.toString());
 //        holder.title.setText("");
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 

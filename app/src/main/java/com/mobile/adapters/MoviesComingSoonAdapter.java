@@ -95,7 +95,6 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
         holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
         final String dateComingSoon = movie.getReleaseDate().substring(0, 10);
-        Log.d(TAG, "onBindViewHolder: " + dateComingSoon);
         final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)

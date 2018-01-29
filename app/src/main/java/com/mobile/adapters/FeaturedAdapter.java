@@ -54,7 +54,6 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
         final Movie movie = featuredMovie.get(position);
         final Uri imgURI = Uri.parse(movie.getLandscapeImageUrl());
 
-        Log.d(Constants.TAG, "onBindViewHolder: " + imgURI);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgURI)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgURI)
@@ -92,7 +91,6 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        Log.d(Constants.TAG, "getItemCount: " + featuredMovie.size());
         return featuredMovie.size();
     }
 

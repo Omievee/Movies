@@ -8,7 +8,7 @@ public class CardActivationRequest {
 
     String cardNumber;
 
-    public CardActivationRequest(String last4digits) {
-        this.cardNumber = last4digits;
+    public CardActivationRequest(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

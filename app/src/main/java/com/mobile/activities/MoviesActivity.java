@@ -12,7 +12,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +28,10 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
+import com.mobile.adapters.SearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.PastReservations;
 import com.mobile.fragments.PendingReservationFragment;
@@ -54,11 +59,7 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-
-    SimpleDraweeView featuredFilmHeader;
     FloatingActionMenu reservationsMenu;
-
-    MovieSearchAdapter searchAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,16 +70,13 @@ public class MoviesActivity extends BaseActivity {
         Fragment moviesFragment = new MoviesFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
-
         FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
         fadeIn(main);
-
         reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
-
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        SearchResults = findViewById(R.id.MovieSearch_Results);
+
 
         movieSearchNEWRELEASE = new ArrayList<>();
         movieSearchALLMOVIES = new ArrayList<>();
@@ -284,63 +282,62 @@ public class MoviesActivity extends BaseActivity {
     }
 
 
-
     //Search For Movies
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
-
-        movieSearchALLMOVIES.clear();
-        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-
-                searchAdapter.notifyDataSetChanged();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String s) {
-                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
-                    @Override
-                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                        if (response.body() != null && response.isSuccessful()) {
-                            MoviesResponse = response.body();
-                            SearchResults.setAdapter(searchAdapter);
-                            movieSearchALLMOVIES.clear();
-
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
-                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
-                                if (!s.isEmpty()) {
-                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
-                                        SearchResults.setVisibility(View.VISIBLE);
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
-                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return true;
-            }
-        });
-
-
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.options_menu, menu);
+//
+//        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        searchAdapter = new MovieSearchAdapter(getApplicationContext(), movieSearchALLMOVIES);
+//
+//        movieSearchALLMOVIES.clear();
+//        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                searchAdapter.notifyDataSetChanged();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(final String s) {
+//                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+//                    @Override
+//                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+//                        if (response.body() != null && response.isSuccessful()) {
+//                            MoviesResponse = response.body();
+//                            SearchResults.setAdapter(searchAdapter);
+//                            movieSearchALLMOVIES.clear();
+//
+//                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
+//                            movieSearchALLMOVIES.addAll(MoviesResponse.getNowPlaying());
+//                            movieSearchALLMOVIES.addAll(MoviesResponse.getFeatured());
+//                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
+//                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
+//                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
+//                                if (!s.isEmpty()) {
+//                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
+//                                        SearchResults.setVisibility(View.VISIBLE);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
+//                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                return true;
+//            }
+//        });
+//
+//
+//        return true;
+//    }
 
 
 }

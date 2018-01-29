@@ -9,6 +9,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/MAIN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -35,11 +36,20 @@
                 android:src="@drawable/logo"
                 android:textAlignment="center"
                 android:tint="@color/white"
-                android:visibility="visible"
                 app:layout_collapseMode="pin" />
 
-
+            <com.mancj.materialsearchbar.MaterialSearchBar
+                android:id="@+id/searchBar"
+                style="@style/MaterialSearchBarLight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:mt_hint="Search Movies"
+                app:mt_maxSuggestionsCount="10"
+                app:mt_roundedSearchBarEnabled="true"
+                app:mt_searchBarColor="@color/new_red" />
         </FrameLayout>
+
 
         <!--<android.support.design.widget.AppBarLayout-->
         <!--android:id="@+id/MAINPAGE_APPBAR"-->
@@ -191,9 +201,9 @@
         <include
             android:id="@+id/progress"
             layout="@layout/view_loading"
-            android:layout_centerHorizontal="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

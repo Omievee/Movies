@@ -105,7 +105,7 @@ public interface Api {
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
     /* History  */
-    @GET("/rest/v1/reservations")
+    @GET("/rest/v1/reservations/history")
     Call<HistoryResponse> getReservations();
 
     /* Get Seats */

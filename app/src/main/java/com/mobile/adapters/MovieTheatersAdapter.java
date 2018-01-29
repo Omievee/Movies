@@ -190,10 +190,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 }
 
                 date = parseDate(hour + ":" + minute + " " + AM_PM);
-                Log.d(TAG, "onBindViewHolder: " + date);
                 dateCompareOne = parseDate(screening.getStartTimes().get(i));
-                Log.d(TAG, "parse: " + dateCompareOne);
-                Log.d(TAG, "calendar: " + hour + ":" + minute + " " + amPM);
 
 
 //                if (dateCompareOne.before(date)) {

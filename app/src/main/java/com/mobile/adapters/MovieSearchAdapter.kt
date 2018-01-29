@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 
@@ -19,9 +20,6 @@ class MovieSearchAdapter(context: Context, internal var movieSearchList: List<Mo
     internal lateinit var MovieTitle_Search: TextView
     internal lateinit var MovieRating_Search: TextView
 
-
-
-//    constructor(context: Context, resource: Int, objects: List<Movie>) : super(context, resource, objects)
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var rowView: View
@@ -42,7 +40,7 @@ class MovieSearchAdapter(context: Context, internal var movieSearchList: List<Mo
         val search = getItem(position)
         if (search != null) {
             MovieTitle_Search = rowView.findViewById(R.id.MovieSearch_Title)
-            MovieRating_Search = rowView.findViewById(R.id.MovieSearch_Rating)
+//            MovieRating_Search = rowView.findViewById(R.id.MovieSearch_Rating)
 
             MovieTitle_Search.text = search.title
             MovieRating_Search.text = "Rated: " + search.rating
@@ -55,5 +53,9 @@ class MovieSearchAdapter(context: Context, internal var movieSearchList: List<Mo
 
     override fun getCount(): Int {
         return movieSearchList!!.size
+    }
+
+    override fun getFilter(): Filter {
+        return super.getFilter()
     }
 }

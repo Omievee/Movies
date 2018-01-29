@@ -41,7 +41,6 @@ public class ProfileFragment extends PreferenceFragment {
     ProfileBillingAddressFragment profileBillingAddressFragment = new ProfileBillingAddressFragment();
     ProfileShippingAddressFragment profileShippingAddressFragment = new ProfileShippingAddressFragment();
     ProfilePaymentInformationFragment profilePaymentInformationFragment = new ProfilePaymentInformationFragment();
-    ProfileMoviePassCardFragment profileMoviePassCardFragment = new ProfileMoviePassCardFragment();
 
     CallbackManager callbackManager;
     LoginButton loginButton;
@@ -61,7 +60,6 @@ public class ProfileFragment extends PreferenceFragment {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 String fbToken = loginResult.getAccessToken().getToken();
-                Log.d("fbUserId", fbToken);
                 UserPreferences.setFbToken(fbToken);
 
 
@@ -69,14 +67,12 @@ public class ProfileFragment extends PreferenceFragment {
                 RestClient.getAuthenticated().linkToFacebook(fbLinkRequest).enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
-                        Log.d("response", response.toString());
 
                         Toast.makeText(getActivity(), "Your Facebook account has been connected.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
-                        Log.d("error", t.getMessage().toString());
                     }
                 });
             }
@@ -84,14 +80,12 @@ public class ProfileFragment extends PreferenceFragment {
             @Override
             public void onCancel() {
                 // App code
-                Log.d("cancel", "onCancel");
 
             }
 
             @Override
             public void onError(FacebookException exception) {
                 Toast.makeText(getActivity(), exception.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("error", exception.toString());
             }
         });
 
@@ -176,22 +170,7 @@ public class ProfileFragment extends PreferenceFragment {
             }
         });
 
-        Preference moviepassCard = findPreference("moviepass_card");
-        moviepassCard.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, profileMoviePassCardFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
 
-                return true;
-            }
-        });
-
-        Log.d("fbToken", UserPreferences.getFbToken());
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override
@@ -222,19 +201,16 @@ public class ProfileFragment extends PreferenceFragment {
 
 
         try {
-            Log.d("accessToken", String.valueOf(accessToken));
         } catch (Exception e) {
         }
 
         try {
-            Log.d("accessTokenToken", accessToken.getToken());
         } catch (Exception e) {
         }
 
         facebook.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("prefClick", "prefClick");
 
                 final LoginButton l = new LoginButton(getActivity());
                 loginButton = getActivity().findViewById(R.id.button_facebook_log_in);
@@ -281,7 +257,6 @@ public class ProfileFragment extends PreferenceFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("onActivityResult", "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }

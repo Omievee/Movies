@@ -16,17 +16,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -36,10 +34,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
@@ -49,6 +48,7 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.adapters.SearchAdapter;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -90,7 +90,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private MoviesComingSoonAdapter comingSoonAdapter;
     private NowPlayingMoviesAdapter nowPlayingAdapter;
     private FeaturedAdapter featuredAdapter;
-
+    SearchAdapter customAdapter;
+    MaterialSearchBar searchBar;
     MoviesFragment mMoviesFragment;
     MoviesResponse moviesResponse;
     ArrayList<Movie> mMovieArrayList;
@@ -100,6 +101,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     ArrayList<Movie> newReleases;
     ArrayList<Movie> featured;
     ArrayList<Movie> nowPlaying;
+    ArrayList<Movie> ALLMOVIES;
 
 
     @BindView(R.id.new_releases)
@@ -114,9 +116,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @BindView(R.id.FeaturedRE)
     RecyclerView featuredRecycler;
 
-
-//    @BindView(R.id.MOVIES_SEARCH)
-//    SearchView MovieSearch;
 
     View progress;
 
@@ -140,7 +139,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoon = new ArrayList<>();
         featured = new ArrayList<>();
         nowPlaying = new ArrayList<>();
-
+        ALLMOVIES = new ArrayList<>();
         /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -186,26 +185,51 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.VISIBLE);
 
+        /** SEARCH */
+        searchBar = rootView.findViewById(R.id.searchBar);
+        LayoutInflater inf = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        customAdapter = new SearchAdapter(inf);
+
+        searchBar.setHint("Search Movies");
+        searchBar.setMaxSuggestionCount(3);
+
 
         loadMovies();
         //Featured Film:
-
-
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-
         LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Provider = LocationManager.getBestProvider(criteria, true);
-
-
         checkLocationPermission();
-        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionHasActiveCard());
-        Log.d(Constants.TAG, "onCreateView: " + UserPreferences.getRestrictionSubscriptionStatus());
-
 
 //        //TODO: Check for active moviepass subscription or not
 
 
+        ArrayList<Movie> moviesFound = new ArrayList<>();
+
+
+        customAdapter.setSuggestions(moviesFound);
+        searchBar.setMaxSuggestionCount(4);
+        searchBar.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                customAdapter.getFilter().filter(searchBar.getText(), new Filter.FilterListener() {
+                    @Override
+                    public void onFilterComplete(int i) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return rootView;
     }
 
@@ -231,6 +255,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         if (featuredRecycler != null) {
             featuredRecycler.setAdapter(featuredAdapter);
+        }
+
+        if (searchBar != null) {
+            searchBar.setCustomSuggestionAdapter(customAdapter);
         }
     }
 
@@ -314,6 +342,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     comingSoon.clear();
                     featured.clear();
                     nowPlaying.clear();
+                    ALLMOVIES.clear();
 
 
                     if (newRealeasesAdapter != null) {
@@ -336,6 +365,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         nowPlayingAdapter.notifyDataSetChanged();
                     }
 
+                    if (customAdapter != null) {
+                        customAdapter.notifyDataSetChanged();
+                    }
+
                     if (moviesResponse != null) {
                         newReleases.addAll(moviesResponse.getNewReleases());
                         newReleasesRecycler.setAdapter(newRealeasesAdapter);
@@ -351,7 +384,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                         featured.addAll(moviesResponse.getFeatured());
                         featuredRecycler.setAdapter(featuredAdapter);
-                        Log.d(Constants.TAG, "onResponse: " + nowPlayingRecycler.getAdapter());
+
+
                     }
 
 
@@ -563,7 +597,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private static void setTranslucentStatusBarKiKat(Window window) {
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
-
 
 
 }

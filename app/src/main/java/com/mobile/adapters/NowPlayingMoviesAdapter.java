@@ -46,7 +46,6 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
     @Override
     public NowPlayingMoviesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
-        Log.d(Constants.TAG, "onCreateViewHolder: ");
         return new ViewHolder(view);
     }
 
@@ -54,7 +53,6 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
     public void onBindViewHolder(final NowPlayingMoviesAdapter.ViewHolder holder, int position) {
         final Movie nowPlaying = moviesArrayList.get(position);
 
-        Log.d(Constants.TAG, "madeit: ");
         final Uri imgUrl = Uri.parse(nowPlaying.getImageUrl());
         holder.moviePoster.setImageURI(imgUrl);
         holder.movieTitle.setText("");

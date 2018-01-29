@@ -1,6 +1,5 @@
 package com.mobile.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,9 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.ReyclerDecor.SeparatorDecoration;
@@ -41,6 +38,7 @@ public class PastReservations extends BottomSheetDialogFragment {
     ArrayList<Movie> historyList;
     TextView noMovies;
     View progress;
+    HistoryResponse historyResponse;
 
     public PastReservations() {
     }
@@ -54,6 +52,7 @@ public class PastReservations extends BottomSheetDialogFragment {
         historyList = new ArrayList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
         progress = rootview.findViewById(R.id.progress);
+
         return rootview;
     }
 
@@ -78,17 +77,17 @@ public class PastReservations extends BottomSheetDialogFragment {
         RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
             @Override
             public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-
-                HistoryResponse history = response.body();
+                historyResponse = response.body();
                 if (response != null && response.isSuccessful()) {
                     progress.setVisibility(View.GONE);
-                    historyList.addAll(history.getHistory());
+                    Log.d(Constants.TAG, "onResponse: " + historyResponse.getReservations());
+
+                    historyList.addAll(historyResponse.getReservations());
+
                     if (historyAdapter != null) {
                         historyRecycler.getRecycledViewPool().clear();
                         historyAdapter.notifyDataSetChanged();
                     }
-
-
                 }
 
             }
@@ -96,7 +95,8 @@ public class PastReservations extends BottomSheetDialogFragment {
             @Override
             public void onFailure(Call<HistoryResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Server Error: Try again later", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
 
             }
         });

@@ -68,7 +68,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             posterImageView = v.findViewById(R.id.historyPoster);
             title = v.findViewById(R.id.MovieTitle);
             theater = v.findViewById(R.id.Theater);
-            date = v.findViewById(R.id.date);
+            date = v.findViewById(R.id.Date);
         }
     }
 
@@ -115,18 +115,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.posterImageView.refreshDrawableState();
         }
         holder.posterImageView.setController(controller);
-
-        /* TODO : do something with auditorium on history */
         long createdAt = movie.getCreatedAt();
-        Log.d(Constants.TAG, "Created??: " + createdAt);
-        Date date = new Date(createdAt);
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
-        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
 
         holder.title.setText(movieTitle);
-        holder.theater.setText("theater");
-//        holder.date.setText(sdfTime.format(date));
+        holder.date.setText(sdf.format(new Date(createdAt)));
         holder.listItemHistory.setTag(position);
     }
 

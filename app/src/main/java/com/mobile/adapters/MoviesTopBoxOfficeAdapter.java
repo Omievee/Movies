@@ -92,7 +92,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                         }
 
 
-                        Log.d(TAG, "onFinalImageSet: " + imgUrl);
                     }
 
                     @Override
@@ -100,7 +99,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 //                        holder.title.setText(movie.getTitle());
 //                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                         holder.mTopBoxMovieDV.setImageURI(imgUrl + "/original.jpg");
-                        Log.d(TAG, "onFailure: " + imgUrl);
                     }
                 })
 

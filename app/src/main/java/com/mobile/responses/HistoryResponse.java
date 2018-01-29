@@ -10,15 +10,16 @@ import java.util.List;
 
 public class HistoryResponse {
 
-    public Movie getMovie() {
-        return movie;
+
+    public List<Movie> reservations;
+//    public Movie reservations;
+
+//    public Movie getReservations() {
+//        return reservations;
+//    }
+    public List<Movie> getReservations() {
+        return reservations;
     }
 
-    public List<Movie> movies;
-    public Movie movie;
-
-    public List<Movie> getHistory() {
-        return movies;
-    }
 
 }

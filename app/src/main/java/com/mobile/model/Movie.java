@@ -3,6 +3,7 @@ package com.mobile.model;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Parcel
@@ -18,13 +19,25 @@ public class Movie implements ISearchable {
     protected boolean viewed;
     protected long createdAt;
     protected String imageUrl;
+    protected String landscapeImageUrl;
+    protected List<Review> reviews;
+    protected String theaterName;
+
+    public ArrayList<Movie> getReservations() {
+        return reservations;
+    }
+
+
+    private ArrayList<Movie> reservations;
+
+    public String getTheaterName() {
+        return theaterName;
+    }
 
     public String getLandscapeImageUrl() {
         return landscapeImageUrl;
     }
 
-    protected String landscapeImageUrl;
-    protected List<Review> reviews;
 
     public Movie() {
         reviews = new ArrayList<>();
@@ -126,5 +139,6 @@ public class Movie implements ISearchable {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
+
 
 }

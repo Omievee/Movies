@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/COORDPARENT"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
     android:orientation="vertical">
@@ -14,25 +14,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
-        android:background="@color/test_black" />
+        android:background="@color/test_black"
+        android:visibility="visible" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/MovieToolbar_MAINPAGE"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:paddingTop="@dimen/double_margin_standard">
 
-    </android.support.v7.widget.Toolbar>
+    <!--<ListView-->
+    <!--android:id="@+id/MovieSearch_Results"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@android:drawable/screen_background_dark_transparent"-->
+    <!--android:visibility="gone">-->
 
-    <ListView
-        android:id="@+id/MovieSearch_Results"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/screen_background_dark_transparent"
-        android:visibility="gone">
+    <!--</ListView>-->
 
-    </ListView>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/FAB_RESERVATION_MENU"
