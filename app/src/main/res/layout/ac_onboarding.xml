@@ -31,25 +31,12 @@
             android:layout_height="wrap_content">
 
 
-            <TextView
-                android:id="@+id/NearMe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/dots"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/new_red"
-                android:layout_marginBottom="@dimen/quadruple_margin_standard"
-                android:text="Check to see which theaters are near you"
-                android:textSize="15sp" />
-
-
             <Button
                 android:id="@+id/ONBOARDING_JOIN_NOW"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/dots"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/margin_half"
                 android:background="@drawable/mpbutton1"
                 android:text="Sign Up Now"
                 android:textColor="@android:color/white"
@@ -116,11 +103,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_standard"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/double_margin_standard">
+
+                <TextView
+                    android:id="@+id/NearMe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="8dp"
+                    android:text="Check to see which theaters are near you"
+                    android:textColor="@color/new_red"
+                    android:textSize="15sp" />
 
 
             </RelativeLayout>

@@ -264,7 +264,7 @@
     <string name="fragment_sign_up_step_two_selected_card_masked">[xxxx]</string>
     <string name="fragment_sign_up_step_two_billing_address">My billing address is the same as my shipping address</string>
     <string name="fragment_sign_up_step_three_terms">I agree with the MoviePass  </string>
-    <string name="fragment_sign_up_step_three_terms_link">Terms of Service</string>
+    <string name="fragment_sign_up_step_three_terms_link">Terms of Service*</string>
     <string name="fragment_sign_up_step_three_terms2"> and </string>
     <string name="fragment_sign_up_step_three_terms_link2">Privacy Policy</string>
     <string name="fragment_sign_up_step_two_must_agree_to_terms">You must agree with the terms and conditions to sign up</string>

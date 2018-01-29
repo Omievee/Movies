@@ -120,6 +120,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
 
         holder.title.setText(movieTitle);
+        holder.theater.setText(movie.getTheaterName());
         holder.date.setText(sdf.format(new Date(createdAt)));
         holder.listItemHistory.setTag(position);
     }
