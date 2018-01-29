@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
+import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.LegalFragment;
@@ -86,6 +87,7 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 UserPreferences.clearUserId();
                 UserPreferences.clearFbToken();
+                HelpshiftContext.getCoreApi().logout();
                 Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
                 startActivity(intent);
                 finishAffinity();
@@ -109,6 +111,7 @@ public class SettingsActivity extends BaseActivity {
                     JSONObject attributes = new JSONObject();
                     attributes.put("pushPermission", pushValue);
                     Taplytics.setUserAttributes(attributes);
+                    HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
                 } catch (JSONException e) {
 
                 }

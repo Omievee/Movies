@@ -18,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
@@ -65,6 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             attributes.put("email", UserPreferences.getUserEmail());
             attributes.put("name", UserPreferences.getUserName());
             Taplytics.setUserAttributes(attributes);
+            HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
         } catch (JSONException e) {
 
         }

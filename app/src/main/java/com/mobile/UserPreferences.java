@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+import com.helpshift.util.HelpshiftContext;
+
 /**
  * Created by ryan on 4/26/17.
  */
@@ -171,12 +173,15 @@ public class UserPreferences {
 
     public static void clearFbToken() {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putString(Constants.FB_TOKEN, "token");
         editor.apply();
     }
 
     public static String getFbToken() {
         return sPrefs.getString(Constants.FB_TOKEN, "token");
+    }
+
+    public static void helpshift() {
+        HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
 }
