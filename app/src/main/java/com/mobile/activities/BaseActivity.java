@@ -23,7 +23,9 @@ import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
+import com.taplytics.sdk.Taplytics;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -58,14 +60,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        try {
-//            JSONObject attributes = new JSONObject();
-//            attributes.put("email", UserPreferences.getUserEmail());
-//            attributes.put("name", UserPreferences.getUserName());
-//            Taplytics.setUserAttributes(attributes);
-//        } catch (JSONException e) {
-//
-//        }git stat
+        try {
+            JSONObject attributes = new JSONObject();
+            attributes.put("email", UserPreferences.getUserEmail());
+            attributes.put("name", UserPreferences.getUserName());
+            Taplytics.setUserAttributes(attributes);
+        } catch (JSONException e) {
+
+        }
 
         checkRestrictions();
 
@@ -111,7 +113,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
 
 
-                    Log.d(Constants.TAG, "RESTRICTION: " + subscriptionActivationRequired);
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
@@ -121,12 +122,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                             UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard, subscriptionActivationRequired);
-                        Log.d(Constants.TAG, "required?: " + subscriptionActivationRequired);
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (restriction.getPopInfo() != null) {
-                        Log.d("popInfo", restriction.getPopInfo().toString());
 
                         int reservationId = restriction.getPopInfo().getReservationId();
                         String movieTitle = restriction.getPopInfo().getMovieTitle();
@@ -148,7 +147,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
                         //IF API ERROR LOG OUT TO LOG BACK IN
                         /*
@@ -173,7 +171,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             @Override
             public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
 
-                Log.d(Constants.TAG, "base fail: " + t.getMessage());
             }
         });
     }

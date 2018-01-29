@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.fragments.NearMe;
+import com.mobile.fragments.SynopsisFragment;
 import com.moviepass.R;
 
 
@@ -29,7 +31,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     ImageView zero, one, two, three, four;
     private ViewPager mViewPager;
-
+    TextView nearMe;
     ImageView[] indicators;
 
     int page = 0;
@@ -41,30 +43,36 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         mCoordinator = findViewById(R.id.main_content);
         onboardingSignIn = findViewById(R.id.ONBOARDING_SIGN_IN);
         onboardingJoinNow = findViewById(R.id.ONBOARDING_JOIN_NOW);
-
+        nearMe = findViewById(R.id.NearMe);
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
         four = findViewById(R.id.intro_indicator_4);
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-//        mRedView.setVisibility(View.INVISIBLE);
 
         indicators = new ImageView[]{zero, one, two, three, four};
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
+
+        nearMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+                NearMe fragobj = new NearMe();
+                FragmentManager fm = getSupportFragmentManager();
+                fragobj.show(fm, "fr_nearme");
+            }
+        });
+
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

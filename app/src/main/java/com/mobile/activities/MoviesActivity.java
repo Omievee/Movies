@@ -119,7 +119,6 @@ public class MoviesActivity extends BaseActivity {
 
         View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
-        Log.d(TAG, "mp activation??: " + UserPreferences.getIsSubscriptionActivationRequired());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
@@ -284,26 +283,6 @@ public class MoviesActivity extends BaseActivity {
         alert.show();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main_menu, menu);
-//
-//        final MenuItem searchItem = menu.findItem(R.id.action_search);
-//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-//
-//        return true;
-//    }
 
 
     //Search For Movies
@@ -362,24 +341,6 @@ public class MoviesActivity extends BaseActivity {
 
         return true;
     }
-//
-//    public void test() {
-//        RestClient.getAuthenticated().getRestrictions().enqueue(new Callback<RestrictionsResponse>() {
-//            @Override
-//            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-//                Log.d(TAG, "omie 2: " );
-//
-//                if (response.body() != null && response.isSuccessful()) {
-//                    restriction = response.body();
-//                    Log.d(TAG, "restriction response: " + restriction.toString());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-//                Log.d(TAG, "onFailure: " + t.getMessage());
-//            }
-//        });
-//    }
+
 
 }

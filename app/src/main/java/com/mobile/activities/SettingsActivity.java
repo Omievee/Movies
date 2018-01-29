@@ -15,6 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.helpshift.support.ApiConfig;
+import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
@@ -22,6 +23,13 @@ import com.mobile.fragments.LegalFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
+import com.taplytics.sdk.Taplytics;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anubis on 6/9/17.
@@ -31,7 +39,7 @@ public class SettingsActivity extends BaseActivity {
     protected BottomNavigationView bottomNavigationView;
 
     LegalFragment legalFragment = new LegalFragment();
-
+    boolean pushValue;
     RelativeLayout help;
     RelativeLayout signout, legal;
     Switch pushSwitch;
@@ -47,7 +55,7 @@ public class SettingsActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        String versionName = BuildConfig.VERSION_NAME;
+        final String versionName = BuildConfig.VERSION_NAME;
         legal = findViewById(R.id.Legal);
         version = findViewById(R.id.VERSIOn);
         pushSwitch = findViewById(R.id.PushSwitch);
@@ -57,11 +65,16 @@ public class SettingsActivity extends BaseActivity {
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, String[]> customIssueFields = new HashMap<>();
+                customIssueFields.put("version", new String[]{"sl", BuildConfig.VERSION_NAME});
+
+
                 ApiConfig apiConfig = new ApiConfig.Builder()
                         .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
                         .setGotoConversationAfterContactUs(true)
                         .setRequireEmail(false)
                         .setEnableTypingIndicator(true)
+                        .setShowConversationResolutionQuestion(false)
                         .build();
 
                 Support.showFAQs(SettingsActivity.this, apiConfig);
@@ -84,19 +97,21 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 if (pushSwitch.isChecked()) {
                     UserPreferences.setPushPermission(true);
+                    pushValue = true;
                 } else {
                     UserPreferences.setPushPermission(false);
+                    pushValue = false;
                 }
-                Log.d(Constants.TAG, "psuh: " + UserPreferences.getPushPermission());
 
 
-//                //SEND isChecked TO TAPLYTICS
-//                try {
-//                    JSONObject attributes = new JSONObject();
-//                    attributes.put("pushPermission", pushValue);
-//                    Taplytics.setUserAttributes(attributes);
-//                } catch (JSONException e){
-//                }
+                //SEND isChecked TO TAPLYTICS
+                try {
+                    JSONObject attributes = new JSONObject();
+                    attributes.put("pushPermission", pushValue);
+                    Taplytics.setUserAttributes(attributes);
+                } catch (JSONException e) {
+
+                }
             }
         });
 
@@ -179,17 +194,17 @@ public class SettingsActivity extends BaseActivity {
 
 }
 
-////        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-////            public boolean onPreferenceClick(Preference preference) {
-////                //open browser or intent here
-////
-////                HashMap config = new HashMap ();
-////                config.put("gotoConversationAfterContactUs", true);
-////                config.put("hideNameAndEmail", true);
-////                config.put("showSearchOnNewConversation", true);
-////
-////                Support.showConversation(getActivity(), config);
-////
-////                return true;
-////            }
-////        });
+//        contact.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//            public boolean onPreferenceClick(Preference preference) {
+//                //open browser or intent here
+//
+//                HashMap config = new HashMap ();
+//                config.put("gotoConversationAfterContactUs", true);
+//                config.put("hideNameAndEmail", true);
+//                config.put("showSearchOnNewConversation", true);
+//
+//                Support.showConversation(getActivity(), config);
+//
+//                return true;
+//            }
+//        });

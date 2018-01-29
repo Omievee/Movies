@@ -379,5 +379,6 @@
     <string name="Policy_One">Flix is primarily adult&#8211;oriented. Those 21 and older may see any show any time. Ages 17 to 20: You can come solo to showtimes before 7pm. But for shows 7 pm and later, you\'ll need to be with a parent or guardian. Ages 6 to 16: You are good to go for all rated G, PG, and PG&#8211;13 shows as long as you are with a parent or guardian. It isn\'t really appropriate for you to see rated R motion pictures though. Ages 2&#8211;5: You can see all the G and PG movies at Flix that start before 7pm, but not after. No PG&#8211;13 or R movies though at any time! Infants, toddlers, and strollers are only allowed in Flix during special \"Baby Day\" events.</string>
     <string name="Theater_Late_policy">LATE ARRIVAL POLICY</string>
     <string name="Policy_two">We begin seating approximately 30 minutes prior to showtime in order to provide food and beverage service before the feature begins. We do not seat late arrivals after the feature begins, so you will not be able to see the show if you are not on time. </string>
+    <string name="title_activity_near_me">Map</string>
 
 </resources>

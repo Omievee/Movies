@@ -303,8 +303,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public void setZip(String zipcode) {
         zip = zipcode;
-        Log.d("SUA set", zip);
-
         mViewPager.setCurrentItem(1);
     }
 
@@ -312,9 +310,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public String getZip() {
         try {
-            Log.d("SUG get", zip);
         } catch (Exception e) {
-            Log.d("e", e.toString());
         }
 
         return zip;
@@ -358,13 +354,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public void setAddressZip(String frag_addressZip) {
         addressZip = frag_addressZip;
-        Log.d("currentItem", String.valueOf(mViewPager.getCurrentItem()));
 
     }
 
     public void setPage() {
         String TAG = "found";
-        Log.d(TAG, "setPage: " + mViewPager.getCurrentItem());
         if (mViewPager.getCurrentItem() == 0) {
             mViewPager.setCurrentItem(1);
         } else if (mViewPager.getCurrentItem() == 1) {
@@ -380,9 +374,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     public String getPrice() {
 
         try {
-            Log.d("SUG get", price);
         } catch (Exception e) {
-            Log.d("e", e.toString());
         }
 
         return price;

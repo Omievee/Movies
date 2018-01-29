@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:padding="@dimen/margin_half"
-    app:cardBackgroundColor="@color/test_black"
+    app:cardBackgroundColor="@color/new_red"
     app:cardPreventCornerOverlap="true">
 
     <!-- TODO: Update blank fragment layout -->
@@ -42,7 +42,7 @@
             android:layout_below="@id/TEXT"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/double_margin_standard"
-            android:background="@drawable/mpbutton1"
+            android:background="@android:color/transparent"
             android:text="Try again"
             android:textSize="15sp" />
     </RelativeLayout>

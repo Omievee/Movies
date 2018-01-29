@@ -104,7 +104,6 @@ public interface Api {
     @PUT("/rest/v1/reservations")
     Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
-    //TODO:
     /* History  */
     @GET("/rest/v1/reservations")
     Call<HistoryResponse> getReservations();
@@ -124,6 +123,11 @@ public interface Api {
     /* Theaters */
     @GET("/rest/v1/theaters/near")
     Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
+
+
+    /* Near Me Theaters */
+//    @GET("/rest/v1/theaters/near")
+//    Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
 
     /* Theater screenings (details) */
     @GET("/rest/v1/theaters/{id}/screenings")

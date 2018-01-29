@@ -180,7 +180,6 @@ public class SelectSeatActivity extends BaseActivity {
     protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest() {
 
         if (screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-            Log.d(TAG, "who is this?: " + screeningObject.getProvider().getProviderName());
             int normalizedMovieId = screeningObject.getMoviepassId();
             String externalMovieId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId();
             String format = screeningObject.getFormat();
@@ -266,7 +265,6 @@ public class SelectSeatActivity extends BaseActivity {
                 SeatingsInfoResponse seatingsInfoResponse = response.body();
 
                 if (seatingsInfoResponse != null) {
-                    Log.d(TAG, "onResponse: " + seatingsInfoResponse);
                     showSeats(
                             seatingsInfoResponse.seatingInfo.seats,
                             seatingsInfoResponse.seatingInfo.rows,
@@ -277,7 +275,6 @@ public class SelectSeatActivity extends BaseActivity {
             @Override
             public void onFailure(Call<SeatingsInfoResponse> call, Throwable t) {
                 mProgressWheel.setVisibility(View.GONE);
-                Log.d("error", "Unable to download seat information: " + t.getMessage().toString());
             }
         });
     }
@@ -351,7 +348,6 @@ public class SelectSeatActivity extends BaseActivity {
                 public void onClick(View sender) {
                     if (finalSeatName != null) {
                         mSelectedSeat.setText(finalSeatName);
-                        Log.d(TAG, "seat: ");
                     } else {
                         String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
                         mSelectedSeat.setText(formattedSeatName);
@@ -359,7 +355,6 @@ public class SelectSeatActivity extends BaseActivity {
                     }
 
                     final SeatButton button = (SeatButton) sender;
-                    Log.d(TAG, "seat: ");
                     selectSeat(button.getSeatName());
                     reserveSeatButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -459,7 +454,6 @@ public class SelectSeatActivity extends BaseActivity {
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
                     Toast.makeText(getApplicationContext(), R.string.pending_reservation, Toast.LENGTH_LONG).show();
                 } else if (restError != null) {
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
                     Toast.makeText(getApplicationContext(), restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -538,7 +532,6 @@ public class SelectSeatActivity extends BaseActivity {
     public void onBackPressed() {
         if (getIntent().getParcelableExtra(THEATER) != null) {
             Theater theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
-            Log.d(TAG, "first if: ");
 
             Intent intent = new Intent(SelectSeatActivity.this, TheaterActivity.class);
             intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
@@ -546,7 +539,6 @@ public class SelectSeatActivity extends BaseActivity {
             finish();
         } else if (getIntent().getParcelableExtra(MOVIE) != null) {
             Movie movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
-            Log.d(TAG, "sec ond if: ");
 
             Intent intent = new Intent(SelectSeatActivity.this, MovieActivity.class);
             intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(movie));
@@ -554,21 +546,9 @@ public class SelectSeatActivity extends BaseActivity {
             finish();
         } else {
             finish();
-            Log.d(TAG, "final if: ");
-            Log.d(TAG, "onBackPressed: ");
-//        finish();
 
         }
     }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                onBackPressed();
-//                break;
-//        }
-//        return true;
-//    }
 
     /* Bottom Navigation Things */
     int getContentViewId() {
@@ -587,9 +567,6 @@ public class SelectSeatActivity extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-//                } else if (itemId == R.id.action_reservations) {
-//                    Toast.makeText(SelectSeatActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-//                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {

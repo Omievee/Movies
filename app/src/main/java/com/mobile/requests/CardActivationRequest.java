@@ -6,9 +6,9 @@ package com.mobile.requests;
 
 public class CardActivationRequest {
 
-    String last4digits;
+    String cardNumber;
 
     public CardActivationRequest(String last4digits) {
-        this.last4digits = last4digits;
+        this.cardNumber = last4digits;
     }
 }

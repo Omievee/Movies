@@ -492,7 +492,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                                 LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                                 CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
-
                                 mMap.moveCamera(current);
                             }
                         }

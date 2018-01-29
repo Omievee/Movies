@@ -92,7 +92,6 @@ public class ProfileActivity extends BaseActivity {
             public void run() {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
-                    Log.d(TAG, "run: " + item.toString());
                 } else if (itemId == R.id.action_movies) {
                     startActivity(new Intent(getApplicationContext(), MoviesActivity.class));
                 } else if (itemId == R.id.action_theaters) {

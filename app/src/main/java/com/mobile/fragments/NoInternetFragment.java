@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import com.moviepass.R;
 
 
-public class NoInternetFragment extends DialogFragment {
+public class NoInternetFragment extends BottomSheetDialogFragment {
 
     Button tryAgain;
     View rootview;

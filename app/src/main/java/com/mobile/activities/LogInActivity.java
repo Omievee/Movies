@@ -107,7 +107,6 @@ public class LogInActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
 
-                        Log.d("loginResult", loginResult.getAccessToken().getToken());
 
                         String device = UserPreferences.getDeviceUuid();
 

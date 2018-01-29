@@ -102,22 +102,20 @@ public class ActivateMoviePassCard extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 progress.setVisibility(View.VISIBLE);
-                digits = activateDigits.getText().toString();
+                digits = activateDigits.getText().toString().trim();
                 final CardActivationRequest request = new CardActivationRequest(digits);
                 RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
                     @Override
                     public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                         CardActivationResponse cardActivationResponse = response.body();
                         if (cardActivationResponse != null && response.isSuccessful()) {
-                            Log.d(Constants.TAG, "onResponse: " + digits);
 
                             progress.setVisibility(View.GONE);
                             Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
                             startActivity(intent);
                         } else {
                             progress.setVisibility(View.GONE);
-                            Log.d(Constants.TAG, "fail: ");
-                            Toast.makeText(ActivateMoviePassCard.this, "Incorrect card number", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivateMoviePassCard.this, response.message(), Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -158,12 +156,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
-            Log.d(Constants.TAG, "this did: ");
-
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-
-                Log.d(Constants.TAG, "made it: ");
 
                 activateScanCardIcon.setVisibility(View.GONE);
                 activateManualInput.setVisibility(View.GONE);

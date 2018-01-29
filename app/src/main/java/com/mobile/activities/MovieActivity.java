@@ -336,10 +336,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
-        Log.d(TAG, "showtime: " + showtime);
-        Log.d(TAG, "provider: " + screening.getProvider());
-        Log.d(TAG, "perfominfo: " + screening.getProvider().getPerformanceInfo(showtime));
-
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
         //PerformanceInfo
@@ -397,7 +393,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
                     } else {
-                        Log.d("screeningObject,", screening.toString());
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
@@ -407,10 +402,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
-                        Log.d(TAG, "try/catch: ");
                         fabLoadCard.setEnabled(true);
                     } catch (Exception e) {
-                        Log.d(TAG, "exception: ");
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
                         fabLoadCard.setEnabled(true);
@@ -435,7 +428,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
                     Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
                 } else if(restError!=null){
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
                     Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 clearSuccessCount(); */
@@ -482,7 +474,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 }
 
                                 if (screeningsResponse != null) {
-                                    Log.d("getScreenings", screeningsResponse.getScreenings().toString());
                                     selectedScreeningsList.addAll(screeningsResponse.getScreenings());
 
                                     theatersList.addAll(screeningsResponse.getTheaters());
@@ -517,7 +508,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     @Override
                     public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
                         if (t != null) {
-                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
                         }
                     }
 
@@ -582,7 +572,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
 
-                        Log.d(TAG, "onFinalImageSet: " + imgUrl.toString());
                         if (imgUrl.toString().contains("updateMovieThumb")) {
                             supportStartPostponedEnterTransition();
                             selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);

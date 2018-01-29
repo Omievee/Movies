@@ -15,10 +15,10 @@ import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
 import com.mobile.network.RestClient;
+import com.taplytics.sdk.Taplytics;
 
 import io.fabric.sdk.android.Fabric;
 
-//import com.taplytics.sdk.Taplytics;
 
 
 public class Application extends MultiDexApplication {
@@ -32,7 +32,6 @@ public class Application extends MultiDexApplication {
     private AmazonS3 s3;
     private static CognitoCachingCredentialsProvider sCredProvider;
 
-//    private native static String getCognitoKey();
 
     private native static String getCognitoKey();
 
@@ -52,7 +51,7 @@ public class Application extends MultiDexApplication {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-//        Taplytics.startTaplytics(this, "setUserAttributes");
+        Taplytics.startTaplytics(this, "setUserAttributes");
 
         UserPreferences.load(this);
 

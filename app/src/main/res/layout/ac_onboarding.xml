@@ -31,14 +31,16 @@
             android:layout_height="wrap_content">
 
 
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_above="@id/dots"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginBottom="@dimen/double_margin_standard"-->
-            <!--android:text="Check to see which theaters are near you"-->
-            <!--android:textSize="18sp" />-->
+            <TextView
+                android:id="@+id/NearMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/dots"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/new_red"
+                android:layout_marginBottom="@dimen/quadruple_margin_standard"
+                android:text="Check to see which theaters are near you"
+                android:textSize="15sp" />
 
 
             <Button
@@ -148,6 +150,13 @@
             android:textSize="15sp" />
 
     </FrameLayout>
+
+
+    <WebView
+        android:id="@+id/Web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 
 </android.support.design.widget.CoordinatorLayout>

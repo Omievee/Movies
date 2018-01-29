@@ -91,11 +91,6 @@ public class ConfirmationActivity extends BaseActivity {
         cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
 
-        Log.d(TAG, "Qurl: " + screeningToken.getQrUrl());
-        Log.d(TAG, "confirm code: " + screeningToken.getConfirmationCode());
-        Log.d(TAG, "zip: " + screeningToken.getZipCodeTicket());
-
-
         if (screeningToken.getConfirmationCode() != null) {
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
