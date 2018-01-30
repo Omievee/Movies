@@ -210,7 +210,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                         public void onClick(DialogInterface dialog, int which) {
                             String reasonString = reason.getText().toString();
 
-                            Log.d("length", "length: " + String.valueOf(reasonString.length()));
 
                             if (reasonString.length() == 0) {
                                 Toast.makeText(VerificationActivity.this, R.string.activity_verification_empty_reason, Toast.LENGTH_LONG).show();
@@ -224,7 +223,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                         public void onClick(DialogInterface dialog, int which) {
                             String reasonString = reason.getText().toString();
 
-                            Log.d("length", "length: " + String.valueOf(reasonString.length()));
                             dialog.dismiss();
                         }
                     });
@@ -258,7 +256,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                     intent.putExtra("showtime", showtime);
                     startActivity(intent);
 
-                    Log.d("VAresId", String.valueOf(reservationId));
                 }
             }
         });
@@ -356,7 +353,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
             }
             isPreview = true;
         } catch (IOException e) {
-            //Log.d(TAG, "Error setting camera preview: " + e.getMessage());
         }
     }
 
@@ -435,7 +431,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
 
             isPreview = true;
         } catch (Exception e) {
-            //Log.d(TAG, "Error starting camera preview: " + e.getMessage());
         }
     }
 
@@ -531,8 +526,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                     VerificationLostResponse ticketVerificationLostResponse = response.body();
 
                     if (ticketVerificationLostResponse != null) {
-                        Log.d("ticketVR", "ticketVerificationResponseMsg: " + response.message());
-                        Log.d("ticketVR", "ticketVerificationResponseMsg: " + ticketVerificationLostResponse.getMessage());
 
                         progress.setVisibility(View.GONE);
 
@@ -546,7 +539,6 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
 
                             progress.setVisibility(View.GONE);
                         } catch (Exception e) {
-                            Log.d("e", "e :" + e.getMessage());
                             Toast.makeText(VerificationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }

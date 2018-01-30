@@ -313,8 +313,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     // Plan Info
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
-                    Log.d(Constants.TAG, "onResponse: " + lastName);
-                    Log.d(Constants.TAG, "onResponse: " + firstName);
                     String email = userInfoResponse.getEmail();
 
                     userName.setText(firstName + " " + lastName);
@@ -325,7 +323,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     List<String> addressList = Arrays.asList(address.split(",", -1));
 
                     for (int i = 0; i < addressList.size(); i++) {
-                        Log.d(Constants.TAG, "onResponse: " + addressList.get(0));
                         userCity.setText(addressList.get(0));
                         userState.setText(addressList.get(1));
                         userZip.setText(addressList.get(2));
@@ -341,7 +338,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     }
 
 
-                    Log.d(Constants.TAG, "MP#: " + userInfoResponse.getMoviePassCardNumber());
                     userMPCardNum.setText(userInfoResponse.getMoviePassCardNumber());
 
                     String plan = userInfoResponse.getPlan();
@@ -402,7 +398,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 saveChanges();
 
 
-                Log.i(Constants.TAG, "Place:" + place.toString());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 Log.i(Constants.TAG, status.getStatusMessage());
@@ -417,13 +412,9 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                 for (int i = 0; i < localList.size(); i++) {
                     userAddress.setText(localList.get(0));
-                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(0));
                     userCity.setText(localList.get(1).trim());
-                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(1).trim());
 
                     String State = localList.get(2).substring(0, 3).trim();
-                    Log.d(Constants.TAG, "onActivityResult: " + localList.get(2));
-
                     String zip = localList.get(2).substring(4, 9);
                     userState.setText(State);
                     userZip.setText(zip);
@@ -441,14 +432,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                 userNewBillingCC.setText(cardNumber);
 
 
-                Log.d(Constants.TAG, "onActivityResult: " + scanResult.getCardType().name);
-                Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryYear);
-                Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryMonth);
-
-
                 if (scanResult.isExpiryValid()) {
                     String month = String.valueOf(scanResult.expiryMonth);
-                    Log.d(Constants.TAG, "onActivityResult: " + scanResult.expiryYear);
                     String year = String.valueOf(scanResult.expiryYear);
                     if (month.length() < 2) {
                         MONTH = "0" + month;
@@ -456,7 +441,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                         MONTH = month;
                     }
                     YEAR = year.substring(2, 4);
-                    Log.d(Constants.TAG, "onActivityResult: " + YEAR);
                     userNewBillingExp.setText(MONTH + "/" + YEAR);
                     userNewBillingCVV.setText(scanResult.cvv);
                 }
@@ -500,7 +484,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                 String newCC = userNewBillingCC.getText().toString();
                 String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-                Log.d(Constants.TAG, "onClick: " + ccExMonth);
                 String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
                 String newExp = ccExMonth + "/" + ccExYr;
                 String newCVV = userNewBillingCVV.getText().toString();
@@ -542,7 +525,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
 
                     Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
-                    Log.d("update BillAdd Error", t.toString());
                 }
             });
         }
@@ -562,9 +544,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     progress.setVisibility(View.GONE);
 
-                    Log.d(Constants.TAG, "SUCCESS: ");
-//                    final Snackbar snackbar = Snackbar.make(relativeLayout, R.string.fragment_profile_payment_information_updated, Snackbar.LENGTH_LONG);
-//                    snackbar.show();
 
                     userNewBillingCC.clearComposingText();
                     userNewBillingCVV.clearComposingText();

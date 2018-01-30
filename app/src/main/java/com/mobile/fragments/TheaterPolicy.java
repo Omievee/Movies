@@ -56,7 +56,6 @@ public class TheaterPolicy extends BottomSheetDialogFragment {
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "onClick: " );
 
             }
         });

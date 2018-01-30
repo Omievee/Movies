@@ -82,7 +82,6 @@ public class ConfirmationActivity extends BaseActivity {
         moviepassCC_QR.setImageDrawable(getDrawable(R.drawable.mpmastercard2));
         confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
         confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
-//        qrCode = findViewById(R.id.qr_code);
         loadCardLogo = findViewById(R.id.CONFIRMED_LOADED_LOGO);
         confirmedMovieTitle.setText(screening.getTitle());
         theater.setText(screening.getTheaterName());
@@ -103,7 +102,6 @@ public class ConfirmationActivity extends BaseActivity {
                 confirmationCode.setText(code);
             }
             if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
-                Log.d(TAG, "made it: ");
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
                 if (qrUrl != null) {
                     cancelReservation.setVisibility(View.GONE);
@@ -130,7 +128,6 @@ public class ConfirmationActivity extends BaseActivity {
         cancelReservation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "CLICKED: ");
                 progress.setVisibility(View.VISIBLE);
                 ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
                 RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
@@ -143,7 +140,6 @@ public class ConfirmationActivity extends BaseActivity {
                         if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
                             try {
                                 JSONObject jObjError = new JSONObject(response.errorBody().string());
-                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
                                 Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
                             } catch (Exception e) {
@@ -156,7 +152,6 @@ public class ConfirmationActivity extends BaseActivity {
                         } else {
                             try {
                                 JSONObject jObjError = new JSONObject(response.errorBody().string());
-                                Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
 
                                 Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                             } catch (Exception e) {

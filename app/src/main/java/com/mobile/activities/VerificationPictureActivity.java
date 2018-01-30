@@ -230,7 +230,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             addViewAndRemove(holder.getSurfaceFrame().centerX(), holder.getSurfaceFrame().centerY());
             isPreview = true;
         } catch (IOException e) {
-            //Log.d(TAG, "Error setting camera preview: " + e.getMessage());
         }
     }
 
