@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/test_black"
     android:fitsSystemWindows="true">
 
 
@@ -107,9 +108,9 @@
                         android:id="@+id/CINEMA_PIN"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/margin_half"
                         android:layout_centerInParent="true"
                         android:layout_toEndOf="@id/CINEMA_ZIPCITY"
+                        android:paddingStart="@dimen/margin_half"
                         android:src="@drawable/locationiconsmallred"
                         app:layout_collapseMode="parallax" />
 
@@ -175,9 +176,9 @@
                 android:id="@+id/CINEMA_SELECTED_THEATER_RECYCLER"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layoutAnimation="@anim/layout_animation"
                 android:layout_marginBottom="50dp"
-                android:background="@color/test_black">
+                android:background="@color/test_black"
+                android:layoutAnimation="@anim/layout_anim_bottom">
 
             </android.support.v7.widget.RecyclerView>
 

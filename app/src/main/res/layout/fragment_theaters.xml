@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
+        android:layoutAnimation="@anim/layout_anim_bottom"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:focusable="false"

@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -170,6 +172,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
 
+        int res2 = R.anim.layout_anim_bottom;
+        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(this, res2);
 
 
         //Start location tasks
@@ -209,23 +213,24 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
         movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, theatersList, this);
         selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
-        selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                        for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
-                            View v = selectedTheatersRecyclerView.getChildAt(i);
-                            v.setAlpha(0.0f);
-                            v.animate().alpha(1.0f)
-                                    .setDuration(1000)
-                                    .setStartDelay(i * 50)
-                                    .start();
-                        }
-                        return true;
-                    }
-                });
+        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
+//        selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+//                new ViewTreeObserver.OnPreDrawListener() {
+//                    @Override
+//                    public boolean onPreDraw() {
+//                        selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+//
+//                        for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
+//                            View v = selectedTheatersRecyclerView.getChildAt(i);
+//                            v.setAlpha(0.0f);
+//                            v.animate().alpha(1.0f)
+//                                    .setDuration(1000)
+//                                    .setStartDelay(i * 50)
+//                                    .start();
+//                        }
+//                        return true;
+//                    }
+//                });
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();

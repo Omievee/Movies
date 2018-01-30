@@ -31,6 +31,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -186,7 +188,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         LinearLayoutManager mLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
 
+        int res2 = R.anim.layout_animation;
+        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
+
         theatersMapViewRecycler = rootView.findViewById(R.id.recycler_view);
+        theatersMapViewRecycler.setLayoutAnimation(animation2);
         theatersMapViewRecycler.setLayoutManager(mLayoutManager);
 
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();

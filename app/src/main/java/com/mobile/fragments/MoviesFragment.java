@@ -135,9 +135,13 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress = rootView.findViewById(R.id.progress);
         newReleaseTXT = rootView.findViewById(R.id.new_releases_text);
+        newReleaseTXT.setVisibility(View.GONE);
         nowPlayingTXT = rootView.findViewById(R.id.now_Playing_text);
+        nowPlayingTXT.setVisibility(View.GONE);
         comingSoonTXT = rootView.findViewById(R.id.coming_soon_text);
+        comingSoonTXT.setVisibility(View.GONE);
         topBoxTXT = rootView.findViewById(R.id.top_box_office_text);
+        topBoxTXT.setVisibility(View.GONE);
 
         Api api;
 
@@ -334,9 +338,13 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     featured.clear();
                     nowPlaying.clear();
                     ALLMOVIES.clear();
+                    topBoxTXT.setVisibility(View.VISIBLE);
                     fadeIn(topBoxTXT);
+                    comingSoonTXT.setVisibility(View.VISIBLE);
                     fadeIn(comingSoonTXT);
+                    newReleaseTXT.setVisibility(View.VISIBLE);
                     fadeIn(newReleaseTXT);
+                    nowPlayingTXT.setVisibility(View.VISIBLE);
                     fadeIn(nowPlayingTXT);
                     if (newRealeasesAdapter != null) {
                         newReleasesRecycler.getRecycledViewPool().clear();
