@@ -13,6 +13,7 @@
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -116,6 +117,7 @@
             android:name="com.mobile.activities.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/RedTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -133,9 +135,11 @@
         <activity
             android:name="com.mobile.activities.LogInActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:screenOrientation="portrait"
                 android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
         <activity
@@ -150,6 +154,7 @@
         <activity
             android:name="com.mobile.activities.MoviesActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -165,10 +170,12 @@
         <activity
             android:name="com.mobile.activities.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.ProfileActivity"
             android:parentActivityName="com.mobile.activities.MoviesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan">
             <meta-data
@@ -181,22 +188,27 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:screenOrientation="portrait"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
             android:name="com.mobile.activities.SelectSeatActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.SettingsActivity"
             android:parentActivityName="com.mobile.activities.MoviesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:screenOrientation="portrait"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
             android:name="com.mobile.activities.SignUpFirstOpenActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -204,11 +216,13 @@
         </activity>
         <activity
             android:name="com.mobile.activities.SignUpActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name="com.mobile.activities.TheaterActivity"
             android:parentActivityName="com.mobile.activities.TheatersActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -217,10 +231,12 @@
         <activity
             android:name="com.mobile.activities.TheatersActivity"
             android:parentActivityName="com.mobile.activities.MoviesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:screenOrientation="portrait"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
         <activity
@@ -239,7 +255,7 @@
         <activity android:name="com.mobile.activities.ActivatedCard_TutorialActivity" />
         <activity
             android:name="com.mobile.fragments.NearMe"
-            android:label="@string/title_activity_near_me"></activity>
+            android:label="@string/title_activity_near_me" />
     </application>
 
 </manifest>
