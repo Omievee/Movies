@@ -32,10 +32,13 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mancj.materialsearchbar.MaterialSearchBar;
@@ -82,7 +85,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final int LOCATION_PERMISSIONS = 99;
     android.location.LocationManager LocationManager;
     String Provider;
-
+    TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
     Api api;
 
     private MoviesNewReleasesAdapter newRealeasesAdapter;
@@ -131,6 +134,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         ButterKnife.bind(this, rootView);
 
         progress = rootView.findViewById(R.id.progress);
+        newReleaseTXT = rootView.findViewById(R.id.new_releases_text);
+        nowPlayingTXT = rootView.findViewById(R.id.now_Playing_text);
+        comingSoonTXT = rootView.findViewById(R.id.coming_soon_text);
+        topBoxTXT = rootView.findViewById(R.id.top_box_office_text);
 
         Api api;
 
@@ -140,6 +147,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         featured = new ArrayList<>();
         nowPlaying = new ArrayList<>();
         ALLMOVIES = new ArrayList<>();
+
+        int resId = R.anim.layout_animation;
+        int res2 = R.anim.layout_anim_bottom;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
+        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
+
         /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -148,6 +161,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
         newReleasesRecycler.setItemAnimator(null);
         fadeIn(newReleasesRecycler);
+        newReleasesRecycler.setLayoutAnimation(animation);
+
         newRealeasesAdapter = new MoviesNewReleasesAdapter(getActivity(), newReleases, this);
 
         /** Top Box Office RecyclerView */
@@ -157,6 +172,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
         topBoxOfficeRecycler.setItemAnimator(null);
         fadeIn(topBoxOfficeRecycler);
+        topBoxOfficeRecycler.setLayoutAnimation(animation);
+
         topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(getActivity(), TopBoxOffice, this);
 
         /** Coming Soon RecyclerView */
@@ -166,6 +183,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
         comingSoonRecycler.setItemAnimator(null);
         fadeIn(comingSoonRecycler);
+        comingSoonRecycler.setLayoutAnimation(animation);
+
         comingSoonAdapter = new MoviesComingSoonAdapter(getActivity(), comingSoon, this);
 
         /** NOW PLAYING */
@@ -173,6 +192,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
         nowPlayingRecycler.setLayoutManager(nowplayingManager);
         fadeIn(nowPlayingRecycler);
+        nowPlayingRecycler.setLayoutAnimation(animation);
+
         nowPlayingAdapter = new NowPlayingMoviesAdapter(getActivity(), nowPlaying, this);
 
         /** FEATURED */
@@ -181,6 +202,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
         featuredAdapter = new FeaturedAdapter(getActivity(), featured, this);
+        featuredRecycler.setLayoutAnimation(animation2);
 
 
         progress.setVisibility(View.VISIBLE);
@@ -312,8 +334,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     featured.clear();
                     nowPlaying.clear();
                     ALLMOVIES.clear();
-
-
+                    fadeIn(topBoxTXT);
+                    fadeIn(comingSoonTXT);
+                    fadeIn(newReleaseTXT);
+                    fadeIn(nowPlayingTXT);
                     if (newRealeasesAdapter != null) {
                         newReleasesRecycler.getRecycledViewPool().clear();
                         newRealeasesAdapter.notifyDataSetChanged();

@@ -93,7 +93,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         progress = rootView.findViewById(R.id.progress);
         shippingDetails = rootView.findViewById(R.id.ShippingDetails);
-//        backArrow = rootView.findViewById(R.id.accountback);
         bilingDetails = rootView.findViewById(R.id.billingdetails);
         billingSwitch = rootView.findViewById(R.id.SWITCH);
         billing2 = rootView.findViewById(R.id.Billing2);
@@ -361,7 +360,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-
+                Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }

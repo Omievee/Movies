@@ -166,7 +166,6 @@ public class UserPreferences {
 
     public static void setFbToken(String token) {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putString(Constants.FB_TOKEN, token);
         editor.apply();
     }

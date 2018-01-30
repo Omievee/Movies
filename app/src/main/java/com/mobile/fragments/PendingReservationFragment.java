@@ -15,16 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
+import com.mobile.model.UserInfo;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -32,7 +35,9 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -121,7 +126,24 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                         if (active.getRedemption_code() != null) {
                             pendingReservationCode.setText(active.getRedemption_code());
                         } else {
-                            pendingReservationCode.setText("11204");
+                            int userId = UserPreferences.getUserId();
+                            RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+                                @Override
+                                public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                                    if (response != null && response.isSuccessful()) {
+                                        String address = response.body().getShippingAddressLine2();
+                                        List<String> addressList = Arrays.asList(address.split(",", -1));
+                                        for (int i = 0; i < addressList.size(); i++) {
+                                            pendingReservationCode.setText(addressList.get(2));
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+                                    Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
 
                     } else {

@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -147,12 +149,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         UserLocationManagerFused.getLocationInstance(getContext()).startLocationUpdates();
 
         //Recycler / Adapter / LLM
+        int resId = R.anim.layout_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         qualifiersApproved = screening.getQualifiersApproved();
         theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this, qualifiersApproved);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
+        theaterSelectedRecyclerView.setLayoutAnimation(animation);
         theaterSelectedRecyclerView.setNestedScrollingEnabled(false);
 
 

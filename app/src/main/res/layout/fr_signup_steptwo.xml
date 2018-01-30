@@ -191,6 +191,7 @@
                     android:layout_below="@id/LAYOUT_5"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/double_margin_standard"
+                    android:textColor="@color/white"
                     android:gravity="center_horizontal"
                     android:text="You will be able to review all details before being charged."
                     android:textSize="15sp" />
