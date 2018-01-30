@@ -186,12 +186,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         progress.setVisibility(View.VISIBLE);
 
         /** SEARCH */
-        searchBar = rootView.findViewById(R.id.searchBar);
-        LayoutInflater inf = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        customAdapter = new SearchAdapter(inf);
-
-        searchBar.setHint("Search Movies");
-        searchBar.setMaxSuggestionCount(3);
 
 
         loadMovies();
@@ -205,31 +199,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 //        //TODO: Check for active moviepass subscription or not
 
 
-        ArrayList<Movie> moviesFound = new ArrayList<>();
-
-
-        customAdapter.setSuggestions(moviesFound);
-        searchBar.setMaxSuggestionCount(4);
-        searchBar.addTextChangeListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                customAdapter.getFilter().filter(searchBar.getText(), new Filter.FilterListener() {
-                    @Override
-                    public void onFilterComplete(int i) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         return rootView;
     }
 
@@ -572,30 +541,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 
-    }
-
-
-    public static void setTranslucentStatusBar(Window window) {
-        if (window == null) return;
-        int sdkInt = VERSION.SDK_INT;
-        if (sdkInt >= VERSION_CODES.LOLLIPOP) {
-            setTranslucentStatusBarLollipop(window);
-        } else if (sdkInt >= VERSION_CODES.KITKAT) {
-            setTranslucentStatusBarKiKat(window);
-        }
-    }
-
-    @TargetApi(VERSION_CODES.LOLLIPOP)
-    private static void setTranslucentStatusBarLollipop(Window window) {
-        window.setStatusBarColor(
-                window.getContext()
-                        .getResources()
-                        .getColor(android.R.color.transparent));
-    }
-
-    @TargetApi(VERSION_CODES.KITKAT)
-    private static void setTranslucentStatusBarKiKat(Window window) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
 

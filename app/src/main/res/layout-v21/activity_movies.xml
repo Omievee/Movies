@@ -18,14 +18,14 @@
         android:visibility="visible" />
 
 
-    <!--<ListView-->
-    <!--android:id="@+id/MovieSearch_Results"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@android:drawable/screen_background_dark_transparent"-->
-    <!--android:visibility="gone">-->
+    <ListView
+        android:id="@+id/MovieSearch_Results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:visibility="visible">
 
-    <!--</ListView>-->
+    </ListView>
 
 
     <com.github.clans.fab.FloatingActionMenu
