@@ -126,24 +126,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                         if (active.getRedemption_code() != null) {
                             pendingReservationCode.setText(active.getRedemption_code());
                         } else {
-                            int userId = UserPreferences.getUserId();
-                            RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
-                                @Override
-                                public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                                    if (response != null && response.isSuccessful()) {
-                                        String address = response.body().getShippingAddressLine2();
-                                        List<String> addressList = Arrays.asList(address.split(",", -1));
-                                        for (int i = 0; i < addressList.size(); i++) {
-                                            pendingReservationCode.setText(addressList.get(2));
-                                        }
-                                    }
-                                }
+                            pendingReservationCode.setText(active.getZip());
 
-                                @Override
-                                public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                                    Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                                }
-                            });
                         }
 
                     } else {

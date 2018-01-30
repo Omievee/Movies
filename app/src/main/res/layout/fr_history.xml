@@ -23,6 +23,7 @@
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/quadruple_margin_standard"
+        android:visibility="visible"
         android:background="@color/test_blue">
 
     </android.support.v7.widget.RecyclerView>
@@ -33,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/HEADER"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:text="You haven't seen any awesome movies yet!"
+        android:layout_margin="@dimen/double_margin_standard"
+        android:text="You have no viewing history at this time"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"

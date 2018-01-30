@@ -82,7 +82,15 @@ public class PastReservations extends BottomSheetDialogFragment {
                     progress.setVisibility(View.GONE);
                     Log.d(Constants.TAG, "onResponse: " + historyResponse.getReservations());
 
-                    historyList.addAll(historyResponse.getReservations());
+                    if (historyResponse.getReservations().size() == 0) {
+                        historyRecycler.setVisibility(View.GONE);
+                        noMovies.setVisibility(View.VISIBLE);
+                    } else {
+                        historyList.addAll(historyResponse.getReservations());
+                        historyRecycler.setVisibility(View.VISIBLE);
+                        noMovies.setVisibility(View.GONE);
+
+                    }
 
                     if (historyAdapter != null) {
                         historyRecycler.getRecycledViewPool().clear();

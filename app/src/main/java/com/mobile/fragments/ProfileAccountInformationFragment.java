@@ -478,18 +478,12 @@ public class ProfileAccountInformationFragment extends Fragment {
         userSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 progress.setVisibility(View.VISIBLE);
 
-//                updateShippingAddress();
-
-                String newCC = userNewBillingCC.getText().toString();
-                String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-                String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-                String newExp = ccExMonth + "/" + ccExYr;
-                String newCVV = userNewBillingCVV.getText().toString();
-
-                updateCreditCard(newCC, newExp, newCVV);
-
+                updateShippingAddress();
+//                updateCCData();
 
             }
         });
@@ -499,8 +493,6 @@ public class ProfileAccountInformationFragment extends Fragment {
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
-
-
             String newAddress = userAddress.getText().toString();
             String newAddress2 = userAddress2.getText().toString();
             String newCity = userCity.getText().toString();
@@ -508,7 +500,6 @@ public class ProfileAccountInformationFragment extends Fragment {
             String newState = userState.getText().toString();
 
             String type = "shippingAddress";
-
 
             AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
             RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
@@ -529,6 +520,16 @@ public class ProfileAccountInformationFragment extends Fragment {
             });
         }
 
+    }
+
+    public void updateCCData() {
+        String newCC = userNewBillingCC.getText().toString();
+        String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+        String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+        String newExp = ccExMonth + "/" + ccExYr;
+        String newCVV = userNewBillingCVV.getText().toString();
+
+        updateCreditCard(newCC, newExp, newCVV);
     }
 
 

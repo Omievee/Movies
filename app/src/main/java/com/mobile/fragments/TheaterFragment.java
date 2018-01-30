@@ -204,7 +204,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPendingSubscription()) {
+                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, time);
+                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
                     showActivateCardDialog(screening, time);
                 } else {
                     progress.setVisibility(View.VISIBLE);

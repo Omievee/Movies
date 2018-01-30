@@ -16,6 +16,12 @@ public class ActiveReservationResponse {
     String showtime;
     String eTicket;
 
+    public String getZip() {
+        return zip;
+    }
+
+    String zip;
+
     public Reservation getReservation() {
         return reservation;
     }

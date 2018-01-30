@@ -54,6 +54,7 @@ import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
 import com.moviepass.R;
@@ -68,6 +69,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -87,12 +89,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
+    HistoryResponse historyResponse;
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
     private Location mMyLocation;
     ArrayList<String> mShowtimesList;
 
+    boolean isfirst;
 
     public Movie movie;
     Reservation reservation;
@@ -214,23 +217,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, theatersList, this);
         selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
         selectedTheatersRecyclerView.setLayoutAnimation(animation2);
-//        selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-//                new ViewTreeObserver.OnPreDrawListener() {
-//                    @Override
-//                    public boolean onPreDraw() {
-//                        selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-//
-//                        for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
-//                            View v = selectedTheatersRecyclerView.getChildAt(i);
-//                            v.setAlpha(0.0f);
-//                            v.animate().alpha(1.0f)
-//                                    .setDuration(1000)
-//                                    .setStartDelay(i * 50)
-//                                    .start();
-//                        }
-//                        return true;
-//                    }
-//                });
+
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
@@ -239,7 +226,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedSynopsis.setVisibility(View.GONE);
             selectedMoviePoster.setClickable(false);
         }
-
         selectedSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -325,13 +311,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (isPendingSubscription()) {
+                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+                    ProgressBar.setVisibility(View.VISIBLE);
+                    reserve(screening, showtime);
+                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
                     showActivateCardDialog(screening, showtime);
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(screening, showtime);
                 }
+
             }
         });
     }
@@ -344,7 +333,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         String providerName = screening.getProvider().providerName;
         //PerformanceInfo
         int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
-
         String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
         int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
@@ -423,18 +411,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
-/*                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
-                    Toast.makeText(TheaterActivity.this, R.string.log_out_log_in, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
-                    Toast.makeText(TheaterActivity.this, R.string.data_connection, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
-                    Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
-                } else if(restError!=null){
-                    Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                clearSuccessCount(); */
             }
         });
     }
@@ -446,13 +422,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         finish();
     }
 
-    private void showVerification(ScreeningToken token) {
-        ProgressBar.setVisibility(View.GONE);
-        Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
-        finish();
-    }
+//    private void showVerification(ScreeningToken token) {
+//        ProgressBar.setVisibility(View.GONE);
+//        Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
+//        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
+//        startActivity(confirmationIntent);
+//        finish();
+//    }
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
@@ -467,7 +443,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
                                 ProgressBar.setVisibility(View.GONE);
                             } else {
-
                                 //Initial View to Display RecyclerView Based on User's Current Location
                                 screeningsResponse = response.body();
                                 selectedScreeningsList.clear();
@@ -705,6 +680,31 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             }
         });
         alert.show();
+    }
+
+
+    public void isFirstTime() {
+        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                if (response.isSuccessful() && response != null) {
+                    historyResponse = response.body();
+                    if (historyResponse.getReservations().size() == 0) {
+
+                        isfirst = true;
+                    } else {
+                        isfirst = false;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+
+            }
+        });
+
     }
 
 

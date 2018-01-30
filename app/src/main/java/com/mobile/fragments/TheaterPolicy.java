@@ -24,6 +24,7 @@ public class TheaterPolicy extends BottomSheetDialogFragment {
     public static final String POLICY = "policy";
     TextView theaterName;
     ImageButton close;
+
     public TheaterPolicy() {
     }
 
@@ -59,8 +60,5 @@ public class TheaterPolicy extends BottomSheetDialogFragment {
 
             }
         });
-
-
-
     }
 }
