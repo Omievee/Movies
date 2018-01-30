@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.activities.LogInActivity;
@@ -71,6 +73,8 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.userId = user.getId();
                     RestClient.deviceUuid = user.getDeviceUuid();
                     RestClient.authToken = user.getAuthToken();
+
+//                    int userID = Integer.parseInt(String.valueOf(RestClient.userId) + String.valueOf("3232323"));
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
                     Intent i = new Intent(getActivity(), MoviesActivity.class);

@@ -134,8 +134,8 @@ public interface Api {
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
     /* User */
-    @GET("/rest/v1/session")
-    Call<RestrictionsResponse> getRestrictions();
+    @GET("/rest/v1/session/{userId}")
+    Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")

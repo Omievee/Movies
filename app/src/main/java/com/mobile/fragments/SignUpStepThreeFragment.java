@@ -152,7 +152,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         //TODO: UPDATE IN 2099 to avoid signup failures
         String year = "20" + cardExpYear;
 //        int YEAR = Integer.valueOf(year);
-        Log.d(TAG, "beginRegistration: " + year);
         String cvv = String.valueOf(cardCvv);
 
         final String bStreet;

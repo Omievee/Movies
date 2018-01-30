@@ -235,7 +235,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         });
 
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
                 .setCountry("US")
                 .build();
 
@@ -883,7 +884,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     theaterPins.add(drawable);
                 }
             } catch (Exception e) {
-                Log.d("onBeforeClusterRender: ", e.toString());
             }
         }
 

@@ -36,6 +36,7 @@ import retrofit2.Response;
 //import com.taplytics.sdk.Taplytics;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    int offset =3232323;
 
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -100,12 +101,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     public void checkRestrictions() {
-        RestClient.getAuthenticated().getRestrictions().enqueue(new Callback<RestrictionsResponse>() {
+        RestrictionsResponse request = new RestrictionsResponse();
+        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId()+offset).enqueue(new Callback<RestrictionsResponse>() {
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
-
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
@@ -113,7 +114,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean verificationRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||

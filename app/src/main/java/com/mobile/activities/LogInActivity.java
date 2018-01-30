@@ -25,6 +25,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.model.User;
@@ -34,6 +35,10 @@ import com.mobile.requests.LogInRequest;
 import com.moviepass.R;
 
 import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -271,11 +276,12 @@ public class LogInActivity extends AppCompatActivity {
     private void moviePassLoginSucceeded(User user) {
         if (user != null) {
 
-            int userId = user.getId();
+            int us = user.getId();
             String deviceUuid = user.getDeviceUuid();
             String authToken = user.getAuthToken();
 
-            UserPreferences.setUserCredentials(userId, deviceUuid, authToken, user.getFirstName(), user.getEmail());
+
+            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
 
             Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
             i.putExtra("launch", true);
@@ -286,7 +292,6 @@ public class LogInActivity extends AppCompatActivity {
                 UserPreferences.hasUserLoggedInBefore(true);
             }
 
-//            mProgress.setVisibility(View.INVISIBLE);
             finish();
         }
     }
