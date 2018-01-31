@@ -157,10 +157,10 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         holder.movieRating.setText("Rated: " + screening.getRating());
         holder.showtimeGrid.removeAllViews();
 
+        final Screening passScreen = screening;
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-
                 showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 holder.showtimeGrid.addView(showtime);
@@ -185,7 +185,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             }
                             currentTime = checked;
                             String selectedShowTime = currentTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), screening, selectedShowTime);
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), passScreen, selectedShowTime);
                         }
 
                     });

@@ -25,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.CrashlyticsInitProvider;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -54,6 +57,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.services.common.Crash;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -200,18 +204,19 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     @Override
     public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull final String showtime) {
         final String time = showtime;
+        final Screening screening1 = screening;
         fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
                     progress.setVisibility(View.VISIBLE);
-                    reserve(screening, time);
+                    reserve(screening1, time);
                 } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-                    showActivateCardDialog(screening, time);
+                    showActivateCardDialog(screening1, time);
                 } else {
                     progress.setVisibility(View.VISIBLE);
-                    reserve(screening, time);
+                    reserve(screening1, time);
                 }
             }
         });
@@ -255,6 +260,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         //PerformanceInfo
         int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
+        Log.d(TAG, "reserve: " +normalizedMovieId);
+        String screen = screening.getScreen();
+        String both = screen + " " + String.valueOf(normalizedMovieId);
+        CrashlyticsCore.getInstance().log(String.valueOf(both));
         String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
         String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
         int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();

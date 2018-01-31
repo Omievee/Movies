@@ -80,7 +80,7 @@
     <!--Tutorial-->
     <string name="tutorial_First_Header">Your MoviePass card is activated!</string>
     <string name="tutorial_First_Body">You can now use your MoviePass card to purchase tickets at the theater!</string>
-    <string name="tutorial_First_See_How">See how it works > </string>
+    <string name="tutorial_First_See_How">See how it works </string>
 
     <string name="one">1</string>
     <string name="two">2</string>

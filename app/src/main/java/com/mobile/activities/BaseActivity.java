@@ -36,7 +36,7 @@ import retrofit2.Response;
 //import com.taplytics.sdk.Taplytics;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    int offset =3232323;
+    int offset = 3232323;
 
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -101,8 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
     public void checkRestrictions() {
-        RestrictionsResponse request = new RestrictionsResponse();
-        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId()+offset).enqueue(new Callback<RestrictionsResponse>() {
+        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {

@@ -12,8 +12,8 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/tutorial_container"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/double_margin_standard"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/double_margin_standard"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <TextView
@@ -120,6 +120,12 @@
             android:text="@string/tutorial_First_See_How"
             android:textColor="@color/new_red"
             android:textSize="25sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tutorial_firstSwipe"
+            android:src="@drawable/arrowforward" />
 
 
     </RelativeLayout>
