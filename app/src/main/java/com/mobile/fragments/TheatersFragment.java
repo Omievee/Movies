@@ -292,7 +292,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMinZoomPreference(10);
-        mMap.setMyLocationEnabled(true);
         //SNAP the recyclerview to center in the view
         LinearSnapHelper snapHelper = new LinearSnapHelper() {
             @Override
@@ -379,18 +378,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     }
 
                 }
-
                 //Onclick for individual Markers - adjusts recycler to that specific theater.
                 CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(15).build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
                 theatersMapViewAdapter.notifyDataSetChanged();
                 theatersMapViewRecycler.smoothScrollToPosition(theaterSelected);
-
                 marker.showInfoWindow();
 
                 return true;
             }
         });
+
+
 
 
     }

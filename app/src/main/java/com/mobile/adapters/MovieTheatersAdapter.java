@@ -27,6 +27,8 @@ import com.moviepass.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -68,6 +70,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
 
     public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ArrayList<Theater> theaterArrayList, ShowtimeClickListener showtimeClickListener) {
+
         this.screeningsArrayList = screeningsArrayList;
         this.theaterArrayList = theaterArrayList;
         this.showtimeClickListener = showtimeClickListener;
@@ -193,11 +196,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 dateCompareOne = parseDate(screening.getStartTimes().get(i));
 
 
-//                if (dateCompareOne.before(date)) {
-//                    Log.d(TAG, "false: ");
-////                    HOLDER.showTimesGrid.removeView(showTime);
-//                }
-
                 showTime.setTextColor(root.getResources().getColor(R.color.white_ish));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(30, 20, 30, 20);
@@ -207,26 +205,23 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                HOLDER.showTimesGrid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        RadioButton checked = group.findViewById(checkedId);
-                        if (screening.getFormat().equals("2D")) {
-                            if (currentTime != null) {
-                                currentTime.setChecked(false);
-                            }
-                            currentTime = checked;
-                            String selectedShowTime = currentTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
-                        } else {
-                            Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
+                HOLDER.showTimesGrid.setOnCheckedChangeListener((group, checkedId) -> {
+                    RadioButton checked = group.findViewById(checkedId);
+                    if (screening.getFormat().equals("2D")) {
+                        if (currentTime != null) {
+                            currentTime.setChecked(false);
                         }
-
+                        currentTime = checked;
+                        String selectedShowTime = currentTime.getText().toString();
+                        showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                    } else {
+                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
                     }
+
                 });
 
 
-                if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
+                if (!screening.isApproved()) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         currentTime.setClickable(false);
                         holder.notSupported.setVisibility(View.VISIBLE);

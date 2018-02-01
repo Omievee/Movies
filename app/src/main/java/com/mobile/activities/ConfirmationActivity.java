@@ -79,7 +79,7 @@ public class ConfirmationActivity extends BaseActivity {
         theater = findViewById(R.id.CONFIRMED_THEATER);
         confirmationCode = findViewById(R.id.CONFIRMED_CONFIRMATION_CODE);
         moviepassCC_QR = findViewById(R.id.CONFIRMED_MASTERCARD);
-        moviepassCC_QR.setImageDrawable(getDrawable(R.drawable.mpmastercard2));
+        moviepassCC_QR.setImageResource(R.drawable.mpmastercard2);
         confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
         confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
         loadCardLogo = findViewById(R.id.CONFIRMED_LOADED_LOGO);

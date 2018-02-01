@@ -161,7 +161,6 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                 ChangedMindResponse responseBody = response.body();
                 progress.setVisibility(View.GONE);
 
-
                 if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

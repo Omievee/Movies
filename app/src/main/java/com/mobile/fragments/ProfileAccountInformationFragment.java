@@ -331,7 +331,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     }
                     userBIllingCard.setText(userInfoResponse.getBillingCard());
                     if (userInfoResponse.getNextBillingDate().equals("")) {
-                        userBillingDate.setText("Uknown");
+                        userBillingDate.setText("Unknown");
                     } else {
                         userBillingDate.setText(userInfoResponse.getNextBillingDate());
 

@@ -191,7 +191,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     });
                 }
 
-                if (screening.getFormat().equals("3D") || screening.getFormat().equals("IMAX 3D") || screening.getFormat().equals("IMAX")) {
+                Log.d(TAG, "FORMAT?: " + screening.getTitle() + " " + screening.isApproved());
+
+                if (!screening.isApproved()) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         currentTime.setClickable(false);
                         holder.notSupported.setVisibility(View.VISIBLE);

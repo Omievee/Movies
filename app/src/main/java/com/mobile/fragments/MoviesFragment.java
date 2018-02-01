@@ -63,6 +63,8 @@ import com.moviepass.R;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -346,6 +348,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     fadeIn(newReleaseTXT);
                     nowPlayingTXT.setVisibility(View.VISIBLE);
                     fadeIn(nowPlayingTXT);
+
+
                     if (newRealeasesAdapter != null) {
                         newReleasesRecycler.getRecycledViewPool().clear();
                         newRealeasesAdapter.notifyDataSetChanged();
@@ -378,6 +382,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
 
                         comingSoon.addAll(moviesResponse.getComingSoon());
+                        Collections.sort(comingSoon, new Comparator<Movie>() {
+                            @Override
+                            public int compare(Movie movie, Movie t1) {
+                                return movie.getRunningTime() - t1.getRunningTime();
+                            }
+                        });
                         comingSoonRecycler.setAdapter(comingSoonAdapter);
 
                         nowPlaying.addAll(moviesResponse.getNowPlaying());

@@ -57,7 +57,7 @@ public interface Api {
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
-    @GET("/rest/v1/users/passwordReset/{emailAddress}")
+    @GET("/rest/v1/password_reset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
 
     /* FB Login */

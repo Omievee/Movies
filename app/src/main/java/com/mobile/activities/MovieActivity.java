@@ -64,6 +64,8 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -215,7 +217,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
         selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
         movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, theatersList, this);
-        selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
+
         selectedTheatersRecyclerView.setLayoutAnimation(animation2);
 
 
@@ -447,35 +449,19 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 screeningsResponse = response.body();
                                 selectedScreeningsList.clear();
                                 theatersList.clear();
-                                if (movieTheatersAdapter != null) {
-                                    selectedTheatersRecyclerView.getRecycledViewPool().clear();
-                                    movieTheatersAdapter.notifyDataSetChanged();
-                                }
 
                                 if (screeningsResponse != null) {
                                     selectedScreeningsList.addAll(screeningsResponse.getScreenings());
-
                                     theatersList.addAll(screeningsResponse.getTheaters());
+                                    Collections.sort(theatersList, (theater, t1) -> (int) (theater.getDistance() - (t1.getDistance())));
+
+                                    if (movieTheatersAdapter != null) {
+                                        selectedTheatersRecyclerView.getRecycledViewPool().clear();
+                                        movieTheatersAdapter.notifyDataSetChanged();
+                                    }
+
 
                                     selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
-                                    selectedTheatersRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                                            new ViewTreeObserver.OnPreDrawListener() {
-                                                @Override
-                                                public boolean onPreDraw() {
-                                                    selectedTheatersRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                                                    for (int i = 0; i < selectedTheatersRecyclerView.getChildCount(); i++) {
-                                                        View v = selectedTheatersRecyclerView.getChildAt(i);
-                                                        v.setAlpha(0.0f);
-                                                        v.animate().alpha(1.0f)
-                                                                .setDuration(1000)
-                                                                .setStartDelay(i * 50)
-                                                                .start();
-                                                    }
-
-                                                    return true;
-                                                }
-                                            });
-
                                     ProgressBar.setVisibility(View.GONE);
                                     fabLoadCard.setVisibility(View.VISIBLE);
                                 }
@@ -542,7 +528,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
     private void loadMoviePosterData() {
-
         final Uri imgUrl = Uri.parse(movie.getLandscapeImageUrl());
         selectedMoviePoster.setImageURI(imgUrl);
         DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -663,7 +648,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         @Override
                         public void onFailure(Call<CardActivationResponse> call, Throwable t) {
                             ProgressBar.setVisibility(View.GONE);
-
                             showActivateCardDialog(screening, showtime);
                         }
                     });
