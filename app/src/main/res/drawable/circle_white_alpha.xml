@@ -13,6 +13,6 @@
         android:right="@dimen/margin_half"
         android:top="@dimen/margin_half" />
     <size
-        android:width="80dp"
-        android:height="80dp" />
+        android:width="100dp"
+        android:height="100dp" />
 </shape>

@@ -39,6 +39,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,6 +53,8 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
@@ -73,6 +77,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
+import com.mobile.Constants;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
@@ -93,6 +98,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by anubis on 6/6/17.
@@ -131,10 +138,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     MapView mMapView;
 
     private OnFragmentInteractionListener listener;
-    SupportPlaceAutocompleteFragment places;
 
     SearchView mSearchLocation;
-    ImageView mSearchClose;
+    ImageView mSearchClose, myloc;
     CardView mCardView;
     View mProgress;
     RelativeLayout mRelativeLayout;
@@ -173,7 +179,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //        mCardView = rootView.findViewById(R.id.card_view);
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
-
+        myloc = rootView.findViewById(R.id.myloc);
 
         mRequestingLocationUpdates = true;
 
@@ -202,44 +208,31 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         theatersMapViewAdapter = new TheatersAdapter(mTheaters, this);
 
+        mSearchClose.setOnClickListener(view -> {
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                    .build();
 
+            try {
+                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
 
-        mSearchClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                expand(mCardView);
-                collapse(mSearchClose);
-                mSearchClose.setVisibility(View.GONE);
+                startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                // TODO: Handle the error.
             }
+
         });
 
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
-                .setCountry("US")
-                .build();
-
-        places = (SupportPlaceAutocompleteFragment)
-                getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        places.setFilter(typeFilter);
-        places.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                mRequestingLocationUpdates = false;
-                loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
-            }
-
-            @Override
-            public void onError(Status status) {
-                Toast.makeText(getActivity().getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        places.setHint("Search a new location");
 
         //Hide Keyboard when not in use
-        getActivity().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-        );
+        getActivity().
+
+                getWindow().
+
+                setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+                );
 
         return rootView;
     }
@@ -368,9 +361,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         });
 
 
-
-
     }
+
 
     @Override
     public void onResume() {
@@ -572,21 +564,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            // Check for the integer request code originally supplied to startResolutionForResult().
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.i(TAG, "User agreed to make required location settings changes.");
-                        // Nothing to do. startLocationupdates() gets called in onResume again.
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Log.i(TAG, "User chose not to make required location settings changes.");
-                        mRequestingLocationUpdates = false;
-                        updateLocationUI();
-                        break;
-                }
-                break;
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                mRequestingLocationUpdates = false;
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                myloc.setVisibility(View.VISIBLE);
+                loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
+                myloc.setOnClickListener(view -> {
+
+                    mRequestingLocationUpdates = true;
+                    LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+                    mMap.animateCamera(cameraUpdate);
+                    myloc.setVisibility(View.GONE);
+                });
+
+            }
         }
     }
 
