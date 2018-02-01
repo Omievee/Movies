@@ -73,7 +73,6 @@ public class MoviesActivity extends BaseActivity {
         ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
         FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
         fadeIn(main);
-        reservationsMenu = findViewById(R.id.FAB_RESERVATION_MENU);
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -84,37 +83,6 @@ public class MoviesActivity extends BaseActivity {
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
-        final FloatingActionButton currentRes = new FloatingActionButton(this);
-        currentRes.setLabelText("Current Reservation");
-        currentRes.setButtonSize(FloatingActionButton.SIZE_MINI);
-        FloatingActionButton historyRes = new FloatingActionButton(this);
-        historyRes.setLabelText("Past Reservations");
-        historyRes.setButtonSize(FloatingActionButton.SIZE_MINI);
-        historyRes.setShowProgressBackground(true);
-
-        reservationsMenu.addMenuButton(currentRes);
-        reservationsMenu.addMenuButton(historyRes);
-
-        currentRes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PendingReservationFragment fragobj = new PendingReservationFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fragment_pendingreservation");
-                reservationsMenu.close(true);
-
-            }
-        });
-
-        historyRes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PastReservations fragobj = new PastReservations();
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fr_history");
-                reservationsMenu.close(true);
-            }
-        });
 
         View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
@@ -129,15 +97,11 @@ public class MoviesActivity extends BaseActivity {
             sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             sb.setBackgroundColor(getResources().getColor(R.color.new_red));
             snack.setActionTextColor(getResources().getColor(R.color.white));
-            snack.setAction("Ok", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-                    startActivity(activateCard);
-                }
+            snack.setAction("Ok", v -> {
+                Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+                startActivity(activateCard);
             });
 
-            reservationsMenu.setVisibility(View.GONE);
         }
 
     }

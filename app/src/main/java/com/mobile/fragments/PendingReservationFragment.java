@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
@@ -48,7 +49,7 @@ import retrofit2.Response;
  * Created by omievee
  */
 
-public class PendingReservationFragment extends BottomSheetDialogFragment {
+public class PendingReservationFragment extends Fragment {
 
     public static final String TAG = "found";
     int reservation;
@@ -170,10 +171,8 @@ public class PendingReservationFragment extends BottomSheetDialogFragment {
                     } catch (Exception e) {
                     }
                 } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
-                    dismiss();
                 } else if (responseBody != null && response.isSuccessful()) {
                     Toast.makeText(getActivity(), responseBody.getMessage(), Toast.LENGTH_LONG).show();
-                    dismiss();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

@@ -28,18 +28,6 @@
     </ListView>
 
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/FAB_RESERVATION_MENU"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="57dp"
-        android:elevation="5dp"
-        app:fab_colorRipple="@color/white"
-        app:fab_size="normal"
-        app:layout_anchorGravity="bottom"
-        app:menu_colorNormal="@color/new_red"
-        app:menu_icon="@drawable/ticketnavwhite" />
 
     <include
         android:id="@+id/navigation"

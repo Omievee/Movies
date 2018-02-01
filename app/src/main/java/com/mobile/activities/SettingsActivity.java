@@ -57,12 +57,20 @@ public class SettingsActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         final String versionName = BuildConfig.VERSION_NAME;
+
+
         legal = findViewById(R.id.Legal);
         version = findViewById(R.id.VERSIOn);
         pushSwitch = findViewById(R.id.PushSwitch);
         help = findViewById(R.id.HELP);
         signout = findViewById(R.id.SIGNOUT);
         version.setText("App Version: " + versionName);
+
+        fadeIn(legal);
+        fadeIn(help);
+        fadeIn(signout);
+        fadeIn(version);
+        fadeIn(pushSwitch);
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,9 +1,11 @@
 package com.mobile.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,7 +32,7 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends BottomSheetDialogFragment {
+public class PastReservations extends Fragment {
 
     View rootview;
     HistoryAdapter historyAdapter;
@@ -47,7 +49,7 @@ public class PastReservations extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        rootview = inflater.inflate(R.layout.fr_history, container);
+        rootview = inflater.inflate(R.layout.fr_history, container, false);
         historyRecycler = rootview.findViewById(R.id.historyReycler);
         historyList = new ArrayList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
@@ -60,14 +62,13 @@ public class PastReservations extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager manager = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(getContext(), historyList);
+        historyAdapter = new HistoryAdapter(getActivity(), historyList);
         historyRecycler.setAdapter(historyAdapter);
         progress.setVisibility(View.VISIBLE);
 
-        SeparatorDecoration decor = new SeparatorDecoration(getContext(), getResources().getColor(R.color.test_black), 1.5f);
-        historyRecycler.addItemDecoration(decor);
+
         loadHIstory();
     }
 

@@ -13,7 +13,7 @@
         android:text="History"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_margin="@dimen/margin_standard"
+        android:layout_margin="@dimen/margin_half"
         android:textStyle="bold" />
 
 
@@ -22,9 +22,9 @@
         android:layout_width="match_parent"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/quadruple_margin_standard"
         android:visibility="visible"
-        android:background="@color/test_blue">
+        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+        android:background="@color/test_black">
 
     </android.support.v7.widget.RecyclerView>
 

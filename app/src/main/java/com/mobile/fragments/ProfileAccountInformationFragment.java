@@ -139,8 +139,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         userMPCardNum = rootView.findViewById(R.id.MPCardNum);
 
         return rootView;
-
-
     }
 
     @Override
@@ -168,44 +166,35 @@ public class ProfileAccountInformationFragment extends Fragment {
 //            }
 //        });
 
-        shippingClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (shippingDetails.getVisibility() == View.GONE) {
-                    expand(shippingDetails);
-                } else {
-                    collapse(shippingDetails);
+        shippingClick.setOnClickListener(v -> {
+            if (shippingDetails.getVisibility() == View.GONE) {
+                expand(shippingDetails);
+            } else {
+                collapse(shippingDetails);
 
-                }
             }
         });
 
-        billingSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (billing2.getVisibility() == View.GONE) {
-                    yesNo.setText("NO");
-                    expand(billing2);
-                } else {
-                    yesNo.setText("YES");
-                    collapse(billing2);
-                }
+        billingSwitch.setOnClickListener(v -> {
+            if (billing2.getVisibility() == View.GONE) {
+                yesNo.setText("NO");
+                expand(billing2);
+            } else {
+                yesNo.setText("YES");
+                collapse(billing2);
             }
         });
 
-        userPlanCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        userPlanCancel.setOnClickListener(v -> {
 
-                FragmentManager manager = getActivity().getFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.container, cancelSubscription);
-                transaction.addToBackStack(null);
-                transaction.commit();
+            FragmentManager manager = getActivity().getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            transaction.replace(R.id.profile_container, cancelSubscription);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
 
-            }
         });
 
 

@@ -124,11 +124,6 @@ public interface Api {
     @GET("/rest/v1/theaters/near")
     Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
 
-
-    /* Near Me Theaters */
-//    @GET("/rest/v1/theaters/near")
-//    Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
-
     /* Theater screenings (details) */
     @GET("/rest/v1/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);

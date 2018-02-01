@@ -11,8 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 
 import com.mobile.fragments.ProfileAccountInformationFragment;
+import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.moviepass.R;
 
@@ -23,7 +29,8 @@ import com.moviepass.R;
 public class ProfileActivity extends BaseActivity {
     public static final String TAG = "Found it";
 
-    ProfileAccountInformationFragment profileFragment = new ProfileAccountInformationFragment();
+//    ProfileAccountInformationFragment profileFragment = new ProfileAccountInformationFragment();
+    ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
 
     @Override
@@ -40,7 +47,7 @@ public class ProfileActivity extends BaseActivity {
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, profileFragment);
+        transaction.add(R.id.profile_container, profileFragment);
         transaction.commit();
 
         bottomNavigationView = findViewById(R.id.navigation);
@@ -122,4 +129,7 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
+
+
+
 }

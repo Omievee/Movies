@@ -169,8 +169,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
-        mSearchLocation = rootView.findViewById(R.id.search);
-        mCardView = rootView.findViewById(R.id.card_view);
+//        mSearchLocation = rootView.findViewById(R.id.search);
+//        mCardView = rootView.findViewById(R.id.card_view);
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
 
@@ -202,34 +202,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         theatersMapViewAdapter = new TheatersAdapter(mTheaters, this);
 
-        mSearchLocation.setVisibility(View.GONE);
-        mSearchLocation.setOnOpenCloseListener(new SearchView.OnOpenCloseListener() {
-            @Override
-            public boolean onClose() {
-                collapse(mSearchLocation);
-                mSearchLocation.close(true);
-                mSearchLocation.setVisibility(View.GONE);
-                expand(mSearchClose);
-                mSearchClose.setVisibility(View.VISIBLE);
-                return false;
-            }
 
-            @Override
-            public boolean onOpen() {
-                mSearchLocation.open(true);
-                mSearchLocation.setVisibility(View.VISIBLE);
-                mSearchClose.setVisibility(View.GONE);
-                return false;
-            }
-        });
 
         mSearchClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSearchLocation.open(true);
-                expand(mCardView);
+//                expand(mCardView);
                 collapse(mSearchClose);
-                mSearchLocation.setVisibility(View.VISIBLE);
                 mSearchClose.setVisibility(View.GONE);
             }
         });
@@ -247,7 +226,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             @Override
             public void onPlaceSelected(Place place) {
                 mRequestingLocationUpdates = false;
-
                 loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
             }
 
@@ -783,9 +761,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                     mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                                         @Override
                                         public void onMapClick(LatLng arg0) {
-                                            if (mCardView.getVisibility() == View.VISIBLE) {
-                                                collapse(mCardView);
-                                            }
+//                                            if (mCardView.getVisibility() == View.VISIBLE) {
+//                                                collapse(mCardView);
+//                                            }
 
                                             if (mSearchClose.getVisibility() == View.GONE) {
                                                 expand(mSearchClose);
@@ -925,7 +903,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
-        collapse(mCardView);
+//        collapse(mCardView);
 
         mClusterManager.clearItems();
         mClusterManager.cluster();

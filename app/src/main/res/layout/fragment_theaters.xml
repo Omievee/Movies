@@ -13,30 +13,23 @@
 
     <ImageView
         android:id="@+id/search_inactive"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginTop="@dimen/double_margin_standard"
-        android:src="@drawable/search_inactive_button" />
+        android:background="@drawable/circle_white_alpha"
+        android:src="@drawable/ic_search_black_24dp"
+        android:tint="@color/white" />
 
 
-    <com.lapism.searchview.SearchView
-        android:id="@+id/search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_standard"
-        android:layout_marginRight="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:visibility="gone" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_standard"
-        android:background="@color/white"
-        android:visibility="gone">
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/card_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/margin_standard"-->
+        <!--android:background="@color/white"-->
+        <!--android:visibility="visible">-->
 
         <fragment
             android:id="@+id/place_autocomplete_fragment"
@@ -44,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-    </android.support.v7.widget.CardView>
+    <!--</android.support.v7.widget.CardView>-->
 
 
     <android.support.v7.widget.RecyclerView

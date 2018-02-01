@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue"
+    android:background="@color/test_black"
     android:orientation="vertical">
 
     <!--<android.support.v7.widget.Toolbar-->
@@ -17,19 +17,12 @@
 
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/profile_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navigation">
+        android:layout_above="@id/navigation"
+        android:layout_marginTop="@dimen/margin_half">
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingEnd="@dimen/margin_standard"
-            android:paddingStart="@dimen/margin_standard"
-            android:paddingTop="@dimen/margin_half"
-            android:src="@drawable/logo_compact" />
 
     </FrameLayout>
 

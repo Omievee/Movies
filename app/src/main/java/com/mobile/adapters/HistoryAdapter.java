@@ -54,21 +54,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         @BindView(R.id.historyPoster)
         SimpleDraweeView posterImageView;
-        @BindView(R.id.MovieTitle)
-        TextView title;
-        @BindView(R.id.Theater)
-        TextView theater;
-        @BindView(R.id.Date)
-        TextView date;
+//        @BindView(R.id.MovieTitle)
+//        TextView title;
+//        @BindView(R.id.Theater)
+//        TextView theater;
+//        @BindView(R.id.Date)
+//        TextView date;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
             listItemHistory = v.findViewById(R.id.historyCard);
             posterImageView = v.findViewById(R.id.historyPoster);
-            title = v.findViewById(R.id.MovieTitle);
-            theater = v.findViewById(R.id.Theater);
-            date = v.findViewById(R.id.Date);
+//            title = v.findViewById(R.id.MovieTitle);
+//            theater = v.findViewById(R.id.Theater);
+//            date = v.findViewById(R.id.Date);
         }
     }
 
@@ -81,9 +81,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = historyArrayList.get(position);
-
-        String movieTitle = movie.getTitle();
-        final Uri imgUrl = Uri.parse(movie.getLandscapeImageUrl());
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.posterImageView.setImageURI(imgUrl);
         holder.posterImageView.getHierarchy().setFadeDuration(500);
 
@@ -100,7 +98,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-                            holder.title.setText(movie.getTitle());
+//                            holder.title.setText(movie.getTitle());
                         }
                     }
 
@@ -115,13 +113,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.posterImageView.refreshDrawableState();
         }
         holder.posterImageView.setController(controller);
-        long createdAt = movie.getCreatedAt();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-
-
-        holder.title.setText(movieTitle);
-        holder.theater.setText(movie.getTheaterName());
-        holder.date.setText(sdf.format(new Date(createdAt)));
+//        long createdAt = movie.getCreatedAt();
+//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//
+////
+//        holder.title.setText(movieTitle);
+//        holder.theater.setText(movie.getTheaterName());
+//        holder.date.setText(sdf.format(new Date(createdAt)));
         holder.listItemHistory.setTag(position);
     }
 
