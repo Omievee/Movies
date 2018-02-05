@@ -89,6 +89,11 @@ public class SettingsActivity extends BaseActivity {
                 Support.showFAQs(SettingsActivity.this, apiConfig);
             }
         });
+        if (UserPreferences.getPushPermission()) {
+            pushSwitch.setChecked(true);
+        } else {
+            pushSwitch.setChecked(false);
+        }
 
         signout.setOnClickListener(new View.OnClickListener() {
             @Override

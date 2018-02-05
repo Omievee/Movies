@@ -1,7 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityCompat;
@@ -19,16 +20,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -36,7 +33,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,17 +58,18 @@ import com.moviepass.R;
 
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.os.Build.*;
 
 /**
  * Created by ryan on 4/25/17.
@@ -107,7 +104,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     ArrayList<Movie> featured;
     ArrayList<Movie> nowPlaying;
     ArrayList<Movie> ALLMOVIES;
-
+    Activity myActivity;
 
     @BindView(R.id.new_releases)
     RecyclerView newReleasesRecycler;
@@ -222,7 +219,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Provider = LocationManager.getBestProvider(criteria, true);
-        checkLocationPermission();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
 
 //        //TODO: Check for active moviepass subscription or not
 
@@ -381,13 +380,32 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         TopBoxOffice.addAll(moviesResponse.getTopBoxOffice());
                         topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
 
-                        comingSoon.addAll(moviesResponse.getComingSoon());
                         Collections.sort(comingSoon, new Comparator<Movie>() {
                             @Override
                             public int compare(Movie movie, Movie t1) {
-                                return movie.getRunningTime() - t1.getRunningTime();
+                                final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+                                Date date = null;
+                                Date date1 = null;
+                                try {
+                                    date = fm.parse(movie.getReleaseDate());
+                                    date1 = fm.parse(t1.getReleaseDate());
+
+                                    SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+//                                    holder.comingSoon.setText(out.format(date));
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                return date.compareTo(date1);
                             }
                         });
+                        comingSoon.addAll(moviesResponse.getComingSoon());
+                        for (int i = 0; i < comingSoon.size(); i++) {
+                            Log.d(Constants.TAG, "onResponse: " + comingSoon.get(i).getReleaseDate());
+
+                        }
                         comingSoonRecycler.setAdapter(comingSoonAdapter);
 
                         nowPlaying.addAll(moviesResponse.getNowPlaying());
@@ -483,20 +501,26 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public interface OnFragmentInteractionListener {
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+
+    }
 
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(myActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            if (ActivityCompat.shouldShowRequestPermissionRationale(myActivity,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(getActivity())
+                new AlertDialog.Builder(myActivity)
                         .setTitle("GPS Services Are Required For MoviePass to Run Properlly")
                         .setMessage(" Allow GPS Location Access? ")
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -514,9 +538,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        LOCATION_PERMISSIONS);
+                ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
             }
             return false;
         } else {
@@ -535,7 +557,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(getActivity(),
+                    if (ContextCompat.checkSelfPermission(myActivity,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 

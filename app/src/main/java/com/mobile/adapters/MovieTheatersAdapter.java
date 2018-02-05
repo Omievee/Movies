@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,7 +70,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public RadioButton showTime;
 
 
-    public MovieTheatersAdapter(ArrayList<Screening> screeningsArrayList, ArrayList<Theater> theaterArrayList, ShowtimeClickListener showtimeClickListener) {
+    public MovieTheatersAdapter(ArrayList<Theater> theaterArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
 
         this.screeningsArrayList = screeningsArrayList;
         this.theaterArrayList = theaterArrayList;
@@ -97,6 +98,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         TextView address1;
         @BindView(R.id.progress)
         View progress;
+        @BindView(R.id.ONE)
+        LinearLayout ONE;
 
 
         public ViewHolder(View v) {
@@ -113,6 +116,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             cardview = v.findViewById(R.id.ONE);
             distance = v.findViewById(R.id.THEATER_DISTANCE_LISTITEM);
             address1 = v.findViewById(R.id.THEATER_ADDRESS_LISTITEM);
+            ONE = v.findViewById(R.id.ONE);
         }
 
 
@@ -122,10 +126,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         root = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theaters_and_showtimes, parent, false);
 
-
         return new ViewHolder(root);
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -134,6 +136,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
+        if (screeningsArrayList.size() == 0) {
+            holder.ONE.setVisibility(View.GONE);
+            holder.notSupported.setVisibility(View.VISIBLE);
+            holder.notSupported.setText("No Theaters Found");
+        }
 
         int theaterID = screeningsArrayList.get(position).getTribuneTheaterId();
         String theaterName = screeningsArrayList.get(position).getTheaterName();
@@ -144,24 +151,31 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 double distance = theaterArrayList.get(i).getDistance();
                 String name = theaterArrayList.get(i).getName();
                 String address = theaterArrayList.get(i).getCity() + " " + theaterArrayList.get(i).getState() + " " + theaterArrayList.get(i).getZip();
-                HOLDER.distance.setText(String.valueOf(distance));
+                HOLDER.distance.setText(String.valueOf(distance) + " miles");
                 HOLDER.TheaterName.setText(name);
                 HOLDER.address1.setText(address);
                 final Uri uri = Uri.parse("geo:" + theaterArrayList.get(i).getLat() + "," + theaterArrayList.get(i).getLon() + "?q=" + Uri.encode(theaterArrayList.get(i).getName()));
 
-                HOLDER.distance.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            HOLDER.itemView.getContext().startActivity(mapIntent);
-                        } catch (ActivityNotFoundException e) {
-                            Toast.makeText(HOLDER.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception x) {
-                            x.getMessage();
-                        }
+                HOLDER.distance.setOnClickListener(v -> {
+                    try {
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        HOLDER.itemView.getContext().startActivity(mapIntent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(HOLDER.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+                    } catch (Exception x) {
+                        x.getMessage();
+                    }
+                });
+                HOLDER.TheaterPin.setOnClickListener(view -> {
+                    try {
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        HOLDER.itemView.getContext().startActivity(mapIntent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(HOLDER.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+                    } catch (Exception x) {
+                        x.getMessage();
                     }
                 });
             }
@@ -185,7 +199,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 int minute = now.get(Calendar.MINUTE);
                 int amPM = now.get(Calendar.AM_PM);
 
-                String AM_PM = "";
+                String AM_PM;
                 if (amPM == 0) {
                     AM_PM = "AM";
                 } else {
@@ -222,17 +236,17 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
 
                 if (!screening.isApproved()) {
+                    currentTime.setClickable(false);
+                    holder.notSupported.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        currentTime.setClickable(false);
-                        holder.notSupported.setVisibility(View.VISIBLE);
                         holder.cardview.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
                 }
             }
         }
 
-    }
 
+    }
 
     @Override
     public int getItemCount() {
@@ -244,11 +258,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         return position;
     }
 
-    @Override
-    public void onViewRecycled(ViewHolder holder) {
-        super.onViewRecycled(holder);
-    }
-
 
     private Date parseDate(String date) {
         try {
@@ -257,5 +266,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             return new Date(0);
         }
     }
+
 
 }

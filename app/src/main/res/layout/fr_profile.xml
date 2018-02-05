@@ -137,7 +137,8 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:background="@color/test_blue"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_half">
+        android:padding="@dimen/margin_half"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

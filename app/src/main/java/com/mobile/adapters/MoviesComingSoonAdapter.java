@@ -135,7 +135,6 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
 //                        holder.title.setText(movie.getTitle());
                         try {
                             Date date = fm.parse(dateComingSoon);
-
                             SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
                             holder.comingSoon.setText(out.format(date));
                         } catch (ParseException e) {

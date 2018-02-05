@@ -3,6 +3,7 @@ package com.mobile.model;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 
 @Parcel
-public class Screening {
+public class Screening implements Comparator<Theater>{
 
     private List<Screening> screening;
 
@@ -39,6 +40,9 @@ public class Screening {
     String title;
     String rating;
     String synopsis;
+
+
+
 
     public String getSynopsis() {
         return synopsis;
@@ -271,5 +275,11 @@ public class Screening {
 
     public Provider getProvider() {
         return provider;
+    }
+
+
+    @Override
+    public int compare(Theater theater, Theater t1) {
+        return Double.compare(theater.getDistance(), t1.getDistance());
     }
 }

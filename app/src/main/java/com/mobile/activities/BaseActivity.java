@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -19,7 +18,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.helpshift.util.HelpshiftContext;
-import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.network.RestClient;
@@ -74,9 +72,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
         checkRestrictions();
 
-        Fresco.initialize(this);
 
     }
+
 
     @Override
     protected void onStart() {

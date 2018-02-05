@@ -77,9 +77,9 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         final Movie movie = moviesArrayList.get(position);
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
-//        holder.title.setText("");
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
+        Log.d(TAG, "URL???: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
@@ -95,13 +95,13 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                         if (imgUrl.toString().contains("default")) {
                             holder.title.setText(movie.getTitle());
                         }
+
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.mNewReleasePosterDV.setImageURI(imgUrl + "/original.jpg");
-//                        holder.title.setText(movie.getTitle());
-//                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+
                     }
                 })
                 .build();

@@ -31,12 +31,15 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
+import com.mobile.activities.EticketConfirmation;
 import com.mobile.activities.SelectSeatActivity;
+import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
+import com.mobile.model.SelectedSeat;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
@@ -83,12 +86,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     ArrayList<String> showtimesAtSelectedTheater;
     View progress;
     Reservation reservation;
+    PerformanceInfoRequest mPerformReq;
 
     public static final String POLICY = "policy";
     public static final String TOKEN = "token";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
-    public static final String THEATER = "theater";
+    public static final String THEATER = "cinema";
 
     public static TheaterFragment newInstance() {
         return new TheaterFragment();
@@ -114,6 +118,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             }
         });
         progress = rootView.findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
         eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
         reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS);
 
@@ -132,21 +137,17 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         final Uri uri = Uri.parse("geo:" + theaterObject.getLat() + "," + theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
 
-        cinemaPin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
-                    mapIntent.setPackage("com.google.android.apps.maps");
-                    getActivity().startActivity(mapIntent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(getActivity(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
-
-                } catch (Exception x) {
-                    x.getMessage();
-                }
-
+        cinemaPin.setOnClickListener(v -> {
+            try {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                mapIntent.setPackage("com.google.android.apps.maps");
+                getActivity().startActivity(mapIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+            } catch (Exception x) {
+                x.getMessage();
             }
+
         });
 
         /* Start Location Tasks */
@@ -164,7 +165,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         theaterSelectedRecyclerView.setLayoutAnimation(animation);
         theaterSelectedRecyclerView.setNestedScrollingEnabled(false);
 
-
         loadMovies();
 
         if (theaterObject.getName().contains("Flix Brewhouse")) {
@@ -177,7 +177,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fragobj.show(fm, "fr_theaterpolicy");
         }
-        Log.d(TAG, "onCreateView: " + theaterObject.getName().contains("Flix Brewhouse"));
 
         return rootView;
     }
@@ -202,13 +201,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     @Override
-    public void onShowtimeClick(int pos, @NotNull final Screening screening, @NotNull final String showtime) {
+    public void onShowtimeClick(int pos, final Screening screening,  final String showtime) {
         final String time = showtime;
         final Screening screening1 = screening;
         fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening1, time);
@@ -229,6 +230,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
                 screeningsResponse = response.body();
                 if (screeningsResponse != null) {
+                    progress.setVisibility(View.GONE);
                     moviesAtSelectedTheater.clear();
                     moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
                     if (theaterSelectedRecyclerView != null) {
@@ -250,50 +252,26 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
     public void reserve(Screening screening, String showtime) {
         fabLoadCard.setEnabled(false);
-
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
 
 
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
-
         //PerformanceInfo
-        int normalizedMovieId = screening.getProvider().getPerformanceInfo(showtime).getNormalizedMovieId();
-        Log.d(TAG, "reserve: " +normalizedMovieId);
-        String screen = screening.getScreen();
-        String both = screen + " " + String.valueOf(normalizedMovieId);
-        CrashlyticsCore.getInstance().log(String.valueOf(both));
-        String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-        String format = screening.getProvider().getPerformanceInfo(showtime).getFormat();
-        int tribuneTheaterId = screening.getProvider().getPerformanceInfo(showtime).getTribuneTheaterId();
-        int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
-        String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-        String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-        String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-        String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-        int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-        String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-        Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+        checkProviderDoPerformanceInfoRequest(screening, showtime);
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
-            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
+            TicketInfoRequest ticketInfo = new TicketInfoRequest(mPerformReq);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
-            PerformanceInfoRequest performanceInfo = new PerformanceInfoRequest(dateTime, externalMovieId, performanceNumber,
-                    tribuneTheaterId, format, normalizedMovieId, sku, price, auditorium, performanceId, sessionId);
-            TicketInfoRequest ticketInfo = new TicketInfoRequest(performanceInfo);
-            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest, showtime);
+            showEticketConfirmation(screening, showtime);
         } else {
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
-
             startActivity(intent);
             getActivity().finish();
         }
@@ -322,6 +300,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         showConfirmation(token);
                     }
                 } else {
+
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
@@ -330,7 +309,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
-
                             Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
                         }
                         Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
@@ -435,12 +413,131 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         alert.show();
     }
 
+
+    protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest(Screening screen, String time) {
+
+        Screening S = screen;
+
+        if (screen.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
+            int normalizedMovieId = screen.getMoviepassId();
+            String externalMovieId = screen.getProvider().getPerformanceInfo(time).getExternalMovieId();
+            String format = screen.getFormat();
+            int tribuneTheaterId = screen.getTribuneTheaterId();
+            int screeningId = screen.getProvider().getPerformanceInfo(time).getScreeningId();
+            int performanceNumber = screen.getProvider().getPerformanceInfo(time).getPerformanceNumber();
+            String sku = screen.getProvider().getPerformanceInfo(time).getSku();
+            Double price = screen.getProvider().getPerformanceInfo(time).getPrice();
+            String dateTime = screen.getProvider().getPerformanceInfo(time).getDateTime();
+            String auditorium = screen.getProvider().getPerformanceInfo(time).getAuditorium();
+            String performanceId = screen.getProvider().getPerformanceInfo(time).getPerformanceId();
+            String sessionId = screen.getProvider().getPerformanceInfo(time).getSessionId();
+            int theater = screen.getProvider().getTheater();
+            String cinemaChainId = screen.getProvider().getPerformanceInfo(time).getCinemaChainId();
+            String showtimeId = screen.getProvider().getPerformanceInfo(time).getShowtimeId();
+            TicketType ticketType = screen.getProvider().getPerformanceInfo(time).getTicketType();
+
+
+            mPerformReq = new PerformanceInfoRequest(
+                    normalizedMovieId,
+                    externalMovieId,
+                    format,
+                    tribuneTheaterId,
+                    screeningId,
+                    dateTime,
+                    performanceNumber,
+                    sku,
+                    price,
+                    auditorium,
+                    performanceId,
+                    sessionId,
+                    cinemaChainId,
+                    ticketType,
+                    showtimeId);
+
+            Log.d(TAG, "----------------------------------------------: " );
+            Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
+            Log.d(TAG, "normal: " + normalizedMovieId);
+            Log.d(TAG, "external: " + externalMovieId);
+            Log.d(TAG, "format: " + format);
+            Log.d(TAG, "tribune: "+ tribuneTheaterId);
+            Log.d(TAG, "sku ID: " + sku);
+            Log.d(TAG, "price: " + price ) ;
+            Log.d(TAG, "date: " + dateTime);
+            Log.d(TAG, "aud: " + auditorium);
+            Log.d(TAG, "perform: " + performanceId);
+            Log.d(TAG, "session: " + sessionId);
+            Log.d(TAG, "cinema: " + cinemaChainId);
+            Log.d(TAG, "show id: " + showtimeId);
+            Log.d(TAG, "tick type: " + ticketType);
+
+            return mPerformReq;
+
+
+        } else {
+            //IF not movieXchange then it will simply request these parameters:
+            int normalizedMovieId = screen.getMoviepassId();
+            String externalMovieId = S.getProvider().getPerformanceInfo(time).getExternalMovieId();
+            String format = screen.getFormat();
+            int tribuneTheaterId = screen.getTribuneTheaterId();
+            int performanceNumber = screen.getProvider().getPerformanceInfo(time).getPerformanceNumber();
+            String sku = screen.getProvider().getPerformanceInfo(time).getSku();
+            Double price = screen.getProvider().getPerformanceInfo(time).getPrice();
+            String dateTime = screen.getProvider().getPerformanceInfo(time).getDateTime();
+            String auditorium = screen.getProvider().getPerformanceInfo(time).getAuditorium();
+            String performanceId = screen.getProvider().getPerformanceInfo(time).getPerformanceId();
+            String sessionId = screen.getProvider().getPerformanceInfo(time).getSessionId();
+            int theater = screen.getProvider().getTheater();
+
+            mPerformReq = new PerformanceInfoRequest(
+                    dateTime,
+                    externalMovieId,
+                    performanceNumber,
+                    tribuneTheaterId,
+                    format,
+                    normalizedMovieId,
+                    sku,
+                    price,
+                    auditorium,
+                    performanceId,
+                    sessionId);
+
+            Log.d(TAG, "----------------------------------------------: " );
+            Log.d(TAG, "time?: "+ time);
+
+            Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
+            Log.d(TAG, "normal: " + normalizedMovieId);
+            Log.d(TAG, "external: " + externalMovieId);
+            Log.d(TAG, "format: " + format);
+            Log.d(TAG, "tribune: "+ tribuneTheaterId);
+            Log.d(TAG, "sku ID: " + sku);
+            Log.d(TAG, "price: " + price ) ;
+            Log.d(TAG, "date: " + dateTime);
+            Log.d(TAG, "aud: " + auditorium);
+            Log.d(TAG, "perform: " + performanceId);
+            Log.d(TAG, "session: " + sessionId);
+            Log.d(TAG, "----------------------------------------------: " );
+
+            return mPerformReq;
+        }
+
+    }
+
     private void showConfirmation(ScreeningToken token) {
-        progress.setVisibility(View.GONE);
-        Intent confirmationIntent = new Intent(getContext(), ConfirmationActivity.class);
+        Intent confirmationIntent = new Intent(getActivity(), ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         getActivity().finish();
+    }
+
+    private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
+
+        Intent intent = new Intent(getActivity(), EticketConfirmation.class);
+
+        intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
+        intent.putExtra(SHOWTIME, selectedShowTime);
+
+        startActivity(intent);
+
     }
 
 

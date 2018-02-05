@@ -30,6 +30,7 @@
                     android:layout_height="wrap_content"
                     android:elevation="5dp"
                     android:ellipsize="marquee"
+                    android:maxLength="20"
                     android:singleLine="true"
                     android:text="[ MOVIE TITLE ]"
                     android:textColor="@color/white"
@@ -43,7 +44,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/margin_half"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/close_white" />
+                    android:src="@drawable/close_white"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 
@@ -90,8 +92,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard"
-        android:layout_below="@id/CONFIRMED_HEADER">
+        android:layout_below="@id/CONFIRMED_HEADER"
+        android:layout_marginBottom="@dimen/quadruple_margin_standard">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,44 +139,63 @@
             </FrameLayout>
 
 
-            <TextView
-                android:id="@+id/CONFIRMED_ZIP_TEXT"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/quadruple_margin_standard"
-                android:paddingStart="@dimen/quadruple_margin_standard"
-                android:text="@string/activity_confirmation_confirmation_text"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
-                android:background="@drawable/confirmation_code_confirm"
-                android:padding="@dimen/margin_half"
-                android:text=" 11204 "
-                android:textColor="@color/black_text"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/quadruple_margin_standard"
+                    android:paddingStart="@dimen/quadruple_margin_standard"
+                    android:text="You have 30 minutes to purchase your ticket"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
 
 
-            <TextView
-                android:id="@+id/CONFIRMED_CANCEL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/margin_standard"
-                android:text="Cancel or Change Reservation"
-                android:textColor="@color/new_red"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/CONFIRMED_ZIP_TEXT"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                    android:paddingEnd="@dimen/quadruple_margin_standard"
+                    android:paddingStart="@dimen/quadruple_margin_standard"
+                    android:text="@string/activity_confirmation_confirmation_text"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:background="@drawable/confirmation_code_confirm"
+                    android:padding="@dimen/margin_half"
+                    android:text=" 11204 "
+                    android:textColor="@color/black_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:id="@+id/CONFIRMED_CANCEL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:text="Cancel or Change Reservation"
+                    android:textColor="@color/new_red"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

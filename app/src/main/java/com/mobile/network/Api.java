@@ -98,7 +98,7 @@ public interface Api {
 
     /* GET PENDING RESERVATION */
     @GET("rest/v1/reservations/last")
-    Call<ActiveReservationResponse> getLast();
+    Call<ActiveReservationResponse> last();
 
     /* Cancel Reservation  */
     @PUT("/rest/v1/reservations")

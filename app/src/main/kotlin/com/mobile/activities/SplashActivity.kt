@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 
 import com.mobile.UserPreferences
 import com.moviepass.R
@@ -16,8 +15,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            Log.d("userId", UserPreferences.getUserId().toString())
             if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
+
                 val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
                 startActivity(i)
                 finish()

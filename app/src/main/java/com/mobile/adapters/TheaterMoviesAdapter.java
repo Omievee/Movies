@@ -134,7 +134,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         int minutes = t % 60;
 
         if (t == 0) {
-            holder.movieTime.setVisibility(View.GONE);
+            holder.movieTime.setVisibility(View.INVISIBLE);
         } else if (hours > 1) {
             String translatedRunTime = hours + " hours " + minutes + " minutes";
             holder.movieTime.setText(translatedRunTime);
@@ -151,13 +151,13 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         }
 
         if (screening.getSynopsis().equals("")) {
-            holder.synopsis.setVisibility(View.GONE);
+            holder.synopsis.setVisibility(View.INVISIBLE);
         }
 
         holder.movieRating.setText("Rated: " + screening.getRating());
         holder.showtimeGrid.removeAllViews();
 
-        final Screening passScreen = screening;
+        Screening passScreen = screening;
 
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -177,9 +177,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     holder.showtimeGrid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                             checked = group.findViewById(checkedId);
-
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
@@ -187,40 +185,50 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             String selectedShowTime = currentTime.getText().toString();
                             showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), passScreen, selectedShowTime);
                         }
-
                     });
                 }
 
-                Log.d(TAG, "FORMAT?: " + screening.getTitle() + " " + screening.isApproved());
+
+//                Log.d(TAG, "onBindViewHolder: " + screening.getTitle());
+//                Log.d(TAG, "approved: " + screening.isApproved());
+//                Log.d(TAG, "format: " + screening.getFormat());
+//                Log.d(TAG, "getqualifiers: " + screening.getQualifiers());
+//                Log.d(TAG, "qualifiers approved: " + screening.getQualifiersApproved());
+//                Log.d(TAG, "is3d: " + screening.is3D());
+//                Log.d(TAG, "isimax: " + screening.isImax());
+//                Log.d(TAG, "istheaterEvent: " + screening.isTheatreEvent());
+//                Log.d(TAG, "rpx: " + screening.isRpx());
+//                Log.d(TAG, "2d: " + screening.is2D());
+//                Log.d(TAG, "------------------------------------------: ");
+
 
                 if (!screening.isApproved()) {
+                    currentTime.setClickable(false);
+                    holder.notSupported.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        currentTime.setClickable(false);
-                        holder.notSupported.setVisibility(View.VISIBLE);
                         holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
                 }
             }
+
+            //TODO:
+            holder.synopsis.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String synopsis = screening.getSynopsis();
+                    String title = screening.getTitle();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MOVIE, synopsis);
+                    bundle.putString(TITLE, title);
+
+                    SynopsisFragment fragobj = new SynopsisFragment();
+                    fragobj.setArguments(bundle);
+                    FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+                    fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+                }
+            });
         }
-
-        //TODO:
-        holder.synopsis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String synopsis = screening.getSynopsis();
-                String title = screening.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
-
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-            }
-        });
-
     }
 
 

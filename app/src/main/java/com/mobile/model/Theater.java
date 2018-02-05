@@ -1,13 +1,14 @@
 package com.mobile.model;
 
+
+import android.os.Parcelable;
+
 import org.parceler.Parcel;
 
-/**
- * Created by anubis on 6/7/17.
- */
+import java.util.ArrayList;
 
 @Parcel
-public class Theater {
+public class Theater  {
 
     int id;
     int moviepassId;
@@ -23,11 +24,6 @@ public class Theater {
     String theaterChainName;
     String ticketType;
     String synopsis;
-
-    public String getSynopsis() {
-        return synopsis;
-    }
-
     public Theater() {
     }
 
@@ -55,9 +51,13 @@ public class Theater {
         return address;
     }
 
-    public double getDistance() { return distance; }
+    public double getDistance() {
+        return distance;
+    }
 
-    public int getMoviepassId() { return  moviepassId; }
+    public int getMoviepassId() {
+        return moviepassId;
+    }
 
     public int getTribuneTheaterId() {
         return tribuneTheaterId;
@@ -79,10 +79,17 @@ public class Theater {
         return getName();
     }
 
-    public String getCity() { return city; }
+    public String getCity() {
+        return city;
+    }
 
-    public String getState() { return state; }
+    public String getState() {
+        return state;
+    }
 
-    public String getZip() { return zip; }
+    public String getZip() {
+        return zip;
+    }
+
 
 }

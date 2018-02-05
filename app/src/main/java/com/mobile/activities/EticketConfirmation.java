@@ -5,11 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -23,7 +25,7 @@ import org.parceler.Parcels;
 
 public class EticketConfirmation extends BaseActivity {
 
-    TextView  etixTitle, etixTheater, etixShowtime, etixSeat;
+    TextView etixTitle, etixTheater, etixShowtime, etixSeat, seatTExt;
     SimpleDraweeView etixPoster;
     ImageView etixOnBack;
     Screening screeningObject;
@@ -31,8 +33,7 @@ public class EticketConfirmation extends BaseActivity {
     Button etixConfirm;
     String selectedShowTime;
     View progressWheel;
-
-
+    RelativeLayout relSeat;
 
     public static final String SEAT = "seat";
     public static final String TAG = "FOUND IT";
@@ -55,7 +56,7 @@ public class EticketConfirmation extends BaseActivity {
         etixTheater = findViewById(R.id.ETIX_THEATER);
         etixSeat = findViewById(R.id.ETIX_SEAT);
         etixOnBack = findViewById(R.id.Etix_ONBACK);
-
+        relSeat = findViewById(R.id.relSeat);
 
         bottomNavigationView = findViewById(R.id.ETIX_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -70,44 +71,46 @@ public class EticketConfirmation extends BaseActivity {
 
 
         //set details for confirmation page..
+
         Intent intent = getIntent();
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
         seatObject = Parcels.unwrap(getIntent().getParcelableExtra(SEAT));
-        screeningObject = Parcels.unwrap(getIntent().getParcelableExtra(SCREENING));
 
         etixTitle.setText(screeningObject.getTitle());
         etixShowtime.setText(selectedShowTime);
         etixTheater.setText(screeningObject.getTheaterName());
-        etixSeat.setText(seatObject.getSeatName());
+
+        if (seatObject != null) {
+            etixSeat.setText(seatObject.getSeatName());
+            relSeat.setVisibility(View.VISIBLE);
+        }
+
         progressWheel = findViewById(R.id.etixprogress);
 
         Uri uri = Uri.parse(screeningObject.getImageUrl());
-
         etixPoster.setImageURI(uri);
 
-//        context = get;
+        etixConfirm.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            //new variables for data objects
 
-        etixConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            Screening screening = screeningObject;
+            String selectedTiime = selectedShowTime;
 
+            bundle.putParcelable(SCREENING, Parcels.wrap(screening));
+            bundle.putString(SHOWTIME, selectedTiime);
 
-                Bundle bundle = new Bundle();
-                //new variables for data objects
-                Screening screening = screeningObject;
+            if (seatObject != null) {
                 SelectedSeat seat = new SelectedSeat(seatObject.getSelectedSeatRow(), seatObject.getSelectedSeatColumn(), seatObject.getSeatName());
-
-                bundle.putParcelable(SCREENING, Parcels.wrap(screening));
-                bundle.putString(SHOWTIME, selectedShowTime);
                 bundle.putParcelable(SEAT, Parcels.wrap(seat));
-
-
-                ETicketFragment fragobj = new ETicketFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fr_eticketconfirm_noticedialog");
             }
+
+
+            ETicketFragment fragobj = new ETicketFragment();
+            fragobj.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fragobj.show(fm, "fr_eticketconfirm_noticedialog");
         });
 
     }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/margin_standard"
+
     android:background="@color/test_black">
 
     <TextView
@@ -10,23 +12,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_half"
         android:text="History"
+
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:layout_margin="@dimen/margin_half"
         android:textStyle="bold" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyReycler"
         android:layout_width="match_parent"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/doubledouble_margin_standard"
-        android:background="@color/test_black">
+        android:background="@color/test_black"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:visibility="visible">
 
     </android.support.v7.widget.RecyclerView>
+
+    <!--<GridView-->
+    <!--android:id="@+id/gridHistory"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center"-->
+    <!--android:horizontalSpacing="5dp"-->
+    <!--android:numColumns="auto_fit"-->
+    <!--android:paddingTop="5dp"-->
+    <!--android:stretchMode="columnWidth"-->
+    <!--android:verticalSpacing="5dp"-->
+    <!--tools:listitem="@layout/list_item_history" />-->
+
 
     <TextView
         android:id="@+id/NoMoives"

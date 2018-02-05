@@ -26,8 +26,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/margin_standard"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
         android:orientation="horizontal">
 
         <ImageView
@@ -36,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/margin_half"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/double_margin_standard"
-            android:layout_marginEnd="@dimen/margin_half"
             android:padding="@dimen/margin_half"
             android:src="@drawable/iconback"
-            android:tint="@color/white" />
+            android:tint="@color/white"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/CINEMA_TITLE"

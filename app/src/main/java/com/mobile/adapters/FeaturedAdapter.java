@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         final Movie movie = featuredMovie.get(position);
         final Uri imgURI = Uri.parse(movie.getLandscapeImageUrl());
+
+        holder.moviePoster.setMinimumHeight(9 * holder.itemView.getContext().getResources().getDisplayMetrics().heightPixels / 16);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgURI)
                 .setProgressiveRenderingEnabled(true)

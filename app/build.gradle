@@ -21,11 +21,12 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 72
-        versionName "3.0-beta.V10"
+        versionCode 79
+        versionName "3.0-beta.V12.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -165,8 +166,8 @@ dependencies {
         transitive = true;
     }
 
-    compile "com.android.support:appcompat-v7:26.1.0"
-    compile "com.android.support:design:26.1.0"
+    compile "com.android.support:appcompat-v7:27.0.2"
+    compile "com.android.support:design:27.0.2"
 
     //PatternLock
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
@@ -174,8 +175,9 @@ dependencies {
     //Spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
 
-        //material serach
+    //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
+
 }
 
 

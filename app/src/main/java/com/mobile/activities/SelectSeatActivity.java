@@ -158,14 +158,8 @@ public class SelectSeatActivity extends BaseActivity {
         //PerformanceInfo
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
-
         if (reserveSeatButton.getText().toString().matches(getString(R.string.activity_select_seat_activity_title))) {
-            reserveSeatButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    makeSnackbar(getString(R.string.activity_select_seat_select_first));
-                }
-            });
+            reserveSeatButton.setOnClickListener(view -> makeSnackbar(getString(R.string.activity_select_seat_select_first)));
         }
 
         onBackButton.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +366,7 @@ public class SelectSeatActivity extends BaseActivity {
 
 //TODO: come back to this..
 //                            SelectedSeat seatObject = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-//                            reserve(screeningObject, selectedShowTime, seatObject);
+//                            reserveWithSeat(screeningObject, selectedShowTime, seatObject);
                             mProgressWheel.setVisibility(View.VISIBLE);
                         }
                     });

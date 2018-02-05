@@ -232,9 +232,8 @@ public class ProfileAccountInformationFragment extends Fragment {
                 userScanCard.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            creditCardClick();
-                        }
+                        creditCardClick();
+
                     }
                 });
 
@@ -441,10 +440,11 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void creditCardClick() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+            }
             scan_card();
         } else {
             scan_card();

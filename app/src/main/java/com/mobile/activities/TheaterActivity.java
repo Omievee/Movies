@@ -1,6 +1,7 @@
 package com.mobile.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.fragments.TheaterFragment;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 public class TheaterActivity extends BaseActivity {
 
     public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
-    public static final String THEATER = "theater";
+    public static final String THEATER = "cinema";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screeningObject";
     public static final String SHOWTIME = "showtime";
@@ -61,8 +63,6 @@ public class TheaterActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        final ActionBar actionBar = getSupportActionBar();
-
         Fragment theaterFrag = new TheaterFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.theater_container, theaterFrag).commit();
@@ -72,24 +72,24 @@ public class TheaterActivity extends BaseActivity {
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
-        Bundle extras = getIntent().getExtras();
-        extras.getBundle(TheaterActivity.THEATER);
-        theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null){
+               extras.get(THEATER);
+            }
+            theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
+        }
+
 
         theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
         theaterSelectedName.setText(theater.getName());
+        Log.d(Constants.TAG, "onCreate: " + theater.getName());
         moviesList = new ArrayList<>();
         showtimesList = new ArrayList<>();
         backArrow = findViewById(R.id.CINEMA_BACK);
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+        backArrow.setOnClickListener(v -> onBackPressed());
 
-        //TODO: Bring back animations once polished.. Simpler Animations?.. 
+        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
 
     }
 
@@ -99,7 +99,6 @@ public class TheaterActivity extends BaseActivity {
         updateNavigationBarState();
     }
 
-    // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
     public void onPause() {
         super.onPause();

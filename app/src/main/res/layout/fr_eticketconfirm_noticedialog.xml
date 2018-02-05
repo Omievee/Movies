@@ -55,4 +55,11 @@
     </LinearLayout>
 
 
+    <include
+        android:id="@+id/lock_confirm"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
 </android.support.v7.widget.CardView>

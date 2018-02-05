@@ -64,6 +64,8 @@ public class ETicketFragment extends DialogFragment {
     CheckInRequest checkinRequest;
     PerformanceInfoRequest mPerformReq;
 
+    View progressWheel;
+
     public ETicketFragment() {
     }
 
@@ -77,7 +79,7 @@ public class ETicketFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fr_eticketconfirm_noticedialog, container);
-
+        progressWheel = rootView.findViewById(R.id.lock_confirm);
         lockView = rootView.findViewById(R.id.LOCKVIEW);
 
         return rootView;
@@ -108,14 +110,22 @@ public class ETicketFragment extends DialogFragment {
         public void onProgress(List<PatternLockView.Dot> progressPattern) {
 
         }
+
         @Override
         public void onComplete(List<PatternLockView.Dot> pattern) {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {
-                reserve(getTitle, getShowtime, getSeat);
+                if (getSeat != null) {
+                    reserveWithSeat(getTitle, getShowtime, getSeat);
+
+                } else {
+                    reserveNoSeat(getTitle, getShowtime);
+                }
             } else {
                 Toast.makeText(getActivity(), "Incorrect Pattern", Toast.LENGTH_SHORT).show();
                 lockView.clearPattern();
             }
+            progressWheel.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -145,9 +155,10 @@ public class ETicketFragment extends DialogFragment {
     }
 
 
-    public void reserve(Screening screening, String showtime, SelectedSeat selectedSeat) {
+    public void reserveWithSeat(Screening screening, String showtime, SelectedSeat selectedSeat) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getActivity()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getActivity()).updateLocation(mCurrentLocation);
+
         SelectedSeatRequest selectedSeatRequest = new SelectedSeatRequest(selectedSeat.getSelectedSeatRow(), selectedSeat.getSelectedSeatColumn());
 
 
@@ -228,13 +239,13 @@ public class ETicketFragment extends DialogFragment {
     }
 
     private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SelectedSeat selectedSeat) {
-            RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
-//                    progressWheel.setVisibility(View.GONE);
+                    progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
 
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
@@ -250,12 +261,11 @@ public class ETicketFragment extends DialogFragment {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         dismiss();
-//                        progressWheel.setVisibility(View.GONE);
+                        progressWheel.setVisibility(View.GONE);
                     } catch (Exception e) {
-//                        Log.d(TAG, "onResponse: " + e.getMessage());
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         dismiss();
-//                        progressWheel.setVisibility(View.GONE);
+                        progressWheel.setVisibility(View.GONE);
                     }
                 }
 
@@ -263,7 +273,7 @@ public class ETicketFragment extends DialogFragment {
 
             @Override
             public void failure(RestError restError) {
-//                progressWheel.setVisibility(View.GONE);
+                progressWheel.setVisibility(View.GONE);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
@@ -288,6 +298,142 @@ public class ETicketFragment extends DialogFragment {
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
         getActivity().finish();
+    }
+
+
+    public void reserveNoSeat(Screening screening, String showtime) {
+        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getActivity()).mCurrentLocation;
+        UserLocationManagerFused.getLocationInstance(getActivity()).updateLocation(mCurrentLocation);
+
+
+        if (screening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
+            int normalizedMovieId = screening.getMoviepassId();
+            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
+            String format = screening.getFormat();
+            int tribuneTheaterId = screening.getTribuneTheaterId();
+            int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
+            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
+            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
+            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
+            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
+            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
+            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
+            int theater = screening.getProvider().getTheater();
+            String cinemaChainId = screening.getProvider().getPerformanceInfo(showtime).getCinemaChainId();
+            String showtimeId = screening.getProvider().getPerformanceInfo(showtime).getShowtimeId();
+            TicketType ticketType = screening.getProvider().getPerformanceInfo(showtime).getTicketType();
+
+
+            PerformanceInfoRequest perform = new PerformanceInfoRequest(
+                    normalizedMovieId,
+                    externalMovieId,
+                    format,
+                    tribuneTheaterId,
+                    screeningId,
+                    dateTime,
+                    performanceNumber,
+                    sku,
+                    price,
+                    auditorium,
+                    performanceId,
+                    sessionId,
+                    cinemaChainId,
+                    ticketType,
+                    showtimeId);
+
+            ticketRequest = new TicketInfoRequest(perform);
+
+
+        } else {
+            //IF not movieXchange then it will simply request these parameters:
+            int normalizedMovieId = screening.getMoviepassId();
+            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
+            String format = screening.getFormat();
+            int tribuneTheaterId = screening.getTribuneTheaterId();
+            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
+            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
+            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
+            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
+            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
+            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
+            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
+
+            PerformanceInfoRequest request = new PerformanceInfoRequest(
+                    dateTime,
+                    externalMovieId,
+                    performanceNumber,
+                    tribuneTheaterId,
+                    format,
+                    normalizedMovieId,
+                    sku,
+                    price,
+                    auditorium,
+                    performanceId,
+                    sessionId);
+            ticketRequest = new TicketInfoRequest(request);
+
+
+        }
+
+        providerName = screening.getProvider().providerName;
+        checkinRequest = new CheckInRequest(ticketRequest, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        reservationRequestNoSeat(screening, checkinRequest, showtime);
+    }
+
+    private void reservationRequestNoSeat(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
+        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+            @Override
+            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
+                ReservationResponse reservationResponse = response.body();
+
+                if (reservationResponse != null && reservationResponse.isOk()) {
+                    progressWheel.setVisibility(View.GONE);
+                    Reservation reservation = reservationResponse.getReservation();
+
+                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
+                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+
+                    showConfirmation(token);
+                    dismiss();
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        dismiss();
+                        progressWheel.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        dismiss();
+                        progressWheel.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+
+            @Override
+            public void failure(RestError restError) {
+                progressWheel.setVisibility(View.GONE);
+
+                String hostname = "Unable to resolve host: No address associated with hostname";
+
+                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
+                    Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_LONG).show();
+                }
+                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
+                    Toast.makeText(getActivity(), R.string.data_connection, Toast.LENGTH_LONG).show();
+                }
+                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
+                    Toast.makeText(getActivity(), R.string.pending_reservation, Toast.LENGTH_LONG).show();
+                } else if (restError != null) {
+                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+                    Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
 }

@@ -100,7 +100,7 @@ public class PendingReservationFragment extends Fragment {
 
 
     private void getPendingReservation() {
-        RestClient.getAuthenticated().getLast().enqueue(new Callback<ActiveReservationResponse>() {
+        RestClient.getAuthenticated().last().enqueue(new Callback<ActiveReservationResponse>() {
             @Override
             public void onResponse(Call<ActiveReservationResponse> call, Response<ActiveReservationResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
@@ -116,6 +116,7 @@ public class PendingReservationFragment extends Fragment {
                         pendingReservationTitle.setText(active.getTitle());
                         pendingReservationTheater.setText(active.getTheater());
                         String reservationTime = active.getShowtime().substring(11, 16);
+
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
                         try {
                             Date date = sdf.parse(reservationTime);
@@ -173,12 +174,13 @@ public class PendingReservationFragment extends Fragment {
                 } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
                 } else if (responseBody != null && response.isSuccessful()) {
                     Toast.makeText(getActivity(), responseBody.getMessage(), Toast.LENGTH_LONG).show();
+                    getActivity().finish();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-
                         Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        getActivity().finish();
                     } catch (Exception e) {
                     }
                 }

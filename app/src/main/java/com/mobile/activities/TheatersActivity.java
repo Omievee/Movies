@@ -1,6 +1,7 @@
 package com.mobile.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -23,14 +24,14 @@ import org.parceler.Parcels;
 
 public class TheatersActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
 
+    public static final String THEATER = "cinema";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-
-        final ActionBar actionBar = getSupportActionBar();
-        Fragment theatersFragment = new TheatersFragment();
+        TheatersFragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, theatersFragment).commit();
 
@@ -51,7 +52,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         final Theater finalTheater = theater;
 
         Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
-        intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
+        intent.putExtra(THEATER, Parcels.wrap(finalTheater));
         startActivity(intent);
     }
 

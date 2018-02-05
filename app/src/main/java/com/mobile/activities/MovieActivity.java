@@ -8,8 +8,10 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +23,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
@@ -66,6 +67,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -103,6 +105,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     Reservation reservation;
     protected BottomNavigationView bottomNavigationView;
     MovieTheatersAdapter movieTheatersAdapter;
+
     ScreeningsResponse screeningsResponse;
 
 
@@ -113,6 +116,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     ArrayList<Screening> selectedScreeningsList;
     ArrayList<Theater> theatersList;
+    ArrayList<Screening> sortedScreeningList;
 
     ArrayList<String> selectedShowtimesList;
 
@@ -190,7 +194,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         //FRESCO:
-        ButterKnife.bind(this, selectedMoviePoster);
+//        ButterKnife.bind(this, selectedMoviePoster);
 
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
@@ -210,13 +214,17 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         selectedScreeningsList = new ArrayList<>();
         theatersList = new ArrayList<>();
+        sortedScreeningList = new ArrayList<>();
 
 
         /* Theaters RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
         selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-        movieTheatersAdapter = new MovieTheatersAdapter(selectedScreeningsList, theatersList, this);
+
+
+        movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
+
 
         selectedTheatersRecyclerView.setLayoutAnimation(animation2);
 
@@ -435,40 +443,47 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
-                        ScreeningsResponse screenings = response.body();
-                        if (screenings != null) {
-
-                            List<Screening> screeningsList = screenings.getScreenings();
-                            if (screeningsList.size() == 0) {
-                                Toast.makeText(MovieActivity.this, "No Theaters Found", Toast.LENGTH_SHORT).show();
-                                ProgressBar.setVisibility(View.GONE);
-                            } else {
-                                //Initial View to Display RecyclerView Based on User's Current Location
-                                screeningsResponse = response.body();
-                                selectedScreeningsList.clear();
-                                theatersList.clear();
-
-                                if (screeningsResponse != null) {
-                                    selectedScreeningsList.addAll(screeningsResponse.getScreenings());
-                                    theatersList.addAll(screeningsResponse.getTheaters());
-                                    Collections.sort(theatersList, (theater, t1) -> (int) (theater.getDistance() - (t1.getDistance())));
-
-                                    if (movieTheatersAdapter != null) {
-                                        selectedTheatersRecyclerView.getRecycledViewPool().clear();
-                                        movieTheatersAdapter.notifyDataSetChanged();
-                                    }
-
-
-                                    selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
-                                    ProgressBar.setVisibility(View.GONE);
-                                    fabLoadCard.setVisibility(View.VISIBLE);
+                        if (response != null && response.isSuccessful()) {
+                            screeningsResponse = response.body();
+                            //Initial View to Display RecyclerView Based on User's Current Location
+                            selectedScreeningsList.clear();
+                            theatersList.clear();
+                            sortedScreeningList.clear();
+                            Collections.sort(theatersList, new Comparator<Theater>() {
+                                @Override
+                                public int compare(Theater theater, Theater t1) {
+                                    return Double.compare(theater.getDistance(), t1.getDistance());
                                 }
+                            });
 
+                            //Sort Theaters & have screenings follow suit
+                            selectedScreeningsList.addAll(screeningsResponse.getScreenings());
+                            theatersList.addAll(screeningsResponse.getTheaters());
+                            for (int i = 0; i < theatersList.size(); i++) {
+                                Theater t = theatersList.get(i);
+                                int ID = t.getTribuneTheaterId();
+                                for (int j = 0; j < selectedScreeningsList.size(); j++) {
+                                    int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
+                                    if (screenID == ID) {
+                                        sortedScreeningList.add(selectedScreeningsList.get(j));
+                                    }
+                                }
                             }
+
+
+                            if (movieTheatersAdapter != null) {
+                                selectedTheatersRecyclerView.getRecycledViewPool().clear();
+                                movieTheatersAdapter.notifyDataSetChanged();
+                            }
+                            selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
+                            ProgressBar.setVisibility(View.GONE);
+                            fabLoadCard.setVisibility(View.VISIBLE);
                         }
                     }
+
 
                     @Override
                     public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
@@ -477,6 +492,35 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     }
 
                 });
+    }
+
+    public static void sorted(List<Screening> screeningObjects, List<Theater> theaterDistanceObjects) {
+
+        HashMap<Theater, Integer> indexMap = new HashMap<>();
+        int index = 0;
+        for (Theater object : theaterDistanceObjects) {
+            indexMap.put(object, index);
+            index++;
+        }
+
+        Collections.sort(screeningObjects, new Comparator<Screening>() {
+            @Override
+            public int compare(Screening screening, Screening t1) {
+                Integer leftIndex = indexMap.get(screening);
+                Log.d(TAG, "compare: " + indexMap.get(screening));
+                Integer rightIndex = indexMap.get(t1);
+                Log.d(TAG, "compare: " + rightIndex);
+                if (leftIndex == null) {
+                    return -1;
+                }
+                if (rightIndex == null) {
+                    return 1;
+                }
+
+                return Integer.compare(leftIndex, rightIndex);
+            }
+        });
+
     }
 
 

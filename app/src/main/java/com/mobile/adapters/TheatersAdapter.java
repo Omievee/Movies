@@ -110,14 +110,13 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             holder.iconSeat.setVisibility(View.INVISIBLE);
         }
 
+        Theater theaterSelected  = theater;
         holder.listItemTheater.setTag(position);
-
         setSlideAnimation(holder.listItemTheater);
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theater, (int) holder.itemView.getX(), (int) holder.itemView.getY());
+                theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY());
             }
         });
     }

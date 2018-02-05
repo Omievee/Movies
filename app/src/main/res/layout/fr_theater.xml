@@ -104,6 +104,7 @@
                         android:textColor="@color/white"
                         app:layout_collapseMode="parallax" />
 
+
                     <ImageView
                         android:id="@+id/CINEMA_PIN"
                         android:layout_width="wrap_content"
@@ -191,8 +192,8 @@
         android:id="@+id/FAB_LOADCARD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
         android:layout_marginBottom="63dp"
+        android:layout_marginEnd="5dp"
         android:animateLayoutChanges="true"
         android:elevation="5dp"
         android:visibility="visible"

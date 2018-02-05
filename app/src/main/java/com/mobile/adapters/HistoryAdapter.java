@@ -23,6 +23,8 @@ import com.mobile.Constants;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,8 +56,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
         @BindView(R.id.historyPoster)
         SimpleDraweeView posterImageView;
-//        @BindView(R.id.MovieTitle)
-//        TextView title;
+        @BindView(R.id.Date_seen)
+        TextView saw;
+
+        @BindView(R.id.Title_Movie)
+        TextView title;
 //        @BindView(R.id.Theater)
 //        TextView theater;
 //        @BindView(R.id.Date)
@@ -66,7 +71,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             ButterKnife.bind(this, v);
             listItemHistory = v.findViewById(R.id.historyCard);
             posterImageView = v.findViewById(R.id.historyPoster);
-//            title = v.findViewById(R.id.MovieTitle);
+            saw = v.findViewById(R.id.Date_seen);
+            title = v.findViewById(R.id.Title_Movie);
 //            theater = v.findViewById(R.id.Theater);
 //            date = v.findViewById(R.id.Date);
         }
@@ -85,6 +91,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.posterImageView.setImageURI(imgUrl);
         holder.posterImageView.getHierarchy().setFadeDuration(500);
 
+
+        Log.d(Constants.TAG, "onBindViewHolder: " + imgUrl);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
@@ -98,7 +106,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-//                            holder.title.setText(movie.getTitle());
+                            holder.title.setText(movie.getTitle());
                         }
                     }
 
@@ -113,13 +121,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.posterImageView.refreshDrawableState();
         }
         holder.posterImageView.setController(controller);
-//        long createdAt = movie.getCreatedAt();
-//        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        long createdAt = movie.getCreatedAt();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 //
 ////
 //        holder.title.setText(movieTitle);
 //        holder.theater.setText(movie.getTheaterName());
-//        holder.date.setText(sdf.format(new Date(createdAt)));
+        holder.saw.setText(sdf.format(new Date(createdAt)));
         holder.listItemHistory.setTag(position);
     }
 

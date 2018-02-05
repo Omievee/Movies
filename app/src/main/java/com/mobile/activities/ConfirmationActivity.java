@@ -99,6 +99,7 @@ public class ConfirmationActivity extends BaseActivity {
             if (code == null) {
                 confirmationCode.setText(zip);
             } else {
+                cancelReservation.setVisibility(View.GONE);
                 confirmationCode.setText(code);
             }
             if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
@@ -125,47 +126,43 @@ public class ConfirmationActivity extends BaseActivity {
             }
 
         }
-        cancelReservation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
-                RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
-                    @Override
-                    public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
-                        ChangedMindResponse responseBody = response.body();
-                        progress.setVisibility(View.GONE);
+        cancelReservation.setOnClickListener(v -> {
+            progress.setVisibility(View.VISIBLE);
+            ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
+            RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
+                @Override
+                public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
+                    ChangedMindResponse responseBody = response.body();
+                    progress.setVisibility(View.GONE);
 
+                    if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
 
-                        if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
-                            try {
-                                JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                        } catch (Exception e) {
+                        }
+                    } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
+                        finish();
+                    } else if (responseBody != null && response.isSuccessful()) {
+                        Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
 
-                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
-                            } catch (Exception e) {
-                            }
-                        } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
-                            finish();
-                        } else if (responseBody != null && response.isSuccessful()) {
-                            Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
-                            finish();
-                        } else {
-                            try {
-                                JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                                Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
-                            }
+                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
                         }
                     }
+                }
 
-                    @Override
-                    public void failure(RestError restError) {
-                        progress.setVisibility(View.GONE);
-                        Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+                @Override
+                public void failure(RestError restError) {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         });
         cancelX.setOnClickListener(new View.OnClickListener() {
             @Override
