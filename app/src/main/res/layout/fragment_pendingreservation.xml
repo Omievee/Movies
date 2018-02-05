@@ -126,13 +126,13 @@
 
 
                     <TextView
-                        android:id="@+id/CONFIRMED_ZIP_TEXT"
+                        android:id="@+id/PendingConrimCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_standard"
                         android:layout_marginTop="@dimen/margin_standard"
                         android:paddingEnd="@dimen/quadruple_margin_standard"
                         android:paddingStart="@dimen/quadruple_margin_standard"
-                        android:text="@string/activity_confirmation_confirmation_text"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="15sp"
@@ -145,7 +145,7 @@
                         android:layout_below="@id/CONFIRMED_ZIP_TEXT"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="@dimen/margin_standard"
-                        android:layout_marginTop="@dimen/double_margin_standard"
+                        android:layout_marginTop="@dimen/doubledouble_margin_standard"
                         android:background="@drawable/confirmation_code_confirm"
                         android:text="[ Code ]"
                         android:textColor="@color/black_text"
@@ -166,14 +166,15 @@
 
             <Button
                 android:id="@+id/PEndingRes_Cancel"
-                android:layout_width="175dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/margin_half"
-                android:background="@drawable/mpbutton1"
+                android:background="@android:color/transparent"
                 android:padding="@dimen/margin_half"
-                android:text="Cancel Reservation"
-                android:textColor="@color/white"
+                android:text="Cancel or Change Reservation"
+                android:textAllCaps="false"
+                android:textColor="@color/new_red"
                 android:textSize="13sp"
                 android:visibility="gone" />
         </LinearLayout>

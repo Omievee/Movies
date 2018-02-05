@@ -21,7 +21,7 @@
             android:layout_height="200dp"
             android:foreground="@drawable/poster_gradient"
             fresco:actualImageScaleType="fitXY"
-            fresco:placeholderImage="@drawable/film_reel_icon" />
+            fresco:failureImage="@drawable/film_reel_icon" />
 
 
         <TextView

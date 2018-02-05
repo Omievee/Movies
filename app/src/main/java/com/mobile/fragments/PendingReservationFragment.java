@@ -54,7 +54,7 @@ public class PendingReservationFragment extends Fragment {
     public static final String TAG = "found";
     int reservation;
     View progress;
-    TextView pendingReservationTitle, pendingReservationTheater, pendingReservationTime, pendingReservationCode;
+    TextView pendingReservationTitle, confirmedText, pendingReservationTheater, pendingReservationTime, pendingReservationCode;
 
     Button pendingResrvationCANCELBUTTON;
     ImageView pendingPosterImage;
@@ -72,6 +72,7 @@ public class PendingReservationFragment extends Fragment {
         pendingReservationTheater = rootView.findViewById(R.id.PendingRes_Location);
         pendingReservationCode = rootView.findViewById(R.id.PendingRes_Code);
         pendingReservationTime = rootView.findViewById(R.id.PendingRes_Time);
+        confirmedText = rootView.findViewById(R.id.PendingConrimCode);
         pendingPosterImage = rootView.findViewById(R.id.PendingRes_IMage);
         pendingResrvationCANCELBUTTON = rootView.findViewById(R.id.PEndingRes_Cancel);
         pendingLayout = rootView.findViewById(R.id.Pending_Data);
@@ -86,12 +87,7 @@ public class PendingReservationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         progress.setVisibility(View.VISIBLE);
         pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
-        pendingResrvationCANCELBUTTON.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelPending();
-            }
-        });
+        pendingResrvationCANCELBUTTON.setOnClickListener(v -> cancelPending());
 
         getPendingReservation();
 
@@ -126,8 +122,10 @@ public class PendingReservationFragment extends Fragment {
                         }
 
                         if (active.getRedemption_code() != null) {
+                            confirmedText.setText("Here is your redemption code");
                             pendingReservationCode.setText(active.getRedemption_code());
                         } else {
+                            confirmedText.setText("If asked, please provide this zip code");
                             pendingReservationCode.setText(active.getZip());
 
                         }

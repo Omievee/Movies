@@ -97,13 +97,14 @@ public class ConfirmationActivity extends BaseActivity {
             String code = screeningToken.getConfirmationCode();
             String zip = screeningToken.getZipCodeTicket();
             confirmationCode.setText("If asked, ");
-
+            confirmedZipText.setText("Here is your redemption code:");
 
             if (code == null) {
                 confirmationCode.setText(zip);
             } else {
                 cancelReservation.setVisibility(View.GONE);
                 confirmationCode.setText(code);
+
             }
             if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());

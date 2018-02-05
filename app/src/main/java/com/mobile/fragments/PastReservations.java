@@ -78,7 +78,6 @@ public class PastReservations extends Fragment {
         return rootview;
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

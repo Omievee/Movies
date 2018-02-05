@@ -248,7 +248,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         buildLocationSettingsRequest();
 
 
-
         updateLocationUI();
 
 
@@ -662,7 +661,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                     //Initial View to Display RecyclerView Based on User's Current Location
                                     mTheatersResponse = response.body();
                                     mTheaters.clear();
-
                                     if (theatersMapViewAdapter != null) {
                                         theatersMapViewRecycler.getRecycledViewPool().clear();
                                         theatersMapViewAdapter.notifyDataSetChanged();
@@ -685,8 +683,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                     mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(),
                                             theater.getName(), R.drawable.theater_pin, position, theater));
 
+
                                     mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
                                     final CameraPosition[] mPreviousCameraPosition = {null};
+
                                     mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                                         @Override
                                         public void onCameraIdle() {
@@ -726,36 +726,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                                         }
                                     });
 
-                                    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                                        @Override
-                                        public void onMapClick(LatLng arg0) {
-                                            if (theatersMapViewRecycler != null) {
-                                                if (isRecyclerViewShown) {
-                                                    theatersMapViewRecycler.animate()
-                                                            .translationY(theatersMapViewRecycler.getHeight())
-                                                            .alpha(0.5f)
-                                                            .setListener(new AnimatorListenerAdapter() {
-                                                                @Override
-                                                                public void onAnimationEnd(Animator animation) {
-                                                                    super.onAnimationEnd(animation);
-                                                                    isRecyclerViewShown = false;
-                                                                }
-                                                            });
-                                                } else {
-                                                    theatersMapViewRecycler.animate()
-                                                            .translationY(0)
-                                                            .alpha(1.0f)
-                                                            .setListener(new AnimatorListenerAdapter() {
-                                                                @Override
-                                                                public void onAnimationEnd(Animator animation) {
-                                                                    super.onAnimationEnd(animation);
-                                                                    isRecyclerViewShown = true;
-                                                                }
-                                                            });
-                                                }
-                                            }
-                                        }
-                                    });
+
                                 }
                             }
                         }
@@ -770,20 +741,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                 });
     }
-
-//    private List<Theater> filterStandardTheaters(List<Theater> allTheaters) {
-//        List<Theater> filteredTheaters = new ArrayList<>();
-//
-//        if (allTheaters != null) {
-//            for (Theater theater : allTheaters) {
-//                if (!theater.getTicketType().matches("STANDARD")) {
-//                    filteredTheaters.add(theater);
-//                }
-//            }
-//        }
-//
-//        return filteredTheaters;
-//    }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {
         private final IconGenerator mClusterIconGenerator;
@@ -857,8 +814,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
         mClusterManager.clearItems();
         mClusterManager.cluster();
-        theatersListRecyclerview.setVisibility(View.GONE);
-        fadeOut(theatersListRecyclerview);
+        if (theatersListRecyclerview.getVisibility() == View.VISIBLE) {
+            theatersListRecyclerview.setVisibility(View.GONE);
+            fadeOut(theatersListRecyclerview);
+        }
+
         int recyclerViewHeight = theatersMapViewRecycler.getHeight();
         float screenHeight = mRelativeLayout.getHeight();
 
