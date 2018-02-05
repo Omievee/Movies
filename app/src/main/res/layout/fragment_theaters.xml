@@ -45,10 +45,36 @@
         android:dividerHeight="0dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:layoutAnimation="@anim/layout_anim_bottom"
+        android:layoutAnimation="@anim/layout_animation"
         android:listSelector="@android:color/transparent"
         android:orientation="horizontal"
         tools:listitem="@layout/list_item_theater" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:layoutAnimation="@anim/layout_animation_slide_from_bottom"
+        android:visibility="gone">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <ImageView
+        android:id="@+id/List_Switch"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/magin_MAX"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:background="@drawable/circle_white_alpha"
+        android:src="@drawable/list_icon2"
+        android:tint="@color/white" />
 
 
     <include

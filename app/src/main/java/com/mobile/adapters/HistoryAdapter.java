@@ -92,7 +92,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.posterImageView.getHierarchy().setFadeDuration(500);
 
 
-        Log.d(Constants.TAG, "onBindViewHolder: " + imgUrl);
+        Log.d(Constants.TAG, "PAST URL: " + imgUrl);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
@@ -109,7 +109,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                             holder.title.setText(movie.getTitle());
                         }
                     }
-
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.posterImageView.setImageURI(imgUrl + "/original.jpg");

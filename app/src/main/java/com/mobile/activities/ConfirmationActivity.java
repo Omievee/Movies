@@ -89,12 +89,15 @@ public class ConfirmationActivity extends BaseActivity {
         cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
         cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
+        Log.d(TAG, "onCreate: " + screeningToken.getZipCodeTicket()) ;
 
         if (screeningToken.getConfirmationCode() != null) {
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode();
             String zip = screeningToken.getZipCodeTicket();
+            confirmationCode.setText("If asked, ");
+
 
             if (code == null) {
                 confirmationCode.setText(zip);

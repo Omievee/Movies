@@ -5,10 +5,11 @@ import android.os.Parcelable;
 
 import org.parceler.Parcel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Parcel
-public class Theater  {
+public class Theater implements Serializable {
 
     int id;
     int moviepassId;

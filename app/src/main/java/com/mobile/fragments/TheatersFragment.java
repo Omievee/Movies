@@ -13,11 +13,13 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -30,8 +32,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
@@ -86,6 +91,8 @@ import com.mobile.model.TheatersResponse;
 import com.mobile.network.RestClient;
 import com.moviepass.R;
 
+import org.parceler.Parcels;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,7 +122,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     final static byte DEFAULT_ZOOM_LEVEL = 10;
-
+    public static final String THEATERS = "theaters";
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -142,7 +149,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private OnFragmentInteractionListener listener;
 
     SearchView mSearchLocation;
-    ImageView mSearchClose, myloc;
+    ImageView mSearchClose, myloc, listSwitch;
     CardView mCardView;
     View mProgress;
     RelativeLayout mRelativeLayout;
@@ -158,7 +165,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     OnTheaterSelect theaterSelect;
 
     @BindView(R.id.recycler_view)
-    RecyclerView theatersMapViewRecycler;
+    RecyclerView theatersMapViewRecycler, theatersListRecyclerview;
 
     String TAG = "TAG";
 
@@ -177,12 +184,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
-//        mSearchLocation = rootView.findViewById(R.id.search);
-//        mCardView = rootView.findViewById(R.id.card_view);
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.mapView);
         myloc = rootView.findViewById(R.id.myloc);
-
+        listSwitch = rootView.findViewById(R.id.List_Switch);
         mRequestingLocationUpdates = true;
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -193,22 +198,20 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         /* Set up RecyclerView */
         mTheaters = new ArrayList<>();
-        LinearLayoutManager mLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         int res2 = R.anim.layout_animation;
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
-
         theatersMapViewRecycler = rootView.findViewById(R.id.recycler_view);
         theatersMapViewRecycler.setLayoutAnimation(animation2);
         theatersMapViewRecycler.setLayoutManager(mLayoutManager);
-//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-//        itemAnimator.setAddDuration(250);
-//        itemAnimator.setRemoveDuration(250);
-//        theatersMapViewRecycler.setItemAnimator(itemAnimator);
-
-
         theatersMapViewAdapter = new TheatersAdapter(mTheaters, this);
+
+        //ListViewRecycler
+        theatersListRecyclerview = rootView.findViewById(R.id.list_recycler);
+        LinearLayoutManager vertical = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        theatersListRecyclerview.setLayoutManager(vertical);
+        theatersListRecyclerview.setAdapter(theatersMapViewAdapter);
+
 
         mSearchClose.setOnClickListener(view -> {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -219,17 +222,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
             try {
                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
-
                 startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
             } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                 // TODO: Handle the error.
             }
-
         });
 
 
         //Hide Keyboard when not in use
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
         return rootView;
     }
@@ -245,7 +247,26 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         createLocationRequest();
         buildLocationSettingsRequest();
 
+
+
         updateLocationUI();
+
+
+        listSwitch.setOnClickListener(v -> {
+            if (theatersListRecyclerview.getVisibility() == View.GONE) {
+                theatersListRecyclerview.setVisibility(View.VISIBLE);
+                fadeOut(theatersMapViewRecycler);
+                fadeIn(theatersListRecyclerview);
+                theatersMapViewRecycler.setVisibility(View.GONE);
+            } else {
+                theatersListRecyclerview.setVisibility(View.GONE);
+                fadeIn(theatersMapViewRecycler);
+                fadeOut(theatersListRecyclerview);
+                theatersMapViewRecycler.setVisibility(View.VISIBLE);
+            }
+
+
+        });
     }
 
     @Override
@@ -320,12 +341,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             mClusterManager.setOnClusterClickListener(this);
 
             startLocationUpdates();
-//            if (mRequestingLocationUpdates && checkPermissions()) {
-//
-//            } else if (!checkPermissions()) {
-//                requestPermissions();
-//            }
-
             updateLocationUI();
 
             if (!success) {
@@ -344,7 +359,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 if (markerPosition.latitude == mTheaters.get(i).getLat() && markerPosition.longitude == mTheaters.get(i).getLon()) {
                     theaterSelected = i;
                 }
-
             }
             //Onclick for individual Markers - adjusts recycler to that specific theater.
             CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(15).build();
@@ -599,34 +613,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     startLocationUpdates();
                 }
             } else {
-                // Permission denied.
 
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
-
-                // Additionally, it is important to remember that a permission might have been
-                // rejected without asking the user for permission (device policy or "Never ask
-                // again" prompts). Therefore, a user interface affordance is typically implemented
-                // when permissions are denied. Otherwise, your app could appear unresponsive to
-                // touches or interactions which have required permissions.
-                /* TODO */
-                /*
-                showSnackbar(R.string.permission_denied_explanation,
-                        R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        });*/
             }
         }
     }
@@ -870,7 +857,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
         mClusterManager.clearItems();
         mClusterManager.cluster();
-
+        theatersListRecyclerview.setVisibility(View.GONE);
+        fadeOut(theatersListRecyclerview);
         int recyclerViewHeight = theatersMapViewRecycler.getHeight();
         float screenHeight = mRelativeLayout.getHeight();
 
@@ -889,6 +877,27 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     public interface OnFragmentInteractionListener {
+    }
+
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
     }
 
 //    public static void expand(final View v) {
