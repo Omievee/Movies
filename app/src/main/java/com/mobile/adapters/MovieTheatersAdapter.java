@@ -186,28 +186,26 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
-
-
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
                 showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 
-                Calendar now = Calendar.getInstance();
-
-                int hour = now.get(Calendar.HOUR);
-                int minute = now.get(Calendar.MINUTE);
-                int amPM = now.get(Calendar.AM_PM);
-
-                String AM_PM;
-                if (amPM == 0) {
-                    AM_PM = "AM";
-                } else {
-                    AM_PM = "PM";
-                }
-
-                date = parseDate(hour + ":" + minute + " " + AM_PM);
-                dateCompareOne = parseDate(screening.getStartTimes().get(i));
+//                Calendar now = Calendar.getInstance();
+//
+//                int hour = now.get(Calendar.HOUR);
+//                int minute = now.get(Calendar.MINUTE);
+//                int amPM = now.get(Calendar.AM_PM);
+//
+//                String AM_PM;
+//                if (amPM == 0) {
+//                    AM_PM = "AM";
+//                } else {
+//                    AM_PM = "PM";
+//                }
+//
+//                date = parseDate(hour + ":" + minute + " " + AM_PM);
+//                dateCompareOne = parseDate(screening.getStartTimes().get(i));
 
 
                 showTime.setTextColor(root.getResources().getColor(R.color.white_ish));

@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -56,10 +57,10 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private final int TYPE_ITEM = 0;
     public RadioButton showtime;
     public RadioButton currentTime;
-    RadioButton checked;
-
+    Screening passScreen;
     Context context;
 
+    ViewHolder HOLDER;
 
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
         this.showtimeClickListener = showtimeClickListener;
@@ -113,7 +114,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Screening screening = screeningsArrayList.get(position);
-
+        HOLDER = holder;
         startTimes = screening.getStartTimes();
 
         //FRESCO code..
@@ -124,69 +125,87 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build();
-        holder.cinemaPoster.setImageURI(imgUrl);
-        holder.cinemaPoster.getHierarchy().setFadeDuration(500);
-        holder.cinemaTItle.setText(screening.getTitle());
-        holder.cinemaPoster.setController(controller);
+        HOLDER.cinemaPoster.setImageURI(imgUrl);
+        HOLDER.cinemaPoster.getHierarchy().setFadeDuration(500);
+        HOLDER.cinemaTItle.setText(screening.getTitle());
+        HOLDER.cinemaPoster.setController(controller);
 
         int t = screening.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
 
         if (t == 0) {
-            holder.movieTime.setVisibility(View.INVISIBLE);
+            HOLDER.movieTime.setVisibility(View.INVISIBLE);
         } else if (hours > 1) {
             String translatedRunTime = hours + " hours " + minutes + " minutes";
-            holder.movieTime.setText(translatedRunTime);
+            HOLDER.movieTime.setText(translatedRunTime);
         } else {
             String translatedRunTime = hours + " hour " + minutes + " minutes";
-            holder.movieTime.setText(translatedRunTime);
+            HOLDER.movieTime.setText(translatedRunTime);
         }
 
 
         if (screening.getTitle().equals("Check In if Movie Missing")) {
-            holder.movieRating.setVisibility(View.GONE);
-            holder.synopsis.setVisibility(View.GONE);
-            holder.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+            HOLDER.movieRating.setVisibility(View.GONE);
+            HOLDER.synopsis.setVisibility(View.GONE);
+            HOLDER.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
         }
 
         if (screening.getSynopsis().equals("")) {
-            holder.synopsis.setVisibility(View.INVISIBLE);
+            HOLDER.synopsis.setVisibility(View.INVISIBLE);
         }
 
-        holder.movieRating.setText("Rated: " + screening.getRating());
-        holder.showtimeGrid.removeAllViews();
+        HOLDER.movieRating.setText("Rated: " + screening.getRating());
+        HOLDER.showtimeGrid.removeAllViews();
 
-        Screening passScreen = screening;
-
+        final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
-                holder.showtimeGrid.addView(showtime);
                 showtime.setTextSize(16);
-                showtime.setTextColor(root.getResources().getColor(R.color.white));
+                HOLDER.showtimeGrid.addView(showtime);
+
+//                Calendar now = Calendar.getInstance();
+//
+//                int hour = now.get(Calendar.HOUR);
+//                int minute = now.get(Calendar.MINUTE);
+//                int amPM = now.get(Calendar.AM_PM);
+//
+//                String AM_PM;
+//                if (amPM == 0) {
+//                    AM_PM = "AM";
+//                } else {
+//                    AM_PM = "PM";
+//                }
+//
+//                date = parseDate(hour + ":" + minute + " " + AM_PM);
+//                dateCompareOne = parseDate(screening.getStartTimes().get(i));
+
+
+                showtime.setTextColor(root.getResources().getColor(R.color.white_ish));
+                showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showtime.setPadding(30, 20, 30, 20);
-                showtime.setBackground((root.getResources().getDrawable(R.drawable.showtime_background)));
-                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+                showtime.setButtonDrawable(null);
+                RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 50, 30);
                 showtime.setLayoutParams(params);
-                showtime.setButtonDrawable(null);
+                final Screening select = screening;
                 currentTime = showtime;
-                if (screening.getFormat().equals("2D")) {
-                    holder.showtimeGrid.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup group, int checkedId) {
-                            checked = group.findViewById(checkedId);
-                            if (currentTime != null) {
-                                currentTime.setChecked(false);
-                            }
-                            currentTime = checked;
-                            String selectedShowTime = currentTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), passScreen, selectedShowTime);
+                HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
+                    RadioButton checked = group.findViewById(checkedId);
+                    if (screening.getFormat().equals("2D")) {
+                        if (currentTime != null) {
+                            currentTime.setChecked(false);
                         }
-                    });
-                }
+                        currentTime = checked;
+                        String selectedShowTime = currentTime.getText().toString();
+                        showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
+                    } else {
+                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 
 //                Log.d(TAG, "onBindViewHolder: " + screening.getTitle());

@@ -201,14 +201,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     @Override
-    public void onShowtimeClick(int pos, final Screening screening,  final String showtime) {
+    public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
         final String time = showtime;
         final Screening screening1 = screening;
         fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
         fabLoadCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
                     progress.setVisibility(View.VISIBLE);
@@ -219,6 +218,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening1, time);
                 }
+
+
             }
         });
     }
@@ -251,7 +252,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     public void reserve(Screening screening, String showtime) {
-        fabLoadCard.setEnabled(false);
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
 
@@ -266,14 +266,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
+            progress.setVisibility(View.GONE);
             showEticketConfirmation(screening, showtime);
         } else {
+            progress.setVisibility(View.GONE);
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
             startActivity(intent);
-            getActivity().finish();
         }
     }
 
@@ -454,14 +455,14 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     ticketType,
                     showtimeId);
 
-            Log.d(TAG, "----------------------------------------------: " );
+            Log.d(TAG, "----------------------------------------------: ");
             Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
             Log.d(TAG, "normal: " + normalizedMovieId);
             Log.d(TAG, "external: " + externalMovieId);
             Log.d(TAG, "format: " + format);
-            Log.d(TAG, "tribune: "+ tribuneTheaterId);
+            Log.d(TAG, "tribune: " + tribuneTheaterId);
             Log.d(TAG, "sku ID: " + sku);
-            Log.d(TAG, "price: " + price ) ;
+            Log.d(TAG, "price: " + price);
             Log.d(TAG, "date: " + dateTime);
             Log.d(TAG, "aud: " + auditorium);
             Log.d(TAG, "perform: " + performanceId);
@@ -501,21 +502,21 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     performanceId,
                     sessionId);
 
-            Log.d(TAG, "----------------------------------------------: " );
-            Log.d(TAG, "time?: "+ time);
+            Log.d(TAG, "----------------------------------------------: ");
+            Log.d(TAG, "time?: " + time);
 
             Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
             Log.d(TAG, "normal: " + normalizedMovieId);
             Log.d(TAG, "external: " + externalMovieId);
             Log.d(TAG, "format: " + format);
-            Log.d(TAG, "tribune: "+ tribuneTheaterId);
+            Log.d(TAG, "tribune: " + tribuneTheaterId);
             Log.d(TAG, "sku ID: " + sku);
-            Log.d(TAG, "price: " + price ) ;
+            Log.d(TAG, "price: " + price);
             Log.d(TAG, "date: " + dateTime);
             Log.d(TAG, "aud: " + auditorium);
             Log.d(TAG, "perform: " + performanceId);
             Log.d(TAG, "session: " + sessionId);
-            Log.d(TAG, "----------------------------------------------: " );
+            Log.d(TAG, "----------------------------------------------: ");
 
             return mPerformReq;
         }
