@@ -117,6 +117,8 @@
     <string name="pending_reservation">You have a pending reservation</string>
     <string name="error">Error: Contact Customer Support</string>
 
+
+    <string name="firstBoot">firstBoot</string>
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
     <string name="activity_sign_in_email">Email</string>

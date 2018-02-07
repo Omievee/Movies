@@ -85,7 +85,6 @@ public class UserPreferences {
 
     public static void setLocation(String cityAndState, String zipCode, double lat, double lng, boolean isLocationUserDefined, boolean isSubscriptionActivationRequired) {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putString(Constants.CITY_AND_STATE, cityAndState);
         editor.putLong(Constants.PREFS_LATITUDE, Double.doubleToRawLongBits(lat));
         editor.putLong(Constants.PREFS_LONGITUDE, Double.doubleToRawLongBits(lng));
@@ -134,7 +133,6 @@ public class UserPreferences {
     public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
                                        boolean verificationRequired, boolean hasActiveCard, boolean subscriptionRequired) {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putString(Constants.SUBSCRIPTION_STATUS, status);
         editor.putBoolean(Constants.FB_PRESENT, fb);
         editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
@@ -192,4 +190,11 @@ public class UserPreferences {
     public static void helpshift() {
         HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
+
+    public static void setFirstBoot(Boolean boot) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putBoolean("firstBoot", true);
+        editor.apply();
+    }
+
 }

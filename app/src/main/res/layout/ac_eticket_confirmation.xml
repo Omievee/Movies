@@ -61,8 +61,7 @@
                 android:layout_below="@id/LAYOUT1"
                 android:layout_margin="@dimen/margin_standard"
                 android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
-                android:ellipsize="marquee"
-                android:singleLine="true"
+                android:maxLines="2"
                 android:text="[ MOVIE TITLE ]"
                 android:textColor="@color/white_ish"
                 android:textSize="20sp" />
@@ -74,8 +73,7 @@
                 android:layout_below="@id/ETIX_MOVIE_TITLE"
                 android:layout_marginStart="@dimen/margin_standard"
                 android:layout_toEndOf="@id/ETIX_MOVIEPOSTER"
-                android:ellipsize="marquee"
-                android:singleLine="true"
+                android:maxLines="2"
                 android:text="[ THEATER ]"
                 android:textColor="@color/white_ish"
                 android:textSize="18sp" />

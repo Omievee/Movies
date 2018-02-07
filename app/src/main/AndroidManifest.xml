@@ -13,7 +13,6 @@
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -257,6 +256,7 @@
         <activity
             android:name="com.mobile.fragments.NearMe"
             android:label="@string/title_activity_near_me" />
+        <activity android:name="com.mobile.activities.MoviePassCardAutoActivate"></activity>
     </application>
 
 </manifest>

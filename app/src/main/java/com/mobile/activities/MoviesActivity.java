@@ -4,7 +4,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -62,6 +64,8 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchALLMOVIES;
     FloatingActionMenu reservationsMenu;
 
+    boolean firstBoot;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,9 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
+
 
         View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
@@ -101,8 +108,8 @@ public class MoviesActivity extends BaseActivity {
                 startActivity(activateCard);
             });
 
-        }else if(!UserPreferences.getIsSubscriptionActivationRequired()){
-
+        } else if (!UserPreferences.getIsSubscriptionActivationRequired()) {
+//            if(!firstBoot)
         }
 
     }
