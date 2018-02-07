@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -110,29 +111,21 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * Created by anubis on 6/6/17.
- */
 
 public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener,
         GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin> {
 
-    public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
     final static byte DEFAULT_ZOOM_LEVEL = 10;
-    public static final String THEATERS = "theaters";
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final int LOCATION_PERMISSIONS = 99;
 
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
 
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theatersMapViewAdapter;
-
     private FusedLocationProviderClient mFusedLocationClient;
     private SettingsClient mSettingsClient;
     private LocationRequest mLocationRequest;
@@ -148,19 +141,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private OnFragmentInteractionListener listener;
 
-    SearchView mSearchLocation;
     ImageView mSearchClose, myloc, listSwitch;
-    CardView mCardView;
     View mProgress;
     RelativeLayout mRelativeLayout;
     LatLng markerPosition;
-    Marker marker;
-
     ArrayList<Theater> mTheaters;
     private ClusterManager<TheaterPin> mClusterManager;
-
     boolean isRecyclerViewShown;
-
     TheatersResponse mTheatersResponse;
     OnTheaterSelect theaterSelect;
 
@@ -462,6 +449,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         } else {
             if (checkPermissions()) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
@@ -514,15 +511,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-
-                if (task.isSuccessful() && task.getResult() != null) {
-                    Log.d("MainActivity", "Result: " + task.getResult());
-                    // Location mCurrentLocation = task.getResult();
-                    updateLocationUI();
-                }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                // Location mCurrentLocation = task.getResult();
+                updateLocationUI();
             }
         });
     }
@@ -536,47 +528,30 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
 
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
+    public boolean checkPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("GPS Services Are Required For MoviePass to Run Properlly")
+                        .setMessage(" Allow GPS Location Access? ")
+                        .setPositiveButton("Ok", (dialogInterface, i) -> {
+                            //Prompt the user once explanation has been shown
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+            }
+            return false;
+        } else {
+            return true;
+        }
     }
 
-//    private void requestPermissions() {
-//        boolean shouldProvideRationale =
-//                ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(),
-//                        Manifest.permission.ACCESS_FINE_LOCATION);
-//
-//        // Provide an additional rationale to the user. This would happen if the user denied the
-//        // request previously, but didn't check the "Don't ask again" checkbox.
-//        if (shouldProvideRationale) {
-//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-//            Snackbar.make(
-//                    getActivity().getWindow().getDecorView().getRootView(),
-//                    /* TODO */
-//                    "give permission to access your location",
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    /* TODO */
-//                    .setAction("OK", new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            // Request permission
-//                            ActivityCompat.requestPermissions(getActivity(),
-//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//                        }
-//                    })
-//                    .show();
-//        } else {
-//            Log.i(TAG, "Requesting permission");
-//            // Request permission. It's possible this can be auto answered if device policy
-//            // sets the permission in a given signup1State or the user denied the permission
-//            // previously and checked "Never ask again".
-//            ActivityCompat.requestPermissions(getActivity(),
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -597,13 +572,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i(TAG, "onRequestPermissionResult");
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
                 Log.i(TAG, "User interaction was cancelled.");
                 Toast.makeText(getActivity(), "You must grant permission to use MoviePass.", Toast.LENGTH_SHORT).show();
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -617,14 +589,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         }
     }
 
-//    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-//                              View.OnClickListener listener) {
-//        Snackbar.make(
-//                getActivity().findViewById(android.R.id.content),
-//                getString(mainTextStringId),
-//                Snackbar.LENGTH_INDEFINITE)
-//                .setAction(getString(actionStringId), listener).show();
-//    }
 
     private void loadTheaters(Double latitude, final Double longitude) {
         mMap.clear();

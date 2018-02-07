@@ -2,6 +2,8 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v13.view.ViewCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -20,8 +25,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +45,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
+import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
@@ -64,12 +73,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by ryan on 4/25/17.
@@ -94,16 +108,16 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private FeaturedAdapter featuredAdapter;
     SearchAdapter customAdapter;
     MaterialSearchBar searchBar;
-    MoviesFragment mMoviesFragment;
     MoviesResponse moviesResponse;
-    ArrayList<Movie> mMovieArrayList;
-
+    SearchFragment fragment = new SearchFragment();
+    ImageView movieLogo, searchicon;
     ArrayList<Movie> TopBoxOffice;
     ArrayList<Movie> comingSoon;
     ArrayList<Movie> newReleases;
     ArrayList<Movie> featured;
     ArrayList<Movie> nowPlaying;
-    ArrayList<Movie> ALLMOVIES;
+    public ArrayList<Movie> ALLMOVIES;
+    ArrayList<String> lastSuggestions;
     Activity myActivity;
 
     @BindView(R.id.new_releases)
@@ -141,7 +155,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonTXT.setVisibility(View.GONE);
         topBoxTXT = rootView.findViewById(R.id.top_box_office_text);
         topBoxTXT.setVisibility(View.GONE);
-
+        searchicon = rootView.findViewById(R.id.search_inactive);
+        searchicon.setVisibility(View.GONE);
+        movieLogo = rootView.findViewById(R.id.MoviePass_HEADER);
         Api api;
 
         newReleases = new ArrayList<>();
@@ -207,14 +223,22 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         featuredAdapter = new FeaturedAdapter(getActivity(), featured, this);
         featuredRecycler.setLayoutAnimation(animation2);
 
-
         progress.setVisibility(View.VISIBLE);
+        loadMovies();
 
         /** SEARCH */
+        searchicon.setOnClickListener(view -> {
+            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            transaction.replace(R.id.MAIN_CONTAINER, fragment);
+            transaction.addToBackStack(null);
+            fragmentManager.popBackStack();
+            transaction.commit();
+        });
 
-
-        loadMovies();
         //Featured Film:
+
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -222,8 +246,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-
-//        //TODO: Check for active moviepass subscription or not
 
 
         return rootView;
@@ -253,9 +275,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             featuredRecycler.setAdapter(featuredAdapter);
         }
 
-        if (searchBar != null) {
-            searchBar.setCustomSuggestionAdapter(customAdapter);
-        }
     }
 
     @Override
@@ -311,10 +330,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                sharedImageView,
-                ViewCompat.getTransitionName(sharedImageView));
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
         startActivity(movieIntent, options.toBundle());
     }
 
@@ -380,32 +396,28 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                         TopBoxOffice.addAll(moviesResponse.getTopBoxOffice());
                         topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
 
-                        Collections.sort(comingSoon, new Comparator<Movie>() {
-                            @Override
-                            public int compare(Movie movie, Movie t1) {
-                                final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
-                                Date date = null;
-                                Date date1 = null;
-                                try {
-                                    date = fm.parse(movie.getReleaseDate());
-                                    date1 = fm.parse(t1.getReleaseDate());
-
-                                    SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-//                                    holder.comingSoon.setText(out.format(date));
-
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                return date.compareTo(date1);
-                            }
-                        });
+//                        Collections.sort(comingSoon, new Comparator<Movie>() {
+//                            @Override
+//                            public int compare(Movie movie, Movie t1) {
+//                                final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+//                                Date date = null;
+//                                Date date1 = null;
+//                                try {
+//                                    date = fm.parse(movie.getReleaseDate());
+//                                    date1 = fm.parse(t1.getReleaseDate());
+//
+//                                    SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+////                                    holder.comingSoon.setText(out.format(date));
+//
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//
+//                                return date.compareTo(date1);
+//                            }
+//                        });
                         comingSoon.addAll(moviesResponse.getComingSoon());
-                        for (int i = 0; i < comingSoon.size(); i++) {
-                            Log.d(Constants.TAG, "onResponse: " + comingSoon.get(i).getReleaseDate());
-
-                        }
                         comingSoonRecycler.setAdapter(comingSoonAdapter);
 
                         nowPlaying.addAll(moviesResponse.getNowPlaying());
@@ -413,11 +425,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                         featured.addAll(moviesResponse.getFeatured());
                         featuredRecycler.setAdapter(featuredAdapter);
-
+                        searchicon.setVisibility(View.VISIBLE);
+                        fadeIn(searchicon);
+                        //Filter out duplicates
+                        Log.d(Constants.TAG, "size second: " + ALLMOVIES.size());
 
                     }
-
-
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
                 }
@@ -509,9 +522,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(myActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(myActivity,
@@ -605,6 +616,15 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
     }
 
 

@@ -28,6 +28,7 @@
 
             </android.support.v7.widget.RecyclerView>
 
+
             <ImageView
                 android:id="@+id/MoviePass_HEADER"
                 android:layout_width="150dp"
@@ -39,16 +40,18 @@
                 android:tint="@color/white"
                 app:layout_collapseMode="pin" />
 
-            <com.mancj.materialsearchbar.MaterialSearchBar
-                android:id="@+id/searchBar"
-                style="@style/MaterialSearchBarLight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:mt_hint="Search Movies"
-                app:mt_maxSuggestionsCount="10"
-                app:mt_roundedSearchBarEnabled="true"
-                app:mt_searchBarColor="@color/new_red" />
+
+            <ImageView
+                android:id="@+id/search_inactive"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginTop="35dp"
+                android:src="@drawable/ic_search_black_24dp"
+                android:tint="@color/white" />
+
+
         </FrameLayout>
 
 
@@ -89,7 +92,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_below="@id/FRAME"
-            android:layout_marginTop="@dimen/margin_half"
             android:animateLayoutChanges="true">
 
             <LinearLayout
@@ -112,10 +114,10 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/new_releases"
                     android:layout_width="wrap_content"
-                    android:layoutAnimation="@anim/layout_animation"
                     android:layout_height="wrap_content"
                     android:divider="@null"
                     android:dividerHeight="0dp"
+                    android:layoutAnimation="@anim/layout_animation"
                     android:listSelector="@android:color/transparent"
                     android:orientation="horizontal"
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
@@ -136,9 +138,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:divider="@null"
-                    android:layoutAnimation="@anim/layout_animation"
-
                     android:dividerHeight="0dp"
+
+                    android:layoutAnimation="@anim/layout_animation"
                     android:listSelector="@android:color/transparent"
                     android:orientation="horizontal"
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
@@ -160,9 +162,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:divider="@null"
-                    android:layoutAnimation="@anim/layout_animation"
-
                     android:dividerHeight="0dp"
+
+                    android:layoutAnimation="@anim/layout_animation"
                     android:listSelector="@android:color/transparent"
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
 
@@ -182,10 +184,10 @@
                     android:id="@+id/coming_soon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layoutAnimation="@anim/layout_animation"
-
                     android:divider="@null"
+
                     android:dividerHeight="0dp"
+                    android:layoutAnimation="@anim/layout_animation"
                     android:listSelector="@android:color/transparent"
                     tools:listitem="@layout/list_item_movie_poster_withbottom" />
 

@@ -1,6 +1,14 @@
 package com.mobile.adapters;
 
+import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
+import android.support.annotation.Nullable;
+import android.support.v13.view.ViewCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,13 +17,27 @@ import android.widget.TextView;
 import android.view.LayoutInflater;
 import android.widget.Filter;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mobile.Constants;
+import com.mobile.MoviePosterClickListener;
+import com.mobile.activities.MovieActivity;
+import com.mobile.activities.MoviesActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
+
+import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
 
 /**
  * Created by o_vicarra on 1/29/18.
@@ -33,11 +55,64 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
     @Override
     public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
         holder.title.setText(suggestion.getTitle());
+        holder.rating.setText(suggestion.getRating());
+
+        int t = suggestion.getRunningTime();
+        int hours = t / 60; //since both are ints, you get an int
+        int minutes = t % 60;
+        if (t == 0) {
+            holder.runTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            holder.runTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            holder.runTime.setText(translatedRunTime);
+        }
+
+        final Uri imgUrl = Uri.parse(suggestion.getImageUrl());
+        holder.image.setImageURI(imgUrl);
+        holder.image.getHierarchy().setFadeDuration(500);
+
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        holder.image.setImageURI(imgUrl + "/original.jpg");
+                    }
+                })
+                .build();
+
+        holder.image.setController(controller);
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(Constants.TAG, "onClick: " + position + suggestion.getTitle());
+                Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
+                movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
+                holder.itemView.getContext().startActivity(movieIntent);
+
+            }
+        });
+
+
     }
 
     @Override
     public int getSingleViewHeight() {
-        return 10;
+        return 80;
     }
 
     @Override
@@ -48,14 +123,21 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         return new SuggestionHolder(root);
     }
 
+
     static class SuggestionHolder extends RecyclerView.ViewHolder {
         protected TextView title;
-        protected TextView subtitle;
-        protected ImageView image;
+        protected TextView rating;
+        protected TextView runTime;
+        protected SimpleDraweeView image;
+        CardView cardView;
 
         public SuggestionHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.MovieSearch_Title);
+            rating = itemView.findViewById(R.id.MovieSearch_Rating);
+            runTime = itemView.findViewById(R.id.MovieSearch_RunTIme);
+            image = itemView.findViewById(R.id.MovieSearch_Poster);
+            cardView = itemView.findViewById(R.id.cardMovie);
         }
     }
 
@@ -66,9 +148,8 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
-
                 String movieSearch = charSequence.toString();
-                if (movieSearch.isEmpty()) {
+                if (movieSearch.equals("")) {
                     suggestions = suggestions_clone;
                 } else {
                     suggestions = new ArrayList<>();
@@ -90,5 +171,6 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         };
 
     }
+
 }
 

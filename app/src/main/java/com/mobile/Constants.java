@@ -14,6 +14,10 @@ public class Constants {
     public static final String REDEMPTION_ROUTE = "/coupons/form/redeem";
 
 
+    //FilteredMovies:
+    public static final String FILTERED = "filteredMovies";
+
+
     public final static int REQUEST_CAMERA_CODE = 0;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
 

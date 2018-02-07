@@ -1,13 +1,16 @@
 package com.mobile.model;
 
+import android.os.Parcelable;
+
 import org.parceler.Parcel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Parcel
-public class Movie implements ISearchable {
+public class Movie implements ISearchable, Parcelable {
 
     protected int id;
     protected String tribuneId;
@@ -22,6 +25,34 @@ public class Movie implements ISearchable {
     protected String landscapeImageUrl;
     protected List<Review> reviews;
     protected String theaterName;
+
+    protected Movie(android.os.Parcel in) {
+        id = in.readInt();
+        tribuneId = in.readString();
+        title = in.readString();
+        runningTime = in.readInt();
+        releaseDate = in.readString();
+        rating = in.readString();
+        synopsis = in.readString();
+        viewed = in.readByte() != 0;
+        createdAt = in.readLong();
+        imageUrl = in.readString();
+        landscapeImageUrl = in.readString();
+        theaterName = in.readString();
+        reservations = in.createTypedArrayList(Movie.CREATOR);
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(android.os.Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public ArrayList<Movie> getReservations() {
         return reservations;
@@ -141,4 +172,25 @@ public class Movie implements ISearchable {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(tribuneId);
+        parcel.writeString(title);
+        parcel.writeInt(runningTime);
+        parcel.writeString(releaseDate);
+        parcel.writeString(rating);
+        parcel.writeString(synopsis);
+        parcel.writeByte((byte) (viewed ? 1 : 0));
+        parcel.writeLong(createdAt);
+        parcel.writeString(imageUrl);
+        parcel.writeString(landscapeImageUrl);
+        parcel.writeString(theaterName);
+        parcel.writeTypedList(reservations);
+    }
 }

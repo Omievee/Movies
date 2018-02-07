@@ -83,7 +83,6 @@ public class MoviesActivity extends BaseActivity {
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
-
         View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
@@ -225,87 +224,33 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+
+
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            AlertDialog alert;
+            AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
+            builder.setMessage("Do you want to quit MoviePass?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finishAffinity(); // finish activity
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert = builder.create();
+            alert.show();
+        } else if (getFragmentManager().getBackStackEntryCount() == 1) {
+            getFragmentManager().popBackStack();
+        }
+
         // do nothing. We want to force user to stay in this activity and not drop out.
-        AlertDialog alert;
-        AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
-        builder.setMessage("Do you want to quit MoviePass?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                finishAffinity(); // finish activity
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alert = builder.create();
-        alert.show();
-    }
 
-
-    //Search For Movies
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-
-        final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (android.support.v7.widget.SearchView) menu.findItem(R.id.moviesearch).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        movieSearchALLMOVIES.clear();
-        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                searchAdapter.notifyDataSetChanged();
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(final String s) {
-                RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
-                    @Override
-                    public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                        if (response.body() != null && response.isSuccessful()) {
-                            MoviesResponse = response.body();
-                            SearchResults.setAdapter(searchAdapter);
-                            movieSearchALLMOVIES.clear();
-
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getComingSoon());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getNowPlaying());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getFeatured());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getNewReleases());
-                            movieSearchALLMOVIES.addAll(MoviesResponse.getTopBoxOffice());
-
-                            searchAdapter = new MovieSearchAdapter(getBaseContext(), movieSearchALLMOVIES);
-
-
-                            searchAdapter.getFilter().filter(s);
-//                            for (int i = 0; i < movieSearchALLMOVIES.size(); i++) {
-//                                if (!s.isEmpty()) {
-//                                    if (movieSearchALLMOVIES.get(i).getTitle().contains(s)) {
-//                                        SearchResults.setVisibility(View.VISIBLE);
-//                                    }
-//                                }
-//                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MoviesResponse> call, Throwable throwable) {
-                        Toast.makeText(MoviesActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                return true;
-            }
-        });
-
-
-        return true;
     }
 
 

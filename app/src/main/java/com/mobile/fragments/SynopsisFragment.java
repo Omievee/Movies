@@ -21,8 +21,6 @@ public class SynopsisFragment extends BottomSheetDialogFragment {
     public TextView synopsisText, synopsisTitle;
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
-
-
     public static final String SYNOPSIS = "synopsis";
 
     public SynopsisFragment() {

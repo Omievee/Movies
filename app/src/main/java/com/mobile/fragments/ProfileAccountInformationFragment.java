@@ -280,13 +280,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 }
             }
         });
-//        if (userNewBillingExp.isDirty() || userNewBillingCVV.isDirty() || userNewBillingCC.isDirty() ||
-//                userNewAddress.isDirty() || userNewState.isDirty() || userNewCity.isDirty() || userNewZip.isDirty() ||
-//                userNewAddress2.isDirty() || userCity.isDirty() || userState.isDirty() || userZip.isDirty() || userAddress.isDirty() || userAddress2.isDirty()) {
-//            userSave.setTextColor(getResources().getColor(R.color.new_red));
-//            saveChanges();
-//        }
-
 
     }
 
@@ -345,6 +338,7 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }

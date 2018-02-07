@@ -311,8 +311,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        supportFinishAfterTransition();
-
     }
 
 

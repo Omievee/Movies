@@ -22,6 +22,7 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.LegalFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.model.User;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -71,23 +72,27 @@ public class SettingsActivity extends BaseActivity {
         fadeIn(signout);
         fadeIn(version);
         fadeIn(pushSwitch);
-        help.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map<String, String[]> customIssueFields = new HashMap<>();
-                customIssueFields.put("version", new String[]{"sl", BuildConfig.VERSION_NAME});
 
 
-                ApiConfig apiConfig = new ApiConfig.Builder()
-                        .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
-                        .setGotoConversationAfterContactUs(true)
-                        .setRequireEmail(false)
-                        .setEnableTypingIndicator(true)
-                        .setShowConversationResolutionQuestion(false)
-                        .build();
+        help.setOnClickListener(v -> {
+            Map<String, String[]> customIssueFileds = new HashMap<>();
+            customIssueFileds.put("version name", new String[]{"sl", versionName});
+            String[] tags = new String[]{versionName};
+            HashMap<String, Object> userData = new HashMap<>();
+            userData.put("version", versionName);
+            Metadata meta = new Metadata(userData, tags);
 
-                Support.showFAQs(SettingsActivity.this, apiConfig);
-            }
+            ApiConfig apiConfig = new ApiConfig.Builder()
+                    .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
+                    .setGotoConversationAfterContactUs(true)
+                    .setRequireEmail(false)
+                    .setCustomIssueFields(customIssueFileds)
+                    .setCustomMetadata(meta)
+                    .setEnableTypingIndicator(true)
+                    .setShowConversationResolutionQuestion(false)
+                    .build();
+
+            Support.showFAQs(SettingsActivity.this, apiConfig);
         });
         if (UserPreferences.getPushPermission()) {
             pushSwitch.setChecked(true);

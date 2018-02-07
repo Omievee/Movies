@@ -96,8 +96,6 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-//                        holder.title.setText(movie.getTitle());
-//                        holder.title.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                         holder.mTopBoxMovieDV.setImageURI(imgUrl + "/original.jpg");
                     }
                 })

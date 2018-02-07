@@ -1,39 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="5dp"
-    android:layout_margin="@dimen/margin_half"
-    app:cardBackgroundColor="@color/test_black"
-    app:cardCornerRadius="6dp">
+    android:background="@color/test_black">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/double_margin_standard">
+        android:id="@+id/cardMovie"
+        android:elevation="5dp"
+        android:layout_margin="@dimen/margin_half"
+        app:cardBackgroundColor="@color/test_blue"
+        app:cardCornerRadius="5dp">
 
 
-        <TextView
-            android:id="@+id/MovieSearch_Title"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:text="[Movie Title"
-            android:textColor="@color/white_ish"
-            android:textSize="20sp" />
+            android:layout_margin="@dimen/margin_half"
+            android:orientation="horizontal">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/MovieSearch_Poster"
+                android:layout_width="95dp"
+                android:layout_height="150dp"
+                android:layout_alignParentStart="true"
+                app:placeholderImage="@drawable/film_reel_icon" />
 
 
-        <!--<TextView-->
-            <!--android:id="@+id/MovieSearch_Rating"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="5"-->
-            <!--android:text="[Rated * ]"-->
-            <!--android:textColor="@color/white_ish"-->
-            <!--android:textSize="20sp" />-->
+            <TextView
+                android:id="@+id/MovieSearch_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_half"
+                android:layout_toEndOf="@id/MovieSearch_Poster"
+                android:text="[Movie Title"
+                android:textColor="@color/white_ish"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/MovieSearch_Rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/MovieSearch_Title"
 
-</android.support.v7.widget.CardView>
+                android:layout_margin="@dimen/margin_half"
+
+                android:layout_toEndOf="@id/MovieSearch_Poster"
+                android:text="[Rated * ]"
+                android:textColor="@color/white_ish"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/MovieSearch_RunTIme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/MovieSearch_Rating"
+                android:layout_margin="@dimen/margin_half"
+                android:layout_toEndOf="@id/MovieSearch_Poster"
+                android:text="[Run TIme]"
+                android:textColor="@color/white_ish"
+                android:textSize="15sp" />
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
