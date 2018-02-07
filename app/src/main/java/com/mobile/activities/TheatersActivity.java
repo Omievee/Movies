@@ -85,7 +85,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
                     startActivity(new Intent(TheatersActivity.this, SettingsActivity.class));
                 }
             }
-        }, 300);
+        }, 0);
         return true;
     }
 

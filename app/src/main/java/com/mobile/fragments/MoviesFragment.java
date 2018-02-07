@@ -329,9 +329,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
         Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        movieIntent.putExtra(EXTRA_MOVIE_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), sharedImageView, ViewCompat.getTransitionName(sharedImageView));
-        startActivity(movieIntent, options.toBundle());
+        startActivity(movieIntent);
     }
 
     public void loadMovies() {

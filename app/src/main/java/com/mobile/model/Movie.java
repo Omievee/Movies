@@ -7,10 +7,12 @@ import org.parceler.Parcel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Parcel
-public class Movie implements ISearchable, Parcelable {
+public class Movie  implements ISearchable, Parcelable {
 
     protected int id;
     protected String tribuneId;
@@ -193,4 +195,7 @@ public class Movie implements ISearchable, Parcelable {
         parcel.writeString(theaterName);
         parcel.writeTypedList(reservations);
     }
+
+
+
 }

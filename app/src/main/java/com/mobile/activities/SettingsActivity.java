@@ -140,7 +140,6 @@ public class SettingsActivity extends BaseActivity {
         legal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 FragmentManager manager = getFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -191,7 +190,7 @@ public class SettingsActivity extends BaseActivity {
                     startActivity(new Intent(SettingsActivity.this, SettingsActivity.class));
                 }
             }
-        }, 300);
+        }, 0);
         return true;
     }
 

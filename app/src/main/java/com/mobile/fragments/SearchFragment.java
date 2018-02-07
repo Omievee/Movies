@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.helpshift.All;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.mobile.Constants;
@@ -27,7 +28,11 @@ import org.parceler.Parcels;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +53,10 @@ public class SearchFragment extends Fragment {
     ArrayList<Movie> ALLMOVIES;
     MoviesFragment moviesFrag;
     View progress;
+    ArrayList<Movie> noDuplicates;
+    ArrayList<Movie> third;
+    int ID, ID2;
+
     public SearchFragment() {
     }
 
@@ -59,7 +68,7 @@ public class SearchFragment extends Fragment {
 
         progress = rootView.findViewById(R.id.progress);
         ALLMOVIES = new ArrayList<>();
-
+        noDuplicates = new ArrayList<>();
         return rootView;
     }
 
@@ -104,20 +113,17 @@ public class SearchFragment extends Fragment {
                 MoviesResponse info = response.body();
                 if (response.isSuccessful() && response != null) {
                     progress.setVisibility(View.GONE);
+                    ALLMOVIES.clear();
+
+
                     ALLMOVIES.addAll(info.getFeatured());
+                    ALLMOVIES.addAll(info.getNewReleases());
                     ALLMOVIES.addAll(info.getNowPlaying());
                     ALLMOVIES.addAll(info.getTopBoxOffice());
-                    ALLMOVIES.addAll(info.getNewReleases());
-
-                    //Filter out duplicates
-                    Log.d(Constants.TAG, "size first: " + ALLMOVIES.size());
                     for (int i = 0; i < ALLMOVIES.size(); i++) {
-                        for (int j = 1; j < ALLMOVIES.size(); j++) {
-                            if (ALLMOVIES.get(i).getId() == (ALLMOVIES.get(j).getId())) {
-                                ALLMOVIES.remove(j);
-                            }
-                        }
+                        ID = ALLMOVIES.get(i).getId();
                     }
+
                 }
             }
 
@@ -129,7 +135,6 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
 
 
 }

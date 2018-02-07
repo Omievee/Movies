@@ -46,8 +46,8 @@ public class LegalFragment extends Fragment {
         privacyPolicy = view.findViewById(R.id.PP);
         ToS = view.findViewById(R.id.TOS);
 
-        final String ppURL = "https://www.moviepass.com/content/privacy";
-        final String tosURL = "https://www.moviepass.com/content/terms";
+        final String ppURL = "https://www.moviepass.com/privacy/";
+        final String tosURL = "https://www.moviepass.com/terms";
         ToS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

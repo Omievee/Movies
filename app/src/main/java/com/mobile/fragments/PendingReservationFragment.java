@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,8 +55,8 @@ public class PendingReservationFragment extends Fragment {
     public static final String TAG = "found";
     int reservation;
     View progress;
-    TextView pendingReservationTitle, confirmedText, pendingReservationTheater, pendingReservationTime, pendingReservationCode;
-
+    TextView pendingReservationTitle, confirmedText, pendingReservationTheater, pendingReservationTime, pendingReservationCode, message, ifAsked;
+    FrameLayout frame;
     Button pendingResrvationCANCELBUTTON;
     ImageView pendingPosterImage;
     LinearLayout noPending;
@@ -77,8 +78,9 @@ public class PendingReservationFragment extends Fragment {
         pendingResrvationCANCELBUTTON = rootView.findViewById(R.id.PEndingRes_Cancel);
         pendingLayout = rootView.findViewById(R.id.Pending_Data);
         noPending = rootView.findViewById(R.id.NoPending);
-
-
+        message = rootView.findViewById(R.id.CONFIRMED_READY_MESSAGE);
+        ifAsked = rootView.findViewById(R.id.ifAsked);
+        frame = rootView.findViewById(R.id.Frame);
         return rootView;
     }
 
@@ -122,19 +124,20 @@ public class PendingReservationFragment extends Fragment {
                         }
 
                         if (active.getRedemption_code() != null) {
-                            confirmedText.setText("Here is your redemption code");
+                            message.setText("Here is your redemption code");
+                            ifAsked.setVisibility(View.GONE);
                             pendingReservationCode.setText(active.getRedemption_code());
+                            frame.setVisibility(View.GONE);
+                            pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
                         } else {
-                            confirmedText.setText("If asked, please provide this zip code");
+                            message.setText("You can now use your MoviePass card to purchase yoru ticket");
                             pendingReservationCode.setText(active.getZip());
-
                         }
 
                     } else {
                         pendingLayout.setVisibility(View.GONE);
                         noPending.setVisibility(View.VISIBLE);
                         pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
-
                     }
                     reservation = active.getReservation().getId();
                 } else {

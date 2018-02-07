@@ -219,6 +219,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         //Hide Keyboard when not in use
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        checkPermissions();
 
         return rootView;
     }
@@ -265,7 +266,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
+        if(checkPermissions()){
+            mMap.setMyLocationEnabled(true);
+        }
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMinZoomPreference(12);
         //SNAP the recyclerview to center in the view

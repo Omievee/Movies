@@ -134,9 +134,7 @@ public class ProfileCancellationFragment extends Fragment {
                 cancelSubscriptionReason = 8;
                 break;
         }
-
         String angryComments = cancelComments.getText().toString();
-
         CancellationRequest request = new CancellationRequest(requestDate, cancelSubscriptionReason, angryComments);
         RestClient.getAuthenticated().requestCancellation(request).enqueue(new Callback<CancellationResponse>() {
             @Override
@@ -144,8 +142,8 @@ public class ProfileCancellationFragment extends Fragment {
                 cancellationResponse = response.body();
                 progress.setVisibility(View.GONE);
                 if (cancellationResponse != null && response.isSuccessful()) {
-                    getActivity().finish();
                     Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
+                    getActivity().finish();
                 } else {
                     Toast.makeText(getActivity(), response.raw().message(), Toast.LENGTH_SHORT).show();
                 }

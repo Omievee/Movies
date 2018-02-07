@@ -101,6 +101,8 @@ public class MoviesActivity extends BaseActivity {
                 startActivity(activateCard);
             });
 
+        }else if(!UserPreferences.getIsSubscriptionActivationRequired()){
+
         }
 
     }
@@ -224,8 +226,6 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
-
         if (getFragmentManager().getBackStackEntryCount() == 0) {
             AlertDialog alert;
             AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
@@ -234,7 +234,7 @@ public class MoviesActivity extends BaseActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    finishAffinity(); // finish activity
+                    finishAffinity();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

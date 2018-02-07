@@ -169,26 +169,20 @@ public class LogInActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mInputEmail, InputMethodManager.SHOW_IMPLICIT);
         String password = mInputPassword.getText().toString();
-
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
-
             LogInRequest request = new LogInRequest(email, password);
             String deviceId = DeviceID.getID(this);
-
             RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         moviePassLoginSucceeded(response.body());
                     } else if (response.errorBody() != null) {
-
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
-
 //                            mProgress.setVisibility(View.GONE);
 //                            toggleControls(true);
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-
                         } catch (Exception e) {
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
@@ -199,8 +193,7 @@ public class LogInActivity extends AppCompatActivity {
                 public void onFailure(Call<User> call, Throwable t) {
 //                    mProgress.setVisibility(View.INVISIBLE);
 //                    toggleControls(true);
-                    Toast.makeText(LogInActivity.this, "No MoviePass User Found with this Facebook Account.", Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
 

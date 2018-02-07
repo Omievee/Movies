@@ -107,7 +107,7 @@ public class ProfileActivity extends BaseActivity {
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 }
             }
-        }, 300);
+        }, 0);
         return true;
     }
 

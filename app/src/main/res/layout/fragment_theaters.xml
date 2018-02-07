@@ -74,7 +74,8 @@
         android:layout_marginEnd="@dimen/margin_standard"
         android:background="@drawable/circle_white_alpha"
         android:src="@drawable/list_icon2"
-        android:tint="@color/white" />
+        android:tint="@color/white"
+        android:visibility="invisible" />
 
 
     <include

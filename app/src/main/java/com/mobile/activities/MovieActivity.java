@@ -492,36 +492,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 });
     }
 
-    public static void sorted(List<Screening> screeningObjects, List<Theater> theaterDistanceObjects) {
-
-        HashMap<Theater, Integer> indexMap = new HashMap<>();
-        int index = 0;
-        for (Theater object : theaterDistanceObjects) {
-            indexMap.put(object, index);
-            index++;
-        }
-
-        Collections.sort(screeningObjects, new Comparator<Screening>() {
-            @Override
-            public int compare(Screening screening, Screening t1) {
-                Integer leftIndex = indexMap.get(screening);
-                Log.d(TAG, "compare: " + indexMap.get(screening));
-                Integer rightIndex = indexMap.get(t1);
-                Log.d(TAG, "compare: " + rightIndex);
-                if (leftIndex == null) {
-                    return -1;
-                }
-                if (rightIndex == null) {
-                    return 1;
-                }
-
-                return Integer.compare(leftIndex, rightIndex);
-            }
-        });
-
-    }
-
-
 //    /* Bottom Navigation View */
 
     int getContentViewId() {
@@ -548,7 +518,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 }
                 finish();
             }
-        }, 300);
+        }, 0);
         return true;
     }
 
