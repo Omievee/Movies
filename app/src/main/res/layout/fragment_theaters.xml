@@ -58,7 +58,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_standard"
         android:background="@android:drawable/screen_background_dark_transparent"
-        android:layoutAnimation="@anim/layout_animation_slide_from_bottom"
         android:visibility="gone">
 
     </android.support.v7.widget.RecyclerView>
@@ -73,7 +72,6 @@
         android:layout_marginBottom="@dimen/magin_MAX"
         android:layout_marginEnd="@dimen/margin_standard"
         android:background="@drawable/circle_white_alpha"
-        android:src="@drawable/list_icon2"
         android:tint="@color/white"
         android:visibility="invisible" />
 

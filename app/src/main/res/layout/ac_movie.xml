@@ -187,20 +187,31 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/FAB_LOADCARD"
+    <Button
+        android:id="@+id/button_check_in"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard"
-        android:layout_marginEnd="5dp"
+        android:layout_height="48dp"
+        android:background="@color/new_red"
         android:animateLayoutChanges="true"
-        android:elevation="5dp"
-        android:visibility="visible"
-        app:fab_colorNormal="@color/new_red"
-        app:fab_size="normal"
+        android:visibility="gone"
+        android:text="@string/fragment_theater_check_in"
+        android:layout_marginBottom="56dp"
         app:layout_anchor="@+id/NESTED_SCROLL"
-        app:layout_anchorGravity="right | bottom" />
+        app:layout_anchorGravity="bottom" />
+
+    <!--<com.github.clans.fab.FloatingActionButton-->
+        <!--android:id="@+id/FAB_LOADCARD"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
+        <!--android:layout_marginEnd="5dp"-->
+        <!--android:animateLayoutChanges="true"-->
+        <!--android:elevation="5dp"-->
+        <!--android:visibility="visible"-->
+        <!--app:fab_colorNormal="@color/new_red"-->
+        <!--app:fab_size="normal"-->
+        <!--app:layout_anchor="@+id/NESTED_SCROLL"-->
+        <!--app:layout_anchorGravity="right | bottom" />-->
 
 
     <include
