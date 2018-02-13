@@ -237,7 +237,7 @@
             android:animateLayoutChanges="true"
             android:background="@drawable/mpbutton1"
             android:padding="@dimen/margin_standard"
-            android:text="@string/activity_theater_button_action"
+            android:text="Continue"
             android:textSize="15sp"
             android:textStyle="bold" />
 

@@ -222,13 +222,7 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public void makeSnackbar(int message) {
-        final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("OK", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                snackbar.dismiss();
-            }
-        });
+        final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 

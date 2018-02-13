@@ -191,10 +191,11 @@
                     android:layout_below="@id/LAYOUT_5"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/double_margin_standard"
-                    android:textColor="@color/white"
                     android:gravity="center_horizontal"
-                    android:text="You will be able to review all details before being charged."
-                    android:textSize="15sp" />
+                    android:text="You'll be able to review details before being charged."
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="italic" />
 
 
                 <LinearLayout
@@ -213,7 +214,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-                        android:hint="@string/fragment_sign_up_step_one_address"
+                        android:hint="Billing Address"
                         android:inputType="text"
                         android:lines="1"
                         android:maxLength="26"
@@ -230,7 +231,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_standard"
                         android:backgroundTint="@color/white"
-                        android:hint="@string/fragment_sign_up_step_one_address_two"
+                        android:hint="Billing Address 2"
                         android:inputType="text"
                         android:lines="1"
                         android:maxLength="26"
@@ -262,7 +263,6 @@
                         android:inputType="text"
                         android:maxLength="26"
                         android:maxLines="1"
-
                         android:textColor="@color/white"
                         android:textColorHighlight="@color/white"
                         android:textColorHint="@color/gray_icon" />

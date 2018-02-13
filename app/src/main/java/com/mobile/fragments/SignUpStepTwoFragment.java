@@ -124,7 +124,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2NextButton = view.findViewById(R.id.button_next2);
 
         signupYesNo = view.findViewById(R.id.signup_yes_no);
-//        signup2CCName = view.findViewById(R.id.SIGNUP2_NAME);
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
         signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
@@ -137,12 +136,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }
         });
 
-        /* buttonPaypal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                paypalClick();
-            }
-        }); */
 
         signup2SameAddressSwitch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -323,13 +316,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     }
 
     public void makeSnackbar(String message) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("OK", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                snackbar.dismiss();
-            }
-        });
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 

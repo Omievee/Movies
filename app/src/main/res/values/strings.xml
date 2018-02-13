@@ -110,7 +110,7 @@
     <string name="activity_select_seat_available">Available</string>
     <string name="activity_select_seat_unavailable">Unavailable</string>
     <string name="activity_select_seat_selected">Selected</string>
-    <string name="activity_select_seat_reserve">Reserve Your Seat</string>
+    <string name="activity_select_seat_reserve">Continue</string>
 
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
     <string name="data_connection">Check Your Connection And Try Again</string>
