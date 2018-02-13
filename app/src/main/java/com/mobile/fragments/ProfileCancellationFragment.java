@@ -1,10 +1,8 @@
 package com.mobile.fragments;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.mobile.Constants;
-import com.mobile.UserPreferences;
-import com.mobile.activities.LogInActivity;
-import com.mobile.activities.SettingsActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
@@ -25,7 +19,6 @@ import com.moviepass.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;

@@ -1,7 +1,5 @@
 package com.mobile.activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,44 +8,24 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
-import com.mobile.adapters.SearchAdapter;
 import com.mobile.fragments.MoviesFragment;
-import com.mobile.fragments.PastReservations;
-import com.mobile.fragments.PendingReservationFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
-import com.mobile.network.RestClient;
 import com.moviepass.R;
 
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.

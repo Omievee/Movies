@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v13.view.ViewCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import android.view.LayoutInflater;
@@ -30,13 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mobile.Constants;
-import com.mobile.MoviePosterClickListener;
 import com.mobile.activities.MovieActivity;
-import com.mobile.activities.MoviesActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 /**

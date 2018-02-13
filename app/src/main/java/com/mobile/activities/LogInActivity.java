@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -25,7 +24,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.model.User;
@@ -35,10 +33,6 @@ import com.mobile.requests.LogInRequest;
 import com.moviepass.R;
 
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import retrofit2.Call;

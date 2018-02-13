@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
@@ -64,15 +64,20 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             JSONObject attributes = new JSONObject();
             attributes.put("email", UserPreferences.getUserEmail());
             attributes.put("name", UserPreferences.getUserName());
+            attributes.put("user_id", String.valueOf(UserPreferences.getUserId()));
+            Log.d("taplytics put", UserPreferences.getUserEmail());
             Taplytics.setUserAttributes(attributes);
-            HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
         } catch (JSONException e) {
 
         }
 
+        try {
+            HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+        } catch (Exception e) {
+
+        }
+
         checkRestrictions();
-
-
     }
 
 

@@ -21,8 +21,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 81
-        versionName "3.0-beta.V12.2"
+        versionCode 82
+        versionName "3.0-beta.V12.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -49,7 +49,6 @@ android {
         }
     }
     defaultConfig {
-
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath false
@@ -80,6 +79,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:11.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+    debugCompile ('io.socket:socket.io-client:+') {
+        exclude group: 'org.json', module: 'json'
+    }
+
     // Kotlin
     kapt "com.android.databinding:compiler:3.0.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -90,12 +93,14 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:$play_services_version"
     compile "com.google.android.gms:play-services-places:$play_services_version"
     compile "com.android.support:support-v4:27.0.2"
+    compile("com.google.android.gms:play-services-gcm:$play_services_version")
+
 
     //Support Libraries
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:support-v13:27.0.2"
     compile 'com.android.support:multidex:1.0.2'
-//    compile 'com.android.support:support-core-utils:26.2.1'
+    //compile 'com.android.support:support-core-utils:26.2.1'
 
     // Google Maps Utilities
     compile 'com.google.maps.android:android-maps-utils:0.5+'

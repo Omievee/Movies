@@ -1,9 +1,8 @@
 package com.mobile.application;
 
 import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
+
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -33,7 +32,6 @@ public class Application extends MultiDexApplication {
     private AmazonS3 s3;
     private static CognitoCachingCredentialsProvider sCredProvider;
 
-
     private native static String getCognitoKey();
 
     static String cognitoPoolId = String.valueOf(getCognitoKey());
@@ -50,9 +48,12 @@ public class Application extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
+
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
-        Taplytics.startTaplytics(this, "setUserAttributes");
+
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
