@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,15 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.CrashlyticsInitProvider;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -39,7 +35,6 @@ import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
-import com.mobile.model.SelectedSeat;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
@@ -53,14 +48,12 @@ import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
 import com.moviepass.R;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.services.common.Crash;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +73,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
-    com.github.clans.fab.FloatingActionButton fabLoadCard;
+    Button buttonCheckIn;
     Screening screening = new Screening();
     ArrayList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
@@ -108,15 +101,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         moviesAtSelectedTheater = new ArrayList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
-        fabLoadCard = rootView.findViewById(R.id.FAB_LOADCARD);
-        fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
-        fabLoadCard.setImageDrawable(getResources().getDrawable(R.drawable.ticketnavwhite));
-        fabLoadCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "Please select a showtime", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        buttonCheckIn = rootView.findViewById(R.id.button_check_in);
         progress = rootView.findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
         eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
@@ -204,11 +190,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
         final String time = showtime;
         final Screening screening1 = screening;
-        fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
-        fabLoadCard.setOnClickListener(new View.OnClickListener() {
+        buttonCheckIn.setVisibility(View.VISIBLE);
+        buttonCheckIn.setEnabled(true);
+        buttonCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening1, time);
@@ -218,8 +204,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening1, time);
                 }
-
-
             }
         });
     }
@@ -254,7 +238,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void reserve(Screening screening, String showtime) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
-
 
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
@@ -306,7 +289,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
                         progress.setVisibility(View.GONE);
-                        fabLoadCard.setEnabled(true);
+                        buttonCheckIn.setVisibility(View.VISIBLE);
+                        buttonCheckIn.setEnabled(true);
 
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
@@ -317,15 +301,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progress.setVisibility(View.GONE);
-                    fabLoadCard.setEnabled(true);
+                    buttonCheckIn.setVisibility(View.VISIBLE);
+                    buttonCheckIn.setEnabled(true);
                 }
-                fabLoadCard.setEnabled(true);
+                buttonCheckIn.setVisibility(View.VISIBLE);
+                buttonCheckIn.setEnabled(true);
             }
 
             @Override
             public void failure(RestError restError) {
                 progress.setVisibility(View.GONE);
-                fabLoadCard.setEnabled(true);
+                buttonCheckIn.setVisibility(View.VISIBLE);
+                buttonCheckIn.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 

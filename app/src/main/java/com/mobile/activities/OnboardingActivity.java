@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobile.fragments.NearMe;
-import com.mobile.fragments.SynopsisFragment;
 import com.moviepass.R;
 
 

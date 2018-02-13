@@ -20,7 +20,6 @@ import com.mobile.Constants;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CredentialsRequest;
-import com.mobile.requests.PersonalInfoRequest;
 import com.moviepass.R;
 
 import java.text.SimpleDateFormat;

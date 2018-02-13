@@ -23,20 +23,10 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
 import com.mobile.model.ProspectUser;
-import com.mobile.network.RestCallback;
-import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
-import com.mobile.requests.PersonalInfoRequest;
-import com.mobile.responses.PersonalInfoResponse;
-import com.mobile.responses.RegistrationPlanResponse;
 import com.moviepass.R;
 
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

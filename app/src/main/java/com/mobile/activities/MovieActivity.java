@@ -19,12 +19,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -67,11 +67,8 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,8 +126,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @BindView(R.id.SELECTED_RUNTIME)
     TextView selectedRuntime;
 
-    @BindView(R.id.FAB_LOADCARD)
-    com.github.clans.fab.FloatingActionButton fabLoadCard;
+    @BindView(R.id.button_check_in)
+    Button buttonCheckIn;
 
     @BindView(R.id.SELECTED_SYNOPSIS)
     ImageButton selectedSynopsis;
@@ -162,21 +159,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedMovieTitle = findViewById(R.id.SELECTED_MOVIE_TITLE);
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
         selectedRuntime = findViewById(R.id.SELECTED_RUNTIME);
-        fabLoadCard = findViewById(R.id.FAB_LOADCARD);
-        fabLoadCard.setImageDrawable(getDrawable(R.drawable.ticketnavwhite));
-        fabLoadCard.setColorNormal(getResources().getColor(R.color.gray_dark));
+        buttonCheckIn = findViewById(R.id.button_check_in);
         ProgressBar = findViewById(R.id.progress);
 
         filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
         ProgressBar.setVisibility(View.VISIBLE);
-
-        fabLoadCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MovieActivity.this, "Please select a showtime", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
@@ -315,8 +303,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     public void onShowtimeClick(int pos, final Screening screening, final String showtime) {
-        fabLoadCard.setColorNormal(getResources().getColor(R.color.new_red));
-        fabLoadCard.setOnClickListener(new View.OnClickListener() {
+
+        buttonCheckIn.setVisibility(View.VISIBLE);
+        buttonCheckIn.setEnabled(true);
+        buttonCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
@@ -328,7 +318,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(screening, showtime);
                 }
-
             }
         });
     }
@@ -402,11 +391,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
-                        fabLoadCard.setEnabled(true);
+                        buttonCheckIn.setVisibility(View.VISIBLE);
+                        buttonCheckIn.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         ProgressBar.setVisibility(View.GONE);
-                        fabLoadCard.setEnabled(true);
+                        buttonCheckIn.setVisibility(View.VISIBLE);
+                        buttonCheckIn.setEnabled(true);
                     }
                 }
 
@@ -415,7 +406,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             @Override
             public void failure(RestError restError) {
                 ProgressBar.setVisibility(View.GONE);
-                fabLoadCard.setEnabled(true);
+                buttonCheckIn.setVisibility(View.VISIBLE);
+                buttonCheckIn.setEnabled(true);
 
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
@@ -478,7 +470,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             }
                             selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                             ProgressBar.setVisibility(View.GONE);
-                            fabLoadCard.setVisibility(View.VISIBLE);
+                            buttonCheckIn.setVisibility(View.VISIBLE);
+                            buttonCheckIn.setEnabled(true);
                         }
                     }
 

@@ -275,6 +275,8 @@
     <string name="fragment_sign_up_step_two_finish">Next</string>
     <string name="fragment_sign_up_step_three_submit">Submit</string>
 
+    <!-- TheaterFragment -->
+    <string name="fragment_theater_check_in">CHECK IN</string>
 
     <!-- TheatersFragment -->
     <string name="fragment_theaters_name">[Name]</string>

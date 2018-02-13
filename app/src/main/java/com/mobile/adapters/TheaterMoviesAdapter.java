@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -27,9 +26,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.listeners.ShowtimeClickListener;
-import com.mobile.model.Movie;
 import com.mobile.model.Screening;
-import com.mobile.model.Theater;
 import com.moviepass.R;
 
 import java.util.ArrayList;
