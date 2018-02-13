@@ -230,6 +230,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
 
+        Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getPushPermission());
         return rootView;
     }
 

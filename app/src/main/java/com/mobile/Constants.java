@@ -61,4 +61,7 @@ public class Constants {
     public static final String ROTTEN_TOMATOES = "rt";
     public static final String PUSH_PERMISSION = "push";
 
+    //Taplytics Notifs
+    public static final String CUSTOM_DATA = "custom_keys";
+
 }

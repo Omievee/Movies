@@ -442,12 +442,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             selectedScreeningsList.clear();
                             theatersList.clear();
                             sortedScreeningList.clear();
-                            Collections.sort(theatersList, new Comparator<Theater>() {
-                                @Override
-                                public int compare(Theater theater, Theater t1) {
-                                    return Double.compare(theater.getDistance(), t1.getDistance());
-                                }
-                            });
+                            Collections.sort(theatersList, (theater, t1) -> Double.compare(theater.getDistance(), t1.getDistance()));
 
                             //Sort Theaters & have screenings follow suit
                             selectedScreeningsList.addAll(screeningsResponse.getScreenings());
@@ -470,8 +465,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             }
                             selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                             ProgressBar.setVisibility(View.GONE);
-                            buttonCheckIn.setVisibility(View.VISIBLE);
-                            buttonCheckIn.setEnabled(true);
                         }
                     }
 

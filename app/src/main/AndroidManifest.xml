@@ -11,7 +11,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE"/>
+
+    <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
+
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -46,13 +48,14 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
         </receiver>
-
         <service android:name="com.taplytics.sdk.TLGcmIntentService" />
+
 
         <receiver android:name="com.taplytics.sdk.TLBootReceiver">
             <intent-filter>
@@ -64,7 +67,7 @@
 
         <meta-data
             android:name="com.taplytics.sdk.notification_icon"
-            android:resource="@drawable/notification_icon" />
+            android:resource="@mipmap/ic_launcher_round" />
 
         <!-- End of Taplytics -->
 
@@ -156,10 +159,12 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="tl-6ea3ea4d"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tl-6ea3ea4d" />
             </intent-filter>
 
             <meta-data

@@ -111,14 +111,12 @@
     <string name="activity_select_seat_unavailable">Unavailable</string>
     <string name="activity_select_seat_selected">Selected</string>
     <string name="activity_select_seat_reserve">Continue</string>
-
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
     <string name="data_connection">Check Your Connection And Try Again</string>
     <string name="pending_reservation">You have a pending reservation</string>
     <string name="error">Error: Contact Customer Support</string>
-
-
     <string name="firstBoot">firstBoot</string>
+
     <!-- SignInActivity -->
     <string name="activity_sign_in_welcome_back">Welcome back</string>
     <string name="activity_sign_in_email">Email</string>
