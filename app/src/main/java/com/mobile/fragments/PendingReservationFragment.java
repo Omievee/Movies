@@ -111,6 +111,7 @@ public class PendingReservationFragment extends Fragment {
                             e.printStackTrace();
                         }
 
+                        Log.d(TAG, "onResponse: " + active.getSeat());
                         if (active.getRedemption_code() != null) {
                             message.setText("Here is your redemption code");
                             ifAsked.setVisibility(View.GONE);
@@ -118,7 +119,7 @@ public class PendingReservationFragment extends Fragment {
                             frame.setVisibility(View.GONE);
                             pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
                         } else {
-                            message.setText("You can now use your MoviePass card to purchase yoru ticket");
+                            message.setText("You can now use your MoviePass card to purchase your ticket");
                             pendingReservationCode.setText(active.getZip());
                         }
 

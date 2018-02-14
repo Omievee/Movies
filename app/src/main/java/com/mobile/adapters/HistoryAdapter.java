@@ -113,7 +113,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.posterImageView.setImageURI(imgUrl + "/original.jpg");
-                        holder.title.setText(movie.getTitle());
                     }
                 })
                 .build();
