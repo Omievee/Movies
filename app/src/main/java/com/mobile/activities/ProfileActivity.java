@@ -20,9 +20,8 @@ import com.moviepass.R;
  */
 
 public class ProfileActivity extends BaseActivity {
-    public static final String TAG = "Found it";
 
-//    ProfileAccountInformationFragment profileFragment = new ProfileAccountInformationFragment();
+    public static final String TAG = "Found it";
     ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
 
@@ -33,9 +32,6 @@ public class ProfileActivity extends BaseActivity {
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        final ActionBar actionBar = getSupportActionBar();
-
 
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -122,7 +118,6 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
-
 
 
 }

@@ -112,17 +112,17 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2ScanCardIcon = view.findViewById(R.id.SIGNUP2_SCANCARD_ICON);
         selectedCreditCardText = view.findViewById(R.id.credit_card_number_copy);
         selectedCreditCardMasked = view.findViewById(R.id.credit_card_number);
+
         signup2Address = view.findViewById(R.id.SIGNUP2_ADDRESS);
         signup2Address2 = view.findViewById(R.id.SIGNUP2_ADDRESS2);
         signup2City = view.findViewById(R.id.SIGNUP2_CITY);
-        signup2State = view.findViewById(R.id.state);
+        signup2State = view.findViewById(R.id.signup2Spinner);
         signup2Zip = view.findViewById(R.id.SIGNUP2_ZIP);
-
         signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
+
         fullBillingAddress = view.findViewById(R.id.LAYOUT_6);
         fullBillingAddress2 = view.findViewById(R.id.LAYOUT_7);
         signup2NextButton = view.findViewById(R.id.button_next2);
-
         signupYesNo = view.findViewById(R.id.signup_yes_no);
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
@@ -187,34 +187,42 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         });
 
 
-        signup2NextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (infoIsGood()) {
-                    String ccNum = signup2CCNum.getText().toString();
-                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
-                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
-                    String ccCVV = signup2CC_CVV.getText().toString();
-                    creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
-                    ((SignUpActivity) getActivity()).setPage();
-                } else {
-                    makeSnackbar("Fill out all required fields.");
-                }
+        signup2NextButton.setOnClickListener(view1 -> {
+            if (infoIsGood()) {
+                String ccNum = signup2CCNum.getText().toString();
+                String ccEx = signup2CCExp.getText().toString().substring(0, 2);
+                String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
+                String ccCVV = signup2CC_CVV.getText().toString();
+                creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
+                ((SignUpActivity) getActivity()).setPage();
+            } else {
+                makeSnackbar("Fill out all required fields.");
             }
         });
 
     }
 
+//   signup2SameAddressSwitch.isChecked()
+
 
     public boolean infoIsGood() {
-        if (signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
-                !signup2CC_CVV.getText().toString().isEmpty()) {
+        if (signup2CCNum.length() == 16
+                && !signup2CCExp.getText().toString().isEmpty()
+                && !signup2CC_CVV.getText().toString().isEmpty()) {
             return true;
-        } else if (!signup2SameAddressSwitch.isChecked() && signup2CCNum.length() == 16 && !signup2CCExp.getText().toString().isEmpty() &&
-                !signup2CC_CVV.getText().toString().isEmpty() && !signup2CCName.getText().toString().isEmpty()
-                && !signup2Address.getText().toString().isEmpty() && !signup2City.getText().toString().isEmpty() && !signup2State.getSelectedItem().toString().equals("State")
-                && signup2Zip.getText().toString().length() == 5) {
-            return true;
+
+            //TODO: RETURN AND CHECK WHY NULL?
+//        } else if (
+//                !signup2SameAddressSwitch.isChecked()
+//                        && signup2CCNum.length() == 16
+//                        && !signup2CCExp.getText().toString().isEmpty()
+//                        && !signup2CC_CVV.getText().toString().isEmpty()
+//                        && !signup2CCName.getText().toString().isEmpty()
+//                        && !signup2Address.getText().toString().equals("")
+//                        && !signup2City.getText().toString().equals("")
+//                        && !signup2State.getSelectedItem().toString().equals("State")
+//                        && signup2Zip.getText().toString().length() == 5) {
+//            return true;
         }
         return false;
     }

@@ -74,8 +74,6 @@ public class SignUpStepOneFragment extends Fragment {
         if (!isViewShown) {
             setButtonActions();
         }
-
-
         signUpAddress1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

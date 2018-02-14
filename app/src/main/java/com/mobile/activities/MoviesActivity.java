@@ -116,49 +116,38 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (android.R.id.home == itemId) {
-                    AlertDialog alert;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
-                    builder.setMessage("Do you want to quit MoviePass?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish(); // finish activity
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.show();
-                    alert = builder.create();
-                    alert.show();
-                } else {
-                    if (itemId == R.id.action_profile) {
-                        if (UserPreferences.getUserId() == 0) {
-                            Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(MoviesActivity.this, ProfileActivity.class);
-                            startActivity(intent);
-                        }
-
-                    } else if (itemId == R.id.action_movies) {
-                    } else if (itemId == R.id.action_theaters) {
-                        startActivity(new Intent(MoviesActivity.this, TheatersActivity.class));
-                    } else if (itemId == R.id.action_settings) {
-                        startActivity(new Intent(MoviesActivity.this, SettingsActivity.class));
+        bottomNavigationView.postDelayed(() -> {
+            int itemId = item.getItemId();
+            if (android.R.id.home == itemId) {
+                AlertDialog alert;
+                AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
+                builder.setMessage("Do you want to quit MoviePass?");
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                    dialog.dismiss();
+                    finish(); // finish activity
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                builder.show();
+                alert = builder.create();
+                alert.show();
+            } else {
+                if (itemId == R.id.action_profile) {
+                    item.setIcon(getDrawable(R.drawable.profilenavred));
+                    if (UserPreferences.getUserId() == 0) {
+                        Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(MoviesActivity.this, ProfileActivity.class);
+                        startActivity(intent);
                     }
+                } else if (itemId == R.id.action_movies) {
+                } else if (itemId == R.id.action_theaters) {
+                    startActivity(new Intent(MoviesActivity.this, TheatersActivity.class));
+                } else if (itemId == R.id.action_settings) {
+                    startActivity(new Intent(MoviesActivity.this, SettingsActivity.class));
                 }
             }
-        }, 50);
+        }, 0);
         return true;
     }
 

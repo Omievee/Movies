@@ -9,7 +9,7 @@
     <!-- Android Manifest -->
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="menu_bottom_navigation_main_profile">Profile</string>
+    <string name="menu_bottom_navigation_main_profile">Account</string>
     <string name="menu_bottom_navigation_main_reservations">Reservations</string>
     <string name="menu_bottom_navigation_main_movies">Movies</string>
     <string name="menu_bottom_navigation_main_theaters">Theaters</string>

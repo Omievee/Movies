@@ -204,9 +204,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .setCountry("US")
                     .build();
-
             try {
                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
                 startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
@@ -266,7 +266,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(checkPermissions()){
+        if (checkPermissions()) {
             mMap.setMyLocationEnabled(true);
         }
         mMap.getUiSettings().setMyLocationButtonEnabled(false);

@@ -490,20 +490,17 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                } else if (itemId == R.id.action_theaters) {
-                    startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                }
-                finish();
+        bottomNavigationView.postDelayed(() -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_profile) {
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+            } else if (itemId == R.id.action_movies) {
+            } else if (itemId == R.id.action_theaters) {
+                startActivity(new Intent(getApplicationContext(), TheatersActivity.class));
+            } else if (itemId == R.id.action_settings) {
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
             }
+            finish();
         }, 0);
         return true;
     }

@@ -269,7 +269,7 @@
 
 
                     <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/state"
+                        android:id="@+id/signup2Spinner"
                         android:layout_width="160dp"
                         android:layout_height="42dp"
                         android:hint="@string/fragment_sign_up_step_one_state"
@@ -282,7 +282,6 @@
                         android:id="@+id/SIGNUP2_ZIP"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-
                         android:layout_weight=".3"
                         android:backgroundTint="@color/white"
                         android:hint="@string/fragment_sign_up_step_one_zip"

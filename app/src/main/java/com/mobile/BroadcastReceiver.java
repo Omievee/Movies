@@ -36,15 +36,6 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
 
     @Override
     public void pushOpened(Context context, Intent intent) {
-
-        //A user clicked on the notification! Do whatever you want here!
-
-        /* If you call through to the super,
-        Taplytics will launch your app's LAUNCH activity.
-        This is optional. */
-
-//        super.pushOpened(context, intent);
-
         if (intent.getExtras() != null) {
 
             Bundle bundle = intent.getExtras();
@@ -62,38 +53,24 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
 
                     Taplytics.setTaplyticsPushTokenListener(s -> {
 
-                        String resultJSON = bundle.get("custom_keys").toString();
-                        try {
-                            JSONObject root = new JSONObject(resultJSON);
-                            String array = root.getString("external_url");
+                        if (bundle.get("custom_keys") != null) {
+                            String resultJSON = bundle.get("custom_keys").toString();
+                            try {
+                                JSONObject root = new JSONObject(resultJSON);
+                                String array = root.getString("external_url");
 
-                            Log.d(Constants.TAG, "pushOpened: " + array.toString());
+                                Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(array));
+                                context.startActivity(notifIntent);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            super.pushOpened(context, intent);
                         }
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(key);
-//                            Iterator<String> myKeys = jsonObject.keys();
-//                            if (jsonObject.has("custom_keys")) {
-//                                Log.d(Constants.TAG, "true: ");
-//                            }
-//                            while (myKeys.hasNext()) {
-//                                String k = myKeys.next();
-//                                JSONObject innterOBJ = jsonObject.getJSONObject(k);
-//                                Iterator<String> innerK = innterOBJ.keys();
-//                                while (innerK.hasNext()) {
-//                                    String innerKEY = myKeys.next();
-//                                    String value = innterOBJ.getString(innerKEY);
-//
-//                                    Log.d(Constants.TAG, "pushOpened: " + value.toString());
-//                                }
-////                            }
-//
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+
+
                     });
 
                 } catch (JSONException e) {
@@ -102,22 +79,22 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
             }
         }
 
-        if (intent.getDataString() != null) {
-            Log.d("intent", intent.getDataString());
-        }
-
-        if (intent.getStringExtra("external_url") != null) {
-            Log.d("intentURL", intent.getStringExtra("external_url"));
-        }
-
-        JSONObject customKeys = new JSONObject();
-        Taplytics.trackPushOpen("tl_id", customKeys);
-        try {
-            String externalURL = customKeys.getString("external_url");
-            Log.d("externalUrl", externalURL);
-        } catch (Exception e) {
-
-        }
+//        if (intent.getDataString() != null) {
+//            Log.d("intent", intent.getDataString());
+//        }
+//
+//        if (intent.getStringExtra("external_url") != null) {
+//            Log.d("intentURL", intent.getStringExtra("external_url"));
+//        }
+//
+//        JSONObject customKeys = new JSONObject();
+//        Taplytics.trackPushOpen("tl_id", customKeys);
+//        try {
+//            String externalURL = customKeys.getString("external_url");
+//            Log.d("externalUrl", externalURL);
+//        } catch (Exception e) {
+//
+//        }
     }
 
     @Override
