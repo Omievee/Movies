@@ -23,7 +23,7 @@ import com.moviepass.R;
 public class ActivatedCard_TutorialActivity extends BaseActivity {
 
 
-    ImageView zero, one, two, three, four, ccImage;
+    ImageView zero, one, two, three, four, ccImage, arrow;
     TextView skip, seehow, topNumber;
     ViewPager tutorialViewPager;
 
@@ -57,7 +57,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         seehow = findViewById(R.id.tutorial_firstSwipe);
         indicators = new ImageView[]{zero, one, two, three, four};
         activityLayout = findViewById(R.id.TUTORIAL_MAIN_ACTIVITY);
-
+        arrow = findViewById(R.id.swipeArrow);
 
         topNumber = findViewById(R.id.tutorial_topnumber);
         topNumber.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -96,8 +96,12 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                         ccImage.setVisibility(View.VISIBLE);
                         fadeIn(ccImage);
                         topNumber.setVisibility(View.GONE);
+                        arrow.setVisibility(View.VISIBLE);
+                        fadeIn(arrow);
                         break;
                     case 1:
+                        arrow.setVisibility(View.GONE);
+                        fadeOut(arrow);
                         ccImage.setVisibility(View.GONE);
                         dots.setVisibility(View.VISIBLE);
                         fadeIn(dots);
@@ -241,8 +245,5 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        //Disable on back functionality
-    }
+
 }

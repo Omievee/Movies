@@ -25,6 +25,7 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
+import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.activities.SettingsActivity;
 import com.moviepass.BuildConfig;
@@ -48,7 +49,7 @@ public class ProfileFragment extends Fragment {
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     View root;
     RelativeLayout details, history, currentRes, howToUse, help;
-    TextView version, TOS, PP;
+    TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
 
@@ -75,7 +76,7 @@ public class ProfileFragment extends Fragment {
         pushSwitch = root.findViewById(R.id.PushSwitch);
         TOS = root.findViewById(R.id.TOS);
         PP = root.findViewById(R.id.PP);
-
+        signout = root.findViewById(R.id.SignOut);
         fadeIn(root);
         return root;
     }
@@ -114,6 +115,17 @@ public class ProfileFragment extends Fragment {
 
             }
 
+        });
+
+
+
+        signout.setOnClickListener(view16 -> {
+            UserPreferences.clearUserId();
+            UserPreferences.clearFbToken();
+            HelpshiftContext.getCoreApi().logout();
+            Intent intent = new Intent(getActivity(), LogInActivity.class);
+            startActivity(intent);
+            getActivity().finishAffinity();
         });
         details.setOnClickListener(view1 -> {
             FragmentManager fragmentManager = getActivity().getFragmentManager();

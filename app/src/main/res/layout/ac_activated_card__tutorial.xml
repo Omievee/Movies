@@ -122,10 +122,15 @@
             android:textSize="25sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/swipeArrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
             android:layout_toRightOf="@id/tutorial_firstSwipe"
-            android:src="@drawable/arrowforward" />
+            android:src="@drawable/arrowforward"
+            android:tint="@color/new_red" />
 
 
     </RelativeLayout>
