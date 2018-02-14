@@ -380,9 +380,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onPause() {
         super.onPause();
-        theatersMapViewRecycler.setVisibility(View.INVISIBLE);
-        mClusterManager.clearItems();
-        mClusterManager.cluster();
+//        theatersMapViewRecycler.setVisibility(View.INVISIBLE);
+//        mClusterManager.clearItems();
+//        mClusterManager.cluster();
     }
 
     @Override

@@ -30,11 +30,11 @@
         android:iconTint="@color/white"
         android:title="@string/menu_bottom_navigation_main_profile" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:enabled="true"
-        android:icon="@drawable/iconsettingswhite"
-        android:iconTint="@color/white"
-        android:title="@string/menu_bottom_navigation_main_settings" />
+    <!--<item-->
+    <!--android:id="@+id/action_settings"-->
+    <!--android:enabled="true"-->
+    <!--android:icon="@drawable/iconsettingswhite"-->
+    <!--android:iconTint="@color/white"-->
+    <!--android:title="@string/menu_bottom_navigation_main_settings" />-->
 
 </menu>

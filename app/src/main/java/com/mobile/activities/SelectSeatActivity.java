@@ -132,21 +132,6 @@ public class SelectSeatActivity extends BaseActivity {
         mProgressWheel = findViewById(R.id.progress);
 
 
-        //TODO: runtime logic;
-//
-//        int t = screeningObject.getRunningTime();
-//        int hours = t / 60; //since both are ints, you get an int
-//        int minutes = t % 60;
-//
-////        if (screeningObject.getRunningTime() == 0) {
-//            mMovieRunTime.setVisibility(View.GONE);
-//        } else if (hours > 1) {
-//            String translatedRunTime = hours + " hours " + minutes + " minutes";
-//            mMovieRunTime.setText(translatedRunTime);
-//        } else {
-//            String translatedRunTime = hours + " hour " + minutes + " minutes";
-//            mMovieRunTime.setText(translatedRunTime);
-//        }
         mSelectedMovieTitle.setText(screeningObject.getTitle());
         mTheaterSelected.setText(screeningObject.getTheaterName());
         mScreeningShowtime.setText(selectedShowTime);

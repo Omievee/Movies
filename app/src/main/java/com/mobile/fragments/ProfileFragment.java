@@ -3,6 +3,8 @@ package com.mobile.fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,8 +15,27 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.helpshift.support.ApiConfig;
+import com.helpshift.support.Metadata;
+import com.helpshift.support.Support;
+import com.helpshift.util.HelpshiftContext;
+import com.mobile.UserPreferences;
+import com.mobile.activities.ActivateMoviePassCard;
+import com.mobile.activities.ActivatedCard_TutorialActivity;
+import com.mobile.activities.ProfileActivity;
+import com.mobile.activities.SettingsActivity;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
+import com.taplytics.sdk.Taplytics;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by anubis on 5/31/17.
@@ -26,7 +47,10 @@ public class ProfileFragment extends Fragment {
     PastReservations pastReservations = new PastReservations();
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     View root;
-    RelativeLayout details, history, currentRes, refferals;
+    RelativeLayout details, history, currentRes, howToUse, help;
+    TextView version, TOS, PP;
+    Switch pushSwitch;
+    boolean pushValue;
 
     public ProfileFragment() {
     }
@@ -45,7 +69,12 @@ public class ProfileFragment extends Fragment {
         details = root.findViewById(R.id.Details);
         history = root.findViewById(R.id.History);
         currentRes = root.findViewById(R.id.Current);
-        refferals = root.findViewById(R.id.Refs);
+        howToUse = root.findViewById(R.id.HowTO);
+        help = root.findViewById(R.id.HELP);
+        version = root.findViewById(R.id.VERSIOn);
+        pushSwitch = root.findViewById(R.id.PushSwitch);
+        TOS = root.findViewById(R.id.TOS);
+        PP = root.findViewById(R.id.PP);
 
         fadeIn(root);
         return root;
@@ -55,6 +84,37 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String versionName = BuildConfig.VERSION_NAME;
+        version.setText("App Version: " + versionName);
+
+        final String ppURL = "https://www.moviepass.com/privacy/";
+        final String tosURL = "https://www.moviepass.com/terms";
+
+        if (UserPreferences.getPushPermission()) {
+            pushSwitch.setChecked(true);
+        } else {
+            pushSwitch.setChecked(false);
+        }
+
+        pushSwitch.setOnClickListener(v -> {
+            if (pushSwitch.isChecked()) {
+                UserPreferences.setPushPermission(true);
+                pushValue = true;
+            } else {
+                UserPreferences.setPushPermission(false);
+                pushValue = false;
+            }
+
+            try {
+                JSONObject attributes = new JSONObject();
+                attributes.put("pushPermission", pushValue);
+                Taplytics.setUserAttributes(attributes);
+                HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+            } catch (JSONException e) {
+
+            }
+
+        });
         details.setOnClickListener(view1 -> {
             FragmentManager fragmentManager = getActivity().getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -64,6 +124,39 @@ public class ProfileFragment extends Fragment {
             transaction.commit();
 
 
+        });
+
+        TOS.setOnClickListener(view13 -> {
+
+            Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tosURL));
+            getActivity().startActivity(notifIntent);
+        });
+
+        PP.setOnClickListener(view14 -> {
+
+            Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ppURL));
+            getActivity().startActivity(notifIntent);
+        });
+
+        help.setOnClickListener(view12 -> {
+            Map<String, String[]> customIssueFileds = new HashMap<>();
+            customIssueFileds.put("version name", new String[]{"sl", versionName});
+            String[] tags = new String[]{versionName};
+            HashMap<String, Object> userData = new HashMap<>();
+            userData.put("version", versionName);
+            Metadata meta = new Metadata(userData, tags);
+
+            ApiConfig apiConfig = new ApiConfig.Builder()
+                    .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
+                    .setGotoConversationAfterContactUs(true)
+                    .setRequireEmail(false)
+                    .setCustomIssueFields(customIssueFileds)
+                    .setCustomMetadata(meta)
+                    .setEnableTypingIndicator(true)
+                    .setShowConversationResolutionQuestion(false)
+                    .build();
+
+            Support.showFAQs(getActivity(), apiConfig);
         });
 
         history.setOnClickListener(view2 -> {
@@ -76,15 +169,20 @@ public class ProfileFragment extends Fragment {
         });
 
         currentRes.setOnClickListener(view1 -> {
-                    FragmentManager fragmentManager = getActivity().getFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                    transaction.replace(R.id.profile_container, pendingReservationFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            transaction.replace(R.id.profile_container, pendingReservationFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-                }
-        );
+        });
+
+        howToUse.setOnClickListener(view15 -> {
+            Intent intent = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     public void fadeIn(View view) {
