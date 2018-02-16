@@ -22,10 +22,14 @@ import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
+import com.mobile.responses.UserInfoResponse;
 import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +54,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    UserInfoResponse userInfoResponse;
     protected BottomNavigationView bottomNavigationView;
+
+    public String myZip;
 
     AlertDialog alert;
     public static final String MyPREFERENCES = "myprefs";
@@ -78,6 +85,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
         checkRestrictions();
+        userData();
     }
 
 
@@ -217,6 +225,29 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
+
+    public void userData() {
+        int userId = UserPreferences.getUserId();
+        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                userInfoResponse = response.body();
+                if (userInfoResponse != null) {
+                    String address = userInfoResponse.getShippingAddressLine2();
+                    List<String> addressList = Arrays.asList(address.split(",", -1));
+
+                    for (int i = 0; i < addressList.size(); i++) {
+                        myZip = addressList.get(2);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+            }
+        });
+    }
+}
 
 
     /*
@@ -413,4 +444,4 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
     */
 
-}
+

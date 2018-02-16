@@ -34,7 +34,7 @@ public class NearMe extends BottomSheetDialogFragment {
         webView = root.findViewById(R.id.Web);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        searchTheaterURL = "https://www.moviepass.com/?zip=";
+        searchTheaterURL = "https://www.moviepass.com/?myZip=";
 
         webView.setWebViewClient(new WebViewClient() {
             @Override

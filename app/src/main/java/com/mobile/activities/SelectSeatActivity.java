@@ -243,7 +243,6 @@ public class SelectSeatActivity extends BaseActivity {
             public void onResponse(Call<SeatingsInfoResponse> call, Response<SeatingsInfoResponse> response) {
                 mProgressWheel.setVisibility(View.GONE);
                 SeatingsInfoResponse seatingsInfoResponse = response.body();
-
                 if (seatingsInfoResponse != null) {
                     showSeats(
                             seatingsInfoResponse.seatingInfo.seats,

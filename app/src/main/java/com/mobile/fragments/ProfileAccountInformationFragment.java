@@ -338,7 +338,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .setCountry("US")
                 .build();
-
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
 
@@ -359,13 +358,16 @@ public class ProfileAccountInformationFragment extends Fragment {
                 List<String> localList = Arrays.asList(address.split(",", -1));
 
                 for (int i = 0; i < localList.size(); i++) {
-
-                    userNewAddress.setText(localList.get(0));
-                    userNewCity.setText(localList.get(1));
-                    String State = localList.get(2).substring(0, 3);
-                    String zip = localList.get(2).substring(4, 9);
-                    userNewState.setText(State);
-                    userNewZip.setText(zip);
+                    if (localList.get(2).trim().length() < 8) {
+                        Toast.makeText(getActivity(), "Invalid", Toast.LENGTH_SHORT).show();
+                    } else {
+                        userNewAddress.setText(localList.get(0));
+                        userNewCity.setText(localList.get(1));
+                        String State = localList.get(2).substring(0, 3);
+                        String zip = localList.get(2).substring(4, 9);
+                        userNewState.setText(State);
+                        userNewZip.setText(zip);
+                    }
                 }
                 saveChanges();
 
@@ -451,17 +453,12 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     public void saveChanges() {
         userSave.setTextColor(getResources().getColor(R.color.new_red));
-        userSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        userSave.setOnClickListener(v -> {
 
-
-                progress.setVisibility(View.VISIBLE);
-
-                updateShippingAddress();
+            progress.setVisibility(View.VISIBLE);
+            updateShippingAddress();
 //                updateCCData();
 
-            }
         });
     }
 

@@ -23,7 +23,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/margin_half"
                 android:src="@drawable/iconback"
-                android:tint="@color/white" />
+                android:tint="@color/white"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/SEATCHART_HEADER"

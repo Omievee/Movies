@@ -99,6 +99,8 @@ public class PendingReservationFragment extends Fragment {
                         pendingLayout.setVisibility(View.VISIBLE);
 
 
+                        Log.d(TAG, "onResponse: " + active.getE_ticket());
+
                         pendingReservationTitle.setText(active.getTitle());
                         pendingReservationTheater.setText(active.getTheater());
                         String reservationTime = active.getShowtime().substring(11, 16);
@@ -111,7 +113,6 @@ public class PendingReservationFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        Log.d(TAG, "onResponse: " + active.getSeat());
                         if (active.getRedemption_code() != null) {
                             message.setText("Here is your redemption code");
                             ifAsked.setVisibility(View.GONE);
@@ -157,9 +158,10 @@ public class PendingReservationFragment extends Fragment {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-
                         Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+
                     } catch (Exception e) {
+
                     }
                 } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
                 } else if (responseBody != null && response.isSuccessful()) {
@@ -172,6 +174,7 @@ public class PendingReservationFragment extends Fragment {
                         Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         getActivity().finish();
                     } catch (Exception e) {
+
                     }
                 }
             }

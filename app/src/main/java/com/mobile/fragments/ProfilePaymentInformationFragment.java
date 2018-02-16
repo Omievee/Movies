@@ -210,7 +210,7 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
         String sStreet2 = ProspectUser.street2;
         String sCity = ProspectUser.city;
         String sState = ProspectUser.signup1State;
-        String sZip = ProspectUser.zip;
+        String sZip = ProspectUser.myZip;
         boolean amc3dMarkup = getIntent().getExtras().getBoolean("amc3dMarkup");
         String facebookToken = getIntent().getExtras().getString("fbToken");
 
@@ -220,7 +220,7 @@ public class ProfilePaymentInformationFragment extends Fragment implements Payme
         bStreet2 = ProspectUser.street2;
         bCity = ProspectUser.city;
         bState = ProspectUser.signup1State;
-        bZip = ProspectUser.zip;
+        bZip = ProspectUser.myZip;
 
         if (facebookToken == null) {
             mProgress.setVisibility(View.VISIBLE);

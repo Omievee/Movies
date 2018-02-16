@@ -43,7 +43,7 @@ public class Constants {
     //Address things
     public static final String CITY_AND_STATE = "city_state";
     public static final HashMap<String, String> STATES_AND_STATES_ABREV = new HashMap<>();
-    public static final String ZIP_CODE = "zip";
+    public static final String ZIP_CODE = "myZip";
     public static final String UNITED_STATES_PREFIX = "US";
 
     //Restrictions Things

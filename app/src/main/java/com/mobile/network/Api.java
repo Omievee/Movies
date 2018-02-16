@@ -84,8 +84,8 @@ public interface Api {
     @POST("/rest/v1/prospects")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
 
-    @GET("/rest/v1/register/amc_upgradeability/{zip}")
-    Call<RegistrationPlanResponse> getPlans(@Path("zip") String zip);
+    @GET("/rest/v1/register/amc_upgradeability/{myZip}")
+    Call<RegistrationPlanResponse> getPlans(@Path("myZip") String zip);
 
     /* SignUp */
     @POST("/rest/v1/registration")

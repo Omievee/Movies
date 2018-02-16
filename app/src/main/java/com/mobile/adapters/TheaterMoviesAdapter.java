@@ -191,7 +191,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 currentTime = showtime;
                 HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
                     RadioButton checked = group.findViewById(checkedId);
-                    if (screening.getFormat().equals("2D")) {
+                    if (screening.isApproved()) {
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
@@ -205,17 +205,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 });
 
 
-//                Log.d(TAG, "onBindViewHolder: " + screening.getTitle());
-//                Log.d(TAG, "approved: " + screening.isApproved());
-//                Log.d(TAG, "format: " + screening.getFormat());
-//                Log.d(TAG, "getqualifiers: " + screening.getQualifiers());
-//                Log.d(TAG, "qualifiers approved: " + screening.getQualifiersApproved());
-//                Log.d(TAG, "is3d: " + screening.is3D());
-//                Log.d(TAG, "isimax: " + screening.isImax());
-//                Log.d(TAG, "istheaterEvent: " + screening.isTheatreEvent());
-//                Log.d(TAG, "rpx: " + screening.isRpx());
-//                Log.d(TAG, "2d: " + screening.is2D());
-//                Log.d(TAG, "------------------------------------------: ");
+
 
 
                 if (!screening.isApproved()) {
@@ -227,22 +217,18 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 }
             }
 
-            //TODO:
-            holder.synopsis.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String synopsis = screening.getSynopsis();
-                    String title = screening.getTitle();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(MOVIE, synopsis);
-                    bundle.putString(TITLE, title);
+            holder.synopsis.setOnClickListener(view -> {
+                String synopsis = screening.getSynopsis();
+                String title = screening.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
 
-                    SynopsisFragment fragobj = new SynopsisFragment();
-                    fragobj.setArguments(bundle);
-                    FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-                    fragobj.show(fm, "fr_dialogfragment_synopsis");
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
 
-                }
             });
         }
     }

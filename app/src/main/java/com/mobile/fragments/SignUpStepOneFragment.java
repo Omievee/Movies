@@ -242,12 +242,12 @@ public class SignUpStepOneFragment extends Fragment {
 
 //        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
 //                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
-//                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.zip);
+//                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.myZip);
 //
 //        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
 //            @Override
 //            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
-//                RestClient.getUnauthenticated().getPlans(ProspectUser.zip).enqueue(new RestCallback<RegistrationPlanResponse>() {
+//                RestClient.getUnauthenticated().getPlans(ProspectUser.myZip).enqueue(new RestCallback<RegistrationPlanResponse>() {
 //                    @Override
 //                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
 //                        progress.setVisibility(View.GONE);

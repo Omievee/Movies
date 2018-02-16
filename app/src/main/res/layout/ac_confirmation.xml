@@ -167,7 +167,7 @@
                     android:layout_marginTop="@dimen/margin_half"
                     android:background="@drawable/confirmation_code_confirm"
                     android:padding="@dimen/margin_half"
-                    android:text=" 11204 "
+                    android:text="  "
                     android:textColor="@color/black_text"
                     android:textSize="13sp"
                     android:textStyle="bold"

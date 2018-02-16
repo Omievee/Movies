@@ -182,6 +182,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         }
         HOLDER.TheaterAddressListItem.setText(screening.getTheaterAddress());
         HOLDER.showTimesGrid.removeAllViews();
+
+
         HOLDER.showTimesGrid.setPadding(40, 10, 40, 10);
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
@@ -190,7 +192,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setText(screening.getStartTimes().get(i));
                 showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
-
+//TODO: REMOVE SHOWTIMES ONCE THE TIME HAS PASSED
 //                Calendar now = Calendar.getInstance();
 //
 //                int hour = now.get(Calendar.HOUR);
@@ -206,8 +208,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 //
 //                date = parseDate(hour + ":" + minute + " " + AM_PM);
 //                dateCompareOne = parseDate(screening.getStartTimes().get(i));
-
-
                 showTime.setTextColor(root.getResources().getColor(R.color.white_ish));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(30, 20, 30, 20);
@@ -217,23 +217,17 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                HOLDER.showTimesGrid.setOnCheckedChangeListener((group, checkedId) -> {
-                    RadioButton checked = group.findViewById(checkedId);
-                    if (screening.getFormat().equals("2D")) {
+                if (screening.getFormat().matches("2D")) {
+                    HOLDER.showTimesGrid.setOnCheckedChangeListener((group, checkedId) -> {
+                        RadioButton checked = group.findViewById(checkedId);
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
                         currentTime = checked;
                         String selectedShowTime = currentTime.getText().toString();
                         showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
-                    } else {
-                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
-                    }
-
-                });
-
-
-                if (!screening.isApproved()) {
+                    });
+                } else {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -242,8 +236,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 }
             }
         }
-
-
     }
 
     @Override

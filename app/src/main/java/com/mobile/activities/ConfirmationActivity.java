@@ -92,17 +92,21 @@ public class ConfirmationActivity extends BaseActivity {
 
         Log.d(TAG, "onCreate: " + screeningToken.getZipCodeTicket());
 
+        userData();
+
         if (screeningToken.getConfirmationCode() != null) {
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode();
             thirtyMins.setVisibility(View.GONE);
             String zip = screeningToken.getZipCodeTicket();
+            Log.d(TAG, "onCreate: " + zip);
             confirmationCode.setText("If asked, ");
             confirmedZipText.setText("Here is your redemption code:");
 
+            Log.d(TAG, "onCreate:  " + myZip);
             if (code == null) {
-                confirmationCode.setText(zip);
+                confirmationCode.setText(myZip);
             } else {
                 cancelReservation.setVisibility(View.GONE);
                 confirmationCode.setText(code);

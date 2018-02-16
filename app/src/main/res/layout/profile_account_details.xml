@@ -533,7 +533,8 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="Change"
                             android:textColor="@color/new_red"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:visibility="invisible" />
 
                         <View
                             android:layout_width="fill_parent"
