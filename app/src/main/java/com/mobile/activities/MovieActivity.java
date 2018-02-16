@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -108,7 +109,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     ImageView backButton;
-    TextView THEATER_ADDRESS_LISTITEM;
+    TextView THEATER_ADDRESS_LISTITEM, noTheaters;
     TextView selectedMovieTitle;
     ImageButton selectedMovieSynopsis;
 
@@ -155,7 +156,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
-
+        noTheaters = findViewById(R.id.NoTheaters);
         selectedMoviePoster = findViewById(R.id.SELECTED_MOVIE_IMAGE);
         selectedMovieTitle = findViewById(R.id.SELECTED_MOVIE_TITLE);
         THEATER_ADDRESS_LISTITEM = findViewById(R.id.THEATER_ADDRESS2_LISTITEM);
@@ -178,10 +179,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+
         currentLocationTasks();
 
 
-        //FRESCO:
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
@@ -258,11 +259,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onPause() {
         super.onPause();
-//        try {
-//            unregisterReceiver(mLocationBroadCast);
-//        } catch (IllegalArgumentException is) {
-//            is.printStackTrace();
-//        }
+        try {
+            unregisterReceiver(mLocationBroadCast);
+        } catch (IllegalArgumentException is) {
+            is.printStackTrace();
+        }
     }
 
     @Override
@@ -415,7 +416,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
 
-
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
@@ -433,6 +433,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             //Sort Theaters & have screenings follow suit
                             selectedScreeningsList.addAll(screeningsResponse.getScreenings());
                             theatersList.addAll(screeningsResponse.getTheaters());
+                            Log.d(TAG, "onResponse:  " + theatersList.size());
                             for (int i = 0; i < theatersList.size(); i++) {
                                 Theater t = theatersList.get(i);
                                 int ID = t.getTribuneTheaterId();
@@ -440,7 +441,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
                                     if (screenID == ID) {
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
+
                                     }
+//                                    if (sortedScreeningList.size() == 0) {
+//                                        Log.d(TAG, "onResponse: " + sortedScreeningList.size());
+//                                        noTheaters.setVisibility(View.VISIBLE);
+//                                        selectedTheatersRecyclerView.setVisibility(View.GONE);
+//                                    }
                                 }
                             }
 

@@ -21,13 +21,11 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 86
+        versionCode 87
         versionName "3.0.2A"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-
-
 
     buildTypes {
         release {
@@ -42,14 +40,21 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
     externalNativeBuild {
         cmake {
             path 'CMakeLists.txt'
         }
     }
+    /** THIS FIXES LOLLIPOP DEVICES DO NOT DELETE */
+    dexOptions {
+        preDexLibraries false
+    }
+
     defaultConfig {
         javaCompileOptions {
             annotationProcessorOptions {

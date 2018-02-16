@@ -176,11 +176,21 @@
                 android:layout_marginBottom="95dp"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
-                android:visibility="visible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:listitem="@layout/list_item_theaters_and_showtimes">
 
             </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/NoTheaters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:text="No theaters found"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -191,27 +201,27 @@
         android:id="@+id/button_check_in"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/new_red"
-        android:animateLayoutChanges="true"
-        android:visibility="gone"
-        android:text="@string/fragment_theater_check_in"
         android:layout_marginBottom="56dp"
+        android:animateLayoutChanges="true"
+        android:background="@color/new_red"
+        android:text="@string/fragment_theater_check_in"
+        android:visibility="gone"
         app:layout_anchor="@+id/NESTED_SCROLL"
         app:layout_anchorGravity="bottom" />
 
     <!--<com.github.clans.fab.FloatingActionButton-->
-        <!--android:id="@+id/FAB_LOADCARD"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
-        <!--android:layout_marginEnd="5dp"-->
-        <!--android:animateLayoutChanges="true"-->
-        <!--android:elevation="5dp"-->
-        <!--android:visibility="visible"-->
-        <!--app:fab_colorNormal="@color/new_red"-->
-        <!--app:fab_size="normal"-->
-        <!--app:layout_anchor="@+id/NESTED_SCROLL"-->
-        <!--app:layout_anchorGravity="right | bottom" />-->
+    <!--android:id="@+id/FAB_LOADCARD"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
+    <!--android:layout_marginEnd="5dp"-->
+    <!--android:animateLayoutChanges="true"-->
+    <!--android:elevation="5dp"-->
+    <!--android:visibility="visible"-->
+    <!--app:fab_colorNormal="@color/new_red"-->
+    <!--app:fab_size="normal"-->
+    <!--app:layout_anchor="@+id/NESTED_SCROLL"-->
+    <!--app:layout_anchorGravity="right | bottom" />-->
 
 
     <include
@@ -227,7 +237,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
-
 
 
 </android.support.design.widget.CoordinatorLayout>

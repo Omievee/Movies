@@ -77,24 +77,18 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         Log.d(TAG, "1: " + num);
 
         //ToS & Privacy Links
-        confirmTermsText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String url = "https://www.moviepass.com/content/terms";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
+        confirmTermsText.setOnClickListener(view -> {
+            String url = "https://www.moviepass.com/content/terms";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
         });
 
-        confirmsPricacyText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://www.moviepass.com/content/privacy";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
+        confirmsPricacyText.setOnClickListener(v -> {
+            String url = "https://www.moviepass.com/content/privacy";
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
         });
 
 
@@ -121,8 +115,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     }
 
     @Override
-    public void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {//        confirmCCNum.setText(num);
-        Log.d(TAG, "OnCreditCardEntered: " + ccNum + " " + ccExMonth + " " + ccExYear + " " + ccCVV);
+    public void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV) {
 
     }
 

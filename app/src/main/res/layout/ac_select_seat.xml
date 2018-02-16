@@ -238,6 +238,7 @@
             android:background="@drawable/mpbutton1"
             android:padding="@dimen/margin_standard"
             android:text="Continue"
+            android:textAlignment="center"
             android:textSize="15sp"
             android:textStyle="bold" />
 

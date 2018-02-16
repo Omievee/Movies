@@ -56,7 +56,7 @@ public class ConfirmationActivity extends BaseActivity {
     TextView confirmationCode;
     SimpleDraweeView moviepassCC_QR;
     ImageView loadCardLogo;
-    TextView confirmedZipText;
+    TextView confirmedZipText, thirtyMins;
     protected BottomNavigationView bottomNavigationView;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +66,7 @@ public class ConfirmationActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        thirtyMins = findViewById(R.id.thirtyMins);
 
         progress = findViewById(R.id.confirm_progress);
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
@@ -89,12 +90,13 @@ public class ConfirmationActivity extends BaseActivity {
         cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
         cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
 
-        Log.d(TAG, "onCreate: " + screeningToken.getZipCodeTicket()) ;
+        Log.d(TAG, "onCreate: " + screeningToken.getZipCodeTicket());
 
         if (screeningToken.getConfirmationCode() != null) {
             confirmedZipText.setVisibility(View.VISIBLE);
             confirmationCode.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode();
+            thirtyMins.setVisibility(View.GONE);
             String zip = screeningToken.getZipCodeTicket();
             confirmationCode.setText("If asked, ");
             confirmedZipText.setText("Here is your redemption code:");
@@ -104,7 +106,6 @@ public class ConfirmationActivity extends BaseActivity {
             } else {
                 cancelReservation.setVisibility(View.GONE);
                 confirmationCode.setText(code);
-
             }
             if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
                 Uri qrUrl = Uri.parse(screeningToken.getQrUrl());

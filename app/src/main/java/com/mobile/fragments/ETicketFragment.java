@@ -256,7 +256,7 @@ public class ETicketFragment extends DialogFragment {
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     } catch (Exception e) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     }
@@ -278,7 +278,8 @@ public class ETicketFragment extends DialogFragment {
                     Toast.makeText(getActivity(), R.string.pending_reservation, Toast.LENGTH_LONG).show();
                 } else if (restError != null) {
                     Log.d("resResponse:", "else onfail:" + "onRespnse fail");
-                    Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
+                    //TODO Check why null sometimes?
+//                    Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -239,6 +239,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     public void reserve(Screening screening, String showtime) {
+        Screening screen = screening;
+        String time = showtime;
+
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
         /* Standard Check In */
@@ -252,17 +255,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             }
             TicketInfoRequest ticketInfo = new TicketInfoRequest(mPerformReq);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screening, checkInRequest, showtime);
+            reservationRequest(screen, checkInRequest, time);
 
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
             progress.setVisibility(View.GONE);
-            showEticketConfirmation(screening, showtime);
+            showEticketConfirmation(screen, time);
 
         } else {
+
             progress.setVisibility(View.GONE);
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
-            intent.putExtra(SCREENING, Parcels.wrap(screening));
-            intent.putExtra(SHOWTIME, showtime);
+            intent.putExtra(SCREENING, Parcels.wrap(screen));
+            intent.putExtra(SHOWTIME, time);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
             startActivity(intent);
         }

@@ -37,7 +37,7 @@
                 android:id="@+id/CONFIRMED_THEATER"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_half"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="[ MOVIE THEATER ]"
@@ -49,7 +49,7 @@
                 android:id="@+id/CONFIRMED_SHOWTIME"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_half"
                 android:text="[ 12:00 PM ]"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
@@ -135,6 +135,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/thirtyMins"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingEnd="@dimen/quadruple_margin_standard"

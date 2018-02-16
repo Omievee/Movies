@@ -66,6 +66,8 @@
                     android:id="@+id/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
                     android:paddingStart="@dimen/margin_half"
                     android:text="Account Details"
                     android:textColor="@color/white"
@@ -313,9 +315,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/SignOut"
-                android:paddingStart="@dimen/margin_standard"
                 android:layout_gravity="bottom"
-                android:padding="@dimen/margin_half" />
+                android:padding="@dimen/margin_half"
+                android:paddingStart="@dimen/margin_standard" />
 
         </LinearLayout>
 

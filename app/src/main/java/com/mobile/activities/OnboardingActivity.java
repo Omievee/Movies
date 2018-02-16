@@ -2,12 +2,14 @@ package com.mobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.Constants;
 import com.mobile.fragments.NearMe;
 import com.moviepass.R;
 
@@ -156,9 +159,10 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
+            Log.d(Constants.TAG, "onCreateView: " );
             TextView textView = rootView.findViewById(R.id.section_label);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);

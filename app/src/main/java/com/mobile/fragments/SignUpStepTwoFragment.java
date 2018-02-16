@@ -205,15 +205,12 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     }
 
-//   signup2SameAddressSwitch.isChecked()
-
-
     public boolean infoIsGood() {
         if (signup2CCNum.length() == 16
                 && !signup2CCExp.getText().toString().isEmpty()
                 && signup2CCExp.getText().toString().length() == 5
                 && !signup2CC_CVV.getText().toString().isEmpty()
-                && signup2CC_CVV.getText().toString().length() == 3 || signup2CC_CVV.getText().toString().length() == 4) {
+                && signup2CC_CVV.getText().toString().length() <= 4) {
             return true;
 
             //TODO: RETURN AND CHECK WHY NULL?
@@ -276,7 +273,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 
                 signup2CCNum.setText(scanResult.getRedactedCardNumber());
-
                 if (scanResult.isExpiryValid()) {
                     String month = String.valueOf(scanResult.expiryMonth);
                     String year = String.valueOf(scanResult.expiryYear);
@@ -288,17 +284,14 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     YEAR = year.substring(2, 4);
                     signup2CCExp.setText(MONTH + "/" + YEAR);
                     signup2CC_CVV.setText(scanResult.cvv);
+                    signup2NextButton.setOnClickListener(view -> {
+                        if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") || signup2CCName.equals("") || signup2CCExp.equals("")
+                                || signup2CCNum.getText().length() < 16 || signup2CC_CVV.getText().length() < 3 || signup2CCExp.getText().length() < 5) {
 
-                    signup2NextButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") || signup2CCName.equals("") || signup2CCExp.equals("")) {
-                                Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
-                            } else {
-                                signup2NextButton.setEnabled(true);
-                                ((SignUpActivity) getActivity()).setPage();
-                            }
-
+                            Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+                        } else {
+                            signup2NextButton.setEnabled(true);
+                            ((SignUpActivity) getActivity()).setPage();
                         }
                     });
                 }

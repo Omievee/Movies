@@ -45,17 +45,12 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  */
 
 public class SearchFragment extends Fragment {
-
-    public static final String MOVIES = "movies";
     MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
     ArrayList<Movie> ALLMOVIES;
-    MoviesFragment moviesFrag;
     View progress;
     ArrayList<Movie> noDuplicates;
-    ArrayList<Movie> third;
-    int ID, ID2;
 
     public SearchFragment() {
     }
@@ -65,8 +60,8 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
-
         progress = rootView.findViewById(R.id.progress);
+
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
         return rootView;
@@ -114,15 +109,10 @@ public class SearchFragment extends Fragment {
                 if (response.isSuccessful() && response != null) {
                     progress.setVisibility(View.GONE);
                     ALLMOVIES.clear();
-
-
                     ALLMOVIES.addAll(info.getFeatured());
                     ALLMOVIES.addAll(info.getNewReleases());
                     ALLMOVIES.addAll(info.getNowPlaying());
                     ALLMOVIES.addAll(info.getTopBoxOffice());
-                    for (int i = 0; i < ALLMOVIES.size(); i++) {
-                        ID = ALLMOVIES.get(i).getId();
-                    }
 
                 }
             }
