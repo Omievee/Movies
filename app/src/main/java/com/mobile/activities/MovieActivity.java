@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -177,13 +178,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-
         currentLocationTasks();
 
 
         //FRESCO:
-//        ButterKnife.bind(this, selectedMoviePoster);
-
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
@@ -219,40 +217,36 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
-
         if (movie.getSynopsis().equals("")) {
             selectedSynopsis.setVisibility(View.GONE);
             selectedMoviePoster.setClickable(false);
         }
-        selectedSynopsis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String synopsis = movie.getSynopsis();
-                String title = movie.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
-            }
+        selectedSynopsis.setOnClickListener(view -> {
+            String synopsis = movie.getSynopsis();
+            String title = movie.getTitle();
+            Bundle bundle = new Bundle();
+            bundle.putString(MOVIE, synopsis);
+            bundle.putString(TITLE, title);
+
+            SynopsisFragment fragobj = new SynopsisFragment();
+            fragobj.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fragobj.show(fm, "fr_dialogfragment_synopsis");
         });
-        selectedMoviePoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String synopsis = movie.getSynopsis();
-                String title = movie.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
-            }
+        selectedMoviePoster.setOnClickListener(v -> {
+            String synopsis = movie.getSynopsis();
+            String title = movie.getTitle();
+            Bundle bundle = new Bundle();
+            bundle.putString(MOVIE, synopsis);
+            bundle.putString(TITLE, title);
+
+            SynopsisFragment fragobj = new SynopsisFragment();
+            fragobj.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            fragobj.show(fm, "fr_dialogfragment_synopsis");
+
         });
 
         filmRating.setText("Rated: " + movie.getRating());
@@ -264,13 +258,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onPause() {
         super.onPause();
-        overridePendingTransition(0, 0);
-
-        try {
-            unregisterReceiver(mLocationBroadCast);
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
+//        try {
+//            unregisterReceiver(mLocationBroadCast);
+//        } catch (IllegalArgumentException is) {
+//            is.printStackTrace();
+//        }
     }
 
     @Override
@@ -422,13 +414,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         finish();
     }
 
-//    private void showVerification(ScreeningToken token) {
-//        ProgressBar.setVisibility(View.GONE);
-//        Intent confirmationIntent = new Intent(MovieActivity.this, VerificationActivity.class);
-//        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-//        startActivity(confirmationIntent);
-//        finish();
-//    }
+
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
@@ -590,7 +576,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         mLocationAcquired = false;
         boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
         if (!enabled) {
-//            showDialogGPS();
         } else {
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
             onLocationChanged(location);
@@ -599,7 +584,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             }
         }
     }
-
 
     private void showActivateCardDialog(final Screening screening, final String showtime) {
         View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
@@ -614,77 +598,69 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         alert.setTitle(getString(R.string.dialog_activate_card_header));
         alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, int which) {
-                String digits = editText.getText().toString();
-                dialog.dismiss();
+        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            String digits = editText.getText().toString();
+            dialog.dismiss();
 
-                if (digits.length() == 4) {
-                    CardActivationRequest request = new CardActivationRequest(digits);
-                    ProgressBar.setVisibility(View.VISIBLE);
+            if (digits.length() == 4) {
+                CardActivationRequest request = new CardActivationRequest(digits);
+                ProgressBar.setVisibility(View.VISIBLE);
+                RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
+                    @Override
+                    public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                        CardActivationResponse cardActivationResponse = response.body();
+                        ProgressBar.setVisibility(View.GONE);
 
-                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
-                        @Override
-                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-                            CardActivationResponse cardActivationResponse = response.body();
-                            ProgressBar.setVisibility(View.GONE);
-
-                            if (cardActivationResponse != null && response.isSuccessful()) {
-                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
-                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-
-                                reserve(screening, showtime);
-                            } else {
-                                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
-                            }
+                        if (cardActivationResponse != null && response.isSuccessful()) {
+                            String cardActivationResponseMessage = cardActivationResponse.getMessage();
+                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+                            reserve(screening, showtime);
+                        } else {
+                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-                            ProgressBar.setVisibility(View.GONE);
-                            showActivateCardDialog(screening, showtime);
-                        }
-                    });
-                } else {
-                    Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
-                }
+                    @Override
+                    public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                        ProgressBar.setVisibility(View.GONE);
+                        showActivateCardDialog(screening, showtime);
+                    }
+                });
+            } else {
+                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
             }
         });
-        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, int which) {
-                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
+        alert.setNegativeButton("Activate Later", (dialog, which) -> {
+            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+            dialog.dismiss();
         });
         alert.show();
     }
 
 
-    public void isFirstTime() {
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-            @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                if (response.isSuccessful() && response != null) {
-                    historyResponse = response.body();
-                    if (historyResponse.getReservations().size() == 0) {
-
-                        isfirst = true;
-                    } else {
-                        isfirst = false;
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-
-            }
-        });
-
-    }
+//    public void isFirstTime() {
+//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+//            @Override
+//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+//                if (response.isSuccessful() && response != null) {
+//                    historyResponse = response.body();
+//                    if (historyResponse.getReservations().size() == 0) {
+//
+//                        isfirst = true;
+//                    } else {
+//                        isfirst = false;
+//                    }
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+//
+//            }
+//        });
+//
+//    }
 
 
 }

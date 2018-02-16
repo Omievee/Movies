@@ -21,8 +21,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 84
-        versionName "3.0.1A"
+        versionCode 86
+        versionName "3.0.2A"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

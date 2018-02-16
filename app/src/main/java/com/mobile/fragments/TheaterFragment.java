@@ -195,10 +195,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         buttonCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+                Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
+                if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening1, time);
-                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
+                } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
+                    reserve(screening1, time);
+                } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
                     showActivateCardDialog(screening1, time);
                 } else {
                     progress.setVisibility(View.VISIBLE);
@@ -238,19 +241,23 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void reserve(Screening screening, String showtime) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
-
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
         //PerformanceInfo
         checkProviderDoPerformanceInfoRequest(screening, showtime);
 
         if (screening.getProvider().ticketType.matches("STANDARD")) {
+            if (isPendingSubscription()) {
+                showActivateCardDialog(screening, showtime);
+            }
             TicketInfoRequest ticketInfo = new TicketInfoRequest(mPerformReq);
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
+
         } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
             progress.setVisibility(View.GONE);
             showEticketConfirmation(screening, showtime);
+
         } else {
             progress.setVisibility(View.GONE);
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
@@ -296,9 +303,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         if (jObjError.getString("message").equals("You do not have an active card")) {
                             Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(getContext(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);

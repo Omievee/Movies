@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +79,7 @@ public class SelectSeatActivity extends BaseActivity {
     ImageView mMoviePoster;
     ImageView onBackButton;
     Screening screeningObject;
+    Theater theaterObject;
     TextView mSelectedMovieTitle;
     TextView mMovieRunTime;
     TextView mTheaterSelected;
@@ -106,7 +108,8 @@ public class SelectSeatActivity extends BaseActivity {
         Intent intent = getIntent();
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
-        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
+
+//        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
 
         coordinatorLayout = findViewById(R.id.mCoordinator);
         mSelectedMovieTitle = findViewById(R.id.SEATCHART_MOVIETITLE);
@@ -134,6 +137,10 @@ public class SelectSeatActivity extends BaseActivity {
 
         mSelectedMovieTitle.setText(screeningObject.getTitle());
         mTheaterSelected.setText(screeningObject.getTheaterName());
+
+        Log.d(TAG, "theater: " + screeningObject.getTheaterName());
+        Log.d(TAG, "title: " + screeningObject.getTitle());
+
         mScreeningShowtime.setText(selectedShowTime);
 
 
@@ -495,14 +502,12 @@ public class SelectSeatActivity extends BaseActivity {
     public void onBackPressed() {
         if (getIntent().getParcelableExtra(THEATER) != null) {
             Theater theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
-
             Intent intent = new Intent(SelectSeatActivity.this, TheaterActivity.class);
             intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(theater));
             startActivity(intent);
             finish();
         } else if (getIntent().getParcelableExtra(MOVIE) != null) {
             Movie movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
-
             Intent intent = new Intent(SelectSeatActivity.this, MovieActivity.class);
             intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(movie));
             startActivity(intent);

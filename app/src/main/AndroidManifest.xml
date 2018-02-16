@@ -17,6 +17,12 @@
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
     <uses-feature
         android:name="android.hardware.fingerprint"
         android:required="false" />

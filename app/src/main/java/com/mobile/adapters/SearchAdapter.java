@@ -50,7 +50,6 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
     public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
         holder.title.setText(suggestion.getTitle());
         holder.rating.setText(suggestion.getRating());
-
         int t = suggestion.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
@@ -90,15 +89,10 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
 
         holder.image.setController(controller);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(Constants.TAG, "onClick: " + position + suggestion.getTitle());
-                Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
-                movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
-                holder.itemView.getContext().startActivity(movieIntent);
-
-            }
+        holder.cardView.setOnClickListener(view -> {
+            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
+            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
+            holder.itemView.getContext().startActivity(movieIntent);
         });
 
 

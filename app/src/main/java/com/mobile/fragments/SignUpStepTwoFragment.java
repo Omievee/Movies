@@ -194,7 +194,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
                 String ccCVV = signup2CC_CVV.getText().toString();
                 creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
-                ((SignUpActivity) getActivity()).setPage();
+                Log.d(TAG, "onViewCreated: " + ccNum + ccEx + ccEx2 + ccCVV);
+                if (((SignUpActivity) getActivity()) != null) {
+                    ((SignUpActivity) getActivity()).setPage();
+                }
             } else {
                 makeSnackbar("Fill out all required fields.");
             }
@@ -208,7 +211,9 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public boolean infoIsGood() {
         if (signup2CCNum.length() == 16
                 && !signup2CCExp.getText().toString().isEmpty()
-                && !signup2CC_CVV.getText().toString().isEmpty()) {
+                && signup2CCExp.getText().toString().length() == 5
+                && !signup2CC_CVV.getText().toString().isEmpty()
+                && signup2CC_CVV.getText().toString().length() == 3 || signup2CC_CVV.getText().toString().length() == 4) {
             return true;
 
             //TODO: RETURN AND CHECK WHY NULL?

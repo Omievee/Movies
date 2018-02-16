@@ -56,20 +56,15 @@ public class OnboardingActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
         indicators = new ImageView[]{zero, one, two, three, four};
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
 
-        nearMe.setOnClickListener(new View.OnClickListener() {
-            @Override
-
-            public void onClick(View v) {
-                NearMe fragobj = new NearMe();
-                FragmentManager fm = getSupportFragmentManager();
-                fragobj.show(fm, "fr_nearme");
-            }
+        nearMe.setOnClickListener(v -> {
+            NearMe fragobj = new NearMe();
+            FragmentManager fm = getSupportFragmentManager();
+            fragobj.show(fm, "fr_nearme");
         });
 
 
@@ -106,44 +101,32 @@ public class OnboardingActivity extends AppCompatActivity {
 
         });
 
-        onboardingSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OnboardingActivity.this, LogInActivity.class);
-                startActivity(intent);
-            }
+        onboardingSignIn.setOnClickListener(view -> {
+            Intent intent = new Intent(OnboardingActivity.this, LogInActivity.class);
+            startActivity(intent);
         });
 
-        onboardingJoinNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-                startActivity(intent);
-            }
+        onboardingJoinNow.setOnClickListener(view -> {
+            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+            startActivity(intent);
         });
     }
 
+//
 //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_onboarding, menu);
-//        return true;
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
 //    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public static class PlaceholderFragment extends Fragment {
 
@@ -173,8 +156,7 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
             TextView textView = rootView.findViewById(R.id.section_label);

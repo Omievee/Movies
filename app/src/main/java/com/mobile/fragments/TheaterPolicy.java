@@ -41,7 +41,6 @@ public class TheaterPolicy extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fr_theaterpolicy, container);
-
     }
 
     @Override
@@ -54,11 +53,8 @@ public class TheaterPolicy extends BottomSheetDialogFragment {
         theaterName.setText(theaterText);
 
 
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        close.setOnClickListener(v -> {
 
-            }
         });
     }
 }

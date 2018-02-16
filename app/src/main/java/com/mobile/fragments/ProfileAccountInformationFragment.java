@@ -198,46 +198,35 @@ public class ProfileAccountInformationFragment extends Fragment {
         });
 
 
-        userNewAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callPlaceAutocompleteActivityIntent();
+        userNewAddress.setOnClickListener(v -> callPlaceAutocompleteActivityIntent());
+
+        userEditShipping.setOnClickListener(v -> {
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                    .build();
+
+            try {
+                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+                startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
+            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+                // TODO: Handle the error.
             }
         });
 
-        userEditShipping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
-                        .build();
+        userBillingChange.setOnClickListener(v -> {
 
-                try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
-                    startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
-                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
+            userOldBilling.setVisibility(View.GONE);
+            newBillingData.setVisibility(View.VISIBLE);
+            newBillingData2.setVisibility(View.VISIBLE);
+
+            userScanCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    creditCardClick();
+
                 }
-            }
-        });
+            });
 
-        userBillingChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                userOldBilling.setVisibility(View.GONE);
-                newBillingData.setVisibility(View.VISIBLE);
-                newBillingData2.setVisibility(View.VISIBLE);
-
-                userScanCard.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        creditCardClick();
-
-                    }
-                });
-
-            }
         });
 
         billingClick.setOnClickListener(new View.OnClickListener() {
@@ -347,6 +336,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     private void callPlaceAutocompleteActivityIntent() {
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .setCountry("US")
                 .build();
 
         try {
@@ -391,21 +381,24 @@ public class ProfileAccountInformationFragment extends Fragment {
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
-
                 for (int i = 0; i < localList.size(); i++) {
-                    userAddress.setText(localList.get(0));
-                    userCity.setText(localList.get(1).trim());
-
-                    String State = localList.get(2).substring(0, 3).trim();
-                    String zip = localList.get(2).substring(4, 9);
-                    userState.setText(State);
-                    userZip.setText(zip);
-
+                    if (localList.get(2).trim().length() < 8) {
+                        Toast.makeText(getActivity(), "Invalid", Toast.LENGTH_SHORT).show();
+                    } else {
+                        userAddress.setText(localList.get(0));
+                        userCity.setText(localList.get(1).trim());
+                        String State = localList.get(2).substring(0, 3).trim();
+                        String zip = localList.get(2).substring(4, 9);
+                        userState.setText(State);
+                        userZip.setText(zip);
+                    }
                 }
                 saveChanges();
 
             }
-        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
+        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE)
+
+        {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
 

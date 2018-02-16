@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -84,6 +87,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.mobile.Constants;
+import com.mobile.UserLocationManagerFused;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
@@ -110,10 +114,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.LOCATION_SERVICE;
 
 
 public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener,
-        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin> {
+        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
@@ -135,7 +140,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private String mLastUpdateTime;
     private Boolean mRequestingLocationUpdates;
     double lat, lon;
-
+    LocationListener locaListener;
+    LocationManager locManager;
     GoogleMap mMap;
     MapView mMapView;
 
@@ -180,6 +186,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         mSettingsClient = LocationServices.getSettingsClient(getActivity());
 
+
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
 
@@ -221,6 +228,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
         checkPermissions();
 
+
         return rootView;
     }
 
@@ -254,6 +262,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
 
         });
+
+
     }
 
     @Override
@@ -352,8 +362,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             //Onclick for individual Markers - adjusts recycler to that specific theater.
             CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(15).build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
-            theatersMapViewAdapter.notifyDataSetChanged();
             theatersMapViewRecycler.smoothScrollToPosition(theaterSelected);
+            theatersListRecyclerview.getRecycledViewPool().clear();
+            theatersMapViewAdapter.notifyDataSetChanged();
+
             marker.showInfoWindow();
 
             return true;
@@ -380,6 +392,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onPause() {
         super.onPause();
+
 //        theatersMapViewRecycler.setVisibility(View.INVISIBLE);
 //        mClusterManager.clearItems();
 //        mClusterManager.cluster();
@@ -389,10 +402,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
-        }
+//        if (mClusterManager != null) {
+//            mClusterManager.clearItems();
+//            mClusterManager.cluster();
+//        }
     }
 
     @Override
@@ -425,7 +438,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         if (mCurrentLocation != null) {
             if (theatersMapViewRecycler.getVisibility() == View.VISIBLE) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH24:mm:ss");
-
                 try {
                     Date now = new Date();
                     Date lastUpdate = simpleDateFormat.parse(mLastUpdateTime);
@@ -439,7 +451,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                             mClusterManager.clearItems();
                             mClusterManager.cluster();
                         }
-
                         loadTheaters(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
                     }
                 } catch (Exception e) {
@@ -527,6 +538,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12);
         mMap.animateCamera(cameraUpdate);
         loadTheaters(lat, lon);
+        theatersListRecyclerview.getRecycledViewPool().clear();
+        theatersMapViewAdapter.notifyDataSetChanged();
         myloc.setVisibility(View.GONE);
     }
 
@@ -559,6 +572,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        theatersListRecyclerview.getRecycledViewPool().clear();
+        theatersMapViewAdapter.notifyDataSetChanged();
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
@@ -569,21 +584,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     mRequestingLocationUpdates = true;
                     getMyLocation();
                 });
-
             }
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult");
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
-                Log.i(TAG, "User interaction was cancelled.");
                 Toast.makeText(getActivity(), "You must grant permission to use MoviePass.", Toast.LENGTH_SHORT).show();
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (mRequestingLocationUpdates) {
-                    Log.i(TAG, "Permission granted, updates requested, starting location updates");
                     startLocationUpdates();
                 }
             } else {
@@ -707,6 +718,26 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     }
 
                 });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {

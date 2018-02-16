@@ -65,19 +65,18 @@ public class TheaterActivity extends BaseActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.theater_container, theaterFrag).commit();
 
-
         bottomNavigationView = findViewById(R.id.CINEAM_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras != null){
-               extras.get(THEATER);
+            if (extras != null) {
+                extras.get(THEATER);
             }
             theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
+            Log.d(Constants.TAG, "onCreate: " + theater);
         }
-
 
         theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
         theaterSelectedName.setText(theater.getName());

@@ -73,7 +73,6 @@ public class PastReservations extends Fragment {
         historyList = new ArrayList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
         progress = rootview.findViewById(R.id.progress);
-//        historyGrid = rootview.findViewById(R.id.gridHistory);
 
         return rootview;
     }
@@ -89,8 +88,6 @@ public class PastReservations extends Fragment {
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
-
-
         loadHIstory();
     }
 
@@ -112,9 +109,7 @@ public class PastReservations extends Fragment {
                         historyList.addAll(historyResponse.getReservations());
                         historyRecycler.setVisibility(View.VISIBLE);
                         noMovies.setVisibility(View.GONE);
-
                     }
-
                     if (historyAdapter != null) {
                         historyRecycler.getRecycledViewPool().clear();
                         historyAdapter.notifyDataSetChanged();
@@ -135,7 +130,7 @@ public class PastReservations extends Fragment {
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 120);
+        int noOfColumns = (int) (dpWidth / 110);
         return noOfColumns;
     }
 

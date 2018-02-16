@@ -138,16 +138,9 @@ public class ETicketFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         this.getActivity();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        dismiss();
-
-    }
 
     @Override
     public void dismiss() {
@@ -268,13 +261,11 @@ public class ETicketFragment extends DialogFragment {
                         progressWheel.setVisibility(View.GONE);
                     }
                 }
-
             }
 
             @Override
             public void failure(RestError restError) {
                 progressWheel.setVisibility(View.GONE);
-
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
