@@ -30,6 +30,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.facebook.GraphRequest.TAG;
 
 /**
  * Created by o_vicarra on 2/6/18.
@@ -103,6 +105,7 @@ public class SearchFragment extends Fragment {
     //
     public void loadResults() {
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 MoviesResponse info = response.body();
@@ -113,7 +116,14 @@ public class SearchFragment extends Fragment {
                     ALLMOVIES.addAll(info.getNewReleases());
                     ALLMOVIES.addAll(info.getNowPlaying());
                     ALLMOVIES.addAll(info.getTopBoxOffice());
-
+                    HashMap<Integer, Movie> movieHashMap = new HashMap<>();
+                    for(Movie movie : ALLMOVIES){
+                        movieHashMap.put(movie.getId(),movie);
+                    }
+                    ALLMOVIES.clear();
+                    for(Movie movie : movieHashMap.values()){
+                        ALLMOVIES.add(movie);
+                    }
                 }
             }
 
@@ -125,6 +135,5 @@ public class SearchFragment extends Fragment {
             }
         });
     }
-
 
 }

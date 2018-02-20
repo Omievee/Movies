@@ -137,13 +137,22 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults results = new FilterResults();
                 String movieSearch = charSequence.toString();
+                boolean isMovieDuplicated = false;
                 if (movieSearch.equals("")) {
                     suggestions = suggestions_clone;
                 } else {
                     suggestions = new ArrayList<>();
                     for (Movie movieTitle : suggestions_clone)
-                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase()))
-                            suggestions.add(movieTitle);
+                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
+                            for(Movie movieDuplicate : suggestions){
+                                if(movieDuplicate.getId() == movieTitle.getId()){
+                                    isMovieDuplicated = true;
+                                }
+
+                            }
+                            if(isMovieDuplicated == false)
+                                suggestions.add(movieTitle);
+                        }
                 }
                 results.values = suggestions;
 

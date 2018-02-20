@@ -132,7 +132,7 @@ public class MoviesActivity extends BaseActivity {
                 alert.show();
             } else {
                 if (itemId == R.id.action_profile) {
-                    item.setIcon(getDrawable(R.drawable.profilenavred));
+                   // item.setIcon(getDrawable(R.drawable.profilenavred));
                     if (UserPreferences.getUserId() == 0) {
                         Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
                         startActivity(intent);
