@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.model.E_Ticket;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -43,32 +44,30 @@ public class PendingReservationFragment extends Fragment {
     public static final String TAG = "found";
     int reservation;
     View progress;
-    TextView pendingReservationTitle, confirmedText, pendingReservationTheater, pendingReservationTime, pendingReservationCode, message, ifAsked;
+    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip;
     FrameLayout frame;
     Button pendingResrvationCANCELBUTTON;
-    ImageView pendingPosterImage;
-    LinearLayout noPending;
-    RelativeLayout pendingLayout;
+    RelativeLayout pendingData, StandardTicket, ETicket;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_pendingreservation, container, false);
+        View rootView = inflater.inflate(R.layout.fr_pending, container, false);
         ButterKnife.bind(this, rootView);
 
 
         progress = rootView.findViewById(R.id.progress);
-        pendingReservationTitle = rootView.findViewById(R.id.PendingRes_Title);
-        pendingReservationTheater = rootView.findViewById(R.id.PendingRes_Location);
-        pendingReservationCode = rootView.findViewById(R.id.PendingRes_Code);
-        pendingReservationTime = rootView.findViewById(R.id.PendingRes_Time);
-        confirmedText = rootView.findViewById(R.id.PendingConrimCode);
-        pendingPosterImage = rootView.findViewById(R.id.PendingRes_IMage);
+        noCurrentRes = rootView.findViewById(R.id.NO_Current_Res);
+        pendingTitle = rootView.findViewById(R.id.PendingRes_Title);
+        pendingLocal = rootView.findViewById(R.id.PendingRes_Location);
+        pendingTime = rootView.findViewById(R.id.PendingRes_Time);
+        pendingSeat = rootView.findViewById(R.id.PendingRes_Seat);
+        StandardTicket = rootView.findViewById(R.id.STANDARD_TICKET);
+        ETicket = rootView.findViewById(R.id.E_TICKET);
+        confirmCode = rootView.findViewById(R.id.ConfirmCode);
         pendingResrvationCANCELBUTTON = rootView.findViewById(R.id.PEndingRes_Cancel);
-        pendingLayout = rootView.findViewById(R.id.Pending_Data);
-        noPending = rootView.findViewById(R.id.NoPending);
-        message = rootView.findViewById(R.id.CONFIRMED_READY_MESSAGE);
-        ifAsked = rootView.findViewById(R.id.ifAsked);
-        frame = rootView.findViewById(R.id.Frame);
+        zip = rootView.findViewById(R.id.PendingZip);
+        pendingData = rootView.findViewById(R.id.PENDING_DATA);
+
         return rootView;
     }
 
@@ -76,12 +75,9 @@ public class PendingReservationFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         progress.setVisibility(View.VISIBLE);
-        pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
         pendingResrvationCANCELBUTTON.setOnClickListener(v -> cancelPending());
 
         getPendingReservation();
-
-
     }
 
 
@@ -92,50 +88,44 @@ public class PendingReservationFragment extends Fragment {
                 if (response.body() != null && response.isSuccessful()) {
                     ActiveReservationResponse active = response.body();
                     progress.setVisibility(View.GONE);
-                    if (active.getTitle() != null && active.getTheater() != null && active.getShowtime() != null) {
-                        pendingLayout.setVisibility(View.VISIBLE);
-                        noPending.setVisibility(View.GONE);
-                        pendingResrvationCANCELBUTTON.setVisibility(View.VISIBLE);
-                        pendingLayout.setVisibility(View.VISIBLE);
 
 
-                        Log.d(TAG, "onResponse: " + active.getE_ticket());
+                    if (active.getTitle() != null && active.getTheater() != null) {
+                        pendingData.setVisibility(View.VISIBLE);
 
-                        pendingReservationTitle.setText(active.getTitle());
-                        pendingReservationTheater.setText(active.getTheater());
                         String reservationTime = active.getShowtime().substring(11, 16);
-
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
                         try {
                             Date date = sdf.parse(reservationTime);
-                            pendingReservationTime.setText(sdf.format(date));
+                            pendingTime.setText(sdf.format(date));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
+                        pendingTitle.setText(active.getTitle());
+                        pendingLocal.setText(active.getTheater());
 
-                        if (active.getRedemption_code() != null) {
-                            message.setText("Here is your redemption code");
-                            ifAsked.setVisibility(View.GONE);
-                            pendingReservationCode.setText(active.getRedemption_code());
-                            frame.setVisibility(View.GONE);
-                            pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
+                        if (!active.getE_ticket().getRedemption_code().equals("")) {
+                            ETicket.setVisibility(View.VISIBLE);
+
+                            confirmCode.setText(active.getE_ticket().getRedemption_code());
+
+                            if (!active.getE_ticket().getSeat().equals("")) {
+                                pendingSeat.setVisibility(View.VISIBLE);
+                                pendingSeat.setText("Seat: " + active.getE_ticket().getSeat());
+                            }
+
+
                         } else {
-                            message.setText("You can now use your MoviePass card to purchase your ticket");
-                            pendingReservationCode.setText(active.getZip());
+                            StandardTicket.setVisibility(View.VISIBLE);
+                            zip.setText(active.getZip());
                         }
-
                     } else {
-                        pendingLayout.setVisibility(View.GONE);
-                        noPending.setVisibility(View.VISIBLE);
-                        pendingResrvationCANCELBUTTON.setVisibility(View.GONE);
+                        noCurrentRes.setVisibility(View.VISIBLE);
                     }
-                    reservation = active.getReservation().getId();
-                } else {
-                    progress.setVisibility(View.GONE);
-                    pendingLayout.setVisibility(View.GONE);
-                    noPending.setVisibility(View.VISIBLE);
-                }
 
+                } else {
+                    Log.d(TAG, "else: ");
+                }
             }
 
             @Override

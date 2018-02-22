@@ -456,8 +456,8 @@ public class ProfileAccountInformationFragment extends Fragment {
         userSave.setOnClickListener(v -> {
 
             progress.setVisibility(View.VISIBLE);
-            updateShippingAddress();
-//                updateCCData();
+//            updateShippingAddress();
+                updateCCData();
 
         });
     }

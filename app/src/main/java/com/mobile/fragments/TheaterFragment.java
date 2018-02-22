@@ -192,21 +192,19 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final Screening screening1 = screening;
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
-        buttonCheckIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
-                if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
-                    progress.setVisibility(View.VISIBLE);
-                    reserve(screening1, time);
-                } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
-                    reserve(screening1, time);
-                } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
-                    showActivateCardDialog(screening1, time);
-                } else {
-                    progress.setVisibility(View.VISIBLE);
-                    reserve(screening1, time);
-                }
+        buttonCheckIn.setOnClickListener(view -> {
+
+            Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
+            if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
+                progress.setVisibility(View.VISIBLE);
+                reserve(screening1, time);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
+                reserve(screening1, time);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
+                showActivateCardDialog(screening1, time);
+            } else {
+                progress.setVisibility(View.VISIBLE);
+                reserve(screening1, time);
             }
         });
     }

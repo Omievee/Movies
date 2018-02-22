@@ -18,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.network.RestClient;
@@ -238,6 +239,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                     for (int i = 0; i < addressList.size(); i++) {
                         myZip = addressList.get(2);
+                        Log.d(Constants.TAG, "onResponse: " + myZip);
                     }
                 }
             }

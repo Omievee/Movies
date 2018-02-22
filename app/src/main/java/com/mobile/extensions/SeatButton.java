@@ -61,7 +61,6 @@ public class SeatButton extends AppCompatImageButton {
     }
 
     public void setSeatSelected(Boolean selected) {
-//        mSelected = selected;
         if (selected) {
             switch (mSeatInfo.getSeatType()) {
                 case SeatTypeCompanion:

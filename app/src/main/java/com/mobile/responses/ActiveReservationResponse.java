@@ -1,5 +1,6 @@
 package com.mobile.responses;
 
+import com.mobile.model.E_Ticket;
 import com.mobile.model.Reservation;
 
 /**
@@ -14,39 +15,25 @@ public class ActiveReservationResponse {
     String seat;
     String redemption_code;
     String showtime;
+    E_Ticket e_ticket;
+    String zip;
 
-    public String getE_ticket() {
+
+    public E_Ticket getE_ticket() {
         return e_ticket;
     }
-
-    String e_ticket;
-
 
 
     public String getZip() {
         return zip;
     }
 
-    String zip;
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    Reservation reservation;
-
 
     public String getTheater() {
         return theater;
     }
 
-    public String getSeat() {
-        return seat;
-    }
 
-    public String getRedemption_code() {
-        return redemption_code;
-    }
 
     public String getShowtime() {
         return showtime;

@@ -180,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/margin_standard"
-                    android:text="Cancel or Change Reservation"
+                    android:text="Cancel/Change Reservation"
                     android:textColor="@color/new_red"
                     android:textSize="15sp" />
 

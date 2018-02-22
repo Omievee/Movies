@@ -69,6 +69,7 @@ public class SeatInfo implements Comparable {
     }
 
     public SeatType getSeatType() {
+
         SeatType seatType = SeatType.SeatTypeUnknown;
 
         if (type.toLowerCase().matches("canreserve")) {
