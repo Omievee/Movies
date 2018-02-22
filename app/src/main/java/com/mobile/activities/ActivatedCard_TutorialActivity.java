@@ -23,8 +23,8 @@ import com.moviepass.R;
 public class ActivatedCard_TutorialActivity extends BaseActivity {
 
 
-    ImageView zero, one, two, three, four, ccImage, arrow;
-    TextView done, seehow, topNumber;
+    ImageView zero, one, two, three, four;
+    TextView done;
     ViewPager tutorialViewPager;
 
     int page = 0;
@@ -46,21 +46,13 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         three = findViewById(R.id.tutorial_indicator_3);
         four = findViewById(R.id.tutorial_indicator_4);
 
-
         dots = findViewById(R.id.dots);
-
         done = findViewById(R.id.TUTORIAL_DONE);
         tutorialViewPager = findViewById(R.id.tutorial_container);
         tutorialAdapter = new tutorialAdapter(getSupportFragmentManager());
-//        ccImage = findViewById(R.id.tutorial_first);
         tutorialViewPager.setAdapter(tutorialAdapter);
-        seehow = findViewById(R.id.tutorial_firstSwipe);
         indicators = new ImageView[]{one, two, three, four};
         activityLayout = findViewById(R.id.TUTORIAL_MAIN_ACTIVITY);
-        arrow = findViewById(R.id.swipeArrow);
-
-//        topNumber = findViewById(R.id.tutorial_topnumber);
-//        topNumber.setGravity(Gravity.CENTER_HORIZONTAL);
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,32 +81,9 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
                 switch (position) {
                     case 0:
-                        arrow.setVisibility(View.GONE);
-                        fadeOut(arrow);
-                        ccImage.setVisibility(View.GONE);
                         dots.setVisibility(View.VISIBLE);
-//                        skip.setVisibility(View.VISIBLE);
-//                        fadeIn(skip);
-                        seehow.setVisibility(View.GONE);
-//                        topNumber.setVisibility(View.VISIBLE);
-//                        topNumber.setText("1");
-//                        topNumber.setGravity(Gravity.CENTER);
-//                        skip.setText("Skip");
-
-                        break;
-                    case 1:
-//                        skip.setText("Skip");
-
-//                        topNumber.setText("2");
-                        break;
-                    case 2:
-//                        topNumber.setText("3");
-//                        skip.setText("Skip");
-
                         break;
                     case 3:
-//                        skip.setText("Done");
-//                        topNumber.setText("4");
                         done.setVisibility(View.VISIBLE);
                         fadeIn(done);
                         break;
@@ -196,8 +165,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         int[] tutorialBodies = new int[]{R.string.tutorial_body_1, R.string.tutorial_body_2,
                 R.string.tutorial_body_3, R.string.tutorial_body_4};
-
-//        int[] topNumbers = new int[]{R.string.one, R.string.two, R.string.three, R.string.four};
 
 
         public static ActivatedCard_TutorialActivity.PlaceholderFragment newInstance(int sectionNumber) {

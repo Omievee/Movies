@@ -27,12 +27,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
             android:layout_marginEnd="@dimen/double_margin_standard"
+            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
             android:text="Done"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/dots"
@@ -83,31 +83,6 @@
 
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tutorial_firstSwipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:text="@string/tutorial_First_See_How"
-            android:textColor="@color/new_red"
-            android:visibility="gone"
-            android:textSize="25sp" />
-
-        <ImageView
-            android:id="@+id/swipeArrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:visibility="gone"
-            android:layout_marginStart="@dimen/margin_half"
-            android:layout_toRightOf="@id/tutorial_firstSwipe"
-            android:src="@drawable/arrowforward"
-            android:tint="@color/new_red" />
-
 
     </RelativeLayout>
 

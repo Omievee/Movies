@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.MoviesActivity;
 import com.mobile.model.ProspectUser;
@@ -74,7 +75,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 //                    int userID = Integer.parseInt(String.valueOf(RestClient.userId) + String.valueOf("3232323"));
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
-                    Intent i = new Intent(getActivity(), MoviesActivity.class);
+                    Intent i = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
