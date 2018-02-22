@@ -16,48 +16,23 @@
         android:layout_marginTop="@dimen/double_margin_standard"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <TextView
-        android:id="@+id/tutorial_topnumber"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal |top"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:background="@drawable/onboarding_confirmation_steps_circles"
-        android:gravity="center"
-        android:text="1"
-        android:textAlignment="center"
-        android:textColor="@color/new_red"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
-
-    <ImageView
-        android:id="@+id/tutorial_first"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/mpmastercard2" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
         <TextView
-            android:id="@+id/TUTORIAL_SKIP"
+            android:id="@+id/TUTORIAL_DONE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
             android:layout_marginEnd="@dimen/double_margin_standard"
-            android:text="Skip"
+            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+            android:text="Done"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/dots"
@@ -66,8 +41,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/tutorial_indicator_0"
@@ -109,29 +83,6 @@
 
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tutorial_firstSwipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:text="@string/tutorial_First_See_How"
-            android:textColor="@color/new_red"
-            android:textSize="25sp" />
-
-        <ImageView
-            android:id="@+id/swipeArrow"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
-            android:layout_marginStart="@dimen/margin_half"
-            android:layout_toRightOf="@id/tutorial_firstSwipe"
-            android:src="@drawable/arrowforward"
-            android:tint="@color/new_red" />
-
 
     </RelativeLayout>
 

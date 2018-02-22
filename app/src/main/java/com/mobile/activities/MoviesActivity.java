@@ -96,7 +96,6 @@ public class MoviesActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         updateNavigationBarState();
-
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items

@@ -269,15 +269,20 @@ public class LogInActivity extends AppCompatActivity {
 
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
-
-            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-            i.putExtra("launch", true);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-
-            if (UserPreferences.getHasUserLoggedInBefore()) {
+            if (!UserPreferences.getHasUserLoggedInBefore()) {
                 UserPreferences.hasUserLoggedInBefore(true);
+                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+                startActivity(i);
+            } else {
+                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                i.putExtra("launch", true);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
             }
+
+
+
+
 
             finish();
         }
