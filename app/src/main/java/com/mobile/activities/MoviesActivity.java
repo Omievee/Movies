@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +91,7 @@ public class MoviesActivity extends BaseActivity {
 //            if(!firstBoot)
         }
 
+
     }
 
     @Override
@@ -132,7 +134,7 @@ public class MoviesActivity extends BaseActivity {
                 alert.show();
             } else {
                 if (itemId == R.id.action_profile) {
-                   // item.setIcon(getDrawable(R.drawable.profilenavred));
+                    // item.setIcon(getDrawable(R.drawable.profilenavred));
                     if (UserPreferences.getUserId() == 0) {
                         Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
                         startActivity(intent);

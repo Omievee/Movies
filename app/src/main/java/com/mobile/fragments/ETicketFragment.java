@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
+import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.TicketType;
@@ -96,6 +97,7 @@ public class ETicketFragment extends DialogFragment {
             getTitle = Parcels.unwrap(bundle.getParcelable(SCREENING));
             getShowtime = bundle.getString(SHOWTIME);
             getSeat = Parcels.unwrap(bundle.getParcelable(SEAT));
+
         }
     }
 
@@ -116,7 +118,9 @@ public class ETicketFragment extends DialogFragment {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {
                 if (getSeat != null) {
                     reserveWithSeat(getTitle, getShowtime, getSeat);
-
+                    Log.d(Constants.TAG, "name: " + getSeat.getSeatName());
+                    Log.d(Constants.TAG, "col: " + getSeat.getSelectedSeatColumn());
+                    Log.d(Constants.TAG, "row: " + getSeat.getSelectedSeatRow());
                 } else {
                     reserveNoSeat(getTitle, getShowtime);
                 }

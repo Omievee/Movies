@@ -9,9 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_half"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:text="Current Reservation"
         android:textColor="@color/white"
+        android:textStyle="bold"
         android:textSize="20sp" />
 
 
@@ -195,7 +196,7 @@
                     android:id="@+id/PEndingRes_Cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/PendingRes_Code"
+                    android:layout_below="@id/PendingZip"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/margin_half"

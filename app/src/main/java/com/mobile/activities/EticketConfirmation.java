@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -100,9 +101,14 @@ public class EticketConfirmation extends BaseActivity {
             bundle.putParcelable(SCREENING, Parcels.wrap(screening));
             bundle.putString(SHOWTIME, selectedTiime);
 
+
             if (seatObject != null) {
                 SelectedSeat seat = new SelectedSeat(seatObject.getSelectedSeatRow(), seatObject.getSelectedSeatColumn(), seatObject.getSeatName());
+
                 bundle.putParcelable(SEAT, Parcels.wrap(seat));
+                Log.d(TAG, "row: " + seatObject.getSelectedSeatRow());
+                Log.d(TAG, "col: " + seatObject.getSelectedSeatColumn());
+                Log.d(TAG, "name: " + seatObject.getSeatName());
             }
 
 

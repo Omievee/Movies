@@ -270,6 +270,7 @@ public class SelectSeatActivity extends BaseActivity {
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
             if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
                     (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
+
                 if (seat.getSeatName().contains("A")) {
                     mGridSeatsA.addView(seatButton);
                 }
@@ -314,30 +315,34 @@ public class SelectSeatActivity extends BaseActivity {
                 mSeatButtons.add(seatButton);
 
             } else {
-                seatButton.setPadding(3, 3, 3, 3);
-                mGridSeatsA.addView(seatButton);
-                mSeatButtons.add(seatButton);
+            seatButton.setPadding(3, 3, 3, 3);
+            mGridSeatsA.addView(seatButton);
+            mSeatButtons.add(seatButton);
             }
 
             final int seatRow = seat.getRow();
             final int seatCol = seat.getColumn();
             final String finalSeatName = seat.getSeatName();
 
-            seatButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View sender) {
-                    if (finalSeatName != null) {
-                        mSelectedSeat.setText(finalSeatName);
-                    } else {
-                        String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
-                        mSelectedSeat.setText(formattedSeatName);
+            seatButton.setOnClickListener(sender -> {
+                if (finalSeatName != null) {
+                    mSelectedSeat.setText(finalSeatName);
+                } else {
+                    String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
+                    mSelectedSeat.setText(formattedSeatName);
 
-                    }
+                }
 
-                    final SeatButton button = (SeatButton) sender;
-                    selectSeat(button.getSeatName());
-                    reserveSeatButton.setOnClickListener(view -> {
+                final SeatButton button = (SeatButton) sender;
+                selectSeat(button.getSeatName());
+                reserveSeatButton.setOnClickListener(view -> {
 
-                        SelectedSeat seatSelected = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+                    Log.d(TAG, "button name:" + button.getSeatName());
+                    Log.d(TAG, "button row: " + button.getSeatInfo().getRow());
+                    Log.d(TAG, "button col: " + button.getSeatInfo().getColumn());
+
+
+                    SelectedSeat seatSelected = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
                         Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
 
                         intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
@@ -350,9 +355,8 @@ public class SelectSeatActivity extends BaseActivity {
 //TODO: come back to this..
 //                            SelectedSeat seatObject = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
 //                            reserveWithSeat(screeningObject, selectedShowTime, seatObject);
-                        mProgressWheel.setVisibility(View.VISIBLE);
-                    });
-                }
+//                    mProgressWheel.setVisibility(View.VISIBLE);
+                });
             });
 
         }
