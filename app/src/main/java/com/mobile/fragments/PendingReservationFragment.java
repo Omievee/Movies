@@ -104,12 +104,12 @@ public class PendingReservationFragment extends Fragment {
                         pendingTitle.setText(active.getTitle());
                         pendingLocal.setText(active.getTheater());
 
-                        if (active.getE_ticket() != null) {
+                        if (!active.getE_ticket().getRedemption_code().equals("")) {
                             ETicket.setVisibility(View.VISIBLE);
 
                             confirmCode.setText(active.getE_ticket().getRedemption_code());
 
-                            if (active.getE_ticket().getSeat() != null) {
+                            if (!active.getE_ticket().getSeat().equals("")) {
                                 pendingSeat.setVisibility(View.VISIBLE);
                                 pendingSeat.setText("Seat: " + active.getE_ticket().getSeat());
                             }
