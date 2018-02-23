@@ -9,6 +9,7 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -44,6 +45,9 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+    realm {
+        syncEnabled = true;
+    }
 
     externalNativeBuild {
         cmake {
@@ -54,6 +58,7 @@ android {
     dexOptions {
         preDexLibraries false
     }
+
 
     defaultConfig {
         javaCompileOptions {
@@ -83,6 +88,7 @@ ext {
 }
 
 dependencies {
+
     implementation 'com.google.android.gms:play-services-maps:11.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -188,6 +194,8 @@ dependencies {
 
     //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
+
+    //Realm
 
 }
 

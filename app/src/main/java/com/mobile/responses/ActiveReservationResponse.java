@@ -18,6 +18,12 @@ public class ActiveReservationResponse {
     E_Ticket e_ticket;
     String zip;
 
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    Reservation reservation;
+
 
     public E_Ticket getE_ticket() {
         return e_ticket;

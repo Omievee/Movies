@@ -23,13 +23,13 @@ import com.mobile.activities.TicketType;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
-import com.mobile.model.SelectedSeat;
+import com.mobile.model.SeatSelected;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
-import com.mobile.requests.SelectedSeatRequest;
+import com.mobile.requests.SelectedSeat;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.responses.ReservationResponse;
 import com.moviepass.R;
@@ -55,9 +55,9 @@ public class ETicketFragment extends DialogFragment {
     PatternLockView lockView;
     PatternLockViewListener getmPatternLockViewListener;
     String getShowtime;
-    SelectedSeat getSeat;
+    SeatSelected getSeat;
     Screening getTitle;
-    SelectedSeat seatObject;
+    SeatSelected seatObject;
 
     public static final String TOKEN = "token";
     String providerName;
@@ -152,11 +152,11 @@ public class ETicketFragment extends DialogFragment {
     }
 
 
-    public void reserveWithSeat(Screening screening, String showtime, SelectedSeat selectedSeat) {
+    public void reserveWithSeat(Screening screening, String showtime, SeatSelected seatSelected) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getActivity()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getActivity()).updateLocation(mCurrentLocation);
 
-        SelectedSeatRequest selectedSeatRequest = new SelectedSeatRequest(selectedSeat.getSelectedSeatRow(), selectedSeat.getSelectedSeatColumn());
+        SelectedSeat selectedSeat = new SelectedSeat(seatSelected.getSelectedSeatRow(), seatSelected.getSelectedSeatColumn());
 
 
         if (screening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
@@ -195,7 +195,7 @@ public class ETicketFragment extends DialogFragment {
                     ticketType,
                     showtimeId);
 
-            ticketRequest = new TicketInfoRequest(perform, selectedSeatRequest);
+            ticketRequest = new TicketInfoRequest(perform, selectedSeat);
 
 
         } else {
@@ -225,17 +225,17 @@ public class ETicketFragment extends DialogFragment {
                     auditorium,
                     performanceId,
                     sessionId);
-            ticketRequest = new TicketInfoRequest(request, selectedSeatRequest);
+            ticketRequest = new TicketInfoRequest(request, selectedSeat);
 
 
         }
 
         providerName = screening.getProvider().providerName;
         checkinRequest = new CheckInRequest(ticketRequest, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        reservationRequest(screening, checkinRequest, showtime, selectedSeat);
+        reservationRequest(screening, checkinRequest, showtime, seatSelected);
     }
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SelectedSeat selectedSeat) {
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SeatSelected seatSelected) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -248,7 +248,7 @@ public class ETicketFragment extends DialogFragment {
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, selectedSeat);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seatSelected);
 
                     showConfirmation(token);
                     dismiss();

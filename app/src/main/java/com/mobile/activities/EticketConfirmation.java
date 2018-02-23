@@ -18,7 +18,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.fragments.ETicketFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Screening;
-import com.mobile.model.SelectedSeat;
+import com.mobile.model.SeatSelected;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -29,7 +29,7 @@ public class EticketConfirmation extends BaseActivity {
     SimpleDraweeView etixPoster;
     ImageView etixOnBack;
     Screening screeningObject;
-    SelectedSeat seatObject;
+    SeatSelected seatObject;
     Button etixConfirm;
     String selectedShowTime;
     View progressWheel;
@@ -103,7 +103,7 @@ public class EticketConfirmation extends BaseActivity {
 
 
             if (seatObject != null) {
-                SelectedSeat seat = new SelectedSeat(seatObject.getSelectedSeatRow(), seatObject.getSelectedSeatColumn(), seatObject.getSeatName());
+                SeatSelected seat = new SeatSelected(seatObject.getSelectedSeatRow(), seatObject.getSelectedSeatColumn(), seatObject.getSeatName());
 
                 bundle.putParcelable(SEAT, Parcels.wrap(seat));
                 Log.d(TAG, "row: " + seatObject.getSelectedSeatRow());

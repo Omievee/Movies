@@ -9,11 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -23,12 +24,17 @@ import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -45,7 +51,7 @@ public class ConfirmationActivity extends BaseActivity {
     Screening screening;
     ScreeningToken screeningToken;
     View progress;
-
+    String ZIP;
     TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip;
     Button cancelButton;
     RelativeLayout pendingData, StandardTicket, ETicket;
@@ -84,9 +90,7 @@ public class ConfirmationActivity extends BaseActivity {
         pendingTitle.setText(screeningToken.getScreening().getTitle());
         pendingLocal.setText(screeningToken.getScreening().getTheaterName());
         pendingTime.setText(screeningTime);
-
-
-        //TODO ZIP CODE ...
+        userData();
 
         if (screeningToken.getConfirmationCode() != null) {
 
@@ -95,8 +99,9 @@ public class ConfirmationActivity extends BaseActivity {
             String code = screeningToken.getConfirmationCode();
             confirmCode.setText(code);
 
-            if (!screeningToken.getSeatName().equals("")) {
-
+            if (screeningToken.getSeatName() != null) {
+                pendingSeat.setVisibility(View.VISIBLE);
+                pendingTime.setText(screeningToken.getSeatName());
             }
 
         } else {
@@ -193,5 +198,28 @@ public class ConfirmationActivity extends BaseActivity {
                 break;
             }
         }
+    }
+
+    public void userData() {
+        int userId = UserPreferences.getUserId();
+        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                userInfoResponse = response.body();
+                if (userInfoResponse != null) {
+                    String address = userInfoResponse.getShippingAddressLine2();
+                    List<String> addressList = Arrays.asList(address.split(",", -1));
+
+                    for (int i = 0; i < addressList.size(); i++) {
+                        ZIP = addressList.get(2);
+                        zip.setText(ZIP);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+            }
+        });
     }
 }
