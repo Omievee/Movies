@@ -455,6 +455,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userSave.setTextColor(getResources().getColor(R.color.new_red));
         userSave.setOnClickListener(v -> {
 
+
             progress.setVisibility(View.VISIBLE);
 //            updateShippingAddress();
                 updateCCData();

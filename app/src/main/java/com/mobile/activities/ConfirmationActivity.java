@@ -103,7 +103,7 @@ public class ConfirmationActivity extends BaseActivity {
 
             if (screeningToken.getSeatName() != null) {
                 pendingSeat.setVisibility(View.VISIBLE);
-                pendingSeat.setText(screeningToken.getSeatName());
+                pendingSeat.setText("Seat: " + screeningToken.getSeatName());
             }
 
         } else {

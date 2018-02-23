@@ -41,7 +41,8 @@ public class TheaterActivity extends BaseActivity {
     public static final String TOKEN = "token";
 
     TheaterMoviesAdapter theaterMoviesAdapter;
-
+    boolean mIsStateAlreadySaved = false;
+    boolean mPendingShowDialog = false;
     ArrayList<Screening> moviesList;
     ArrayList<String> showtimesList;
 
@@ -157,4 +158,8 @@ public class TheaterActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
 }
