@@ -18,7 +18,7 @@ public class ScreeningToken {
     int seatRow;
     String time;
     String zipCodeTicket;
-    SelectedSeat selectedSeat;
+    SeatSelected seatSelected;
 
     public ScreeningToken() {
     }
@@ -38,13 +38,13 @@ public class ScreeningToken {
         this.confirmationCode = confirmationCode;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode, SelectedSeat selectedSeat) {
+    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode, SeatSelected seatSelected) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
         this.confirmationCode = confirmationCode;
-        this.selectedSeat = selectedSeat;
+        this.seatSelected = seatSelected;
     }
 
     public Screening getScreening() {
@@ -63,9 +63,9 @@ public class ScreeningToken {
         this.reservation = mReservation;
     }
 
-    public void setSelectedSeat(SelectedSeat selectedSeat) { this.selectedSeat = selectedSeat; }
+    public void setSeatSelected(SeatSelected seatSelected) { this.seatSelected = seatSelected; }
 
-    public SelectedSeat getSelectedSeat() { return selectedSeat; }
+    public SeatSelected getSeatSelected() { return seatSelected; }
 
     public String getSeatName() {
         return seatName;

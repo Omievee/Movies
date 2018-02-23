@@ -1,7 +1,6 @@
 package com.mobile.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,11 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -23,12 +24,17 @@ import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.util.Arrays;
+import java.util.List;
+
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -45,18 +51,12 @@ public class ConfirmationActivity extends BaseActivity {
     Screening screening;
     ScreeningToken screeningToken;
     View progress;
+    String ZIP;
+    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip;
+    Button cancelButton;
+    RelativeLayout pendingData, StandardTicket, ETicket;
 
-    ImageView cancelX;
-    TextView confirmedMovieTitle;
-    TextView theater;
-    TextView confirmedShowTime;
-    TextView confirmedMessage;
-    ImageView qrCode;
-    TextView cancelReservation;
-    TextView confirmationCode;
-    SimpleDraweeView moviepassCC_QR;
-    ImageView loadCardLogo;
-    TextView confirmedZipText, thirtyMins;
+
     protected BottomNavigationView bottomNavigationView;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,6 @@ public class ConfirmationActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        thirtyMins = findViewById(R.id.thirtyMins);
 
         progress = findViewById(R.id.confirm_progress);
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
@@ -75,67 +74,41 @@ public class ConfirmationActivity extends BaseActivity {
         String screeningTime = screeningToken.getTime();
 
 
-        confirmedZipText = findViewById(R.id.CONFIRMED_ZIP_TEXT);
-        confirmedMovieTitle = findViewById(R.id.CONFIRMED_MOVIE_TITLE);
-        theater = findViewById(R.id.CONFIRMED_THEATER);
-        confirmationCode = findViewById(R.id.CONFIRMED_CONFIRMATION_CODE);
-        moviepassCC_QR = findViewById(R.id.CONFIRMED_MASTERCARD);
-        moviepassCC_QR.setImageResource(R.drawable.mpmastercard2);
-        confirmedShowTime = findViewById(R.id.CONFIRMED_SHOWTIME);
-        confirmedMessage = findViewById(R.id.CONFIRMED_READY_MESSAGE);
-        loadCardLogo = findViewById(R.id.CONFIRMED_LOADED_LOGO);
-        confirmedMovieTitle.setText(screening.getTitle());
-        theater.setText(screening.getTheaterName());
-        confirmedShowTime.setText(screeningTime);
-        cancelReservation = findViewById(R.id.CONFIRMED_CANCEL);
-        cancelX = findViewById(R.id.CONFIRMED_X_BUTTON);
+        noCurrentRes = findViewById(R.id.NO_Current_Res);
+        pendingTitle = findViewById(R.id.PendingRes_Title);
+        pendingLocal = findViewById(R.id.PendingRes_Location);
+        pendingTime = findViewById(R.id.PendingRes_Time);
+        pendingSeat = findViewById(R.id.PendingRes_Seat);
+        StandardTicket = findViewById(R.id.STANDARD_TICKET);
+        ETicket = findViewById(R.id.E_TICKET);
+        confirmCode = findViewById(R.id.ConfirmCode);
+        cancelButton = findViewById(R.id.PEndingRes_Cancel);
+        zip = findViewById(R.id.PendingZip);
+        pendingData = findViewById(R.id.PENDING_DATA);
 
-        Log.d(TAG, "onCreate: " + screeningToken.getZipCodeTicket());
 
+        pendingTitle.setText(screeningToken.getScreening().getTitle());
+        pendingLocal.setText(screeningToken.getScreening().getTheaterName());
+        pendingTime.setText(screeningTime);
         userData();
 
         if (screeningToken.getConfirmationCode() != null) {
-            confirmedZipText.setVisibility(View.VISIBLE);
-            confirmationCode.setVisibility(View.VISIBLE);
+
+            ETicket.setVisibility(View.VISIBLE);
+
             String code = screeningToken.getConfirmationCode();
-            thirtyMins.setVisibility(View.GONE);
-            String zip = screeningToken.getZipCodeTicket();
-            Log.d(TAG, "onCreate: " + zip);
-            confirmationCode.setText("If asked, ");
-            confirmedZipText.setText("Here is your redemption code:");
+            confirmCode.setText(code);
 
-            Log.d(TAG, "onCreate:  " + myZip);
-            if (code == null) {
-                confirmationCode.setText(myZip);
-            } else {
-                cancelReservation.setVisibility(View.GONE);
-                confirmationCode.setText(code);
-            }
-            if (screeningToken.getQrUrl() != null && screeningToken.getQrUrl().matches("http://www.moviepass.com/images/amc/qrcode.png")) {
-                Uri qrUrl = Uri.parse(screeningToken.getQrUrl());
-                if (qrUrl != null) {
-                    cancelReservation.setVisibility(View.GONE);
-                    //TODO :  QR?
-
-//                    loadCardLogo.setVisibility(View.INVISIBLE);
-//
-//
-//                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(qrUrl)
-//                            .setProgressiveRenderingEnabled(true)zx
-//                            .setSource(qrUrl)
-//                            .build();
-//
-//                    DraweeController controller = Fresco.newDraweeControllerBuilder()
-//                            .setImageRequest(request).build();
-//
-//                    moviepassCC_QR.setImageURI(qrUrl);
-//                    moviepassCC_QR.setController(controller);
-
-                }
+            if (screeningToken.getSeatName() != null) {
+                pendingSeat.setVisibility(View.VISIBLE);
+                pendingTime.setText(screeningToken.getSeatName());
             }
 
+        } else {
+            StandardTicket.setVisibility(View.VISIBLE);
         }
-        cancelReservation.setOnClickListener(v -> {
+
+        cancelButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
             ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
             RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
@@ -173,13 +146,8 @@ public class ConfirmationActivity extends BaseActivity {
                 }
             });
         });
-        cancelX.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent backToMain = new Intent(getApplicationContext(), MoviesActivity.class);
-                startActivity(backToMain);
-            }
-        });
+
+
     }
 
     /* Bottom Navigation View */
@@ -230,5 +198,28 @@ public class ConfirmationActivity extends BaseActivity {
                 break;
             }
         }
+    }
+
+    public void userData() {
+        int userId = UserPreferences.getUserId();
+        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                userInfoResponse = response.body();
+                if (userInfoResponse != null) {
+                    String address = userInfoResponse.getShippingAddressLine2();
+                    List<String> addressList = Arrays.asList(address.split(",", -1));
+
+                    for (int i = 0; i < addressList.size(); i++) {
+                        ZIP = addressList.get(2);
+                        zip.setText(ZIP);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+            }
+        });
     }
 }

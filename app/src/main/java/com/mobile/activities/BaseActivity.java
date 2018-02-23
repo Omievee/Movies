@@ -86,7 +86,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
         checkRestrictions();
-        userData();
     }
 
 
@@ -227,28 +226,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         view.setAnimation(animation);
     }
 
-    public void userData() {
-        int userId = UserPreferences.getUserId();
-        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
-            @Override
-            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
-                userInfoResponse = response.body();
-                if (userInfoResponse != null) {
-                    String address = userInfoResponse.getShippingAddressLine2();
-                    List<String> addressList = Arrays.asList(address.split(",", -1));
 
-                    for (int i = 0; i < addressList.size(); i++) {
-                        myZip = addressList.get(2);
-                        Log.d(Constants.TAG, "onResponse: " + myZip);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-            }
-        });
-    }
 }
 
 

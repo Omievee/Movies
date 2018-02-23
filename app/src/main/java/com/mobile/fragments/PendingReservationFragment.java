@@ -93,6 +93,8 @@ public class PendingReservationFragment extends Fragment {
                     if (active.getTitle() != null && active.getTheater() != null) {
                         pendingData.setVisibility(View.VISIBLE);
 
+                        reservation = active.getReservation().getId();
+
                         String reservationTime = active.getShowtime().substring(11, 16);
                         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
                         try {

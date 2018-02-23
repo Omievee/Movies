@@ -1,195 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue">
+    android:background="@color/test_black">
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/CONFIRMED_HEADER"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/HEADER"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/charcoal"
-        android:elevation="5dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="35dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/CONFIRMED_MOVIE_TITLE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="5dp"
-                android:ellipsize="marquee"
-                android:maxLength="20"
-                android:singleLine="true"
-                android:text="[ MOVIE TITLE ]"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/CONFIRMED_THEATER"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="[ MOVIE THEATER ]"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-
-            <TextView
-                android:id="@+id/CONFIRMED_SHOWTIME"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
-                android:text="[ 12:00 PM ]"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
-                android:visibility="invisible">
-
-
-                <ImageButton
-                    android:id="@+id/CONFIRMED_X_BUTTON"
-                    android:layout_width="15dp"
-                    android:layout_height="25dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/close_white"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:text="Current Reservation"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/CONFIRMED_HEADER"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard">
+        android:layout_below="@id/HEADER">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/CONFIRMED_READY_MESSAGE"
+                android:id="@+id/NO_Current_Res"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:text="@string/activity_confirmation_purchase_ticket"
+                android:layout_marginTop="@dimen/a_lot_margin_standard"
+                android:padding="@dimen/margin_half"
+                android:text="No current reservation at this time"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/double_margin_standard">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/CONFIRMED_MASTERCARD"
-                    android:layout_width="300dp"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/margin_half"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:src="@drawable/mpmastercard2"
-                    android:textAlignment="center" />
-
-                <ImageView
-                    android:id="@+id/CONFIRMED_LOADED_LOGO"
-                    android:layout_width="60dp"
-                    android:layout_height="66dp"
-                    android:layout_gravity="end"
-                    android:layout_marginBottom="@dimen/double_margin_standard"
-                    android:layout_marginEnd="40dp"
-                    android:src="@drawable/loadedsuccession"
-                    android:visibility="visible" />
-
-            </FrameLayout>
+                android:textSize="18sp"
+                android:visibility="gone" />
 
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/PENDING_DATA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_half"
-                android:orientation="vertical">
+                android:background="@color/charcoal"
+                android:padding="@dimen/margin_half"
+                android:visibility="visible">
 
                 <TextView
-                    android:id="@+id/thirtyMins"
+                    android:id="@+id/PendingRes_Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:elevation="5dp"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:text="[ MOVIE TITLE ]"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/PendingRes_Location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/PendingRes_Title"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:text="[ Pending Location ]"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@id/PendingRes_Title"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/PendingRes_Location"
+                    android:src="@drawable/locationicon"
+                    android:tint="@color/new_red" />
+
+
+                <TextView
+                    android:id="@+id/PendingRes_Time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/PendingRes_Location"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:text="[ Pending Time ]"
+                    android:textColor="@color/white"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/PendingRes_Seat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/PendingRes_Location"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="@dimen/margin_half"
+                    android:layout_toRightOf="@id/PendingRes_Time"
+                    android:text="[ Pending Seat ]"
+                    android:textColor="@color/new_red"
+                    android:textSize="18dp"
+                    android:visibility="invisible" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/STANDARD_TICKET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/PENDING_DATA"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/STandardMSG"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:text="You can now use your MoviePass card to purchase your ticket!"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:id="@+id/Frame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/STandardMSG"
+                    android:layout_centerHorizontal="true">
+
+
+                    <ImageView
+                        android:id="@+id/PendingRes_IMage"
+                        android:layout_width="300dp"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="@dimen/double_margin_standard"
+                        android:src="@drawable/mpmastercard2" />
+
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:src="@drawable/loadedsuccession" />
+
+                </FrameLayout>
+
+
+                <TextView
+                    android:id="@+id/PendingConrimCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/Frame"
+                    android:layout_marginBottom="@dimen/margin_standard"
                     android:paddingEnd="@dimen/quadruple_margin_standard"
                     android:paddingStart="@dimen/quadruple_margin_standard"
                     android:text="You have 30 minutes to purchase your ticket"
                     android:textAlignment="center"
                     android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-
-                <TextView
-                    android:id="@+id/CONFIRMED_ZIP_TEXT"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
-                    android:paddingEnd="@dimen/quadruple_margin_standard"
-                    android:paddingStart="@dimen/quadruple_margin_standard"
-                    android:text="@string/activity_confirmation_confirmation_text"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/CONFIRMED_CONFIRMATION_CODE"
+                    android:id="@+id/ifAsked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_below="@id/PendingConrimCode"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                    android:gravity="center_horizontal"
+                    android:text="If asked, please provide this zip" />
+
+                <TextView
+                    android:id="@+id/PendingZip"
+                    android:layout_width="90dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ifAsked"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_half"
                     android:background="@drawable/confirmation_code_confirm"
-                    android:padding="@dimen/margin_half"
-                    android:text="  "
+                    android:text="[ Code ]"
+                    android:textAlignment="center"
                     android:textColor="@color/black_text"
-                    android:textSize="13sp"
+                    android:textSize="20dp"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
 
-                <TextView
-                    android:id="@+id/CONFIRMED_CANCEL"
+                <Button
+                    android:id="@+id/PEndingRes_Cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/PendingZip"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_margin="@dimen/margin_half"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/margin_half"
                     android:text="Cancel/Change Reservation"
+                    android:textAllCaps="false"
                     android:textColor="@color/new_red"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
+                    android:textSize="13sp" />
 
 
-        </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/E_TICKET"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/PENDING_DATA"
+                android:visibility="gone">
+
+
+                <TextView
+                    android:id="@+id/E_Ticket_MSG"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:text="Here is your redemption code:"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/ConfirmCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/E_Ticket_MSG"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/quadruple_margin_standard"
+                    android:background="@drawable/confirm"
+                    android:gravity="center"
+                    android:text="W12345"
+                    android:textAlignment="center"
+                    android:textColor="@color/black_text"
+                    android:textSize="35sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ConfirmCode"
+                    android:layout_marginTop="@dimen/quadruple_margin_standard"
+                    android:text="Present this code at the theater to get your ticket!"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
 
     </ScrollView>
+
 
     <include
         android:id="@+id/CONFIRMED_BOTTOMNAV"
@@ -207,3 +280,4 @@
 
 
 </RelativeLayout>
+

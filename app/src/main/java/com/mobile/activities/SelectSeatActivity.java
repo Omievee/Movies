@@ -29,14 +29,13 @@ import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.SeatInfo;
-import com.mobile.model.SelectedSeat;
+import com.mobile.model.SeatSelected;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
-import com.mobile.requests.SelectedSeatRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.SeatingsInfoResponse;
@@ -342,7 +341,7 @@ public class SelectSeatActivity extends BaseActivity {
                     Log.d(TAG, "button col: " + button.getSeatInfo().getColumn());
 
 
-                    SelectedSeat seatSelected = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+                    SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
                         Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
 
                         intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
@@ -353,7 +352,7 @@ public class SelectSeatActivity extends BaseActivity {
 
 
 //TODO: come back to this..
-//                            SelectedSeat seatObject = new SelectedSeat(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+//                            SeatSelected seatObject = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
 //                            reserveWithSeat(screeningObject, selectedShowTime, seatObject);
 //                    mProgressWheel.setVisibility(View.VISIBLE);
                 });
@@ -369,11 +368,11 @@ public class SelectSeatActivity extends BaseActivity {
         }
     }
 //
-//    private void reserve(Screening screening, String showtime, SelectedSeat selectedSeat) {
+//    private void reserve(Screening screening, String showtime, SeatSelected selectedSeat) {
 //
 //        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
 //        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
-//        SelectedSeatRequest selectedSeatRequest = new SelectedSeatRequest(selectedSeat.getSelectedSeatRow(), selectedSeat.getSelectedSeatColumn());
+//        SelectedSeat selectedSeatRequest = new SelectedSeat(selectedSeat.getSelectedSeatRow(), selectedSeat.getSelectedSeatColumn());
 //
 //
 //        mProviderName = screening.getProvider().providerName;
@@ -385,7 +384,7 @@ public class SelectSeatActivity extends BaseActivity {
 
 
     //TODO:
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SelectedSeat selectedSeat) {
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SeatSelected seatSelected) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -398,7 +397,7 @@ public class SelectSeatActivity extends BaseActivity {
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, selectedSeat);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seatSelected);
 
                     showConfirmation(token);
 

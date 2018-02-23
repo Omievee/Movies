@@ -215,6 +215,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     .build();
             try {
                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+
                 startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
             } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                 // TODO: Handle the error.
