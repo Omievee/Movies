@@ -48,6 +48,7 @@ import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.adapters.SearchAdapter;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -231,6 +232,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getPushPermission());
+
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
+
         return rootView;
     }
 

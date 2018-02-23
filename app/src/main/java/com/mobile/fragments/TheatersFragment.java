@@ -88,6 +88,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
@@ -224,7 +225,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
 
         //Hide Keyboard when not in use
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
 
 
         return rootView;

@@ -20,6 +20,7 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.TicketType;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -99,6 +100,9 @@ public class ETicketFragment extends DialogFragment {
             getSeat = Parcels.unwrap(bundle.getParcelable(SEAT));
 
         }
+
+        //Context singleton
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
     }
 
     private PatternLockViewListener mPatternLockViewListener = new PatternLockViewListener() {
@@ -117,6 +121,7 @@ public class ETicketFragment extends DialogFragment {
         public void onComplete(List<PatternLockView.Dot> pattern) {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {
                 if (getSeat != null) {
+                    Log.d(Constants.TAG, "onComplete: " + getSeat.getSeatName());
                     reserveWithSeat(getTitle, getShowtime, getSeat);
                     Log.d(Constants.TAG, "name: " + getSeat.getSeatName());
                     Log.d(Constants.TAG, "col: " + getSeat.getSelectedSeatColumn());
@@ -196,6 +201,7 @@ public class ETicketFragment extends DialogFragment {
                     showtimeId);
 
             ticketRequest = new TicketInfoRequest(perform, selectedSeat);
+            Log.d(Constants.TAG, "performinfo:1 " + selectedSeat);
 
 
         } else {
@@ -227,6 +233,7 @@ public class ETicketFragment extends DialogFragment {
                     sessionId);
             ticketRequest = new TicketInfoRequest(request, selectedSeat);
 
+            Log.d(Constants.TAG, "performinfo:2 " + selectedSeat);
 
         }
 
@@ -235,12 +242,13 @@ public class ETicketFragment extends DialogFragment {
         reservationRequest(screening, checkinRequest, showtime, seatSelected);
     }
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SeatSelected seatSelected) {
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, SeatSelected seatSelected) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
+                SeatSelected seat  = seatSelected;
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
@@ -248,7 +256,8 @@ public class ETicketFragment extends DialogFragment {
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seatSelected);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
+                    Log.d(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
                     dismiss();
@@ -292,6 +301,7 @@ public class ETicketFragment extends DialogFragment {
     private void showConfirmation(ScreeningToken token) {
         Intent confirmationIntent = new Intent(getActivity(), ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
+        Log.d(Constants.TAG, "SHOW CONFIRMATION TAG: " + token.getSeatName());
         startActivity(confirmationIntent);
         getActivity().finish();
     }

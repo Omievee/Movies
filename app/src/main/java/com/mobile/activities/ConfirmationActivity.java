@@ -99,9 +99,11 @@ public class ConfirmationActivity extends BaseActivity {
             String code = screeningToken.getConfirmationCode();
             confirmCode.setText(code);
 
+            Log.d(TAG, "onCreate:  " + screeningToken.getSeatName());
+
             if (screeningToken.getSeatName() != null) {
                 pendingSeat.setVisibility(View.VISIBLE);
-                pendingTime.setText(screeningToken.getSeatName());
+                pendingSeat.setText(screeningToken.getSeatName());
             }
 
         } else {
