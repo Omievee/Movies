@@ -126,7 +126,9 @@ public class PendingReservationFragment extends Fragment {
                     }
 
                 } else {
+                    noCurrentRes.setVisibility(View.VISIBLE);
                     Log.d(TAG, "else: ");
+                    progress.setVisibility(View.GONE);
                 }
             }
 

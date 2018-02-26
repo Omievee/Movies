@@ -433,7 +433,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             //Sort Theaters & have screenings follow suit
                             selectedScreeningsList.addAll(screeningsResponse.getScreenings());
                             theatersList.addAll(screeningsResponse.getTheaters());
-                            Log.d(TAG, "onResponse:  " + theatersList.size());
                             for (int i = 0; i < theatersList.size(); i++) {
                                 Theater t = theatersList.get(i);
                                 int ID = t.getTribuneTheaterId();
@@ -443,11 +442,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
 
                                     }
-//                                    if (sortedScreeningList.size() == 0) {
-//                                        Log.d(TAG, "onResponse: " + sortedScreeningList.size());
-//                                        noTheaters.setVisibility(View.VISIBLE);
-//                                        selectedTheatersRecyclerView.setVisibility(View.GONE);
-//                                    }
                                 }
                             }
 
@@ -592,56 +586,61 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
     }
 
-    private void showActivateCardDialog(final Screening screening, final String showtime) {
-        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
-        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(MovieActivity.this);
-        alert.setView(dialoglayout);
+    private void showActivateCardDialog( Screening screening,  String showtime) {
+        Intent activateCard = new Intent(MovieActivity.this, ActivateMoviePassCard.class);
+        activateCard.putExtra(SCREENING, Parcels.wrap(screening));
+        activateCard.putExtra(SHOWTIME, showtime);
+        startActivity(activateCard);
 
-        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        InputFilter[] filters = new InputFilter[1];
-        filters[0] = new InputFilter.LengthFilter(4);
-        editText.setFilters(filters);
-
-        alert.setTitle(getString(R.string.dialog_activate_card_header));
-        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
-        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            String digits = editText.getText().toString();
-            dialog.dismiss();
-
-            if (digits.length() == 4) {
-                CardActivationRequest request = new CardActivationRequest(digits);
-                ProgressBar.setVisibility(View.VISIBLE);
-                RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
-                    @Override
-                    public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-                        CardActivationResponse cardActivationResponse = response.body();
-                        ProgressBar.setVisibility(View.GONE);
-
-                        if (cardActivationResponse != null && response.isSuccessful()) {
-                            String cardActivationResponseMessage = cardActivationResponse.getMessage();
-                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-                            reserve(screening, showtime);
-                        } else {
-                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-                        ProgressBar.setVisibility(View.GONE);
-                        showActivateCardDialog(screening, showtime);
-                    }
-                });
-            } else {
-                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
-            }
-        });
-        alert.setNegativeButton("Activate Later", (dialog, which) -> {
-            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
-            dialog.dismiss();
-        });
-        alert.show();
+//        View dialoglayout = getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
+//        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(MovieActivity.this);
+//        alert.setView(dialoglayout);
+//
+//        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
+//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        InputFilter[] filters = new InputFilter[1];
+//        filters[0] = new InputFilter.LengthFilter(4);
+//        editText.setFilters(filters);
+//
+//        alert.setTitle(getString(R.string.dialog_activate_card_header));
+//        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
+//        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//            String digits = editText.getText().toString();
+//            dialog.dismiss();
+//
+//            if (digits.length() == 4) {
+//                CardActivationRequest request = new CardActivationRequest(digits);
+//                ProgressBar.setVisibility(View.VISIBLE);
+//                RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
+//                    @Override
+//                    public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+//                        CardActivationResponse cardActivationResponse = response.body();
+//                        ProgressBar.setVisibility(View.GONE);
+//
+//                        if (cardActivationResponse != null && response.isSuccessful()) {
+//                            String cardActivationResponseMessage = cardActivationResponse.getMessage();
+//                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
+//                            reserve(screening, showtime);
+//                        } else {
+//                            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+//                        ProgressBar.setVisibility(View.GONE);
+//                        showActivateCardDialog(screening, showtime);
+//                    }
+//                });
+//            } else {
+//                Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
+//            }
+//        });
+//        alert.setNegativeButton("Activate Later", (dialog, which) -> {
+//            Toast.makeText(MovieActivity.this, R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+//            dialog.dismiss();
+//        });
+//        alert.show();
     }
 
 
