@@ -31,6 +31,7 @@ import com.mobile.activities.EticketConfirmation;
 import com.mobile.activities.SelectSeatActivity;
 import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -164,6 +165,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             fragobj.show(fm, "fr_theaterpolicy");
         }
 
+
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
+
         return rootView;
     }
 
@@ -260,7 +264,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             showEticketConfirmation(screen, time);
 
         } else {
-
             progress.setVisibility(View.GONE);
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screen));
@@ -536,6 +539,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         startActivity(intent);
 
     }
+
 
 
 }

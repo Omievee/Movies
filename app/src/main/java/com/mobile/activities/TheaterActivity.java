@@ -41,7 +41,8 @@ public class TheaterActivity extends BaseActivity {
     public static final String TOKEN = "token";
 
     TheaterMoviesAdapter theaterMoviesAdapter;
-
+    boolean mIsStateAlreadySaved = false;
+    boolean mPendingShowDialog = false;
     ArrayList<Screening> moviesList;
     ArrayList<String> showtimesList;
 
@@ -79,9 +80,7 @@ public class TheaterActivity extends BaseActivity {
         }
 
         theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
-        Log.d(Constants.TAG, "THEATER NAME?!: " + theater.getName());
         theaterSelectedName.setText(theater.getName());
-        Log.d(Constants.TAG, "onCreate: " + theater.getName());
         moviesList = new ArrayList<>();
         showtimesList = new ArrayList<>();
         backArrow = findViewById(R.id.CINEMA_BACK);
@@ -157,4 +156,8 @@ public class TheaterActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
 }

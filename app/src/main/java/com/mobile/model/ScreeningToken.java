@@ -14,7 +14,6 @@ public class ScreeningToken {
     Reservation reservation;
     Screening screening;
     int seatCol;
-    String seatName;
     int seatRow;
     String time;
     String zipCodeTicket;
@@ -27,7 +26,6 @@ public class ScreeningToken {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
-        this.seatName = null;
     }
 
     public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode) {
@@ -63,12 +61,21 @@ public class ScreeningToken {
         this.reservation = mReservation;
     }
 
-    public void setSeatSelected(SeatSelected seatSelected) { this.seatSelected = seatSelected; }
 
-    public SeatSelected getSeatSelected() { return seatSelected; }
+    public void setSeatSelected(SeatSelected seatSelected) {
+        this.seatSelected = seatSelected;
+    }
+
+    public SeatSelected getSeatSelected() {
+        return seatSelected;
+    }
+
 
     public String getSeatName() {
-        return seatName;
+        if (seatSelected != null) {
+            return seatSelected.getSeatName();
+        }
+        return "";
     }
 
     public void setZipCodeTicket(String zipCodeTicket) {
@@ -79,11 +86,19 @@ public class ScreeningToken {
         return zipCodeTicket;
     }
 
-    public void setConfirmationCode(String confirmationCode) { this.confirmationCode = confirmationCode; }
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
+    }
 
-    public String getConfirmationCode() {return confirmationCode; }
+    public String getConfirmationCode() {
+        return confirmationCode;
+    }
 
-    public void setQrUrl(String qrUrl) { this.qrUrl = qrUrl; }
+    public void setQrUrl(String qrUrl) {
+        this.qrUrl = qrUrl;
+    }
 
-    public String getQrUrl() {return qrUrl; }
+    public String getQrUrl() {
+        return qrUrl;
+    }
 }

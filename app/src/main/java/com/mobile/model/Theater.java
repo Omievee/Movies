@@ -25,11 +25,15 @@ public class Theater implements Serializable {
     String theaterChainName;
     String ticketType;
     String synopsis;
+
     public Theater() {
     }
 
     public String getName() {
-        return name;
+        if (name != null) {
+            return name;
+        }
+        return "";
     }
 
     public boolean ticketTypeIsStandard() {

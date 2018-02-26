@@ -55,7 +55,9 @@ public class Application extends MultiDexApplication {
 
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
+
         Realm.init(this);
+
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());

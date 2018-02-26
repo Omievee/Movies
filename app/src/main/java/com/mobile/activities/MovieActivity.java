@@ -84,7 +84,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screeningObject";
+    public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
@@ -218,37 +218,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
-        if (movie.getSynopsis().equals("")) {
-            selectedSynopsis.setVisibility(View.GONE);
-            selectedMoviePoster.setClickable(false);
-        }
-
-        selectedSynopsis.setOnClickListener(view -> {
-            String synopsis = movie.getSynopsis();
-            String title = movie.getTitle();
-            Bundle bundle = new Bundle();
-            bundle.putString(MOVIE, synopsis);
-            bundle.putString(TITLE, title);
-
-            SynopsisFragment fragobj = new SynopsisFragment();
-            fragobj.setArguments(bundle);
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_dialogfragment_synopsis");
-        });
-
-        selectedMoviePoster.setOnClickListener(v -> {
-            String synopsis = movie.getSynopsis();
-            String title = movie.getTitle();
-            Bundle bundle = new Bundle();
-            bundle.putString(MOVIE, synopsis);
-            bundle.putString(TITLE, title);
-
-            SynopsisFragment fragobj = new SynopsisFragment();
-            fragobj.setArguments(bundle);
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-        });
 
         filmRating.setText("Rated: " + movie.getRating());
 
@@ -347,12 +316,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screening, checkInRequest, showtime);
         } else {
-            /* TODO : Go to SELECT SEAT */
+
             Intent intent = new Intent(this, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screening));
             intent.putExtra(SHOWTIME, showtime);
             intent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
             startActivity(intent);
+            Log.d(TAG, "reserve: " + screening.getProvider().getProviderName());
             finish();
         }
 
@@ -442,6 +412,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
 
                                     }
+
+
                                 }
                             }
 
@@ -452,6 +424,43 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             }
                             selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                             ProgressBar.setVisibility(View.GONE);
+
+
+                            if (movie.getSynopsis().equals("")) {
+                                selectedSynopsis.setVisibility(View.GONE);
+                                selectedMoviePoster.setClickable(false);
+                            } else {
+                                selectedMoviePoster.setClickable(true);
+
+                                selectedSynopsis.setOnClickListener(view -> {
+                                    String synopsis = movie.getSynopsis();
+                                    String title = movie.getTitle();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(MOVIE, synopsis);
+                                    bundle.putString(TITLE, title);
+
+                                    SynopsisFragment fragobj = new SynopsisFragment();
+                                    fragobj.setArguments(bundle);
+                                    FragmentManager fm = getSupportFragmentManager();
+                                    fragobj.show(fm, "fr_dialogfragment_synopsis");
+                                });
+
+                                selectedMoviePoster.setOnClickListener(v -> {
+                                    String synopsis = movie.getSynopsis();
+                                    String title = movie.getTitle();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(MOVIE, synopsis);
+                                    bundle.putString(TITLE, title);
+
+                                    SynopsisFragment fragobj = new SynopsisFragment();
+                                    fragobj.setArguments(bundle);
+                                    FragmentManager fm = getSupportFragmentManager();
+                                    fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+                                });
+                            }
+
+
                         }
                     }
 

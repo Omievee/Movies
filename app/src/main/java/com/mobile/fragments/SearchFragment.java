@@ -19,6 +19,7 @@ import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
@@ -66,6 +67,7 @@ public class SearchFragment extends Fragment {
 
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
+
         return rootView;
     }
 
@@ -117,11 +119,11 @@ public class SearchFragment extends Fragment {
                     ALLMOVIES.addAll(info.getNowPlaying());
                     ALLMOVIES.addAll(info.getTopBoxOffice());
                     HashMap<Integer, Movie> movieHashMap = new HashMap<>();
-                    for(Movie movie : ALLMOVIES){
-                        movieHashMap.put(movie.getId(),movie);
+                    for (Movie movie : ALLMOVIES) {
+                        movieHashMap.put(movie.getId(), movie);
                     }
                     ALLMOVIES.clear();
-                    for(Movie movie : movieHashMap.values()){
+                    for (Movie movie : movieHashMap.values()) {
                         ALLMOVIES.add(movie);
                     }
                 }
