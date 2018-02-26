@@ -285,7 +285,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     signup2CCExp.setText(MONTH + "/" + YEAR);
                     signup2CC_CVV.setText(scanResult.cvv);
                     signup2NextButton.setOnClickListener(view -> {
-                        if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") || signup2CCName.equals("") || signup2CCExp.equals("")
+                        if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") ||  signup2CCExp.equals("")
                                 || signup2CCNum.getText().length() < 16 || signup2CC_CVV.getText().length() < 3 || signup2CCExp.getText().length() < 5) {
 
                             Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();

@@ -20,6 +20,7 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.TicketType;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -64,7 +65,7 @@ public class ETicketFragment extends DialogFragment {
     TicketInfoRequest ticketRequest;
     CheckInRequest checkinRequest;
     PerformanceInfoRequest mPerformReq;
-
+    Context context;
     View progressWheel;
 
     public ETicketFragment() {
@@ -99,6 +100,9 @@ public class ETicketFragment extends DialogFragment {
             getSeat = Parcels.unwrap(bundle.getParcelable(SEAT));
 
         }
+
+        //Context singleton
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
     }
 
     private PatternLockViewListener mPatternLockViewListener = new PatternLockViewListener() {
@@ -118,9 +122,6 @@ public class ETicketFragment extends DialogFragment {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {
                 if (getSeat != null) {
                     reserveWithSeat(getTitle, getShowtime, getSeat);
-                    Log.d(Constants.TAG, "name: " + getSeat.getSeatName());
-                    Log.d(Constants.TAG, "col: " + getSeat.getSelectedSeatColumn());
-                    Log.d(Constants.TAG, "row: " + getSeat.getSelectedSeatRow());
                 } else {
                     reserveNoSeat(getTitle, getShowtime);
                 }
@@ -198,6 +199,7 @@ public class ETicketFragment extends DialogFragment {
             ticketRequest = new TicketInfoRequest(perform, selectedSeat);
 
 
+
         } else {
             //IF not movieXchange then it will simply request these parameters:
             int normalizedMovieId = screening.getMoviepassId();
@@ -227,6 +229,7 @@ public class ETicketFragment extends DialogFragment {
                     sessionId);
             ticketRequest = new TicketInfoRequest(request, selectedSeat);
 
+            Log.d(Constants.TAG, "performinfo:2 " + selectedSeat);
 
         }
 
@@ -235,12 +238,15 @@ public class ETicketFragment extends DialogFragment {
         reservationRequest(screening, checkinRequest, showtime, seatSelected);
     }
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SeatSelected seatSelected) {
+
+    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, SeatSelected seatSelected) {
+
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
+                SeatSelected seat = seatSelected;
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
@@ -248,7 +254,9 @@ public class ETicketFragment extends DialogFragment {
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seatSelected);
+
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
+                    Log.d(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
                     dismiss();
@@ -402,7 +410,7 @@ public class ETicketFragment extends DialogFragment {
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     } catch (Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     }
