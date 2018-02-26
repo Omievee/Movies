@@ -91,7 +91,7 @@ public class SelectSeatActivity extends BaseActivity {
     TicketInfoRequest mTicketRequest;
     CheckInRequest mCheckinRequest;
     PerformanceInfoRequest mPerformReq;
-
+    Movie movieObject;
     private ArrayList<SeatButton> mSeatButtons;
 
 
@@ -107,7 +107,7 @@ public class SelectSeatActivity extends BaseActivity {
         Intent intent = getIntent();
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
-
+        movieObject = Parcels.unwrap(intent.getParcelableExtra(MOVIE));
 //        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
 
         coordinatorLayout = findViewById(R.id.mCoordinator);
@@ -134,11 +134,10 @@ public class SelectSeatActivity extends BaseActivity {
         mProgressWheel = findViewById(R.id.progress);
 
 
-        mSelectedMovieTitle.setText(screeningObject.getTitle());
-        mTheaterSelected.setText(screeningObject.getTheaterName());
-
-        Log.d(TAG, "theater: " + screeningObject.getTheaterName());
-        Log.d(TAG, "title: " + screeningObject.getTitle());
+        if (screeningObject != null) {
+            mSelectedMovieTitle.setText(screeningObject.getTitle());
+            mTheaterSelected.setText(screeningObject.getTheaterName());
+        }
 
         mScreeningShowtime.setText(selectedShowTime);
 
@@ -146,6 +145,8 @@ public class SelectSeatActivity extends BaseActivity {
         reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
 
         //PerformanceInfo
+
+        Log.d(TAG, "onCreate: " + screeningObject.getProvider().getProviderName());
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
         if (reserveSeatButton.getText().toString().matches(getString(R.string.activity_select_seat_activity_title))) {
@@ -157,7 +158,6 @@ public class SelectSeatActivity extends BaseActivity {
 
 
     protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest() {
-
         if (screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
             int normalizedMovieId = screeningObject.getMoviepassId();
             String externalMovieId = screeningObject.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId();
@@ -314,9 +314,9 @@ public class SelectSeatActivity extends BaseActivity {
                 mSeatButtons.add(seatButton);
 
             } else {
-            seatButton.setPadding(3, 3, 3, 3);
-            mGridSeatsA.addView(seatButton);
-            mSeatButtons.add(seatButton);
+                seatButton.setPadding(3, 3, 3, 3);
+                mGridSeatsA.addView(seatButton);
+                mSeatButtons.add(seatButton);
             }
 
             final int seatRow = seat.getRow();
@@ -342,13 +342,13 @@ public class SelectSeatActivity extends BaseActivity {
 
 
                     SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-                        Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
+                    Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
 
-                        intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
-                        intent.putExtra(SHOWTIME, selectedShowTime);
-                        intent.putExtra(SEAT, Parcels.wrap(seatSelected));
+                    intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
+                    intent.putExtra(SHOWTIME, selectedShowTime);
+                    intent.putExtra(SEAT, Parcels.wrap(seatSelected));
 
-                        startActivity(intent);
+                    startActivity(intent);
 
 
 //TODO: come back to this..
@@ -511,7 +511,7 @@ public class SelectSeatActivity extends BaseActivity {
         } else if (getIntent().getParcelableExtra(MOVIE) != null) {
             Movie movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
             Intent intent = new Intent(SelectSeatActivity.this, MovieActivity.class);
-            intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(movie));
+            intent.putExtra(MOVIE, Parcels.wrap(movie));
             startActivity(intent);
             finish();
         } else {

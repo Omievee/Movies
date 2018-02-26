@@ -264,7 +264,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             showEticketConfirmation(screen, time);
 
         } else {
-
             progress.setVisibility(View.GONE);
             Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screen));

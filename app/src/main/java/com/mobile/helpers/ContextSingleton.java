@@ -26,8 +26,8 @@ public class ContextSingleton {
     }
 
 
-    public void getGlobalContext() {
-        currentContext.getPackageName();
+    public String getGlobalContext() {
+        return currentContext.getPackageName();
     }
 
 

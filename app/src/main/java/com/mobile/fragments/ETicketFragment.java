@@ -65,7 +65,7 @@ public class ETicketFragment extends DialogFragment {
     TicketInfoRequest ticketRequest;
     CheckInRequest checkinRequest;
     PerformanceInfoRequest mPerformReq;
-
+    Context context;
     View progressWheel;
 
     public ETicketFragment() {
@@ -121,11 +121,7 @@ public class ETicketFragment extends DialogFragment {
         public void onComplete(List<PatternLockView.Dot> pattern) {
             if (PatternLockUtils.patternToString(lockView, pattern).equals("6304258")) {
                 if (getSeat != null) {
-                    Log.d(Constants.TAG, "onComplete: " + getSeat.getSeatName());
                     reserveWithSeat(getTitle, getShowtime, getSeat);
-                    Log.d(Constants.TAG, "name: " + getSeat.getSeatName());
-                    Log.d(Constants.TAG, "col: " + getSeat.getSelectedSeatColumn());
-                    Log.d(Constants.TAG, "row: " + getSeat.getSelectedSeatRow());
                 } else {
                     reserveNoSeat(getTitle, getShowtime);
                 }
@@ -248,7 +244,7 @@ public class ETicketFragment extends DialogFragment {
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
-                SeatSelected seat  = seatSelected;
+                SeatSelected seat = seatSelected;
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
@@ -301,7 +297,6 @@ public class ETicketFragment extends DialogFragment {
     private void showConfirmation(ScreeningToken token) {
         Intent confirmationIntent = new Intent(getActivity(), ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        Log.d(Constants.TAG, "SHOW CONFIRMATION TAG: " + token.getSeatName());
         startActivity(confirmationIntent);
         getActivity().finish();
     }
@@ -412,7 +407,7 @@ public class ETicketFragment extends DialogFragment {
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     } catch (Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                         dismiss();
                         progressWheel.setVisibility(View.GONE);
                     }

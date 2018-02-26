@@ -395,8 +395,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         super.onPause();
 
         theatersMapViewRecycler.setVisibility(View.INVISIBLE);
-        mClusterManager.clearItems();
-        mClusterManager.cluster();
+        if(mClusterManager != null) {
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
+        }
+
     }
 
     @Override
@@ -418,8 +421,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onDetach() {
         super.onDetach();
-        mClusterManager.clearItems();
-        mClusterManager.cluster();
+        if(mClusterManager != null) {
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
+        }
+
         listener = null;
     }
 
