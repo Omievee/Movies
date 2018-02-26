@@ -197,7 +197,7 @@ public class ETicketFragment extends DialogFragment {
                     showtimeId);
 
             ticketRequest = new TicketInfoRequest(perform, selectedSeat);
-            Log.d(Constants.TAG, "performinfo:1 " + selectedSeat);
+
 
 
         } else {
@@ -238,7 +238,9 @@ public class ETicketFragment extends DialogFragment {
         reservationRequest(screening, checkinRequest, showtime, seatSelected);
     }
 
+
     private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, SeatSelected seatSelected) {
+
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -251,6 +253,7 @@ public class ETicketFragment extends DialogFragment {
 
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+
 
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
                     Log.d(Constants.TAG, "onResponse: " + seat.getSeatName());

@@ -61,6 +61,7 @@ public class ScreeningToken {
         this.reservation = mReservation;
     }
 
+
     public void setSeatSelected(SeatSelected seatSelected) {
         this.seatSelected = seatSelected;
     }
@@ -68,6 +69,7 @@ public class ScreeningToken {
     public SeatSelected getSeatSelected() {
         return seatSelected;
     }
+
 
     public String getSeatName() {
         if (seatSelected != null) {

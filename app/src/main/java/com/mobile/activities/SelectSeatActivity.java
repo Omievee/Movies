@@ -342,6 +342,7 @@ public class SelectSeatActivity extends BaseActivity {
 
 
                     SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+
                     Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
 
                     intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
