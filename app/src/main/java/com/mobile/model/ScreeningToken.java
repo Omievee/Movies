@@ -14,7 +14,6 @@ public class ScreeningToken {
     Reservation reservation;
     Screening screening;
     int seatCol;
-    String seatName;
     int seatRow;
     String time;
     String zipCodeTicket;
@@ -27,7 +26,6 @@ public class ScreeningToken {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
-        this.seatName = null;
     }
 
     public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode) {
@@ -72,7 +70,10 @@ public class ScreeningToken {
     }
 
     public String getSeatName() {
-        return seatSelected.getSeatName();
+        if (seatSelected != null) {
+            return seatSelected.getSeatName();
+        }
+        return "";
     }
 
     public void setZipCodeTicket(String zipCodeTicket) {
