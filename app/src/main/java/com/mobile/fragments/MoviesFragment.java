@@ -231,7 +231,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
 
-        Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getPushPermission());
+        Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getIsVerificationRequired());
 
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 

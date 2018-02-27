@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_red">
 
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/VerificationMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:lineSpacingExtra="5dp"
+        android:padding="@dimen/margin_standard"
+        android:text="In order to proceed, we need to verify your ticket purchase. Please take a picture of your ticket."
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_below="@id/VerificationMsg"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/margin_half"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:src="@drawable/ticketverificon" />
+
+
+</RelativeLayout>

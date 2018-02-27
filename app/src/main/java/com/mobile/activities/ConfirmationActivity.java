@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -93,24 +95,27 @@ public class ConfirmationActivity extends BaseActivity {
         userData();
 
         if (screeningToken.getConfirmationCode() != null) {
-
             ETicket.setVisibility(View.VISIBLE);
-
             String code = screeningToken.getConfirmationCode();
             confirmCode.setText(code);
-
-
-
-
             if (screeningToken.getSeatName() != null) {
                 pendingSeat.setVisibility(View.VISIBLE);
                 pendingSeat.setText("Seat: " + screeningToken.getSeatName());
-
             }
-
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
+            if (!UserPreferences.getIsVerificationRequired()) {
+                Bundle bundle = new Bundle();
+                TicketVerificationDialog dialog = new TicketVerificationDialog();
+                dialog.setArguments(bundle);
+                FragmentManager fm = getSupportFragmentManager();
+                dialog.setCancelable(false);
+                dialog.show(fm, "fr_ticketverification_banner");
+            }
+
+
         }
+
 
         cancelButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
@@ -139,6 +144,7 @@ public class ConfirmationActivity extends BaseActivity {
 
                             Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
+
                         }
                     }
                 }

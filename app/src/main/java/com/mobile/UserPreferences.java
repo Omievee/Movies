@@ -191,10 +191,6 @@ public class UserPreferences {
         HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
 
-    public static void setFirstBoot(Boolean boot) {
-        SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putBoolean("firstBoot", true);
-        editor.apply();
-    }
+
 
 }

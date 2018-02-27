@@ -22,7 +22,7 @@
         app:mt_placeholder="Search Movies"
         app:mt_placeholderColor="@color/white"
         app:mt_roundedSearchBarEnabled="true"
-        app:mt_searchBarColor="@color/test_black"
+        app:mt_searchBarColor="@color/test_blue"
         app:mt_searchIconTint="@color/white"
         app:mt_textColor="@color/white" />
 

@@ -147,16 +147,13 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             }
         });
 
-        mRequestFocusImageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (isPreview) {
-                        focusOnTouch(motionEvent);
-                    }
+        mRequestFocusImageView.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (isPreview) {
+                    focusOnTouch(motionEvent);
                 }
-                return false;
             }
+            return false;
         });
     }
 
