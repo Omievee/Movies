@@ -1,22 +1,22 @@
 package com.mobile.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -43,7 +43,7 @@ import retrofit2.Response;
  * Created by anubis on 6/20/17.
  */
 
-public class ConfirmationActivity extends BaseActivity {
+public class ConfirmationActivity extends BaseActivity implements GestureDetector.OnGestureListener {
     public static final String TAG = " found it ";
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screeningObject";
@@ -53,14 +53,16 @@ public class ConfirmationActivity extends BaseActivity {
     Screening screening;
     ScreeningToken screeningToken;
     View progress;
+    ImageView scanTicket, downArrow;
     String ZIP;
-    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip;
+    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText;
     Button cancelButton;
-    RelativeLayout pendingData, StandardTicket, ETicket;
-
+    RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
+    GestureDetector gestureScanner;
 
     protected BottomNavigationView bottomNavigationView;
 
+    @SuppressLint("ClickableViewAccessibility")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_confirmation);
@@ -75,7 +77,7 @@ public class ConfirmationActivity extends BaseActivity {
         reservation = screeningToken.getReservation();
         String screeningTime = screeningToken.getTime();
 
-
+        verifyTicketFlag = findViewById(R.id.VerifyTicketFLag);
         noCurrentRes = findViewById(R.id.NO_Current_Res);
         pendingTitle = findViewById(R.id.PendingRes_Title);
         pendingLocal = findViewById(R.id.PendingRes_Location);
@@ -87,6 +89,12 @@ public class ConfirmationActivity extends BaseActivity {
         cancelButton = findViewById(R.id.PEndingRes_Cancel);
         zip = findViewById(R.id.PendingZip);
         pendingData = findViewById(R.id.PENDING_DATA);
+        scanTicket = findViewById(R.id.TicketScan);
+        downArrow = findViewById(R.id.Hide);
+        verifyMsgExpanded = findViewById(R.id.VerifyTicketMSG);
+        verifyText = findViewById(R.id.smallTextFlag);
+
+        gestureScanner = new GestureDetector(this);
 
 
         pendingTitle.setText(screeningToken.getScreening().getTitle());
@@ -105,14 +113,30 @@ public class ConfirmationActivity extends BaseActivity {
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
             if (!UserPreferences.getIsVerificationRequired()) {
-                Bundle bundle = new Bundle();
-                TicketVerificationDialog dialog = new TicketVerificationDialog();
-                dialog.setArguments(bundle);
-                FragmentManager fm = getSupportFragmentManager();
-                dialog.setCancelable(false);
-                dialog.show(fm, "fr_ticketverification_banner");
-            }
+                verifyTicketFlag.setVisibility(View.VISIBLE);
+                expand(verifyMsgExpanded);
+                bottomNavigationView.setVisibility(View.GONE);
+                verifyTicketFlag.setOnTouchListener((v, event) -> {
+                    if (verifyText.getVisibility() == View.INVISIBLE) {
+                        collapse(verifyMsgExpanded);
+                        fadeIn(verifyText);
+                        verifyText.setVisibility(View.VISIBLE);
+                    } else {
+                        expand(verifyMsgExpanded);
+                        fadeOut(verifyText);
+                        verifyText.setVisibility(View.INVISIBLE);
+                    }
 
+
+                    return gestureScanner.onTouchEvent(event);
+                });
+//                Bundle bundle = new Bundle();
+//                TicketVerificationDialog dialog = new TicketVerificationDialog();
+//                dialog.setArguments(bundle);
+//                FragmentManager fm = getSupportFragmentManager();
+//                dialog.setCancelable(false);
+//                dialog.show(fm, "fr_ticketverification_banner");
+            }
 
         }
 
@@ -231,5 +255,36 @@ public class ConfirmationActivity extends BaseActivity {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
             }
         });
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
     }
 }

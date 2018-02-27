@@ -195,7 +195,7 @@ dependencies {
     //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
 
-    //Umano Drawer
+    //Umano Panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
 
 }
