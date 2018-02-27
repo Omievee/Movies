@@ -62,6 +62,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountInformationFragment extends Fragment {
 
+    private static boolean updateShipping = false, updateBillingAddress = false, updateBillingCard = false;
     ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
@@ -352,6 +353,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                updateBillingAddress = true;
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
                 String address = place.getAddress().toString();
@@ -380,6 +382,7 @@ public class ProfileAccountInformationFragment extends Fragment {
             }
         } else if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2) {
             if (resultCode == RESULT_OK) {
+                updateShipping = true;
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
@@ -399,11 +402,10 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             }
         } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE)
-
         {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-
+                updateBillingCard = true;
                 String cardNumber = scanResult.getFormattedCardNumber();
                 cardNumber = cardNumber.replace(" ", "");
                 userNewBillingCC.setText(cardNumber);
@@ -457,13 +459,18 @@ public class ProfileAccountInformationFragment extends Fragment {
 
 
             progress.setVisibility(View.VISIBLE);
-//            updateShippingAddress();
+            if(updateShipping) {
+                updateShippingAddress();
+                Log.d("SAVE CHANGES------->", "saveChanges: UPDATING SHIPPING ADDRESS");
+            }
+            if(updateBillingCard) {
                 updateCCData();
+                Log.d("SAVE CHANGES------->", "saveChanges: UPDATING BILLING CARD");
+            }
 
         });
     }
 
-    //TODO: save shipping & billing info when changed..
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
