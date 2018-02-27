@@ -271,15 +271,18 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         buttonCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
-                    ProgressBar.setVisibility(View.VISIBLE);
-                    reserve(screening, showtime);
-                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-                    showActivateCardDialog(screening, showtime);
-                } else {
-                    ProgressBar.setVisibility(View.VISIBLE);
-                    reserve(screening, showtime);
-                }
+                Intent ticketVerif = new Intent(MovieActivity.this, VerificationPictureActivity.class);
+                startActivity(ticketVerif);
+
+//                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+////                    ProgressBar.setVisibility(View.VISIBLE);
+////                    reserve(screening, showtime);
+////                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
+////                    showActivateCardDialog(screening, showtime);
+////                } else {
+////                    ProgressBar.setVisibility(View.VISIBLE);
+////                    reserve(screening, showtime);
+////                }
             }
         });
     }

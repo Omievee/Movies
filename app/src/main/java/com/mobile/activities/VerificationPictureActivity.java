@@ -1,7 +1,9 @@
 package com.mobile.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -13,6 +15,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
@@ -73,6 +76,11 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         System.loadLibrary("native-lib");
     }
 
+    public static final int REQUEST_CAMERA_CODE = 0;
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
+
     private native static String getProductionBucket();
     private native static String getStagingBucket();
 
@@ -109,7 +117,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification_picture);
-        
+
         s3 = ((Application) getApplicationContext()).getAmazonS3Client();
         transferUtility = new TransferUtility(s3, getApplicationContext());
 
@@ -127,34 +135,42 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
         mRequestFocusImageView = findViewById(R.id.image_focus_touch);
         mRelFocusViewContainer = findViewById(R.id.focus_view_container);
-        
-        progress = findViewById(R.id.progress);
-        startFadeOutAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
 
-        buttonTakePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
+
             }
-        });
 
-        buttonRetakePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
-                    retakePicture();
+            progress = findViewById(R.id.progress);
+            startFadeOutAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
+            buttonTakePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    takePicture();
                 }
-            }
-        });
+            });
 
-        mRequestFocusImageView.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if (isPreview) {
-                    focusOnTouch(motionEvent);
+            buttonRetakePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
+                        retakePicture();
+                    }
                 }
-            }
-            return false;
-        });
+            });
+
+//            mRequestFocusImageView.setOnTouchListener((view, motionEvent) -> {
+//                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+//                    if (isPreview) {
+//                        focusOnTouch(motionEvent);
+//                    }
+//                }
+//                return false;
+//            });
+        }
     }
 
     @Override
@@ -541,7 +557,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
     };
 
     private HashMap<String, String> metaDataMap(@NonNull String reservationId, @NonNull String showTime, @NonNull String movieId, @NonNull String movieTitle,
-                                                @NonNull String theaterId, @NonNull String theaterName, String reservationKind ) {
+                                                @NonNull String theaterId, @NonNull String theaterName, String reservationKind) {
         HashMap<String, String> meta = new HashMap<>();
         meta.put("reservation_id", reservationId);//reservationId
         meta.put("showtime", showTime);//ShowTime
@@ -554,7 +570,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
         meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
 
-        return  meta;
+        return meta;
     }
 
     private void uploadAWSFile(File file, final String fileKey, ObjectMetadata objectMetadata) {
@@ -646,8 +662,10 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
     }
 
-    /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(){
+    /**
+     * Create a File for saving an image or video
+     */
+    private static File getOutputMediaFile() {
         // To be safe, you should test that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -657,8 +675,8 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
                 Log.d("MoviePass", "failed to create directory");
                 return null;
             }
@@ -693,7 +711,8 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                 } else {
                     if (focusModes != null && focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                         camera.autoFocus(mAutoFocusTakePictureCallback);
-                    }                }
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 FirebaseCrash.report(new Exception(e.getMessage()));
@@ -708,7 +727,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
         return new Rect(left, top, left + FOCUS_AREA_SIZE, top + FOCUS_AREA_SIZE);
     }
-
     private int clamp(int touchCoordinateInCameraReper, int focusAreaSize) {
         int result;
         if (Math.abs(touchCoordinateInCameraReper) + focusAreaSize / 2 > 1000) {

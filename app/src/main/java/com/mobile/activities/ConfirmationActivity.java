@@ -1,10 +1,14 @@
 package com.mobile.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +52,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screeningObject";
     public static final String TOKEN = "token";
-
     Reservation reservation;
     Screening screening;
     ScreeningToken screeningToken;
@@ -130,14 +133,14 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
                     return gestureScanner.onTouchEvent(event);
                 });
-//                Bundle bundle = new Bundle();
-//                TicketVerificationDialog dialog = new TicketVerificationDialog();
-//                dialog.setArguments(bundle);
-//                FragmentManager fm = getSupportFragmentManager();
-//                dialog.setCancelable(false);
-//                dialog.show(fm, "fr_ticketverification_banner");
-            }
 
+                scanTicket.setOnClickListener(v -> {
+
+                    Intent ticketVerif = new Intent(ConfirmationActivity.this, VerificationPictureActivity.class);
+                    startActivity(ticketVerif);
+
+                });
+            }
         }
 
 
@@ -180,9 +183,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 }
             });
         });
-
-
     }
+
+
 
     /* Bottom Navigation View */
 
@@ -288,3 +291,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         return false;
     }
 }
+//                Bundle bundle = new Bundle();
+//                TicketVerificationDialog dialog = new TicketVerificationDialog();
+//                dialog.setArguments(bundle);
+//                FragmentManager fm = getSupportFragmentManager();
+//                dialog.setCancelable(false);
+//                dialog.show(fm, "fr_ticketverification_banner");
