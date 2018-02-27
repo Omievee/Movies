@@ -220,6 +220,12 @@ public class ProfileAccountInformationFragment extends Fragment {
             newBillingData.setVisibility(View.VISIBLE);
             newBillingData2.setVisibility(View.VISIBLE);
 
+            userNewBillingCC.setText("");
+            userNewBillingCVV.setText("");
+            userNewBillingExp.setText("");
+
+
+
             userScanCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -268,8 +274,57 @@ public class ProfileAccountInformationFragment extends Fragment {
                         s.insert(s.length() - 1, String.valueOf("/"));
                     }
                 }
+                manuallyUpdateCC();
             }
         });
+
+        userNewBillingCVV.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                manuallyUpdateCC();
+            }
+        });
+
+        userNewBillingCC.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                manuallyUpdateCC();
+            }
+        });
+
+
+
+    }
+
+    private void manuallyUpdateCC(){
+        //If CC info is not empty
+        if(!userNewBillingCC.getText().toString().trim().isEmpty() &&
+                !userNewBillingExp.getText().toString().trim().isEmpty() &&
+                !userNewBillingCVV.getText().toString().trim().isEmpty()){
+            userSave.setTextColor(getResources().getColor(R.color.new_red));
+            updateBillingCard = true;
+            saveChanges();
+        }
 
     }
 
@@ -461,11 +516,9 @@ public class ProfileAccountInformationFragment extends Fragment {
             progress.setVisibility(View.VISIBLE);
             if(updateShipping) {
                 updateShippingAddress();
-                Log.d("SAVE CHANGES------->", "saveChanges: UPDATING SHIPPING ADDRESS");
             }
             if(updateBillingCard) {
                 updateCCData();
-                Log.d("SAVE CHANGES------->", "saveChanges: UPDATING BILLING CARD");
             }
 
         });
@@ -535,7 +588,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     newBillingData2.setVisibility(View.GONE);
 
                     loadUserInfo();
-
+                    loadFragment();
                 }
             }
 
@@ -548,6 +601,10 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             }
         });
+    }
+
+    public void loadFragment(){
+        getActivity().onBackPressed();
     }
 
 
