@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     Switch billingSwitch;
     RelativeLayout userOldBilling, shippingClick, billingClick;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
+    String userBillingAddress, getUserBillingAddress2, userBillingCity, userBillingState, userBillingZip;
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
             userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userMPCardNum, userMPExpirNum;
 
@@ -105,6 +107,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userState = rootView.findViewById(R.id.State);
         userZip = rootView.findViewById(R.id.zip);
         userAddress2 = rootView.findViewById(R.id.Address2);
+        userAddress2.setEnabled(false);
 
         userBillingDate = rootView.findViewById(R.id.BillingDate);
         userPlan = rootView.findViewById(R.id.Plan);
@@ -340,21 +343,80 @@ public class ProfileAccountInformationFragment extends Fragment {
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
                     String email = userInfoResponse.getEmail();
+                    String addressLine1 = userInfoResponse.getShippingAddressLine1();
 
                     userName.setText(firstName + " " + lastName);
                     userEmail.setText(email);
-                    userAddress.setText(userInfoResponse.getShippingAddressLine1());
+//
+//
+//                    if(addressLine1.charAt(userInfoResponse.getShippingAddressLine1().length()-1)!='#'){
+//                        String apt = "";
+//                        boolean exit = false;
+//                        int i = addressLine1.length()-1;
+//                        while(!exit){
+//                            apt = addressLine1.charAt(i) + apt;
+//                            addressLine1 = addressLine1.substring(0,i);
+//                            i = addressLine1.length()-1;
+//                            if(addressLine1.charAt(i) == '#')
+//                                exit=true;
+//                        }
+//                        userAddress2.setText(apt);
+//                    }
+
+                    userAddress.setText(addressLine1);
 
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
+                    String shippingCity = "", shippingState = "", shippingZip ="";
 
                     for (int i = 0; i < addressList.size(); i++) {
                         userCity.setText(addressList.get(0));
                         userState.setText(addressList.get(1));
                         userZip.setText(addressList.get(2));
-
+                        shippingCity = addressList.get(0);
+                        shippingState = addressList.get(1);
+                        shippingZip = addressList.get(2);
 
                     }
+
+                    String billingAddress = userInfoResponse.getBillingAddressLine2();
+                    List<String> billingAddressList = Arrays.asList(billingAddress.split(",", -1));
+                    String billingCity = "", billingState = "", billingZip = "";
+
+                    for (int i = 0; i < billingAddressList.size(); i++) {
+                        billingCity = (billingAddressList.get(0));
+                        billingState = (billingAddressList.get(1));
+                        billingZip = (billingAddressList.get(2));
+
+                    }
+
+
+
+                    if(userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())){
+                        if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
+                                !shippingZip.equalsIgnoreCase(billingZip)){
+                            billingSwitch.setChecked(false);
+                            yesNo.setText("NO");
+                            billing2.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    else
+                    {
+                        billingSwitch.setChecked(false);
+                        yesNo.setText("NO");
+                        billing2.setVisibility(View.VISIBLE);
+
+                        userNewAddress.setText(userInfoResponse.getBillingAddressLine1());
+                        userNewCity.setText(billingCity);
+                        userNewState.setText(billingState);
+                        userNewZip.setText(billingZip);
+
+                        String billingAddressLine1 = userInfoResponse.getBillingAddressLine1();
+
+                        userNewAddress.setText(billingAddressLine1);
+
+                    }
+
                     userBIllingCard.setText(userInfoResponse.getBillingCard());
                     if (userInfoResponse.getNextBillingDate().equals("")) {
                         userBillingDate.setText("Unknown");
@@ -362,7 +424,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                         userBillingDate.setText(userInfoResponse.getNextBillingDate());
 
                     }
-
 
                     userMPCardNum.setText(userInfoResponse.getMoviePassCardNumber());
 
@@ -438,6 +499,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         } else if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2) {
             if (resultCode == RESULT_OK) {
                 updateShipping = true;
+                userAddress2.setEnabled(true);
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
@@ -520,6 +582,9 @@ public class ProfileAccountInformationFragment extends Fragment {
             if(updateBillingCard) {
                 updateCCData();
             }
+            if(updateBillingAddress){
+                updateBillingAddress();
+            }
 
         });
     }
@@ -529,6 +594,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
             String newAddress = userAddress.getText().toString();
             String newAddress2 = userAddress2.getText().toString();
+            Log.d("UPDATING ADDRESS ---> ", "updateShippingAddress: "+newAddress2);
             String newCity = userCity.getText().toString();
             String newZip = userZip.getText().toString();
             String newState = userState.getText().toString();
@@ -543,6 +609,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     loadUserInfo();
                     Toast.makeText(getActivity(), "Shipping address has been updated", Toast.LENGTH_SHORT).show();
+                    loadFragment();
                 }
 
                 @Override
@@ -556,14 +623,48 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     }
 
-    public void updateCCData() {
-        String newCC = userNewBillingCC.getText().toString();
-        String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-        String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-        String newExp = ccExMonth + "/" + ccExYr;
-        String newCVV = userNewBillingCVV.getText().toString();
+    public void updateBillingAddress() {
+        int userId = UserPreferences.getUserId();
+        if (userNewAddress.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
+            String newAddress = userNewAddress.getText().toString();
+            String newAddress2 = userNewAddress2.getText().toString();
+            String newCity = userNewCity.getText().toString();
+            String newZip = userNewZip.getText().toString();
+            String newState = userNewState.getText().toString();
 
-        updateCreditCard(newCC, newExp, newCVV);
+            String type = "billingAddress";
+            Log.d("UPDATING BILLING (1)", "updateBillingAddress: ");
+
+            AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
+            RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+                @Override
+                public void onResponse(Call<Object> call, Response<Object> response) {
+                    progress.setVisibility(View.GONE);
+
+                    loadUserInfo();
+                    Toast.makeText(getActivity(), "Billing address has been updated", Toast.LENGTH_SHORT).show();
+                    loadFragment();
+                }
+
+                @Override
+                public void onFailure(Call<Object> call, Throwable t) {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                    loadFragment();
+                }
+            });
+        }
+
+    }
+
+
+    public void updateCCData() {
+            String newCC = userNewBillingCC.getText().toString();
+            String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+            String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+            String newExp = ccExMonth + "/" + ccExYr;
+            String newCVV = userNewBillingCVV.getText().toString();
+            updateCreditCard(newCC, newExp, newCVV);
     }
 
 
@@ -578,8 +679,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                 if (response.isSuccessful() && response.body() != null) {
                     progress.setVisibility(View.GONE);
-
-
                     userNewBillingCC.clearComposingText();
                     userNewBillingCVV.clearComposingText();
                     userNewBillingExp.clearComposingText();
@@ -597,6 +696,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
+                    loadFragment();
                 }
 
             }
@@ -661,5 +761,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         v.startAnimation(a);
     }
 }
+
 
 

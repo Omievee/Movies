@@ -135,7 +135,6 @@ public class ProfileFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
 
-
         });
 
         TOS.setOnClickListener(view13 -> {
