@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
@@ -20,8 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -52,6 +55,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screeningObject";
     public static final String TOKEN = "token";
+    public static final int REQUEST_CAMERA_CODE = 0;
     Reservation reservation;
     Screening screening;
     ScreeningToken screeningToken;
@@ -62,7 +66,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     Button cancelButton;
     RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
     GestureDetector gestureScanner;
-
+    private static String CAMERA_PERMISSIONS[] = new String[]{
+            Manifest.permission.CAMERA
+    };
     protected BottomNavigationView bottomNavigationView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -135,10 +141,14 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 scanTicket.setOnClickListener(v -> {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+                        } else {
+                            scan_Ticket();
+                        }
 
-                    Intent ticketVerif = new Intent(ConfirmationActivity.this, VerificationPictureActivity.class);
-                    startActivity(ticketVerif);
-
+                    }
                 });
             }
         }
@@ -185,7 +195,20 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            scan_Ticket();
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, "You must grant permissions in order to continue", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     /* Bottom Navigation View */
 
@@ -290,10 +313,10 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
     }
+
+
+    public void scan_Ticket() {
+        Intent ticketVerif = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(ticketVerif, Constants.REQUEST_TICKET_VERIF);
+    }
 }
-//                Bundle bundle = new Bundle();
-//                TicketVerificationDialog dialog = new TicketVerificationDialog();
-//                dialog.setArguments(bundle);
-//                FragmentManager fm = getSupportFragmentManager();
-//                dialog.setCancelable(false);
-//                dialog.show(fm, "fr_ticketverification_banner");

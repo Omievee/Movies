@@ -33,8 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/quadruple_margin_standard"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/test_black">
+        android:background="@color/dark">
 
         <ImageView
             android:id="@+id/take_picture"

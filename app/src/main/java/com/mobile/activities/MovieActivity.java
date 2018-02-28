@@ -1,10 +1,13 @@
 package com.mobile.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
@@ -15,6 +18,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -88,6 +92,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
+
 
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -271,18 +276,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         buttonCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ticketVerif = new Intent(MovieActivity.this, VerificationPictureActivity.class);
-                startActivity(ticketVerif);
 
-//                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
-////                    ProgressBar.setVisibility(View.VISIBLE);
-////                    reserve(screening, showtime);
-////                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-////                    showActivateCardDialog(screening, showtime);
-////                } else {
-////                    ProgressBar.setVisibility(View.VISIBLE);
-////                    reserve(screening, showtime);
-////                }
+                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+                    ProgressBar.setVisibility(View.VISIBLE);
+                    reserve(screening, showtime);
+                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
+                    showActivateCardDialog(screening, showtime);
+                } else {
+                    ProgressBar.setVisibility(View.VISIBLE);
+                    reserve(screening, showtime);
+                }
             }
         });
     }
@@ -651,29 +654,5 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
 
-//    public void isFirstTime() {
-//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-//            @Override
-//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-//                if (response.isSuccessful() && response != null) {
-//                    historyResponse = response.body();
-//                    if (historyResponse.getReservations().size() == 0) {
-//
-//                        isfirst = true;
-//                    } else {
-//                        isfirst = false;
-//                    }
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-//
-//            }
-//        });
-//
-//    }
-
-
 }
+

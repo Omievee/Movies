@@ -23,6 +23,7 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -139,25 +140,33 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (restriction.getPopInfo() != null) {
+                    if (!UserPreferences.getIsVerificationRequired() ) {
 
-                        int reservationId = restriction.getPopInfo().getReservationId();
-                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-                        String theaterName = restriction.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-                        String showtime = restriction.getPopInfo().getShowtime();
+//                        int reservationId = restriction.getPopInfo().getReservationId();
+//                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+//                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+//                        String theaterName = restriction.getPopInfo().getTheaterName();     && restriction.getPopInfo() != null
+//                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+//                        String showtime = restriction.getPopInfo().getShowtime();
 
-                        Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
-                        intent.putExtra("reservationId", reservationId);
-                        intent.putExtra("mSelectedMovieTitle", movieTitle);
-                        intent.putExtra("tribuneMovieId", tribuneMovieId);
-                        intent.putExtra("mTheaterSelected", theaterName);
-                        intent.putExtra("tribuneTheaterId", tribuneTheaterId);
-                        intent.putExtra("showtime", showtime);
-                        startActivity(intent);
-                        finish();
+
+//                        Bundle bundle = new Bundle();
+//                        bundle.putInt("reservationId", reservationId);
+//                        bundle.putString("mSelectedMovieTitle", movieTitle);
+//                        bundle.putString("tribuneMovieId", tribuneMovieId);
+//                        bundle.putString("mTheaterSelected", theaterName);
+//                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+//                        bundle.putString("showtime", showtime);
+//
+
+                        TicketVerificationDialog dialog = new TicketVerificationDialog();
+//                        dialog.setArguments(bundle);
+                        FragmentManager fm = getSupportFragmentManager();
+                        dialog.setCancelable(false);
+                        dialog.show(fm, "fr_ticketverification_banner");
+
                     }
+
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

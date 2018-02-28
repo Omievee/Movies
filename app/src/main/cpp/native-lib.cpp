@@ -20,7 +20,8 @@ Java_com_moviepass_fragments_SignUpStepTwoFragment_getSandboxTokenizationKey(JNI
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_fragments_SignUpStepTwoFragment_getProductionTokenizationKey(JNIEnv *env, jclass) {
+Java_com_moviepass_fragments_SignUpStepTwoFragment_getProductionTokenizationKey(JNIEnv *env,
+                                                                                jclass) {
     jstring str = env->NewStringUTF("sandbox_snpbh3w8_2fj37y3ndsjstzxv");
     return str;
 }
@@ -32,13 +33,13 @@ Java_com_mobile_application_Application_getCognitoKey(JNIEnv *env, jclass) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_activities_VerificationPictureActivity_getProductionBucket(JNIEnv *env, jclass) {
+Java_com_mobile_fragments_TicketVerificationDialog_getProductionBucket(JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("mpcore.production.tickets");
     return str;
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_activities_VerificationPictureActivity_getStagingBucket(JNIEnv *env, jclass) {
+Java_com_mobile_fragments_TicketVerificationDialog_getStagingBucket(JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("mpcore.staging.tickets");
     return str;
 }
@@ -56,4 +57,16 @@ Java_com_moviepass_fragments_ProfilePaymentInformationFragment_getProductionToke
     jstring str = env->NewStringUTF("sandbox_snpbh3w8_2fj37y3ndsjstzxv");
     return str;
 }
+
+//JNIEXPORT jstring JNICALL
+//Java_com_mobile_fragments_TicketVerificationDialog_getProductionBucket(JNIEnv *env, jclass type) {
+//    jstring str = env->NewStringUTF("mpcore.production.tickets");
+//    return str;
+//}
+//JNIEXPORT jstring JNICALL
+//Java_com_mobile_fragments_TicketVerificationDialog_getStagingBucket(JNIEnv *env, jclass type) {
+//
+//    jstring str = env->NewStringUTF("mpcore.staging.tickets");
+//    return str;
+//}
 }

@@ -82,6 +82,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
     };
 
     private native static String getProductionBucket();
+
     private native static String getStagingBucket();
 
     private static final String TAG = "TAG";
@@ -110,7 +111,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
     RelativeLayout relativeLayout;
     ImageView buttonTakePicture;
     ImageView buttonRetakePicture;
-    ImageView buttonSubmitPicture;
+    ImageView buttonSubmitPicture, buttonClose;
     View progress;
 
     @Override
@@ -129,6 +130,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
 
+        buttonClose = findViewById(R.id.close);
         buttonTakePicture = findViewById(R.id.take_picture);
         buttonRetakePicture = findViewById(R.id.retake_picture);
         buttonSubmitPicture = findViewById(R.id.submit_picture);
@@ -140,38 +142,31 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(CAMERA_PERMISSIONS, REQUEST_CAMERA_CODE);
-
             }
-
-            progress = findViewById(R.id.progress);
-            startFadeOutAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
-
-            buttonTakePicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    takePicture();
-                }
-            });
-
-            buttonRetakePicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
-                        retakePicture();
-                    }
-                }
-            });
-
-//            mRequestFocusImageView.setOnTouchListener((view, motionEvent) -> {
-//                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//                    if (isPreview) {
-//                        focusOnTouch(motionEvent);
-//                    }
-//                }
-//                return false;
-//            });
         }
+
+
+        progress = findViewById(R.id.progress);
+        startFadeOutAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+
+        buttonTakePicture.setOnClickListener(v -> takePicture());
+
+        buttonRetakePicture.setOnClickListener(v -> {
+            if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
+                retakePicture();
+            }
+        });
+
+        mRequestFocusImageView.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (isPreview) {
+                    focusOnTouch(motionEvent);
+                }
+            }
+            return false;
+        });
     }
+
 
     @Override
     public void onPause() {
@@ -225,7 +220,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
             setCameraDisplayOrientation(this, 0, camera);
-
             Camera.Parameters p = camera.getParameters();
             List<String> focusModes = p.getSupportedFocusModes();
             if (p.getSupportedFocusModes().contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
@@ -240,9 +234,11 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             if (focusModes != null && focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
                 camera.autoFocus(mAutoFocusTakePictureCallback);
             }
-            addViewAndRemove(holder.getSurfaceFrame().centerX(), holder.getSurfaceFrame().centerY());
+//            addViewAndRemove(holder.getSurfaceFrame().centerX(), holder.getSurfaceFrame().centerY());
             isPreview = true;
+
         } catch (IOException e) {
+
         }
     }
 
@@ -262,7 +258,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
      */
     public void stopPreview() {
         if (camera != null) {
-
             isPreview = false;
             camera.stopPreview();
         }
@@ -350,21 +345,21 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         camera.setDisplayOrientation(result);
     }
 
-    void addViewAndRemove(float x, float y) {
-        mRelFocusViewContainer.removeAllViews();
-
-        View view = getLayoutInflater().inflate(R.layout.view_focus_circle, null);
-        view.setX(x - 30);
-        view.setY(y - 30);
-        mRelFocusViewContainer.addView(view);
-        view.startAnimation(startFadeOutAnimation);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, 750);
-    }
+//    void addViewAndRemove(float x, float y) {
+//        mRelFocusViewContainer.removeAllViews();
+//
+//        View view = getLayoutInflater().inflate(R.layout.view_focus_circle, null);
+//        view.setX(x - 30);
+//        view.setY(y - 30);
+//        mRelFocusViewContainer.addView(view);
+//        view.startAnimation(startFadeOutAnimation);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }, 750);
+//    }
 
     public static int getRotationAngle(Activity mContext, int cameraId) {
         android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
@@ -453,10 +448,8 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
     }
 
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
-
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
             int angleToRotate = getRotationAngle(VerificationPictureActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK);
             // Solve image inverting problem
             Bitmap orignalImage = BitmapFactory.decodeByteArray(data, 0, data.length);
@@ -471,7 +464,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
-                Log.d(TAG, "Error creating media file, test storage permissions: ");
+                Log.d(TAG, "Error creating media file, test storage permissions");
                 return;
             }
 
@@ -491,68 +484,73 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                 return;
             }
 
-            buttonSubmitPicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    progress.setVisibility(View.VISIBLE);
-                    buttonSubmitPicture.setEnabled(false);
+            Log.d(TAG, "button Submit: ");
+            if (buttonRetakePicture.getVisibility() == View.VISIBLE) {
+                buttonSubmitPicture.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: ");
+                        progress.setVisibility(View.VISIBLE);
+                        buttonSubmitPicture.setEnabled(false);
 
-                    final Intent intent = getIntent();
+                        final Intent intent = getIntent();
 
-                    //MetaData
-                    final ObjectMetadata objectMetadata = new ObjectMetadata();
+                        //MetaData
+                        final ObjectMetadata objectMetadata = new ObjectMetadata();
 
-                    if (screening != null) {
+                        if (screening != null) {
 
-                        final String fileKey = String.valueOf(token.getReservation().getId());
+                            final String fileKey = String.valueOf(token.getReservation().getId());
 
-                        //AWS S3 upload
-                        try {
-                            String reservationId = String.valueOf(token.getReservation().getId());
-                            String showTime = String.valueOf(token.getTime());
-                            String movieTitle = URLEncoder.encode(token.getScreening() != null ? token.getScreening().getTitle() : "", "UTF-8");
-                            String theaterName = URLEncoder.encode(token.getScreening().getTheaterName(), "UTF-8");
-                            URLEncoder.encode(Build.MODEL, "UTF-8");
-                            String reservationKind = token.getScreening().getKind();
-                            String movieId = String.valueOf(token.getScreening().getMoviepassId());
-                            String theaterId = String.valueOf(token.getScreening().getTribuneTheaterId());
+                            //AWS S3 upload
+                            try {
+                                String reservationId = String.valueOf(token.getReservation().getId());
+                                String showTime = String.valueOf(token.getTime());
+                                String movieTitle = URLEncoder.encode(token.getScreening() != null ? token.getScreening().getTitle() : "", "UTF-8");
+                                String theaterName = URLEncoder.encode(token.getScreening().getTheaterName(), "UTF-8");
+                                URLEncoder.encode(Build.MODEL, "UTF-8");
+                                String reservationKind = token.getScreening().getKind();
+                                String movieId = String.valueOf(token.getScreening().getMoviepassId());
+                                String theaterId = String.valueOf(token.getScreening().getTribuneTheaterId());
 
-                            //Setting MetaData
-                            objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                                //Setting MetaData
+                                objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            //Upload
+                            uploadAWSFile(getPictureFile, fileKey, objectMetadata);
+                        } else {
+
+                            Log.d("intextras", "intextras" + intent.getExtras());
+
+                            final String fileKey = String.valueOf(intent.getIntExtra("reservationId", 0));
+
+                            //AWS S3 upload
+                            try {
+                                String reservationId = String.valueOf(intent.getIntExtra("reservationId", 0));
+                                String showTime = String.valueOf(intent.getStringExtra("showtime"));
+                                String movieTitle = URLEncoder.encode(intent.getStringExtra("mSelectedMovieTitle"), "UTF-8");
+                                String theaterName = URLEncoder.encode(intent.getStringExtra("mTheaterSelected"), "UTF-8");
+                                URLEncoder.encode(Build.MODEL, "UTF-8");
+                                String reservationKind = URLEncoder.encode(String.valueOf("STANDARD"), "UTF-8");
+                                String movieId = String.valueOf(intent.getStringExtra("tribuneMovieId"));
+                                String theaterId = String.valueOf(intent.getStringExtra("tribuneTheaterId"));
+
+                                //Setting MetaData
+                                objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+
+                            //Upload
+                            uploadAWSFile(getPictureFile, fileKey, objectMetadata);
                         }
-
-                        //Upload
-                        uploadAWSFile(getPictureFile, fileKey, objectMetadata);
-                    } else {
-
-                        Log.d("intextras", "intextras" + intent.getExtras());
-
-                        final String fileKey = String.valueOf(intent.getIntExtra("reservationId", 0));
-
-                        //AWS S3 upload
-                        try {
-                            String reservationId = String.valueOf(intent.getIntExtra("reservationId", 0));
-                            String showTime = String.valueOf(intent.getStringExtra("showtime"));
-                            String movieTitle = URLEncoder.encode(intent.getStringExtra("mSelectedMovieTitle"), "UTF-8");
-                            String theaterName = URLEncoder.encode(intent.getStringExtra("mTheaterSelected"), "UTF-8");
-                            URLEncoder.encode(Build.MODEL, "UTF-8");
-                            String reservationKind = URLEncoder.encode(String.valueOf("STANDARD"), "UTF-8");
-                            String movieId = String.valueOf(intent.getStringExtra("tribuneMovieId"));
-                            String theaterId = String.valueOf(intent.getStringExtra("tribuneTheaterId"));
-
-                            //Setting MetaData
-                            objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-
-                        //Upload
-                        uploadAWSFile(getPictureFile, fileKey, objectMetadata);
                     }
-                }
-            });
+                });
+            }
+
         }
     };
 
@@ -575,7 +573,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
     private void uploadAWSFile(File file, final String fileKey, ObjectMetadata objectMetadata) {
         buttonSubmitPicture.setEnabled(false);
-
         //Staging Bucket
         //TransferObserver observer = transferUtility.upload(getStagingBucket(), fileKey, file, objectMetadata);
 
@@ -586,7 +583,6 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             public void onStateChanged(int id, TransferState state) {
                 if (isActivityFinished)
                     return;
-
                 if (state == TransferState.COMPLETED) {
                     Log.i(TAG, "id: " + id + " State: " + state);
                     progress.setVisibility(View.GONE);
@@ -607,6 +603,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
                             @Override
                             public void onFailure(Call<VerificationResponse> call, Throwable t) {
+
                             }
                         });
                     } else if (intent.getExtras() != null) {
@@ -616,6 +613,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                         RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
                             @Override
                             public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
+
                                 Intent confirmationIntent = new Intent(VerificationPictureActivity.this, BrowseActivity.class);
                                 startActivity(confirmationIntent);
                                 finish();
@@ -645,14 +643,12 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
             @Override
             public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
                 Log.i(TAG, " id:" + id + " Bytes Current:" + bytesCurrent + " Total" + bytesTotal);
-
             }
 
             @Override
             public void onError(int id, Exception ex) {
                 if (isActivityFinished)
                     return;
-
                 Log.e(TAG, "id:" + id);
                 ex.printStackTrace();
                 progress.setVisibility(View.GONE);
@@ -669,8 +665,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         // To be safe, you should test that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "MoviePass");
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -686,8 +681,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
 
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                timeStamp + ".jpg");
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp + ".jpg");
 
         return mediaFile;
     }
@@ -715,9 +709,9 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                FirebaseCrash.report(new Exception(e.getMessage()));
+//                FirebaseCrash.report(new Exception(e.getMessage()));
             }
-            addViewAndRemove(event.getX(), event.getY());
+//            addViewAndRemove(event.getX(), event.getY());
         }
     }
 
@@ -727,6 +721,7 @@ public class VerificationPictureActivity extends AppCompatActivity implements Su
 
         return new Rect(left, top, left + FOCUS_AREA_SIZE, top + FOCUS_AREA_SIZE);
     }
+
     private int clamp(int touchCoordinateInCameraReper, int focusAreaSize) {
         int result;
         if (Math.abs(touchCoordinateInCameraReper) + focusAreaSize / 2 > 1000) {
