@@ -2,6 +2,7 @@ package com.mobile.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -9,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +45,7 @@ import retrofit2.Response;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     int offset = 3232323;
-
+    Bundle bundle;
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
     public final static int REQUEST_STORAGE_CODE = 1001;
@@ -140,7 +142,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (!UserPreferences.getIsVerificationRequired() ) {
+                    if (!UserPreferences.getIsVerificationRequired()) {
 
 //                        int reservationId = restriction.getPopInfo().getReservationId();
 //                        String movieTitle = restriction.getPopInfo().getMovieTitle();
@@ -150,7 +152,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 //                        String showtime = restriction.getPopInfo().getShowtime();
 
 
-//                        Bundle bundle = new Bundle();
+//                        bundle = new Bundle();
 //                        bundle.putInt("reservationId", reservationId);
 //                        bundle.putString("mSelectedMovieTitle", movieTitle);
 //                        bundle.putString("tribuneMovieId", tribuneMovieId);
@@ -160,10 +162,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 //
 
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
-//                        dialog.setArguments(bundle);
                         FragmentManager fm = getSupportFragmentManager();
-                        dialog.setCancelable(false);
-                        dialog.show(fm, "fr_ticketverification_banner");
+                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
 
                     }
 
@@ -196,6 +196,19 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             }
         });
+    }
+
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+        // Make sure the current transaction finishes first
+        fragmentManager.executePendingTransactions();
+        // If there is no fragment yet with this tag...
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            TicketVerificationDialog dialog = new TicketVerificationDialog();
+//            dialog.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            dialog.setCancelable(false);
+            dialog.show(fm, "fr_ticketverification_banner");
+        }
     }
 
     public boolean isOnline() {

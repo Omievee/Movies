@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -29,6 +33,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.utils.AppUtils;
@@ -59,12 +64,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     View root;
     int PERMISSION_ALL = 1;
     Bitmap photo;
+    ProgressBar progress;
+    TextView noStub;
 
     private native static String getProductionBucket();
-
     private native static String getStagingBucket();
 
-    private AmazonS3 client;
     private TransferUtility transferUtility;
 
     public static final int REQUEST_CAMERA_CODE = 0;
@@ -101,18 +106,14 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         root = inflater.inflate(R.layout.fr_ticketverification_banner, container, false);
 
         ticketScan = root.findViewById(R.id.TicketScan);
-
-
-        client = ((Application) getContext().getApplicationContext()).getAmazonS3Client();
-        Log.d(Constants.TAG, "onCreateView: " + client);
-
-
+        progress = root.findViewById(R.id.progress);
+        noStub = root.findViewById(R.id.NoStub);
         transferUtility = TransferUtility.builder()
                 .context(getActivity().getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
                 .s3Client(((Application) getContext().getApplicationContext()).getAmazonS3Client())
                 .build();
-        //TransferUtility(client, getContext().getApplicationContext());
+
         return root;
     }
 
@@ -130,6 +131,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 scanTicket();
             }
         });
+
+        noStub.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), TicketVerification_NoStub.class);
+            startActivity(intent);
+        });
     }
 
 
@@ -144,38 +150,10 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
             if (data.getExtras() != null) {
                 photo = (Bitmap) data.getExtras().get("data");
-
                 if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
                 } else {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    final byte[] bitmapdata = bos.toByteArray();
-
-                    File pictureFile = getOutputMediaFile();
-                    if (pictureFile == null) {
-                        Log.d(Constants.TAG, "Error creating media file, test storage permissions");
-                        return;
-                    }
-
-                    try {
-                        FileOutputStream fos = new FileOutputStream(pictureFile);
-                        fos.write(bitmapdata);
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        Log.d(Constants.TAG, "File not found: " + e.getMessage());
-                    } catch (IOException e) {
-
-                        Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
-
-                    }
-                    //Turn into file
-                    final File getPictureFile = getOutputMediaFile();
-                    if (getPictureFile == null) {
-                        return;
-                    }
-                    Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
-                    uploadToAWS(getPictureFile);
+                    createImageFile();
                 }
 
             }
@@ -184,20 +162,60 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     }
 
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //Check permissions results.. one for camera, the other for storage
         if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             scanTicket();
         } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getActivity(), "You must grant Camera permissions to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
         }
-
         if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            createBitmapFile(photo);
+            createImageFile();
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(getActivity(), "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
+
         }
+    }
+
+    public void createImageFile() {
+        Handler handler = new Handler();
+        progress.setVisibility(View.VISIBLE);
+        ticketScan.setVisibility(View.INVISIBLE);
+        handler.postDelayed(() -> {
+
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            final byte[] bitmapdata = bos.toByteArray();
+
+            File pictureFile = getOutputMediaFile();
+            if (pictureFile == null) {
+                Log.d(Constants.TAG, "Error creating media file, test storage permissions");
+                return;
+            }
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                fos.write(bitmapdata);
+                fos.close();
+            } catch (FileNotFoundException e) {
+                Log.d(Constants.TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+
+                Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
+
+            }
+            //Turn into file
+            final File getPictureFile = getOutputMediaFile();
+            if (getPictureFile == null) {
+                return;
+            }
+            Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
+            uploadToAWS(getPictureFile);
+        }, 4000);
+
     }
 
     private void uploadToAWS(File ticketPhoto) {
@@ -222,17 +240,14 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
         String key = "1";
 
-        TransferObserver observer = transferUtility.upload(getProductionBucket(), key, ticketPhoto, objectMetadata);
-
-        Log.d(Constants.TAG, "uploadToAWS: " + observer);
+        TransferObserver observer = transferUtility.upload(getStagingBucket(), key, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
-                    Log.d(Constants.TAG, "complete: ");
-                } else {
-                    Log.d(Constants.TAG, "fail: " + state.toString());
-
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                    dismiss();
                 }
             }
 
@@ -242,7 +257,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             }
 
             @Override
-            public void onError(int id , Exception ex) {
+            public void onError(int id, Exception ex) {
                 Log.d(Constants.TAG, "onError: ");
             }
         });
@@ -266,14 +281,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     }
 
     private static File getOutputMediaFile() {
-        // To be safe, you should test that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
                 Log.d("MoviePass", "failed to create directory");

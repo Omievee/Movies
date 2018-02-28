@@ -28,7 +28,7 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme"/>
+    <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
         <item name="colorPrimary">@color/test_blue</item>
@@ -43,6 +43,10 @@
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="CircularProgressWhite" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="MyOverflowText" parent="TextAppearance.AppCompat.Small">
