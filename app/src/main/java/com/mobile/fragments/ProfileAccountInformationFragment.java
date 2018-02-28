@@ -76,7 +76,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
             userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userMPCardNum, userMPExpirNum;
 
-    Button userSave;
+    Button userSave, userCancel;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
     ImageButton userScanCard;
     String MONTH, YEAR;
@@ -138,6 +138,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         newBillingData2 = rootView.findViewById(R.id.profile_newBilling2);
 
         userSave = rootView.findViewById(R.id.saveChanges);
+        userCancel = rootView.findViewById(R.id.cancelChanges);
         cancelSubscription = new ProfileCancellationFragment();
 
         userMPCardNum = rootView.findViewById(R.id.MPCardNum);
@@ -325,6 +326,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 !userNewBillingExp.getText().toString().trim().isEmpty() &&
                 !userNewBillingCVV.getText().toString().trim().isEmpty()){
             userSave.setTextColor(getResources().getColor(R.color.new_red));
+            userCancel.setTextColor(getResources().getColor(R.color.white));
             updateBillingCard = true;
             saveChanges();
         }
@@ -347,21 +349,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     userName.setText(firstName + " " + lastName);
                     userEmail.setText(email);
-//
-//
-//                    if(addressLine1.charAt(userInfoResponse.getShippingAddressLine1().length()-1)!='#'){
-//                        String apt = "";
-//                        boolean exit = false;
-//                        int i = addressLine1.length()-1;
-//                        while(!exit){
-//                            apt = addressLine1.charAt(i) + apt;
-//                            addressLine1 = addressLine1.substring(0,i);
-//                            i = addressLine1.length()-1;
-//                            if(addressLine1.charAt(i) == '#')
-//                                exit=true;
-//                        }
-//                        userAddress2.setText(apt);
-//                    }
 
                     userAddress.setText(addressLine1);
 
@@ -390,14 +377,17 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     }
 
-
-
                     if(userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())){
                         if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
                                 !shippingZip.equalsIgnoreCase(billingZip)){
                             billingSwitch.setChecked(false);
                             yesNo.setText("NO");
                             billing2.setVisibility(View.VISIBLE);
+
+                            userNewAddress.setText(userInfoResponse.getBillingAddressLine1());
+                            userNewCity.setText(billingCity);
+                            userNewState.setText(billingState);
+                            userNewZip.setText(billingZip);
                         }
                     }
                     else
@@ -406,14 +396,12 @@ public class ProfileAccountInformationFragment extends Fragment {
                         yesNo.setText("NO");
                         billing2.setVisibility(View.VISIBLE);
 
+                        Log.d("BILLING", "onResponse: "+billingCity);
+
                         userNewAddress.setText(userInfoResponse.getBillingAddressLine1());
                         userNewCity.setText(billingCity);
                         userNewState.setText(billingState);
                         userNewZip.setText(billingZip);
-
-                        String billingAddressLine1 = userInfoResponse.getBillingAddressLine1();
-
-                        userNewAddress.setText(billingAddressLine1);
 
                     }
 
@@ -572,9 +560,9 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     public void saveChanges() {
         userSave.setTextColor(getResources().getColor(R.color.new_red));
+        userCancel.setTextColor(getResources().getColor(R.color.white));
+        userSave.setClickable(true);
         userSave.setOnClickListener(v -> {
-
-
             progress.setVisibility(View.VISIBLE);
             if(updateShipping) {
                 updateShippingAddress();
@@ -585,7 +573,19 @@ public class ProfileAccountInformationFragment extends Fragment {
             if(updateBillingAddress){
                 updateBillingAddress();
             }
+        });
 
+        userCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                collapse(shippingDetails);
+                collapse(bilingDetails);
+                loadUserInfo();
+                userSave.setClickable(false);
+                userSave.setTextColor(getResources().getColor(R.color.gray_icon));
+                userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
+                userAddress2.setEnabled(false);
+            }
         });
     }
 
@@ -594,7 +594,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
             String newAddress = userAddress.getText().toString();
             String newAddress2 = userAddress2.getText().toString();
-            Log.d("UPDATING ADDRESS ---> ", "updateShippingAddress: "+newAddress2);
             String newCity = userCity.getText().toString();
             String newZip = userZip.getText().toString();
             String newState = userState.getText().toString();
@@ -633,7 +632,6 @@ public class ProfileAccountInformationFragment extends Fragment {
             String newState = userNewState.getText().toString();
 
             String type = "billingAddress";
-            Log.d("UPDATING BILLING (1)", "updateBillingAddress: ");
 
             AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
             RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
