@@ -58,15 +58,17 @@ Java_com_moviepass_fragments_ProfilePaymentInformationFragment_getProductionToke
     return str;
 }
 
-//JNIEXPORT jstring JNICALL
-//Java_com_mobile_fragments_TicketVerificationDialog_getProductionBucket(JNIEnv *env, jclass type) {
-//    jstring str = env->NewStringUTF("mpcore.production.tickets");
-//    return str;
-//}
-//JNIEXPORT jstring JNICALL
-//Java_com_mobile_fragments_TicketVerificationDialog_getStagingBucket(JNIEnv *env, jclass type) {
-//
-//    jstring str = env->NewStringUTF("mpcore.staging.tickets");
-//    return str;
-//}
+JNIEXPORT jstring JNICALL
+Java_com_mobile_activities_ConfirmationActivity_getProductionBucket(JNIEnv *env, jclass type) {
+    jstring str = env->NewStringUTF("mpcore.production.tickets");
+
+    return str;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_mobile_activities_ConfirmationActivity_getStagingBucket(JNIEnv *env, jclass type) {
+    jstring str = env->NewStringUTF("mpcore.staging.tickets");
+
+    return str;
+}
 }

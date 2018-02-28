@@ -142,24 +142,24 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (!UserPreferences.getIsVerificationRequired()) {
+                    if (UserPreferences.getIsVerificationRequired() && restriction.getPopInfo() != null) {
 
-//                        int reservationId = restriction.getPopInfo().getReservationId();
-//                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-//                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-//                        String theaterName = restriction.getPopInfo().getTheaterName();     && restriction.getPopInfo() != null
-//                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-//                        String showtime = restriction.getPopInfo().getShowtime();
+                        int reservationId = restriction.getPopInfo().getReservationId();
+                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+                        String theaterName = restriction.getPopInfo().getTheaterName();
+                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+                        String showtime = restriction.getPopInfo().getShowtime();
 
 
-//                        bundle = new Bundle();
-//                        bundle.putInt("reservationId", reservationId);
-//                        bundle.putString("mSelectedMovieTitle", movieTitle);
-//                        bundle.putString("tribuneMovieId", tribuneMovieId);
-//                        bundle.putString("mTheaterSelected", theaterName);
-//                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-//                        bundle.putString("showtime", showtime);
-//
+                        bundle = new Bundle();
+                        bundle.putInt("reservationId", reservationId);
+                        bundle.putString("mSelectedMovieTitle", movieTitle);
+                        bundle.putString("tribuneMovieId", tribuneMovieId);
+                        bundle.putString("mTheaterSelected", theaterName);
+                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+                        bundle.putString("showtime", showtime);
+
 
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
@@ -204,7 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         // If there is no fragment yet with this tag...
         if (fragmentManager.findFragmentByTag(tag) == null) {
             TicketVerificationDialog dialog = new TicketVerificationDialog();
-//            dialog.setArguments(bundle);
+            dialog.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             dialog.setCancelable(false);
             dialog.show(fm, "fr_ticketverification_banner");

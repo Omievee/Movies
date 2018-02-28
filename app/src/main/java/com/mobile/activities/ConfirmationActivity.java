@@ -4,12 +4,16 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +25,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.application.Application;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Reservation;
@@ -34,12 +45,23 @@ import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.mobile.utils.AppUtils;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -62,12 +84,25 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     View progress;
     ImageView scanTicket, downArrow;
     String ZIP;
+    TransferUtility transferUtility;
+    Bitmap photo;
     TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText;
     Button cancelButton;
     RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
     GestureDetector gestureScanner;
+
+
+    private native static String getProductionBucket();
+    private native static String getStagingBucket();
+
+
+
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
+    };
+
+    private static String STORAGE_PERMISSIONS[] = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     protected BottomNavigationView bottomNavigationView;
 
@@ -76,9 +111,17 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_confirmation);
 
+
         bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        transferUtility = TransferUtility.builder()
+                .context(getApplicationContext())
+                .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+                .s3Client(((Application) getApplicationContext()).getAmazonS3Client())
+                .build();
+
 
         progress = findViewById(R.id.confirm_progress);
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
@@ -135,8 +178,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                         fadeOut(verifyText);
                         verifyText.setVisibility(View.INVISIBLE);
                     }
-
-
                     return gestureScanner.onTouchEvent(event);
                 });
 
@@ -201,7 +242,13 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             scan_Ticket();
         } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(this, "You must grant permissions in order to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
+        }
+        if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            createImageFile();
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(this, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -318,5 +365,127 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public void scan_Ticket() {
         Intent ticketVerif = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(ticketVerif, Constants.REQUEST_TICKET_VERIF);
+    }
+
+    public void createImageFile() {
+        Handler handler = new Handler();
+        progress.setVisibility(View.VISIBLE);
+        scanTicket.setVisibility(View.INVISIBLE);
+        handler.postDelayed(() -> {
+
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            final byte[] bitmapdata = bos.toByteArray();
+
+            File pictureFile = getOutputMediaFile();
+            if (pictureFile == null) {
+                Log.d(Constants.TAG, "Error creating media file, test storage permissions");
+                return;
+            }
+
+            try {
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                fos.write(bitmapdata);
+                fos.close();
+            } catch (FileNotFoundException e) {
+                Log.d(Constants.TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+
+                Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
+
+            }
+            //Turn into file
+            final File getPictureFile = getOutputMediaFile();
+            if (getPictureFile == null) {
+                return;
+            }
+            Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
+            uploadToAWS(getPictureFile);
+        }, 4000);
+
+    }
+
+
+    private void uploadToAWS(File ticketPhoto) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        try {
+            String reservationId = "restId";
+            String showTime = "showtime:";
+            String movieTitle = "movieId";
+            String theaterName = "theaterName";
+            URLEncoder.encode(Build.MODEL, "UTF-8");
+            String reservationKind = "reskind";
+            String movieId = "movieID";
+            String theaterId = "theaterID";
+
+            //Setting MetaData
+            objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        String key = "1";
+
+        TransferObserver observer = transferUtility.upload(getStagingBucket(), key, ticketPhoto, objectMetadata);
+        observer.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (state == TransferState.COMPLETED) {
+
+                    //TODO: ADD REST CALL TO MAKE PUSH
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.d(Constants.TAG, "onError: ");
+            }
+        });
+    }
+
+    private HashMap<String, String> metaDataMap(@NonNull String reservationId, @NonNull String showTime, @NonNull String movieId, @NonNull String movieTitle,
+                                                @NonNull String theaterId, @NonNull String theaterName, String reservationKind) {
+        HashMap<String, String> meta = new HashMap<>();
+        meta.put("reservation_id", reservationId);//reservationId
+        meta.put("showtime", showTime);//ShowTime
+        meta.put("movie_id", movieId);//Movie Id
+        meta.put("movie_title", movieTitle);// MovieTitle
+        meta.put("theater_id", theaterId);//TheaterId
+        meta.put("theater_name", theaterName);//TheaterName
+        meta.put("reservation_kind", reservationKind);//reservationKind
+        meta.put("device_name", AppUtils.getDeviceName());//Device Name
+        meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
+        meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
+
+        return meta;
+    }
+
+    private static File getOutputMediaFile() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MoviePass", "failed to create directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp + ".jpg");
+
+        return mediaFile;
     }
 }

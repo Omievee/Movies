@@ -166,7 +166,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/ifAsked"
@@ -270,7 +270,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/double_margin_standard"
-        android:background="@color/new_red"
+        android:background="@color/test_blue"
         android:visibility="visible">
 
         <TextView
