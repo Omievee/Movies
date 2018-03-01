@@ -33,16 +33,10 @@ import java.util.ArrayList;
  */
 
 public class MoviesActivity extends BaseActivity {
-    String TAG = "found it";
-    public android.support.v7.widget.SearchView searchView;
-    MoviesResponse MoviesResponse;
-    MovieSearchAdapter searchAdapter;
-    ListView SearchResults;
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-    FloatingActionMenu reservationsMenu;
-
+    View parentLayout;
     boolean firstBoot;
 
     @Override
@@ -69,26 +63,10 @@ public class MoviesActivity extends BaseActivity {
         boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
 
 
-        View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
-        if (UserPreferences.getIsSubscriptionActivationRequired()) {
-            Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-            params.setMargins(0, 0, 0, 180);
-            snack.getView().setLayoutParams(params);
-            snack.show();
-            View sb = snack.getView();
-            snack.getView().setHovered(true);
-            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-            snack.setActionTextColor(getResources().getColor(R.color.white));
-            snack.setAction("Ok", v -> {
-                Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-                startActivity(activateCard);
-            });
 
-        } else if (!UserPreferences.getIsSubscriptionActivationRequired()) {
-//            if(!firstBoot)
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            activateMoviePassCardSnackBar();
         }
 
 
@@ -226,6 +204,24 @@ public class MoviesActivity extends BaseActivity {
 
         // do nothing. We want to force user to stay in this activity and not drop out.
 
+    }
+
+    public void activateMoviePassCardSnackBar() {
+        parentLayout = findViewById(R.id.COORDPARENT);
+        Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
+        params.setMargins(0, 0, 0, 180);
+        snack.getView().setLayoutParams(params);
+        snack.show();
+        View sb = snack.getView();
+        snack.getView().setHovered(true);
+        sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+        snack.setActionTextColor(getResources().getColor(R.color.white));
+        snack.setAction("Ok", v -> {
+            Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+            startActivity(activateCard);
+        });
     }
 
 

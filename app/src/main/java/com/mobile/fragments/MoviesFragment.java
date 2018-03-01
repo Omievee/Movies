@@ -63,6 +63,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,7 +102,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public ArrayList<Movie> ALLMOVIES;
     ArrayList<String> lastSuggestions;
     Activity myActivity;
-
+    Movie moviesRealm;
     @BindView(R.id.new_releases)
     RecyclerView newReleasesRecycler;
     @BindView(R.id.top_box_office)
@@ -220,7 +221,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             transaction.commit();
         });
 
-        //Featured Film:
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -230,10 +230,16 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             checkLocationPermission();
         }
 
+//
+//        Realm realm = Realm.getDefaultInstance();
+//        realm.beginTransaction();
+//        moviesRealm = realm.createObject(Movie.class);
+
 
         Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getPushPermission());
 
         ContextSingleton.getInstance(getContext()).getGlobalContext();
+
 
         return rootView;
     }

@@ -17,12 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mobile.model.Screening;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
 
 
 public class ActivatedCard_TutorialActivity extends BaseActivity {
 
-
+    Screening screeningObject;
+    String selectedShowTime;
     ImageView zero, one, two, three, four;
     TextView done;
     ViewPager tutorialViewPager;
@@ -53,14 +57,23 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         tutorialViewPager.setAdapter(tutorialAdapter);
         indicators = new ImageView[]{one, two, three, four};
         activityLayout = findViewById(R.id.TUTORIAL_MAIN_ACTIVITY);
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        Intent intent = getIntent();
+        if (getIntent() != null) {
+            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
+            selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
+        }
+        done.setOnClickListener(v -> {
+            if (screeningObject != null && selectedShowTime != null) {
+                MovieActivity reserAct = new MovieActivity();
+                reserAct.reserve(screeningObject, selectedShowTime);
+            } else {
                 Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);
                 doneIntent.putExtra("launch", true);
                 doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(doneIntent);
             }
+
         });
 
 
@@ -155,7 +168,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         }
 
         ImageView img;
-        TextView num;
 
         int[] tutorialImages = new int[]{R.drawable.tutorial_1, R.drawable.tutorial_2,
                 R.drawable.tutorial_3, R.drawable.tutorial_4};
