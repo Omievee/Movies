@@ -1,643 +1,360 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/test_black"
-    android:orientation="vertical">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:background="@color/test_black"
+                                                 android:orientation="vertical">
 
-    <ScrollView
-        android:id="@+id/Scroll"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/ACCOUNTHEADER"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_half">
 
+            <!--<ImageView-->
+            <!--android:id="@+id/accountback"-->
+            <!--android:layout_width="34dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/margin_half"-->
+            <!--android:src="@drawable/iconback"-->
+            <!--android:tint="@color/white" />-->
 
-            <RelativeLayout
-                android:id="@+id/ACCOUNTHEADER"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:orientation="horizontal"
-                android:padding="@dimen/margin_half">
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="Account Details"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-                <!--<ImageView-->
-                <!--android:id="@+id/accountback"-->
-                <!--android:layout_width="34dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="@dimen/margin_half"-->
-                <!--android:src="@drawable/iconback"-->
-                <!--android:tint="@color/white" />-->
+            <Button
+                android:id="@+id/saveChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:text="Account Details"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                android:background="@android:color/transparent"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_icon"
+                android:textSize="20sp"/>
 
-                <Button
-                    android:id="@+id/saveChanges"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+            <Button
+                android:id="@+id/cancelChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@android:color/transparent"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/gray_icon"
+                android:textSize="20sp"/>
 
-                    android:background="@android:color/transparent"
-                    android:text="Save"
-                    android:textAllCaps="false"
-                    android:textColor="@color/gray_icon"
-                    android:textSize="20sp" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+
+        <ScrollView
+            android:id="@+id/Scroll"
+            android:layout_width="match_parent"
+            android:layout_below="@id/ACCOUNTHEADER"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/UserNAmeEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ACCOUNTHEADER"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_half">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Name:"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/USER_NAME"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:text="[USER NAME]"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/white" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:text="Email:"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-
-                <TextView
-                    android:id="@+id/USER_EMAIL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:text="[USER EMAIL]"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/white" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/MPCArd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:animateLayoutChanges="true"
-                        android:text="MoviePass Card:"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/MPCardNum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/MPCArd"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="[####]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:id="@+id/view2"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/MPCardNum"
-                        android:background="@color/white" />
-
-
-                </RelativeLayout>
-
-
-                <!--TODO: PASSWORD CHANGE?-->
-                <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/Password"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentStart="true"-->
-                <!--android:layout_marginTop="@dimen/margin_standard"-->
-                <!--android:text="Password"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:textSize="15sp" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/USER_PASSWORD"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@id/Password"-->
-                <!--android:layout_marginTop="@dimen/margin_standard"-->
-                <!--android:inputType="textPassword"-->
-                <!--android:text="[MOVIES]"-->
-                <!--android:textColor="@color/white"-->
-                <!--android:textSize="25sp" />-->
-
-                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_above="@id/view"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_alignParentEnd="true"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:padding="@dimen/margin_half"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:text="Change"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textColor="@color/new_red"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:textSize="15sp" />&ndash;&gt;-->
-
-                <!--<View-->
-                <!--android:id="@+id/view"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_below="@id/USER_PASSWORD"-->
-                <!--android:background="@color/white" />-->
-
-
-                <!--</RelativeLayout>-->
-
-            </LinearLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/MIDDLE"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/doubledouble_margin_standard"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:animateLayoutChanges="true"
-                android:background="@color/test_blue">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:padding="@dimen/margin_half"
-                    android:text="Shipping Address"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/DOWN"
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentEnd="true"
-                    android:paddingTop="@dimen/margin_half"
-                    android:src="@drawable/icondown"
-                    android:textAlignment="center"
-                    android:tint="@color/white" />
-
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/ShippingDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_half"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:text="Address"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/Address1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:animateLayoutChanges="true"
-                        android:text="[Shipping]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/EDITSHIPPING"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:animateLayoutChanges="true"
-                        android:text="Change"
-                        android:textColor="@color/new_red"
-                        android:textSize="18sp" />
-
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/Address1"
-                        android:animateLayoutChanges="true"
-                        android:background="@color/white" />
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:text="Address 2"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/Address2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:animateLayoutChanges="true"
-                    android:hint="Suite / Apt"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:animateLayoutChanges="true"
-                    android:background="@color/white" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:animateLayoutChanges="true"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/city1"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:animateLayoutChanges="true"
-                        android:text="City"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/state1"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:animateLayoutChanges="true"
-                        android:text="State"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/zip1"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:animateLayoutChanges="true"
-                        android:text="Zip"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <TextView
-                        android:id="@+id/city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="[City]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-
-                    <TextView
-                        android:id="@+id/State"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="[ST]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/zip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="Zip"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/city"
-                        android:background="@color/white" />
-
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/END"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/doubledouble_margin_standard"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:animateLayoutChanges="true"
-                android:background="@color/test_blue">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:padding="@dimen/margin_half"
-                    android:text="Plan &amp; Billing Info"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/DOWN2"
-                    android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentEnd="true"
-                    android:paddingTop="@dimen/margin_half"
-                    android:src="@drawable/icondown"
-                    android:textAlignment="center"
-                    android:tint="@color/white" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/billingdetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:orientation="vertical"
-                android:padding="@dimen/margin_half"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Plan:"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <TextView
-                        android:id="@+id/Plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="[Monthly / Yearly]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-
-                    <TextView
-                        android:id="@+id/Plan_Data"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="[$9.95]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/PLan_cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="Cancel"
-                        android:textColor="@color/new_red"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:id="@+id/view"
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:layout_below="@id/Plan"
-                        android:background="@color/white" />
-
-
-                </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/UserNAmeEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/double_margin_standard"
-                    android:orientation="vertical">
+                    android:layout_below="@id/ACCOUNTHEADER"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_half">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Billing:"
+                        android:text="Name:"
                         android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"/>
 
-                    <RelativeLayout
-                        android:id="@+id/old_billing"
+                    <TextView
+                        android:id="@+id/USER_NAME"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="visible">
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="[USER NAME]"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
 
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="Email:"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"/>
+
+
+                    <TextView
+                        android:id="@+id/USER_EMAIL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="[USER EMAIL]"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/white"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/USER_BILLING"
+                            android:id="@+id/MPCArd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:text="[####-####-####-0000]"
+                            android:animateLayoutChanges="true"
+                            android:text="MoviePass Card:"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
-
+                            android:textSize="15sp"/>
 
                         <TextView
-                            android:id="@+id/Billing_Change"
+                            android:id="@+id/MPCardNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
+                            android:layout_below="@id/MPCArd"
                             android:layout_marginTop="@dimen/margin_standard"
-                            android:text="Change"
-                            android:textColor="@color/new_red"
-                            android:textSize="18sp"
-                            android:visibility="visible" />
+                            android:text="[####]"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
 
                         <View
-                            android:layout_width="fill_parent"
+                            android:id="@+id/view2"
+                            android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_below="@id/USER_BILLING"
-                            android:background="@color/white" />
+                            android:layout_below="@id/MPCardNum"
+                            android:background="@color/white"/>
 
 
                     </RelativeLayout>
 
-                    <LinearLayout
-                        android:id="@+id/profile_newBilling"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+
+                    <!--TODO: PASSWORD CHANGE?-->
+                    <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content">-->
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/Password"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:layout_marginTop="@dimen/margin_standard"-->
+                    <!--android:text="Password"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="15sp" />-->
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/USER_PASSWORD"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@id/Password"-->
+                    <!--android:layout_marginTop="@dimen/margin_standard"-->
+                    <!--android:inputType="textPassword"-->
+                    <!--android:text="[MOVIES]"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="25sp" />-->
+
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_above="@id/view"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_alignParentEnd="true"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:padding="@dimen/margin_half"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="Change"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textColor="@color/new_red"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:textSize="15sp" />&ndash;&gt;-->
+
+                    <!--<View-->
+                    <!--android:id="@+id/view"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:layout_below="@id/USER_PASSWORD"-->
+                    <!--android:background="@color/white" />-->
 
 
-                        <EditText
-                            android:id="@+id/profile_ccnum"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginEnd="@dimen/margin_half"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Credit Card Number"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="16"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white"
-                            android:textColorHint="@color/gray_icon" />
-
-                        <ImageButton
-                            android:id="@+id/profile_scanicon"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:background="@color/test_blue"
-                            android:scaleType="center"
-                            android:src="@drawable/scanicon2" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/profile_newBilling2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:visibility="gone">
-
-                        <EditText
-                            android:id="@+id/profile_expiration"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_minimum"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Expiration MM/YY"
-                            android:inputType="date"
-                            android:lines="1"
-                            android:maxLength="5"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white" />
-
-
-                        <EditText
-                            android:id="@+id/profile_cvv"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_minimum"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Security code (CVV)"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="4"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white" />
-
-
-                    </LinearLayout>
-
+                    <!--</RelativeLayout>-->
 
                 </LinearLayout>
 
+
+                <RelativeLayout
+                    android:id="@+id/MIDDLE"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/doubledouble_margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:background="@color/test_blue">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="@dimen/margin_half"
+                        android:text="Shipping Address"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
+
+                    <ImageView
+                        android:id="@+id/DOWN"
+                        android:layout_width="60dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentEnd="true"
+                        android:paddingTop="@dimen/margin_half"
+                        android:src="@drawable/icondown"
+                        android:textAlignment="center"
+                        android:tint="@color/white"/>
+
+
+                </RelativeLayout>
+
                 <LinearLayout
+                    android:id="@+id/ShippingDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_half"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Billing Address:"
+                        android:animateLayoutChanges="true"
+                        android:text="Address"
                         android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/Address1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:text="[Shipping]"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
+
+                        <TextView
+                            android:id="@+id/EDITSHIPPING"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:text="Change"
+                            android:textColor="@color/new_red"
+                            android:textSize="18sp"/>
+
+
+                        <View
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/Address1"
+                            android:animateLayoutChanges="true"
+                            android:background="@color/white"/>
+
+                    </RelativeLayout>
+
+                    <EditText
+                        android:id="@+id/Address2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:animateLayoutChanges="true"
+                        android:hint="Suite / Apt"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:animateLayoutChanges="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/city1"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:animateLayoutChanges="true"
+                            android:text="City"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"/>
+
+                        <TextView
+                            android:id="@+id/state1"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:animateLayoutChanges="true"
+                            android:text="State"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"/>
+
+                        <TextView
+                            android:id="@+id/zip1"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:animateLayoutChanges="true"
+                            android:text="Zip"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"/>
+
+
+                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -645,128 +362,286 @@
 
 
                         <TextView
-                            android:id="@+id/BillingQ"
+                            android:id="@+id/city"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_marginTop="@dimen/margin_standard"
-                            android:text="Use shipping address for billing?"
+                            android:text="[City]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"
+                            android:textSize="18sp"/>
 
-                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/YesNo"
+                            android:id="@+id/State"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginEnd="45dp"
+                            android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/margin_standard"
-                            android:text="YES"
-                            android:textAlignment="center"
-                            android:textColor="@color/new_red"
-                            android:textSize="18sp" />
+                            android:text="[ST]"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
 
-                        <Switch
-                            android:id="@+id/SWITCH"
+                        <TextView
+                            android:id="@+id/zip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="@dimen/margin_standard"
-                            android:checked="true" />
-
-                    </RelativeLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/Billing2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:text="Address"
+                            android:text="Zip"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/AddressShipping2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true"
-                            android:text="Click to enter a new address"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"/>
 
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
-                            android:animateLayoutChanges="true"
-                            android:background="@color/white" />
+                            android:layout_below="@id/city"
+                            android:background="@color/white"/>
 
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/END"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/doubledouble_margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:background="@color/test_blue">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:padding="@dimen/margin_half"
+                        android:text="Plan &amp; Billing Info"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"/>
+
+                    <ImageView
+                        android:id="@+id/DOWN2"
+                        android:layout_width="60dp"
+                        android:layout_height="35dp"
+                        android:layout_alignParentEnd="true"
+                        android:paddingTop="@dimen/margin_half"
+                        android:src="@drawable/icondown"
+                        android:textAlignment="center"
+                        android:tint="@color/white"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/billingdetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="vertical"
+                    android:padding="@dimen/margin_half"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Plan:"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:id="@+id/Plan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:text="[Monthly / Yearly]"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
+
+
+                        <TextView
+                            android:id="@+id/Plan_Data"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:text="[$9.95]"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"/>
+
+                        <TextView
+                            android:id="@+id/PLan_cancel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:text="Cancel"
+                            android:textColor="@color/new_red"
+                            android:textSize="18sp"/>
+
+                        <View
+                            android:id="@+id/view"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@id/Plan"
+                            android:background="@color/white"/>
+
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/double_margin_standard"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:text="Address 2"
+                            android:text="Billing:"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
-
-                        <EditText
-                            android:id="@+id/AddressShipping_EDIT"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true"
-                            android:hint="Suite / Apt"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
+                            android:textSize="15sp"/>
 
                         <RelativeLayout
+                            android:id="@+id/old_billing"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true">
+                            android:visibility="visible">
+
 
                             <TextView
+                                android:id="@+id/USER_BILLING"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
-                                android:animateLayoutChanges="true"
-                                android:text="City"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:text="[####-####-####-0000]"
                                 android:textColor="@color/white"
-                                android:textSize="15sp" />
+                                android:textSize="18sp"/>
+
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
-                                android:animateLayoutChanges="true"
-                                android:text="State"
-                                android:textColor="@color/white"
-                                android:textSize="15sp" />
-
-                            <TextView
+                                android:id="@+id/Billing_Change"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:animateLayoutChanges="true"
-                                android:text="Zip"
-                                android:textColor="@color/white"
-                                android:textSize="15sp" />
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:text="Change"
+                                android:textColor="@color/new_red"
+                                android:textSize="18sp"
+                                android:visibility="visible"/>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="1dp"
+                                android:layout_below="@id/USER_BILLING"
+                                android:background="@color/white"/>
 
 
                         </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/profile_newBilling"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+
+                            <EditText
+                                android:id="@+id/profile_ccnum"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginEnd="@dimen/margin_half"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/white"
+                                android:hint="Credit Card Number"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="16"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white"
+                                android:textColorHint="@color/gray_icon"/>
+
+                            <ImageButton
+                                android:id="@+id/profile_scanicon"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:background="@color/test_blue"
+                                android:scaleType="center"
+                                android:src="@drawable/scanicon2"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/profile_newBilling2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:visibility="gone">
+
+                            <EditText
+                                android:id="@+id/profile_expiration"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_minimum"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/white"
+                                android:hint="Expiration MM/YY"
+                                android:inputType="date"
+                                android:lines="1"
+                                android:maxLength="5"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"/>
+
+
+                            <EditText
+                                android:id="@+id/profile_cvv"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_minimum"
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/white"
+                                android:hint="Security code (CVV)"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="4"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"/>
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Billing Address:"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"/>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -774,73 +649,204 @@
 
 
                             <TextView
-                                android:id="@+id/city2"
+                                android:id="@+id/BillingQ"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentStart="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:hint="City"
-
+                                android:text="Use shipping address for billing?"
                                 android:textColor="@color/white"
-                                android:textSize="18sp" />
+                                android:textSize="18sp"
 
+                                android:textStyle="bold"/>
 
                             <TextView
-                                android:id="@+id/state2"
+                                android:id="@+id/YesNo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginEnd="45dp"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:hint="State"
-                                android:textColor="@color/white"
-                                android:textSize="18sp" />
+                                android:text="YES"
+                                android:textAlignment="center"
+                                android:textColor="@color/new_red"
+                                android:textSize="18sp"/>
 
-                            <TextView
-                                android:id="@+id/zip2"
+                            <Switch
+                                android:id="@+id/SWITCH"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:hint="Zip Code"
+                                android:checked="true"/>
+
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/Billing2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:animateLayoutChanges="true"
+                                android:text="Address"
                                 android:textColor="@color/white"
-                                android:textSize="18sp" />
+                                android:textSize="15sp"/>
+
+                            <TextView
+                                android:id="@+id/AddressShipping2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:text="Click to enter a new address"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"/>
 
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="1dp"
-                                android:layout_below="@id/city2"
-                                android:background="@color/white" />
+                                android:animateLayoutChanges="true"
+                                android:background="@color/white"/>
 
 
-                        </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:text="Address 2"
+                                android:textColor="@color/white"
+                                android:textSize="15sp"/>
 
-                    </LinearLayout>
+                            <EditText
+                                android:id="@+id/AddressShipping_EDIT"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:hint="Suite / Apt"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/margin_standard"
-                        android:layout_marginTop="@dimen/double_margin_standard"
-                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/Date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Next Billing Date: "
-                            android:textColor="@color/white"
-                            android:textSize="15sp" />
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true">
 
-                        <TextView
-                            android:id="@+id/BillingDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:text="[Billing Date]"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentStart="true"
+                                    android:animateLayoutChanges="true"
+                                    android:text="City"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"/>
 
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:animateLayoutChanges="true"
+                                    android:text="State"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:animateLayoutChanges="true"
+                                    android:text="Zip"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"/>
+
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <TextView
+                                    android:id="@+id/city2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_marginTop="@dimen/margin_standard"
+                                    android:hint="City"
+
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"/>
+
+
+                                <TextView
+                                    android:id="@+id/state2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="@dimen/margin_standard"
+                                    android:hint="State"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"/>
+
+                                <TextView
+                                    android:id="@+id/zip2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginTop="@dimen/margin_standard"
+                                    android:hint="Zip Code"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"/>
+
+                                <View
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_below="@id/city2"
+                                    android:background="@color/white"/>
+
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/margin_standard"
+                            android:layout_marginTop="@dimen/double_margin_standard"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/Date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Next Billing Date: "
+                                android:textColor="@color/white"
+                                android:textSize="15sp"/>
+
+                            <TextView
+                                android:id="@+id/BillingDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:text="[Billing Date]"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
+
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -848,14 +854,14 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </RelativeLayout>
 
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </android.support.design.widget.CoordinatorLayout>
