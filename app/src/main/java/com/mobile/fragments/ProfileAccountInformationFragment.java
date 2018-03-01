@@ -396,7 +396,6 @@ public class ProfileAccountInformationFragment extends Fragment {
                         yesNo.setText("NO");
                         billing2.setVisibility(View.VISIBLE);
 
-                        Log.d("BILLING", "onResponse: "+billingCity);
 
                         userNewAddress.setText(userInfoResponse.getBillingAddressLine1());
                         userNewCity.setText(billingCity);
@@ -607,7 +606,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
 
                     loadUserInfo();
-                    Toast.makeText(getActivity(), "Shipping address has been updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
                     loadFragment();
                 }
 
@@ -640,7 +639,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     progress.setVisibility(View.GONE);
 
                     loadUserInfo();
-                    Toast.makeText(getActivity(), "Billing address has been updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
                     loadFragment();
                 }
 
@@ -685,6 +684,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     newBillingData2.setVisibility(View.GONE);
 
                     loadUserInfo();
+                    Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
                     loadFragment();
                 }
             }
