@@ -55,6 +55,7 @@ public class Constants {
     public static final String VERIFICATION_REQUIRED = "verification";
     public static final String ACTIVE_CARD = "card";
     public static final String IS_SUBSCRIPTION_ACTIVATION_REQUIRED = "required";
+    public static final String PROOF_OF_PUCHASE_REQUIRED = "proof";
 
     public static final int CARD_SCAN_REQUEST_CODE = 27;
 

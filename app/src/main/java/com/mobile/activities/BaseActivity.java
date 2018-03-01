@@ -2,15 +2,12 @@ package com.mobile.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -33,9 +30,6 @@ import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -126,7 +120,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
                     boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean verificationRequired = restriction.getProofOfPurchaseRequired();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
 
@@ -134,15 +128,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
                             UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getRestrictionVerificationRequired() != verificationRequired ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
                             UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
                             UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
 
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard, subscriptionActivationRequired);
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (UserPreferences.getIsVerificationRequired() && restriction.getPopInfo() != null) {
+                    Log.d(Constants.TAG, "pop required???: " + restriction.getProofOfPurchaseRequired());
+
+                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
 
                         int reservationId = restriction.getPopInfo().getReservationId();
                         String movieTitle = restriction.getPopInfo().getMovieTitle();

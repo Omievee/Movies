@@ -37,16 +37,10 @@ import java.util.ArrayList;
 
 public class MoviesActivity extends BaseActivity {
     String TAG = "found it";
-    public android.support.v7.widget.SearchView searchView;
-    MoviesResponse MoviesResponse;
-    MovieSearchAdapter searchAdapter;
-    ListView SearchResults;
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-    FloatingActionMenu reservationsMenu;
 
-    boolean firstBoot;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +62,6 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
-
 
         View parentLayout = findViewById(R.id.COORDPARENT);
         checkRestrictions();
@@ -90,12 +81,10 @@ public class MoviesActivity extends BaseActivity {
                 startActivity(activateCard);
             });
 
-        } else if (!UserPreferences.getIsSubscriptionActivationRequired()) {
-//            if(!firstBoot)
         }
 
-        //AWS Connection
-//        AWSMobileClient.getInstance().initialize(this).execute();
+        Log.d(TAG, "user id: "+ UserPreferences.getUserId());
+
     }
 
     @Override

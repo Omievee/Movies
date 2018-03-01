@@ -87,13 +87,12 @@ public class RestClient {
                 Request original = chain.request();
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
-
                         .addHeader("user_id", "" + UserPreferences.getUserId())
                         .addHeader("device_uuid", UserPreferences.getDeviceUuid())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "MoviePass/Android/20170706");
+                        .addHeader("User-Agent", "MoviePass/Android/20180301");
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);

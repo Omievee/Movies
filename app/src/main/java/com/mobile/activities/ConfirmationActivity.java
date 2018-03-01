@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +37,6 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.application.Application;
 import com.mobile.helpers.BottomNavigationViewHelper;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -43,8 +44,10 @@ import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
+import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
 import com.moviepass.R;
 
@@ -68,6 +71,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.helpshift.util.constants.KeyValueStoreColumns.key;
+
 /**
  * Created by anubis on 6/20/17.
  */
@@ -82,19 +87,20 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     Screening screening;
     ScreeningToken screeningToken;
     View progress;
+    ProgressBar whiteProgress;
     ImageView scanTicket, downArrow;
     String ZIP;
     TransferUtility transferUtility;
     Bitmap photo;
-    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText;
+    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText, noStub;
     Button cancelButton;
     RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
     GestureDetector gestureScanner;
-
+    String uploadKey;
 
     private native static String getProductionBucket();
-    private native static String getStagingBucket();
 
+    private native static String getStagingBucket();
 
 
     private static String CAMERA_PERMISSIONS[] = new String[]{
@@ -122,13 +128,13 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 .s3Client(((Application) getApplicationContext()).getAmazonS3Client())
                 .build();
 
-
+        whiteProgress = findViewById(R.id.white_progress);
         progress = findViewById(R.id.confirm_progress);
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
         screening = screeningToken.getScreening();
         reservation = screeningToken.getReservation();
         String screeningTime = screeningToken.getTime();
-
+        noStub = findViewById(R.id.ConfirmNotStub);
         verifyTicketFlag = findViewById(R.id.VerifyTicketFLag);
         noCurrentRes = findViewById(R.id.NO_Current_Res);
         pendingTitle = findViewById(R.id.PendingRes_Title);
@@ -164,7 +170,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             }
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
-            if (!UserPreferences.getIsVerificationRequired()) {
+            if (UserPreferences.getProofOfPurchaseRequired()) {
                 verifyTicketFlag.setVisibility(View.VISIBLE);
                 expand(verifyMsgExpanded);
                 bottomNavigationView.setVisibility(View.GONE);
@@ -182,14 +188,19 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 scanTicket.setOnClickListener(v -> {
+                    Log.d(TAG, "onCreate: ");
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
-                        } else {
-                            scan_Ticket();
                         }
-
+                    } else {
+                        scan_Ticket();
                     }
+                });
+
+                noStub.setOnClickListener(v -> {
+                    Intent noStubIntent = new Intent(ConfirmationActivity.this, TicketVerification_NoStub.class);
+                    startActivity(noStubIntent);
                 });
             }
         }
@@ -255,6 +266,21 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
+            if (data.getExtras() != null) {
+                photo = (Bitmap) data.getExtras().get("data");
+                if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
+                    }
+                } else {
+                    createImageFile();
+                }
+
+            }
+
+        }
+
     }
 
     /* Bottom Navigation View */
@@ -369,7 +395,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
     public void createImageFile() {
         Handler handler = new Handler();
-        progress.setVisibility(View.VISIBLE);
+        whiteProgress.setVisibility(View.VISIBLE);
         scanTicket.setVisibility(View.INVISIBLE);
         handler.postDelayed(() -> {
 
@@ -410,35 +436,54 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     private void uploadToAWS(File ticketPhoto) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
-        try {
-            String reservationId = "restId";
-            String showTime = "showtime:";
-            String movieTitle = "movieId";
-            String theaterName = "theaterName";
-            URLEncoder.encode(Build.MODEL, "UTF-8");
-            String reservationKind = "reskind";
-            String movieId = "movieID";
-            String theaterId = "theaterID";
+        Log.d(TAG, "uploadToAWS:  " + screeningToken);
+        if (screeningToken != null) {
+            uploadKey = String.valueOf(screeningToken.getReservation().getId());
 
-            //Setting MetaData
-            objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            try {
+                String reservationId = String.valueOf(screeningToken.getReservation().getId());
+                String showTime = screeningToken.getTime();
+                String movieTitle = screeningToken.getScreening().getTitle();
+                String theaterName = screeningToken.getScreening().getTheaterName();
+                URLEncoder.encode(Build.MODEL, "UTF-8");
+                String reservationKind = screeningToken.getScreening().getKind();
+                String movieId = String.valueOf(screeningToken.getScreening().getMoviepassId());
+                String theaterId = String.valueOf(screeningToken.getScreening().getTribuneTheaterId());
+
+                //Setting MetaData
+                objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
 
-        String key = "1";
-
-        TransferObserver observer = transferUtility.upload(getStagingBucket(), key, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(getStagingBucket(), uploadKey, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
+                Log.d(TAG, "STATUS???: " + state);
                 if (state == TransferState.COMPLETED) {
+                    int reservationId = screeningToken.getReservation().getId();
+                    VerificationRequest ticketVerificationRequest = new VerificationRequest();
+                    RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
+                        @Override
+                        public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
+                            if (response != null && response.isSuccessful()) {
+                                whiteProgress.setVisibility(View.GONE);
+                                Toast.makeText(ConfirmationActivity.this, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        }
 
-                    //TODO: ADD REST CALL TO MAKE PUSH
-                    progress.setVisibility(View.GONE);
-                    Toast.makeText(getApplicationContext(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
-                    finish();
+                        @Override
+                        public void onFailure(Call<VerificationResponse> call, Throwable t) {
+                            whiteProgress.setVisibility(View.GONE);
+                            Toast.makeText(ConfirmationActivity.this, "Server Error. Try Again", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
                 }
             }
 

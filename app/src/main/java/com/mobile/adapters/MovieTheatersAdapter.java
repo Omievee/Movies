@@ -136,6 +136,22 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
+
+
+        Log.d(TAG, "======================================================: ");
+        Log.d(TAG, "title: " + screening.getTitle());
+        Log.d(TAG, "theater name : " + screening.getTheaterName());
+        Log.d(TAG, "approved: " + screening.isApproved());
+        Log.d(TAG, "2d: " + screening.is2D());
+        Log.d(TAG, "theater event: " + screening.isTheatreEvent());
+        Log.d(TAG, "RPX: " + screening.isRpx());
+        Log.d(TAG, "3D: " + screening.is3D());
+        Log.d(TAG, "Etx: " + screening.isEtx());
+        Log.d(TAG, "largeFormat: " + screening.isLargeFormat());
+
+
+
+
         if (screeningsArrayList.size() == 0) {
             holder.ONE.setVisibility(View.GONE);
             holder.notSupported.setVisibility(View.VISIBLE);

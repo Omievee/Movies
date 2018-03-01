@@ -68,6 +68,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     TextView noStub;
 
     private native static String getProductionBucket();
+
     private native static String getStagingBucket();
 
     private TransferUtility transferUtility;
@@ -155,9 +156,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 } else {
                     createImageFile();
                 }
-
             }
-
         }
     }
 
