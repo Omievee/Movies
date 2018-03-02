@@ -59,7 +59,7 @@ public class MoviesActivity extends BaseActivity {
 
         Intent intent=getIntent();
         Uri data = intent.getData();
-        if (data != null) {
+        if (data != null && data.getPath().length()>3) {
             String movieIdEncripted;
             int idLength;
             movieIdEncripted = (data.getLastPathSegment());
