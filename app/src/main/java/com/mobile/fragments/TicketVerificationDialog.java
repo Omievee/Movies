@@ -66,7 +66,8 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     Bitmap photo;
     ProgressBar progress;
     TextView noStub;
-
+    ObjectMetadata objectMetadata;
+    String key;
     private native static String getProductionBucket();
 
     private native static String getStagingBucket();
@@ -87,18 +88,18 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public TicketVerificationDialog() {
     }
 
-//    public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
-//        TicketVerificationDialog fragment = new TicketVerificationDialog();
-//        Bundle args = new Bundle();
-//        args.putInt("reservationId", resID);
-//        args.putString("mSelectedMovieTitle", movieTitle);
-//        args.putString("tribuneMovieId", tribuneMovieId);
-//        args.putString("mTheaterSelected", theaterName);
-//        args.putString("tribuneTheaterId", tribuneTheaterId);
-//        args.putString("showtime", showtime);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+    public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
+        TicketVerificationDialog fragment = new TicketVerificationDialog();
+        Bundle args = new Bundle();
+        args.putInt("reservationId", resID);
+        args.putString("mSelectedMovieTitle", movieTitle);
+        args.putString("tribuneMovieId", tribuneMovieId);
+        args.putString("mTheaterSelected", theaterName);
+        args.putString("tribuneTheaterId", tribuneTheaterId);
+        args.putString("showtime", showtime);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
     @Nullable
@@ -135,6 +136,8 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
         noStub.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TicketVerification_NoStub.class);
+            int res = getArguments().getInt("reservationId");
+            intent.putExtra(Constants.SCREENING, res);
             startActivity(intent);
         });
     }
@@ -218,26 +221,29 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     }
 
     private void uploadToAWS(File ticketPhoto) {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata = new ObjectMetadata();
+        key = String.valueOf(getArguments().getInt("reservationId"));
 
         try {
-            String reservationId = "restId";
-            String showTime = "showtime:";
-            String movieTitle = "movieId";
-            String theaterName = "theaterName";
-            URLEncoder.encode(Build.MODEL, "UTF-8");
-            String reservationKind = "reskind";
-            String movieId = "movieID";
-            String theaterId = "theaterID";
+            if (getArguments() != null) {
+                String reservationId = String.valueOf(getArguments().getInt("reservationId"));
+                String showTime = getArguments().getString("showtime");
+                String movieTitle = getArguments().getString("mSelectedMovieTitle");
+                String theaterName = getArguments().getString("mTheaterSelected");
+                URLEncoder.encode(Build.MODEL, "UTF-8");
+                String reservationKind = "reskind";
+                String tribuneMovieId = getArguments().getString("tribuneMovieId");
+                String tribuneTheaterId = getArguments().getString("tribuneTheaterId");
+                objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, tribuneMovieId, movieTitle, tribuneTheaterId, theaterName, reservationKind));
+            }
+
 
             //Setting MetaData
-            objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, movieId, movieTitle, theaterId, theaterName, reservationKind));
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-
-        String key = "1";
 
         TransferObserver observer = transferUtility.upload(getStagingBucket(), key, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {

@@ -36,7 +36,6 @@ public class TheaterActivity extends BaseActivity {
     public static final String EXTRA_CIRCULAR_REVEAL_TRANSITION_NAME = "circular_reveal_transition_name";
     public static final String THEATER = "cinema";
     public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screeningObject";
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
 

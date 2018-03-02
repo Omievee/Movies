@@ -168,7 +168,8 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
                             fab.setEnabled(true);
                             Snackbar snackbar = Snackbar.make(relativeLayout, restError.getMessage(), BaseTransientBottomBar.LENGTH_LONG);
                             snackbar.show();
-                            finish();                        }
+                            finish();
+                        }
                     });
                 }
             });
@@ -466,9 +467,9 @@ public class VerificationActivity extends AppCompatActivity implements SurfaceHo
 
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.05;
-        double targetRatio = (double) w/h;
+        double targetRatio = (double) w / h;
 
-        if (sizes==null) return null;
+        if (sizes == null) return null;
 
         Camera.Size optimalSize = null;
 

@@ -14,6 +14,14 @@ public class Constants {
     public static final String REDEMPTION_ROUTE = "/coupons/form/redeem";
 
 
+    //COMMON VARIABLES
+    public static final String MOVIE = "movie";
+    public static final String TITLE = "title";
+    public static final String RESERVATION = "reservation";
+    public static final String SCREENING = "screening";
+    public static final String SHOWTIME = "showtime";
+    public static final String TOKEN = "token";
+    public static final String SEAT = "seat";
 
     //PERMISSION CODES
     public final static int REQUEST_CAMERA_CODE = 0;

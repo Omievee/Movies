@@ -78,10 +78,6 @@ import static com.helpshift.util.constants.KeyValueStoreColumns.key;
  */
 
 public class ConfirmationActivity extends BaseActivity implements GestureDetector.OnGestureListener {
-    public static final String TAG = " found it ";
-    public static final String RESERVATION = "reservation";
-    public static final String SCREENING = "screeningObject";
-    public static final String TOKEN = "token";
     public static final int REQUEST_CAMERA_CODE = 0;
     Reservation reservation;
     Screening screening;
@@ -130,7 +126,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         whiteProgress = findViewById(R.id.white_progress);
         progress = findViewById(R.id.confirm_progress);
-        screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(TOKEN));
+        screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(Constants.TOKEN));
         screening = screeningToken.getScreening();
         reservation = screeningToken.getReservation();
         String screeningTime = screeningToken.getTime();
@@ -170,7 +166,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             }
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
-            if (UserPreferences.getProofOfPurchaseRequired()) {
+            if (UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().isPopRequired()) {
                 verifyTicketFlag.setVisibility(View.VISIBLE);
                 expand(verifyMsgExpanded);
                 bottomNavigationView.setVisibility(View.GONE);
@@ -188,7 +184,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 scanTicket.setOnClickListener(v -> {
-                    Log.d(TAG, "onCreate: ");
+                    Log.d(Constants.TAG, "onCreate: ");
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
@@ -199,7 +195,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 noStub.setOnClickListener(v -> {
+                    int res = screeningToken.getReservation().getId();
                     Intent noStubIntent = new Intent(ConfirmationActivity.this, TicketVerification_NoStub.class);
+                    noStubIntent.putExtra(Constants.SCREENING, res);
                     startActivity(noStubIntent);
                 });
             }
@@ -436,7 +434,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     private void uploadToAWS(File ticketPhoto) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
-        Log.d(TAG, "uploadToAWS:  " + screeningToken);
+        Log.d(Constants.TAG, "uploadToAWS:  " + screeningToken);
         if (screeningToken != null) {
             uploadKey = String.valueOf(screeningToken.getReservation().getId());
 
@@ -462,7 +460,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                Log.d(TAG, "STATUS???: " + state);
+                Log.d(Constants.TAG, "STATUS???: " + state);
                 if (state == TransferState.COMPLETED) {
                     int reservationId = screeningToken.getReservation().getId();
                     VerificationRequest ticketVerificationRequest = new VerificationRequest();

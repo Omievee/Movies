@@ -136,17 +136,13 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    Log.d(Constants.TAG, "pop required???: " + restriction.getProofOfPurchaseRequired());
-
                     if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
-
                         int reservationId = restriction.getPopInfo().getReservationId();
                         String movieTitle = restriction.getPopInfo().getMovieTitle();
                         String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
                         String theaterName = restriction.getPopInfo().getTheaterName();
                         String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
                         String showtime = restriction.getPopInfo().getShowtime();
-
 
                         bundle = new Bundle();
                         bundle.putInt("reservationId", reservationId);
@@ -160,7 +156,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
-
                     }
 
                 } else {
@@ -170,14 +165,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         //IF API ERROR LOG OUT TO LOG BACK IN
                         /*
                         if (jObjError.getString("message").matches("INVALID API REQUEST")) {
-
-                            UserPreferences.resetUserCredentials();
-                            Intent intent = new Intent(BaseActivity.this, LauncherActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-
-                            finish();
-                        }
 
                         */
 
@@ -301,200 +288,5 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
 
 }
-
-
-    /*
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    Toast.makeText(BaseActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
-                } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(BaseActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(BaseActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(BaseActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState(){
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
-    }
-
-    abstract int getContentViewId();
-
-    abstract int getNavigationMenuItemId();
-
-
-
-
-    /* Handle Permissions
-    public void requestMandatoryPermissions(){
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(BaseActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_CODE);
-            }
-            if (ContextCompat.checkSelfPermission(BaseActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(STORAGE_PERMISSIONS, REQUEST_STORAGE_CODE);
-            }
-        }
-    }
-
-    public boolean grantedMandatoryPermissions(){
-        boolean locationPermissionResult = ContextCompat.checkSelfPermission(BaseActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
-        boolean storagePermissionResult = ContextCompat.checkSelfPermission(BaseActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-
-        return locationPermissionResult && storagePermissionResult;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<String, Integer>();
-                // Initial
-                perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++)
-                    perms.put(permissions[i], grantResults[i]);
-
-                // Check for ACCESS_FINE_LOCATION
-                if (grantedMandatoryPermissions()) {
-                    // All Permissions Granted
-                    locationInit();
-                } else {
-                    // Permission Denied
-                    Toast.makeText(BaseActivity.this, R.string.activity_main_mandatory_permissions,
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    /* Handle Location
-    class LocationUpdateBroadCast extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (grantedMandatoryPermissions()) {
-                if (!isLocationUserDefined()) {
-                    onLocationChanged(UserLocationManagerFused.getLocationInstance(context).mCurrentLocation);
-                }
-            } else {
-                requestMandatoryPermissions();
-            }
-        }
-    }
-
-    protected void onLocationChanged(Location location) {
-        if (grantedMandatoryPermissions()) {
-            if (!UserPreferences.getIsLocationUserDefined() && mDoUpdateLocation && location != null) {
-                try {
-                    mLocation = location;
-
-                    UserPreferences.setCoordinates(location.getLatitude(), location.getLatitude());
-                } catch (Exception e) {
-                    FirebaseCrash.report(new Exception(e.getMessage()));
-                }
-            }
-
-            /* TODO : INITIAL ACTIVITY
-
-            if (mIsIntialActivity) {
-                UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
-            }
-
-
-        } else {
-            requestMandatoryPermissions();
-        }
-    }
-
-    public void locationInit() {
-        if (grantedMandatoryPermissions()) {
-            LocationManager mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            boolean enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            if (!enabled) {
-                showDialogGPS();
-            }
-
-            if (!UserPreferences.getIsLocationUserDefined() && mDoUpdateLocation) {
-                mLocationBroadCast = new LocationUpdateBroadCast();
-                UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-            }
-
-            /* TODO
-            if (isOnline()) {
-            } else {
-                noInternetCheckLoop();
-            }
-
-
-        } else {
-            requestMandatoryPermissions();
-        }
-    }
-
-    public static boolean isLocationUserDefined() {
-        return UserPreferences.getIsLocationUserDefined();
-    }
-
-    /* TODO SET FLOW FOR USERS WHO DENY LOCATION PERMISSION
-
-    private void showDialogGPS() {
-        if (alert != null && alert.isShowing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogCustom);
-        builder.setCancelable(false);
-        builder.setTitle("Enable GPS");
-        builder.setMessage("You must enable your GPS to use MoviePass.");
-        builder.setInverseBackgroundForced(true);
-        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startActivity(
-                        new Intent(android.Provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        alert = builder.create();
-        alert.show();
-    }
-    */
 
 

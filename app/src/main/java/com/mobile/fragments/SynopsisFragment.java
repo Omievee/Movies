@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mobile.Constants;
 import com.moviepass.R;
 
 
@@ -19,8 +20,6 @@ public class SynopsisFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = " found it";
     public TextView synopsisText, synopsisTitle;
-    public static final String MOVIE = "movie";
-    public static final String TITLE = "title";
     public static final String SYNOPSIS = "synopsis";
 
     public SynopsisFragment() {
@@ -48,8 +47,8 @@ public class SynopsisFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String strtext = getArguments().getString(MOVIE);
-        String title = getArguments().getString(TITLE);
+        String strtext = getArguments().getString(Constants.MOVIE);
+        String title = getArguments().getString(Constants.TITLE);
 
         synopsisTitle = view.findViewById(R.id.SYNOPSIS_TITLE);
         synopsisText = view.findViewById(R.id.SYNOPSIS_TEXT);
