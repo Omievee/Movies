@@ -1,6 +1,7 @@
 package com.mobile.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +45,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
+import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieTheatersAdapter;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
@@ -92,7 +94,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
-
 
 
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
@@ -273,19 +274,31 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
-        buttonCheckIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        buttonCheckIn.setOnClickListener(view -> {
 
-                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
-                    ProgressBar.setVisibility(View.VISIBLE);
-                    reserve(screening, showtime);
-                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-                    showActivateCardDialog(screening, showtime);
+            if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
+                showActivateCardDialog(screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELCT_SEATING")) {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
+            } else {
+                if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.AlertDialogCustom);
+                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
+                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        ProgressBar.setVisibility(View.VISIBLE);
+                        reserve(screening, showtime);
+                    });
+                    alert.show();
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(screening, showtime);
                 }
+
             }
         });
     }

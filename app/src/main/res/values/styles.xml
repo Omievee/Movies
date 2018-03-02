@@ -64,12 +64,12 @@
     </style>
 
     <!-- Style for Alert Dialogs -->
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AlertDialogCustom" parent="Base.ThemeOverlay.AppCompat.Dialog.Alert">
         <!-- SET BUTTON COLOR IN DIALOG BUILDER -->
         <item name="colorPrimary">@color/red_dark</item>
         <item name="colorAccent">@color/red_dark</item>
         <item name="android:textColor">@color/red_dark</item>
-        <item name="android:textColorPrimary">@color/black_overlay</item>
+        <item name="android:textColorPrimary">@color/test_black</item>
     </style>
 
     <!-- Style to get white text on toolbars -->

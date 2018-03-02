@@ -170,6 +170,7 @@
     <string name="activity_verification_lost_ticket_title_post">Ticket Verification</string>
     <string name="activity_verification_lost_ticket_message_post">In the future please submit pictures of your ticket stubs. Your account status could be affected if you fail to do so.</string>
     <string name="activity_verification_empty_reason">You must list a reason</string>
+    <string name="pre_pop_dialog">After you purchase your ticket, don\'t forget  to take a picture of the ticket stub. You can subit it an time before your next movie. Your account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
 
 
     <!-- Adapters -->
