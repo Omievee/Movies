@@ -7,12 +7,16 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by anubis on 6/10/17.
  */
 
 @Parcel
-public class Screening implements Comparator<Theater> {
+
+public class Screening extends RealmObject{
+
 
     private List<Screening> screening;
 
@@ -283,8 +287,5 @@ public class Screening implements Comparator<Theater> {
     }
 
 
-    @Override
-    public int compare(Theater theater, Theater t1) {
-        return Double.compare(theater.getDistance(), t1.getDistance());
-    }
+
 }

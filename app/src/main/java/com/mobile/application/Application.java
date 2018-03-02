@@ -21,6 +21,7 @@ import com.mobile.network.RestClient;
 import com.taplytics.sdk.Taplytics;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
 
 
 public class Application extends MultiDexApplication {
@@ -55,6 +56,9 @@ public class Application extends MultiDexApplication {
         s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
+
+        Realm.init(this);
+
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
