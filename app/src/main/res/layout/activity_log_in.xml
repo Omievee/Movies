@@ -86,6 +86,14 @@
             android:text="@string/activity_sign_in_log_in"
             android:textSize="15sp" />
 
+        <!--<ProgressBar-->
+            <!--style="@style/Widget.AppCompat.ProgressBar"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginTop="@dimen/margin_half"-->
+            <!--android:theme="@style/CircularProgressWhite" />-->
+
         <com.facebook.login.widget.LoginButton
             android:id="@+id/button_facebook_log_in"
             android:layout_width="200dp"
@@ -155,5 +163,8 @@
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
 
 </RelativeLayout>

@@ -64,8 +64,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmFullAddress = rootview.findViewById(R.id.CONFIRM_FULL_ADDRESS);
         confirmCityStateZip = rootview.findViewById(R.id.CONFIRM_CITYSTATEZIP);
 
-//        confirmEditAddress = rootview.findViewById(R.id.CONFIRM_EDIT_ADDRESS);
-//        confirmEditBilling = rootview.findViewById(R.id.CONFIRM_EDIT_BILLING);
 
         confirmCCNum = rootview.findViewById(R.id.CONFIRM_NUMBER);
         confirmTermsText = rootview.findViewById(R.id.CONFIRM_ToS);
@@ -78,14 +76,14 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
         //ToS & Privacy Links
         confirmTermsText.setOnClickListener(view -> {
-            String url = "https://www.moviepass.com/content/terms";
+            String url = "https://www.moviepass.com/terms";
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             startActivity(i);
         });
 
         confirmsPricacyText.setOnClickListener(v -> {
-            String url = "https://www.moviepass.com/content/privacy";
+            String url = "https://www.moviepass.com/privacy/";
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(url));
             startActivity(i);

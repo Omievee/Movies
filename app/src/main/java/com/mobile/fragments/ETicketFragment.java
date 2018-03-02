@@ -51,7 +51,6 @@ public class ETicketFragment extends DialogFragment {
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String SEAT = "seat";
-    public static final String PATTERN = "630425";
     View rootView;
     PatternLockView lockView;
     PatternLockViewListener getmPatternLockViewListener;

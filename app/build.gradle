@@ -126,9 +126,11 @@ dependencies {
 
     //AWS
     compile 'com.amazonaws:aws-android-sdk-core:2.+'
-    compile 'com.amazonaws:aws-android-sdk-s3:2.2.11'
-    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.+'
-    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.6.+'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.6.+'
+    compile('com.amazonaws:aws-android-sdk-mobile-client:2.6.7@aar') { transitive = true; }
+
     // Braintree
     compile('com.braintreepayments.api:drop-in:3.+') {
         exclude group: 'com.android.support'
@@ -195,7 +197,8 @@ dependencies {
     //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
 
-    //Realm
+    //Umano Panel
+    compile 'com.sothree.slidinguppanel:library:3.4.0'
 
 }
 

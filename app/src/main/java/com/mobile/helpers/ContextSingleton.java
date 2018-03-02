@@ -7,8 +7,8 @@ import android.content.Context;
  */
 
 public class ContextSingleton {
-    private static ContextSingleton instance;
-    private final Context currentContext;
+    public static ContextSingleton instance;
+    public final Context currentContext;
 
     private ContextSingleton(Context context) {
         currentContext = context;

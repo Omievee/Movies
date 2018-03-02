@@ -28,7 +28,7 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme"/>
+    <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
         <item name="colorPrimary">@color/test_blue</item>
@@ -43,6 +43,10 @@
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
         <item name="colorAccent">@color/red</item>
+    </style>
+
+    <style name="CircularProgressWhite" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/white</item>
     </style>
 
     <style name="MyOverflowText" parent="TextAppearance.AppCompat.Small">
@@ -60,12 +64,13 @@
     </style>
 
     <!-- Style for Alert Dialogs -->
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="CUSTOM_ALERT" parent="Theme.AppCompat.Dialog.Alert">
         <!-- SET BUTTON COLOR IN DIALOG BUILDER -->
-        <item name="colorPrimary">@color/red_dark</item>
-        <item name="colorAccent">@color/red_dark</item>
-        <item name="android:textColor">@color/red_dark</item>
-        <item name="android:textColorPrimary">@color/black_overlay</item>
+        <item name="colorPrimary">@color/test_black</item>
+        <item name="colorAccent">@color/new_red</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorPrimary">@color/new_red</item>
+        <item name="android:windowBackground">@color/test_black</item>
     </style>
 
     <!-- Style to get white text on toolbars -->

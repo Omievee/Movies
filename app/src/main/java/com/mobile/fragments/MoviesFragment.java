@@ -236,7 +236,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 //        moviesRealm = realm.createObject(Movie.class);
 
 
-        Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getPushPermission());
+        Log.d(Constants.TAG, "onCreateView:  " + UserPreferences.getProofOfPurchaseRequired());
 
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
