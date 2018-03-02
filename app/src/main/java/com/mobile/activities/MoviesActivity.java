@@ -61,7 +61,17 @@ public class MoviesActivity extends BaseActivity {
         String action = intent.getAction();
         Uri data = intent.getData();
         if (data != null) {
-            movieId = Integer.valueOf(data.getLastPathSegment());
+            String movieIdEncripted;
+            int idLength;
+            movieIdEncripted = (data.getLastPathSegment());
+            idLength = movieIdEncripted.length();
+            idLength = idLength-5;
+            movieIdEncripted = movieIdEncripted.substring(2,idLength);
+            movieId = Integer.valueOf(movieIdEncripted);
+
+            Log.d("DEEP LINK", "onCreate: "+movieIdEncripted);
+
+
             loadMovies();
         }
         else
