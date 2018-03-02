@@ -33,9 +33,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.network.RestClient;
+import com.mobile.requests.VerificationRequest;
+import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
 import com.moviepass.R;
 
@@ -49,6 +53,10 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -68,6 +76,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     TextView noStub;
     ObjectMetadata objectMetadata;
     String key;
+
     private native static String getProductionBucket();
 
     private native static String getStagingBucket();
@@ -250,9 +259,24 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
-                    progress.setVisibility(View.GONE);
-                    Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
-                    dismiss();
+                    int reservationId = getArguments().getInt("reservationId");
+                    VerificationRequest ticketVerificationRequest = new VerificationRequest();
+                    RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
+                        @Override
+                        public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
+                            if (response != null && response.isSuccessful()) {
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<VerificationResponse> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(), "Server Error. Try Again", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
 
