@@ -167,6 +167,22 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="moviepass.com"
+                      android:pathPrefix="/go/movies" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="moviespass"
+                      android:host="app"
+                      android:pathPrefix="/movies" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -252,6 +268,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:screenOrientation="portrait"
                 android:value="com.mobile.activities.MoviesActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                      android:host="moviepass.com"
+                      android:pathPrefix="/go/theaters" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.mobile.activities.VerificationActivity"

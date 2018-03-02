@@ -3,6 +3,7 @@ package com.mobile.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -18,15 +19,23 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.network.RestClient;
 import com.moviepass.R;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
@@ -38,21 +47,35 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchALLMOVIES;
     View parentLayout;
     boolean firstBoot;
+    public ArrayList<Movie> ALLMOVIES;
+    Movie movie;
+    int movieId;
+    MoviesResponse moviesResponse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
 
-
-        Fragment moviesFragment = new MoviesFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
-        FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
-        fadeIn(main);
+        Intent intent=getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if (data != null) {
+            movieId = Integer.valueOf(data.getLastPathSegment());
+            loadMovies();
+        }
+        else
+        {
+            Fragment moviesFragment = new MoviesFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
+            FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+            fadeIn(main);
+        }
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
 
 
         movieSearchNEWRELEASE = new ArrayList<>();
@@ -223,6 +246,51 @@ public class MoviesActivity extends BaseActivity {
             startActivity(activateCard);
         });
     }
+
+    public void loadMovies() {
+        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+
+                if (response.body() != null && response.isSuccessful()) {
+                    moviesResponse = response.body();
+                    ALLMOVIES = new ArrayList<>();
+
+                    if (moviesResponse != null) {
+                        ALLMOVIES.addAll(moviesResponse.getNewReleases());
+                        ALLMOVIES.addAll(moviesResponse.getTopBoxOffice());
+                        ALLMOVIES.addAll(moviesResponse.getComingSoon());
+                        ALLMOVIES.addAll(moviesResponse.getNowPlaying());
+                        ALLMOVIES.addAll(moviesResponse.getFeatured());
+
+                        for(Movie AllMovies: ALLMOVIES){
+                            if(AllMovies.getId() == movieId){
+                                movie = AllMovies;
+                                startMovieActivity();
+                            }
+                        }
+
+
+
+                    }
+                } else {
+                    /* TODO : FIX IF RESPONSE IS NULL */
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void startMovieActivity(){
+        Intent movieIntent = new Intent(this,MovieActivity.class);
+        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+        startActivity(movieIntent);
+    }
+
 
 
 }
