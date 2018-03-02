@@ -116,14 +116,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/PENDING_DATA"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/STandardMSG"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:text="You can now use your MoviePass card to purchase your ticket!"
                     android:textAlignment="center"
                     android:textColor="@color/white"
