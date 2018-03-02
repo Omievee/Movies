@@ -58,7 +58,6 @@ public class MoviesActivity extends BaseActivity {
         setContentView(R.layout.activity_movies);
 
         Intent intent=getIntent();
-        String action = intent.getAction();
         Uri data = intent.getData();
         if (data != null) {
             String movieIdEncripted;
@@ -68,10 +67,6 @@ public class MoviesActivity extends BaseActivity {
             idLength = idLength-5;
             movieIdEncripted = movieIdEncripted.substring(2,idLength);
             movieId = Integer.valueOf(movieIdEncripted);
-
-            Log.d("DEEP LINK", "onCreate: "+movieIdEncripted);
-
-
             loadMovies();
         }
         else

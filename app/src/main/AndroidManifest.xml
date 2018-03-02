@@ -177,10 +177,19 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="www.moviepass.com"
+                      android:pathPrefix="/go/movies" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="moviespass"
                       android:host="app"
                       android:pathPrefix="/movies" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -274,6 +283,22 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
                       android:host="moviepass.com"
+                      android:pathPrefix="/go/theaters" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="moviespass"
+                      android:host="app"
+                      android:pathPrefix="/theaters" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                      android:host="www.moviepass.com"
                       android:pathPrefix="/go/theaters" />
             </intent-filter>
         </activity>
