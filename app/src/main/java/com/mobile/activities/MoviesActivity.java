@@ -41,7 +41,7 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-
+    View parentLayout;
 
 
     @Override
@@ -70,11 +70,7 @@ public class MoviesActivity extends BaseActivity {
 
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
-
         }
-
-        Log.d(TAG, "user id: "+ UserPreferences.getUserId());
-
     }
 
     @Override

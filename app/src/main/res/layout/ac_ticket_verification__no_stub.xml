@@ -57,8 +57,7 @@
                     android:textColorHint="@color/gray_dark"
                     app:counterEnabled="true"
                     app:counterMaxLength="250"
-                    app:counterTextAppearance="@style/MyOverflowText"
-                    app:hintEnabled="true">
+                    app:counterTextAppearance="@style/MyOverflowText">
 
                     <EditText
                         android:id="@+id/NoStubComments"
