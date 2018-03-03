@@ -178,8 +178,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                      android:host="www.moviepass.com"
-                      android:pathPrefix="/go" />
+                      android:host="www.moviepass.com/go"
+                      android:pathPrefix="/" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -289,8 +289,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
-                      android:host="moviepass.com"
+                <data android:scheme="https"
+                      android:host="www.moviepass.com"
                       android:pathPrefix="/go/theaters" />
             </intent-filter>
             <intent-filter>

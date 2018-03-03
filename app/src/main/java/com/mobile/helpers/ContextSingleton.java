@@ -8,11 +8,14 @@ import android.content.Context;
 
 public class ContextSingleton {
     private static ContextSingleton instance;
-    private final Context currentContext;
+    private Context currentContext;
 
     private ContextSingleton(Context context) {
         currentContext = context;
+    }
 
+    public void updateSingleton(Context context){
+        currentContext = context;
     }
 
     public static ContextSingleton getInstance(Context context) {

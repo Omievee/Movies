@@ -32,6 +32,7 @@ import com.moviepass.R;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +50,9 @@ public class MoviesActivity extends BaseActivity {
     boolean firstBoot;
     public ArrayList<Movie> ALLMOVIES;
     Movie movie;
+    String campaign;
     int movieId;
+    List<String> urlPath;
     MoviesResponse moviesResponse;
 
     @Override
@@ -61,8 +64,11 @@ public class MoviesActivity extends BaseActivity {
         Uri data = intent.getData();
         if (data != null && data.getPath().length()>3) {
             String movieIdEncripted;
+
+            urlPath = data.getPathSegments();
             int idLength;
-            movieIdEncripted = (data.getLastPathSegment());
+            movieIdEncripted = (urlPath.get(2));
+            campaign = urlPath.get(3);
             idLength = movieIdEncripted.length();
             idLength = idLength-5;
             movieIdEncripted = movieIdEncripted.substring(2,idLength);
@@ -80,8 +86,6 @@ public class MoviesActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-
 
         movieSearchNEWRELEASE = new ArrayList<>();
         movieSearchALLMOVIES = new ArrayList<>();

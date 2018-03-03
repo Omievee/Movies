@@ -129,6 +129,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         billingClick = rootView.findViewById(R.id.END);
 
         userNewBillingCC = rootView.findViewById(R.id.profile_ccnum);
+        userNewBillingCC = rootView.findViewById(R.id.profile_ccnum);
         userNewBillingCVV = rootView.findViewById(R.id.profile_cvv);
         userNewBillingExp = rootView.findViewById(R.id.profile_expiration);
         userScanCard = rootView.findViewById(R.id.profile_scanicon);
@@ -228,8 +229,6 @@ public class ProfileAccountInformationFragment extends Fragment {
             userNewBillingCVV.setText("");
             userNewBillingExp.setText("");
 
-
-
             userScanCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -325,10 +324,26 @@ public class ProfileAccountInformationFragment extends Fragment {
         if(!userNewBillingCC.getText().toString().trim().isEmpty() &&
                 !userNewBillingExp.getText().toString().trim().isEmpty() &&
                 !userNewBillingCVV.getText().toString().trim().isEmpty()){
-            userSave.setTextColor(getResources().getColor(R.color.new_red));
-            userCancel.setTextColor(getResources().getColor(R.color.white));
-            updateBillingCard = true;
-            saveChanges();
+
+
+            if(userNewBillingCC.getText().toString().length()>=16 &&
+                    userNewBillingCVV.getText().toString().length()>=3 &&
+                    userNewBillingExp.getText().toString().length()>=5){
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCC.getText().toString().length());
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCVV.getText().toString().length());
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingExp.getText().toString().length());
+                userSave.setTextColor(getResources().getColor(R.color.new_red));
+                userCancel.setTextColor(getResources().getColor(R.color.white));
+                updateBillingCard = true;
+                saveChanges();
+            }
+            else
+            {
+                userSave.setTextColor(getResources().getColor(R.color.gray_icon));
+                userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
+                updateBillingCard = false;
+            }
+
         }
 
     }
@@ -692,8 +707,9 @@ public class ProfileAccountInformationFragment extends Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 if (getActivity() != null) {
-                    Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error updating credit card information", Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
+                    loadUserInfo();
                     loadFragment();
                 }
 
