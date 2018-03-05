@@ -10,23 +10,20 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 
-import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.UserPreferences;
-import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
-import com.mobile.model.MoviesResponse;
 import com.moviepass.R;
 
 import java.util.ArrayList;
+
+
 
 /**
  * Created by anubis on 8/4/17.
