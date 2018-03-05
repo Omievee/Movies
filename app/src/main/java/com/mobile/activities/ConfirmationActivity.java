@@ -456,7 +456,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         }
 
 
-        TransferObserver observer = transferUtility.upload(getStagingBucket(), uploadKey, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(getProductionBucket(), uploadKey, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
