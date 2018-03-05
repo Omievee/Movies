@@ -254,7 +254,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         }
 
 
-        TransferObserver observer = transferUtility.upload(getStagingBucket(), key, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(getProductionBucket(), key, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
