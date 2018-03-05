@@ -281,10 +281,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 reserve(screening, showtime);
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
                 showActivateCardDialog(screening, showtime);
-            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELCT_SEATING")) {
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
                 ProgressBar.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else {
+            } else if (screening.getProvider().ticketType.matches("STANDARD")){
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
                     alert.setTitle(R.string.activity_verification_lost_ticket_title_post);

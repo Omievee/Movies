@@ -200,35 +200,29 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(view -> {
 
-            Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
             if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
                 progress.setVisibility(View.VISIBLE);
-                reserve(screening1, time);
-            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
-                reserve(screening1, time);
+                reserve(screening, showtime);
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
-                showActivateCardDialog(screening1, time);
-            } else {
-                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
+                showActivateCardDialog(screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
+                progress.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
+            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+                if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
+                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
+                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        progress.setVisibility(View.VISIBLE);
+                        reserve(screening, showtime);
+                    });
+                    alert.show();
+                } else {
                     progress.setVisibility(View.VISIBLE);
                     reserve(screening, showtime);
-                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-                    showActivateCardDialog(screening, showtime);
-                } else {
-                    if (UserPreferences.getProofOfPurchaseRequired() || screening1.isPopRequired()) {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
-                        alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
-                        alert.setMessage(R.string.pre_pop_dialog);
-                        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            progress.setVisibility(View.VISIBLE);
-                            reserve(screening1, time);
-                        });
-                        alert.show();
-                    } else {
-                        progress.setVisibility(View.VISIBLE);
-                        reserve(screening1, time);
-                    }
                 }
+
             }
         });
     }
