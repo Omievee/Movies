@@ -86,7 +86,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
 
 
     public void displayWarning() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(TicketVerification_NoStub.this, R.style.AlertDialogCustom);
+        AlertDialog.Builder alert = new AlertDialog.Builder(TicketVerification_NoStub.this, R.style.CUSTOM_ALERT);
         alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
         alert.setMessage(R.string.activity_verification_lost_ticket_message_post);
         alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {

@@ -37,12 +37,11 @@ import java.util.ArrayList;
 
 public class MoviesActivity extends BaseActivity {
 
-    String TAG = "found it";
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-    View parentLayout;
 
+    View parentLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +70,8 @@ public class MoviesActivity extends BaseActivity {
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
+
+
     }
 
     @Override
