@@ -81,9 +81,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by anubis on 6/9/17.
- */
+
 
 public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
@@ -234,11 +232,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            unregisterReceiver(mLocationBroadCast);
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
+//        try {
+//            unregisterReceiver(mLocationBroadCast);
+//        } catch (IllegalArgumentException is) {
+//            is.printStackTrace();
+//        }
     }
 
     @Override
