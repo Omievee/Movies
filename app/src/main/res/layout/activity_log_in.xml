@@ -87,14 +87,6 @@
             android:textAllCaps="false"
             android:textSize="15sp" />
 
-        <!--<ProgressBar-->
-        <!--style="@style/Widget.AppCompat.ProgressBar"-->
-        <!--android:layout_width="30dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_height="30dp"-->
-        <!--android:layout_marginTop="@dimen/margin_half"-->
-        <!--android:theme="@style/CircularProgressWhite" />-->
-
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -114,15 +106,15 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingStart="@dimen/margin_standard"
-                android:textStyle="normal"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:background="@android:color/transparent"
                 android:paddingBottom="@dimen/margin_standard"
+                android:paddingStart="@dimen/margin_standard"
                 android:paddingTop="@dimen/margin_standard"
                 android:text="Sign in with facebook"
                 android:textAllCaps="false"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="normal" />
 
 
         </RelativeLayout>

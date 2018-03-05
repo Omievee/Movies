@@ -84,7 +84,7 @@ public class LogInActivity extends AppCompatActivity {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                progress.setVisibility(View.VISIBLE);
                 logIn();
             }
         });
@@ -93,7 +93,7 @@ public class LogInActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LogInActivity.this, SignUpFirstOpenActivity.class);
+                Intent intent = new Intent(LogInActivity.this, OnboardingActivity.class);
                 startActivity(intent);
             }
         });
@@ -102,6 +102,7 @@ public class LogInActivity extends AppCompatActivity {
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 forgotPassword();
             }
         });
@@ -109,7 +110,6 @@ public class LogInActivity extends AppCompatActivity {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(Constants.TAG, "onClick: ");
                 LoginManager.getInstance().logInWithReadPermissions(LogInActivity.this, Arrays.asList("public_profile", "email", "user_birthday"));
 
             }
@@ -133,14 +133,12 @@ public class LogInActivity extends AppCompatActivity {
                         } else if (response.errorBody() != null) {
                             Toast.makeText(LogInActivity.this, "Please check your credentials and try again.", Toast.LENGTH_LONG).show();
                             progress.setVisibility(View.GONE);
-//                                    toggleControls(true);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         progress.setVisibility(View.INVISIBLE);
-//                                toggleControls(true);
                         Toast.makeText(LogInActivity.this, t.getMessage().toString(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -148,8 +146,6 @@ public class LogInActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                // App code
-                Toast.makeText(LogInActivity.this, "cancel", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -186,13 +182,16 @@ public class LogInActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         moviePassLoginSucceeded(response.body());
+                        progress.setVisibility(View.GONE);
                     } else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
-//                            mProgress.setVisibility(View.GONE);
-//                            toggleControls(true);
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                            progress.setVisibility(View.GONE);
+
                         } catch (Exception e) {
+                            progress.setVisibility(View.GONE);
+
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -200,8 +199,7 @@ public class LogInActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-//                    mProgress.setVisibility(View.INVISIBLE);
-//                    toggleControls(true);
+                    progress.setVisibility(View.GONE);
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                 }
 
