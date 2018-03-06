@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -231,7 +232,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
 
-
         return rootView;
     }
 
@@ -316,11 +316,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         startActivity(movieIntent);
     }
 
+    @SuppressLint("DefaultLocale")
     public void loadMovies() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+        double lat = UserPreferences.getLatitude();
+        double lon = UserPreferences.getLongitude();
+
+        RestClient.getAuthenticated().getMovies(Double.parseDouble(String.format("%.2f", lat)), Double.parseDouble(String.format("%.2f", lon))).enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-
                 if (response.body() != null && response.isSuccessful()) {
                     progress.setVisibility(View.GONE);
                     moviesResponse = response.body();

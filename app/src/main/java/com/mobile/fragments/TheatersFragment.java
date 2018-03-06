@@ -141,7 +141,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     boolean isRecyclerViewShown;
     TheatersResponse mTheatersResponse;
     OnTheaterSelect theaterSelect;
-
+    Theater th;
     @BindView(R.id.recycler_view)
     RecyclerView theatersMapViewRecycler, theatersListRecyclerview;
 
@@ -214,7 +214,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
 
         theatersRealm = Realm.getDefaultInstance();
-        getAllTheatersForStorage();
+      //  getAllTheatersForStorage();
 
         return rootView;
     }
@@ -842,17 +842,39 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 LocalStorageTheaters locallyStoredTheaters = response.body();
 
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
-                    theatersRealm.executeTransactionAsync(realm -> {
-                    }, () -> {
-                        Theater th = theatersRealm.createObject(Theater.class);
 
-                        for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
-                            th.setName(locallyStoredTheaters.getTheaters().get(j).getName());
+                    theatersRealm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(@NonNull Realm bgRealm) {
+                             th = bgRealm.createObject(Theater.class);
+                            for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
+                                th.setName(locallyStoredTheaters.getTheaters().get(j).getName());
+                                th.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
+                                th.setCity(locallyStoredTheaters.getTheaters().get(j).getCity());
+                                th.setDistance(locallyStoredTheaters.getTheaters().get(j).getDistance());
+                                th.setId(locallyStoredTheaters.getTheaters().get(j).getId());
+                                th.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
+                                th.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
+                                th.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
+                                th.setState(locallyStoredTheaters.getTheaters().get(j).getState());
+                                th.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
+                                th.setZip(locallyStoredTheaters.getTheaters().get(j).getZip());
+                            }
                         }
-                    }, (Realm.Transaction.OnError) error -> {
-                        Log.d(TAG, "onResponse: " + error.getMessage());
-                    });
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
 
+                            Log.d(TAG, "onSuccess: ");
+                            // Transaction was a success.
+                        }
+                    }, new Realm.Transaction.OnError() {
+                        @Override
+                        public void onError(Throwable error) {
+                            // Transaction failed and was automatically canceled.
+                            Log.d(TAG, "Realm onError: " + error.getMessage());
+                        }
+                    });
 
                 }
             }
@@ -862,12 +884,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
             }
         });
+
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        theatersRealm.close();
     }
 
     //    public static void expand(final View v) {
