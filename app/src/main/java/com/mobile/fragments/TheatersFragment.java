@@ -3,6 +3,7 @@ package com.mobile.fragments;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -91,6 +92,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -214,7 +216,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
 
         theatersRealm = Realm.getDefaultInstance();
-      //  getAllTheatersForStorage();
+        Log.d(TAG, "onCreateView: " + theatersRealm.getPath());
+        //  getAllTheatersForStorage();
+        queryRealmTheaters();
 
         return rootView;
     }
@@ -428,6 +432,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         };
     }
 
+    @SuppressLint("DefaultLocale")
     private void updateLocationUI() {
         if (mCurrentLocation != null) {
             if (theatersMapViewRecycler.getVisibility() == View.VISIBLE) {
@@ -472,14 +477,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
                     if (mRequestingLocationUpdates) {
                         if (loc != null) {
-                            loadTheaters(loc.getLatitude(), loc.getLongitude());
+                            loadTheaters(Double.parseDouble(String.format("%.2f", loc.getLatitude())), Double.parseDouble(String.format("%.2f", loc.getLongitude())));
 
                             LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                             CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                             mMap.moveCamera(current);
-
-                            lat = loc.getLatitude();
-                            lon = loc.getLongitude();
+                            lat = Double.parseDouble(String.format("%.2f", loc.getLatitude()));
+                            lon = Double.parseDouble(String.format("%.2f", loc.getLongitude()));
                         }
                     }
                 });
@@ -834,7 +838,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         view.setAnimation(animation);
     }
 
-
+    /**
+     * REALM CODE
+     */
     public void getAllTheatersForStorage() {
         RestClient.getsGetAllTheatersApi().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
@@ -846,7 +852,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     theatersRealm.executeTransactionAsync(new Realm.Transaction() {
                         @Override
                         public void execute(@NonNull Realm bgRealm) {
-                             th = bgRealm.createObject(Theater.class);
+                            th = bgRealm.createObject(Theater.class);
                             for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                                 th.setName(locallyStoredTheaters.getTheaters().get(j).getName());
                                 th.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
@@ -881,9 +887,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
             @Override
             public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
-
+                Toast.makeText(getContext(), "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void queryRealmTheaters() {
+
+        RealmResults<Theater> result2 = theatersRealm.where(Theater.class)
+                .contains("name", "Studio Movie Grill")
+                .findAll();
+
+        Log.d(TAG, "queryRealmTheaters: " + result2.toString());
 
 
     }
