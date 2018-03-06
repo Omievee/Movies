@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.Constants;
@@ -24,9 +25,13 @@ import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.model.Eid;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.network.Api;
 import com.mobile.network.RestClient;
+import com.mobile.requests.OpenAppEventRequest;
+import com.mobile.responses.GoWatchItResponse;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -37,6 +42,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by anubis on 8/4/17.
@@ -77,6 +84,7 @@ public class MoviesActivity extends BaseActivity {
         }
         else
         {
+            userOpenedApp();
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -298,6 +306,44 @@ public class MoviesActivity extends BaseActivity {
         Intent movieIntent = new Intent(this,MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         startActivity(movieIntent);
+    }
+
+    public void userOpenedApp(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://click.moviepass.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Api service = retrofit.create(Api.class);
+
+        OpenAppEventRequest request = new OpenAppEventRequest("a","a","a","a","a",
+                "a","a","a","a","a","a",new Eid("a","a"));
+
+        Call<GoWatchItResponse> userCall = service.openAppEvent(request);
+
+        Log.d("------->", "getRequest: " + userCall.request().url().toString());
+
+        userCall.enqueue(new Callback<GoWatchItResponse>() {
+            @Override
+            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response)
+            {
+                GoWatchItResponse weather = response.body();
+                if(weather == null)
+                {
+                    Toast.makeText(MoviesActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GoWatchItResponse> call, Throwable t) {
+                Toast.makeText(MoviesActivity.this, "Unable", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
     }
 
 

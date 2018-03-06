@@ -14,6 +14,7 @@ import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookLinkRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.requests.OpenAppEventRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.PersonalInfoRequest;
 import com.mobile.requests.SignUpRequest;
@@ -23,6 +24,7 @@ import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.PersonalInfoResponse;
 import com.mobile.responses.RegistrationPlanResponse;
@@ -151,4 +153,14 @@ public interface Api {
     /* Cancel Subscription */
     @POST("/api/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
+
+    /* Open App Go Watch It Event */
+    @POST("/prod/ingest")
+    Call<GoWatchItResponse> openAppEvent(@Body OpenAppEventRequest request);
+
+
+
+
+
+
 }
