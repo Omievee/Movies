@@ -4,8 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -17,17 +15,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -35,14 +28,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
-import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -51,7 +42,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -63,9 +53,6 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -75,51 +62,48 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.lapism.searchview.SearchView;
 import com.mobile.Constants;
-import com.mobile.UserLocationManagerFused;
+import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.listeners.TheatersClickListener;
-import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.model.TheatersResponse;
 import com.mobile.network.RestClient;
+import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.LOCATION_SERVICE;
 
 
 public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener,
         GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
+
+    Realm theatersRealm;
+
 
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
@@ -228,6 +212,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
+
+        theatersRealm = Realm.getDefaultInstance();
+        getAllTheatersForStorage();
 
         return rootView;
     }
@@ -395,7 +382,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         super.onPause();
 
         theatersMapViewRecycler.setVisibility(View.INVISIBLE);
-        if(mClusterManager != null) {
+        if (mClusterManager != null) {
             mClusterManager.clearItems();
             mClusterManager.cluster();
         }
@@ -421,7 +408,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onDetach() {
         super.onDetach();
-        if(mClusterManager != null) {
+        if (mClusterManager != null) {
             mClusterManager.clearItems();
             mClusterManager.cluster();
         }
@@ -625,7 +612,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                         TheatersResponse theaters = response.body();
                         if (theaters != null) {
                             List<Theater> theaterList = theaters.getTheaters();
-
                             if (theaterList.size() == 0) {
                                 mProgress.setVisibility(View.GONE);
 
@@ -848,7 +834,43 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         view.setAnimation(animation);
     }
 
-//    public static void expand(final View v) {
+
+    public void getAllTheatersForStorage() {
+        RestClient.getsGetAllTheatersApi().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+            @Override
+            public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
+                LocalStorageTheaters locallyStoredTheaters = response.body();
+
+                if (locallyStoredTheaters != null && response.isSuccessful()) {
+                    theatersRealm.executeTransactionAsync(realm -> {
+                    }, () -> {
+                        Theater th = theatersRealm.createObject(Theater.class);
+
+                        for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
+                            th.setName(locallyStoredTheaters.getTheaters().get(j).getName());
+                        }
+                    }, (Realm.Transaction.OnError) error -> {
+                        Log.d(TAG, "onResponse: " + error.getMessage());
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        theatersRealm.close();
+    }
+
+    //    public static void expand(final View v) {
 //        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 //        final int targetedHeight = v.getMeasuredHeight();
 //

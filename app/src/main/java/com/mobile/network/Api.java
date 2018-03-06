@@ -24,6 +24,7 @@ import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
+import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.PersonalInfoResponse;
 import com.mobile.responses.RegistrationPlanResponse;
 import com.mobile.responses.ReservationResponse;
@@ -151,4 +152,8 @@ public interface Api {
     /* Cancel Subscription */
     @POST("/api/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
+
+
+    @GET("/theaters/all.json")
+    Call<LocalStorageTheaters> getAllMoviePassTheaters();
 }

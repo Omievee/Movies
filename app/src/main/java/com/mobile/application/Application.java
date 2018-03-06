@@ -60,12 +60,13 @@ public class Application extends MultiDexApplication {
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
-        Log.d(TAG, "onCreate: " + config.getPath());
+        Log.d(TAG, "REALM PATH!! ---->: " + config.getPath());
         Realm.setDefaultConfiguration(config);
 
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
+        RestClient.setUpAllTheaters(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {

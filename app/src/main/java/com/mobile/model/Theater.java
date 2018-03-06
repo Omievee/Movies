@@ -1,19 +1,78 @@
 package com.mobile.model;
 
 
-import android.os.Parcelable;
-
 import org.parceler.Parcel;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 @Parcel
-public class Theater implements Serializable {
+public class Theater extends RealmObject implements Serializable {
 
     int id;
+
     int moviepassId;
     int tribuneTheaterId;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMoviepassId(int moviepassId) {
+        this.moviepassId = moviepassId;
+    }
+
+    public void setTribuneTheaterId(int tribuneTheaterId) {
+        this.tribuneTheaterId = tribuneTheaterId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setTheaterChainName(String theaterChainName) {
+        this.theaterChainName = theaterChainName;
+    }
+
+    public void setTicketType(String ticketType) {
+        this.ticketType = ticketType;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
     String name;
     String address;
     String city;

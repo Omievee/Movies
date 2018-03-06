@@ -10,7 +10,7 @@ import java.util.List;
 import io.realm.RealmObject;
 
 @Parcel
-public class Movie extends RealmObject implements ISearchable, Parcelable {
+public class Movie  implements ISearchable, Parcelable {
 
     protected int id;
     protected String tribuneId;

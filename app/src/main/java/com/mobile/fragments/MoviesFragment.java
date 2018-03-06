@@ -231,18 +231,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
 
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(realm1 -> {
-            Movie movieRealm = realm.createObject(Movie.class);
-
-
-        }, () -> {
-
-            Log.d(Constants.TAG, "Realm Success: ");
-
-        }, error -> {
-            Log.d(Constants.TAG, "Realm Error: " +error.getMessage());
-        });
 
         return rootView;
     }

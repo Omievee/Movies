@@ -38,12 +38,16 @@ public class RestClient {
 
     private native static String getEndPoint();
 
+    static String theaterURL = "http://a1.moviepass.com ";
     static String url = String.valueOf(getEndPoint());
 
     private static Api sAuthenticatedAPI;
     private static Api sUnauthenticatedAPI;
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sUnauthenticatedInstance;
+    private static Retrofit sGetAllTheatersInstance;
+
+    private static Api sGetAllTheatersApi;
 
     public static int userId;
     public static String deviceUuid = "";
@@ -58,6 +62,10 @@ public class RestClient {
 
     public static Api getUnauthenticated() {
         return sUnauthenticatedAPI;
+    }
+
+    public static Api getsGetAllTheatersApi() {
+        return sGetAllTheatersApi;
     }
 
     public static void setupAuthenticatedWebClient(Context context) {
@@ -159,5 +167,58 @@ public class RestClient {
                 .client(httpClient.build())
                 .build();
         sUnauthenticatedAPI = sUnauthenticatedInstance.create(Api.class);
+    }
+
+
+    public static void setUpAllTheaters(Context context) {
+
+        sGetAllTheatersApi = null;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+        if (Constants.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(40, TimeUnit.SECONDS);
+        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.addInterceptor(logging);
+
+        CookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient.cookieJar(cookieJar);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("user_id", "" + UserPreferences.getUserId())
+                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("auth_token", UserPreferences.getAuthToken())
+                        .addHeader("Content-type", "application/json")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("User-Agent", "MoviePass/Android/20170706");
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        sGetAllTheatersInstance = new Retrofit.Builder()
+                .baseUrl(theaterURL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
+                .build();
+        sGetAllTheatersApi = sGetAllTheatersInstance.create(Api.class);
     }
 }
