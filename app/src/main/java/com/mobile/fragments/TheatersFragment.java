@@ -92,7 +92,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -598,109 +597,109 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
 
-    private void loadTheaters(Double latitude, final Double longitude) {
-        mMap.clear();
-        mTheaters.clear();
-        mProgress.setVisibility(View.VISIBLE);
-        theatersMapViewRecycler.setVisibility(View.VISIBLE);
-
-        LatLng latlng = new LatLng(latitude, longitude);
-        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
-        mMap.moveCamera(current);
-        mMap.animateCamera(current);
-
-        RestClient.getAuthenticated().getTheaters(latitude, longitude)
-                .enqueue(new Callback<TheatersResponse>() {
-                    @Override
-                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
-                        TheatersResponse theaters = response.body();
-                        if (theaters != null) {
-                            List<Theater> theaterList = theaters.getTheaters();
-                            if (theaterList.size() == 0) {
-                                mProgress.setVisibility(View.GONE);
-
-                                Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-                            } else {
-                                mClusterManager.clearItems();
-                                mClusterManager.cluster();
-
-                                for (final Theater theater : theaterList) {
-                                    LatLng location = new LatLng(theater.getLat(), theater.getLon());
-
-                                    mMapData.put(location, theater);
-
-                                    //Initial View to Display RecyclerView Based on User's Current Location
-                                    mTheatersResponse = response.body();
-                                    mTheaters.clear();
-                                    if (theatersMapViewAdapter != null) {
-                                        theatersMapViewRecycler.getRecycledViewPool().clear();
-                                        theatersMapViewAdapter.notifyDataSetChanged();
-                                    }
-
-                                    if (mTheatersResponse != null) {
-                                        Collections.sort(mTheaters, (theater1, t1) -> Double.compare(theater1.getDistance(), t1.getDistance()));
-                                        mTheaters.addAll(mTheatersResponse.getTheaters());
-
-                                        theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
-                                        theatersMapViewRecycler.setTranslationY(0);
-                                        theatersMapViewRecycler.setAlpha(1.0f);
-                                        isRecyclerViewShown = true;
-                                        mProgress.setVisibility(View.GONE);
-                                    }
-                                    final int position;
-                                    position = theaterList.indexOf(theater);
-                                    mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
-                                    mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
-                                    final CameraPosition[] mPreviousCameraPosition = {null};
-
-                                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                                        @Override
-                                        public void onCameraIdle() {
-                                            CameraPosition position = mMap.getCameraPosition();
-                                            if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
-                                                mPreviousCameraPosition[0] = mMap.getCameraPosition();
-                                                mClusterManager.cluster();
-                                            }
-                                        }
-                                    });
-
-                                    mClusterManager.cluster();
-
-                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                                        @Override
-                                        public void onInfoWindowClick(final Marker marker) {
-                                            mRequestingLocationUpdates = false;
-                                            final Marker finalMarker = marker;
-                                            final Theater theaterMarker = markerTheaterMap.get(marker.getId());
-                                            mProgress.setVisibility(View.VISIBLE);
-                                            theatersMapViewRecycler.animate().translationY(theatersMapViewRecycler.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
-                                                @Override
-                                                public void onAnimationEnd(Animator animation) {
-                                                    super.onAnimationEnd(animation);
-                                                    Projection projection = mMap.getProjection();
-                                                    LatLng markerLocation = finalMarker.getPosition();
-                                                    Point screenPosition = projection.toScreenLocation(markerLocation);
-                                                    onTheaterClick(position, theaterMarker, screenPosition.x, screenPosition.y);
-                                                }
-                                            });
-                                        }
-                                    });
-
-
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<TheatersResponse> call, Throwable t) {
-                        if (t != null) {
-                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
-                        }
-                    }
-
-                });
-    }
+//    private void loadTheaters(Double latitude, final Double longitude) {
+//        mMap.clear();
+//        mTheaters.clear();
+//        mProgress.setVisibility(View.VISIBLE);
+//        theatersMapViewRecycler.setVisibility(View.VISIBLE);
+//
+//        LatLng latlng = new LatLng(latitude, longitude);
+//        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
+//        mMap.moveCamera(current);
+//        mMap.animateCamera(current);
+//
+//        RestClient.getAuthenticated().getTheaters(latitude, longitude)
+//                .enqueue(new Callback<TheatersResponse>() {
+//                    @Override
+//                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
+//                        TheatersResponse theaters = response.body();
+//                        if (theaters != null) {
+//                            List<Theater> theaterList = theaters.getTheaters();
+//                            if (theaterList.size() == 0) {
+//                                mProgress.setVisibility(View.GONE);
+//
+//                                Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                mClusterManager.clearItems();
+//                                mClusterManager.cluster();
+//
+//                                for (final Theater theater : theaterList) {
+//                                    LatLng location = new LatLng(theater.getLat(), theater.getLon());
+//
+//                                    mMapData.put(location, theater);
+//
+//                                    //Initial View to Display RecyclerView Based on User's Current Location
+//                                    mTheatersResponse = response.body();
+//                                    mTheaters.clear();
+//                                    if (theatersMapViewAdapter != null) {
+//                                        theatersMapViewRecycler.getRecycledViewPool().clear();
+//                                        theatersMapViewAdapter.notifyDataSetChanged();
+//                                    }
+//
+//                                    if (mTheatersResponse != null) {
+//                                        Collections.sort(mTheaters, (theater1, t1) -> Double.compare(theater1.getDistance(), t1.getDistance()));
+//                                        mTheaters.addAll(mTheatersResponse.getTheaters());
+//
+//                                        theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
+//                                        theatersMapViewRecycler.setTranslationY(0);
+//                                        theatersMapViewRecycler.setAlpha(1.0f);
+//                                        isRecyclerViewShown = true;
+//                                        mProgress.setVisibility(View.GONE);
+//                                    }
+//                                    final int position;
+//                                    position = theaterList.indexOf(theater);
+//                                    mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
+//                                    mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+//                                    final CameraPosition[] mPreviousCameraPosition = {null};
+//
+//                                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+//                                        @Override
+//                                        public void onCameraIdle() {
+//                                            CameraPosition position = mMap.getCameraPosition();
+//                                            if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
+//                                                mPreviousCameraPosition[0] = mMap.getCameraPosition();
+//                                                mClusterManager.cluster();
+//                                            }
+//                                        }
+//                                    });
+//
+//                                    mClusterManager.cluster();
+//
+//                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+//                                        @Override
+//                                        public void onInfoWindowClick(final Marker marker) {
+//                                            mRequestingLocationUpdates = false;
+//                                            final Marker finalMarker = marker;
+//                                            final Theater theaterMarker = markerTheaterMap.get(marker.getId());
+//                                            mProgress.setVisibility(View.VISIBLE);
+//                                            theatersMapViewRecycler.animate().translationY(theatersMapViewRecycler.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
+//                                                @Override
+//                                                public void onAnimationEnd(Animator animation) {
+//                                                    super.onAnimationEnd(animation);
+//                                                    Projection projection = mMap.getProjection();
+//                                                    LatLng markerLocation = finalMarker.getPosition();
+//                                                    Point screenPosition = projection.toScreenLocation(markerLocation);
+//                                                    onTheaterClick(position, theaterMarker, screenPosition.x, screenPosition.y);
+//                                                }
+//                                            });
+//                                        }
+//                                    });
+//
+//
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<TheatersResponse> call, Throwable t) {
+//                        if (t != null) {
+//                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+//                        }
+//                    }
+//
+//                });
+//    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -842,7 +841,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
      * REALM CODE
      */
     public void getAllTheatersForStorage() {
-        RestClient.getsGetAllTheatersApi().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+        RestClient.getAllTheatersAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
             public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
                 LocalStorageTheaters locallyStoredTheaters = response.body();
@@ -908,54 +907,115 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         super.onDestroy();
     }
 
-    //    public static void expand(final View v) {
-//        v.measure(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        final int targetedHeight = v.getMeasuredHeight();
-//
-//        v.getLayoutParams().height = 0;
-//        v.setVisibility(View.VISIBLE);
-//        Animation a = new Animation() {
-//            @Override
-//            protected void applyTransformation(float interpolatedTime, Transformation t) {
-//                v.getLayoutParams().height = interpolatedTime == 1
-//                        ? RelativeLayout.LayoutParams.WRAP_CONTENT
-//                        : (int) (targetedHeight * interpolatedTime);
-//                v.requestLayout();
-//            }
-//
-//            @Override
-//            public boolean willChangeBounds() {
-//                return true;
-//            }
-//        };
-//
-//        a.setDuration((int) (targetedHeight / v.getContext().getResources().getDisplayMetrics().density));
-//        v.startAnimation(a);
-//    }
-//
-//    public void collapse(final View v) {
-//        final int initialHeight = v.getMeasuredHeight();
-//
-//        Animation a = new Animation() {
-//            @Override
-//            protected void applyTransformation(float interpolatedTime, Transformation t) {
-//                if (interpolatedTime == 1) {
-//                    v.setVisibility(View.GONE);
-//                } else {
-//                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
-//                    v.requestLayout();
-//                }
-//            }
-//
-//            @Override
-//            public boolean willChangeBounds() {
-//                return true;
-//            }
-//        };
-//
-//        a.setDuration((int) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
-//        v.startAnimation(a);
-//    }
+
+    private void loadTheaters(Double latitude, final Double longitude) {
+        mMap.clear();
+        mTheaters.clear();
+        mProgress.setVisibility(View.VISIBLE);
+        theatersMapViewRecycler.setVisibility(View.VISIBLE);
+
+        LatLng latlng = new LatLng(latitude, longitude);
+        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
+        mMap.moveCamera(current);
+        mMap.animateCamera(current);
+
+
+
+        
+
+
+
+        RestClient.getAuthenticated().getTheaters(latitude, longitude).enqueue(new Callback<TheatersResponse>() {
+                    @Override
+                    public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
+                        TheatersResponse theaters = response.body();
+                        if (theaters != null) {
+                            List<Theater> theaterList = theaters.getTheaters();
+                            if (theaterList.size() == 0) {
+                                mProgress.setVisibility(View.GONE);
+
+                                Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mClusterManager.clearItems();
+                                mClusterManager.cluster();
+
+                                for (final Theater theater : theaterList) {
+                                    LatLng location = new LatLng(theater.getLat(), theater.getLon());
+
+                                    mMapData.put(location, theater);
+
+                                    //Initial View to Display RecyclerView Based on User's Current Location
+                                    mTheatersResponse = response.body();
+                                    mTheaters.clear();
+                                    if (theatersMapViewAdapter != null) {
+                                        theatersMapViewRecycler.getRecycledViewPool().clear();
+                                        theatersMapViewAdapter.notifyDataSetChanged();
+                                    }
+
+                                    if (mTheatersResponse != null) {
+                                        Collections.sort(mTheaters, (theater1, t1) -> Double.compare(theater1.getDistance(), t1.getDistance()));
+                                        mTheaters.addAll(mTheatersResponse.getTheaters());
+
+                                        theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
+                                        theatersMapViewRecycler.setTranslationY(0);
+                                        theatersMapViewRecycler.setAlpha(1.0f);
+                                        isRecyclerViewShown = true;
+                                        mProgress.setVisibility(View.GONE);
+                                    }
+                                    final int position;
+                                    position = theaterList.indexOf(theater);
+                                    mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
+                                    mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+                                    final CameraPosition[] mPreviousCameraPosition = {null};
+
+                                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                                        @Override
+                                        public void onCameraIdle() {
+                                            CameraPosition position = mMap.getCameraPosition();
+                                            if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
+                                                mPreviousCameraPosition[0] = mMap.getCameraPosition();
+                                                mClusterManager.cluster();
+                                            }
+                                        }
+                                    });
+
+                                    mClusterManager.cluster();
+
+                                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                                        @Override
+                                        public void onInfoWindowClick(final Marker marker) {
+                                            mRequestingLocationUpdates = false;
+                                            final Marker finalMarker = marker;
+                                            final Theater theaterMarker = markerTheaterMap.get(marker.getId());
+                                            mProgress.setVisibility(View.VISIBLE);
+                                            theatersMapViewRecycler.animate().translationY(theatersMapViewRecycler.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                    super.onAnimationEnd(animation);
+                                                    Projection projection = mMap.getProjection();
+                                                    LatLng markerLocation = finalMarker.getPosition();
+                                                    Point screenPosition = projection.toScreenLocation(markerLocation);
+                                                    onTheaterClick(position, theaterMarker, screenPosition.x, screenPosition.y);
+                                                }
+                                            });
+                                        }
+                                    });
+
+
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TheatersResponse> call, Throwable t) {
+                        if (t != null) {
+                            Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
+                        }
+                    }
+
+                });
+    }
 
 
 }

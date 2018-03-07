@@ -45,9 +45,9 @@ public class RestClient {
     private static Api sUnauthenticatedAPI;
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sUnauthenticatedInstance;
-    private static Retrofit sGetAllTheatersInstance;
+    private static Retrofit allTheatersInstance;
 
-    private static Api sGetAllTheatersApi;
+    private static Api allTheatersAPI;
 
     public static int userId;
     public static String deviceUuid = "";
@@ -64,8 +64,8 @@ public class RestClient {
         return sUnauthenticatedAPI;
     }
 
-    public static Api getsGetAllTheatersApi() {
-        return sGetAllTheatersApi;
+    public static Api getAllTheatersAPI() {
+        return allTheatersAPI;
     }
 
     public static void setupAuthenticatedWebClient(Context context) {
@@ -172,7 +172,7 @@ public class RestClient {
 
     public static void setUpAllTheaters(Context context) {
 
-        sGetAllTheatersApi = null;
+        allTheatersAPI = null;
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
@@ -213,12 +213,12 @@ public class RestClient {
                 .setLenient()
                 .create();
 
-        sGetAllTheatersInstance = new Retrofit.Builder()
+        allTheatersInstance = new Retrofit.Builder()
                 .baseUrl(theaterURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-        sGetAllTheatersApi = sGetAllTheatersInstance.create(Api.class);
+        allTheatersAPI = allTheatersInstance.create(Api.class);
     }
 }
