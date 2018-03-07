@@ -59,7 +59,7 @@ public class Application extends MultiDexApplication {
         Fresco.initialize(this);
 
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
+        RealmConfiguration config = new RealmConfiguration.Builder().name(Realm.DEFAULT_REALM_NAME).build();
         Log.d(TAG, "REALM PATH!! ---->: " + config.getPath());
         Realm.setDefaultConfiguration(config);
 
