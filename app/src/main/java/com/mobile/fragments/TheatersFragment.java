@@ -888,7 +888,34 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         }
 
+        if (localTheaters.size() == 0) {
+            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+        } else {
+            mClusterManager.clearItems();
+            mClusterManager.cluster();
 
+            for (final Theater theater : localTheaters) {
+                LatLng location = new LatLng(theater.getLat(), theater.getLon());
+
+                mMapData.put(location, theater);
+
+                final int position;
+                position = localTheaters.indexOf(theater);
+                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
+                mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+                final CameraPosition[] mPreviousCameraPosition = {null};
+
+                mMap.setOnCameraIdleListener(() -> {
+                    CameraPosition position1 = mMap.getCameraPosition();
+                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position1.zoom) {
+                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
+                        mClusterManager.cluster();
+                    }
+                });
+
+            }
+
+        }
     }
 
     @Override
