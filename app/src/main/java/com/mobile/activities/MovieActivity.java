@@ -353,11 +353,13 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "RESPONSE: " + jObjError.getString("messege").toString());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onResponse: " + e.getMessage());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
@@ -371,7 +373,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 ProgressBar.setVisibility(View.GONE);
                 buttonCheckIn.setVisibility(View.VISIBLE);
                 buttonCheckIn.setEnabled(true);
-
                 String hostname = "Unable to resolve host: No address associated with hostname";
 
             }
@@ -595,7 +596,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
     }
 
-    private void showActivateCardDialog( Screening screening,  String showtime) {
+    private void showActivateCardDialog(Screening screening, String showtime) {
         Intent activateCard = new Intent(MovieActivity.this, ActivateMoviePassCard.class);
         activateCard.putExtra(SCREENING, Parcels.wrap(screening));
         activateCard.putExtra(SHOWTIME, showtime);
