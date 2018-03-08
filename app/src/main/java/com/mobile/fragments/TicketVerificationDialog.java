@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
+import com.mobile.activities.MovieActivity;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
 import com.mobile.helpers.ContextSingleton;
@@ -42,6 +43,9 @@ import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
 import com.moviepass.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -268,6 +272,20 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                                 progress.setVisibility(View.GONE);
                                 Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                 dismiss();
+                            } else {
+                                JSONObject jObjError = null;
+                                try {
+                                    jObjError = new JSONObject(response.errorBody().string());
+                                    if (jObjError.getString("message").equals("Verification status is different from PENDING_SUBMISSION")) {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                        dismiss();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
@@ -292,7 +310,8 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         });
     }
 
-    private HashMap<String, String> metaDataMap(@NonNull String reservationId, @NonNull String showTime, @NonNull String movieId, @NonNull String movieTitle,
+    private HashMap<String, String> metaDataMap(@NonNull String reservationId, @NonNull String
+            showTime, @NonNull String movieId, @NonNull String movieTitle,
                                                 @NonNull String theaterId, @NonNull String theaterName, String reservationKind) {
         HashMap<String, String> meta = new HashMap<>();
         meta.put("reservation_id", reservationId);//reservationId
