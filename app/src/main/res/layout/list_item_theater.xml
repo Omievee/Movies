@@ -8,7 +8,7 @@
     android:layout_margin="@dimen/margin_half"
     android:elevation="@dimen/basic_elevation"
     android:padding="@dimen/margin_half"
-    app:cardBackgroundColor="@color/test_black"
+    app:cardBackgroundColor="@color/test_blue"
     app:cardCornerRadius="5dp">
 
     <LinearLayout

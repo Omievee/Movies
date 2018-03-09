@@ -123,7 +123,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
     private OnFragmentInteractionListener listener;
 
-    LinearLayout listViewMaps;
+    RelativeLayout listViewMaps;
     RelativeLayout goneList;
     ImageView mSearchClose, myloc;
     View mProgress;
@@ -192,16 +192,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             @Override
             public void onClick(View v) {
 
-                if (goneList.getVisibility() == View.INVISIBLE) {
+                if (goneList.getVisibility() == View.GONE) {
                     expand(goneList);
                 } else {
                     collapse(goneList);
                 }
             }
         });
-
-        
-
 
 
         ContextSingleton.getInstance(getContext()).getGlobalContext();
@@ -550,7 +547,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             theatersRealm.beginTransaction();
-            localTheaters.get(j).setDistance(mtrMLE);
+            localTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             theatersRealm.commitTransaction();
 
             Log.d(TAG, "queryRealmLoadTheaters: " + localTheaters.get(j).getDistance() + "   " + localTheaters.get(j).getName());
