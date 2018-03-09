@@ -1,6 +1,9 @@
 package com.mobile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.Constants;
+import com.mobile.activities.TheaterActivity;
+import com.mobile.activities.TheatersActivity;
+import com.mobile.fragments.TheatersFragment;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -26,15 +35,13 @@ import butterknife.ButterKnife;
 
 public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
 
-    private final TheatersClickListener theatersClickListener;
     private ArrayList<Theater> theatersArrayList;
-
+    public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
-
-    public TheatersAdapter(ArrayList<Theater> theatersArrayList, TheatersClickListener theatersClickListener) {
-        this.theatersClickListener = theatersClickListener;
+    TheatersFragment theatersFragment;
+    public TheatersAdapter(ArrayList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
     }
 
@@ -79,6 +86,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
+        theatersFragment = new TheatersFragment();
+
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
@@ -110,10 +119,18 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             holder.iconSeat.setVisibility(View.INVISIBLE);
         }
 
-        Theater theaterSelected  = theater;
+        Theater theaterSelected = theater;
         holder.listItemTheater.setTag(position);
         setSlideAnimation(holder.listItemTheater);
-        holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
+                intent.putExtra(THEATER, Parcels.wrap(Theater.class, theaterSelected));
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
+      //  holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
     }
 
     @Override

@@ -106,6 +106,7 @@ public class TheaterActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
         Log.d("onBackPressed", "onBackPressed");
 
     }
@@ -160,4 +161,8 @@ public class TheaterActivity extends BaseActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
     }
+
+
+
+
 }

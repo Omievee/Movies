@@ -35,7 +35,7 @@ import butterknife.BindView;
  * Created by anubis on 6/9/17.
  */
 
-public class BrowseActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
+public class BrowseActivity extends BaseActivity  {
 
     int SUPPORT_PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     String TAG = "TAG";
@@ -119,47 +119,46 @@ public class BrowseActivity extends BaseActivity implements TheatersFragment.OnT
         mRedView.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
-        final Theater finalTheater = theater;
-
-        if (Build.VERSION.SDK_INT >= 21) {
-            mRedView.bringToFront();
-
-            int cxFinal = mRedView.getWidth() / 2;
-            int cyFinal = mRedView.getHeight() / 2;
-
-            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
-
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
-
-            mRedView.setVisibility(View.VISIBLE);
-            anim.start();
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-
-                    Intent intent = new Intent(BrowseActivity.this, TheaterActivity.class);
-                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
-
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-                }
-            });
-        }
-    }
+//    @Override
+//    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
+//        final Theater finalTheater = theater;
+//
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            mRedView.bringToFront();
+//
+//            int cxFinal = mRedView.getWidth() / 2;
+//            int cyFinal = mRedView.getHeight() / 2;
+//
+//            float finalRadius = (float) Math.hypot(cxFinal, cyFinal);
+//
+//            Animator anim = ViewAnimationUtils.createCircularReveal(mRedView, cx, cy, 0, finalRadius);
+//
+//            mRedView.setVisibility(View.VISIBLE);
+//            anim.start();
+//            anim.addListener(new Animator.AnimatorListener() {
+//                @Override
+//                public void onAnimationStart(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animator) {
+//
+//                    Intent intent = new Intent(BrowseActivity.this, TheaterActivity.class);
+//                    intent.putExtra(TheaterActivity.THEATER, Parcels.wrap(finalTheater));
+//
+//                    startActivity(intent);
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animator) {
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animator) {
+//                }
+//            });
+//        }
+//    }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override

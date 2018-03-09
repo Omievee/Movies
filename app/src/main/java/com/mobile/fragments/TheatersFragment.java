@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -90,7 +91,7 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 
-public class TheatersFragment extends Fragment implements OnMapReadyCallback, TheatersClickListener,
+public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
     Realm theatersRealm;
@@ -101,7 +102,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     public static final int LOCATION_PERMISSIONS = 99;
-
+    public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
 
@@ -124,12 +125,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private OnFragmentInteractionListener listener;
 
     RelativeLayout listViewMaps;
-    RelativeLayout goneList;
+    public RelativeLayout goneList;
     ImageView mSearchClose, myloc;
     View mProgress;
     RelativeLayout mRelativeLayout;
     private ClusterManager<TheaterPin> mClusterManager;
-    OnTheaterSelect theaterSelect;
     @BindView(R.id.listViewTheaters)
     RecyclerView theatersRECY;
     RealmList<Theater> myList;
@@ -141,8 +141,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
+
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
+        }
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
@@ -169,7 +173,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
         theatersRECY.setLayoutManager(manager);
-        theaterAdapter = new TheatersAdapter(localTheaters, this);
+        theaterAdapter = new TheatersAdapter(localTheaters);
         theatersRECY.setAdapter(theaterAdapter);
 
 
@@ -188,13 +192,24 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         });
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                expand(goneList);
+            }
+        }, 3000);
+
+
         listViewMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (goneList.getVisibility() == View.GONE) {
                     expand(goneList);
+                    expanded = true;
                 } else {
+                    expanded = false;
                     collapse(goneList);
                 }
             }
@@ -329,7 +344,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
-        theaterSelect = (OnTheaterSelect) context;
     }
 
     @Override
@@ -481,26 +495,26 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         return true;
     }
 
-    public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
-        mClusterManager.clearItems();
-        mClusterManager.cluster();
-
-        int recyclerViewHeight = theatersRECY.getHeight();
-        float screenHeight = mRelativeLayout.getHeight();
-
-        int finalCx = cx;
-        int finalCy = (int) screenHeight + recyclerViewHeight - cy;
-
-        onTheaterSelect(pos, theater, finalCx, finalCy);
-    }
-
-    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
-        theaterSelect.onTheaterSelect(pos, theater, cx, cy);
-    }
-
-    public interface OnTheaterSelect {
-        public void onTheaterSelect(int pos, Theater theater, int cx, int cy);
-    }
+//    public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
+//        mClusterManager.clearItems();
+//        mClusterManager.cluster();
+//
+//        int recyclerViewHeight = theatersRECY.getHeight();
+//        float screenHeight = mRelativeLayout.getHeight();
+//
+//        int finalCx = cx;
+//        int finalCy = (int) screenHeight + recyclerViewHeight - cy;
+//
+//        onTheaterSelect(pos, theater, finalCx, finalCy);
+//    }
+//
+//    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
+//        theaterSelect.onTheaterSelect(pos, theater, cx, cy);
+//    }
+//
+//    public interface OnTheaterSelect {
+//        public void onTheaterSelect(int pos, Theater theater, int cx, int cy);
+//    }
 
     public interface OnFragmentInteractionListener {
     }
@@ -835,7 +849,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     }
 
 
-    public static void expand(final View v) {
+    public void expand(final View v) {
         v.measure(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         final int targetHeight = v.getMeasuredHeight();
 
@@ -859,7 +873,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         v.startAnimation(animate);
     }
 
-    public static void collapse(final View v) {
+    public void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();
 
         Animation a = new Animation() {

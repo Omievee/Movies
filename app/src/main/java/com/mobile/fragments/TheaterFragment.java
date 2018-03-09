@@ -540,6 +540,4 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
     }
 
-
-
 }

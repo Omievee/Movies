@@ -6,10 +6,10 @@ import org.parceler.Parcel;
 import java.io.Serializable;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+import io.realm.annotations.RealmClass;
 
-@Parcel
+@Parcel(value = Parcel.Serialization.BEAN, analyze = {Theater.class})
+@RealmClass
 public class Theater extends RealmObject implements Serializable {
 
     int id;
@@ -36,6 +36,7 @@ public class Theater extends RealmObject implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
 
     public void setCity(String city) {
         this.city = city;
