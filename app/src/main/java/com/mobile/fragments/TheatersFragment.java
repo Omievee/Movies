@@ -24,8 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,7 +66,6 @@ import com.mobile.helpers.ContextSingleton;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
-import com.mobile.model.TheatersResponse;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
@@ -109,7 +106,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     private HashMap<String, Theater> markerTheaterMap;
 
     private GoogleApiClient mGoogleApiClient;
-    private TheatersAdapter theatersMapViewAdapter;
+    private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
     private SettingsClient mSettingsClient;
     private LocationRequest mLocationRequest;
@@ -133,8 +130,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     RelativeLayout mRelativeLayout;
     private ClusterManager<TheaterPin> mClusterManager;
     OnTheaterSelect theaterSelect;
-    @BindView(R.id.recycler_view)
-    RecyclerView theatersMapViewRecycler, theatersListRecyclerview;
+    @BindView(R.id.listViewTheaters)
+    RecyclerView theatersRECY;
     RealmList<Theater> myList;
     String TAG = "TAG";
     int finalK;
@@ -169,13 +166,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         /* Set up RecyclerView */
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        int res2 = R.anim.layout_animation;
-        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
-        theatersMapViewRecycler = rootView.findViewById(R.id.recycler_view);
-        theatersMapViewRecycler.setLayoutAnimation(animation2);
-        theatersMapViewRecycler.setLayoutManager(mLayoutManager);
-        theatersMapViewAdapter = new TheatersAdapter(localTheaters, this);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        theatersRECY = rootView.findViewById(R.id.listViewTheaters);
+        theatersRECY.setLayoutManager(manager);
+        theaterAdapter = new TheatersAdapter(localTheaters, this);
+        theatersRECY.setAdapter(theaterAdapter);
 
 
         mSearchClose.setOnClickListener(view -> {
@@ -193,12 +188,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         });
 
-
         listViewMaps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                expand(goneList);
-                collapse(goneList);
+
+                if (goneList.getVisibility() == View.INVISIBLE) {
+                    expand(goneList);
+                } else {
+                    collapse(goneList);
+                }
             }
         });
 
@@ -260,10 +258,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //            //Onclick for individual Markers - adjusts recycler to that specific theater.
 //            CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(11).build();
 //            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
-//            theatersMapViewRecycler.getLayoutManager().scrollToPosition(theaterSelected);
+//            theatersRECY.getLayoutManager().scrollToPosition(theaterSelected);
 //
 //            theatersListRecyclerview.getRecycledViewPool().clear();
-//            theatersMapViewAdapter.notifyDataSetChanged();
+//            theaterAdapter.notifyDataSetChanged();
 //
 //            marker.showInfoWindow();
 //
@@ -309,7 +307,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     public void onPause() {
         super.onPause();
 
-        theatersMapViewRecycler.setVisibility(View.INVISIBLE);
+        theatersRECY.setVisibility(View.INVISIBLE);
         if (mClusterManager != null) {
             mClusterManager.clearItems();
             mClusterManager.cluster();
@@ -372,7 +370,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //        mMap.animateCamera(cameraUpdate);
 //        loadTheaters(lat, lon);
 //        theatersListRecyclerview.getRecycledViewPool().clear();
-//        theatersMapViewAdapter.notifyDataSetChanged();
+//        theaterAdapter.notifyDataSetChanged();
 //        myloc.setVisibility(View.GONE);
 //    }
 
@@ -380,8 +378,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        theatersListRecyclerview.getRecycledViewPool().clear();
-        theatersMapViewAdapter.notifyDataSetChanged();
+        theaterAdapter.notifyDataSetChanged();
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
@@ -487,7 +484,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
         mClusterManager.clearItems();
         mClusterManager.cluster();
 
-        int recyclerViewHeight = theatersMapViewRecycler.getHeight();
+        int recyclerViewHeight = theatersRECY.getHeight();
         float screenHeight = mRelativeLayout.getHeight();
 
         int finalCx = cx;
@@ -672,7 +669,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //        mMap.clear();
 //        mTheaters.clear();
 ////        mProgress.setVisibility(View.VISIBLE);
-//        theatersMapViewRecycler.setVisibility(View.VISIBLE);
+//        theatersRECY.setVisibility(View.VISIBLE);
 //
 //        LatLng latlng = new LatLng(latitude, longitude);
 //        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
@@ -704,18 +701,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //                            //Initial View to Display RecyclerView Based on User's Current Location
 //                            mTheatersResponse = response.body();
 //                            mTheaters.clear();
-//                            if (theatersMapViewAdapter != null) {
-//                                theatersMapViewRecycler.getRecycledViewPool().clear();
-//                                theatersMapViewAdapter.notifyDataSetChanged();
+//                            if (theaterAdapter != null) {
+//                                theatersRECY.getRecycledViewPool().clear();
+//                                theaterAdapter.notifyDataSetChanged();
 //                            }
 //
 //                            if (mTheatersResponse != null) {
 //                                Collections.sort(mTheaters, (theater1, t1) -> Double.compare(theater1.getDistance(), t1.getDistance()));
 //                                mTheaters.addAll(mTheatersResponse.getTheaters());
 //
-//                                theatersMapViewRecycler.setAdapter(theatersMapViewAdapter);
-//                                theatersMapViewRecycler.setTranslationY(0);
-//                                theatersMapViewRecycler.setAlpha(1.0f);
+//                                theatersRECY.setAdapter(theaterAdapter);
+//                                theatersRECY.setTranslationY(0);
+//                                theatersRECY.setAlpha(1.0f);
 //                                isRecyclerViewShown = true;
 //                                mProgress.setVisibility(View.GONE);
 //                            }
@@ -745,7 +742,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //                                    final Marker finalMarker = marker;
 //                                    final Theater theaterMarker = markerTheaterMap.get(marker.getId());
 //                                    mProgress.setVisibility(View.VISIBLE);
-//                                    theatersMapViewRecycler.animate().translationY(theatersMapViewRecycler.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
+//                                    theatersRECY.animate().translationY(theatersRECY.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
 //                                        @Override
 //                                        public void onAnimationEnd(Animator animation) {
 //                                            super.onAnimationEnd(animation);
@@ -838,7 +835,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 
 
     public static void expand(final View v) {
-        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, 200);
         final int targetHeight = v.getMeasuredHeight();
 
         v.getLayoutParams().height = 1;
@@ -849,15 +846,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 v.getLayoutParams().height = interpolatedTime == 1 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
                 v.requestLayout();
-
             }
 
             @Override
             public boolean willChangeBounds() {
                 return true;
             }
-
-
         };
 
         animate.setDuration((long) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
