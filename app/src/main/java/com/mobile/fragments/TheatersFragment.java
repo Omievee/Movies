@@ -200,6 +200,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             }
         });
 
+        
+
+
+
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
 

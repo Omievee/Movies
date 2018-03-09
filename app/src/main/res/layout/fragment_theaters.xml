@@ -36,61 +36,49 @@
         android:visibility="gone" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ListViewMaps"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:background="@color/test_black"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:visibility="visible">
 
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/ListViewText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half">
+            android:layout_centerInParent="true"
+            android:padding="@dimen/margin_half"
+            android:text="ListView"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="visible" />
 
-            <TextView
-                android:id="@+id/ListViewText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/margin_half"
-                android:text="List View"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="@dimen/margin_half"
-                android:layout_toEndOf="@id/ListViewText"
-                android:src="@drawable/icondown"
-                android:tint="@color/white" />
-
-
-        </RelativeLayout>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_toEndOf="@id/ListViewText"
+            android:src="@drawable/icondown"
+            android:tint="@color/white" />
 
         <RelativeLayout
             android:id="@+id/goneList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/test_black"
-            android:visibility="invisible">
-
+            android:visibility="gone">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/listViewTheaters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/list_item_theater" />
-
-
         </RelativeLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
+
 
     <include
         android:id="@+id/progress"
