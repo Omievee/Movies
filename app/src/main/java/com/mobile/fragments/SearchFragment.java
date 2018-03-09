@@ -14,15 +14,21 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.helpshift.All;
+import com.helpshift.support.contracts.SearchResultListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.mobile.Constants;
+import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
+import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -47,7 +53,7 @@ import static com.facebook.GraphRequest.TAG;
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements AfterSearchListener {
     MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
@@ -138,4 +144,40 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    public void searchEvent(String search){
+
+        String l = String.valueOf(UserPreferences.getLatitude());
+        String ln = String.valueOf(UserPreferences.getLongitude());
+        String userId = String.valueOf(UserPreferences.getUserId());
+        String deep_link="";
+
+        String versionName = BuildConfig.VERSION_NAME;
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String campaign = "no_campaign";
+
+
+        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("search","true",
+                "Movie","-1",search,campaign,"app","android",deep_link,"organic",
+                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+            @Override
+            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+                GoWatchItResponse responseBody = response.body();
+//                progress.setVisibility(View.GONE);
+
+                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
+            }
+
+            @Override
+            public void failure(RestError restError) {
+//                progress.setVisibility(View.GONE);
+                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void getSearchString() {
+        if(searchBar!=null && searchBar.getText()!=null)
+            searchEvent(searchBar.getText());
+    }
 }

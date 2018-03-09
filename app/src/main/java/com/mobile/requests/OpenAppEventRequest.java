@@ -8,9 +8,10 @@ import com.mobile.model.Eid;
 
 public class OpenAppEventRequest {
     String ct, ci, e, c, m, mc, u, o, ak, l, ln;
+    String debug = "true";
     Eid eid;
 
-    public OpenAppEventRequest(String ct, String ci, String e, String c, String m, String mc, String u, String o, String ak, String l, String ln, Eid eid) {
+    public OpenAppEventRequest(String ct, String ci, String e, String c, String m, String mc, String u, String o, String ak, String l, String ln, String debug, Eid eid) {
         this.ct = ct;
         this.ci = ci;
         this.e = e;
@@ -22,6 +23,7 @@ public class OpenAppEventRequest {
         this.ak = ak;
         this.l = l;
         this.ln = ln;
+        this.debug = debug;
         this.eid = eid;
     }
 }

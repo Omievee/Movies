@@ -33,7 +33,6 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 val i = Intent(this@SplashActivity, MoviesActivity::class.java)
-                userOpenedApp()
                 startActivity(i)
                 finish()
             }
@@ -45,40 +44,5 @@ class SplashActivity : AppCompatActivity() {
         private val SPLASH_TIME_OUT = 1000
     }
 
-    fun userOpenedApp(){
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://click.moviepass.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-
-        val service = retrofit.create(Api::class.java!!)
-
-        val eid = Eid("11111","IDFA")
-
-        val openAppEventR = OpenAppEventRequest("Unset","-1","app_open","no_campaign","app","android",
-                "url","organic","API-KEY","40.01","-74.01", eid)
-
-
-        val userCall = service.openAppEvent(openAppEventR);
-
-        Log.d("sdsd", "getWeatherInfo: " + userCall.request().url().toString())
-
-        userCall.enqueue(object : Callback<GoWatchItResponse> {
-            override fun onResponse(call: Call<GoWatchItResponse>, response: Response<GoWatchItResponse>) {
-                if (response.body() == null && !response.isSuccessful()) {
-                    Toast.makeText(this@SplashActivity, "Please try another city", Toast.LENGTH_SHORT).show()
-                } else {
-
-                }
-            }
-
-            override fun onFailure(call: Call<GoWatchItResponse>, t: Throwable) {
-                Toast.makeText(this@SplashActivity, "Unable", Toast.LENGTH_SHORT).show()
-                Log.d("sdsdf", "onFailure: ")
-                t.printStackTrace()
-            }
-        })
-    }
 
 }

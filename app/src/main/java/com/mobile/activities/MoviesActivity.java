@@ -29,21 +29,28 @@ import com.mobile.model.Eid;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
 import com.mobile.requests.OpenAppEventRequest;
+import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Header;
 
 /**
  * Created by anubis on 8/4/17.
@@ -57,9 +64,10 @@ public class MoviesActivity extends BaseActivity {
     boolean firstBoot;
     public ArrayList<Movie> ALLMOVIES;
     Movie movie;
-    String campaign;
+    String campaign="default_campaign";
     int movieId;
     List<String> urlPath;
+    String url;
     MoviesResponse moviesResponse;
 
     @Override
@@ -71,7 +79,7 @@ public class MoviesActivity extends BaseActivity {
         Uri data = intent.getData();
         if (data != null && data.getPath().length()>3) {
             String movieIdEncripted;
-
+            url = data.getPath();
             urlPath = data.getPathSegments();
             int idLength;
             movieIdEncripted = (urlPath.get(2));
@@ -80,6 +88,7 @@ public class MoviesActivity extends BaseActivity {
             idLength = idLength-5;
             movieIdEncripted = movieIdEncripted.substring(2,idLength);
             movieId = Integer.valueOf(movieIdEncripted);
+            userOpenedApp();
             loadMovies();
         }
         else
@@ -305,43 +314,38 @@ public class MoviesActivity extends BaseActivity {
     public void startMovieActivity(){
         Intent movieIntent = new Intent(this,MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+        movieIntent.putExtra(MovieActivity.CAMPAIGN,campaign);
+        movieIntent.putExtra(MovieActivity.DEEPLINK,url);
         startActivity(movieIntent);
     }
 
     public void userOpenedApp(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://click.moviepass.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        Api service = retrofit.create(Api.class);
+        String l = String.valueOf(UserPreferences.getLatitude());
+        String ln = String.valueOf(UserPreferences.getLongitude());
+        String userId = String.valueOf(UserPreferences.getUserId());
+        String deep_link="MoviePass://app";
+        String thisCampaign = "default_campaign";
+        if(urlPath!=null)
+            thisCampaign = campaign;
 
-        OpenAppEventRequest request = new OpenAppEventRequest("a","a","a","a","a",
-                "a","a","a","a","a","a",new Eid("a","a"));
+        String versionName = BuildConfig.VERSION_NAME;
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
 
-        Call<GoWatchItResponse> userCall = service.openAppEvent(request);
 
-        Log.d("------->", "getRequest: " + userCall.request().url().toString());
-
-        userCall.enqueue(new Callback<GoWatchItResponse>() {
+        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Unset",
+                "-1","app_open",thisCampaign,"app","android",deep_link,"organic",
+                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response)
-            {
-                GoWatchItResponse weather = response.body();
-                if(weather == null)
-                {
-                    Toast.makeText(MoviesActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-
-                }
+            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+                GoWatchItResponse responseBody = response.body();
+//                progress.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<GoWatchItResponse> call, Throwable t) {
-                Toast.makeText(MoviesActivity.this, "Unable", Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
+            public void failure(RestError restError) {
+//                progress.setVisibility(View.GONE);
+                Toast.makeText(MoviesActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

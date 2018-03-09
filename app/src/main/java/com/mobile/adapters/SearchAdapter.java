@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mobile.Constants;
+import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.activities.MovieActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
@@ -41,9 +42,15 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
 
 
     View root;
+    AfterSearchListener listener;
 
     public SearchAdapter(LayoutInflater inflater) {
         super(inflater);
+    }
+
+    public SearchAdapter(LayoutInflater inflater, AfterSearchListener listener) {
+        super(inflater);
+        this.listener = listener;
     }
 
     @Override
@@ -90,6 +97,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         holder.image.setController(controller);
 
         holder.cardView.setOnClickListener(view -> {
+            listener.getSearchString();
             Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
             movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
             holder.itemView.getContext().startActivity(movieIntent);

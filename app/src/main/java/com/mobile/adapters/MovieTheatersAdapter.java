@@ -134,6 +134,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         HOLDER = holder;
 
+        Theater theater = new Theater();
+
         ShowtimesList = new ArrayList<>();
         screening = screeningsArrayList.get(position);
         if (screeningsArrayList.size() == 0) {
@@ -149,6 +151,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         for (int i = 0; i < theaterArrayList.size(); i++) {
             if (theaterArrayList.get(i).getTribuneTheaterId() == theaterID) {
                 double distance = theaterArrayList.get(i).getDistance();
+                theater = theaterArrayList.get(i);
                 String name = theaterArrayList.get(i).getName();
                 String address = theaterArrayList.get(i).getCity() + " " + theaterArrayList.get(i).getState() + " " + theaterArrayList.get(i).getZip();
                 HOLDER.distance.setText(String.valueOf(distance) + " miles");
@@ -218,6 +221,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 final Screening select = screening;
                 currentTime = showTime;
                 if (screening.getFormat().matches("2D")) {
+                    Theater finalTheater = theater;
                     HOLDER.showTimesGrid.setOnCheckedChangeListener((group, checkedId) -> {
                         RadioButton checked = group.findViewById(checkedId);
                         if (currentTime != null) {
@@ -225,7 +229,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         }
                         currentTime = checked;
                         String selectedShowTime = currentTime.getText().toString();
-                        showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        showtimeClickListener.onShowtimeClick(finalTheater,holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
                 } else {
                     currentTime.setClickable(false);
