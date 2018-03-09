@@ -20,7 +20,8 @@
         android:layout_marginTop="@dimen/double_margin_standard"
         android:background="@drawable/circle_white_alpha"
         android:src="@drawable/ic_search_black_24dp"
-        android:tint="@color/white" />
+        android:tint="@color/white"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/myloc"
@@ -35,46 +36,67 @@
         android:visibility="gone" />
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:layoutAnimation="@anim/layout_animation"
-        android:listSelector="@android:color/transparent"
-        android:orientation="horizontal"
-        tools:listitem="@layout/list_item_theater" />
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_recycler"
+    <LinearLayout
+        android:id="@+id/ListViewMaps"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:background="@android:drawable/screen_background_dark_transparent"
-        android:visibility="gone">
-
-    </android.support.v7.widget.RecyclerView>
-
-
-    <ImageView
-        android:id="@+id/List_Switch"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/magin_MAX"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:background="@drawable/circle_white_alpha"
-        android:tint="@color/white"
-        android:visibility="invisible" />
+        android:background="@color/test_black"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/ListViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_half"
+                android:text="List View"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_toEndOf="@id/ListViewText"
+                android:src="@drawable/icondown"
+                android:tint="@color/white" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/goneList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:layoutAnimation="@anim/layout_animation"
+                android:listSelector="@android:color/transparent"
+                tools:listitem="@layout/list_item_theater" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <include
         android:id="@+id/progress"
