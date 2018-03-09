@@ -305,8 +305,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
-                      android:host="www.moviepass.com"
+                <data android:scheme="http"
+                      android:host="moviepass.com"
                       android:pathPrefix="/go/theaters" />
             </intent-filter>
         </activity>
