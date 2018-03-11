@@ -32,6 +32,7 @@ import com.mobile.activities.SelectSeatActivity;
 import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -568,7 +569,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         thr = theaterObject.getState();
         thz = theaterObject.getZip();
         tha = theaterObject.getAddress();
-        String campaign = "no_campaign";
+        String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
         String result="";
         thd = "";
@@ -617,7 +618,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         thr = theaterObject.getState();
         thz = theaterObject.getZip();
         tha = theaterObject.getAddress();
-        String campaign = "no_campaign";
+        String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
         String result="";
         thd = "";
@@ -660,7 +661,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
 
-        String campaign = "no_campaign";
+        String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openTheaterEvent("impression",theaterObject.getName(),

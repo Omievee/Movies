@@ -22,6 +22,7 @@ import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestCallback;
@@ -84,7 +85,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         progress.setVisibility(View.VISIBLE);
         loadResults();
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-        customAdapter = new SearchAdapter(myInflater);
+        customAdapter = new SearchAdapter(myInflater,this);
         Handler handler = new Handler();
         customAdapter.setSuggestions(ALLMOVIES);
         handler.postDelayed(() -> customAdapter.setSuggestions(ALLMOVIES), 500);
@@ -153,7 +154,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        String campaign = "no_campaign";
+        String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("search","true",

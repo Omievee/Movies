@@ -45,6 +45,7 @@ import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieTheatersAdapter;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
@@ -172,7 +173,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         movie = Parcels.unwrap(getIntent().getParcelableExtra(MOVIE));
-        campaign = getIntent().getStringExtra(CAMPAIGN);
+        campaign = GoWatchItSingleton.getInstance().getCampaign();
         url = getIntent().getStringExtra(DEEPLINK);
 
 

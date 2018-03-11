@@ -88,13 +88,18 @@ import com.google.maps.android.ui.IconGenerator;
 import com.lapism.searchview.SearchView;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
+import com.mobile.UserPreferences;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.model.TheatersResponse;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
+import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -216,7 +221,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                     .build();
             try {
                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
-
                 startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
             } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                 // TODO: Handle the error.
@@ -897,5 +901,35 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //        v.startAnimation(a);
 //    }
 
+    public void searchEvent(String search){
+
+        String l = String.valueOf(UserPreferences.getLatitude());
+        String ln = String.valueOf(UserPreferences.getLongitude());
+        String userId = String.valueOf(UserPreferences.getUserId());
+        String deep_link="";
+
+        String versionName = BuildConfig.VERSION_NAME;
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String campaign = "no_campaign";
+
+
+        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("theatrical_search","true",
+                "Movie","-1",search,campaign,"app","android",deep_link,"organic",
+                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+            @Override
+            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+                GoWatchItResponse responseBody = response.body();
+//                progress.setVisibility(View.GONE);
+
+                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
+            }
+
+            @Override
+            public void failure(RestError restError) {
+//                progress.setVisibility(View.GONE);
+                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
 }

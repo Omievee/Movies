@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.TheatersFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
@@ -50,6 +51,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
             url = data.getPath();
             urlPath = data.getPathSegments();
             campaign = urlPath.get(2);
+            GoWatchItSingleton.getInstance().setCampaign(campaign);
         }
         userOpenedTheaterTab();
         TheatersFragment theatersFragment = new TheatersFragment();
@@ -135,6 +137,7 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement","true","Unset","-1","map_view_click",campaign,"app","android",url,"organic",

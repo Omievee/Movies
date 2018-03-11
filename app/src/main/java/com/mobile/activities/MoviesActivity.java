@@ -25,6 +25,7 @@ import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Eid;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
@@ -64,7 +65,6 @@ public class MoviesActivity extends BaseActivity {
     boolean firstBoot;
     public ArrayList<Movie> ALLMOVIES;
     Movie movie;
-    String campaign="default_campaign";
     int movieId;
     List<String> urlPath;
     String url;
@@ -83,7 +83,8 @@ public class MoviesActivity extends BaseActivity {
             urlPath = data.getPathSegments();
             int idLength;
             movieIdEncripted = (urlPath.get(2));
-            campaign = urlPath.get(3);
+            String campaign = urlPath.get(3);
+            GoWatchItSingleton.getInstance().setCampaign(campaign);
             idLength = movieIdEncripted.length();
             idLength = idLength-5;
             movieIdEncripted = movieIdEncripted.substring(2,idLength);
@@ -314,7 +315,6 @@ public class MoviesActivity extends BaseActivity {
     public void startMovieActivity(){
         Intent movieIntent = new Intent(this,MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        movieIntent.putExtra(MovieActivity.CAMPAIGN,campaign);
         movieIntent.putExtra(MovieActivity.DEEPLINK,url);
         startActivity(movieIntent);
     }
@@ -325,9 +325,7 @@ public class MoviesActivity extends BaseActivity {
         String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
         String deep_link="MoviePass://app";
-        String thisCampaign = "default_campaign";
-        if(urlPath!=null)
-            thisCampaign = campaign;
+        String thisCampaign = GoWatchItSingleton.getInstance().getCampaign();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
