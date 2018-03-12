@@ -139,22 +139,22 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (restriction.getPopInfo() != null) {
 
-                        int reservationId = restriction.getPopInfo().getReservationId();
-                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-                        String theaterName = restriction.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-                        String showtime = restriction.getPopInfo().getShowtime();
-
-                        Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
-                        intent.putExtra("reservationId", reservationId);
-                        intent.putExtra("mSelectedMovieTitle", movieTitle);
-                        intent.putExtra("tribuneMovieId", tribuneMovieId);
-                        intent.putExtra("mTheaterSelected", theaterName);
-                        intent.putExtra("tribuneTheaterId", tribuneTheaterId);
-                        intent.putExtra("showtime", showtime);
-                        startActivity(intent);
-                        finish();
+//                        int reservationId = restriction.getPopInfo().getReservationId();
+//                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+//                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+//                        String theaterName = restriction.getPopInfo().getTheaterName();
+//                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+//                        String showtime = restriction.getPopInfo().getShowtime();
+//
+//                        Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
+//                        intent.putExtra("reservationId", reservationId);
+//                        intent.putExtra("mSelectedMovieTitle", movieTitle);
+//                        intent.putExtra("tribuneMovieId", tribuneMovieId);
+//                        intent.putExtra("mTheaterSelected", theaterName);
+//                        intent.putExtra("tribuneTheaterId", tribuneTheaterId);
+//                        intent.putExtra("showtime", showtime);
+//                        startActivity(intent);
+//                        finish();
                     }
                 } else {
                     try {

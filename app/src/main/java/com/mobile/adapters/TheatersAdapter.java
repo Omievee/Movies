@@ -121,7 +121,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
         Theater theaterSelected = theater;
         holder.listItemTheater.setTag(position);
-        setSlideAnimation(holder.listItemTheater);
+//        setSlideAnimation(holder.listItemTheater);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,8 +143,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         return TYPE_ITEM;
     }
 
-    private void setSlideAnimation(View view) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
-        view.startAnimation(animation);
-    }
+//    private void setSlideAnimation(View view) {
+//        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
+//        view.startAnimation(animation);
+//    }
 }

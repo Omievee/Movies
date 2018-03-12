@@ -12,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -64,15 +63,17 @@ import com.google.maps.android.ui.IconGenerator;
 import com.mobile.Constants;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.ContextSingleton;
-import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     LocationManager locManager;
     GoogleMap mMap;
     MapView mMapView;
-
+    Location userCurrentLocation;
     private OnFragmentInteractionListener listener;
 
     RelativeLayout listViewMaps;
@@ -129,14 +130,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     ImageView mSearchClose, myloc;
     View mProgress;
     RelativeLayout mRelativeLayout;
-    private ClusterManager<TheaterPin> mClusterManager;
+    private ClusterManager<TheaterPin> clusterManager;
     @BindView(R.id.listViewTheaters)
     RecyclerView theatersRECY;
     RealmList<Theater> myList;
     String TAG = "TAG";
     int finalK;
     double meterToMile;
-    ArrayList<Theater> localTheaters;
+    ArrayList<Theater> nearbyTheaters;
+    ArrayList<Theater> closestTheaters;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -163,7 +165,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         mRequestingLocationUpdates = true;
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);
         goneList = rootView.findViewById(R.id.goneList);
-        localTheaters = new ArrayList<>();
+        nearbyTheaters = new ArrayList<>();
 
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
@@ -173,7 +175,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
         theatersRECY.setLayoutManager(manager);
-        theaterAdapter = new TheatersAdapter(localTheaters);
+        theaterAdapter = new TheatersAdapter(nearbyTheaters);
         theatersRECY.setAdapter(theaterAdapter);
 
 
@@ -192,26 +194,22 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                expand(goneList);
+//            }
+//        }, 500);
+
+
+        listViewMaps.setOnClickListener(v -> {
+            if (goneList.getVisibility() == View.GONE) {
                 expand(goneList);
-            }
-        }, 3000);
-
-
-        listViewMaps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (goneList.getVisibility() == View.GONE) {
-                    expand(goneList);
-                    expanded = true;
-                } else {
-                    expanded = false;
-                    collapse(goneList);
-                }
+                expanded = true;
+            } else {
+                expanded = false;
+                collapse(goneList);
             }
         });
 
@@ -220,7 +218,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
 
         theatersRealm = Realm.getDefaultInstance();
-//        getAllTheatersForStorage();
+        //  getAllTheatersForStorage();
         return rootView;
     }
 
@@ -252,11 +250,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             // in a raw resource file.
             boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
-            mClusterManager = new ClusterManager<>(getActivity(), mMap);
-            mClusterManager.setRenderer(new TheaterPinRenderer());
-            mMap.setOnMarkerClickListener(mClusterManager);
-            mClusterManager.setOnClusterClickListener(this);
-            mClusterManager.cluster();
+            clusterManager = new ClusterManager<>(getActivity(), mMap);
+            clusterManager.setRenderer(new TheaterPinRenderer());
+            mMap.setOnMarkerClickListener(clusterManager);
+            clusterManager.setOnClusterClickListener(this);
+            clusterManager.cluster();
         } catch (Resources.NotFoundException e) {
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
@@ -290,9 +288,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         mMapView.onResume();
         super.onResume();
 
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
+        if (clusterManager != null) {
+            clusterManager.clearItems();
+            clusterManager.cluster();
         }
         locationUpdateRealm();
     }
@@ -307,6 +305,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
+
                     queryRealmLoadTheaters(loc.getLatitude(), loc.getLongitude());
 
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -324,9 +323,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         super.onPause();
 
         theatersRECY.setVisibility(View.INVISIBLE);
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
+        if (clusterManager != null) {
+            clusterManager.clearItems();
+            clusterManager.cluster();
         }
 
     }
@@ -335,9 +334,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     public void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
+        if (clusterManager != null) {
+            clusterManager.clearItems();
+            clusterManager.cluster();
         }
     }
 
@@ -349,9 +348,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mClusterManager != null) {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
+        if (clusterManager != null) {
+            clusterManager.clearItems();
+            clusterManager.cluster();
         }
 
         listener = null;
@@ -432,20 +431,19 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         private final IconGenerator mClusterIconGenerator;
 
         public TheaterPinRenderer() {
-            super(getActivity(), mMap, mClusterManager);
+            super(getActivity(), mMap, clusterManager);
             mClusterIconGenerator = new IconGenerator(getActivity());
         }
 
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater_pin)).title(theaterPin.getTitle());
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_clustered_theater_pin)).title(theaterPin.getTitle());
         }
 
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
             try {
-                mClusterIconGenerator.setBackground(
-                        ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
+                mClusterIconGenerator.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
 
                 mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
@@ -454,12 +452,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
                 // Draw multiple people.
                 // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-                List<Drawable> theaterPins = new ArrayList<>(Math.min(4, cluster.getSize()));
+                List<Drawable> theaterPins = new ArrayList<>(Math.min(3, cluster.getSize()));
 
                 for (TheaterPin p : cluster.getItems()) {
                     // Draw 4 at most.
                     if (theaterPins.size() == 4) break;
-                    Drawable drawable = getResources().getDrawable(R.drawable.theater_pin);
+                    Drawable drawable = getResources().getDrawable(R.drawable.theaterpineticket);
                     //drawable.setBounds(0, 0, width, height);
                     theaterPins.add(drawable);
                 }
@@ -495,36 +493,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-//    public void onTheaterClick(int pos, Theater theater, int cx, int cy) {
-//        mClusterManager.clearItems();
-//        mClusterManager.cluster();
-//
-//        int recyclerViewHeight = theatersRECY.getHeight();
-//        float screenHeight = mRelativeLayout.getHeight();
-//
-//        int finalCx = cx;
-//        int finalCy = (int) screenHeight + recyclerViewHeight - cy;
-//
-//        onTheaterSelect(pos, theater, finalCx, finalCy);
-//    }
-//
-//    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
-//        theaterSelect.onTheaterSelect(pos, theater, cx, cy);
-//    }
-//
-//    public interface OnTheaterSelect {
-//        public void onTheaterSelect(int pos, Theater theater, int cx, int cy);
-//    }
 
     public interface OnFragmentInteractionListener {
     }
 
 
     void queryRealmLoadTheaters(double latitude, double longitude) {
-        localTheaters.clear();
-        Location userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
+        nearbyTheaters.clear();
+        userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
         userCurrentLocation.setLatitude(latitude);
         userCurrentLocation.setLongitude(longitude);
+
         RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class)
                 .findAll();
 
@@ -533,144 +512,75 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             Location pointB = new Location(LocationManager.GPS_PROVIDER);
             pointB.setLatitude(allTheaters.get(K).getLat());
             pointB.setLongitude(allTheaters.get(K).getLon());
-            double disntaceTO = userCurrentLocation.distanceTo(pointB);
+            double disntanceTO = userCurrentLocation.distanceTo(pointB);
 
-            meterToMile = (disntaceTO / 1609.344);
-
-            Collections.sort(localTheaters, new Comparator<Theater>() {
-                @Override
-                public int compare(Theater o1, Theater o2) {
-                    return Double.compare(o1.getDistance(), o2.getDistance());
-                }
-            });
-
-            Log.d(TAG, "miles?: " + meterToMile);
-            if (meterToMile > 0.0 && meterToMile <= 30.00) {
-
-                localTheaters.add(allTheaters.get(K));
-                if (localTheaters.size() > 40) {
-                    localTheaters.subList(40, localTheaters.size()).clear();
-                }
+            Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
+            if (disntanceTO <= 48280.3) {
+                nearbyTheaters.add(allTheaters.get(K));
             }
+
         }
-        for (int j = 0; j < localTheaters.size(); j++) {
+
+
+        for (int j = 0; j < nearbyTheaters.size(); j++) {
             Location localPoints = new Location(LocationManager.GPS_PROVIDER);
-            localPoints.setLatitude(localTheaters.get(j).getLat());
-            localPoints.setLongitude(localTheaters.get(j).getLon());
+            localPoints.setLatitude(nearbyTheaters.get(j).getLat());
+            localPoints.setLongitude(nearbyTheaters.get(j).getLon());
 
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             theatersRealm.beginTransaction();
-            localTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
+            nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             theatersRealm.commitTransaction();
 
-            Log.d(TAG, "queryRealmLoadTheaters: " + localTheaters.get(j).getDistance() + "   " + localTheaters.get(j).getName());
+            Log.d(TAG, "queryRealmLoadTheaters: " + nearbyTheaters.get(j).getDistance() + "   " + nearbyTheaters.get(j).getName());
         }
 
-        if (localTheaters.size() == 0) {
+
+        if (nearbyTheaters.size() > 40) {
+            nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
+        }
+
+        for (int i = 0; i < nearbyTheaters.size(); i++) {
+            Log.d(TAG, "queryRealmLoadTheaters: " + nearbyTheaters.get(i).getName());
+        }
+
+
+        if (nearbyTheaters.size() == 0) {
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
+            clusterManager.clearItems();
+            clusterManager.cluster();
 
-            for (final Theater theater : localTheaters) {
+            for (final Theater theater : nearbyTheaters) {
                 LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                 mMapData.put(location, theater);
+                
+                Log.d(TAG, "queryRealmLoadTheaters: " + theater.getLat() + " " + theater.getLon());
 
                 final int position;
-                position = localTheaters.indexOf(theater);
-                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
-                mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+                position = nearbyTheaters.indexOf(theater);
+
+                if (theater.ticketTypeIsETicket() || theater.ticketTypeIsSelectSeating()) {
+                    clusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpineticket, position, theater));
+                } else {
+                    clusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpinstandard, position, theater));
+                }
+                mMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
                 final CameraPosition[] mPreviousCameraPosition = {null};
 
                 mMap.setOnCameraIdleListener(() -> {
                     CameraPosition position1 = mMap.getCameraPosition();
                     if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position1.zoom) {
                         mPreviousCameraPosition[0] = mMap.getCameraPosition();
-                        mClusterManager.cluster();
+                        clusterManager.cluster();
                     }
                 });
-
             }
-
         }
     }
 
-    void realm(double latitude, double longitude) {
-        localTheaters.clear();
-        Location userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
-        userCurrentLocation.setLatitude(latitude);
-        userCurrentLocation.setLongitude(longitude);
-
-        RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class)
-                .findAll();
-
-        for (int K = 0; K < allTheaters.size(); K++) {
-            Location pointB = new Location(LocationManager.GPS_PROVIDER);
-            pointB.setLatitude(allTheaters.get(K).getLat());
-            pointB.setLongitude(allTheaters.get(K).getLon());
-            double disntaceTO = userCurrentLocation.distanceTo(pointB);
-
-            meterToMile = (disntaceTO / 1609.344);
-
-
-            if (meterToMile <= 35.50) {
-                Collections.sort(localTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
-                localTheaters.add(allTheaters.get(K));
-            }
-        }
-
-        Log.d(TAG, "queryRealm: " + localTheaters.size());
-        if (localTheaters.size() > 40) {
-            localTheaters.subList(40, localTheaters.size()).clear();
-            Log.d(TAG, "new size: " + localTheaters.size());
-
-            for (int j = 0; j < localTheaters.size(); j++) {
-                Location localPoints = new Location("local");
-                localPoints.setLatitude(localTheaters.get(j).getLat());
-                localPoints.setLongitude(localTheaters.get(j).getLon());
-
-                double d = userCurrentLocation.distanceTo(localPoints);
-                double setDistance = (d / 1609.344);
-                theatersRealm.beginTransaction();
-                localTheaters.get(j).setDistance(setDistance);
-                theatersRealm.commitTransaction();
-
-                Log.d(TAG, "queryRealm: " + localTheaters.get(j).getDistance() + "   " + localTheaters.get(j).getName());
-            }
-        }
-
-        if (localTheaters.size() == 0) {
-            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-        } else {
-            mClusterManager.clearItems();
-            mClusterManager.cluster();
-
-            for (final Theater theater : localTheaters) {
-                LatLng location = new LatLng(theater.getLat(), theater.getLon());
-
-                mMapData.put(location, theater);
-
-                final int position;
-                position = localTheaters.indexOf(theater);
-                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
-                mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
-                final CameraPosition[] mPreviousCameraPosition = {null};
-
-                mMap.setOnCameraIdleListener(() -> {
-                    CameraPosition position1 = mMap.getCameraPosition();
-                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position1.zoom) {
-                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
-                        mClusterManager.cluster();
-                    }
-                });
-
-            }
-
-        }
-
-    }
 
     @Override
     public void onDestroy() {
@@ -705,8 +615,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 //
 //                        Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
 //                    } else {
-//                        mClusterManager.clearItems();
-//                        mClusterManager.cluster();
+//                        clusterManager.clearItems();
+//                        clusterManager.cluster();
 //
 //                        for (final Theater theater : theaterList) {
 //                            LatLng location = new LatLng(theater.getLat(), theater.getLon());
@@ -733,8 +643,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 //                            }
 //                            final int position;
 //                            position = theaterList.indexOf(theater);
-//                            mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
-//                            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+//                            clusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
+//                            mMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
 //                            final CameraPosition[] mPreviousCameraPosition = {null};
 //
 //                            mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -743,12 +653,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 //                                    CameraPosition position = mMap.getCameraPosition();
 //                                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
 //                                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
-//                                        mClusterManager.cluster();
+//                                        clusterManager.cluster();
 //                                    }
 //                                }
 //                            });
 //
-//                            mClusterManager.cluster();
+//                            clusterManager.cluster();
 //
 //                            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 //                                @Override
@@ -790,18 +700,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     /**
      * REALM CODE
      */
+
     public void getAllTheatersForStorage() {
         RestClient.getAllTheatersAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
             public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
                 LocalStorageTheaters locallyStoredTheaters = response.body();
-
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
-
                     for (int i = 0; i < locallyStoredTheaters.getTheaters().size(); i++) {
-
                         Log.d(TAG, "onResponse: " + locallyStoredTheaters.getTheaters().get(i).getTribuneTheaterId());
-
                     }
                     theatersRealm.executeTransactionAsync(new Realm.Transaction() {
                         @Override
@@ -826,9 +733,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                         @Override
                         public void onSuccess() {
                             Log.d(TAG, "onSuccess: ");
-
                             locationUpdateRealm();
-                            // Transaction was a success.
+
                         }
                     }, new Realm.Transaction.OnError() {
                         @Override

@@ -12,10 +12,42 @@ public class TheaterPin implements ClusterItem {
     private String mTitle;
     private String mSnippet;
     private int mArrayPosition;
-    public int profilePhoto;
+    public int theaterPinIcon;
     private double latitude;
     private double longitude;
     private Theater mTheater;
+
+    public TheaterPin() {
+        mPosition = null;
+    }
+
+    public void setmTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public void setmSnippet(String mSnippet) {
+        this.mSnippet = mSnippet;
+    }
+
+    public void setmArrayPosition(int mArrayPosition) {
+        this.mArrayPosition = mArrayPosition;
+    }
+
+    public void setTheaterPinIcon(int theaterPinIcon) {
+        this.theaterPinIcon = theaterPinIcon;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setmTheater(Theater mTheater) {
+        this.mTheater = mTheater;
+    }
 
     public TheaterPin(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
@@ -26,7 +58,7 @@ public class TheaterPin implements ClusterItem {
         longitude = lng;
         mPosition = new LatLng(lat, lng);
         mTitle = title;
-        profilePhoto = pictureResource;
+        theaterPinIcon = pictureResource;
         mArrayPosition = arrayPosition;
         mTheater = theater;
     }
