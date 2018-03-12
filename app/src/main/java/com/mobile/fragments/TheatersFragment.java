@@ -248,7 +248,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_json));
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
             clusterManager = new ClusterManager<>(getActivity(), mMap);
             clusterManager.setRenderer(new TheaterPinRenderer());
@@ -437,14 +437,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_clustered_theater_pin)).title(theaterPin.getTitle());
+            if(theaterPin.getTheater().ticketTypeIsSelectSeating() || theaterPin.getTheater().ticketTypeIsETicket()){
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theaterpineticket)).title(theaterPin.getTitle());
+            }else {
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theaterpinstandard)).title(theaterPin.getTitle());
+
+            }
         }
 
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
             try {
                 mClusterIconGenerator.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
-
                 mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
                 final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
@@ -453,7 +457,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                 // Draw multiple people.
                 // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(3, cluster.getSize()));
-
                 for (TheaterPin p : cluster.getItems()) {
                     // Draw 4 at most.
                     if (theaterPins.size() == 4) break;
@@ -584,114 +587,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-//    private void loadTheaters(Double latitude, final Double longitude) {
-//        Log.d(TAG, "****Begin****: ");
-//        mMap.clear();
-//        mTheaters.clear();
-////        mProgress.setVisibility(View.VISIBLE);
-//        theatersRECY.setVisibility(View.VISIBLE);
-//
-//        LatLng latlng = new LatLng(latitude, longitude);
-//        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM_LEVEL);
-//        mMap.moveCamera(current);
-//        mMap.animateCamera(current);
-//
-//
-//        Log.d(TAG, "****END****: ");
-//
-//        RestClient.getAuthenticated().getTheaters(latitude, longitude).enqueue(new Callback<TheatersResponse>() {
-//            @Override
-//            public void onResponse(Call<TheatersResponse> call, final Response<TheatersResponse> response) {
-//                TheatersResponse theaters = response.body();
-//                if (theaters != null) {
-//                    List<Theater> theaterList = theaters.getTheaters();
-//                    if (theaterList.size() == 0) {
-//                        mProgress.setVisibility(View.GONE);
-//
-//                        Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        clusterManager.clearItems();
-//                        clusterManager.cluster();
-//
-//                        for (final Theater theater : theaterList) {
-//                            LatLng location = new LatLng(theater.getLat(), theater.getLon());
-//
-//                            mMapData.put(location, theater);
-//
-//                            //Initial View to Display RecyclerView Based on User's Current Location
-//                            mTheatersResponse = response.body();
-//                            mTheaters.clear();
-//                            if (theaterAdapter != null) {
-//                                theatersRECY.getRecycledViewPool().clear();
-//                                theaterAdapter.notifyDataSetChanged();
-//                            }
-//
-//                            if (mTheatersResponse != null) {
-//                                Collections.sort(mTheaters, (theater1, t1) -> Double.compare(theater1.getDistance(), t1.getDistance()));
-//                                mTheaters.addAll(mTheatersResponse.getTheaters());
-//
-//                                theatersRECY.setAdapter(theaterAdapter);
-//                                theatersRECY.setTranslationY(0);
-//                                theatersRECY.setAlpha(1.0f);
-//                                isRecyclerViewShown = true;
-//                                mProgress.setVisibility(View.GONE);
-//                            }
-//                            final int position;
-//                            position = theaterList.indexOf(theater);
-//                            clusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theater_pin, position, theater));
-//                            mMap.setInfoWindowAdapter(clusterManager.getMarkerManager());
-//                            final CameraPosition[] mPreviousCameraPosition = {null};
-//
-//                            mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-//                                @Override
-//                                public void onCameraIdle() {
-//                                    CameraPosition position = mMap.getCameraPosition();
-//                                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position.zoom) {
-//                                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
-//                                        clusterManager.cluster();
-//                                    }
-//                                }
-//                            });
-//
-//                            clusterManager.cluster();
-//
-//                            mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-//                                @Override
-//                                public void onInfoWindowClick(final Marker marker) {
-//                                    mRequestingLocationUpdates = false;
-//                                    final Marker finalMarker = marker;
-//                                    final Theater theaterMarker = markerTheaterMap.get(marker.getId());
-//                                    mProgress.setVisibility(View.VISIBLE);
-//                                    theatersRECY.animate().translationY(theatersRECY.getHeight()).alpha(0.5f).setListener(new AnimatorListenerAdapter() {
-//                                        @Override
-//                                        public void onAnimationEnd(Animator animation) {
-//                                            super.onAnimationEnd(animation);
-//                                            Projection projection = mMap.getProjection();
-//                                            LatLng markerLocation = finalMarker.getPosition();
-//                                            Point screenPosition = projection.toScreenLocation(markerLocation);
-//                                            onTheaterClick(position, theaterMarker, screenPosition.x, screenPosition.y);
-//                                        }
-//                                    });
-//                                }
-//                            });
-//
-//
-//                        }
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TheatersResponse> call, Throwable t) {
-//                if (t != null) {
-//                    Log.d("Unable to get theaters", "Unable to download theaters: " + t.getMessage());
-//                }
-//            }
-//
-//        });
-//    }
 
-
+    
     /**
      * REALM CODE
      */
@@ -728,8 +625,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                         @Override
                         public void onSuccess() {
                             Log.d(TAG, "onSuccess: ");
-                            locationUpdateRealm();
-
+                            //  locationUpdateRealm();
                         }
                     }, new Realm.Transaction.OnError() {
                         @Override
