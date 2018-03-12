@@ -76,7 +76,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
-        if(GoWatchItSingleton.getInstance().getCampaign()!=null && GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
 
         return rootView;
