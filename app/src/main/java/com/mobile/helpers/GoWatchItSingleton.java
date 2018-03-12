@@ -14,6 +14,7 @@ import com.mobile.network.RestError;
 import com.mobile.responses.GoWatchItResponse;
 import com.moviepass.BuildConfig;
 
+import java.security.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,6 +55,12 @@ public class GoWatchItSingleton {
         }
     }
 
+    private String currentTimeStamp(){
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        return ts;
+    }
+
     public void userOpenedApp(Context context, String deepLink){
 
         String l = String.valueOf(UserPreferences.getLatitude());
@@ -65,11 +72,12 @@ public class GoWatchItSingleton {
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String lts = currentTimeStamp();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent(debug,"Unset",
                 "-1","app_open",thisCampaign,"app","android",deepLink,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -93,11 +101,12 @@ public class GoWatchItSingleton {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
+        String lts = currentTimeStamp();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent(debug,"Movie",
                 String.valueOf(movieId),"impression",campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -129,6 +138,7 @@ public class GoWatchItSingleton {
         thr = theater.getState();
         thz = theater.getZip();
         tha = theater.getAddress();
+        String lts = currentTimeStamp();
 
         String result="";
         thd = "";
@@ -144,7 +154,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement","theater_click",tht,thd,tn,thc,thr,thz,tha,debug,"Movie",
                 movieId,campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -176,6 +186,7 @@ public class GoWatchItSingleton {
         thr = theater.getState();
         thz = theater.getZip();
         tha = theater.getAddress();
+        String lts = currentTimeStamp();
 
         String result="";
         thd = "";
@@ -191,7 +202,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement,tht,thd,tn,thc,thr,thz,tha,debug,"Movie",
                 movieId,campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -217,11 +228,12 @@ public class GoWatchItSingleton {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
+        String lts = currentTimeStamp();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement,debug,
                 "Movie","-1",search,campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -248,11 +260,12 @@ public class GoWatchItSingleton {
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
 
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
+        String lts = currentTimeStamp();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openTheaterEvent("impression",theaterObject.getName(),
                 theaterObject.getCity(),theaterObject.getState(),theaterObject.getZip(),theaterObject.getAddress(),debug,"Theater","-1",campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
@@ -278,10 +291,11 @@ public class GoWatchItSingleton {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
+        String lts = currentTimeStamp();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement",debug,"Unset","-1","map_view_click",campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+                l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
