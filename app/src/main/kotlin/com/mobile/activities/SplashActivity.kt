@@ -36,10 +36,6 @@ class SplashActivity : AppCompatActivity() {
 
             var urlPath = data.pathSegments
             var idLength: Int
-            if(urlPath.size>=4){
-                val campaign = urlPath.get(3)
-                GoWatchItSingleton.getInstance().campaign = campaign
-            }
             if(urlPath.size>=2) {
                 movieOrTheater = urlPath.get(1)
                 if(movieOrTheater.equals("movies")) {
@@ -49,8 +45,16 @@ class SplashActivity : AppCompatActivity() {
                     movieIdEncripted = movieIdEncripted.substring(2, idLength)
                     val movieId = Integer.valueOf(movieIdEncripted)!!
                     launchActivity(0,movieId)
+                    if(urlPath.size>=4){
+                        val campaign = urlPath.get(3)
+                        GoWatchItSingleton.getInstance().campaign = campaign
+                    }
                 } else if(movieOrTheater.equals("theaters")){
                     launchActivity(1,-1)
+                    if(urlPath.size>=3){
+                        val campaign = urlPath.get(2)
+                        GoWatchItSingleton.getInstance().campaign = campaign
+                    }
                 }
             }
             else {
