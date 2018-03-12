@@ -162,7 +162,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);
         goneList = rootView.findViewById(R.id.goneList);
         nearbyTheaters = new ArrayList<>();
-
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -371,10 +370,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
+                theatersRECY.getRecycledViewPool().clear();
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 myloc.setVisibility(View.VISIBLE);
-                clusterManager.clearItems();
-                clusterManager.cluster();
                 queryRealmLoadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
                 LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12);
@@ -484,9 +482,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
     void queryRealmLoadTheaters(double latitude, double longitude) {
         nearbyTheaters.clear();
+        clusterManager.clearItems();
+        clusterManager.cluster();
         userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
         userCurrentLocation.setLatitude(latitude);
         userCurrentLocation.setLongitude(longitude);
+
         RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class).findAll();
         for (int K = 0; K < allTheaters.size(); K++) {
             Location pointB = new Location(LocationManager.GPS_PROVIDER);
