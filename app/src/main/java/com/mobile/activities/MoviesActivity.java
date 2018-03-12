@@ -89,12 +89,15 @@ public class MoviesActivity extends BaseActivity {
             idLength = idLength-5;
             movieIdEncripted = movieIdEncripted.substring(2,idLength);
             movieId = Integer.valueOf(movieIdEncripted);
-            userOpenedApp();
+
+            Log.d("AAAAA ----->", "onCreate: "+movieId);
+
+            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
             loadMovies();
         }
         else
         {
-            userOpenedApp();
+            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -319,34 +322,34 @@ public class MoviesActivity extends BaseActivity {
         startActivity(movieIntent);
     }
 
-    public void userOpenedApp(){
-
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-        String deep_link="MoviePass://app";
-        String thisCampaign = GoWatchItSingleton.getInstance().getCampaign();
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-
-
-        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Unset",
-                "-1","app_open",thisCampaign,"app","android",deep_link,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-                Toast.makeText(MoviesActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    public void userOpenedApp(){
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//        String deep_link="MoviePass://app";
+//        String thisCampaign = GoWatchItSingleton.getInstance().getCampaign();
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Unset",
+//                "-1","app_open",thisCampaign,"app","android",deep_link,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//                Toast.makeText(MoviesActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
 
 

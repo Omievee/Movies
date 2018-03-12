@@ -90,6 +90,7 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
@@ -150,6 +151,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     LocationManager locManager;
     GoogleMap mMap;
     MapView mMapView;
+    String url;
 
     private OnFragmentInteractionListener listener;
 
@@ -162,6 +164,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
     boolean isRecyclerViewShown;
     TheatersResponse mTheatersResponse;
     OnTheaterSelect theaterSelect;
+
 
     @BindView(R.id.recycler_view)
     RecyclerView theatersMapViewRecycler, theatersListRecyclerview;
@@ -226,6 +229,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
                 // TODO: Handle the error.
             }
         });
+
+        url = "http://moviepass.com/go/movies";
+        if(GoWatchItSingleton.getInstance().getCampaign()!=null && GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
 
 
         //Hide Keyboard when not in use
@@ -584,6 +591,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                GoWatchItSingleton.getInstance().searchEvent(place.getAddress().toString(),"theatrical_search",url);
                 myloc.setVisibility(View.VISIBLE);
                 loadTheaters(place.getLatLng().latitude, place.getLatLng().longitude);
                 myloc.setOnClickListener(view -> {
@@ -901,35 +909,35 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Th
 //        v.startAnimation(a);
 //    }
 
-    public void searchEvent(String search){
-
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-        String deep_link="";
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        String campaign = "no_campaign";
-
-
-        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("theatrical_search","true",
-                "Movie","-1",search,campaign,"app","android",deep_link,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-
-                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    public void searchEvent(String search){
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//        String deep_link="";
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//        String campaign = GoWatchItSingleton.getInstance().getCampaign();
+//
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("theatrical_search","true",
+//                "Movie","-1",search,campaign,"app","android",deep_link,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//
+//                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
 }

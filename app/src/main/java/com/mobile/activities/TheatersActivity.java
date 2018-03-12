@@ -36,8 +36,8 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
 
     public static final String THEATER = "cinema";
     List<String> urlPath;
-    String url="";
     String campaign="no_campaign";
+    String url;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,11 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
             campaign = urlPath.get(2);
             GoWatchItSingleton.getInstance().setCampaign(campaign);
         }
-        userOpenedTheaterTab();
+
+        url = "https://moviepass.com/go/theaters/";
+        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url + GoWatchItSingleton.getInstance().getCampaign();
+        GoWatchItSingleton.getInstance().userOpenedTheaterTab(url);
         TheatersFragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, theatersFragment).commit();
@@ -129,34 +133,34 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         }
     }
 
-    public void userOpenedTheaterTab(){
-
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        String campaign = GoWatchItSingleton.getInstance().getCampaign();
-
-
-        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement","true","Unset","-1","map_view_click",campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-
-                Log.d("HEADER THEATER MAP -- >", "onResponse: "+responseBody.getFollowUrl());
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    public void userOpenedTheaterTab(){
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//        String campaign = GoWatchItSingleton.getInstance().getCampaign();
+//
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement","true","Unset","-1","map_view_click",campaign,"app","android",url,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//
+//                Log.d("HEADER THEATER MAP -- >", "onResponse: "+responseBody.getFollowUrl());
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
 
 }

@@ -242,12 +242,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         filmRating.setText("Rated: " + movie.getRating());
 
-
-        if(campaign==null || campaign.isEmpty())
-            campaign = "no_campaign";
         if(url==null || url.isEmpty())
-            url="";
-        userOpenedMovie();
+            url="https://moviepass.com/go/movies/"+movie.getId();
+        if(campaign!=null && !campaign.isEmpty() && !campaign.equalsIgnoreCase("no_campaign"))
+            url = url +"/"+ campaign;
+        GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()),url);
 
     }
 
@@ -294,7 +293,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
 
-        userClickedOnShowtime(theater, screening, showtime);
+        GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(new View.OnClickListener() {
@@ -364,12 +363,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
-                checkInEvent(theater,screening,showtime,"ticket_purchase_attempt");
+                GoWatchItSingleton.getInstance().checkInEvent(theater,screening,showtime,"ticket_purchase_attempt",String.valueOf(movie.getId()),url);
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
 
-                    checkInEvent(theater,screening,showtime,"ticket_purchase");
+                    GoWatchItSingleton.getInstance().checkInEvent(theater,screening,showtime,"ticket_purchase",String.valueOf(movie.getId()),url);
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
                         String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
@@ -713,128 +712,128 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 //
 //    }
 
-    public void userOpenedMovie(){
+//    public void userOpenedMovie(){
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Movie",
+//                String.valueOf(movie.getId()),"impression",campaign,"app","android",url,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//
+//                Log.d("HEADER MOVIE -- >", "onResponse: "+responseBody.getFollowUrl());
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//               // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-
-
-        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Movie",
-                String.valueOf(movie.getId()),"impression",campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-
-                Log.d("HEADER MOVIE -- >", "onResponse: "+responseBody.getFollowUrl());
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-               // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    public void userClickedOnShowtime(Theater theater, Screening screening, String showtime) {
-
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        String tht,thd,tn,thc,thr,thz,tha;
-        tht = showtime.trim();
-        tn = screening.getTheaterName();
-        thc = theater.getCity();
-        thr = theater.getState();
-        thz = theater.getZip();
-        tha = theater.getAddress();
-
-        String result="";
-        thd = "";
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
-        try {
-            Date date = format1.parse(screening.getDate());
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-             result = format2.format(date);
-            thd = result;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement","theater_click",tht,thd,tn,thc,thr,thz,tha,"true","Movie",
-                String.valueOf(movie.getId()),campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-
-                Log.d("HEADER MOVIE CLICK -- >", "onResponse: "+responseBody.getFollowUrl());
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-               // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    public void checkInEvent(Theater theater, Screening screening, String showtime, String engagement) {
-
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
-        String userId = String.valueOf(UserPreferences.getUserId());
-
-        String versionName = BuildConfig.VERSION_NAME;
-        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-        String tht,thd,tn,thc,thr,thz,tha;
-        tht = showtime.trim();
-        tn = screening.getTheaterName();
-        thc = theater.getCity();
-        thr = theater.getState();
-        thz = theater.getZip();
-        tha = theater.getAddress();
-
-        String result="";
-        thd = "";
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
-        try {
-            Date date = format1.parse(screening.getDate());
-            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            result = format2.format(date);
-            thd = result;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement,tht,thd,tn,thc,thr,thz,tha,"true","Movie",
-                String.valueOf(movie.getId()),campaign,"app","android",url,"organic",
-                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-            @Override
-            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-                GoWatchItResponse responseBody = response.body();
-//                progress.setVisibility(View.GONE);
-
-                Log.d("HEADER MOVIE BUY -- >", "onResponse: "+responseBody.getFollowUrl());
-            }
-
-            @Override
-            public void failure(RestError restError) {
-//                progress.setVisibility(View.GONE);
-                //Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    public void userClickedOnShowtime(Theater theater, Screening screening, String showtime) {
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//        String tht,thd,tn,thc,thr,thz,tha;
+//        tht = showtime.trim();
+//        tn = screening.getTheaterName();
+//        thc = theater.getCity();
+//        thr = theater.getState();
+//        thz = theater.getZip();
+//        tha = theater.getAddress();
+//
+//        String result="";
+//        thd = "";
+//        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+//        try {
+//            Date date = format1.parse(screening.getDate());
+//            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//             result = format2.format(date);
+//            thd = result;
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement","theater_click",tht,thd,tn,thc,thr,thz,tha,"true","Movie",
+//                String.valueOf(movie.getId()),campaign,"app","android",url,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//
+//                Log.d("HEADER MOVIE CLICK -- >", "onResponse: "+responseBody.getFollowUrl());
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//               // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
+//
+//    public void checkInEvent(Theater theater, Screening screening, String showtime, String engagement) {
+//
+//        String l = String.valueOf(UserPreferences.getLatitude());
+//        String ln = String.valueOf(UserPreferences.getLongitude());
+//        String userId = String.valueOf(UserPreferences.getUserId());
+//
+//        String versionName = BuildConfig.VERSION_NAME;
+//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+//        String tht,thd,tn,thc,thr,thz,tha;
+//        tht = showtime.trim();
+//        tn = screening.getTheaterName();
+//        thc = theater.getCity();
+//        thr = theater.getState();
+//        thz = theater.getZip();
+//        tha = theater.getAddress();
+//
+//        String result="";
+//        thd = "";
+//        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+//        try {
+//            Date date = format1.parse(screening.getDate());
+//            SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//            result = format2.format(date);
+//            thd = result;
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement,tht,thd,tn,thc,thr,thz,tha,"true","Movie",
+//                String.valueOf(movie.getId()),campaign,"app","android",url,"organic",
+//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
+//            @Override
+//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
+//                GoWatchItResponse responseBody = response.body();
+////                progress.setVisibility(View.GONE);
+//
+//                Log.d("HEADER MOVIE BUY -- >", "onResponse: "+responseBody.getFollowUrl());
+//            }
+//
+//            @Override
+//            public void failure(RestError restError) {
+////                progress.setVisibility(View.GONE);
+//                //Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
 
 }
