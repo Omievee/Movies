@@ -564,7 +564,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
     public void scan_card() {
         Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
-
         // customize these values to suit your needs.
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false

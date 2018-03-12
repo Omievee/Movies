@@ -1,10 +1,14 @@
 package com.mobile.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
@@ -15,6 +19,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -87,9 +92,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by anubis on 6/9/17.
- */
+
 
 public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
@@ -255,11 +258,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            unregisterReceiver(mLocationBroadCast);
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
+//        try {
+//            unregisterReceiver(mLocationBroadCast);
+//        } catch (IllegalArgumentException is) {
+//            is.printStackTrace();
+//        }
     }
 
     @Override
@@ -296,19 +299,30 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
-        buttonCheckIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isPendingSubscription() && screening.getProvider().ticketTypeIsETicket()) {
-                    ProgressBar.setVisibility(View.VISIBLE);
-                    reserve(theater,screening, showtime);
-                } else if (isPendingSubscription() && !screening.getProvider().ticketTypeIsETicket()) {
-                    showActivateCardDialog(screening, showtime);
+        buttonCheckIn.setOnClickListener(view -> {
+
+            if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(theater,screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
+                showActivateCardDialog(screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(theater,screening, showtime);
+            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+                if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
+                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
+                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        ProgressBar.setVisibility(View.VISIBLE);
+                        reserve(theater,screening, showtime);
+                    });
+                    alert.show();
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(theater,screening, showtime);
                 }
-
             }
         });
     }

@@ -14,11 +14,20 @@ public class Constants {
     public static final String REDEMPTION_ROUTE = "/coupons/form/redeem";
 
 
-    //FilteredMovies:
-    public static final String FILTERED = "filteredMovies";
+    //COMMON VARIABLES
+    public static final String MOVIE = "movie";
+    public static final String TITLE = "title";
+    public static final String RESERVATION = "reservation";
+    public static final String SCREENING = "screening";
+    public static final String SHOWTIME = "showtime";
+    public static final String TOKEN = "token";
+    public static final String SEAT = "seat";
 
-
+    //PERMISSION CODES
     public final static int REQUEST_CAMERA_CODE = 0;
+    public static final int REQUEST_STORAGE_CODE = 2;
+
+    public static final int REQUEST_TICKET_VERIF = 00;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
 
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
@@ -54,6 +63,7 @@ public class Constants {
     public static final String VERIFICATION_REQUIRED = "verification";
     public static final String ACTIVE_CARD = "card";
     public static final String IS_SUBSCRIPTION_ACTIVATION_REQUIRED = "required";
+    public static final String PROOF_OF_PUCHASE_REQUIRED = "proof";
 
     public static final int CARD_SCAN_REQUEST_CODE = 27;
 

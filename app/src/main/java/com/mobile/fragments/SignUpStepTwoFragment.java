@@ -233,7 +233,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         if (ContextCompat.checkSelfPermission(view.getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
             scanCard();
-
         } else {
 
             scanCard();

@@ -284,7 +284,7 @@
                 android:layout_below="@id/NOTIFS"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:paddingStart="@dimen/margin_standard"
-                android:text="Terms of Service"
+                android:text="Terms of Use"
                 android:textColor="@color/new_red"
                 android:textSize="15sp" />
 

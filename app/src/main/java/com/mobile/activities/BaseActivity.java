@@ -3,7 +3,6 @@ package com.mobile.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -16,11 +15,14 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Transformation;
+import android.widget.LinearLayout;
 
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -28,9 +30,6 @@ import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +39,7 @@ import retrofit2.Response;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     int offset = 3232323;
-
+    Bundle bundle;
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
     public final static int REQUEST_STORAGE_CODE = 1001;
@@ -121,7 +120,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
                     boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean verificationRequired = restriction.getProofOfPurchaseRequired();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
 
@@ -129,16 +128,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
                             UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
                             UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getRestrictionVerificationRequired() != verificationRequired ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
                             UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
                             UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
 
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, verificationRequired, hasActiveCard, subscriptionActivationRequired);
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (restriction.getPopInfo() != null) {
-
+                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
                         int reservationId = restriction.getPopInfo().getReservationId();
                         String movieTitle = restriction.getPopInfo().getMovieTitle();
                         String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
@@ -146,16 +144,20 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
                         String showtime = restriction.getPopInfo().getShowtime();
 
-                        Intent intent = new Intent(BaseActivity.this, VerificationActivity.class);
-                        intent.putExtra("reservationId", reservationId);
-                        intent.putExtra("mSelectedMovieTitle", movieTitle);
-                        intent.putExtra("tribuneMovieId", tribuneMovieId);
-                        intent.putExtra("mTheaterSelected", theaterName);
-                        intent.putExtra("tribuneTheaterId", tribuneTheaterId);
-                        intent.putExtra("showtime", showtime);
-                        startActivity(intent);
-                        finish();
+                        bundle = new Bundle();
+                        bundle.putInt("reservationId", reservationId);
+                        bundle.putString("mSelectedMovieTitle", movieTitle);
+                        bundle.putString("tribuneMovieId", tribuneMovieId);
+                        bundle.putString("mTheaterSelected", theaterName);
+                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+                        bundle.putString("showtime", showtime);
+
+
+                        TicketVerificationDialog dialog = new TicketVerificationDialog();
+                        FragmentManager fm = getSupportFragmentManager();
+                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
                     }
+
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -163,14 +165,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                         //IF API ERROR LOG OUT TO LOG BACK IN
                         /*
                         if (jObjError.getString("message").matches("INVALID API REQUEST")) {
-
-                            UserPreferences.resetUserCredentials();
-                            Intent intent = new Intent(BaseActivity.this, LauncherActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-
-                            finish();
-                        }
 
                         */
 
@@ -185,6 +179,19 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             }
         });
+    }
+
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+        // Make sure the current transaction finishes first
+        fragmentManager.executePendingTransactions();
+        // If there is no fragment yet with this tag...
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            TicketVerificationDialog dialog = new TicketVerificationDialog();
+            dialog.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            dialog.setCancelable(false);
+            dialog.show(fm, "fr_ticketverification_banner");
+        }
     }
 
     public boolean isOnline() {
@@ -227,201 +234,59 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     }
 
 
-}
+    public static void expand(final View v) {
+        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
 
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
 
-    /*
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
+        Animation animate = new Animation() {
             @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    Toast.makeText(BaseActivity.this, "Profile Activity", Toast.LENGTH_LONG).show();
-                } else if (itemId == R.id.action_reservations) {
-                    Toast.makeText(BaseActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), ETicketsActivity.class));
-                } else if (itemId == R.id.action_browse) {
-                    startActivity(new Intent(getApplicationContext(), BrowseActivity.class));
-                } else if (itemId == R.id.action_notifications) {
-                    Toast.makeText(BaseActivity.this, "Notification Activity", Toast.LENGTH_LONG).show();
-                } else if (itemId == R.id.action_settings) {
-                    Toast.makeText(BaseActivity.this, "Settings Activity", Toast.LENGTH_LONG).show();
-                }
-                finish();
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
+                v.requestLayout();
+
             }
-        }, 300);
-        return true;
-    }
 
-    private void updateNavigationBarState(){
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
+            @Override
+            public boolean willChangeBounds() {
+                return true;
             }
-        }
+
+
+        };
+
+        animate.setDuration((long) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(animate);
     }
 
-    abstract int getContentViewId();
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
 
-    abstract int getNavigationMenuItemId();
-
-
-
-
-    /* Handle Permissions
-    public void requestMandatoryPermissions(){
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(BaseActivity.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(LOCATION_PERMISSIONS, REQUEST_LOCATION_CODE);
-            }
-            if (ContextCompat.checkSelfPermission(BaseActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(STORAGE_PERMISSIONS, REQUEST_STORAGE_CODE);
-            }
-        }
-    }
-
-    public boolean grantedMandatoryPermissions(){
-        boolean locationPermissionResult = ContextCompat.checkSelfPermission(BaseActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-
-        boolean storagePermissionResult = ContextCompat.checkSelfPermission(BaseActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-
-        return locationPermissionResult && storagePermissionResult;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
-                Map<String, Integer> perms = new HashMap<String, Integer>();
-                // Initial
-                perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
-
-                // Fill with results
-                for (int i = 0; i < permissions.length; i++)
-                    perms.put(permissions[i], grantResults[i]);
-
-                // Check for ACCESS_FINE_LOCATION
-                if (grantedMandatoryPermissions()) {
-                    // All Permissions Granted
-                    locationInit();
+        Animation a = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
                 } else {
-                    // Permission Denied
-                    Toast.makeText(BaseActivity.this, R.string.activity_main_mandatory_permissions,
-                            Toast.LENGTH_SHORT).show();
+                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    v.requestLayout();
                 }
+
             }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setDuration((long) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
     }
 
-    /* Handle Location
-    class LocationUpdateBroadCast extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (grantedMandatoryPermissions()) {
-                if (!isLocationUserDefined()) {
-                    onLocationChanged(UserLocationManagerFused.getLocationInstance(context).mCurrentLocation);
-                }
-            } else {
-                requestMandatoryPermissions();
-            }
-        }
-    }
 
-    protected void onLocationChanged(Location location) {
-        if (grantedMandatoryPermissions()) {
-            if (!UserPreferences.getIsLocationUserDefined() && mDoUpdateLocation && location != null) {
-                try {
-                    mLocation = location;
-
-                    UserPreferences.setCoordinates(location.getLatitude(), location.getLatitude());
-                } catch (Exception e) {
-                    FirebaseCrash.report(new Exception(e.getMessage()));
-                }
-            }
-
-            /* TODO : INITIAL ACTIVITY
-
-            if (mIsIntialActivity) {
-                UserLocationManagerFused.getLocationInstance(this).stopLocationUpdates();
-            }
-
-
-        } else {
-            requestMandatoryPermissions();
-        }
-    }
-
-    public void locationInit() {
-        if (grantedMandatoryPermissions()) {
-            LocationManager mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            boolean enabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            if (!enabled) {
-                showDialogGPS();
-            }
-
-            if (!UserPreferences.getIsLocationUserDefined() && mDoUpdateLocation) {
-                mLocationBroadCast = new LocationUpdateBroadCast();
-                UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-            }
-
-            /* TODO
-            if (isOnline()) {
-            } else {
-                noInternetCheckLoop();
-            }
-
-
-        } else {
-            requestMandatoryPermissions();
-        }
-    }
-
-    public static boolean isLocationUserDefined() {
-        return UserPreferences.getIsLocationUserDefined();
-    }
-
-    /* TODO SET FLOW FOR USERS WHO DENY LOCATION PERMISSION
-
-    private void showDialogGPS() {
-        if (alert != null && alert.isShowing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(BaseActivity.this, R.style.AlertDialogCustom);
-        builder.setCancelable(false);
-        builder.setTitle("Enable GPS");
-        builder.setMessage("You must enable your GPS to use MoviePass.");
-        builder.setInverseBackgroundForced(true);
-        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                startActivity(
-                        new Intent(android.Provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
-        alert = builder.create();
-        alert.show();
-    }
-    */
+}
 
 

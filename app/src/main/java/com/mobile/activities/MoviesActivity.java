@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,12 +19,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Eid;
@@ -85,7 +88,6 @@ public class MoviesActivity extends BaseActivity {
         }
         else
         {
-            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -95,6 +97,7 @@ public class MoviesActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
 
         movieSearchNEWRELEASE = new ArrayList<>();
         movieSearchALLMOVIES = new ArrayList<>();
