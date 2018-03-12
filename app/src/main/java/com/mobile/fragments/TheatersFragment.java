@@ -218,7 +218,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
 
         theatersRealm = Realm.getDefaultInstance();
-        //  getAllTheatersForStorage();
+        //getAllTheatersForStorage();
         return rootView;
     }
 
@@ -503,11 +503,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
         userCurrentLocation.setLatitude(latitude);
         userCurrentLocation.setLongitude(longitude);
+        RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class).findAll();
 
-        RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class)
-                .findAll();
-
-        Log.d(TAG, "queryRealmLoadTheaters: " + allTheaters.size());
         for (int K = 0; K < allTheaters.size(); K++) {
             Location pointB = new Location(LocationManager.GPS_PROVIDER);
             pointB.setLatitude(allTheaters.get(K).getLat());
@@ -520,8 +517,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             }
 
         }
-
-
         for (int j = 0; j < nearbyTheaters.size(); j++) {
             Location localPoints = new Location(LocationManager.GPS_PROVIDER);
             localPoints.setLatitude(nearbyTheaters.get(j).getLat());
@@ -556,7 +551,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                 LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                 mMapData.put(location, theater);
-                
+
                 Log.d(TAG, "queryRealmLoadTheaters: " + theater.getLat() + " " + theater.getLon());
 
                 final int position;
