@@ -29,6 +29,7 @@ class SplashActivity : AppCompatActivity() {
 
         val intent = intent
         val data = intent.data
+
         if (data != null && data.path.length >= 2) run {
             var movieIdEncripted: String
             var movieOrTheater: String
@@ -39,16 +40,19 @@ class SplashActivity : AppCompatActivity() {
             if(urlPath.size>=2) {
                 movieOrTheater = urlPath.get(1)
                 if(movieOrTheater.equals("movies")) {
-                    movieIdEncripted = urlPath.get(2)
-                    idLength = movieIdEncripted.length
-                    idLength = idLength - 5
-                    movieIdEncripted = movieIdEncripted.substring(2, idLength)
-                    val movieId = Integer.valueOf(movieIdEncripted)!!
-                    launchActivity(0,movieId)
+                    if(urlPath.size>=3) {
+                        movieIdEncripted = urlPath.get(2)
+                        idLength = movieIdEncripted.length
+                        idLength = idLength - 5
+                        movieIdEncripted = movieIdEncripted.substring(2, idLength)
+                        val movieId = Integer.valueOf(movieIdEncripted)!!
+                        launchActivity(0,movieId)
+                    }
                     if(urlPath.size>=4){
                         val campaign = urlPath.get(3)
                         GoWatchItSingleton.getInstance().campaign = campaign
                     }
+                    launchActivity(0,-1)
                 } else if(movieOrTheater.equals("theaters")){
                     launchActivity(1,-1)
                     if(urlPath.size>=3){
@@ -56,9 +60,14 @@ class SplashActivity : AppCompatActivity() {
                         GoWatchItSingleton.getInstance().campaign = campaign
                     }
                 }
+                else {
+                    val campaign = urlPath.get(1)
+                    GoWatchItSingleton.getInstance().campaign = campaign
+                    launchActivity(2,-1)
+                }
             }
             else {
-
+                launchActivity(2, -1)
             }
 
             GoWatchItSingleton.getInstance().userOpenedApp(this, url)
@@ -67,7 +76,10 @@ class SplashActivity : AppCompatActivity() {
         }
         else {
             launchActivity(2, -1)
+            var url = "https://www.moviepass.com/go"
+            GoWatchItSingleton.getInstance().userOpenedApp(this, url)
         }
+
 
 
     }
