@@ -41,6 +41,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     private LayoutInflater inflater;
     private Context context;
     TheatersFragment theatersFragment;
+
     public TheatersAdapter(ArrayList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
     }
@@ -86,8 +87,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
-        theatersFragment = new TheatersFragment();
-
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
@@ -121,7 +120,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
         Theater theaterSelected = theater;
         holder.listItemTheater.setTag(position);
-//        setSlideAnimation(holder.listItemTheater);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +128,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
                 holder.itemView.getContext().startActivity(intent);
             }
         });
-      //  holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
+        //  holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
     }
 
     @Override
@@ -143,8 +141,4 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         return TYPE_ITEM;
     }
 
-//    private void setSlideAnimation(View view) {
-//        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
-//        view.startAnimation(animation);
-//    }
 }

@@ -150,7 +150,7 @@ public interface Api {
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
     /* Cancel Subscription */
-    @POST("/api/v1/subscriptions/cancellation")
+    @POST("/rest/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
 

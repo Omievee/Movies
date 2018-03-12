@@ -87,13 +87,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             Manifest.permission.CAMERA
     };
 
-//
-//    private native static String getSandboxTokenizationKey();
-//
-//    private native static String getProductionTokenizationKey();
-
-    private boolean isViewShown = false;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -110,8 +103,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         coordinatorLayout = view.findViewById(R.id.coord_main);
         progress = view.findViewById(R.id.progress);
         signup2ScanCardIcon = view.findViewById(R.id.SIGNUP2_SCANCARD_ICON);
-        selectedCreditCardText = view.findViewById(R.id.credit_card_number_copy);
-        selectedCreditCardMasked = view.findViewById(R.id.credit_card_number);
+        //  selectedCreditCardText = view.findViewById(R.id.credit_card_number_copy);
+        // selectedCreditCardMasked = view.findViewById(R.id.credit_card_number);
 
         signup2Address = view.findViewById(R.id.SIGNUP2_ADDRESS);
         signup2Address2 = view.findViewById(R.id.SIGNUP2_ADDRESS2);
@@ -285,7 +278,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     signup2CCExp.setText(MONTH + "/" + YEAR);
                     signup2CC_CVV.setText(scanResult.cvv);
                     signup2NextButton.setOnClickListener(view -> {
-                        if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") ||  signup2CCExp.equals("")
+                        if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") || signup2CCExp.equals("")
                                 || signup2CCNum.getText().length() < 16 || signup2CC_CVV.getText().length() < 3 || signup2CCExp.getText().length() < 5) {
 
                             Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
