@@ -8,8 +8,8 @@
     android:gravity="bottom"
     sothree:umanoDragView="@+id/ListViewMaps"
     sothree:umanoOverlay="true"
-    sothree:umanoPanelHeight="68dp"
     sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@id/ListViewMaps"
     sothree:umanoShadowHeight="4dp">
 
     <RelativeLayout
@@ -62,6 +62,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/double_margin_standard"
         android:background="@color/test_black"
+        android:clickable="true"
+        android:soundEffectsEnabled="true"
         android:visibility="visible">
 
 
@@ -70,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_standard"
             android:text="ListView"
             android:textColor="@color/white"
             android:textSize="18sp"
@@ -80,7 +82,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="25dp"
-            android:layout_marginTop="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_standard"
             android:layout_toEndOf="@id/ListViewText"
             android:src="@drawable/icondown"
             android:tint="@color/white" />
@@ -88,15 +90,17 @@
         <RelativeLayout
             android:id="@+id/goneList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/ListViewText"
-            android:layout_marginTop="@dimen/margin_half"
+
             android:visibility="visible">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/listViewTheaters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/list_item_theater" />
 
         </RelativeLayout>

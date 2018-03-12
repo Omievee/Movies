@@ -18,6 +18,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -69,6 +70,8 @@ import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
+import com.sothree.slidinguppanel.ScrollableViewHelper;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
@@ -134,12 +137,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     private ClusterManager<TheaterPin> clusterManager;
     @BindView(R.id.listViewTheaters)
     RecyclerView theatersRECY;
-    RealmList<Theater> myList;
     String TAG = "TAG";
-    int finalK;
-    double meterToMile;
     ArrayList<Theater> nearbyTheaters;
-    ArrayList<Theater> closestTheaters;
+    SlidingUpPanelLayout slideup;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -171,7 +171,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
+        slideup = rootView.findViewById(R.id.sliding_layout);
         /* Set up RecyclerView */
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
@@ -209,8 +209,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 
         theatersRealm = Realm.getDefaultInstance();
         //getAllTheatersForStorage();
+
+
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -512,7 +515,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
             if (disntanceTO <= 48280.3) {
                 nearbyTheaters.add(allTheaters.get(K));
-
             }
         }
         for (int j = 0; j < nearbyTheaters.size(); j++) {
@@ -525,11 +527,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             theatersRealm.beginTransaction();
             nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             theatersRealm.commitTransaction();
-
         }
-
         if (nearbyTheaters.size() > 40) {
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
+            theaterAdapter.notifyDataSetChanged();
         }
         Log.d(Constants.TAG, "size?: " + nearbyTheaters.size());
         displayTheatersFromRealm(nearbyTheaters);
@@ -539,6 +540,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         Log.d(TAG, "2nd size?: " + theatersList.size());
         mProgress.setVisibility(View.GONE);
         if (theatersList.size() == 0) {
+            slideup.setEnabled(false);
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             clusterManager.clearItems();
