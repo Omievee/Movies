@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -325,24 +327,20 @@ public class ProfileAccountInformationFragment extends Fragment {
                 !userNewBillingExp.getText().toString().trim().isEmpty() &&
                 !userNewBillingCVV.getText().toString().trim().isEmpty()){
 
-
-            if(userNewBillingCC.getText().toString().length()>=16 &&
-                    userNewBillingCVV.getText().toString().length()>=3 &&
-                    userNewBillingExp.getText().toString().length()>=5){
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCC.getText().toString().length());
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCVV.getText().toString().length());
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingExp.getText().toString().length());
+//            if(userNewBillingCC.getText().toString().length()>=16 &&
+//                    userNewBillingCVV.getText().toString().length()>=3 &&
+//                    userNewBillingExp.getText().toString().length()>=5){
                 userSave.setTextColor(getResources().getColor(R.color.new_red));
                 userCancel.setTextColor(getResources().getColor(R.color.white));
                 updateBillingCard = true;
                 saveChanges();
-            }
-            else
-            {
-                userSave.setTextColor(getResources().getColor(R.color.gray_icon));
-                userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
-                updateBillingCard = false;
-            }
+//            }
+//            else
+//            {
+//                userSave.setTextColor(getResources().getColor(R.color.gray_icon));
+//                userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
+//                updateBillingCard = false;
+//            }
 
         }
 
@@ -577,6 +575,8 @@ public class ProfileAccountInformationFragment extends Fragment {
         userSave.setClickable(true);
         userSave.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             if(updateShipping) {
                 updateShippingAddress();
             }
@@ -670,12 +670,28 @@ public class ProfileAccountInformationFragment extends Fragment {
 
 
     public void updateCCData() {
-            String newCC = userNewBillingCC.getText().toString();
-            String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-            String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-            String newExp = ccExMonth + "/" + ccExYr;
-            String newCVV = userNewBillingCVV.getText().toString();
-            updateCreditCard(newCC, newExp, newCVV);
+        if(userNewBillingCC.getText().toString().length()>=16){
+            if(userNewBillingCVV.getText().toString().length()>=3){
+                if(userNewBillingExp.getText().toString().length()>=5){
+                    String newCC = userNewBillingCC.getText().toString();
+                    String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+                    String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+                    String newExp = ccExMonth + "/" + ccExYr;
+                    String newCVV = userNewBillingCVV.getText().toString();
+                    updateCreditCard(newCC, newExp, newCVV);
+                } else{
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(getActivity(), "Please enter a valid expiration date", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                progress.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), "Please enter a valid security code", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else{
+            progress.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), "Please enter a valid credit card", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
