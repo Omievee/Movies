@@ -249,13 +249,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onResume() {
         super.onResume();
-
         try {
             registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
         } catch (IllegalArgumentException is) {
             is.printStackTrace();
         }
-
     }
 
     @Override

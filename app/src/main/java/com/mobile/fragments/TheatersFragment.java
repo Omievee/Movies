@@ -100,8 +100,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
     Realm theatersRealm;
-
-
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -110,7 +108,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
-
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -147,9 +144,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
-        }
+        rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
@@ -179,7 +174,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         theaterAdapter = new TheatersAdapter(nearbyTheaters);
         theatersRECY.setAdapter(theaterAdapter);
 
-
         mSearchClose.setOnClickListener(view -> {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
@@ -194,22 +188,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                expand(goneList);
-//            }
-//        }, 500);
-//
-
-
-        ContextSingleton.getInstance(getContext()).getGlobalContext();
-
-
         theatersRealm = Realm.getDefaultInstance();
         //getAllTheatersForStorage();
-
 
         return rootView;
     }
@@ -223,6 +203,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         mMapView.getMapAsync(this);
 
         buildLocationSettingsRequest();
+        Log.d(TAG, "VIEW CREATED  THIS.............: ");
     }
 
     @Override
@@ -251,6 +232,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         } catch (Resources.NotFoundException e) {
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
+
         mProgress.setVisibility(View.VISIBLE);
 
 
@@ -275,6 +257,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 //
 //            return true;
 //        });
+
     }
 
     @Override
@@ -287,7 +270,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             clusterManager.cluster();
         }
         locationUpdateRealm();
+        Log.d(TAG, "RESUMING vvvvv: ");
     }
+
 
     void locationUpdateRealm() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -300,7 +285,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
                     queryRealmLoadTheaters(loc.getLatitude(), loc.getLongitude());
-
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                     CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                     mMap.moveCamera(current);
@@ -314,8 +298,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onPause() {
         super.onPause();
-
-        theatersRECY.setVisibility(View.INVISIBLE);
         if (clusterManager != null) {
             clusterManager.clearItems();
             clusterManager.cluster();
@@ -530,7 +512,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         }
         if (nearbyTheaters.size() > 40) {
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
-            theaterAdapter.notifyDataSetChanged();
         }
         Log.d(Constants.TAG, "size?: " + nearbyTheaters.size());
         displayTheatersFromRealm(nearbyTheaters);
@@ -545,12 +526,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         } else {
             clusterManager.clearItems();
             clusterManager.cluster();
-
+            theaterAdapter.notifyDataSetChanged();
             for (final Theater theater : theatersList) {
                 LatLng location = new LatLng(theater.getLat(), theater.getLon());
 
                 Log.d(TAG, "displayTheatersFromRealm: " + theater.getName() + " " + theater.getDistance());
                 mMapData.put(location, theater);
+
                 final int position;
                 position = theatersList.indexOf(theater);
 
@@ -570,7 +552,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                     }
                 });
             }
+            Log.d(TAG, "DISPLAY REALM.............: ");
+
         }
+
     }
 
 
@@ -627,51 +612,4 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
-
-    public void expand(final View v) {
-        v.measure(LinearLayout.LayoutParams.MATCH_PARENT, 200);
-        final int targetHeight = v.getMeasuredHeight();
-
-        v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
-
-        Animation animate = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) (targetHeight * interpolatedTime);
-                v.requestLayout();
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-        animate.setDuration((long) (targetHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(animate);
-    }
-
-    public void collapse(final View v) {
-        final int initialHeight = v.getMeasuredHeight();
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime == 1) {
-                    v.setVisibility(View.GONE);
-                } else {
-                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
-                    v.requestLayout();
-                }
-
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        a.setDuration((long) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
-    }
 }

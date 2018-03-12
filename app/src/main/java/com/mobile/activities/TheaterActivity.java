@@ -106,7 +106,6 @@ public class TheaterActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
         Log.d("onBackPressed", "onBackPressed");
 
     }

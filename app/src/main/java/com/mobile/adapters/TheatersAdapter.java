@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     private ArrayList<Theater> theatersArrayList;
     public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
-    private Context context;
-    TheatersFragment theatersFragment;
 
     public TheatersAdapter(ArrayList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
@@ -90,6 +88,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
+        Log.d(Constants.TAG, "onBindViewHolder: " + theatersArrayList.size());
 /*
         Location loc1 = new Location("");
         loc1.setLatitude(lat1);
@@ -118,17 +117,12 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             holder.iconSeat.setVisibility(View.INVISIBLE);
         }
 
-        Theater theaterSelected = theater;
         holder.listItemTheater.setTag(position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
-                intent.putExtra(THEATER, Parcels.wrap(Theater.class, theaterSelected));
-                holder.itemView.getContext().startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
+            intent.putExtra(THEATER, Parcels.wrap(Theater.class, theater));
+            holder.itemView.getContext().startActivity(intent);
         });
-        //  holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
     }
 
     @Override
@@ -138,7 +132,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_ITEM;
+        return position;
     }
 
 }
