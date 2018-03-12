@@ -74,7 +74,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 GoWatchItResponse responseBody = response.body();
 
-                Log.d("HEADER OPENED", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT APP OPEN", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -103,7 +103,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER MOVIE -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT MOVIE", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -150,7 +150,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER MOVIE CLICK -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT SHOWTIME", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -197,7 +197,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER MOVIE BUY -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT CHECK IN", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -227,7 +227,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT SEARCH", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -258,7 +258,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER THEATER -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT THEATER", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
@@ -287,7 +287,7 @@ public class GoWatchItSingleton {
                 GoWatchItResponse responseBody = response.body();
 //                progress.setVisibility(View.GONE);
 
-                Log.d("HEADER THEATER MAP -- >", "onResponse: "+responseBody.getFollowUrl());
+                Log.d("GO WATCH IT THEATER MAP", "onResponse: "+responseBody.getFollowUrl());
             }
 
             @Override
