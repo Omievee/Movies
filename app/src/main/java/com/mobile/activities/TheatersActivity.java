@@ -44,16 +44,6 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-
-        Intent intent=getIntent();
-        Uri data = intent.getData();
-        if (data != null && data.getPath().length()>2) {
-            url = data.getPath();
-            urlPath = data.getPathSegments();
-            campaign = urlPath.get(2);
-            GoWatchItSingleton.getInstance().setCampaign(campaign);
-        }
-
         url = "https://moviepass.com/go/theaters/";
         if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + GoWatchItSingleton.getInstance().getCampaign();

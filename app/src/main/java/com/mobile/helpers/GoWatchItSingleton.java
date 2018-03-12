@@ -29,6 +29,7 @@ public class GoWatchItSingleton {
 
     private static GoWatchItSingleton instance;
     private String campaign;
+    private String debug = "true";
 
     private GoWatchItSingleton() {
         campaign = "no_campaign";
@@ -66,7 +67,7 @@ public class GoWatchItSingleton {
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Unset",
+        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent(debug,"Unset",
                 "-1","app_open",thisCampaign,"app","android",deepLink,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -94,7 +95,7 @@ public class GoWatchItSingleton {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Movie",
+        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent(debug,"Movie",
                 String.valueOf(movieId),"impression",campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -141,7 +142,7 @@ public class GoWatchItSingleton {
             e.printStackTrace();
         }
 
-        RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement","theater_click",tht,thd,tn,thc,thr,thz,tha,"true","Movie",
+        RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement","theater_click",tht,thd,tn,thc,thr,thz,tha,debug,"Movie",
                 movieId,campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -188,7 +189,7 @@ public class GoWatchItSingleton {
             e.printStackTrace();
         }
 
-        RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement,tht,thd,tn,thc,thr,thz,tha,"true","Movie",
+        RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement,tht,thd,tn,thc,thr,thz,tha,debug,"Movie",
                 movieId,campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -218,7 +219,7 @@ public class GoWatchItSingleton {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement,"true",
+        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement,debug,
                 "Movie","-1",search,campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -250,7 +251,7 @@ public class GoWatchItSingleton {
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openTheaterEvent("impression",theaterObject.getName(),
-                theaterObject.getCity(),theaterObject.getState(),theaterObject.getZip(),theaterObject.getAddress(),"true","Theater","-1",campaign,"app","android",url,"organic",
+                theaterObject.getCity(),theaterObject.getState(),theaterObject.getZip(),theaterObject.getAddress(),debug,"Theater","-1",campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -279,7 +280,7 @@ public class GoWatchItSingleton {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement","true","Unset","-1","map_view_click",campaign,"app","android",url,"organic",
+        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement",debug,"Unset","-1","map_view_click",campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {

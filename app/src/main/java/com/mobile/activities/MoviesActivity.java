@@ -61,6 +61,8 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
+
+    public static final String MOVIES = "movies";
     View parentLayout;
     boolean firstBoot;
     public ArrayList<Movie> ALLMOVIES;
@@ -76,22 +78,8 @@ public class MoviesActivity extends BaseActivity {
         setContentView(R.layout.activity_movies);
 
         Intent intent=getIntent();
-        Uri data = intent.getData();
-        if (data != null && data.getPath().length()>3) {
-            String movieIdEncripted;
-            url = data.getPath();
-            urlPath = data.getPathSegments();
-            int idLength;
-            movieIdEncripted = (urlPath.get(2));
-            String campaign = urlPath.get(3);
-            GoWatchItSingleton.getInstance().setCampaign(campaign);
-            idLength = movieIdEncripted.length();
-            idLength = idLength-5;
-            movieIdEncripted = movieIdEncripted.substring(2,idLength);
-            movieId = Integer.valueOf(movieIdEncripted);
-
-            Log.d("AAAAA ----->", "onCreate: "+movieId);
-
+        if (intent!=null && intent.getIntExtra(MOVIES,-1)!=-1) {
+            movieId = intent.getIntExtra(MOVIES,-1);
             GoWatchItSingleton.getInstance().userOpenedApp(this,url);
             loadMovies();
         }
