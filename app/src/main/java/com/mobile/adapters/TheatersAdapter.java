@@ -85,6 +85,17 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
+        if (theater.ticketTypeIsStandard()) {
+            holder.iconTicket.setVisibility(View.INVISIBLE);
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else if (theater.ticketTypeIsETicket()) {
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else {
+            holder.iconSeat.setVisibility(View.VISIBLE);
+            holder.iconTicket.setVisibility(View.VISIBLE);
+        }
+
+
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
@@ -110,17 +121,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);
 
-        if (theater.ticketTypeIsStandard()) {
-            holder.iconTicket.setVisibility(View.INVISIBLE);
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        } else if (theater.ticketTypeIsETicket()) {
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        }
-
-        if (theater.ticketTypeIsSelectSeating() || theater.ticketTypeIsETicket()) {
-            theatersArrayList.add(0, theater);
-            Log.d(Constants.TAG, "onBindViewHolder: " + theater.getName());
-        }
 
         holder.listItemTheater.setTag(position);
         holder.itemView.setOnClickListener(v -> {
