@@ -409,7 +409,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
                                     if (screenID == ID) {
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
-
                                     }
 
 
