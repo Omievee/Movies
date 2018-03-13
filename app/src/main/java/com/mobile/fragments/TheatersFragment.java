@@ -29,6 +29,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -102,8 +103,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     Location userCurrentLocation;
     Button searchThisArea;
     RelativeLayout listViewMaps, mRelativeLayout, goneList;
-    ImageView mSearchClose, myloc;
+    ImageView mSearchClose, myloc, downArrow;
     View mProgress;
+    TextView listViewText;
     ClusterManager<TheaterPin> mClusterManager;
     RecyclerView theatersRECY;
     String TAG = "TAG";
@@ -145,8 +147,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         theaterAdapter = new TheatersAdapter(nearbyTheaters);
         theatersRECY.setAdapter(theaterAdapter);
         searchThisArea = rootView.findViewById(R.id.SearchThisArea);
-
-
+        listViewText = rootView.findViewById(R.id.ListViewText);
+        downArrow = rootView.findViewById(R.id.DownArrow);
         mSearchClose.setOnClickListener(view -> {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
@@ -490,6 +492,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         if (nearbyTheaters.size() == 0) {
             slideup.setEnabled(false);
+            listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+            downArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             displayTheatersFromRealm(nearbyTheaters);
@@ -502,8 +506,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mProgress.setVisibility(View.GONE);
         theaterAdapter.notifyDataSetChanged();
         slideup.setEnabled(true);
+        listViewText.setTextColor(getResources().getColor(R.color.white));
+        downArrow.setColorFilter(getResources().getColor(R.color.white));
+
         mClusterManager.clearItems();
-        mClusterManager.cluster();
         for (Theater theater : theatersList) {
             LatLng location = new LatLng(theater.getLat(), theater.getLon());
             mMapData.put(location, theater);
