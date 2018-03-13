@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="250dp"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_standard"
@@ -31,13 +31,13 @@
             android:gravity="center_vertical"
             android:text="@string/activity_sign_in_welcome_back"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="@dimen/quadruple_margin_standard"
             android:textColorHint="@color/white">
 
             <EditText
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_standard"
             android:textColorHint="@color/white"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/new_red">
@@ -84,30 +84,41 @@
             android:background="@drawable/mpbutton1"
             android:elevation="2dp"
             android:text="@string/activity_sign_in_log_in"
+            android:textAllCaps="false"
             android:textSize="15sp" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/button_facebook_log_in"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/button_height"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/doubledouble_margin_standard"
-            android:paddingBottom="@dimen/margin_standard"
-            android:paddingTop="@dimen/margin_standard" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_standard">
 
             <ImageView
-                android:id="@+id/FINGER_SCANNER_ICON"
+                android:id="@+id/FACEBOOK_CLICK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_fingerprint_black"
-                android:tint="@color/white"
-                android:visibility="invisible" />
-        </LinearLayout>
+                android:layout_marginTop="@dimen/margin_standard"
+                android:src="@drawable/facebookicon" />
+
+            <Button
+                android:id="@+id/button_facebook_log_in"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:background="@android:color/transparent"
+                android:paddingBottom="@dimen/margin_standard"
+                android:paddingStart="@dimen/margin_standard"
+                android:paddingTop="@dimen/margin_standard"
+                android:text="Sign in with facebook"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+
+        </RelativeLayout>
+
 
     </LinearLayout>
 
@@ -117,27 +128,26 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="16dp"
         android:gravity="bottom"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:padding="@dimen/margin_half">
 
         <TextView
             android:id="@+id/sign_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/margin_standard"
             android:text="@string/activity_sign_in_dont_have_an_account"
             android:textColor="@color/red"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:text="@string/activity_sign_in_forgot_password"
             android:textColor="@color/red"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 
@@ -154,5 +164,6 @@
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </RelativeLayout>

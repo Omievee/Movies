@@ -7,6 +7,7 @@ import android.util.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -54,7 +55,7 @@ public class Application extends MultiDexApplication {
         super.onCreate();
 
         Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
-
+        s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
 

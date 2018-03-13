@@ -9,7 +9,6 @@ JNIEXPORT jstring JNICALL
 Java_com_mobile_network_RestClient_getEndPoint(JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("https://api.moviepass.com");
 //    jstring str = env->NewStringUTF("http://stg.moviepass.com");
-
     return str;
 }
 
@@ -32,13 +31,13 @@ Java_com_mobile_application_Application_getCognitoKey(JNIEnv *env, jclass) {
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_activities_VerificationPictureActivity_getProductionBucket(JNIEnv *env, jclass) {
+Java_com_mobile_fragments_TicketVerificationDialog_getProductionBucket(JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("mpcore.production.tickets");
     return str;
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_activities_VerificationPictureActivity_getStagingBucket(JNIEnv *env, jclass) {
+Java_com_mobile_fragments_TicketVerificationDialog_getStagingBucket(JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("mpcore.staging.tickets");
     return str;
 }
@@ -54,6 +53,20 @@ JNIEXPORT jstring JNICALL
 Java_com_moviepass_fragments_ProfilePaymentInformationFragment_getProductionTokenizationKey(
         JNIEnv *env, jclass) {
     jstring str = env->NewStringUTF("sandbox_snpbh3w8_2fj37y3ndsjstzxv");
+    return str;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_mobile_activities_ConfirmationActivity_getProductionBucket(JNIEnv *env, jclass type) {
+    jstring str = env->NewStringUTF("mpcore.production.tickets");
+
+    return str;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_mobile_activities_ConfirmationActivity_getStagingBucket(JNIEnv *env, jclass type) {
+    jstring str = env->NewStringUTF("mpcore.staging.tickets");
+
     return str;
 }
 }

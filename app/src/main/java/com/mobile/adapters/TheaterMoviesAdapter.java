@@ -114,6 +114,19 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         HOLDER = holder;
         startTimes = screening.getStartTimes();
 
+
+        Log.d(TAG, "======================================================: ");
+        Log.d(TAG, "title: " + screening.getTitle());
+        Log.d(TAG, "theater name : " + screening.getTheaterName());
+        Log.d(TAG, "approved: " + screening.isApproved());
+        Log.d(TAG, "2d: " + screening.is2D());
+        Log.d(TAG, "theater event: " + screening.isTheatreEvent());
+        Log.d(TAG, "RPX: " + screening.isRpx());
+        Log.d(TAG, "3D: " + screening.is3D());
+        Log.d(TAG, "Etx: " + screening.isEtx());
+        Log.d(TAG, "largeFormat: " + screening.isLargeFormat());
+
+
         //FRESCO code..
         final Uri imgUrl = Uri.parse(screening.getLandscapeImageUrl());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -189,29 +202,30 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
-                HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
-                    RadioButton checked = group.findViewById(checkedId);
-                    if (screening.isApproved()) {
-                        if (currentTime != null) {
-                            currentTime.setChecked(false);
-                        }
-                        currentTime = checked;
-                        String selectedShowTime = currentTime.getText().toString();
-                        showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
-                        Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
-                    } else {
-                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-                if (!screening.isApproved()) {
+                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
+                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
+                } else {
+                    HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
+                        RadioButton checked = group.findViewById(checkedId);
+                        if (screening.isApproved()) {
+                            if (currentTime != null) {
+                                currentTime.setChecked(false);
+                            }
+                            currentTime = checked;
+                            String selectedShowTime = currentTime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                            Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
+                        } else {
+                            Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
+
             }
 
             holder.synopsis.setOnClickListener(view -> {
@@ -240,7 +254,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
-
 
 
 }

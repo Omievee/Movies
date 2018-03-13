@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    tools:context="com.mobile.activities.TicketVerification_NoStub">
+
+
+    <ImageView
+        android:id="@+id/closeOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/close_white"
+        android:tint="@color/white" />
+
+
+    <TextView
+        android:id="@+id/ticketHEADER"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+        android:text="Ticket Verification"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ticketHEADER">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/ReasonCard"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/quadruple_margin_standard"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="5dp">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Please explain why you don't have your ticket stub..."
+                    android:textColorHint="@color/gray_dark"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="250"
+                    app:counterTextAppearance="@style/MyOverflowText">
+
+                    <EditText
+                        android:id="@+id/NoStubComments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="250"
+                        android:padding="@dimen/margin_half"
+                        android:textColor="@color/black_text"
+                        android:textColorHighlight="@color/gray_icon"
+                        android:textColorHint="@color/gray_icon"
+                        android:textSize="15dp" />
+                </android.support.design.widget.TextInputLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <Button
+                android:id="@+id/SubmitStub"
+                android:layout_width="170dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/ReasonCard"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="350dp"
+                android:background="@drawable/mpbutton"
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColorHint="@color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</RelativeLayout>

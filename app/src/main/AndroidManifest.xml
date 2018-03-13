@@ -9,12 +9,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
-
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens
@@ -24,11 +23,9 @@
         android:smallScreens="true" />
 
     <uses-feature
-        android:name="android.hardware.fingerprint"
-        android:required="false" />
-    <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-feature
         android:name="android.hardware.WIFI"
         android:required="false" />
@@ -43,10 +40,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ" />
+
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
 
         <!-- Taplytics -->
         <receiver
@@ -55,14 +55,13 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="taplytics.push.OPEN" />
                 <action android:name="taplytics.push.DISMISS" />
             </intent-filter>
         </receiver>
-        <service android:name="com.taplytics.sdk.TLGcmIntentService" />
 
+        <service android:name="com.taplytics.sdk.TLGcmIntentService" />
 
         <receiver android:name="com.taplytics.sdk.TLBootReceiver">
             <intent-filter>
@@ -264,7 +263,8 @@
         <activity
             android:name="com.mobile.fragments.NearMe"
             android:label="@string/title_activity_near_me" />
-        <activity android:name="com.mobile.activities.MoviePassCardAutoActivate"></activity>
+        <activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />
+        <activity android:name="com.mobile.activities.TicketVerification_NoStub"></activity>
     </application>
 
 </manifest>

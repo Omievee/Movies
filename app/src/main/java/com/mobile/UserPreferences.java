@@ -131,13 +131,13 @@ public class UserPreferences {
     }
 
     public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
-                                       boolean verificationRequired, boolean hasActiveCard, boolean subscriptionRequired) {
+                                       boolean proofOfPurchaseRequired, boolean hasActiveCard, boolean subscriptionRequired) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.SUBSCRIPTION_STATUS, status);
         editor.putBoolean(Constants.FB_PRESENT, fb);
         editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
         editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
-        editor.putBoolean(Constants.VERIFICATION_REQUIRED, verificationRequired);
+        editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, proofOfPurchaseRequired);
         editor.putBoolean(Constants.ACTIVE_CARD, hasActiveCard);
         editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, subscriptionRequired);
         editor.apply();
@@ -158,7 +158,6 @@ public class UserPreferences {
     public static boolean getRestrictionAllFormatsEnabled() {
         return sPrefs.getBoolean(Constants.ALL_FORMATS_ENABLED, true);
     }
-
     public static boolean getRestrictionVerificationRequired() {
         return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, true);
     }
@@ -167,8 +166,8 @@ public class UserPreferences {
         return sPrefs.getBoolean(Constants.ACTIVE_CARD, true);
     }
 
-    public static boolean getIsVerificationRequired() {
-        return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, false);
+    public static boolean getProofOfPurchaseRequired() {
+        return sPrefs.getBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, false);
     }
 
     public static void setFbToken(String token) {
@@ -191,10 +190,6 @@ public class UserPreferences {
         HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
 
-    public static void setFirstBoot(Boolean boot) {
-        SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putBoolean("firstBoot", true);
-        editor.apply();
-    }
+
 
 }

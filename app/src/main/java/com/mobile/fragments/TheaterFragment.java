@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
+import com.mobile.activities.MovieActivity;
 import com.mobile.activities.SelectSeatActivity;
 import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
@@ -198,17 +200,29 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(view -> {
 
-            Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
             if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
                 progress.setVisibility(View.VISIBLE);
-                reserve(screening1, time);
-            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
-                reserve(screening1, time);
+                reserve(screening, showtime);
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
-                showActivateCardDialog(screening1, time);
-            } else {
+                showActivateCardDialog(screening, showtime);
+            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
                 progress.setVisibility(View.VISIBLE);
-                reserve(screening1, time);
+                reserve(screening, showtime);
+            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+                if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
+                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
+                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        progress.setVisibility(View.VISIBLE);
+                        reserve(screening, showtime);
+                    });
+                    alert.show();
+                } else {
+                    progress.setVisibility(View.VISIBLE);
+                    reserve(screening, showtime);
+                }
+
             }
         });
     }
@@ -539,5 +553,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         startActivity(intent);
 
     }
+
 
 }
