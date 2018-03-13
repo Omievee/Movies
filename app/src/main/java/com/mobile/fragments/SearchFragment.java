@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.helpshift.All;
@@ -54,6 +55,7 @@ public class SearchFragment extends Fragment {
     ArrayList<Movie> ALLMOVIES;
     View progress;
     ArrayList<Movie> noDuplicates;
+    Button cancel;
 
     public SearchFragment() {
     }
@@ -64,7 +66,7 @@ public class SearchFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
-
+        cancel = rootView.findViewById(R.id.CancelSearch);
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
 
@@ -77,10 +79,19 @@ public class SearchFragment extends Fragment {
 
         progress.setVisibility(View.VISIBLE);
         loadResults();
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: ");
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
+
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater);
         Handler handler = new Handler();
         customAdapter.setSuggestions(ALLMOVIES);
+
         handler.postDelayed(() -> customAdapter.setSuggestions(ALLMOVIES), 500);
         searchBar.setCustomSuggestionAdapter(customAdapter);
         searchBar.addTextChangeListener(new TextWatcher() {
@@ -137,5 +148,6 @@ public class SearchFragment extends Fragment {
             }
         });
     }
+
 
 }

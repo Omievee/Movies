@@ -36,12 +36,9 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
@@ -70,14 +67,11 @@ import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -88,14 +82,10 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 
-public class TheatersFragment extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
+public class TheatersFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
     Realm theatersRealm;
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     public static final int LOCATION_PERMISSIONS = 99;
     public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
@@ -103,28 +93,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
-    private SettingsClient mSettingsClient;
     private LocationRequest mLocationRequest;
     private LocationSettingsRequest mLocationSettingsRequest;
-    private LocationCallback mLocationCallback;
-    private Location mCurrentLocation;
-    private String mLastUpdateTime;
     private Boolean mRequestingLocationUpdates;
     double lat, lon;
-    LocationListener locaListener;
-    LocationManager locManager;
     GoogleMap mMap;
     MapView mMapView;
     Location userCurrentLocation;
-    private OnFragmentInteractionListener listener;
     Button searchThisArea;
-    RelativeLayout listViewMaps;
-    public RelativeLayout goneList;
+    RelativeLayout listViewMaps, mRelativeLayout, goneList;
     ImageView mSearchClose, myloc;
     View mProgress;
-    RelativeLayout mRelativeLayout;
-    private ClusterManager<TheaterPin> mClusterManager;
-    @BindView(R.id.listViewTheaters)
+    ClusterManager<TheaterPin> mClusterManager;
     RecyclerView theatersRECY;
     String TAG = "TAG";
     ArrayList<Theater> nearbyTheaters;
@@ -249,14 +229,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
 //            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
 //            theatersRECY.getLayoutManager().scrollToPosition(theaterSelected);
 //
-//            theatersListRecyclerview.getRecycledViewPool().clear();
+//            theatersRECY.getRecycledViewPool().clear();
 //            theaterAdapter.notifyDataSetChanged();
 //
 //            marker.showInfoWindow();
 //
 //            return true;
 //        });
-
     }
 
 
@@ -277,8 +256,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                     CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                     mMap.moveCamera(current);
-
-
                     mMap.setOnCameraMoveListener(() -> {
                         double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
                         double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
@@ -327,20 +304,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager.clearItems();
 
     }
-
-    private void createLocationCallback() {
-        Log.d(TAG, "HIT?: ");
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                mCurrentLocation = locationResult.getLastLocation();
-                Log.d(TAG, "onLocationResult: " + mCurrentLocation);
-                mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-            }
-        };
-    }
-
 
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
@@ -525,43 +488,42 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
         }
 
+        if (nearbyTheaters.size() == 0) {
+            slideup.setEnabled(false);
+            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+        } else {
+            displayTheatersFromRealm(nearbyTheaters);
+        }
 
-        displayTheatersFromRealm(nearbyTheaters);
     }
 
     void displayTheatersFromRealm(ArrayList<Theater> theatersList) {
         Log.d(TAG, "2nd size?: " + theatersList.size());
         mProgress.setVisibility(View.GONE);
         theaterAdapter.notifyDataSetChanged();
+        slideup.setEnabled(true);
+        mClusterManager.clearItems();
+        mClusterManager.cluster();
+        for (Theater theater : theatersList) {
+            LatLng location = new LatLng(theater.getLat(), theater.getLon());
+            mMapData.put(location, theater);
+            final int position;
+            position = theatersList.indexOf(theater);
 
-        if (theatersList.size() == 0) {
-            slideup.setEnabled(false);
-            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-        } else {
-            slideup.setEnabled(true);
-            mClusterManager.clearItems();
+            mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpinstandard, position, theater));
             mClusterManager.cluster();
-            for (Theater theater : theatersList) {
-                LatLng location = new LatLng(theater.getLat(), theater.getLon());
-                mMapData.put(location, theater);
-                final int position;
-                position = theatersList.indexOf(theater);
 
-                mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpinstandard, position, theater));
-                mClusterManager.cluster();
-
-                mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
-                final CameraPosition[] mPreviousCameraPosition = {null};
-                mMap.setOnCameraIdleListener(() -> {
-                    CameraPosition position1 = mMap.getCameraPosition();
-                    if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position1.zoom) {
-                        mPreviousCameraPosition[0] = mMap.getCameraPosition();
-                        mClusterManager.cluster();
-                    }
-                });
-            }
-            mClusterManager.cluster();
+            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+            final CameraPosition[] mPreviousCameraPosition = {null};
+            mMap.setOnCameraIdleListener(() -> {
+                CameraPosition position1 = mMap.getCameraPosition();
+                if (mPreviousCameraPosition[0] == null || mPreviousCameraPosition[0].zoom != position1.zoom) {
+                    mPreviousCameraPosition[0] = mMap.getCameraPosition();
+                    mClusterManager.cluster();
+                }
+            });
         }
+        mClusterManager.cluster();
 
     }
 
@@ -621,7 +583,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
         fadeIn.setDuration(1000);
-
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);

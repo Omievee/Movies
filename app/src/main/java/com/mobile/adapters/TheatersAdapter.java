@@ -77,6 +77,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater, parent, false);
+
+
         return new ViewHolder(view);
     }
 
@@ -84,6 +86,11 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
+
+//        if (theater.ticketTypeIsSelectSeating() || theater.ticketTypeIsETicket()) {
+//            theatersArrayList.remove(theater);
+//            theatersArrayList.add(0, theater);
+//        }
 
         if (theater.ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);
