@@ -22,6 +22,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -112,7 +117,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
     MapView mMapView;
     Location userCurrentLocation;
     private OnFragmentInteractionListener listener;
-
+    Button searchThisArea;
     RelativeLayout listViewMaps;
     public RelativeLayout goneList;
     ImageView mSearchClose, myloc;
@@ -159,7 +164,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         theatersRECY.setLayoutManager(manager);
         theaterAdapter = new TheatersAdapter(nearbyTheaters);
         theatersRECY.setAdapter(theaterAdapter);
-
+        searchThisArea = rootView.findViewById(R.id.SearchThisArea);
         mSearchClose.setOnClickListener(view -> {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
@@ -273,22 +278,24 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                     mMap.moveCamera(current);
 
 
-                    Log.d(TAG, "locationUpdateRealm: " + lat + " " + lon);
+                    mMap.setOnCameraMoveListener(() -> {
+                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
+                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+                        if (lat != searchLat && lon != searchLon) {
+                            fadeIn(searchThisArea);
+                            searchThisArea.setVisibility(View.VISIBLE);
+                        }
+                        searchThisArea.setOnClickListener(v -> {
+                            mProgress.setVisibility(View.VISIBLE);
+                            queryRealmLoadTheaters(searchLat, searchLon);
+                            searchThisArea.setVisibility(View.GONE);
+                            fadeOut(searchThisArea);
+                        });
+                    });
                 }
             }
         });
     }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        Log.d(TAG, "onPause: ");
-//        if (mClusterManager != null) {
-//            mClusterManager.clearItems();
-//            mClusterManager.cluster();
-//        }
-//
-//    }
 
     @Override
     public void onStop() {
@@ -350,6 +357,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
         Log.d(TAG, "getMyLocation:  " + lat + "  " + lon);
         theatersRECY.getRecycledViewPool().clear();
         theaterAdapter.notifyDataSetChanged();
+        if (searchThisArea.getVisibility() == View.VISIBLE) {
+            searchThisArea.setVisibility(View.GONE);
+            fadeOut(searchThisArea);
+        }
     }
 
 
@@ -522,11 +533,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             slideup.setEnabled(false);
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
+            slideup.setEnabled(true);
             mClusterManager.clearItems();
             mClusterManager.cluster();
             for (final Theater theater : theatersList) {
                 LatLng location = new LatLng(theater.getLat(), theater.getLon());
-                Log.d(TAG, "displayTheatersFromRealm: " + theater.getName() + " " + theater.getDistance());
                 mMapData.put(location, theater);
                 final int position;
                 position = theatersList.indexOf(theater);
@@ -545,7 +556,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
                 });
             }
             mClusterManager.cluster();
-
         }
 
     }
@@ -601,5 +611,26 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback,
             }
         });
     }
+
+    public void fadeIn(View view) {
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setDuration(1000);
+
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeIn);
+        view.setAnimation(animation);
+
+    }
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(1000);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+    }
+
 
 }

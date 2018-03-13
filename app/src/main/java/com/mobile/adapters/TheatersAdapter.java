@@ -117,6 +117,11 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             holder.iconSeat.setVisibility(View.INVISIBLE);
         }
 
+        if (theater.ticketTypeIsSelectSeating() || theater.ticketTypeIsETicket()) {
+            theatersArrayList.add(0, theater);
+            Log.d(Constants.TAG, "onBindViewHolder: " + theater.getName());
+        }
+
         holder.listItemTheater.setTag(position);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
