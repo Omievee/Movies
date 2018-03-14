@@ -143,7 +143,6 @@ public class ProfileCancellationFragment extends Fragment {
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-
                         Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
 

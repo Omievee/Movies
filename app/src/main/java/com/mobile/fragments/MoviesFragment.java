@@ -34,6 +34,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,10 +92,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private NowPlayingMoviesAdapter nowPlayingAdapter;
     private FeaturedAdapter featuredAdapter;
     SearchAdapter customAdapter;
-    MaterialSearchBar searchBar;
     MoviesResponse moviesResponse;
     SearchFragment fragment = new SearchFragment();
-    ImageView movieLogo, searchicon;
+    ImageView movieLogo,searchicon;
+
     ArrayList<Movie> TopBoxOffice;
     ArrayList<Movie> comingSoon;
     ArrayList<Movie> newReleases;
@@ -119,7 +120,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     View progress;
 
-    private OnFragmentInteractionListener listener;
 
     public static MoviesFragment newInstance() {
         return new MoviesFragment();
@@ -306,7 +306,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
     }
 
     //TODO:

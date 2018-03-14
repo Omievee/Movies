@@ -179,9 +179,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         //Start location tasks
-        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-        mLocationBroadCast = new LocationUpdateBroadCast();
-        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+//        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+//        mLocationBroadCast = new LocationUpdateBroadCast();
+//        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         currentLocationTasks();
 
