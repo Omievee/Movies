@@ -79,12 +79,13 @@ public class SearchFragment extends Fragment {
 
         progress.setVisibility(View.VISIBLE);
         loadResults();
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
-                getActivity().getFragmentManager().popBackStack();
-            }
+
+
+        Log.d(TAG, "onViewCreated: " + searchBar.hasFocus());
+
+
+        cancel.setOnClickListener(v -> {
+            getActivity().getFragmentManager().popBackStack();
         });
 
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);

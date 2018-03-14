@@ -32,7 +32,7 @@
         app:mt_backIconTint="@color/white"
         app:mt_borderlessRippleEnabled="true"
         app:mt_dividerColor="@color/new_red"
-        app:mt_hint="Search"
+        app:mt_hint="Search for movies"
         app:mt_hintColor="@color/white"
         app:mt_maxSuggestionsCount="3"
         app:mt_roundedSearchBarEnabled="true"

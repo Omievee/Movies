@@ -388,9 +388,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
             if (theaterPin.getTheater().ticketTypeIsSelectSeating() || theaterPin.getTheater().ticketTypeIsETicket()) {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theaterpineticket)).title(theaterPin.getTitle());
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.eticketingpin)).title(theaterPin.getTitle());
             } else {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theaterpinstandard)).title(theaterPin.getTitle());
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.post_pin)).title(theaterPin.getTitle());
 
             }
         }
