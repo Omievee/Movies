@@ -66,7 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         try {
             JSONObject attributes = new JSONObject();
             attributes.put("email", UserPreferences.getUserEmail());
@@ -77,14 +76,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         } catch (JSONException e) {
 
         }
-
         try {
             HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
         } catch (Exception e) {
 
         }
-
-//        checkRestrictions();
     }
 
 
@@ -96,7 +92,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-//        checkRestrictions();
         if (!isOnline()) {
             NoInternetFragment fragobj = new NoInternetFragment();
             FragmentManager fm = getSupportFragmentManager();

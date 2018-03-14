@@ -546,7 +546,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
      * REALM CODE
      */
     public void getAllTheatersForStorage() {
-        RestClient.getAllTheatersAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+        RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
             public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
                 LocalStorageTheaters locallyStoredTheaters = response.body();

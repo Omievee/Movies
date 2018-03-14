@@ -7,7 +7,6 @@ import android.util.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -67,7 +66,7 @@ public class Application extends MultiDexApplication {
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
-        RestClient.setUpAllTheaters(getApplicationContext());
+        RestClient.setUpLocalStorage(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {
