@@ -38,7 +38,6 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="14dp"
             android:layout_marginTop="40dp"
-
             android:background="@drawable/circle_white_alpha"
             android:elevation="4dp"
             android:src="@drawable/ic_search_black_24dp"
@@ -96,13 +95,38 @@
             android:visibility="visible" />
 
         <ImageView
-            android:id="@+id/DownArrow"
-            android:layout_width="30dp"
+            android:id="@+id/uparrow"
+            android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginTop="@dimen/margin_standard"
             android:layout_toEndOf="@id/ListViewText"
             android:src="@drawable/uparrow"
             android:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/mapviewtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="20dp"
+            android:text="Map View"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/downarrow"
+            android:layout_width="17dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/icondown"
+            android:tint="@color/white"
+            android:visibility="gone" />
+
 
         <RelativeLayout
             android:id="@+id/goneList"
@@ -117,7 +141,7 @@
                 android:id="@+id/listViewTheaters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/double_margin_standard"
+                android:layout_marginTop="20dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/list_item_theater" />
 

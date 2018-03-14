@@ -1,7 +1,9 @@
 package com.mobile.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.widget.CardView;
@@ -13,7 +15,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.activities.TheaterActivity;
@@ -60,6 +64,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         @BindView(R.id.icon_seat)
         ImageView iconSeat;
 
+        @BindView(R.id.distanceView)
+        RelativeLayout distanceView;
+
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
@@ -71,6 +78,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             distance = v.findViewById(R.id.theater_distance);
             iconTicket = v.findViewById(R.id.icon_ticket);
             iconSeat = v.findViewById(R.id.icon_seat);
+            distanceView = v.findViewById(R.id.distanceView);
         }
     }
 
@@ -128,6 +136,19 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);
 
+        final Uri uri = Uri.parse("geo:" + theater.getLat() + "," + theater.getLon() + "?q=" + Uri.encode(theater.getName()));
+        holder.distanceView.setOnClickListener(v -> {
+            try {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                mapIntent.setPackage("com.google.android.apps.maps");
+                holder.itemView.getContext().startActivity(mapIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(holder.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+            } catch (Exception x) {
+                x.getMessage();
+            }
+
+        });
 
         holder.listItemTheater.setTag(position);
         holder.itemView.setOnClickListener(v -> {

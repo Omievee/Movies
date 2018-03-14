@@ -19,7 +19,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -103,9 +105,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     Location userCurrentLocation;
     Button searchThisArea;
     RelativeLayout listViewMaps, mRelativeLayout, goneList;
-    ImageView mSearchClose, myloc, downArrow;
+    ImageView mSearchClose, myloc, upArrow, downArrow;
     View mProgress;
-    TextView listViewText;
+    TextView listViewText, mapViewText;
     ClusterManager<TheaterPin> mClusterManager;
     RecyclerView theatersRECY;
     String TAG = "TAG";
@@ -148,7 +150,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         theatersRECY.setAdapter(theaterAdapter);
         searchThisArea = rootView.findViewById(R.id.SearchThisArea);
         listViewText = rootView.findViewById(R.id.ListViewText);
-        downArrow = rootView.findViewById(R.id.DownArrow);
+        upArrow = rootView.findViewById(R.id.uparrow);
+        downArrow = rootView.findViewById(R.id.downarrow);
+        mapViewText = rootView.findViewById(R.id.mapviewtext);
         mSearchClose.setOnClickListener(view -> {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
@@ -182,8 +186,40 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
         buildLocationSettingsRequest();
-        Log.d(TAG, "onViewCreated: ");
+        Log.d(TAG, "onViewCreated: " + slideup.getPanelState());
 
+
+        slideup.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (slideup.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ) {
+                    downArrow.setVisibility(View.VISIBLE);
+                    fadeIn(downArrow);
+                    mapViewText.setVisibility(View.VISIBLE);
+                    fadeIn(mapViewText);
+
+                    listViewText.setVisibility(View.INVISIBLE);
+                    fadeOut(listViewText);
+                    upArrow.setVisibility(View.INVISIBLE);
+                    fadeOut(upArrow);
+                } else {
+                    downArrow.setVisibility(View.GONE);
+                    fadeOut(downArrow);
+                    mapViewText.setVisibility(View.GONE);
+                    fadeOut(mapViewText);
+
+                    listViewText.setVisibility(View.VISIBLE);
+                    fadeIn(listViewText);
+                    upArrow.setVisibility(View.VISIBLE);
+                    fadeIn(upArrow);
+                }
+            }
+        });
     }
 
     @Override
@@ -215,6 +251,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         } else {
             locationUpdateRealm();
         }
+
 
         mProgress.setVisibility(View.VISIBLE);
 //        mMap.setOnMarkerClickListener(marker -> {
@@ -296,6 +333,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onResume() {
         mMapView.onResume();
         super.onResume();
+
+
     }
 
 
@@ -493,7 +532,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         if (nearbyTheaters.size() == 0) {
             slideup.setEnabled(false);
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-            downArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+            upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             displayTheatersFromRealm(nearbyTheaters);
@@ -507,7 +546,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         theaterAdapter.notifyDataSetChanged();
         slideup.setEnabled(true);
         listViewText.setTextColor(getResources().getColor(R.color.white));
-        downArrow.setColorFilter(getResources().getColor(R.color.white));
+        upArrow.setColorFilter(getResources().getColor(R.color.white));
 
         mClusterManager.clearItems();
         for (Theater theater : theatersList) {
@@ -588,7 +627,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
+        fadeIn.setDuration(200);
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
@@ -598,7 +637,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void fadeOut(View view) {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
+        fadeOut.setDuration(200);
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
