@@ -2,34 +2,34 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import com.amazonaws.mobile.client.AWSMobileClient;
 
-import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.UserPreferences;
-import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
-import com.mobile.model.MoviesResponse;
+import com.mobile.network.RestClient;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
@@ -65,13 +65,9 @@ public class MoviesActivity extends BaseActivity {
 
 
         checkRestrictions();
-
-
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
-
-
     }
 
     @Override
@@ -224,6 +220,90 @@ public class MoviesActivity extends BaseActivity {
             Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
             startActivity(activateCard);
         });
+    }
+
+    public void checkRestrictions() {
+        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    restriction = response.body();
+                    String status = restriction.getSubscriptionStatus();
+                    boolean fbPresent = restriction.getFacebookPresent();
+                    boolean threeDEnabled = restriction.get3dEnabled();
+                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restriction.getHasActiveCard();
+                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+
+                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
+                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
+                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
+                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
+                    }
+
+                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
+                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
+                        int reservationId = restriction.getPopInfo().getReservationId();
+                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+                        String theaterName = restriction.getPopInfo().getTheaterName();
+                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+                        String showtime = restriction.getPopInfo().getShowtime();
+
+                        bundle = new Bundle();
+                        bundle.putInt("reservationId", reservationId);
+                        bundle.putString("mSelectedMovieTitle", movieTitle);
+                        bundle.putString("tribuneMovieId", tribuneMovieId);
+                        bundle.putString("mTheaterSelected", theaterName);
+                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+                        bundle.putString("showtime", showtime);
+
+
+                        TicketVerificationDialog dialog = new TicketVerificationDialog();
+                        FragmentManager fm = getSupportFragmentManager();
+                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                    }
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+
+                        //IF API ERROR LOG OUT TO LOG BACK IN
+                        /*
+                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
+
+                        */
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+        // Make sure the current transaction finishes first
+        fragmentManager.executePendingTransactions();
+        // If there is no fragment yet with this tag...
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            TicketVerificationDialog dialog = new TicketVerificationDialog();
+            dialog.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            dialog.setCancelable(false);
+            dialog.show(fm, "fr_ticketverification_banner");
+        }
     }
 
 
