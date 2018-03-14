@@ -213,6 +213,7 @@ public class LogInActivity extends AppCompatActivity {
 
             });
         } else {
+            progress.setVisibility(View.GONE);
             Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_credentials, Toast.LENGTH_SHORT).show();
         }
     }
@@ -247,6 +248,7 @@ public class LogInActivity extends AppCompatActivity {
                     //If Missing - Account is cancelled, User can't log in
                     if(restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")){
                         Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+                        UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
                     } else {
 //                        moviePassLoginSucceeded(user);
