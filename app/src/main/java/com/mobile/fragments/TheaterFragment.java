@@ -208,7 +208,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+            } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
                     alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
@@ -223,6 +223,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     reserve(screening, showtime);
                 }
 
+            } else {
+                progress.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
             }
         });
     }

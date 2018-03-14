@@ -82,7 +82,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-
 public class MovieActivity extends BaseActivity implements ShowtimeClickListener {
 
     public static final String MOVIE = "movie";
@@ -280,7 +279,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
                 ProgressBar.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+            } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
                     alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
@@ -295,6 +294,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     reserve(screening, showtime);
                 }
 
+            } else {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
             }
         });
     }
