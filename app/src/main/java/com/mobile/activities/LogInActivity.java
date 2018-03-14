@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -27,13 +28,16 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.GsonBuilder;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -66,6 +70,9 @@ public class LogInActivity extends AppCompatActivity {
     Button facebook;
     CallbackManager callbackManager;
     LoginButton facebookLogInButton;
+    int offset = 3232323;
+    int userId;
+    public RestrictionsResponse restriction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,8 +188,10 @@ public class LogInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
-                        moviePassLoginSucceeded(response.body());
+//                        checkRestrictions(response.body());
                         progress.setVisibility(View.GONE);
+                        moviePassLoginSucceeded(response.body());
+//                        checkRestrictions(response.body());
                     } else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -208,6 +217,38 @@ public class LogInActivity extends AppCompatActivity {
         } else {
             Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_credentials, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void checkRestrictions(User user) {
+        Log.d("LOG_IN", "checkRestrictions: USER ID "+user.getId());
+        Log.d("LOG_IN", "checkRestrictions: USER ID PLUS OFFSET "+user.getId()+offset);
+        RestClient.getAuthenticated().getRestrictions(2651521).enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    Log.d("LOG_IN", "onResponse: SUCCESSFUL " +response.body().getSubscriptionStatus());
+//                    restriction = response.body();
+//                    Log.d("LOG_IN", "onResponse: "+new GsonBuilder().setPrettyPrinting().create().toJson(response));
+//                    if(restriction.getSubscriptionStatus().equalsIgnoreCase("ACTIVE")){
+//                        moviePassLoginSucceeded(user);
+//                    } else {
+//                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+//                    }
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: "+jObjError);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void forgotPassword() {
@@ -282,19 +323,20 @@ public class LogInActivity extends AppCompatActivity {
 
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
-            if (!UserPreferences.getHasUserLoggedInBefore()) {
-                UserPreferences.hasUserLoggedInBefore(true);
-                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-                startActivity(i);
-            } else {
-                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-                i.putExtra("launch", true);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-            }
+            checkRestrictions(user);
+//            if (!UserPreferences.getHasUserLoggedInBefore()) {
+//                UserPreferences.hasUserLoggedInBefore(true);
+//                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+//                startActivity(i);
+//            } else {
+//                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+//                i.putExtra("launch", true);
+//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(i);
+//            }
 
 
-            finish();
+//            finish();
         }
     }
 

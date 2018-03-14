@@ -18,6 +18,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 
+import com.google.gson.GsonBuilder;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
@@ -115,6 +116,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
+                    Log.d("LOG_IN BASE ACTIVITY", "onResponse: USER ID "+UserPreferences.getUserId());
+                    Log.d("LOG_IN BASE ACTIVITY", "onResponse: USER ID + OFFSET "+UserPreferences.getUserId()+offset);
+
                     restriction = response.body();
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
