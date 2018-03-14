@@ -12,22 +12,20 @@ public class SignUpRequest {
     PersonalInfo personalInfo;
     Paypal paypal;
     String facebookToken;
-    boolean amc3dMarkup;
     String birthday;
-    String sex;
+    String gender;
 
     //CC & No FB
     public SignUpRequest(String number, String month, String year, String ccv,
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, boolean amc3dMarkup, String birthday, String sex) {
+                         String lastName, String password, String birthday, String gender) {
 
-        this.amc3dMarkup = amc3dMarkup;
         this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, sex);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
     }
 
     //CC & FB
@@ -50,13 +48,12 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, boolean amc3dMarkup, String facebookToken, String birthday, String sex) {
+                         String lastName, String password, String facebookToken, String birthday, String gender) {
 
-        this.amc3dMarkup = amc3dMarkup;
         this.paypal = new Paypal(nonce);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, sex);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
         this.facebookToken = facebookToken;
     }
 
@@ -65,13 +62,12 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, boolean amc3dMarkup, String birthday, String sex) {
+                         String lastName, String password, String birthday, String gender) {
 
-        this.amc3dMarkup = amc3dMarkup;
         this.paypal = new Paypal(nonce);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, sex);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
     }
 
     class PersonalInfo {
@@ -80,15 +76,15 @@ public class SignUpRequest {
         String firstName;
         String lastName;
         String birthday;
-        String sex;
+        String gender;
 
-        PersonalInfo(String email, String password, String firstName, String lastName, String birthday, String sex) {
+        PersonalInfo(String email, String password, String firstName, String lastName, String birthday, String gender) {
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
             this.birthday = birthday;
-            this.sex = sex;
+            this.gender = gender;
         }
     }
 
