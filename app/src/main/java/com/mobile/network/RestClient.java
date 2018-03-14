@@ -229,7 +229,7 @@ public class RestClient {
         localStorageAPI = localStorageInstance.create(Api.class);
     }
 
-    private static void setUpRegistration(Context context) {
+    public static void setUpRegistration(Context context) {
 
         sAuthenticatedRegistrationAPI = null;
 

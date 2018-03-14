@@ -100,12 +100,12 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     final String birthday = DOB.getText().toString().trim();
                     if (isValidEmail(email1) && isValidPassword(password)) {
                         final CredentialsRequest request = new CredentialsRequest(email1);
-                        RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
+                        RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
                             @Override
                             public void onResponse(Call<Object> call, Response<Object> response) {
                                 progress.setVisibility(View.GONE);
                                 if (response != null && response.isSuccessful()) {
-                                    if (response.body().toString().contains(" userExists=1.0")) {
+                                    if (response.body().toString().contains("user exists")) {
                                         Toast.makeText(SignUpFirstOpenActivity.this, "User already exists", Toast.LENGTH_SHORT).show();
                                     } else {
                                         ProspectUser.email = email1;

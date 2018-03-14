@@ -67,6 +67,7 @@ public class Application extends MultiDexApplication {
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
         RestClient.setUpLocalStorage(getApplicationContext());
+        RestClient.setUpRegistration(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {
