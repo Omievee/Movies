@@ -141,7 +141,7 @@
                 android:id="@+id/listViewTheaters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/list_item_theater" />
 
