@@ -116,8 +116,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
-                    Log.d("LOG_IN BASE ACTIVITY", "onResponse: USER ID "+UserPreferences.getUserId());
-                    Log.d("LOG_IN BASE ACTIVITY", "onResponse: USER ID + OFFSET "+UserPreferences.getUserId()+offset);
+
+                    Log.d("LOG_IN", "onResponse: USER EMAIL: "+UserPreferences.getUserEmail());
+
 
                     restriction = response.body();
                     String status = restriction.getSubscriptionStatus();
@@ -138,6 +139,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
+
+                    Log.d("LOG_IN", "onResponse: USER RESTRICTION STATUS: "+UserPreferences.getRestrictionSubscriptionStatus());
+                    Log.d("LOG_IN", "onResponse: USER ACTIVE CARD: "+UserPreferences.getIsSubscriptionActivationRequired());
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {

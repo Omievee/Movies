@@ -84,7 +84,6 @@ public class MoviesActivity extends BaseActivity {
         if (intent!=null && intent.getIntExtra(MOVIES,-1)!=-1) {
             movieId = intent.getIntExtra(MOVIES,-1);
             loadMovies();
-//            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
         }
         else
         {
