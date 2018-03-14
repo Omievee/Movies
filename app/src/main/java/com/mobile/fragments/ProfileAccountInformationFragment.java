@@ -717,6 +717,11 @@ public class ProfileAccountInformationFragment extends Fragment {
                     Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
                     loadFragment();
                 }
+                else {
+                    loadUserInfo();
+                    Toast.makeText(getActivity(), "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                    loadFragment();
+                }
             }
 
             @Override
