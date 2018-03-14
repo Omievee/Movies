@@ -252,12 +252,6 @@
                 android:screenOrientation="portrait"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
-        <activity
-            android:name="com.mobile.activities.VerificationActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="com.mobile.activities.VerificationPictureActivity"
-            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -9,10 +9,11 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+
 
 android {
     compileSdkVersion 27
@@ -22,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 92
-        versionName "3.0.4A"
+        versionCode 100
+        versionName "3.0.5A"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -126,11 +127,9 @@ dependencies {
 
     //AWS
     compile 'com.amazonaws:aws-android-sdk-core:2.+'
-    compile 'com.amazonaws:aws-android-sdk-s3:2.6.+'
-    compile 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
-    compile 'com.amazonaws:aws-android-sdk-ddb:2.6.+'
-    compile('com.amazonaws:aws-android-sdk-mobile-client:2.6.7@aar') { transitive = true; }
-
+    compile 'com.amazonaws:aws-android-sdk-s3:2.2.11'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.2.+'
+    compile 'com.amazonaws:aws-android-sdk-ddb:2.2.+'
     // Braintree
     compile('com.braintreepayments.api:drop-in:3.+') {
         exclude group: 'com.android.support'
@@ -197,10 +196,11 @@ dependencies {
     //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
 
-    //Umano Panel
+    //Umano Sliding panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
-
 }
+
+
 
 
 apply plugin: 'kotlin-android-extensions'

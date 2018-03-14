@@ -3,6 +3,7 @@ package com.mobile.application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -22,6 +23,7 @@ import com.taplytics.sdk.Taplytics;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 
 public class Application extends MultiDexApplication {
@@ -58,10 +60,14 @@ public class Application extends MultiDexApplication {
         Fresco.initialize(this);
 
         Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
+        Log.d(TAG, "REALM PATH!! ---->: " + config.getPath());
+        Realm.setDefaultConfiguration(config);
 
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
+        RestClient.setUpAllTheaters(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {

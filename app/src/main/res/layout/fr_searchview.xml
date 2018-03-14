@@ -6,21 +6,33 @@
     android:background="@color/test_black"
     android:clickable="true">
 
+
+    <Button
+        android:id="@+id/CancelSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/transparent"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
     <com.mancj.materialsearchbar.MaterialSearchBar
         android:id="@+id/searchBar"
         style="@style/MaterialSearchBarLight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/FRAME"
-        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:layout_marginStart="@dimen/margin_half"
+        android:layout_marginTop="85dp"
         app:mt_backIconTint="@color/white"
         app:mt_borderlessRippleEnabled="true"
-        app:mt_clearIconTint="@color/new_red"
         app:mt_dividerColor="@color/new_red"
-        app:mt_hintColor="@color/test_black"
         app:mt_maxSuggestionsCount="3"
-        app:mt_placeholder="Search Movies"
-        app:mt_placeholderColor="@color/white"
         app:mt_roundedSearchBarEnabled="true"
         app:mt_searchBarColor="@color/test_blue"
         app:mt_searchIconTint="@color/white"

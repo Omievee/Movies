@@ -14,9 +14,7 @@ import io.realm.RealmObject;
  */
 
 @Parcel
-
-public class Screening extends RealmObject{
-
+public class Screening {
 
     private List<Screening> screening;
 
@@ -46,12 +44,7 @@ public class Screening extends RealmObject{
     String synopsis;
 
 
-    boolean popRequired;
 
-
-    public boolean isPopRequired() {
-        return popRequired;
-    }
 
     public String getSynopsis() {
         return synopsis;
