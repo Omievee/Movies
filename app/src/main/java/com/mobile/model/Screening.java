@@ -44,7 +44,12 @@ public class Screening {
     String synopsis;
 
 
+    boolean popRequired;
 
+
+    public boolean isPopRequired() {
+        return popRequired;
+    }
 
     public String getSynopsis() {
         return synopsis;

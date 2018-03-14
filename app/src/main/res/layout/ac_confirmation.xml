@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/PENDING_DATA"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/STandardMSG"
@@ -319,12 +319,11 @@
             <ProgressBar
                 android:id="@+id/white_progress"
                 style="@style/Widget.AppCompat.ProgressBar"
-                android:theme="@style/CircularProgressWhite"
                 android:layout_width="60dp"
-                android:visibility="gone"
                 android:layout_height="60dp"
-                android:layout_centerInParent="true" />
-
+                android:layout_centerInParent="true"
+                android:theme="@style/CircularProgressWhite"
+                android:visibility="gone" />
 
 
             <TextView
@@ -368,7 +367,6 @@
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 
 </RelativeLayout>
