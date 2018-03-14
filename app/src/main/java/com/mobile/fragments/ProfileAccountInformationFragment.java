@@ -500,6 +500,7 @@ public class ProfileAccountInformationFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 updateShipping = true;
                 userAddress2.setEnabled(true);
+                userAddress2.clearFocus();
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
@@ -605,32 +606,54 @@ public class ProfileAccountInformationFragment extends Fragment {
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
-            String newAddress = userAddress.getText().toString();
-            String newAddress2 = userAddress2.getText().toString();
-            String newCity = userCity.getText().toString();
-            String newZip = userZip.getText().toString();
-            String newState = userState.getText().toString();
 
-            String type = "shippingAddress";
+            if(!userAddress.getText().toString().isEmpty() && !userCity.getText().toString().isEmpty() && !userZip.getText().toString().isEmpty() && !userState.getText().toString().isEmpty()){
+                String newAddress = userAddress.getText().toString();
+                String newAddress2 = userAddress2.getText().toString();
+                String newCity = userCity.getText().toString();
+                String newZip = userZip.getText().toString();
+                String newState = userState.getText().toString();
 
-            AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
-            RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
-                @Override
-                public void onResponse(Call<Object> call, Response<Object> response) {
-                    progress.setVisibility(View.GONE);
+                String type = "shippingAddress";
 
-                    loadUserInfo();
-                    Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
-                    loadFragment();
-                }
+                AddressChangeRequest request = new AddressChangeRequest(newAddress, newAddress2, newCity, newState, newZip, type);
+                RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        progress.setVisibility(View.GONE);
 
-                @Override
-                public void onFailure(Call<Object> call, Throwable t) {
-                    progress.setVisibility(View.GONE);
+                        if(response!=null & response.isSuccessful()){
+                            loadUserInfo();
+                            Toast.makeText(getActivity(), "Changes Saved", Toast.LENGTH_SHORT).show();
+                            loadFragment();
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                            userAddress.setEnabled(true);
+                            userAddress.clearFocus();
+                            userAddress2.setEnabled(true);
+                            userAddress2.clearFocus();
+                            userCity.setEnabled(true);
+                            userCity.clearFocus();
+                            userZip.setEnabled(true);
+                            userZip.clearFocus();
+                            userState.setEnabled(true);
+                            userState.clearFocus();
+                        }
 
-                    Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
-                }
-            });
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        progress.setVisibility(View.GONE);
+
+                        Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
         }
 
     }
