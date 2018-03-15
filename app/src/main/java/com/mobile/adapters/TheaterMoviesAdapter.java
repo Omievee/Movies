@@ -114,19 +114,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         HOLDER = holder;
         startTimes = screening.getStartTimes();
 
-
-        Log.d(TAG, "======================================================: ");
-        Log.d(TAG, "title: " + screening.getTitle());
-        Log.d(TAG, "theater name : " + screening.getTheaterName());
-        Log.d(TAG, "approved: " + screening.isApproved());
-        Log.d(TAG, "2d: " + screening.is2D());
-        Log.d(TAG, "theater event: " + screening.isTheatreEvent());
-        Log.d(TAG, "RPX: " + screening.isRpx());
-        Log.d(TAG, "3D: " + screening.is3D());
-        Log.d(TAG, "Etx: " + screening.isEtx());
-        Log.d(TAG, "largeFormat: " + screening.isLargeFormat());
-
-
         //FRESCO code..
         final Uri imgUrl = Uri.parse(screening.getLandscapeImageUrl());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -218,14 +205,13 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             }
                             currentTime = checked;
                             String selectedShowTime = currentTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                            showtimeClickListener.onShowtimeClick(null,holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                             Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
                         } else {
                             Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
-
             }
 
             holder.synopsis.setOnClickListener(view -> {
@@ -254,6 +240,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 
 }

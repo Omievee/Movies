@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobile.model.Screening;
+import com.mobile.model.Theater;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -29,6 +30,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
     String selectedShowTime;
     ImageView zero, one, two, three, four;
     TextView done;
+    Theater theater;
     ViewPager tutorialViewPager;
 
     int page = 0;
@@ -62,11 +64,12 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         if (getIntent() != null) {
             screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
             selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
+            theater = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.THEATER));
         }
         done.setOnClickListener(v -> {
             if (screeningObject != null && selectedShowTime != null) {
                 MovieActivity reserAct = new MovieActivity();
-                reserAct.reserve(screeningObject, selectedShowTime);
+                reserAct.reserve(null,screeningObject, selectedShowTime);
             } else {
                 Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);
                 doneIntent.putExtra("launch", true);

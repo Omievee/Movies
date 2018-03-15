@@ -2,6 +2,10 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
+import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -14,18 +18,48 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import android.widget.ListView;
+import android.widget.Toast;
+import com.amazonaws.mobile.client.AWSMobileClient;
+
+import com.github.clans.fab.FloatingActionMenu;
+import com.mobile.Constants;
+
 import com.mobile.UserPreferences;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.model.Eid;
 import com.mobile.model.Movie;
-import com.mobile.network.RestClient;
+
+ import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
+import com.mobile.model.MoviesResponse;
+import com.mobile.network.Api;
+import com.mobile.network.RestCallback;
+import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
+import com.mobile.requests.OpenAppEventRequest;
+import com.mobile.responses.ChangedMindResponse;
+import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
+
 
 import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Headers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Header;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,24 +70,39 @@ import retrofit2.Response;
  */
 
 public class MoviesActivity extends BaseActivity {
-
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
 
+    public static final String MOVIES = "movies";
     View parentLayout;
+    boolean firstBoot;
+    public ArrayList<Movie> ALLMOVIES;
+    Movie movie;
+    int movieId;
+    List<String> urlPath;
+    String url;
+    MoviesResponse moviesResponse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
 
-
-        Fragment moviesFragment = new MoviesFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
-        FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
-        fadeIn(main);
+        Intent intent=getIntent();
+        if (intent!=null && intent.getIntExtra(MOVIES,-1)!=-1) {
+            movieId = intent.getIntExtra(MOVIES,-1);
+            loadMovies();
+//            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
+        }
+        else
+        {
+            Fragment moviesFragment = new MoviesFragment();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
+            FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+            fadeIn(main);
+        }
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -63,8 +112,14 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
+
+
 
         checkRestrictions();
+
+
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
@@ -222,6 +277,7 @@ public class MoviesActivity extends BaseActivity {
         });
     }
 
+
     public void checkRestrictions() {
         RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
             @Override
@@ -285,13 +341,12 @@ public class MoviesActivity extends BaseActivity {
                     }
                 }
             }
-
-            @Override
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-
+               public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+  
             }
         });
-    }
+}
+  
 
     public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
         // Make sure the current transaction finishes first
@@ -305,6 +360,56 @@ public class MoviesActivity extends BaseActivity {
             dialog.show(fm, "fr_ticketverification_banner");
         }
     }
+
+    public void loadMovies() {
+        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+
+                if (response.body() != null && response.isSuccessful()) {
+                    moviesResponse = response.body();
+                    ALLMOVIES = new ArrayList<>();
+
+                    if (moviesResponse != null) {
+                        ALLMOVIES.addAll(moviesResponse.getNewReleases());
+                        ALLMOVIES.addAll(moviesResponse.getTopBoxOffice());
+                        ALLMOVIES.addAll(moviesResponse.getComingSoon());
+                        ALLMOVIES.addAll(moviesResponse.getNowPlaying());
+                        ALLMOVIES.addAll(moviesResponse.getFeatured());
+
+                        for(Movie AllMovies: ALLMOVIES){
+                            if(AllMovies.getId() == movieId){
+                                movie = AllMovies;
+                                startMovieActivity();
+                            }
+                        }
+
+
+
+                    }
+                } else {
+                    /* TODO : FIX IF RESPONSE IS NULL */
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+
+
+            }
+        });
+    }
+
+
+
+    public void startMovieActivity(){
+        Intent movieIntent = new Intent(this,MovieActivity.class);
+        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
+        movieIntent.putExtra(MovieActivity.DEEPLINK,url);
+        startActivity(movieIntent);
+    }
+
 
 
 }

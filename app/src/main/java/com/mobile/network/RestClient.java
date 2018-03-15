@@ -1,6 +1,7 @@
 package com.mobile.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -43,10 +44,12 @@ public class RestClient {
     static String registrationURL = "https://registration.moviepass.com/";
 
     private static Api sAuthenticatedAPI;
+    private static Api sAuthenticatedAPIGoWatchIt;
     private static Api sUnauthenticatedAPI;
     private static Api sAuthenticatedRegistrationAPI;
 
     private static Retrofit sAuthenticatedInstance;
+    private static Retrofit sAuthenticatedInstanceGoWatchIt;
     private static Retrofit sUnauthenticatedInstance;
     private static Retrofit localStorageInstance;
     private static Retrofit sAuthenticatedRegistrationInstance;
@@ -64,8 +67,14 @@ public class RestClient {
         return sAuthenticatedAPI;
     }
 
+
     public static Api getsAuthenticatedRegistrationAPI() {
         return sAuthenticatedRegistrationAPI;
+    }
+
+    public static Api getAuthenticatedAPIGoWatchIt() {
+        return sAuthenticatedAPIGoWatchIt;
+
     }
 
     public static Api getUnauthenticated() {
@@ -126,6 +135,57 @@ public class RestClient {
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI = sAuthenticatedInstance.create(Api.class);
+    }
+
+    public static void setupAuthenticatedGoWatchIt(Context context) {
+
+        sAuthenticatedInstanceGoWatchIt = null;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+        if (Constants.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(40, TimeUnit.SECONDS);
+        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.addInterceptor(logging);
+
+        CookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient.cookieJar(cookieJar);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("x-api-key", "Lalq1yYxOx2d1tj2VlOHw8fFXXUnih3a8TIHInHU");
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+
+
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        sAuthenticatedInstanceGoWatchIt = new Retrofit.Builder()
+                .baseUrl("https://click.moviepass.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
+                .build();
+
+
+        sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(Api.class);
     }
 
     public static void setupUnauthenticatedWebClient(Context context) {

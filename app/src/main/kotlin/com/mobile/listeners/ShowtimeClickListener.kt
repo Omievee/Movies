@@ -1,6 +1,7 @@
 package com.mobile.listeners
 
 import com.mobile.model.Screening
+import com.mobile.model.Theater
 
 /**
  * Created by anubis on 6/13/17.
@@ -8,6 +9,6 @@ import com.mobile.model.Screening
 
 interface ShowtimeClickListener {
 
-    fun onShowtimeClick(pos: Int, screening: Screening, showtime: String)
+    fun onShowtimeClick(theater: Theater, pos: Int, screening: Screening, showtime: String)
 
 }

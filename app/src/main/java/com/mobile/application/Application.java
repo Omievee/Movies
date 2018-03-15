@@ -65,6 +65,7 @@ public class Application extends MultiDexApplication {
 
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
+        RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
         RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
