@@ -95,6 +95,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile_account_details, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         progress = rootView.findViewById(R.id.progress);
         shippingDetails = rootView.findViewById(R.id.ShippingDetails);
