@@ -31,6 +31,10 @@ public class GoWatchItSingleton {
     private static GoWatchItSingleton instance;
     private String campaign;
     private String debug = "true";
+    private String l = "0.0";
+    private String ln = "0.0";
+//    String l = String.valueOf(UserPreferences.getLatitude());
+//    String ln = String.valueOf(UserPreferences.getLongitude());
 
     private GoWatchItSingleton() {
         campaign = "no_campaign";
@@ -63,8 +67,6 @@ public class GoWatchItSingleton {
 
     public void userOpenedApp(Context context, String deepLink){
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
         if(deepLink==null)
             deepLink = "https://www.moviepass.com/go";
@@ -94,8 +96,7 @@ public class GoWatchItSingleton {
 
     public void userOpenedMovie(String movieId, String url){
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
+
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
@@ -125,8 +126,6 @@ public class GoWatchItSingleton {
 
     public void userClickedOnShowtime(Theater theater, Screening screening, String showtime, String movieId, String url) {
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
@@ -173,8 +172,6 @@ public class GoWatchItSingleton {
 
     public void checkInEvent(Theater theater, Screening screening, String showtime, String engagement, String movieId, String url) {
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
@@ -221,8 +218,6 @@ public class GoWatchItSingleton {
 
     public void searchEvent(String search, String engagement, String url){
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
@@ -252,8 +247,6 @@ public class GoWatchItSingleton {
 
     public void userOpenedTheater(Theater theaterObject, String url){
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
@@ -284,8 +277,6 @@ public class GoWatchItSingleton {
 
     public void userOpenedTheaterTab(String url){
 
-        String l = String.valueOf(UserPreferences.getLatitude());
-        String ln = String.valueOf(UserPreferences.getLongitude());
         String userId = String.valueOf(UserPreferences.getUserId());
 
         String versionName = BuildConfig.VERSION_NAME;
