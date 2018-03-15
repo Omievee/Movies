@@ -29,7 +29,9 @@ import com.moviepass.R;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,11 +42,11 @@ import butterknife.ButterKnife;
 
 public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
 
-    private ArrayList<Theater> theatersArrayList;
+    private LinkedList<Theater> theatersArrayList;
     public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
 
-    public TheatersAdapter(ArrayList<Theater> theatersArrayList) {
+    public TheatersAdapter(LinkedList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
     }
 
@@ -95,11 +97,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
-//        if (theater.ticketTypeIsSelectSeating() || theater.ticketTypeIsETicket()) {
-//            theatersArrayList.remove(theater);
-//            theatersArrayList.add(0, theater);
-//        }
-
         if (theater.ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);
             holder.iconSeat.setVisibility(View.INVISIBLE);
@@ -114,7 +111,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
-        Log.d(Constants.TAG, "onBindViewHolder: " + theatersArrayList.size());
 /*
         Location loc1 = new Location("");
         loc1.setLatitude(lat1);

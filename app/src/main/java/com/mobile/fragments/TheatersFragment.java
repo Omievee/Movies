@@ -70,9 +70,13 @@ import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -111,7 +115,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     ClusterManager<TheaterPin> mClusterManager;
     RecyclerView theatersRECY;
     String TAG = "TAG";
-    ArrayList<Theater> nearbyTheaters;
+    LinkedList<Theater> nearbyTheaters;
     SlidingUpPanelLayout slideup;
     double convertedMeters, lastTheater;
     double moved;
@@ -139,7 +143,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mRequestingLocationUpdates = true;
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);
         goneList = rootView.findViewById(R.id.goneList);
-        nearbyTheaters = new ArrayList<>();
+        nearbyTheaters = new LinkedList<>();
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -200,25 +204,26 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                 if (slideup.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    downArrow.setVisibility(View.VISIBLE);
                     fadeIn(downArrow);
-                    mapViewText.setVisibility(View.VISIBLE);
+                    downArrow.setVisibility(View.VISIBLE);
                     fadeIn(mapViewText);
+                    mapViewText.setVisibility(View.VISIBLE);
 
-                    listViewText.setVisibility(View.INVISIBLE);
                     fadeOut(listViewText);
-                    upArrow.setVisibility(View.INVISIBLE);
+                    listViewText.setVisibility(View.INVISIBLE);
                     fadeOut(upArrow);
-                } else {
-                    downArrow.setVisibility(View.GONE);
-                    fadeOut(downArrow);
-                    mapViewText.setVisibility(View.GONE);
-                    fadeOut(mapViewText);
+                    upArrow.setVisibility(View.INVISIBLE);
 
-                    listViewText.setVisibility(View.VISIBLE);
+                } else {
+                    fadeOut(downArrow);
+                    downArrow.setVisibility(View.GONE);
+
+                    fadeOut(mapViewText);
+                    mapViewText.setVisibility(View.GONE);
                     fadeIn(listViewText);
-                    upArrow.setVisibility(View.VISIBLE);
+                    listViewText.setVisibility(View.VISIBLE);
                     fadeIn(upArrow);
+                    upArrow.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -506,8 +511,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             localPoints.setLongitude(nearbyTheaters.get(j).getLon());
 
             double d = userCurrentLocation.distanceTo(localPoints);
-            Log.d(TAG, "D: " + d);
-
             double mtrMLE = (d / 1609.344);
             theatersRealm.beginTransaction();
             nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
@@ -518,7 +521,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
         if (nearbyTheaters.size() > 40) {
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
-            setSearchThisArea();
+            //  setSearchThisArea();
+        }
+
+        for (int i = 0; i < nearbyTheaters.size() ; i++) {
+            Theater etixSelect = nearbyTheaters.get(i);
+            if(etixSelect.getTicketType().matches("E_TICKET") || etixSelect.getTicketType().matches("SELECT_SEATING")){
+                nearbyTheaters.remove(etixSelect);
+                nearbyTheaters.add(0,etixSelect);
+                Log.d(TAG, "queryRealmLoadTheaters: " + nearbyTheaters.get(i).getName());
+            }
         }
 
 
@@ -527,16 +539,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
             upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+
         } else {
             displayTheatersFromRealm(nearbyTheaters);
-
-
         }
 
 
     }
 
-    void displayTheatersFromRealm(ArrayList<Theater> theatersList) {
+    void displayTheatersFromRealm(LinkedList<Theater> theatersList) {
         Log.d(TAG, "2nd size?: " + theatersList.size());
         mProgress.setVisibility(View.GONE);
         theaterAdapter.notifyDataSetChanged();
@@ -546,6 +557,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         mClusterManager.clearItems();
         for (Theater theater : theatersList) {
+
+
             LatLng location = new LatLng(theater.getLat(), theater.getLon());
             mMapData.put(location, theater);
             final int position;
@@ -589,7 +602,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
                 }
 
-                Log.d(TAG, "onCameraMove: " + convertedMeters + " " + lastTheater) ;
+                Log.d(TAG, "onCameraMove: " + convertedMeters + " " + lastTheater);
 
 //                if (convertedMeters > lastTheater) {
 //                    fadeIn(searchThisArea);
