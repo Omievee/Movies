@@ -85,14 +85,14 @@ public interface Api {
     Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
-    @POST("/rest/v1/prospects")
+    @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
-
-    @GET("/rest/v1/register/amc_upgradeability/{myZip}")
-    Call<RegistrationPlanResponse> getPlans(@Path("myZip") String zip);
+//
+//    @GET("/rest/v1/register/amc_upgradeability/{myZip}")
+//    Call<RegistrationPlanResponse> getPlans(@Path("myZip") String zip);
 
     /* SignUp */
-    @POST("/rest/v1/registration")
+    @POST("mobile/register")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
     /* Check In */
@@ -155,7 +155,7 @@ public interface Api {
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
     /* Cancel Subscription */
-    @POST("/rest/v1/subscriptions/cancellation")
+    @POST("/rest/v1/subscription/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
     /* Open App Go Watch It Event */
@@ -222,4 +222,6 @@ public interface Api {
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
+
+
 }

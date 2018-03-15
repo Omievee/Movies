@@ -12,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.mobile.activities.ConfirmationActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
 import com.moviepass.R;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -138,7 +141,12 @@ public class ProfileCancellationFragment extends Fragment {
                     Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                 } else {
-                    Toast.makeText(getActivity(), response.raw().message(), Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+
+                    }
                 }
             }
 

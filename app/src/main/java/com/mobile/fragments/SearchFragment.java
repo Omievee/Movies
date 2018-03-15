@@ -85,17 +85,24 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        searchBar.enableSearch();
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progress.setVisibility(View.VISIBLE);
         loadResults();
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: ");
-                getActivity().getFragmentManager().popBackStack();
-            }
+
+
+
+
+
+        cancel.setOnClickListener(v -> {
+            getActivity().getFragmentManager().popBackStack();
         });
 
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);

@@ -39,18 +39,22 @@ public class RestClient {
 
     private native static String getEndPoint();
 
-    static String theaterURL = "http://a1.moviepass.com ";
-    static String url = String.valueOf(getEndPoint());
+    static String a1URL = "http://a1.moviepass.com ";
+    static String baseURL = String.valueOf(getEndPoint());
+    static String registrationURL = "https://registration.moviepass.com/";
 
     private static Api sAuthenticatedAPI;
     private static Api sAuthenticatedAPIGoWatchIt;
     private static Api sUnauthenticatedAPI;
+    private static Api sAuthenticatedRegistrationAPI;
+
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sAuthenticatedInstanceGoWatchIt;
     private static Retrofit sUnauthenticatedInstance;
-    private static Retrofit allTheatersInstance;
+    private static Retrofit localStorageInstance;
+    private static Retrofit sAuthenticatedRegistrationInstance;
 
-    private static Api allTheatersAPI;
+    private static Api localStorageAPI;
 
     public static int userId;
     public static String deviceUuid = "";
@@ -63,16 +67,22 @@ public class RestClient {
         return sAuthenticatedAPI;
     }
 
+
+    public static Api getsAuthenticatedRegistrationAPI() {
+        return sAuthenticatedRegistrationAPI;
+    }
+
     public static Api getAuthenticatedAPIGoWatchIt() {
         return sAuthenticatedAPIGoWatchIt;
+
     }
 
     public static Api getUnauthenticated() {
         return sUnauthenticatedAPI;
     }
 
-    public static Api getAllTheatersAPI() {
-        return allTheatersAPI;
+    public static Api getLocalStorageAPI() {
+        return localStorageAPI;
     }
 
     public static void setupAuthenticatedWebClient(Context context) {
@@ -88,8 +98,8 @@ public class RestClient {
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(40, TimeUnit.SECONDS);
-        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
@@ -119,7 +129,7 @@ public class RestClient {
                 .create();
 
         sAuthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
@@ -189,8 +199,8 @@ public class RestClient {
             logging.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(40, TimeUnit.SECONDS);
-        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
@@ -219,7 +229,7 @@ public class RestClient {
                 .setLenient()
                 .create();
         sUnauthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
                 .build();
@@ -227,9 +237,9 @@ public class RestClient {
     }
 
 
-    public static void setUpAllTheaters(Context context) {
+    public static void setUpLocalStorage(Context context) {
 
-        allTheatersAPI = null;
+        localStorageAPI = null;
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
@@ -240,8 +250,8 @@ public class RestClient {
         }
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(40, TimeUnit.SECONDS);
-        httpClient.readTimeout(40, TimeUnit.SECONDS);
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
@@ -270,12 +280,64 @@ public class RestClient {
                 .setLenient()
                 .create();
 
-        allTheatersInstance = new Retrofit.Builder()
-                .baseUrl(theaterURL)
+        localStorageInstance = new Retrofit.Builder()
+                .baseUrl(a1URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-        allTheatersAPI = allTheatersInstance.create(Api.class);
+        localStorageAPI = localStorageInstance.create(Api.class);
+    }
+
+    public static void setUpRegistration(Context context) {
+
+        sAuthenticatedRegistrationAPI = null;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+        if (Constants.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
+        httpClient.addInterceptor(logging);
+
+        CookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient.cookieJar(cookieJar);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("user_id", "" + UserPreferences.getUserId())
+                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("auth_token", UserPreferences.getAuthToken())
+                        .addHeader("Content-type", "application/json")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("User-Agent", "MoviePass/Android/20180301");
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        sAuthenticatedRegistrationInstance = new Retrofit.Builder()
+                .baseUrl(registrationURL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
+                .build();
+        sAuthenticatedRegistrationAPI = sAuthenticatedRegistrationInstance.create(Api.class);
     }
 }

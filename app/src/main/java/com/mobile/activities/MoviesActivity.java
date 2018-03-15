@@ -2,27 +2,29 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.net.Uri;
+
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import android.widget.ListView;
 import android.widget.Toast;
 import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.Constants;
+
 import com.mobile.UserPreferences;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.TicketVerificationDialog;
@@ -30,6 +32,9 @@ import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Eid;
 import com.mobile.model.Movie;
+
+ import com.mobile.network.RestClient;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestCallback;
@@ -44,6 +49,7 @@ import com.moviepass.R;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +60,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Header;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 8/4/17.
@@ -106,13 +116,13 @@ public class MoviesActivity extends BaseActivity {
         boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
 
 
+
         checkRestrictions();
+
 
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
-
-
     }
 
     @Override
@@ -267,6 +277,90 @@ public class MoviesActivity extends BaseActivity {
         });
     }
 
+
+    public void checkRestrictions() {
+        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    restriction = response.body();
+                    String status = restriction.getSubscriptionStatus();
+                    boolean fbPresent = restriction.getFacebookPresent();
+                    boolean threeDEnabled = restriction.get3dEnabled();
+                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restriction.getHasActiveCard();
+                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+
+                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
+                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
+                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
+                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
+                    }
+
+                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
+                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
+                        int reservationId = restriction.getPopInfo().getReservationId();
+                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+                        String theaterName = restriction.getPopInfo().getTheaterName();
+                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+                        String showtime = restriction.getPopInfo().getShowtime();
+
+                        bundle = new Bundle();
+                        bundle.putInt("reservationId", reservationId);
+                        bundle.putString("mSelectedMovieTitle", movieTitle);
+                        bundle.putString("tribuneMovieId", tribuneMovieId);
+                        bundle.putString("mTheaterSelected", theaterName);
+                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+                        bundle.putString("showtime", showtime);
+
+
+                        TicketVerificationDialog dialog = new TicketVerificationDialog();
+                        FragmentManager fm = getSupportFragmentManager();
+                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                    }
+
+                } else {
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+
+                        //IF API ERROR LOG OUT TO LOG BACK IN
+                        /*
+                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
+
+                        */
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+               public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+  
+            }
+        });
+}
+  
+
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+        // Make sure the current transaction finishes first
+        fragmentManager.executePendingTransactions();
+        // If there is no fragment yet with this tag...
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            TicketVerificationDialog dialog = new TicketVerificationDialog();
+            dialog.setArguments(bundle);
+            FragmentManager fm = getSupportFragmentManager();
+            dialog.setCancelable(false);
+            dialog.show(fm, "fr_ticketverification_banner");
+        }
+    }
+
     public void loadMovies() {
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -295,15 +389,19 @@ public class MoviesActivity extends BaseActivity {
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
+
                 }
             }
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
 
+
             }
         });
     }
+
+
 
     public void startMovieActivity(){
         Intent movieIntent = new Intent(this,MovieActivity.class);
@@ -311,35 +409,6 @@ public class MoviesActivity extends BaseActivity {
         movieIntent.putExtra(MovieActivity.DEEPLINK,url);
         startActivity(movieIntent);
     }
-
-//    public void userOpenedApp(){
-//
-//        String l = String.valueOf(UserPreferences.getLatitude());
-//        String ln = String.valueOf(UserPreferences.getLongitude());
-//        String userId = String.valueOf(UserPreferences.getUserId());
-//        String deep_link="MoviePass://app";
-//        String thisCampaign = GoWatchItSingleton.getInstance().getCampaign();
-//
-//        String versionName = BuildConfig.VERSION_NAME;
-//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-//
-//
-//        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("true","Unset",
-//                "-1","app_open",thisCampaign,"app","android",deep_link,"organic",
-//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-//            @Override
-//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-//                GoWatchItResponse responseBody = response.body();
-////                progress.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void failure(RestError restError) {
-////                progress.setVisibility(View.GONE);
-//                Toast.makeText(MoviesActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
 
 
 
