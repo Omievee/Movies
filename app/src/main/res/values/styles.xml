@@ -97,4 +97,8 @@
         <item name="color">@android:color/white</item>
     </style>
 
+    <style name="EditTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:colorControlActivated">@color/white_70_opacity</item>
+    </style>
+
 </resources>

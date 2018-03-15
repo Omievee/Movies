@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -110,6 +111,17 @@ public class ProfileAccountInformationFragment extends Fragment {
         userState = rootView.findViewById(R.id.State);
         userZip = rootView.findViewById(R.id.zip);
         userAddress2 = rootView.findViewById(R.id.Address2);
+
+        userAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    userAddress.setFocusable(true);
+                    userAddress.requestFocus();
+                    userAddress.setSelection(userAddress.getText().length());
+                }
+            }
+        });
         disableShippingAddressEditTexts();
 
         userBillingDate = rootView.findViewById(R.id.BillingDate);

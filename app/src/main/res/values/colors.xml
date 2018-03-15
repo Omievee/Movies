@@ -15,6 +15,8 @@
     <color name="black_text">#DE000000</color>
     <color name="dark">#202b36</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_20_opacity">#20FFFFFF</color>
+    <color name="white_70_opacity">#70FFFFFF</color>
     <color name="white_transparent">#40ffffff</color>
     <color name="gun_metal_mask">#404c5863</color>
     <color name="charcoal">#303a43</color>

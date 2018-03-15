@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -262,40 +263,52 @@
                         android:padding="@dimen/margin_half"
                         android:visibility="gone">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:text="Address 1"
-                            android:textColor="@color/white"
-                            android:textSize="15sp" />
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:animateLayoutChanges="true"-->
+                        <!--android:text="Address 1"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:textSize="15sp" />-->
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent">
 
-                            <EditText
-                                android:id="@+id/Address1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_marginTop="@dimen/margin_standard"
-                                android:animateLayoutChanges="true"
-                                android:background="@android:color/transparent"
-                                android:backgroundTint="@android:color/transparent"
-                                android:inputType="text|textVisiblePassword|textCapSentences"
-                                android:maxLines="1"
-                                android:text="[Shipping]"
-                                android:textColor="@color/white"
-                                android:textColorLink="@android:color/transparent"
-                                android:textSize="18sp" />
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textColorHint="@color/white_20_opacity"
+                                android:theme="@style/EditTextStyle">
 
-                            <View
-                                android:layout_width="fill_parent"
-                                android:layout_height="1dp"
-                                android:layout_below="@id/Address1"
-                                android:animateLayoutChanges="true"
-                                android:background="@color/white" />
+                                <android.support.design.widget.TextInputEditText
+                                    android:id="@+id/Address1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_marginTop="@dimen/margin_standard"
+                                    android:animateLayoutChanges="true"
+                                    android:backgroundTint="@color/white_70_opacity"
+                                    android:hint="Address 1"
+                                    android:textCursorDrawable="@color/white"
+                                    android:inputType="text|textVisiblePassword|textCapSentences"
+                                    android:maxLines="1"
+                                    android:text="[Shipping]"
+                                    android:textColor="@color/white"
+                                    android:textColorLink="@android:color/transparent"
+                                    android:textColorHighlight="@color/white_20_opacity"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:backgroundTint="@color/white_70_opacity" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+                            <!--<View-->
+                            <!--android:layout_width="fill_parent"-->
+                            <!--android:layout_height="1dp"-->
+                            <!--android:layout_below="@id/Address1"-->
+                            <!--android:animateLayoutChanges="true"-->
+                            <!--android:background="@color/white" />-->
 
                         </RelativeLayout>
 
@@ -928,7 +941,7 @@
                     </LinearLayout>
 
                 </LinearLayout>
-                
+
             </RelativeLayout>
 
         </ScrollView>
