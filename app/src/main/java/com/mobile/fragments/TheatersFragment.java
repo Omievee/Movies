@@ -267,6 +267,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     listViewText.setVisibility(View.INVISIBLE);
                     fadeOut(upArrow);
                     upArrow.setVisibility(View.INVISIBLE);
+                    String url = "https://www.moviepass.com/go/list";
+                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"list_view_click");
 
                 } else {
                     fadeOut(downArrow);
