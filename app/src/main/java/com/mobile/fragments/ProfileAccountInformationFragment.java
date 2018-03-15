@@ -10,10 +10,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -75,11 +73,12 @@ public class ProfileAccountInformationFragment extends Fragment {
     RelativeLayout userOldBilling, shippingClick, billingClick;
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     String userBillingAddress, getUserBillingAddress2, userBillingCity, userBillingState, userBillingZip;
-    TextView userName, userEmail, userAddress, userAddress2, userCity, userState, userZip, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
+    TextView userName, userEmail, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
             userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userMPCardNum, userMPExpirNum;
 
     Button userSave, userCancel;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
+    EditText userAddress, userAddress2, userCity, userState, userZip;
     ImageButton userScanCard;
     String MONTH, YEAR;
     private static String CAMERA_PERMISSIONS[] = new String[]{
@@ -109,7 +108,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userState = rootView.findViewById(R.id.State);
         userZip = rootView.findViewById(R.id.zip);
         userAddress2 = rootView.findViewById(R.id.Address2);
-        userAddress2.setEnabled(false);
+        disableShippingAddressEditTexts();
 
         userBillingDate = rootView.findViewById(R.id.BillingDate);
         userPlan = rootView.findViewById(R.id.Plan);
@@ -209,6 +208,9 @@ public class ProfileAccountInformationFragment extends Fragment {
         userNewAddress.setOnClickListener(v -> callPlaceAutocompleteActivityIntent());
 
         userEditShipping.setOnClickListener(v -> {
+            enableShippingAddressEditTexts();
+            updateShipping = true;
+            saveChanges();
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .build();
@@ -599,15 +601,37 @@ public class ProfileAccountInformationFragment extends Fragment {
                 userSave.setTextColor(getResources().getColor(R.color.gray_icon));
                 userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
                 userAddress2.setEnabled(false);
+                disableShippingAddressEditTexts();
             }
         });
+    }
+
+    public void disableShippingAddressEditTexts() {
+        userAddress2.setEnabled(false);
+        userAddress.setEnabled(false);
+        userCity.setEnabled(false);
+        userState.setEnabled(false);
+        userZip.setEnabled(false);
+    }
+
+    public void enableShippingAddressEditTexts(){
+        userAddress.setEnabled(true);
+        userAddress.clearFocus();
+        userAddress2.setEnabled(true);
+        userAddress2.clearFocus();
+        userCity.setEnabled(true);
+        userCity.clearFocus();
+        userZip.setEnabled(true);
+        userZip.clearFocus();
+        userState.setEnabled(true);
+        userState.clearFocus();
     }
 
     public void updateShippingAddress() {
         int userId = UserPreferences.getUserId();
         if (userAddress.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
 
-            if(!userAddress.getText().toString().isEmpty() && !userCity.getText().toString().isEmpty() && !userZip.getText().toString().isEmpty() && !userState.getText().toString().isEmpty()){
+            if(!userAddress.getText().toString().trim().isEmpty() && !userCity.getText().toString().trim().isEmpty() && !userZip.getText().toString().trim().isEmpty() && !userState.getText().toString().trim().isEmpty()){
                 String newAddress = userAddress.getText().toString();
                 String newAddress2 = userAddress2.getText().toString();
                 String newCity = userCity.getText().toString();
@@ -629,29 +653,20 @@ public class ProfileAccountInformationFragment extends Fragment {
                         }
                         else{
                             Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
-                            userAddress.setEnabled(true);
-                            userAddress.clearFocus();
-                            userAddress2.setEnabled(true);
-                            userAddress2.clearFocus();
-                            userCity.setEnabled(true);
-                            userCity.clearFocus();
-                            userZip.setEnabled(true);
-                            userZip.clearFocus();
-                            userState.setEnabled(true);
-                            userState.clearFocus();
+                            enableShippingAddressEditTexts();
                         }
-
-
-
                     }
 
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
                         progress.setVisibility(View.GONE);
-
                         Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+            else {
+                Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                progress.setVisibility(View.GONE);
             }
 
         }

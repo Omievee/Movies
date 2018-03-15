@@ -16,15 +16,22 @@
     <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
 
 
-    <FrameLayout
-        android:id="@+id/profile_container"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/navigation"
-        android:layout_marginTop="@dimen/margin_half">
+        android:layout_alignParentTop="true">
 
+        <FrameLayout
+            android:id="@+id/profile_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/navigation"
+            android:layout_marginBottom="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/margin_half">
+        </FrameLayout>
+    </ScrollView>
 
-    </FrameLayout>
 
     <include
         android:id="@+id/navigation"
