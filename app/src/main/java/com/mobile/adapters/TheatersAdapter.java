@@ -3,6 +3,7 @@ package com.mobile.adapters;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -45,6 +46,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     private LinkedList<Theater> theatersArrayList;
     public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
+    TextView etickets, nearby;
 
     public TheatersAdapter(LinkedList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
@@ -96,6 +98,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
+
+
+
 
         if (theater.ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);

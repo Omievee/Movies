@@ -19,9 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -70,12 +68,9 @@ import com.mobile.responses.LocalStorageTheaters;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -108,7 +103,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     MapView mMapView;
     Location userCurrentLocation;
     Button searchThisArea;
-    RelativeLayout listViewMaps, mRelativeLayout, goneList;
+    RelativeLayout listViewMaps, mRelativeLayout;
+    RelativeLayout goneList;
     ImageView mSearchClose, myloc, upArrow, downArrow;
     View mProgress;
     TextView listViewText, mapViewText;
@@ -117,8 +113,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     String TAG = "TAG";
     LinkedList<Theater> nearbyTheaters;
     SlidingUpPanelLayout slideup;
-    double convertedMeters, lastTheater;
-    double moved;
+    double furthest;
+    Location localPoints;
+    Location smallLocal;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -506,7 +503,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             }
         }
         for (int j = 0; j < nearbyTheaters.size(); j++) {
-            Location localPoints = new Location(LocationManager.GPS_PROVIDER);
+            localPoints = new Location(LocationManager.GPS_PROVIDER);
             localPoints.setLatitude(nearbyTheaters.get(j).getLat());
             localPoints.setLongitude(nearbyTheaters.get(j).getLon());
 
@@ -515,21 +512,54 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             theatersRealm.beginTransaction();
             nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             theatersRealm.commitTransaction();
-
         }
         //Sort through shorter list..
         Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
         if (nearbyTheaters.size() > 40) {
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
-            //  setSearchThisArea();
+
         }
 
-        for (int i = 0; i < nearbyTheaters.size() ; i++) {
+        for (int i = 0; i < nearbyTheaters.size(); i++) {
+            smallLocal = new Location(LocationManager.GPS_PROVIDER);
+            smallLocal.setLatitude(nearbyTheaters.get(i).getLat());
+            smallLocal.setLongitude(nearbyTheaters.get(i).getLon());
+
+            furthest = userCurrentLocation.distanceTo(smallLocal);
             Theater etixSelect = nearbyTheaters.get(i);
-            if(etixSelect.getTicketType().matches("E_TICKET") || etixSelect.getTicketType().matches("SELECT_SEATING")){
+            if (etixSelect.getTicketType().matches("E_TICKET") || etixSelect.getTicketType().matches("SELECT_SEATING")) {
                 nearbyTheaters.remove(etixSelect);
-                nearbyTheaters.add(0,etixSelect);
-                Log.d(TAG, "queryRealmLoadTheaters: " + nearbyTheaters.get(i).getName());
+                nearbyTheaters.add(0, etixSelect);
+
+
+                mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
+                        cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
+                        cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
+
+
+                        double distance = userCurrentLocation.distanceTo(cameraLocal);
+                        double myLocationToCameraLocation = (distance / 1609.344);
+                        double myLocationToFurthestTheaterLocation = (furthest / 1609.344);
+
+                        if (myLocationToCameraLocation > myLocationToFurthestTheaterLocation) {
+                            fadeIn(searchThisArea);
+                            searchThisArea.setVisibility(View.VISIBLE);
+                            searchThisArea.setOnClickListener(v -> {
+                                double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
+                                double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+                                mProgress.setVisibility(View.VISIBLE);
+                                queryRealmLoadTheaters(searchLat, searchLon);
+                                searchThisArea.setVisibility(View.GONE);
+                                fadeOut(searchThisArea);
+                            });
+                        }
+
+
+                    }
+                });
             }
         }
 
@@ -543,8 +573,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         } else {
             displayTheatersFromRealm(nearbyTheaters);
         }
-
-
     }
 
     void displayTheatersFromRealm(LinkedList<Theater> theatersList) {
@@ -583,43 +611,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
     void setSearchThisArea() {
 
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
-                cameraLocal.setLatitude(mMap.getCameraPosition().target.latitude);
-                cameraLocal.setLongitude(mMap.getCameraPosition().target.longitude);
 
-
-                Location furthestTheater = new Location(LocationManager.GPS_PROVIDER);
-                for (int i = 0; i < nearbyTheaters.size(); i++) {
-                    furthestTheater.setLatitude(nearbyTheaters.get(i).getLat());
-                    furthestTheater.setLongitude(nearbyTheaters.get(i).getLon());
-                    moved = cameraLocal.distanceTo(furthestTheater);
-                    convertedMeters = (moved / 1609.344);
-
-                    lastTheater = nearbyTheaters.get(i).getDistance();
-
-                }
-
-                Log.d(TAG, "onCameraMove: " + convertedMeters + " " + lastTheater);
-
-//                if (convertedMeters > lastTheater) {
-//                    fadeIn(searchThisArea);
-//                    searchThisArea.setVisibility(View.VISIBLE);
-//                    searchThisArea.setOnClickListener(v -> {
-//                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
-//                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
-//                        mProgress.setVisibility(View.VISIBLE);
-//                        queryRealmLoadTheaters(searchLat, searchLon);
-//                        searchThisArea.setVisibility(View.GONE);
-//                        fadeOut(searchThisArea);
-//                    });
-//                }
-
-
-            }
-        });
     }
 
     @Override

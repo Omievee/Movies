@@ -131,9 +131,10 @@
         <RelativeLayout
             android:id="@+id/goneList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/ListViewText"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
             android:clickable="true"
+            android:orientation="vertical"
             android:visibility="visible">
 
 
@@ -141,11 +142,12 @@
                 android:id="@+id/listViewTheaters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:nestedScrollingEnabled="false"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:nestedScrollingEnabled="true"
                 tools:listitem="@layout/list_item_theater" />
 
         </RelativeLayout>
+
 
     </RelativeLayout>
 
