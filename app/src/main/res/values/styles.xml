@@ -101,4 +101,9 @@
         <item name="android:colorControlActivated">@color/white_70_opacity</item>
     </style>
 
+    <style name="text_in_layout_hint_Style">
+        <item name="android:textColor">@color/white_70_opacity</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
