@@ -113,6 +113,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     String TAG = "TAG";
     ArrayList<Theater> nearbyTheaters;
     SlidingUpPanelLayout slideup;
+    double convertedMeters, lastTheater;
+    double moved;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -197,7 +199,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (slideup.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ) {
+                if (slideup.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     downArrow.setVisibility(View.VISIBLE);
                     fadeIn(downArrow);
                     mapViewText.setVisibility(View.VISIBLE);
@@ -295,20 +297,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                     CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                     mMap.moveCamera(current);
-                    mMap.setOnCameraMoveListener(() -> {
-                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
-                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
-                        if (lat != searchLat && lon != searchLon) {
-                            fadeIn(searchThisArea);
-                            searchThisArea.setVisibility(View.VISIBLE);
-                        }
-                        searchThisArea.setOnClickListener(v -> {
-                            mProgress.setVisibility(View.VISIBLE);
-                            queryRealmLoadTheaters(searchLat, searchLon);
-                            searchThisArea.setVisibility(View.GONE);
-                            fadeOut(searchThisArea);
-                        });
-                    });
+
+
                 }
             }
         });
@@ -343,7 +333,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         super.onDetach();
         Log.d(TAG, "onDetach: ");
         mClusterManager.clearItems();
-
     }
 
     private void buildLocationSettingsRequest() {
@@ -487,6 +476,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     public interface OnFragmentInteractionListener {
+
     }
 
 
@@ -516,18 +506,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             localPoints.setLongitude(nearbyTheaters.get(j).getLon());
 
             double d = userCurrentLocation.distanceTo(localPoints);
+            Log.d(TAG, "D: " + d);
+
             double mtrMLE = (d / 1609.344);
             theatersRealm.beginTransaction();
             nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             theatersRealm.commitTransaction();
-
 
         }
         //Sort through shorter list..
         Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
         if (nearbyTheaters.size() > 40) {
             nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
+            setSearchThisArea();
         }
+
 
         if (nearbyTheaters.size() == 0) {
             slideup.setEnabled(false);
@@ -536,7 +529,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             displayTheatersFromRealm(nearbyTheaters);
+
+
         }
+
 
     }
 
@@ -569,9 +565,49 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
         }
         mClusterManager.cluster();
-
     }
 
+
+    void setSearchThisArea() {
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
+                cameraLocal.setLatitude(mMap.getCameraPosition().target.latitude);
+                cameraLocal.setLongitude(mMap.getCameraPosition().target.longitude);
+
+
+                Location furthestTheater = new Location(LocationManager.GPS_PROVIDER);
+                for (int i = 0; i < nearbyTheaters.size(); i++) {
+                    furthestTheater.setLatitude(nearbyTheaters.get(i).getLat());
+                    furthestTheater.setLongitude(nearbyTheaters.get(i).getLon());
+                    moved = cameraLocal.distanceTo(furthestTheater);
+                    convertedMeters = (moved / 1609.344);
+
+                    lastTheater = nearbyTheaters.get(i).getDistance();
+
+                }
+
+                Log.d(TAG, "onCameraMove: " + convertedMeters + " " + lastTheater) ;
+
+//                if (convertedMeters > lastTheater) {
+//                    fadeIn(searchThisArea);
+//                    searchThisArea.setVisibility(View.VISIBLE);
+//                    searchThisArea.setOnClickListener(v -> {
+//                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
+//                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+//                        mProgress.setVisibility(View.VISIBLE);
+//                        queryRealmLoadTheaters(searchLat, searchLon);
+//                        searchThisArea.setVisibility(View.GONE);
+//                        fadeOut(searchThisArea);
+//                    });
+//                }
+
+
+            }
+        });
+    }
 
     @Override
     public void onDestroy() {
