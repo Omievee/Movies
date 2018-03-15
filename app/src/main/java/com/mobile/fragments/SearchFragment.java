@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.helpshift.All;
@@ -62,6 +63,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     View progress;
     ArrayList<Movie> noDuplicates;
     String url;
+    Button cancel;
 
     public SearchFragment() {
     }
@@ -72,7 +74,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
-
+        cancel = rootView.findViewById(R.id.CancelSearch);
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
@@ -88,6 +90,14 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         progress.setVisibility(View.VISIBLE);
         loadResults();
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: ");
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
+
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater,this);
         Handler handler = new Handler();
@@ -149,40 +159,4 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         });
     }
 
-//    public void searchEvent(String search){
-//
-//        String l = String.valueOf(UserPreferences.getLatitude());
-//        String ln = String.valueOf(UserPreferences.getLongitude());
-//        String userId = String.valueOf(UserPreferences.getUserId());
-//        String deep_link="";
-//
-//        String versionName = BuildConfig.VERSION_NAME;
-//        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-//        String campaign = GoWatchItSingleton.getInstance().getCampaign();
-//
-//
-//        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies("search","true",
-//                "Movie","-1",search,campaign,"app","android",deep_link,"organic",
-//                l,ln,userId,"IDFA", versionCode, versionName).enqueue(new RestCallback<GoWatchItResponse>() {
-//            @Override
-//            public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
-//                GoWatchItResponse responseBody = response.body();
-////                progress.setVisibility(View.GONE);
-//
-//                Log.d("HEADER SEARCH -- >", "onResponse: "+responseBody.getFollowUrl());
-//            }
-//
-//            @Override
-//            public void failure(RestError restError) {
-////                progress.setVisibility(View.GONE);
-//                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
-
-    @Override
-    public void getSearchString() {
-        if(searchBar!=null && searchBar.getText()!=null)
-            GoWatchItSingleton.getInstance().searchEvent(searchBar.getText(),"search",url);
-    }
 }

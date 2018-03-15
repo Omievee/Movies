@@ -56,7 +56,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
     @Override
     public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
         holder.title.setText(suggestion.getTitle());
-        holder.rating.setText(suggestion.getRating());
+        holder.rating.setText("Rated " + suggestion.getRating());
         int t = suggestion.getRunningTime();
         int hours = t / 60; //since both are ints, you get an int
         int minutes = t % 60;
@@ -152,13 +152,13 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
                     suggestions = new ArrayList<>();
                     for (Movie movieTitle : suggestions_clone)
                         if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
-                            for(Movie movieDuplicate : suggestions){
-                                if(movieDuplicate.getId() == movieTitle.getId()){
+                            for (Movie movieDuplicate : suggestions) {
+                                if (movieDuplicate.getId() == movieTitle.getId()) {
                                     isMovieDuplicated = true;
                                 }
 
                             }
-                            if(isMovieDuplicated == false)
+                            if (isMovieDuplicated == false)
                                 suggestions.add(movieTitle);
                         }
                 }

@@ -14,9 +14,7 @@ import io.realm.RealmObject;
  */
 
 @Parcel
-
-public class Screening extends RealmObject{
-
+public class Screening {
 
     private List<Screening> screening;
 

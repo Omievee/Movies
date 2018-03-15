@@ -151,7 +151,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         f.confirmCCNum.setText(" - " + ccNum.substring(12, 16));
         f.confirmSubmit.setOnClickListener(v -> {
             if (f.confirmTermsAgreementSwitch.isChecked()) {
-                f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+                f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+                    }
+                });
+
             } else {
                 f.makeSnackbar("You must agree to the Terms of Service.");
             }

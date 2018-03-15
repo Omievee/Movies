@@ -160,6 +160,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String sCity = ProspectUser.city;
         String sState = ProspectUser.state;
         String sZip = ProspectUser.zip;
+        String birthday = ProspectUser.dateOfBirth;
+        String sex = ProspectUser.gender;
 
 
         boolean amc3dMarkup = false;
@@ -175,7 +177,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             bZip = ProspectUser.zip;
 
             completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, amc3dMarkup);
+                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, amc3dMarkup, birthday, sex);
 
         }
 
@@ -185,7 +187,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     private void completeRegistration(String creditCardNumber, String month, String year, String cvv, String sStreet,
                                       String sStreet2, String sCity, String sState, String sZip, String bStreet,
                                       String bStreet2, String bCity, String bState, String bZip, String email,
-                                      String firstName, String lastName, String password, boolean amc3dMarkup) {
+                                      String firstName, String lastName, String password, boolean amc3dMarkup, String birthday, String sex) {
 
         if (confirmTermsAgreementSwitch.isChecked()) {
             progress.setVisibility(View.VISIBLE);
@@ -193,10 +195,12 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             confirmSubmit.setEnabled(false);
             final SignUpRequest request = new SignUpRequest(creditCardNumber, month, year, cvv,
                     sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
-                    email, firstName, lastName, password, amc3dMarkup);
+                    email, firstName, lastName, password, amc3dMarkup, birthday, sex);
 
             Log.d(TAG, "NAMES: " + firstName + "  " + lastName);
 
+            Log.d(TAG, "completeRegistration: " + ProspectUser.session);
+            Log.d(TAG, "completeRegistration: " + request);
 
             RestClient.getUnauthenticated().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
                 @Override

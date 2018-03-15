@@ -32,7 +32,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class TheatersActivity extends BaseActivity implements TheatersFragment.OnTheaterSelect {
+public class TheatersActivity extends BaseActivity{
 
     public static final String THEATER = "cinema";
     List<String> urlPath;
@@ -63,15 +63,14 @@ public class TheatersActivity extends BaseActivity implements TheatersFragment.O
         updateNavigationBarState();
     }
 
-
-    @Override
-    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
-        final Theater finalTheater = theater;
-
-        Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
-        intent.putExtra(THEATER, Parcels.wrap(finalTheater));
-        startActivity(intent);
-    }
+//
+//    @Override
+//    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
+//
+//        Intent intent = new Intent(TheatersActivity.this, TheaterActivity.class);
+//        intent.putExtra(THEATER, Parcels.wrap(theater));
+//        startActivity(intent);
+//    }
 
     int getContentViewId() {
         return R.layout.activity_theaters;

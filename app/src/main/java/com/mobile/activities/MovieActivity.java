@@ -323,6 +323,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(theater,screening, showtime);
                 }
+
+            } else {
+                ProgressBar.setVisibility(View.VISIBLE);
+                reserve(theater,screening, showtime);
             }
         });
     }
@@ -398,18 +402,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "RESPONSE: " + jObjError.getString("messege").toString());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
-//                        checkInEvent(theater,screening,showtime,"ticket_purchase_attempt");
-
                     } catch (Exception e) {
                         Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onResponse: " + e.getMessage());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
-
-//                        checkInEvent(theater,screening,showtime,"ticket_purchase_attempt");
                     }
                 }
 
@@ -644,7 +646,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
     }
 
-    private void showActivateCardDialog( Screening screening,  String showtime) {
+    private void showActivateCardDialog(Screening screening, String showtime) {
         Intent activateCard = new Intent(MovieActivity.this, ActivateMoviePassCard.class);
         activateCard.putExtra(SCREENING, Parcels.wrap(screening));
         activateCard.putExtra(SHOWTIME, showtime);

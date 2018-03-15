@@ -107,10 +107,11 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@android:color/transparent"
-            android:text="This screening is not supported by MoviePass"
+            android:text="This premium screening is not supported by MoviePass"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:visibility="gone" />
 
     </RelativeLayout>

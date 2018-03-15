@@ -3,20 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_theater"
-    android:layout_width="300dp"
-    android:layout_height="150dp"
-    android:layout_margin="@dimen/margin_standard"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:layout_marginBottom="@dimen/margin_standard"
     android:elevation="@dimen/basic_elevation"
-    android:padding="@dimen/margin_half"
-    app:cardBackgroundColor="@color/test_black"
-    app:cardCornerRadius="5dp"
-    tools:ignore="MissingPrefix">
+    app:cardBackgroundColor="@color/test_blue">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/rel_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/theater_name"
@@ -24,7 +20,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="@dimen/more_spacing"
-            android:maxLines="2"
+            android:ellipsize="end"
+            android:maxLength="30"
+            android:maxLines="1"
             android:text="@string/fragment_theaters_name"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
@@ -33,8 +31,9 @@
 
         <TextView
             android:id="@+id/theater_address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/theater_name"
             android:maxLines="1"
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
@@ -45,8 +44,9 @@
 
         <TextView
             android:id="@+id/theater_city_things"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/theater_address"
             android:maxLines="1"
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
@@ -57,26 +57,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/icon_ticket"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:src="@drawable/ticketnavwhite"
-                android:tint="@color/white" />
-
-            <ImageView
-                android:id="@+id/icon_seat"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_toRightOf="@id/icon_ticket"
-                android:src="@drawable/icon_seat_copy"
-                android:textAlignment="viewEnd" />
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/theater_address"
+            android:layout_toRightOf="@id/theater_city_things">
 
 
             <TextView
@@ -101,7 +84,35 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/margin_standard">
 
-    </LinearLayout>
+
+            <ImageView
+                android:id="@+id/icon_ticket"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_toEndOf="@id/icon_seat"
+                android:src="@drawable/ticketnavwhite"
+                android:tint="@color/white" />
+
+            <ImageView
+                android:id="@+id/icon_seat"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="@dimen/margin_half"
+                android:src="@drawable/icon_seat_copy"
+                android:textAlignment="viewEnd" />
+
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

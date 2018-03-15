@@ -9,10 +9,11 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+
 
 android {
     compileSdkVersion 27
@@ -22,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 92
-        versionName "3.0.4A"
+        versionCode 100
+        versionName "3.0.5A"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -197,10 +198,11 @@ dependencies {
     //material serach
     compile 'com.github.mancj:MaterialSearchBar:0.7.5'
 
-    //Umano Panel
+    //Umano Sliding panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
-
 }
+
+
 
 
 apply plugin: 'kotlin-android-extensions'

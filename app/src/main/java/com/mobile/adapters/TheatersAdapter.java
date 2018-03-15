@@ -1,8 +1,12 @@
 package com.mobile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +15,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.Constants;
+import com.mobile.activities.TheaterActivity;
+import com.mobile.activities.TheatersActivity;
+import com.mobile.fragments.TheatersFragment;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -26,15 +36,11 @@ import butterknife.ButterKnife;
 
 public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
 
-    private final TheatersClickListener theatersClickListener;
     private ArrayList<Theater> theatersArrayList;
-
+    public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
-    private Context context;
 
-    public TheatersAdapter(ArrayList<Theater> theatersArrayList, TheatersClickListener theatersClickListener) {
-        this.theatersClickListener = theatersClickListener;
+    public TheatersAdapter(ArrayList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
     }
 
@@ -71,6 +77,8 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater, parent, false);
+
+
         return new ViewHolder(view);
     }
 
@@ -79,9 +87,26 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
+//        if (theater.ticketTypeIsSelectSeating() || theater.ticketTypeIsETicket()) {
+//            theatersArrayList.remove(theater);
+//            theatersArrayList.add(0, theater);
+//        }
+
+        if (theater.ticketTypeIsStandard()) {
+            holder.iconTicket.setVisibility(View.INVISIBLE);
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else if (theater.ticketTypeIsETicket()) {
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else {
+            holder.iconSeat.setVisibility(View.VISIBLE);
+            holder.iconTicket.setVisibility(View.VISIBLE);
+        }
+
+
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
 
+        Log.d(Constants.TAG, "onBindViewHolder: " + theatersArrayList.size());
 /*
         Location loc1 = new Location("");
         loc1.setLatitude(lat1);
@@ -103,17 +128,13 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);
 
-        if (theater.ticketTypeIsStandard()) {
-            holder.iconTicket.setVisibility(View.INVISIBLE);
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        } else if (theater.ticketTypeIsETicket()) {
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        }
 
-        Theater theaterSelected  = theater;
         holder.listItemTheater.setTag(position);
-        setSlideAnimation(holder.listItemTheater);
-        holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
+            intent.putExtra(THEATER, Parcels.wrap(Theater.class, theater));
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -123,11 +144,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_ITEM;
+        return position;
     }
 
-    private void setSlideAnimation(View view) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
-        view.startAnimation(animation);
-    }
 }

@@ -26,6 +26,7 @@ import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
+import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.PersonalInfoResponse;
 import com.mobile.responses.RegistrationPlanResponse;
 import com.mobile.responses.ReservationResponse;
@@ -154,7 +155,7 @@ public interface Api {
     Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
 
     /* Cancel Subscription */
-    @POST("/api/v1/subscriptions/cancellation")
+    @POST("/rest/v1/subscriptions/cancellation")
     Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
     /* Open App Go Watch It Event */
@@ -217,4 +218,8 @@ public interface Api {
 
 
 
+
+    /* ALL THEATERS */
+    @GET("/theaters/all.json")
+    Call<LocalStorageTheaters> getAllMoviePassTheaters();
 }
