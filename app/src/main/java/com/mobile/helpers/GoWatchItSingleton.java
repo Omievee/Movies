@@ -275,7 +275,7 @@ public class GoWatchItSingleton {
         });
     }
 
-    public void userOpenedTheaterTab(String url){
+    public void userOpenedTheaterTab(String url, String et){
 
         String userId = String.valueOf(UserPreferences.getUserId());
 
@@ -285,7 +285,7 @@ public class GoWatchItSingleton {
         String lts = currentTimeStamp();
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement",debug,"Unset","-1","map_view_click",campaign,"app","android",url,"organic",
+        RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement",debug,"Unset","-1",et,campaign,"app","android",url,"organic",
                 l,ln,userId,"IDFA", versionCode, versionName,lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {

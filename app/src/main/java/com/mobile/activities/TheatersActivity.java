@@ -44,10 +44,10 @@ public class TheatersActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_theaters);
 
-        url = "https://moviepass.com/go/theaters/";
+        url = "https://moviepass.com/go/map";
         if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + GoWatchItSingleton.getInstance().getCampaign();
-        GoWatchItSingleton.getInstance().userOpenedTheaterTab(url);
+        GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"map_view_click");
         TheatersFragment theatersFragment = new TheatersFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, theatersFragment).commit();

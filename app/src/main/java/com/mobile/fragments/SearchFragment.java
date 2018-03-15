@@ -159,4 +159,9 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         });
     }
 
+    @Override
+    public void getSearchString() {
+        String url = "https://moviepass.com/go/movies";
+        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(),"search",url);
+    }
 }

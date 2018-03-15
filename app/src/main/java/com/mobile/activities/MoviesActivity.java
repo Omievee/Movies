@@ -24,7 +24,6 @@ import com.amazonaws.mobile.client.AWSMobileClient;
 import com.github.clans.fab.FloatingActionMenu;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.adapters.MovieSearchAdapter;
 import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
