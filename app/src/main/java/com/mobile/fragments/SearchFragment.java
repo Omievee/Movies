@@ -15,15 +15,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.helpshift.All;
+import com.helpshift.support.contracts.SearchResultListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.mobile.Constants;
+import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
+import com.mobile.network.RestError;
+import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -48,13 +55,14 @@ import static com.facebook.GraphRequest.TAG;
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements AfterSearchListener {
     MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
     ArrayList<Movie> ALLMOVIES;
     View progress;
     ArrayList<Movie> noDuplicates;
+    String url;
     Button cancel;
 
     public SearchFragment() {
@@ -69,6 +77,9 @@ public class SearchFragment extends Fragment {
         cancel = rootView.findViewById(R.id.CancelSearch);
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
+        url = "http://moviepass.com/go/movies";
+        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
 
         return rootView;
     }
@@ -88,10 +99,9 @@ public class SearchFragment extends Fragment {
         });
 
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-        customAdapter = new SearchAdapter(myInflater);
+        customAdapter = new SearchAdapter(myInflater,this);
         Handler handler = new Handler();
         customAdapter.setSuggestions(ALLMOVIES);
-
         handler.postDelayed(() -> customAdapter.setSuggestions(ALLMOVIES), 500);
         searchBar.setCustomSuggestionAdapter(customAdapter);
         searchBar.addTextChangeListener(new TextWatcher() {
@@ -149,5 +159,9 @@ public class SearchFragment extends Fragment {
         });
     }
 
-
+    @Override
+    public void getSearchString() {
+        String url = "https://moviepass.com/go/movies";
+        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(),"search",url);
+    }
 }

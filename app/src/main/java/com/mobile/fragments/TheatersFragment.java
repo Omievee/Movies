@@ -1,31 +1,48 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,43 +53,72 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.lapism.searchview.SearchView;
 import com.mobile.Constants;
+import com.mobile.UserLocationManagerFused;
+import com.mobile.UserPreferences;
+import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
+import com.mobile.model.TheatersResponse;
+import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
+import com.mobile.network.RestError;
+import com.mobile.responses.GoWatchItResponse;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.parceler.Parcels;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -91,6 +137,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
+
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -100,6 +147,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     double lat, lon;
     GoogleMap mMap;
     MapView mMapView;
+    String url;
     Location userCurrentLocation;
     Button searchThisArea;
     RelativeLayout listViewMaps, mRelativeLayout, goneList;
@@ -164,10 +212,19 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             }
         });
 
+        url = "http://moviepass.com/go/theaters";
+        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
+
+
+        //Hide Keyboard when not in use
+        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        ContextSingleton.getInstance(getContext()).getGlobalContext();
+
+
         theatersRealm = Realm.getDefaultInstance();
         return rootView;
     }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -188,6 +245,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
+        // An unresolvable error has occurred and a connection to Google APIs
+        // could not be established. Display an error message, or handle
+        // the failure silently
     }
 
     @Override
@@ -338,6 +398,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                GoWatchItSingleton.getInstance().searchEvent(place.getAddress().toString(),"theatrical_search",url);
+//                myloc.setVisibility(View.VISIBLE);
+//                myloc.setOnClickListener(view -> {
+//                    mRequestingLocationUpdates = true;
+//                    getMyLocation();
+//                });
 
                 LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
                 Log.d(TAG, "onActivityResult: " + place.getLatLng().latitude + " " + place.getLatLng().longitude);
@@ -589,6 +655,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
         fadeIn.setDuration(1000);
+
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
