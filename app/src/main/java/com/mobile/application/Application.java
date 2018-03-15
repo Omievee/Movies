@@ -60,7 +60,6 @@ public class Application extends MultiDexApplication {
 
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
-        Log.d(TAG, "REALM PATH!! ---->: " + config.getPath());
         Realm.setDefaultConfiguration(config);
 
         UserPreferences.load(this);

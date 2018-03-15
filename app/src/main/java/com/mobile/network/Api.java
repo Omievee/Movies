@@ -26,6 +26,7 @@ import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
+import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.PersonalInfoResponse;
 import com.mobile.responses.RegistrationPlanResponse;
@@ -219,9 +220,12 @@ public interface Api {
 
 
 
+    @GET("/prod/movies/current.json")
+    Call<LocalStorageMovies> getAllCurrentMovies();
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
+
 
 
 }

@@ -34,12 +34,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
@@ -50,13 +48,13 @@ import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.adapters.SearchAdapter;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -84,8 +82,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     android.location.LocationManager LocationManager;
     String Provider;
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
-    Api api;
 
+
+    Realm moviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
@@ -94,7 +93,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     SearchAdapter customAdapter;
     MoviesResponse moviesResponse;
     SearchFragment fragment = new SearchFragment();
-    ImageView movieLogo,searchicon;
+    ImageView movieLogo, searchicon;
 
     ArrayList<Movie> TopBoxOffice;
     ArrayList<Movie> comingSoon;
@@ -104,7 +103,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public ArrayList<Movie> ALLMOVIES;
     ArrayList<String> lastSuggestions;
     Activity myActivity;
-    Movie moviesRealm;
     @BindView(R.id.new_releases)
     RecyclerView newReleasesRecycler;
     @BindView(R.id.top_box_office)
@@ -232,6 +230,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
 
+        //      RealmConfiguration movieConfig = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name("Movies.Realm").build();
+        //        Realm.getInstance(movieConfig);
+
+        getMoviesForStorage();
+
         return rootView;
     }
 
@@ -315,6 +318,40 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         startActivity(movieIntent);
     }
 
+    public void getMoviesForStorage() {
+        RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
+            @Override
+            public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
+                LocalStorageMovies localStorageMovies = response.body();
+                if (response.isSuccessful() && localStorageMovies != null) {
+                    for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
+
+
+                    }
+                    for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
+
+
+                    }
+                    for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
+
+
+                    }
+                    for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
+
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
+                Toast.makeText(myActivity, "", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     @SuppressLint("DefaultLocale")
     public void loadMovies() {
         double lat = UserPreferences.getLatitude();
@@ -326,12 +363,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 if (response.body() != null && response.isSuccessful()) {
                     progress.setVisibility(View.GONE);
                     moviesResponse = response.body();
-
-                    Log.d(Constants.TAG, "featured: " + moviesResponse.getFeatured().toString());
-                    Log.d(Constants.TAG, "now playing:  " + moviesResponse.getNowPlaying().toString());
-                    Log.d(Constants.TAG, "coming soon: " + moviesResponse.getComingSoon().toString());
-                    Log.d(Constants.TAG, "new relase: " + moviesResponse.getNewReleases().toString());
-                    Log.d(Constants.TAG, "top box: " + moviesResponse.getTopBoxOffice().toString());
 
                     newReleases.clear();
                     TopBoxOffice.clear();
