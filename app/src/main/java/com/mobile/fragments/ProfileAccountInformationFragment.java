@@ -83,6 +83,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     EditText userAddress, userAddress2, userCity, userState, userZip;
     ImageButton userScanCard;
     String MONTH, YEAR;
+    CustomTextChange customTextChange;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
@@ -97,6 +98,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile_account_details, container, false);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        customTextChange = new CustomTextChange();
 
         progress = rootView.findViewById(R.id.progress);
         shippingDetails = rootView.findViewById(R.id.ShippingDetails);
@@ -111,17 +113,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         userState = rootView.findViewById(R.id.State);
         userZip = rootView.findViewById(R.id.zip);
         userAddress2 = rootView.findViewById(R.id.Address2);
-
-        userAddress.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    userAddress.setFocusable(true);
-                    userAddress.requestFocus();
-                    userAddress.setSelection(userAddress.getText().length());
-                }
-            }
-        });
         disableShippingAddressEditTexts();
 
         userBillingDate = rootView.findViewById(R.id.BillingDate);
@@ -223,8 +214,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         userEditShipping.setOnClickListener(v -> {
             enableShippingAddressEditTexts();
-            updateShipping = true;
-            saveChanges();
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .build();
@@ -360,6 +349,13 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         }
 
+    }
+
+    public void disableSaveAndCancelButtons(){
+        userSave.setClickable(false);
+        userSave.setTextColor(getResources().getColor(R.color.gray_icon));
+        userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
+        userCancel.setClickable(false);
     }
 
     private void loadUserInfo() {
@@ -611,9 +607,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 collapse(shippingDetails);
                 collapse(bilingDetails);
                 loadUserInfo();
-                userSave.setClickable(false);
-                userSave.setTextColor(getResources().getColor(R.color.gray_icon));
-                userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
+                disableSaveAndCancelButtons();
                 userAddress2.setEnabled(false);
                 disableShippingAddressEditTexts();
             }
@@ -626,6 +620,19 @@ public class ProfileAccountInformationFragment extends Fragment {
         userCity.setEnabled(false);
         userState.setEnabled(false);
         userZip.setEnabled(false);
+
+        userAddress.removeTextChangedListener(customTextChange);
+        userAddress2.removeTextChangedListener(customTextChange);
+        userState.removeTextChangedListener(customTextChange);
+        userCity.removeTextChangedListener(customTextChange);
+        userZip.removeTextChangedListener(customTextChange);
+
+//        userAddress.addTextChangedListener(null);
+//        userAddress2.addTextChangedListener(null);
+//        userState.addTextChangedListener(null);
+//        userCity.addTextChangedListener(null);
+//        userZip.addTextChangedListener(null);
+
     }
 
     public void enableShippingAddressEditTexts(){
@@ -639,6 +646,12 @@ public class ProfileAccountInformationFragment extends Fragment {
         userZip.clearFocus();
         userState.setEnabled(true);
         userState.clearFocus();
+
+        userAddress.addTextChangedListener(customTextChange);
+        userAddress2.addTextChangedListener(customTextChange);
+        userState.addTextChangedListener(customTextChange);
+        userCity.addTextChangedListener(customTextChange);
+        userZip.addTextChangedListener(customTextChange);
     }
 
     public void updateShippingAddress() {
@@ -679,6 +692,14 @@ public class ProfileAccountInformationFragment extends Fragment {
                 });
             }
             else {
+                if(userAddress.getText().toString().trim().isEmpty())
+                    userAddress.setError("Error");
+                if(userState.getText().toString().trim().isEmpty())
+                    userState.setError("Error");
+                if(userZip.getText().toString().trim().isEmpty())
+                    userZip.setError("Error");
+                if(userCity.getText().toString().trim().isEmpty())
+                    userCity.setError("Error");
                 Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
                 progress.setVisibility(View.GONE);
             }
@@ -845,6 +866,25 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         a.setDuration((long) (initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         v.startAnimation(a);
+    }
+
+    public class CustomTextChange implements TextWatcher{
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            updateShipping=true;
+            saveChanges();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
 }
 
