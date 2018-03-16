@@ -40,6 +40,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -158,6 +159,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
                 if (response.isSuccessful() && response != null) {
                     progress.setVisibility(View.GONE);
                     ALLMOVIES.clear();
+
                     ALLMOVIES.addAll(info.getFeatured());
                     ALLMOVIES.addAll(info.getNewReleases());
                     ALLMOVIES.addAll(info.getNowPlaying());
@@ -168,6 +170,12 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
                     }
                     ALLMOVIES.clear();
                     for (Movie movie : movieHashMap.values()) {
+                        Collections.sort(ALLMOVIES, new Comparator<Movie>() {
+                            @Override
+                            public int compare(Movie o1, Movie o2) {
+                                return o1.getTitle().trim().compareTo(o2.getTitle().trim());
+                            }
+                        });
                         ALLMOVIES.add(movie);
                     }
                 }

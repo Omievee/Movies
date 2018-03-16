@@ -58,6 +58,7 @@ android {
 //    /** THIS FIXES LOLLIPOP DEVICES DO NOT DELETE */
     dexOptions {
         preDexLibraries false
+        javaMaxHeapSize "4G"
     }
 
 
