@@ -163,7 +163,7 @@ public interface Api {
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")
-    Call<GoWatchItResponse> openAppEvent( @Query("ct") String ct, @Query("ci") String ci,
+    Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci,
                                          @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                          @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
@@ -173,7 +173,7 @@ public interface Api {
     Call<GoWatchItResponse> clickOnShowtime(@Query("e") String engagement, @Query("et") String et, @Query("tht") String tht,
                                             @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                             @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                             @Query("ct") String ct, @Query("ci") String ci,
+                                            @Query("ct") String ct, @Query("ci") String ci,
                                             @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                             @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
@@ -191,7 +191,7 @@ public interface Api {
 
     @GET("/prod/ingest")
     Call<GoWatchItResponse> searchTheatersMovies(@Query("e") String engagement,
-                                                 @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
+                                                 @Query("ct") String ct, @Query("ci") String ci,
                                                  @Query("tr") String tr,
                                                  @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                                  @Query("u") String u, @Query("o") String o, @Query("l") String l,
@@ -210,7 +210,7 @@ public interface Api {
 
     @GET("/prod/ingest")
     Call<GoWatchItResponse> openMapEvent(@Query("e") String engagement,
-                                        @Query("ct") String ct, @Query("ci") String ci,
+                                         @Query("ct") String ct, @Query("ci") String ci,
                                          @Query("et") String et,
                                          @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,

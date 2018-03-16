@@ -238,7 +238,7 @@ public class GoWatchItSingleton {
         String lts = currentTimeStamp();
 
 
-        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement, debug,
+        RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement,
                 "Movie", "-1", search, campaign, "app", "android", url, "organic",
                 l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
@@ -247,8 +247,6 @@ public class GoWatchItSingleton {
                     GoWatchItResponse responseBody = response.body();
                     Log.d("GO WATCH IT SEARCH", "onResponse: " + responseBody.getMessage());
                 }
-
-
             }
 
             @Override
