@@ -26,6 +26,7 @@ import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
+import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -44,6 +45,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,24 +68,42 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     String url;
     Button cancel;
 
+
+    Realm searchRealm;
+
     public SearchFragment() {
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fr_searchview, container, false);
-        searchBar = rootView.findViewById(R.id.searchBar);
-        progress = rootView.findViewById(R.id.progress);
-        cancel = rootView.findViewById(R.id.CancelSearch);
-        ALLMOVIES = new ArrayList<>();
-        noDuplicates = new ArrayList<>();
-        url = "http://moviepass.com/go/movies";
-        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
-            url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
+    public static SearchFragment newInstance(Movie movie) {
+        SearchFragment fragment = new SearchFragment();
+        Bundle args = new Bundle();
+        args.putParcelable("NR", movie);
+        args.putParcelable("FE", movie);
+        args.putParcelable("NP", movie);
+        args.putParcelable("TB", movie);
 
-        return rootView;
+        fragment.setArguments(args);
+        return fragment;
     }
+
+    @Nullable
+
+
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+//        rootView = inflater.inflate(R.layout.fr_searchview, container, false);
+//        searchBar = rootView.findViewById(R.id.searchBar);
+//        progress = rootView.findViewById(R.id.progress);
+//        cancel = rootView.findViewById(R.id.CancelSearch);
+//        ALLMOVIES = new ArrayList<>();
+//        noDuplicates = new ArrayList<>();
+//        url = "http://moviepass.com/go/movies";
+//        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+//            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
+//
+//        return rootView;
+//    }
 
     @Override
     public void onResume() {
@@ -90,23 +111,25 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         searchBar.enableSearch();
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progress.setVisibility(View.VISIBLE);
+
+
         loadResults();
 
-
-
-
+        String test = getArguments().getParcelable("NR");
+        Log.d(TAG, "onViewCreated: " + test);
 
         cancel.setOnClickListener(v -> {
             getActivity().getFragmentManager().popBackStack();
         });
 
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-        customAdapter = new SearchAdapter(myInflater,this);
+        customAdapter = new SearchAdapter(myInflater, this);
         Handler handler = new Handler();
         customAdapter.setSuggestions(ALLMOVIES);
         handler.postDelayed(() -> customAdapter.setSuggestions(ALLMOVIES), 500);
@@ -132,7 +155,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
     }
 
-    //
     public void loadResults() {
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
 
@@ -169,6 +191,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     @Override
     public void getSearchString() {
         String url = "https://moviepass.com/go/movies";
-        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(),"search",url);
+        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
     }
 }

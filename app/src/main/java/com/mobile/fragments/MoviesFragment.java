@@ -2,8 +2,10 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,9 +16,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,7 +82,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     String Provider;
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
 
-
+    SwipeRefreshLayout swiper;
     Realm moviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
@@ -85,14 +90,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     private NowPlayingMoviesAdapter nowPlayingAdapter;
     private FeaturedAdapter featuredAdapter;
     MoviesResponse moviesResponse;
-    SearchFragment fragment = new SearchFragment();
+    SearchFragment searchFrag = new SearchFragment();
     ImageView movieLogo, searchicon;
 
-    ArrayList<Movie> TopBoxOffice;
-    ArrayList<Movie> comingSoon;
-    ArrayList<Movie> newReleases;
-    ArrayList<Movie> featured;
-    ArrayList<Movie> nowPlaying;
+    RealmList<Movie> TopBoxOffice;
+    RealmList<Movie> comingSoon;
+    RealmList<Movie> NEWRelease;
+    RealmList<Movie> featured;
+    RealmList<Movie> nowPlaying;
 
 
     public ArrayList<Movie> ALLMOVIES;
@@ -110,6 +115,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @BindView(R.id.FeaturedRE)
     RecyclerView featuredRecycler;
 
+    public RealmConfiguration config;
 
     View progress;
 
@@ -123,7 +129,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, rootView);
-
+        swiper = rootView.findViewById(R.id.SWIPE2REFRESH);
         progress = rootView.findViewById(R.id.progress);
         newReleaseTXT = rootView.findViewById(R.id.new_releases_text);
         newReleaseTXT.setVisibility(View.GONE);
@@ -137,13 +143,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         searchicon.setVisibility(View.GONE);
         movieLogo = rootView.findViewById(R.id.MoviePass_HEADER);
         Api api;
-
-        newReleases = new ArrayList<>();
-        TopBoxOffice = new ArrayList<>();
-        comingSoon = new ArrayList<>();
-        featured = new ArrayList<>();
-        nowPlaying = new ArrayList<>();
-        ALLMOVIES = new ArrayList<>();
+        NEWRelease = new RealmList<>();
+        TopBoxOffice = new RealmList<>();
+        comingSoon = new RealmList<>();
+        featured = new RealmList<>();
+        nowPlaying = new RealmList<>();
 
         int resId = R.anim.layout_animation;
         int res2 = R.anim.layout_anim_bottom;
@@ -159,7 +163,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newReleasesRecycler.setItemAnimator(null);
         fadeIn(newReleasesRecycler);
         newReleasesRecycler.setLayoutAnimation(animation);
-        newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, newReleases, this);
+        newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, NEWRelease, this);
 
         /** Top Box Office RecyclerView */
         LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -199,15 +203,19 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         featuredAdapter = new FeaturedAdapter(myActivity, featured, this);
         featuredRecycler.setLayoutAnimation(animation2);
 
-        progress.setVisibility(View.VISIBLE);
-//        loadMovies();
 
         /** SEARCH */
         searchicon.setOnClickListener(view -> {
-            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.MAIN_CONTAINER, fragment);
+            transaction.replace(R.id.MAIN_CONTAINER, searchFrag);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("NR", Parcels.wrap(NEWRelease));
+            bundle.putParcelable("NP", Parcels.wrap(nowPlaying));
+            bundle.putParcelable("FE", Parcels.wrap(featured));
+            bundle.putParcelable("TB", Parcels.wrap(TopBoxOffice));
+            searchFrag.setArguments(bundle);
             transaction.addToBackStack(null);
             fragmentManager.popBackStack();
             transaction.commit();
@@ -222,7 +230,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             checkLocationPermission();
         }
 
-
+        progress.setVisibility(View.VISIBLE);
         return rootView;
     }
 
@@ -230,7 +238,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RealmConfiguration config = new RealmConfiguration.Builder()
+
+        config = new RealmConfiguration.Builder()
                 .name("Movies.Realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
@@ -238,18 +247,41 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         moviesRealm = Realm.getInstance(config);
 
+        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                moviesRealm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realm.deleteAll();
+                    }
+                });
+                getMoviesForStorage();
+            }
+        });
 
-        RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
-                .contains("type", "Coming Soon")
-                .findAll();
 
-        Log.d(Constants.TAG, "onViewCreated: " + allMovies.size());
-//        for (int i = 0; i < allMovies.size() ; i++) {
-//            if(allMovies.get(i).getType().matches(""))
-//
-//        }
-        //  getMoviesForStorage();
-//        setAdaptersWithRealmOBjects();
+        Log.d(Constants.TAG, "onViewCreated: " + moviesRealm.isEmpty());
+        if (moviesRealm.isEmpty()) {
+            getMoviesForStorage();
+        } else {
+            setAdaptersWithRealmOBjects();
+        }
+        String alarm = Context.ALARM_SERVICE;
+        AlarmManager am = (AlarmManager) myActivity.getSystemService(alarm);
+
+        Intent i = new Intent("REFRESH_THIS");
+        PendingIntent pi = PendingIntent.getBroadcast(myActivity, 0, i, 0);
+
+        int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+        long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+        long triggerTime = SystemClock.elapsedRealtime() + interval;
+
+        if (am != null) {
+            am.setRepeating(type, triggerTime, interval, pi);
+        }
+
+
     }
 
     @Override
@@ -309,107 +341,106 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 LocalStorageMovies localStorageMovies = response.body();
                 if (response.isSuccessful() && localStorageMovies != null) {
 
-                    moviesRealm.executeTransactionAsync(realm -> {
-                        for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
-                            Movie newReleaseMovies = new Movie();
-                            newReleaseMovies.setType("New Releases");
-                            newReleaseMovies.setId(localStorageMovies.getNewReleases().get(i).getId());
-                            newReleaseMovies.setRunningTime(localStorageMovies.getNewReleases().get(i).getRunningTime());
-                            newReleaseMovies.setSynopsis(localStorageMovies.getNewReleases().get(i).getSynopsis());
-                            newReleaseMovies.setImageUrl(localStorageMovies.getNewReleases().get(i).getImageUrl());
-                            newReleaseMovies.setLandscapeImageUrl(localStorageMovies.getNewReleases().get(i).getLandscapeImageUrl());
-                            newReleaseMovies.setTheaterName(localStorageMovies.getNewReleases().get(i).getTheaterName());
-                            newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
-                            newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
-                            newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
+                    moviesRealm.executeTransactionAsync(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
+                                Movie newReleaseMovies = realm.createObject(Movie.class);
+                                newReleaseMovies.setType("New Releases");
+                                newReleaseMovies.setId(localStorageMovies.getNewReleases().get(i).getId());
+                                newReleaseMovies.setRunningTime(localStorageMovies.getNewReleases().get(i).getRunningTime());
+                                newReleaseMovies.setSynopsis(localStorageMovies.getNewReleases().get(i).getSynopsis());
+                                newReleaseMovies.setImageUrl(localStorageMovies.getNewReleases().get(i).getImageUrl());
+                                newReleaseMovies.setLandscapeImageUrl(localStorageMovies.getNewReleases().get(i).getLandscapeImageUrl());
+                                newReleaseMovies.setTheaterName(localStorageMovies.getNewReleases().get(i).getTheaterName());
+                                newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
+                                newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
+                                newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
 
-                            realm.copyToRealmOrUpdate(newReleaseMovies);
-                            newReleases.add(newReleaseMovies);
+
+                            }
+                            for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
+                                Movie nowPlayingMovies = realm.createObject(Movie.class);
+                                nowPlayingMovies.setType("Now Playing");
+                                nowPlayingMovies.setId(localStorageMovies.getNowPlaying().get(i).getId());
+                                nowPlayingMovies.setRunningTime(localStorageMovies.getNowPlaying().get(i).getRunningTime());
+                                nowPlayingMovies.setSynopsis(localStorageMovies.getNowPlaying().get(i).getSynopsis());
+                                nowPlayingMovies.setImageUrl(localStorageMovies.getNowPlaying().get(i).getImageUrl());
+                                nowPlayingMovies.setLandscapeImageUrl(localStorageMovies.getNowPlaying().get(i).getLandscapeImageUrl());
+                                nowPlayingMovies.setTheaterName(localStorageMovies.getNowPlaying().get(i).getTheaterName());
+                                nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
+                                nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
+                                nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
+
+
+                            }
+                            for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
+                                Movie featuredMovie = realm.createObject(Movie.class);
+                                featuredMovie.setType("Featured");
+                                featuredMovie.setId(localStorageMovies.getFeatured().get(i).getId());
+                                featuredMovie.setRunningTime(localStorageMovies.getFeatured().get(i).getRunningTime());
+                                featuredMovie.setSynopsis(localStorageMovies.getFeatured().get(i).getSynopsis());
+                                featuredMovie.setImageUrl(localStorageMovies.getFeatured().get(i).getImageUrl());
+                                featuredMovie.setLandscapeImageUrl(localStorageMovies.getFeatured().get(i).getLandscapeImageUrl());
+                                featuredMovie.setTheaterName(localStorageMovies.getFeatured().get(i).getTheaterName());
+                                featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
+                                featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
+                                featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+
+
+                            }
+
+
+                            for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
+                                Movie comingSoonMovies = realm.createObject(Movie.class);
+                                comingSoonMovies.setType("Coming Soon");
+                                comingSoonMovies.setId(localStorageMovies.getComingSoon().get(i).getId());
+                                comingSoonMovies.setRunningTime(localStorageMovies.getComingSoon().get(i).getRunningTime());
+                                comingSoonMovies.setSynopsis(localStorageMovies.getComingSoon().get(i).getSynopsis());
+                                comingSoonMovies.setImageUrl(localStorageMovies.getComingSoon().get(i).getImageUrl());
+                                comingSoonMovies.setLandscapeImageUrl(localStorageMovies.getComingSoon().get(i).getLandscapeImageUrl());
+                                comingSoonMovies.setTheaterName(localStorageMovies.getComingSoon().get(i).getTheaterName());
+                                comingSoonMovies.setTitle(localStorageMovies.getComingSoon().get(i).getTitle());
+                                comingSoonMovies.setTribuneId(localStorageMovies.getComingSoon().get(i).getTribuneId());
+                                comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
+                                comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
+                                comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
+
+
+                            }
+                            for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
+                                Movie topBoxOfficeMovies = realm.createObject(Movie.class);
+                                topBoxOfficeMovies.setType("Top Box Office");
+                                topBoxOfficeMovies.setId(localStorageMovies.getTopBoxOffice().get(i).getId());
+                                topBoxOfficeMovies.setRunningTime(localStorageMovies.getTopBoxOffice().get(i).getRunningTime());
+                                topBoxOfficeMovies.setSynopsis(localStorageMovies.getTopBoxOffice().get(i).getSynopsis());
+                                topBoxOfficeMovies.setImageUrl(localStorageMovies.getTopBoxOffice().get(i).getImageUrl());
+                                topBoxOfficeMovies.setLandscapeImageUrl(localStorageMovies.getTopBoxOffice().get(i).getLandscapeImageUrl());
+                                topBoxOfficeMovies.setTheaterName(localStorageMovies.getTopBoxOffice().get(i).getTheaterName());
+                                topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
+                                topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
+                                topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
+
+
+                            }
                         }
-                        for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
-                            Movie nowPlayingMovies = new Movie();
-                            nowPlayingMovies.setType("Now Playing");
-                            nowPlayingMovies.setId(localStorageMovies.getNowPlaying().get(i).getId());
-                            nowPlayingMovies.setRunningTime(localStorageMovies.getNowPlaying().get(i).getRunningTime());
-                            nowPlayingMovies.setSynopsis(localStorageMovies.getNowPlaying().get(i).getSynopsis());
-                            nowPlayingMovies.setImageUrl(localStorageMovies.getNowPlaying().get(i).getImageUrl());
-                            nowPlayingMovies.setLandscapeImageUrl(localStorageMovies.getNowPlaying().get(i).getLandscapeImageUrl());
-                            nowPlayingMovies.setTheaterName(localStorageMovies.getNowPlaying().get(i).getTheaterName());
-                            nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
-                            nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
-                            nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
-
-
-                            realm.copyToRealmOrUpdate(nowPlayingMovies);
+                    }, new Realm.Transaction.OnSuccess() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(Constants.TAG, "onSuccess: ");
+                            setAdaptersWithRealmOBjects();
                         }
-                        for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
-                            Movie featuredMovie = new Movie();
-                            featuredMovie.setType("Featured");
-                            featuredMovie.setId(localStorageMovies.getFeatured().get(i).getId());
-                            featuredMovie.setRunningTime(localStorageMovies.getFeatured().get(i).getRunningTime());
-                            featuredMovie.setSynopsis(localStorageMovies.getFeatured().get(i).getSynopsis());
-                            featuredMovie.setImageUrl(localStorageMovies.getFeatured().get(i).getImageUrl());
-                            featuredMovie.setLandscapeImageUrl(localStorageMovies.getFeatured().get(i).getLandscapeImageUrl());
-                            featuredMovie.setTheaterName(localStorageMovies.getFeatured().get(i).getTheaterName());
-                            featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
-                            featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
-                            featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
-
-
-                            realm.copyToRealmOrUpdate(featuredMovie);
-                        }
-
-
-                        for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
-                            Movie comingSoonMovies = new Movie();
-                            comingSoonMovies.setType("Coming Soon");
-                            comingSoonMovies.setId(localStorageMovies.getComingSoon().get(i).getId());
-                            comingSoonMovies.setRunningTime(localStorageMovies.getComingSoon().get(i).getRunningTime());
-                            comingSoonMovies.setSynopsis(localStorageMovies.getComingSoon().get(i).getSynopsis());
-                            comingSoonMovies.setImageUrl(localStorageMovies.getComingSoon().get(i).getImageUrl());
-                            comingSoonMovies.setLandscapeImageUrl(localStorageMovies.getComingSoon().get(i).getLandscapeImageUrl());
-                            comingSoonMovies.setTheaterName(localStorageMovies.getComingSoon().get(i).getTheaterName());
-                            comingSoonMovies.setTitle(localStorageMovies.getComingSoon().get(i).getTitle());
-                            comingSoonMovies.setTribuneId(localStorageMovies.getComingSoon().get(i).getTribuneId());
-                            comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
-                            comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
-
-
-                            realm.copyToRealmOrUpdate(comingSoonMovies);
-                        }
-
-                        for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
-                            Movie topBoxOfficeMovies = new Movie();
-                            topBoxOfficeMovies.setType("Top Box Office");
-                            topBoxOfficeMovies.setId(localStorageMovies.getTopBoxOffice().get(i).getId());
-                            topBoxOfficeMovies.setRunningTime(localStorageMovies.getTopBoxOffice().get(i).getRunningTime());
-                            topBoxOfficeMovies.setSynopsis(localStorageMovies.getTopBoxOffice().get(i).getSynopsis());
-                            topBoxOfficeMovies.setImageUrl(localStorageMovies.getTopBoxOffice().get(i).getImageUrl());
-                            topBoxOfficeMovies.setLandscapeImageUrl(localStorageMovies.getTopBoxOffice().get(i).getLandscapeImageUrl());
-                            topBoxOfficeMovies.setTheaterName(localStorageMovies.getTopBoxOffice().get(i).getTheaterName());
-                            topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
-                            topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
-                            topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-
-                            realm.copyToRealmOrUpdate(topBoxOfficeMovies);
-                        }
-                    }, () -> {
-                        Log.d(Constants.TAG, "onSuccess: ");
-
-                        RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
-                                .findAll();
-
-                        Log.d(Constants.TAG, "onResponse: " + allMovies.size());
                     }, new Realm.Transaction.OnError() {
                         @Override
                         public void onError(Throwable error) {
-                            Log.d(Constants.TAG, "onError: " + error.getMessage());
+
                         }
                     });
+
+                    swiper.setRefreshing(false);
                 }
 
             }
-
 
             @Override
             public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
@@ -420,6 +451,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
     void setAdaptersWithRealmOBjects() {
+
+        TopBoxOffice.clear();
+        comingSoon.clear();
+        NEWRelease.clear();
+        nowPlaying.clear();
+        featured.clear();
+
+
         topBoxTXT.setVisibility(View.VISIBLE);
         fadeIn(topBoxTXT);
         comingSoonTXT.setVisibility(View.VISIBLE);
@@ -430,204 +469,72 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         fadeIn(nowPlayingTXT);
 
 
-        Log.d(Constants.TAG, "setAdaptersWithRealmOBjects:  " + newReleases.size());
-//        if (newRealeasesAdapter != null) {
-//            newReleasesRecycler.getRecycledViewPool().clear();
-//            newRealeasesAdapter.notifyDataSetChanged();
-//            newReleasesRecycler.setAdapter(newRealeasesAdapter);
-//        }
-//
-//        if (topBoxOfficeAdapter != null) {
-//            topBoxOfficeRecycler.getRecycledViewPool().clear();
-//            topBoxOfficeAdapter.notifyDataSetChanged();
-//        }
-//
-//        if (comingSoonAdapter != null) {
-//            comingSoonRecycler.getRecycledViewPool().clear();
-//            comingSoonAdapter.notifyDataSetChanged();
-//        }
-//
-//        if (nowPlayingAdapter != null) {
-//            nowPlayingRecycler.getRecycledViewPool().clear();
-//            nowPlayingAdapter.notifyDataSetChanged();
-//        }
-//
-//        if (featuredAdapter != null) {
-//            featuredRecycler.getRecycledViewPool().clear();
-//            featuredRecycler.setAdapter(featuredAdapter);
-//        }
-//
-//        searchicon.setVisibility(View.VISIBLE);
-//        fadeIn(searchicon);
+        RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
+                .equalTo("type", "Top Box Office")
+                .or()
+                .equalTo("type", "New Releases")
+                .or()
+                .equalTo("type", "Coming Soon")
+                .or()
+                .equalTo("type", "Now Playing")
+                .or()
+                .equalTo("type", "Featured")
+                .findAll();
 
+        Log.d(Constants.TAG, "setAdaptersWithRealmOBjects: " + allMovies.size());
+        for (int i = 0; i < allMovies.size(); i++) {
 
+            if (allMovies.get(i).getType().matches("New Releases")) {
+                NEWRelease.add(allMovies.get(i));
+            } else if (allMovies.get(i).getType().matches("Coming Soon")) {
+                comingSoon.add(allMovies.get(i));
+            } else if (allMovies.get(i).getType().matches("Now Playing")) {
+                nowPlaying.add(allMovies.get(i));
+            } else if (allMovies.get(i).getType().matches("Featured")) {
+                featured.add(allMovies.get(i));
+            } else if (allMovies.get(i).getType().matches("Top Box Office")) {
+                TopBoxOffice.add(allMovies.get(i));
+            }
+
+        }
+
+        if (newRealeasesAdapter != null) {
+            newReleasesRecycler.getRecycledViewPool().clear();
+            newReleasesRecycler.setAdapter(newRealeasesAdapter);
+            newRealeasesAdapter.notifyDataSetChanged();
+
+        }
+
+        if (topBoxOfficeAdapter != null) {
+            topBoxOfficeRecycler.getRecycledViewPool().clear();
+            topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
+            topBoxOfficeAdapter.notifyDataSetChanged();
+        }
+
+        if (comingSoonAdapter != null) {
+            comingSoonRecycler.getRecycledViewPool().clear();
+            comingSoonRecycler.setAdapter(comingSoonAdapter);
+            comingSoonAdapter.notifyDataSetChanged();
+        }
+
+        if (nowPlayingAdapter != null) {
+            nowPlayingRecycler.getRecycledViewPool().clear();
+            nowPlayingRecycler.setAdapter(nowPlayingAdapter);
+            nowPlayingAdapter.notifyDataSetChanged();
+        }
+
+        if (featuredAdapter != null) {
+            featuredRecycler.getRecycledViewPool().clear();
+            featuredRecycler.setAdapter(featuredAdapter);
+            featuredAdapter.notifyDataSetChanged();
+        }
+
+        searchicon.setVisibility(View.VISIBLE);
+        fadeIn(searchicon);
+
+        progress.setVisibility(View.GONE);
     }
 
-
-//    @SuppressLint("DefaultLocale")
-//    public void loadMovies() {
-//        double lat = UserPreferences.getLatitude();
-//        double lon = UserPreferences.getLongitude();
-//        RestClient.getAuthenticated().getMovies(Double.parseDouble(String.format("%.2f", lat)), Double.parseDouble(String.format("%.2f", lon))).enqueue(new Callback<MoviesResponse>() {
-//            @Override
-//            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-//                    progress.setVisibility(View.GONE);
-//                    moviesResponse = response.body();
-//
-//                    newReleases.clear();
-//                    TopBoxOffice.clear();
-//                    comingSoon.clear();
-//                    featured.clear();
-//                    nowPlaying.clear();
-//                    ALLMOVIES.clear();
-//
-//
-//                    if (newRealeasesAdapter != null) {
-//                        newReleasesRecycler.getRecycledViewPool().clear();
-//                        newRealeasesAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    if (topBoxOfficeAdapter != null) {
-//                        topBoxOfficeRecycler.getRecycledViewPool().clear();
-//                        topBoxOfficeAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    if (comingSoonAdapter != null) {
-//                        comingSoonRecycler.getRecycledViewPool().clear();
-//                        comingSoonAdapter.notifyDataSetChanged();
-//                    }
-//
-//                    if (nowPlayingAdapter != null) {
-//                        nowPlayingRecycler.getRecycledViewPool().clear();
-//                        nowPlayingAdapter.notifyDataSetChanged();
-//                    }
-//
-////                    if (customAdapter != null) {
-////                        customAdapter.notifyDataSetChanged();
-////                    }
-//
-//                    if (moviesResponse != null) {
-//                        newReleases.addAll(moviesResponse.getNewReleases());
-//                        newReleasesRecycler.setAdapter(newRealeasesAdapter);
-//
-//                        TopBoxOffice.addAll(moviesResponse.getTopBoxOffice());
-//                        topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
-//
-////                        Collections.sort(comingSoon, new Comparator<Movie>() {
-////                            @Override
-////                            public int compare(Movie movie, Movie t1) {
-////                                final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
-////                                Date date = null;
-////                                Date date1 = null;
-////                                try {
-////                                    date = fm.parse(movie.getReleaseDate());
-////                                    date1 = fm.parse(t1.getReleaseDate());
-////
-////                                    SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-//////                                    holder.comingSoon.setText(out.format(date));
-////
-////                                } catch (ParseException e) {
-////                                    e.printStackTrace();
-////                                }
-////
-////
-////                                return date.compareTo(date1);
-////                            }
-////                        });
-//                        comingSoon.addAll(moviesResponse.getComingSoon());
-//                        comingSoonRecycler.setAdapter(comingSoonAdapter);
-//
-//                        nowPlaying.addAll(moviesResponse.getNowPlaying());
-//                        nowPlayingRecycler.setAdapter(nowPlayingAdapter);
-//
-//                        featured.addAll(moviesResponse.getFeatured());
-//                        featuredRecycler.setAdapter(featuredAdapter);
-//                        searchicon.setVisibility(View.VISIBLE);
-//                        fadeIn(searchicon);
-//                        //Filter out duplicates
-//                        Log.d(Constants.TAG, "size second: " + ALLMOVIES.size());
-//
-//                    }
-//                } else {
-//                    /* TODO : FIX IF RESPONSE IS NULL */
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
-
-//    public boolean isPendingSubscription() {
-//        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
-//                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    private void showActivateCardDialog() {
-//        View dialoglayout = getActivity().getLayoutInflater().inflate(R.layout.dialog_activate_card, null);
-//        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(getActivity());
-//        alert.setView(dialoglayout);
-//
-//        final EditText editText = dialoglayout.findViewById(R.id.activate_card);
-//        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        InputFilter[] filters = new InputFilter[1];
-//        filters[0] = new InputFilter.LengthFilter(4);
-//        editText.setFilters(filters);
-//
-//        alert.setTitle(getString(R.string.dialog_activate_card_header));
-//        alert.setMessage(R.string.dialog_activate_card_enter_card_digits);
-//        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, int which) {
-//                String digits = editText.getText().toString();
-//                dialog.dismiss();
-//
-//                if (digits.length() == 4) {
-//                    CardActivationRequest request = new CardActivationRequest(digits);
-//                    progress.setVisibility(View.VISIBLE);
-//
-//                    RestClient.getAuthenticated().activateCard(request).enqueue(new retrofit2.Callback<CardActivationResponse>() {
-//                        @Override
-//                        public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-//                            CardActivationResponse cardActivationResponse = response.body();
-//                            progress.setVisibility(View.GONE);
-//
-//                            if (cardActivationResponse != null && response.isSuccessful()) {
-//                                String cardActivationResponseMessage = cardActivationResponse.getMessage();
-//                                Toast.makeText(getActivity(), R.string.dialog_activate_card_successful, Toast.LENGTH_LONG).show();
-//                            } else {
-//                                Toast.makeText(getActivity(), R.string.dialog_activate_card_bad_four_digits, Toast.LENGTH_LONG).show();
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-//                            progress.setVisibility(View.GONE);
-//                            showActivateCardDialog();
-//                        }
-//                    });
-//                } else {
-//                    Toast.makeText(getActivity(), R.string.dialog_activate_card_must_enter_four_digits, Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(final DialogInterface dialog, int which) {
-//                Toast.makeText(getActivity(), R.string.dialog_activate_card_must_activate_future, Toast.LENGTH_LONG).show();
-//                dialog.dismiss();
-//            }
-//        });
-//        alert.show();
-//    }
 
     public interface OnFragmentInteractionListener {
     }

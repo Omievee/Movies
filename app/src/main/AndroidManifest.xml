@@ -12,6 +12,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
+
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -131,19 +132,25 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+
+                <data
                     android:host="moviepass.com"
-                    android:pathPrefix="/go" />
+                    android:pathPrefix="/go"
+                    android:scheme="http" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="www.moviepass.com"
-                    android:pathPrefix="/go" />
+                    android:pathPrefix="/go"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
@@ -281,6 +288,13 @@
             android:label="@string/title_activity_near_me" />
         <activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />
         <activity android:name="com.mobile.activities.TicketVerification_NoStub"></activity>
+
+
+        <receiver android:name="com.mobile.helpers.UpdateRealmMovies">
+            <intent-filter>
+                <action android:name="REFRESH_THIS" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

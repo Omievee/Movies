@@ -35,10 +35,10 @@ import io.realm.RealmList;
 public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHolder> {
 
     private final MoviePosterClickListener moviePosterClickListener;
-    private ArrayList<Movie> featuredMovie;
+    private RealmList<Movie> featuredMovie;
     private Context context;
 
-    public FeaturedAdapter(Context context, ArrayList<Movie> featuredMovie, MoviePosterClickListener moviePosterClickListener) {
+    public FeaturedAdapter(Context context, RealmList<Movie> featuredMovie, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.featuredMovie = featuredMovie;
         this.context = context;

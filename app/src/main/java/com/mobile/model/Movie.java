@@ -15,8 +15,6 @@ import io.realm.annotations.RealmClass;
 @RealmClass
 public class Movie extends RealmObject implements ISearchable, Parcelable {
 
-
-    @PrimaryKey
     protected int id;
 
     public Movie() {
@@ -55,7 +53,7 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
 
     protected String imageUrl;
     protected String landscapeImageUrl;
-//    protected List<Review> reviews;
+    //    protected List<Review> reviews;
     protected String theaterName;
 
     protected Movie(android.os.Parcel in) {

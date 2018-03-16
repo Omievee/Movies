@@ -47,13 +47,13 @@ import io.realm.RealmList;
 public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSoonAdapter.ViewHolder> {
     public static final String TAG = "FOUND IT.. ";
     private final MoviePosterClickListener moviePosterClickListener;
-    private ArrayList<Movie> moviesArrayList;
+    private RealmList<Movie> moviesArrayList;
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesComingSoonAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesComingSoonAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
         this.context = context;

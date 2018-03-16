@@ -134,7 +134,9 @@ public interface Api {
     @GET("/rest/v1/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
-    /** User */
+    /**
+     * User
+     */
     @GET("/rest/v1/session/{userId}")
     Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
 
@@ -161,71 +163,67 @@ public interface Api {
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")
-    Call<GoWatchItResponse> openAppEvent(@Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
-                      @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
+    Call<GoWatchItResponse> openAppEvent( @Query("ct") String ct, @Query("ci") String ci,
+                                         @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                          @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                            @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
+                                         @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
+
     @GET("/prod/ingest")
     Call<GoWatchItResponse> clickOnShowtime(@Query("e") String engagement, @Query("et") String et, @Query("tht") String tht,
                                             @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                             @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                            @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
-                                            @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
-                                         @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                         @Query("ab") String ab, @Query("av") String av,@Query("lts") String lts);
-
-    @GET("/prod/ingest")
-    Call<GoWatchItResponse> ticketPurchase(@Query("e") String engagement, @Query("tht") String tht,
-                                            @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
-                                            @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                            @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
+                                             @Query("ct") String ct, @Query("ci") String ci,
                                             @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                             @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                            @Query("ab") String ab, @Query("av") String av,@Query("lts") String lts);
+                                            @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
-    Call<GoWatchItResponse> searchTheatersMovies(@Query("e") String engagement,
-                                           @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
-                                           @Query("tr") String tr,
+    Call<GoWatchItResponse> ticketPurchase(@Query("e") String engagement, @Query("tht") String tht,
+                                           @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
+                                           @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
+                                           @Query("ct") String ct, @Query("ci") String ci,
                                            @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                            @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                           @Query("ab") String ab, @Query("av") String av,@Query("lts") String lts);
+                                           @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
+
+    @GET("/prod/ingest")
+    Call<GoWatchItResponse> searchTheatersMovies(@Query("e") String engagement,
+                                                 @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
+                                                 @Query("tr") String tr,
+                                                 @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
+                                                 @Query("u") String u, @Query("o") String o, @Query("l") String l,
+                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                                 @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
     Call<GoWatchItResponse> openTheaterEvent(@Query("e") String engagement,
                                              @Query("tn") String th, @Query("thc") String thc,
                                              @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                             @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
+                                             @Query("ct") String ct, @Query("ci") String ci,
                                              @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                              @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                              @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                             @Query("ab") String ab, @Query("av") String av,@Query("lts") String lts);
+                                             @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
     Call<GoWatchItResponse> openMapEvent(@Query("e") String engagement,
-                                                 @Query("debug") String debug, @Query("ct") String ct, @Query("ci") String ci,
-                                                 @Query("et") String et,
-                                                 @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
-                                                 @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
-                                                 @Query("ab") String ab, @Query("av") String av,@Query("lts") String lts);
-
-
-
-
-
+                                        @Query("ct") String ct, @Query("ci") String ci,
+                                         @Query("et") String et,
+                                         @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
+                                         @Query("u") String u, @Query("o") String o, @Query("l") String l,
+                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                         @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 
     @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
+
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
-
 
 
 }
