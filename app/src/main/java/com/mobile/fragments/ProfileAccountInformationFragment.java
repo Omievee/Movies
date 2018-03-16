@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -66,6 +67,8 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileAccountInformationFragment extends Fragment {
 
     private static boolean updateShipping = false, updateBillingAddress = false, updateBillingCard = false;
+    private static int YES = 0, NO = 1;
+    Context context;
     ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
@@ -76,10 +79,11 @@ public class ProfileAccountInformationFragment extends Fragment {
     LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
     String userBillingAddress, getUserBillingAddress2, userBillingCity, userBillingState, userBillingZip;
     TextView userName, userEmail, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userNewAddress, userNewCity, userNewState, userNewZip, userEditShipping, userMPCardNum, userMPExpirNum;
+            userBillingChange, userEditShipping, userMPCardNum, userMPExpirNum;
 
     Button userSave, userCancel;
     EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
+    EditText userNewAddress, userNewCity, userNewState, userNewZip;
     EditText userAddress, userAddress2, userCity, userState, userZip;
     ImageButton userScanCard;
     String MONTH, YEAR;
@@ -107,7 +111,9 @@ public class ProfileAccountInformationFragment extends Fragment {
         billing2 = rootView.findViewById(R.id.Billing2);
 
         userName = rootView.findViewById(R.id.USER_NAME);
+        userName.setEnabled(false);
         userEmail = rootView.findViewById(R.id.USER_EMAIL);
+        userEmail.setEnabled(false);
         userAddress = rootView.findViewById(R.id.Address1);
         userCity = rootView.findViewById(R.id.city);
         userState = rootView.findViewById(R.id.State);
@@ -149,6 +155,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         cancelSubscription = new ProfileCancellationFragment();
 
         userMPCardNum = rootView.findViewById(R.id.MPCardNum);
+        userMPCardNum.setEnabled(false);
 
         return rootView;
     }
@@ -189,11 +196,13 @@ public class ProfileAccountInformationFragment extends Fragment {
 
         billingSwitch.setOnClickListener(v -> {
             if (billing2.getVisibility() == View.GONE) {
-                yesNo.setText("NO");
+                billingSwithChangeState(NO);
                 expand(billing2);
             } else {
                 yesNo.setText("YES");
                 collapse(billing2);
+                billingSwithChangeState(YES);
+                yesNo.setTextColor(ContextCompat.getColor(v.getContext(),R.color.new_red));
             }
         });
 
@@ -358,6 +367,18 @@ public class ProfileAccountInformationFragment extends Fragment {
         userCancel.setClickable(false);
     }
 
+    public void billingSwithChangeState(int option){
+
+        if(option==YES){
+            yesNo.setText("YES");
+            yesNo.setTextColor(ContextCompat.getColor(context,R.color.new_red));
+        } else{
+
+            yesNo.setText("NO");
+            yesNo.setTextColor(ContextCompat.getColor(context,R.color.white));
+        }
+    }
+
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
@@ -406,7 +427,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                         if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
                                 !shippingZip.equalsIgnoreCase(billingZip)){
                             billingSwitch.setChecked(false);
-                            yesNo.setText("NO");
+                            billingSwithChangeState(NO);
                             billing2.setVisibility(View.VISIBLE);
 
                             userNewAddress.setText(userInfoResponse.getBillingAddressLine1());
@@ -418,7 +439,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                     else
                     {
                         billingSwitch.setChecked(false);
-                        yesNo.setText("NO");
+                        billingSwithChangeState(NO);
                         billing2.setVisibility(View.VISIBLE);
 
 
@@ -885,6 +906,12 @@ public class ProfileAccountInformationFragment extends Fragment {
         public void afterTextChanged(Editable s) {
 
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 }
 
