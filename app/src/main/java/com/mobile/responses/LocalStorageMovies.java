@@ -12,6 +12,12 @@ public class LocalStorageMovies {
     List<Movie> newReleases;
     List<Movie> featured;
 
+    public List<Movie> getTopBoxOffice() {
+        return topBoxOffice;
+    }
+
+    List<Movie> topBoxOffice;
+
     public List<Movie> getFeatured() {
         return featured;
     }

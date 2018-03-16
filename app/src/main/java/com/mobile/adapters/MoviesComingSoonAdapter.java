@@ -38,6 +38,7 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by ryan on 4/26/17.

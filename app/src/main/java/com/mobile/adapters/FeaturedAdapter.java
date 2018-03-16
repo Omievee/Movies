@@ -26,6 +26,8 @@ import com.moviepass.R;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+
 /**
  * Created by o_vicarra on 1/17/18.
  */
