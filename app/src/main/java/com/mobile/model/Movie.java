@@ -8,11 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
-@Parcel
-public class Movie  implements ISearchable, Parcelable {
+@Parcel(value = Parcel.Serialization.BEAN, analyze = {Movie.class})
+@RealmClass
+public class Movie extends RealmObject implements ISearchable, Parcelable {
 
     protected int id;
+
+    public Movie() {
+    }
+
     protected String tribuneId;
     protected String title;
     protected int runningTime;
@@ -21,9 +28,32 @@ public class Movie  implements ISearchable, Parcelable {
     protected String synopsis;
     protected boolean viewed;
     protected long createdAt;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    String type;
+
+    public void setLandscapeImageUrl(String landscapeImageUrl) {
+        this.landscapeImageUrl = landscapeImageUrl;
+    }
+
+    public void setTheaterName(String theaterName) {
+        this.theaterName = theaterName;
+    }
+
+//    public void setReservations(ArrayList<Movie> reservations) {
+//        this.reservations = reservations;
+//    }
+
     protected String imageUrl;
     protected String landscapeImageUrl;
-    protected List<Review> reviews;
+    //    protected List<Review> reviews;
     protected String theaterName;
 
     protected Movie(android.os.Parcel in) {
@@ -39,7 +69,7 @@ public class Movie  implements ISearchable, Parcelable {
         imageUrl = in.readString();
         landscapeImageUrl = in.readString();
         theaterName = in.readString();
-        reservations = in.createTypedArrayList(Movie.CREATOR);
+//        reservations = in.createTypedArrayList(Movie.CREATOR);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -54,12 +84,12 @@ public class Movie  implements ISearchable, Parcelable {
         }
     };
 
-    public ArrayList<Movie> getReservations() {
-        return reservations;
-    }
+//    public ArrayList<Movie> getReservations() {
+//        return reservations;
+//    }
 
 
-    private ArrayList<Movie> reservations;
+//    private ArrayList<Movie> reservations;
 
     public String getTheaterName() {
         return theaterName;
@@ -70,9 +100,9 @@ public class Movie  implements ISearchable, Parcelable {
     }
 
 
-    public Movie() {
-        reviews = new ArrayList<>();
-    }
+//    public Movie() {
+//        reviews = new ArrayList<>();
+//    }
 
     @Override
     public int getId() {
@@ -163,13 +193,13 @@ public class Movie  implements ISearchable, Parcelable {
         this.imageUrl = imageUrl;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
-    }
+//    public List<Review> getReviews() {
+//        return reviews;
+//    }
 
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
+//    public void setReviews(List<Review> reviews) {
+//        this.reviews = reviews;
+//    }
 
 
     @Override
@@ -191,7 +221,7 @@ public class Movie  implements ISearchable, Parcelable {
         parcel.writeString(imageUrl);
         parcel.writeString(landscapeImageUrl);
         parcel.writeString(theaterName);
-        parcel.writeTypedList(reservations);
+//        parcel.writeTypedList(reservations);
     }
 
 

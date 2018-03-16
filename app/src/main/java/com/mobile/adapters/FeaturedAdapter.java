@@ -26,6 +26,8 @@ import com.moviepass.R;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+
 /**
  * Created by o_vicarra on 1/17/18.
  */
@@ -33,10 +35,10 @@ import java.util.ArrayList;
 public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHolder> {
 
     private final MoviePosterClickListener moviePosterClickListener;
-    private ArrayList<Movie> featuredMovie;
+    private RealmList<Movie> featuredMovie;
     private Context context;
 
-    public FeaturedAdapter(Context context, ArrayList<Movie> featuredMovie, MoviePosterClickListener moviePosterClickListener) {
+    public FeaturedAdapter(Context context, RealmList<Movie> featuredMovie, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.featuredMovie = featuredMovie;
         this.context = context;

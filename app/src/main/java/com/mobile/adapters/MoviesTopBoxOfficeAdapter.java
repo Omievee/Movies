@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by ryan on 4/26/17.
@@ -35,13 +36,13 @@ import butterknife.ButterKnife;
 public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBoxOfficeAdapter.ViewHolder> {
     public static final String TAG = "found it...";
     private final MoviePosterClickListener moviePosterClickListener;
-    private ArrayList<Movie> moviesArrayList;
+    private RealmList<Movie> moviesArrayList;
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesTopBoxOfficeAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesTopBoxOfficeAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
         this.context = context;

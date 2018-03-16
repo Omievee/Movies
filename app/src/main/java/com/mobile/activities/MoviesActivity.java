@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.FrameLayout;
 
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -33,7 +35,7 @@ import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Eid;
 import com.mobile.model.Movie;
 
- import com.mobile.network.RestClient;
+import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -89,14 +91,12 @@ public class MoviesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
 
-        Intent intent=getIntent();
-        if (intent!=null && intent.getIntExtra(MOVIES,-1)!=-1) {
-            movieId = intent.getIntExtra(MOVIES,-1);
+        Intent intent = getIntent();
+        if (intent != null && intent.getIntExtra(MOVIES, -1) != -1) {
+            movieId = intent.getIntExtra(MOVIES, -1);
             loadMovies();
 //            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
-        }
-        else
-        {
+        } else {
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -114,7 +114,6 @@ public class MoviesActivity extends BaseActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
-
 
 
         checkRestrictions();
@@ -341,12 +340,13 @@ public class MoviesActivity extends BaseActivity {
                     }
                 }
             }
-               public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-  
+
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
             }
         });
-}
-  
+    }
+
 
     public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
         // Make sure the current transaction finishes first
@@ -377,19 +377,17 @@ public class MoviesActivity extends BaseActivity {
                         ALLMOVIES.addAll(moviesResponse.getNowPlaying());
                         ALLMOVIES.addAll(moviesResponse.getFeatured());
 
-                        for(Movie AllMovies: ALLMOVIES){
-                            if(AllMovies.getId() == movieId){
+                        for (Movie AllMovies : ALLMOVIES) {
+                            if (AllMovies.getId() == movieId) {
                                 movie = AllMovies;
                                 startMovieActivity();
                             }
                         }
 
 
-
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
-
                 }
             }
 
@@ -402,14 +400,12 @@ public class MoviesActivity extends BaseActivity {
     }
 
 
-
-    public void startMovieActivity(){
-        Intent movieIntent = new Intent(this,MovieActivity.class);
+    public void startMovieActivity() {
+        Intent movieIntent = new Intent(this, MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        movieIntent.putExtra(MovieActivity.DEEPLINK,url);
+        movieIntent.putExtra(MovieActivity.DEEPLINK, url);
         startActivity(movieIntent);
     }
-
 
 
 }
