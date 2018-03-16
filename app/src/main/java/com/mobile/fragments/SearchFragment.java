@@ -75,35 +75,33 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     }
 
 
-    public static SearchFragment newInstance(Movie movie) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putParcelable("NR", movie);
-        args.putParcelable("FE", movie);
-        args.putParcelable("NP", movie);
-        args.putParcelable("TB", movie);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    public static SearchFragment newInstance(Movie movie) {
+//        SearchFragment fragment = new SearchFragment();
+//        Bundle args = new Bundle();
+//        args.putParcelable("NR", movie);
+//        args.putParcelable("FE", movie);
+//        args.putParcelable("NP", movie);
+//        args.putParcelable("TB", movie);
+//
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fr_searchview, container, false);
+        searchBar = rootView.findViewById(R.id.searchBar);
+        progress = rootView.findViewById(R.id.progress);
+        cancel = rootView.findViewById(R.id.CancelSearch);
+        ALLMOVIES = new ArrayList<>();
+        noDuplicates = new ArrayList<>();
+        url = "http://moviepass.com/go/movies";
+        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-//        rootView = inflater.inflate(R.layout.fr_searchview, container, false);
-//        searchBar = rootView.findViewById(R.id.searchBar);
-//        progress = rootView.findViewById(R.id.progress);
-//        cancel = rootView.findViewById(R.id.CancelSearch);
-//        ALLMOVIES = new ArrayList<>();
-//        noDuplicates = new ArrayList<>();
-//        url = "http://moviepass.com/go/movies";
-//        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
-//            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
-//
-//        return rootView;
-//    }
+        return rootView;
+    }
 
     @Override
     public void onResume() {
@@ -120,10 +118,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
 
         loadResults();
-
-        String test = getArguments().getParcelable("NR");
-        Log.d(TAG, "onViewCreated: " + test);
-
         cancel.setOnClickListener(v -> {
             getActivity().getFragmentManager().popBackStack();
         });

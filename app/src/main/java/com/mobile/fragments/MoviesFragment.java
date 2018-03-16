@@ -210,12 +210,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.MAIN_CONTAINER, searchFrag);
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("NR", Parcels.wrap(NEWRelease));
-            bundle.putParcelable("NP", Parcels.wrap(nowPlaying));
-            bundle.putParcelable("FE", Parcels.wrap(featured));
-            bundle.putParcelable("TB", Parcels.wrap(TopBoxOffice));
-            searchFrag.setArguments(bundle);
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelable("NR", Parcels.wrap(NEWRelease));
+//            bundle.putParcelable("NP", Parcels.wrap(nowPlaying));
+//            bundle.putParcelable("FE", Parcels.wrap(featured));
+//            bundle.putParcelable("TB", Parcels.wrap(TopBoxOffice));
+//            searchFrag.setArguments(bundle);
             transaction.addToBackStack(null);
             fragmentManager.popBackStack();
             transaction.commit();
