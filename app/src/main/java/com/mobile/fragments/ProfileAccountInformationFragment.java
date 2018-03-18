@@ -162,16 +162,6 @@ public class ProfileAccountInformationFragment extends Fragment {
         loadUserInfo();
 
 
-        /* All click listeners => */
-
-//
-//        backArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().onBackPressed();
-//            }
-//        });
-
         shippingClick.setOnClickListener(v -> {
             if (shippingDetails.getVisibility() == View.GONE) {
                 expand(shippingDetails);
@@ -192,15 +182,12 @@ public class ProfileAccountInformationFragment extends Fragment {
         });
 
         userPlanCancel.setOnClickListener(v -> {
-
             FragmentManager manager = getActivity().getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, cancelSubscription);
             transaction.addToBackStack(null);
             transaction.commit();
-
-
         });
 
 
@@ -210,7 +197,6 @@ public class ProfileAccountInformationFragment extends Fragment {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                     .build();
-
             try {
                 Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
                 startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
@@ -316,29 +302,26 @@ public class ProfileAccountInformationFragment extends Fragment {
         });
 
 
-
     }
 
-    private void manuallyUpdateCC(){
+    private void manuallyUpdateCC() {
         //If CC info is not empty
-        if(!userNewBillingCC.getText().toString().trim().isEmpty() &&
+        if (!userNewBillingCC.getText().toString().trim().isEmpty() &&
                 !userNewBillingExp.getText().toString().trim().isEmpty() &&
-                !userNewBillingCVV.getText().toString().trim().isEmpty()){
+                !userNewBillingCVV.getText().toString().trim().isEmpty()) {
 
 
-            if(userNewBillingCC.getText().toString().length()>=16 &&
-                    userNewBillingCVV.getText().toString().length()>=3 &&
-                    userNewBillingExp.getText().toString().length()>=5){
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCC.getText().toString().length());
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingCVV.getText().toString().length());
-                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: "+userNewBillingExp.getText().toString().length());
+            if (userNewBillingCC.getText().toString().length() >= 16 &&
+                    userNewBillingCVV.getText().toString().length() >= 3 &&
+                    userNewBillingExp.getText().toString().length() >= 5) {
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: " + userNewBillingCC.getText().toString().length());
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: " + userNewBillingCVV.getText().toString().length());
+                Log.d("CREDIT CARD ------>", "manuallyUpdateCC: " + userNewBillingExp.getText().toString().length());
                 userSave.setTextColor(getResources().getColor(R.color.new_red));
                 userCancel.setTextColor(getResources().getColor(R.color.white));
                 updateBillingCard = true;
                 saveChanges();
-            }
-            else
-            {
+            } else {
                 userSave.setTextColor(getResources().getColor(R.color.gray_icon));
                 userCancel.setTextColor(getResources().getColor(R.color.gray_icon));
                 updateBillingCard = false;
@@ -369,7 +352,7 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
-                    String shippingCity = "", shippingState = "", shippingZip ="";
+                    String shippingCity = "", shippingState = "", shippingZip = "";
 
                     for (int i = 0; i < addressList.size(); i++) {
                         userCity.setText(addressList.get(0));
@@ -392,9 +375,9 @@ public class ProfileAccountInformationFragment extends Fragment {
 
                     }
 
-                    if(userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())){
-                        if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
-                                !shippingZip.equalsIgnoreCase(billingZip)){
+                    if (userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())) {
+                        if (!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
+                                !shippingZip.equalsIgnoreCase(billingZip)) {
                             billingSwitch.setChecked(false);
                             yesNo.setText("NO");
                             billing2.setVisibility(View.VISIBLE);
@@ -404,9 +387,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                             userNewState.setText(billingState);
                             userNewZip.setText(billingZip);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         billingSwitch.setChecked(false);
                         yesNo.setText("NO");
                         billing2.setVisibility(View.VISIBLE);
@@ -520,8 +501,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 saveChanges();
 
             }
-        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE)
-        {
+        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 updateBillingCard = true;
@@ -577,13 +557,13 @@ public class ProfileAccountInformationFragment extends Fragment {
         userSave.setClickable(true);
         userSave.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
-            if(updateShipping) {
+            if (updateShipping) {
                 updateShippingAddress();
             }
-            if(updateBillingCard) {
+            if (updateBillingCard) {
                 updateCCData();
             }
-            if(updateBillingAddress){
+            if (updateBillingAddress) {
                 updateBillingAddress();
             }
         });
@@ -670,12 +650,12 @@ public class ProfileAccountInformationFragment extends Fragment {
 
 
     public void updateCCData() {
-            String newCC = userNewBillingCC.getText().toString();
-            String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
-            String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
-            String newExp = ccExMonth + "/" + ccExYr;
-            String newCVV = userNewBillingCVV.getText().toString();
-            updateCreditCard(newCC, newExp, newCVV);
+        String newCC = userNewBillingCC.getText().toString();
+        String ccExMonth = userNewBillingExp.getText().toString().substring(0, 2);
+        String ccExYr = "20" + userNewBillingExp.getText().toString().substring(3, 5);
+        String newExp = ccExMonth + "/" + ccExYr;
+        String newCVV = userNewBillingCVV.getText().toString();
+        updateCreditCard(newCC, newExp, newCVV);
     }
 
 
@@ -716,7 +696,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         });
     }
 
-    public void loadFragment(){
+    public void loadFragment() {
         getActivity().onBackPressed();
     }
 

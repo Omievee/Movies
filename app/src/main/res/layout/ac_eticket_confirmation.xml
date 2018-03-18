@@ -133,7 +133,9 @@
             android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:alpha=".2"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:alpha=".4"
             android:background="@color/gray_icon" />
 
 

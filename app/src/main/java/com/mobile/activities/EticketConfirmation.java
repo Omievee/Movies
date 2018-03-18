@@ -6,7 +6,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -138,9 +137,6 @@ public class EticketConfirmation extends BaseActivity {
                 int itemId = item.getItemId();
                 if (itemId == R.id.action_profile) {
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-//                } else if (itemId == R.id.action_reservations) {
-//                    Toast.makeText(SelectSeatActivity.this, "E-Ticket Activity", Toast.LENGTH_LONG).show();
-//                    startActivity(new Intent(getApplicationContext(), ReservationsActivity.class));
                 } else if (itemId == R.id.action_movies) {
                 } else if (itemId == R.id.action_theaters) {
                 } else if (itemId == R.id.action_settings) {

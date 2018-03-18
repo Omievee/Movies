@@ -99,9 +99,6 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
 
-
-
-
         if (theater.ticketTypeIsStandard()) {
             holder.iconTicket.setVisibility(View.INVISIBLE);
             holder.iconSeat.setVisibility(View.INVISIBLE);

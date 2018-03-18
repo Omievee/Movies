@@ -56,11 +56,10 @@
 
         <RelativeLayout
             android:id="@+id/distanceView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/theater_address"
-            android:layout_toRightOf="@id/theater_city_things">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/theater_address">
 
 
             <TextView
@@ -68,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_half"
-                android:layout_toLeftOf="@id/PIN"
+                android:layout_toStartOf="@id/PIN"
                 android:text="@string/fragment_theaters_distance"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
