@@ -2,6 +2,7 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -82,6 +83,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     ObjectMetadata objectMetadata;
     String key;
     Activity myActivity;
+    Context myContext;
 
     private native static String getProductionBucket();
 
@@ -355,7 +357,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         return mediaFile;
     }
 
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
 }
 
 

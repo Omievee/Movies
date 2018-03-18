@@ -483,7 +483,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             if (allMovies.get(i).getType().matches("New Releases")) {
                 NEWRelease.add(allMovies.get(i));
             } else if (allMovies.get(i).getType().matches("Coming Soon")) {
-
                 Collections.sort(comingSoon, (o1, o2) -> o1.getReleaseDate().compareTo(o2.getReleaseDate()));
                 comingSoon.add(allMovies.get(i));
             } else if (allMovies.get(i).getType().matches("Now Playing")) {
