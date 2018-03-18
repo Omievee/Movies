@@ -56,6 +56,8 @@ import com.moviepass.R;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -418,8 +420,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                                 topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                                 topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-
-
                             }
                         }
                     }, () -> {
@@ -436,7 +436,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
             @Override
             public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
-                Toast.makeText(myActivity, "Failure reaching server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -483,6 +483,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             if (allMovies.get(i).getType().matches("New Releases")) {
                 NEWRelease.add(allMovies.get(i));
             } else if (allMovies.get(i).getType().matches("Coming Soon")) {
+
+                Collections.sort(comingSoon, (o1, o2) -> o1.getReleaseDate().compareTo(o2.getReleaseDate()));
                 comingSoon.add(allMovies.get(i));
             } else if (allMovies.get(i).getType().matches("Now Playing")) {
                 nowPlaying.add(allMovies.get(i));
