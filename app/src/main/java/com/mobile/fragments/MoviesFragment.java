@@ -246,18 +246,16 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         moviesRealm = Realm.getInstance(config);
+        swiper.setOnRefreshListener(() -> {
+            newReleasesRecycler.setClickable(false);
+            topBoxOfficeRecycler.setClickable(false);
+            featuredRecycler.setClickable(false);
+            nowPlayingRecycler.setClickable(false);
 
-        swiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                moviesRealm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        realm.deleteAll();
-                    }
-                });
-                getMoviesForStorage();
-            }
+            moviesRealm.executeTransaction(realm -> {
+                realm.deleteAll();
+            });
+            getMoviesForStorage();
         });
 
 
@@ -424,17 +422,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                             }
                         }
-                    }, new Realm.Transaction.OnSuccess() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(Constants.TAG, "onSuccess: ");
-                            setAdaptersWithRealmOBjects();
-                        }
-                    }, new Realm.Transaction.OnError() {
-                        @Override
-                        public void onError(Throwable error) {
-
-                        }
+                    }, () -> {
+                        Log.d(Constants.TAG, "onSuccess: ");
+                        setAdaptersWithRealmOBjects();
+                    }, error -> {
+                        Log.d(Constants.TAG, "onResponse: " + error.getMessage());
                     });
 
                     swiper.setRefreshing(false);
@@ -458,6 +450,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlaying.clear();
         featured.clear();
 
+        topBoxOfficeRecycler.setEnabled(true);
+        featuredRecycler.setEnabled(true);
+        nowPlayingRecycler.setEnabled(true);
+        newReleasesRecycler.setEnabled(true);
 
         topBoxTXT.setVisibility(View.VISIBLE);
         fadeIn(topBoxTXT);

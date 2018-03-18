@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -80,6 +81,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     TextView noStub;
     ObjectMetadata objectMetadata;
     String key;
+    Activity myActivity;
 
     private native static String getProductionBucket();
 
@@ -124,7 +126,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         progress = root.findViewById(R.id.progress);
         noStub = root.findViewById(R.id.NoStub);
         transferUtility = TransferUtility.builder()
-                .context(getActivity().getApplicationContext())
+                .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
                 .s3Client(((Application) getContext().getApplicationContext()).getAmazonS3Client())
                 .build();
@@ -133,14 +135,21 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ContextSingleton.getInstance(getActivity()).getGlobalContext();
+        ContextSingleton.getInstance(myActivity).getGlobalContext();
 
 
         ticketScan.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
             } else {
                 scanTicket();
@@ -148,7 +157,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         });
 
         noStub.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), TicketVerification_NoStub.class);
+            Intent intent = new Intent(myActivity, TicketVerification_NoStub.class);
             int res = getArguments().getInt("reservationId");
             intent.putExtra(Constants.SCREENING, res);
             startActivity(intent);
@@ -167,7 +176,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
             if (data.getExtras() != null) {
                 photo = (Bitmap) data.getExtras().get("data");
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
                 } else {
                     createImageFile();
@@ -184,12 +193,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             scanTicket();
         } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getActivity(), "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
         }
         if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             createImageFile();
         } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getActivity(), "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -270,7 +279,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                         public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
                             if (response != null && response.isSuccessful()) {
                                 progress.setVisibility(View.GONE);
-                                Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(myActivity, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                 dismiss();
                             } else {
                                 JSONObject jObjError = null;
@@ -278,7 +287,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                                     jObjError = new JSONObject(response.errorBody().string());
                                     if (jObjError.getString("message").equals("Verification status is different from PENDING_SUBMISSION")) {
                                         progress.setVisibility(View.GONE);
-                                        Toast.makeText(getActivity(), "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(myActivity, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                         dismiss();
                                     }
                                 } catch (JSONException e) {
@@ -292,7 +301,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                         @Override
                         public void onFailure(Call<VerificationResponse> call, Throwable t) {
                             progress.setVisibility(View.GONE);
-                            Toast.makeText(getActivity(), "Server Error. Try Again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, "Server Error. Try Again", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
