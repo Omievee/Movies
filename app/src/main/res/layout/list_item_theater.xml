@@ -57,8 +57,8 @@
         <RelativeLayout
             android:id="@+id/distanceView"
             android:layout_width="120dp"
-            android:layout_alignParentEnd="true"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_below="@id/theater_address">
 
 

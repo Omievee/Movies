@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_half">
+
+        <TextView
+            android:id="@+id/info_TheaterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theater Name"
+            android:textColor="@color/black_text"
+            android:textSize="15sp"
+            android:maxLength="50"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/info_TheaterAddress1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_TheaterName"
+            android:layout_marginTop="@dimen/margin_half"
+            android:maxLines="2"
+            android:text="Address 1"
+            android:textColor="@color/black_text"
+            android:textSize="15sp" />
+
+
+        <ImageView
+            android:id="@+id/info_Etix"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/info_TheaterAddress1"
+            android:layout_marginTop="@dimen/margin_half"
+            android:src="@drawable/ticketnavwhite"
+            android:tint="@color/black_text"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/info_Seat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/info_TheaterAddress1"
+            android:layout_marginStart="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_half"
+            android:layout_toEndOf="@id/info_Etix"
+            android:src="@drawable/icon_seat_copy"
+            android:tint="@color/black_text"
+            android:visibility="invisible" />
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

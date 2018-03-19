@@ -1,48 +1,35 @@
 package com.mobile.fragments;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LayoutAnimationController;
-import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,30 +37,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -81,45 +57,32 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.lapism.searchview.SearchView;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Constants;
-import com.mobile.UserLocationManagerFused;
-import com.mobile.UserPreferences;
+import com.mobile.activities.TheaterActivity;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
-import com.mobile.listeners.TheatersClickListener;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
-import com.mobile.model.TheatersResponse;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
-import com.mobile.network.RestError;
-import com.mobile.responses.GoWatchItResponse;
-import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.parceler.Parcels;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -150,6 +113,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     MapView mMapView;
     String url;
     Location userCurrentLocation;
+    MaterialSearchBar searchGP;
     Button searchThisArea;
     RelativeLayout listViewMaps, mRelativeLayout;
     RelativeLayout goneList;
@@ -161,9 +125,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     String TAG = "TAG";
     LinkedList<Theater> nearbyTheaters;
     SlidingUpPanelLayout slideup;
-    double furthest;
+    double furthest, LAT, LON;
     Location localPoints;
     Location smallLocal;
+    View customInfoWindow;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -180,6 +145,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 .enableAutoManage(getActivity(), this)
                 .build();
 
+
+        searchGP = rootView.findViewById(R.id.SearchGP);
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mProgress = rootView.findViewById(R.id.progress);
@@ -194,6 +161,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         slideup = rootView.findViewById(R.id.sliding_layout);
         /* Set up RecyclerView */
+
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
         theatersRECY.setLayoutManager(manager);
@@ -204,24 +172,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         upArrow = rootView.findViewById(R.id.uparrow);
         downArrow = rootView.findViewById(R.id.downarrow);
         mapViewText = rootView.findViewById(R.id.mapviewtext);
-        mSearchClose.setOnClickListener(view -> {
-            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
-                    .setCountry("US")
-                    .build();
-            try {
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
-                startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                mProgress.setVisibility(View.VISIBLE);
-            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-                // TODO: Handle the error.
-            }
-        });
+
 
         url = "http://moviepass.com/go/theaters";
-        if(GoWatchItSingleton.getInstance().getCampaign()!=null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
-            url = url+"/"+GoWatchItSingleton.getInstance().getCampaign();
+        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
 
         //Hide Keyboard when not in use
@@ -230,6 +185,37 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
         theatersRealm = Realm.getDefaultInstance();
+
+
+        mSearchClose.setOnClickListener(view -> {
+            searchGP.setVisibility(View.VISIBLE);
+            searchGP.setOnSearchActionListener(new SimpleOnSearchActionListener() {
+                @Override
+                public void onSearchConfirmed(CharSequence text) {
+                    super.onSearchConfirmed(text);
+
+                    searchMap(text.toString());
+                    Log.d(TAG, "onSearchConfirmed: " + text.toString());
+                }
+            });
+
+//            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
+//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+//                    .setCountry("US")
+//                    .build();
+//            try {
+//                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+//                        .setFilter(typeFilter)
+//                        .build(getActivity());
+//
+//                startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+//                mProgress.setVisibility(View.VISIBLE);
+//
+//            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+//                // TODO: Handle the error.
+//            }
+        });
         return rootView;
     }
 
@@ -269,7 +255,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     upArrow.setVisibility(View.INVISIBLE);
 
                     String url = "http://moviepass.com/go/list";
-                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"list_view_click");
+                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
 
                 } else {
                     fadeOut(downArrow);
@@ -298,15 +284,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMinZoomPreference(DEFAULT_ZOOM_LEVEL);
+        customInfoWindow = View.inflate(getContext(), R.layout.fr_theaters_infowindow, null);
+        Log.d(TAG, "onMapReady: " + customInfoWindow);
+
 
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
+
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
             mClusterManager = new ClusterManager<>(getActivity(), mMap);
             mClusterManager.setRenderer(new TheaterPinRenderer());
             mMap.setOnMarkerClickListener(mClusterManager);
+
+
             mClusterManager.setOnClusterClickListener(this);
             mClusterManager.cluster();
         } catch (Resources.NotFoundException e) {
@@ -321,27 +313,50 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
         mProgress.setVisibility(View.VISIBLE);
-//        mMap.setOnMarkerClickListener(marker -> {
-//            markerPosition = marker.getPosition();
-//            int theaterSelected = -1;
-//
-//            for (int i = 0; i < mTheaters.size(); i++) {
-//                if (markerPosition.latitude == mTheaters.get(i).getLat() && markerPosition.longitude == mTheaters.get(i).getLon()) {
-//                    theaterSelected = i;
-//                }
-//            }
-//            //Onclick for individual Markers - adjusts recycler to that specific theater.
-//            CameraPosition theaterPosition = new CameraPosition.Builder().target(markerPosition).zoom(11).build();
-//            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(theaterPosition));
-//            theatersRECY.getLayoutManager().scrollToPosition(theaterSelected);
-//
-//            theatersRECY.getRecycledViewPool().clear();
-//            theaterAdapter.notifyDataSetChanged();
-//
-//            marker.showInfoWindow();
-//
-//            return true;
-//        });
+
+
+        mMap.setOnMarkerClickListener(marker -> {
+            ImageView etickIcon = customInfoWindow.findViewById(R.id.info_Etix);
+            ImageView seatIcon = customInfoWindow.findViewById(R.id.info_Seat);
+
+            etickIcon.setVisibility(View.GONE);
+            seatIcon.setVisibility(View.GONE);
+            mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    TextView infoTheaterName = customInfoWindow.findViewById(R.id.info_TheaterName);
+                    TextView infoTheaterAddress1 = customInfoWindow.findViewById(R.id.info_TheaterAddress1);
+                    ImageView etickIcon = customInfoWindow.findViewById(R.id.info_Etix);
+                    ImageView seatIcon = customInfoWindow.findViewById(R.id.info_Seat);
+
+                    infoTheaterName.setText(marker.getTitle());
+                    infoTheaterAddress1.setText(marker.getSnippet());
+
+                    Log.d(TAG, "getInfoContents: " + marker.getTag());
+
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().toString().matches("E_TICKET")) {
+                            etickIcon.setVisibility(View.VISIBLE);
+                        } else if (marker.getTag().toString().matches("SELECT_SEATING")) {
+                            etickIcon.setVisibility(View.VISIBLE);
+                            seatIcon.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    
+
+                    return customInfoWindow;
+                }
+            });
+
+
+            marker.showInfoWindow();
+            return true;
+        });
     }
 
 
@@ -431,12 +446,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             if (resultCode == RESULT_OK) {
                 mRequestingLocationUpdates = false;
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-                GoWatchItSingleton.getInstance().searchEvent(place.getAddress().toString(),"theatrical_search",url);
-//                myloc.setVisibility(View.VISIBLE);
-//                myloc.setOnClickListener(view -> {
-//                    mRequestingLocationUpdates = true;
-//                    getMyLocation();
-//                });
+                GoWatchItSingleton.getInstance().searchEvent(place.getAddress().toString(), "theatrical_search", url);
 
                 LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
                 Log.d(TAG, "onActivityResult: " + place.getLatLng().latitude + " " + place.getLatLng().longitude);
@@ -487,10 +497,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         @Override
         protected void onBeforeClusterItemRendered(TheaterPin theaterPin, MarkerOptions markerOptions) {
             if (theaterPin.getTheater().ticketTypeIsSelectSeating() || theaterPin.getTheater().ticketTypeIsETicket()) {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.eticketingpin)).title(theaterPin.getTitle());
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.eticketingpin)).title(theaterPin.getTitle()).snippet(theaterPin.getSnippet());
             } else {
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.post_pin)).title(theaterPin.getTitle());
-
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.post_pin)).title(theaterPin.getTitle()).snippet(theaterPin.getSnippet());
             }
         }
 
@@ -502,6 +511,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
                 final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+
 
                 // Draw multiple people.
                 // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
@@ -525,6 +535,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             Theater theater = theaterPin.getTheater();
             markerTheaterMap.put(marker.getId(), theater);
+
+            if (theater.getTicketType().matches("E_TICKET") || theater.getTicketType().matches("SELECT_SEATING")) {
+                marker.setTag(theater.getTicketType());
+            }
         }
 
         @Override
@@ -654,8 +668,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         mClusterManager.clearItems();
         for (Theater theater : theatersList) {
-
-
             LatLng location = new LatLng(theater.getLat(), theater.getLon());
             mMapData.put(location, theater);
             final int position;
@@ -678,8 +690,20 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-    void setSearchThisArea() {
+    void searchMap(String zip) {
+        RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
+                .contains("zip", zip)
+                .findAll();
 
+        for (int i = 0; i < searchArea.size(); i++) {
+            LAT = searchArea.get(i).getLat();
+            LON = searchArea.get(i).getLon();
+
+            Log.d(TAG, "searchMap: " + LAT);
+            Log.d(TAG, "searchMap: " + LON);
+
+        }
+        queryRealmLoadTheaters(LAT, LON);
 
     }
 
@@ -687,7 +711,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onDestroy() {
         super.onDestroy();
         theatersRealm.close();
-        Log.d(TAG, "onDestroy: ");
     }
 
 
@@ -723,7 +746,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                         // Transaction failed and was automatically canceled.
                         Log.d(TAG, "Realm onError: " + error.getMessage());
                     });
-
                 }
             }
 
@@ -737,9 +759,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-
         fadeIn.setDuration(200);
-
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
