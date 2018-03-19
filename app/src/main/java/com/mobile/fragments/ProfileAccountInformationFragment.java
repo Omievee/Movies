@@ -73,7 +73,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
-    View rootView, progress;
+    View rootView, progress, accountInformation;
     ImageView downArraow, backArrow, downArrow2;
     Switch billingSwitch;
     RelativeLayout userOldBilling, shippingClick, billingClick;
@@ -122,6 +122,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         userZip = rootView.findViewById(R.id.zip);
         userAddress2 = rootView.findViewById(R.id.Address2);
         disableShippingAddressEditTexts();
+        accountInformation = rootView.findViewById(R.id.UP);
 
         userBillingDate = rootView.findViewById(R.id.BillingDate);
         userPlan = rootView.findViewById(R.id.Plan);
@@ -227,6 +228,13 @@ public class ProfileAccountInformationFragment extends Fragment {
             transaction.commit();
 
 
+        });
+
+        accountInformation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.openProfileAccountInformation();
+            }
         });
 
 

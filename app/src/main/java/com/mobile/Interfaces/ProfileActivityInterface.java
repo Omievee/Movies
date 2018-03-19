@@ -9,4 +9,5 @@ public interface ProfileActivityInterface {
     void openProfileAccountShippingInformation();
     void closeFragment();
     void openProfileAccountPlanAndInfo();
+    void openProfileAccountInformation();
 }

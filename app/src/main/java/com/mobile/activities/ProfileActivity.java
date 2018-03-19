@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.mobile.Interfaces.ProfileActivityInterface;
+import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
 import com.mobile.fragments.ProfileFragment;
@@ -152,6 +153,17 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
         transaction.replace(R.id.profile_container, billingFragment);
+        transaction.addToBackStack("");
+        transaction.commit();
+    }
+
+    @Override
+    public void openProfileAccountInformation() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountInformation accountInformation = new ProfileAccountInformation();
+        transaction.replace(R.id.profile_container, accountInformation);
         transaction.addToBackStack("");
         transaction.commit();
     }
