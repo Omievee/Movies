@@ -284,7 +284,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMinZoomPreference(DEFAULT_ZOOM_LEVEL);
-        customInfoWindow = View.inflate(getContext(), R.layout.fr_theaters_infowindow, null);
         Log.d(TAG, "onMapReady: " + customInfoWindow);
 
 
@@ -310,15 +309,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         } else {
             locationUpdateRealm();
         }
-
-
         mProgress.setVisibility(View.VISIBLE);
-
-
+        customInfoWindow = View.inflate(getContext(), R.layout.fr_theaters_infowindow, null);
         mMap.setOnMarkerClickListener(marker -> {
             ImageView etickIcon = customInfoWindow.findViewById(R.id.info_Etix);
             ImageView seatIcon = customInfoWindow.findViewById(R.id.info_Seat);
-
             etickIcon.setVisibility(View.GONE);
             seatIcon.setVisibility(View.GONE);
             mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -337,26 +332,33 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     infoTheaterName.setText(marker.getTitle());
                     infoTheaterAddress1.setText(marker.getSnippet());
 
-                    Log.d(TAG, "getInfoContents: " + marker.getTag());
+                    Log.d(TAG, "getInfoContents: " + marker.getZIndex());
+                    Log.d(TAG, "getInfoContents: " + marker.getTitle());
 
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().toString().matches("E_TICKET")) {
+                    if (marker.getTitle() != null) {
+                        if (markerTheaterMap.get(marker.getId()).getTicketType().matches("E_TICKET")) {
                             etickIcon.setVisibility(View.VISIBLE);
-                        } else if (marker.getTag().toString().matches("SELECT_SEATING")) {
+                        } else if (markerTheaterMap.get(marker.getId()).getTicketType().matches("SELECT_SEATING")) {
                             etickIcon.setVisibility(View.VISIBLE);
                             seatIcon.setVisibility(View.VISIBLE);
                         }
                     }
-                    
+
 
                     return customInfoWindow;
                 }
             });
-
-
-            marker.showInfoWindow();
+            if (marker.getTitle() != null) {
+                marker.showInfoWindow();
+            }
             return true;
         });
+
+//        mMap.setOnInfoWindowClickListener(marker -> {
+//            Intent intent = new Intent(getActivity(), TheaterActivity.class);
+//            intent.putExtra("cinema", Parcels.wrap(Theater.class, ));
+//            getActivity().startActivity(intent);
+//        });
     }
 
 
@@ -536,9 +538,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Theater theater = theaterPin.getTheater();
             markerTheaterMap.put(marker.getId(), theater);
 
-            if (theater.getTicketType().matches("E_TICKET") || theater.getTicketType().matches("SELECT_SEATING")) {
-                marker.setTag(theater.getTicketType());
-            }
         }
 
         @Override
