@@ -343,22 +343,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                             seatIcon.setVisibility(View.VISIBLE);
                         }
                     }
-
-
                     return customInfoWindow;
                 }
             });
+
             if (marker.getTitle() != null) {
                 marker.showInfoWindow();
             }
             return true;
         });
+        mMap.setOnInfoWindowClickListener(marker -> {
+            Intent intent = new Intent(getActivity(), TheaterActivity.class);
+            intent.putExtra("cinema", Parcels.wrap(Theater.class, markerTheaterMap.get(marker.getId())));
+            getActivity().startActivity(intent);
+        });
 
-//        mMap.setOnInfoWindowClickListener(marker -> {
-//            Intent intent = new Intent(getActivity(), TheaterActivity.class);
-//            intent.putExtra("cinema", Parcels.wrap(Theater.class, ));
-//            getActivity().startActivity(intent);
-//        });
     }
 
 
