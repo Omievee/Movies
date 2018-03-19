@@ -41,6 +41,7 @@ import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.mobile.Constants;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.network.RestClient;
 import com.mobile.requests.AddressChangeRequest;
@@ -91,6 +92,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
+    private ProfileActivityInterface mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,12 +188,21 @@ public class ProfileAccountInformationFragment extends Fragment {
 //        });
 
         shippingClick.setOnClickListener(v -> {
-            if (shippingDetails.getVisibility() == View.GONE) {
-                expand(shippingDetails);
-            } else {
-                collapse(shippingDetails);
+//            if (shippingDetails.getVisibility() == View.GONE) {
+//                expand(shippingDetails);
+//            } else {
+//                collapse(shippingDetails);
+//
+//            }
+            mListener.openProfileAccountShippingInformation();
+//            FragmentManager manager = getActivity().getFragmentManager();
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+//            ProfileAccountShippingInformation shippingFragment = new ProfileAccountShippingInformation();
+//            transaction.replace(R.id.profile_container, shippingFragment);
+////            transaction.addToBackStack(null);
+//            transaction.commit();
 
-            }
         });
 
         billingSwitch.setOnClickListener(v -> {
@@ -258,12 +269,13 @@ public class ProfileAccountInformationFragment extends Fragment {
         billingClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bilingDetails.getVisibility() == View.GONE) {
-                    expand(bilingDetails);
-                    userBIllingCard.hasFocus();
-                } else {
-                    collapse(bilingDetails);
-                }
+//                if (bilingDetails.getVisibility() == View.GONE) {
+//                    expand(bilingDetails);
+//                    userBIllingCard.hasFocus();
+//                } else {
+//                    collapse(bilingDetails);
+//                }
+                mListener.openProfileAccountPlanAndInfo();
             }
         });
 
@@ -578,8 +590,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 
             }
         }
-
-
     }
 
     public void creditCardClick() {
@@ -653,7 +663,6 @@ public class ProfileAccountInformationFragment extends Fragment {
 //        userState.addTextChangedListener(null);
 //        userCity.addTextChangedListener(null);
 //        userZip.addTextChangedListener(null);
-
     }
 
     public void enableShippingAddressEditTexts(){
@@ -912,6 +921,13 @@ public class ProfileAccountInformationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+
+        if (context instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ProfileActivityInterface");
+        }
     }
 }
 

@@ -12,6 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.mobile.Interfaces.ProfileActivityInterface;
+import com.mobile.fragments.ProfileAccountPlanAndBilling;
+import com.mobile.fragments.ProfileAccountShippingInformation;
 import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.moviepass.R;
@@ -20,7 +23,7 @@ import com.moviepass.R;
  * Created by anubis on 7/23/17.
  */
 
-public class ProfileActivity extends BaseActivity {
+public class ProfileActivity extends BaseActivity implements ProfileActivityInterface {
 
     public static final String TAG = "Found it";
     ProfileFragment profileFragment = new ProfileFragment();
@@ -35,11 +38,7 @@ public class ProfileActivity extends BaseActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.profile_container, profileFragment);
-        transaction.commit();
+        openProfileAccountInformationFragment();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -122,4 +121,38 @@ public class ProfileActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void openProfileAccountInformationFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.profile_container, profileFragment);
+        transaction.commit();
+    }
+
+    @Override
+    public void openProfileAccountShippingInformation() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountShippingInformation shippingFragment = new ProfileAccountShippingInformation();
+        transaction.replace(R.id.profile_container, shippingFragment);
+        transaction.addToBackStack("");
+        transaction.commit();
+    }
+
+    @Override
+    public void closeFragment() {
+        getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void openProfileAccountPlanAndInfo() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
+        transaction.replace(R.id.profile_container, billingFragment);
+        transaction.addToBackStack("");
+        transaction.commit();
+    }
 }
