@@ -36,6 +36,17 @@ public class UserPreferences {
         editor.apply();
     }
 
+    public static void saveAAID(String id){
+        SharedPreferences.Editor editor = sPrefs.edit();
+
+        editor.putString(Constants.AAID, id);
+        editor.apply();
+    }
+
+    public static String getAAID(){
+        return sPrefs.getString(Constants.AAID, "IDFA");
+    }
+
     public static void setUserCredentials(int userId, String deviceUUID, String authToken,
                                           String firstName, String email) {
         SharedPreferences.Editor editor = sPrefs.edit();

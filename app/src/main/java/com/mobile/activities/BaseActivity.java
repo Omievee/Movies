@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.gson.GsonBuilder;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
@@ -31,6 +35,8 @@ import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -37,6 +37,7 @@ public class Constants {
     public static final String USER_DEVICE_UUID = "UUID";
     public static final String USER_AUTH_TOKEN = "AUTH";
     public static final String FB_TOKEN = "token";
+    public static final String AAID = "AAID";
 
     public static final String USER_FIRST_NAME = "CATHERINE";
     public static final String USER_EMAIL = "BOB@LOBLAW.COM";

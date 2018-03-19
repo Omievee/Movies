@@ -73,6 +73,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     private View progress;
     private boolean updateBillingCard = false;
     private boolean updateBillingAddress = false;
+    private boolean billingAddressSameAsShipping = false;
     ProfileAccountInformationFragment.CustomTextChange customTextChange;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
@@ -147,6 +148,9 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 collapse(billingAddressRoot);
                 billingSwithChangeState(YES);
                 yesNo.setTextColor(ContextCompat.getColor(v.getContext(),R.color.new_red));
+                //TODO COMMENTED BECAUSE THIS CANT BE USED RIGHT NOW, SERVER NEEDS TO RETURN THE ACTUAL ADDRESS
+//                billingAddressSameAsShipping=true;
+//                saveChanges();
             }
         });
 
@@ -324,9 +328,18 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
                     }
 
+                    billingCity = billingCity.trim();
+                    billingState = billingState.trim();
+                    billingZip = billingZip.trim();
+
+                    shippingCity = shippingCity.trim();
+                    shippingState = shippingState.trim();
+                    shippingZip = shippingZip.trim();
+
                     if(userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())){
                         if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
                                 !shippingZip.equalsIgnoreCase(billingZip)){
+
                             billingSwitch.setChecked(false);
                             billingSwithChangeState(NO);
                             billingAddressRoot.setVisibility(View.VISIBLE);
@@ -407,6 +420,9 @@ public class ProfileAccountPlanAndBilling extends Fragment {
             if(updateBillingAddress){
                 updateBillingAddress();
             }
+            if(billingAddressSameAsShipping){
+                updateBillingAddressToShippingAddress();
+            }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -415,6 +431,47 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 mListener.closeFragment();
             }
         });
+    }
+
+    //LOGIC IS HERE
+    //CANT USE RIGHT NOW BECAUSE OF THE WAY ADDRESS IS SET UP IN THE BACK END
+    private void updateBillingAddressToShippingAddress() {
+        int userId = UserPreferences.getUserId();
+
+        String address = userInfoResponse.getShippingAddressLine2();
+        List<String> addressList = Arrays.asList(address.split(",", -1));
+        String shippingCity = "", shippingState = "", shippingZip ="";
+        String addres1 = userInfoResponse.getShippingAddressLine1();
+
+        for (int i = 0; i < addressList.size(); i++) {
+            shippingCity = (addressList.get(0));
+            shippingState = (addressList.get(1));
+            shippingZip = (addressList.get(2));
+        }
+
+        String type = "billingAddress";
+
+                AddressChangeRequest request = new AddressChangeRequest(addres1,"", shippingCity, shippingState, shippingZip, type);
+                RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        if (response != null && response.isSuccessful()) {
+                            loadUserInfo();
+                            Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                            mListener.closeFragment();
+                        } else {
+                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                        }
+                        progress.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        progress.setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                        mListener.closeFragment();
+                    }
+                });
     }
 
     public void updateCCData() {
@@ -427,6 +484,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
                     int ccYear = Integer.valueOf(newBillingExp.getText().toString().charAt(3)+""+newBillingExp.getText().toString().charAt(4));
                     int ccMonth = Integer.valueOf(newBillingExp.getText().toString().charAt(0)+""+newBillingExp.getText().toString().charAt(1));
+                    ccYear+=2000;
 
                     if((year<ccYear)||(year==ccYear && month<=ccMonth)){
                         String newCC =  newBillingCC.getText().toString();
@@ -499,7 +557,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 String newAddress2 = address2.getText().toString();
                 String newCity = city.getText().toString();
                 String newZip = zip.getText().toString();
-                String newState = state.getText().toString();
+                String newState = state.getText().toString().toUpperCase();
 
                 String type = "billingAddress";
 
