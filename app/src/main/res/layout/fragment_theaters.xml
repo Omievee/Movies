@@ -48,10 +48,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard"
             android:layout_marginTop="40dp"
             android:visibility="gone"
+            sothree:mt_backIconTint="@color/white"
+            sothree:mt_clearIconTint="@color/white"
+            sothree:mt_hint="Search City or Zip"
+            sothree:mt_hintColor="@color/white"
+            sothree:mt_navIconTint="@color/white"
             sothree:mt_roundedSearchBarEnabled="true"
-            sothree:mt_searchBarColor="@color/test_blue">
+            sothree:mt_searchBarColor="@color/test_black"
+            sothree:mt_searchIconTint="@color/white"
+
+            sothree:mt_textColor="@color/white">
 
         </com.mancj.materialsearchbar.MaterialSearchBar>
 

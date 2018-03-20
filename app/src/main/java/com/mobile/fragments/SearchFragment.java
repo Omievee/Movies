@@ -125,9 +125,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater, this);
-        Handler handler = new Handler();
         customAdapter.setSuggestions(ALLMOVIES);
-        handler.postDelayed(() -> customAdapter.setSuggestions(ALLMOVIES), 500);
         searchBar.setCustomSuggestionAdapter(customAdapter);
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override

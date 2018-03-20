@@ -101,7 +101,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
-
+    Context myContext;
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -186,35 +186,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         theatersRealm = Realm.getDefaultInstance();
 
-
+        searchGP.setMaxSuggestionCount(3);
         mSearchClose.setOnClickListener(view -> {
+            searchGP.enableSearch();
+            fadeIn(searchGP);
             searchGP.setVisibility(View.VISIBLE);
+            fadeOut(mSearchClose);
+            mSearchClose.setVisibility(View.INVISIBLE);
+            searchGP.animate().start();
             searchGP.setOnSearchActionListener(new SimpleOnSearchActionListener() {
                 @Override
                 public void onSearchConfirmed(CharSequence text) {
                     super.onSearchConfirmed(text);
-
                     searchMap(text.toString());
-                    Log.d(TAG, "onSearchConfirmed: " + text.toString());
+
                 }
             });
 
-//            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_GEOCODE)
-//                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
-//                    .setCountry("US")
-//                    .build();
-//            try {
-//                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-//                        .setFilter(typeFilter)
-//                        .build(getActivity());
-//
-//                startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
-//                mProgress.setVisibility(View.VISIBLE);
-//
-//            } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-//                // TODO: Handle the error.
-//            }
         });
         return rootView;
     }
@@ -650,7 +638,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
             upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
             Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-
         } else {
             displayTheatersFromRealm(nearbyTheaters);
         }
@@ -674,7 +661,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpinstandard, position, theater));
             mClusterManager.cluster();
 
-            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+//            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
             final CameraPosition[] mPreviousCameraPosition = {null};
             mMap.setOnCameraIdleListener(() -> {
                 CameraPosition position1 = mMap.getCameraPosition();
@@ -688,9 +675,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-    void searchMap(String zip) {
+    void searchMap(String searchString) {
         RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
-                .contains("zip", zip)
+                .contains("city", searchString)
+                .or()
+                .contains("zip", searchString)
+                .or()
                 .findAll();
 
         for (int i = 0; i < searchArea.size(); i++) {
@@ -701,8 +691,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Log.d(TAG, "searchMap: " + LON);
 
         }
-        queryRealmLoadTheaters(LAT, LON);
+        Log.d(TAG, "searchMap: " + LAT + " " + LON);
+        if (LAT != 0.0 && LON != 0.0) {
+            queryRealmLoadTheaters(LAT, LON);
+            LatLng latLng = new LatLng(LAT, LON);
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+            mMap.animateCamera(cameraUpdate);
+        } else {
+            Toast.makeText(myContext, "No theaters found", Toast.LENGTH_SHORT).show();
+        }
 
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
     }
 
     @Override
