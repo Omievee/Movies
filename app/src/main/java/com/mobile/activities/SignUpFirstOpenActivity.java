@@ -144,6 +144,9 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                                         }
 
                                     }
+                                    else {
+                                        Toast.makeText(SignUpFirstOpenActivity.this, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
 
                                 @Override
@@ -234,7 +237,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                         signupEmailConfirm.clearFocus();
                     }
                 }
-                }
+            }
         });
     }
 
