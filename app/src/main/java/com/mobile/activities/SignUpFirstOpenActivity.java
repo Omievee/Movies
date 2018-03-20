@@ -122,7 +122,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                         final String birthday = DOB.getText().toString().trim();
                         if (isValidEmail(email1) && isValidPassword(password)) {
                             final CredentialsRequest request = new CredentialsRequest(email1);
-                            RestClient.getUnauthenticated().registerCredentials(request).enqueue(new Callback<Object>() {
+                            RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
                                 @Override
                                 public void onResponse(Call<Object> call, Response<Object> response) {
                                     progress.setVisibility(View.GONE);
