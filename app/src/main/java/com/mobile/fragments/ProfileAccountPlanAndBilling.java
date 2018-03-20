@@ -477,7 +477,9 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     public void updateCCData() {
         if(!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
             if (newBillingCC.getText().toString().length() >= 16) {
+                ccNumTextInputLayout.setError(null);
                 if (newBillingCVV.getText().toString().length() >= 3) {
+                    cvvTextInputLayout.setError(null);
                     if (newBillingExp.getText().toString().length() >= 5) {
                         Calendar c = Calendar.getInstance();
                         int year = c.get(Calendar.YEAR);
@@ -488,6 +490,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                         ccYear += 2000;
 
                         if ((year < ccYear) || (year == ccYear && month <= ccMonth)) {
+                            expTextInputLayout.setError(null);
                             String newCC = newBillingCC.getText().toString();
                             String ccExMonth = newBillingExp.getText().toString().substring(0, 2);
                             String ccExYr = "20" + newBillingExp.getText().toString().substring(3, 5);
@@ -505,13 +508,14 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    expTextInputLayout.setError("Invalid CVV");
+                    cvvTextInputLayout.setError("Invalid CVV");
                 }
             } else {
                 progress.setVisibility(View.GONE);
-                expTextInputLayout.setError("Invalid Credit Card Number");
+                ccNumTextInputLayout.setError("Invalid Credit Card Number");
             }
         } else {
+            progress.setVisibility(View.GONE);
             if(newBillingCVV.getText().toString().trim().isEmpty())
                 cvvTextInputLayout.setError("Required");
             if(newBillingExp.getText().toString().trim().isEmpty())

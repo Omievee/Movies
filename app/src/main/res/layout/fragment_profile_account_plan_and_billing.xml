@@ -177,6 +177,7 @@
                     android:id="@+id/profile_newBilling"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -184,7 +185,7 @@
                         android:id="@+id/ccNumTextInputLayout"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
                         app:errorEnabled="true"
