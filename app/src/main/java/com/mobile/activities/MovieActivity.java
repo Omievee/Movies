@@ -27,6 +27,8 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +36,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -310,24 +313,30 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 reserve(theater, screening, showtime);
             } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
-                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
-                    alert.setMessage(R.string.pre_pop_dialog);
-                    alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        ProgressBar.setVisibility(View.VISIBLE);
-                        reserve(theater, screening, showtime);
-                    });
-                    alert.show();
+                    alertTicketVerifNotice(theater, screening, showtime);
                 } else {
                     ProgressBar.setVisibility(View.VISIBLE);
                     reserve(theater, screening, showtime);
                 }
-
             } else {
                 ProgressBar.setVisibility(View.VISIBLE);
                 reserve(theater, screening, showtime);
             }
         });
+    }
+
+
+    void alertTicketVerifNotice(Theater theater, Screening screening, String showtime) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
+        alert.setView(R.layout.alertdialog_ticketverif);
+
+        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            ProgressBar.setVisibility(View.VISIBLE);
+            reserve(theater, screening, showtime);
+        });
+
+        alert.show();
     }
 
     public void reserve(Theater theater, Screening screening, String showtime) {
