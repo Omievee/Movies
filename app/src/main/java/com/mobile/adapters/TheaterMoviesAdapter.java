@@ -142,19 +142,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         }
 
 
-        if (screening.getTitle().equals("Check In if Movie Missing")) {
-            HOLDER.movieRating.setVisibility(View.GONE);
-            HOLDER.synopsis.setVisibility(View.GONE);
-            HOLDER.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
-        }
-
         if (screening.getSynopsis().equals("")) {
             HOLDER.synopsis.setVisibility(View.INVISIBLE);
         }
 
         HOLDER.movieRating.setText("Rated: " + screening.getRating());
         HOLDER.showtimeGrid.removeAllViews();
-
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -205,7 +198,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             }
                             currentTime = checked;
                             String selectedShowTime = currentTime.getText().toString();
-                            showtimeClickListener.onShowtimeClick(null,holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                            showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                             Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
                         } else {
                             Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
@@ -214,20 +207,26 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 }
             }
 
-            holder.synopsis.setOnClickListener(view -> {
-                String synopsis = screening.getSynopsis();
-                String title = screening.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
+            if (screening.getTitle().equals("Check In if Movie Missing")) {
+                HOLDER.movieRating.setVisibility(View.GONE);
+                HOLDER.synopsis.setVisibility(View.GONE);
+                HOLDER.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+            }
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-            });
         }
+        holder.synopsis.setOnClickListener(view -> {
+            String synopsis = screening.getSynopsis();
+            String title = screening.getTitle();
+            Bundle bundle = new Bundle();
+            bundle.putString(MOVIE, synopsis);
+            bundle.putString(TITLE, title);
+
+            SynopsisFragment fragobj = new SynopsisFragment();
+            fragobj.setArguments(bundle);
+            FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
+            fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+        });
     }
 
 
@@ -240,7 +239,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
-
 
 
 }

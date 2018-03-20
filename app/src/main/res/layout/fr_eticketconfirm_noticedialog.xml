@@ -3,7 +3,7 @@
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="wrap_content"
     android:elevation="5dp"
     app:cardBackgroundColor="@color/test_blue"
     app:cardCornerRadius="5dp">
@@ -30,26 +30,26 @@
             android:text="Be sure this is the movie, showtime, and theater you want before proceeding"
             android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="*Outline an 'M' to confirm "
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/margin_half"-->
+        <!--android:text="*Outline an 'M' to confirm "-->
 
-            android:textStyle="italic">
+        <!--android:textStyle="italic">-->
 
-        </TextView>
+        <!--</TextView>-->
 
-        <com.andrognito.patternlockview.PatternLockView
-            android:id="@+id/LOCKVIEW"
-            android:layout_width="280dp"
-            android:layout_height="280dp"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/margin_standard"
-            app:correctStateColor="@color/gun_metal"
-            app:dotNormalSize="10dp"
-            app:dotSelectedSize="24dp"
-            app:wrongStateColor="@color/new_red" />
+        <!--<com.andrognito.patternlockview.PatternLockView-->
+        <!--android:id="@+id/LOCKVIEW"-->
+        <!--android:layout_width="280dp"-->
+        <!--android:layout_height="280dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:padding="@dimen/margin_standard"-->
+        <!--app:correctStateColor="@color/gun_metal"-->
+        <!--app:dotNormalSize="10dp"-->
+        <!--app:dotSelectedSize="24dp"-->
+        <!--app:wrongStateColor="@color/new_red" />-->
 
 
     </LinearLayout>

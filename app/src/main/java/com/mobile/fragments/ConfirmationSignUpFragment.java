@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import retrofit2.Response;
 
 public class ConfirmationSignUpFragment extends Fragment {
 
+    Context myContext;
     //    private OnFragmentInteractionListener mListener;
     View rootView;
     TextView confirmLogIn;
@@ -61,7 +63,7 @@ public class ConfirmationSignUpFragment extends Fragment {
         String email = ProspectUser.email;
         String password = ProspectUser.password;
         LogInRequest request = new LogInRequest(email, password);
-        String deviceId = DeviceID.getID(getActivity());
+        String deviceId = DeviceID.getID(myContext);
 
         RestClient.getUnauthenticated().login(deviceId, request).enqueue(new Callback<User>() {
             @Override
@@ -75,7 +77,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 //                    int userID = Integer.parseInt(String.valueOf(RestClient.userId) + String.valueOf("3232323"));
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
-                    Intent i = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
+                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
@@ -84,10 +86,16 @@ public class ConfirmationSignUpFragment extends Fragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getActivity(), "Server Timeout: Please login manually", Toast.LENGTH_SHORT).show();
-                Intent failure = new Intent(getActivity(), LogInActivity.class);
+                Toast.makeText(myContext, "Server Timeout: Please login manually", Toast.LENGTH_SHORT).show();
+                Intent failure = new Intent(myContext, LogInActivity.class);
                 startActivity(failure);
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
     }
 }

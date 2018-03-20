@@ -154,10 +154,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mobile.activities.BrowseActivity"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustNothing" />
-        <activity
             android:name="com.mobile.activities.ConfirmationActivity"
             android:theme="@style/AppTheme" />
         <activity
@@ -200,9 +196,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity
-            android:name="com.mobile.activities.NotificationsActivity"
-            android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.OnboardingActivity"
             android:label="@string/title_activity_onboarding"
