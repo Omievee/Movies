@@ -133,7 +133,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
         ccNumTextInputLayout = rootView.findViewById(R.id.ccNumTextInputLayout);
         cvvTextInputLayout = rootView.findViewById(R.id.cvvTextInputLayout);
-        expTextInputLayout = rootView.findViewById(R.id.)
+        expTextInputLayout = rootView.findViewById(R.id.expTextInputLayout);
+
 
         progress = rootView.findViewById(R.id.progress);
         loadUserInfo();
@@ -474,41 +475,49 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     }
 
     public void updateCCData() {
-        if(newBillingCC.getText().toString().length()>=16){
-            if(newBillingCVV.getText().toString().length()>=3){
-                if(newBillingExp.getText().toString().length()>=5){
-                    Calendar c = Calendar.getInstance();
-                    int year = c.get(Calendar.YEAR);
-                    int month = c.get(Calendar.MONTH);
+        if(!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
+            if (newBillingCC.getText().toString().length() >= 16) {
+                if (newBillingCVV.getText().toString().length() >= 3) {
+                    if (newBillingExp.getText().toString().length() >= 5) {
+                        Calendar c = Calendar.getInstance();
+                        int year = c.get(Calendar.YEAR);
+                        int month = c.get(Calendar.MONTH);
 
-                    int ccYear = Integer.valueOf(newBillingExp.getText().toString().charAt(3)+""+newBillingExp.getText().toString().charAt(4));
-                    int ccMonth = Integer.valueOf(newBillingExp.getText().toString().charAt(0)+""+newBillingExp.getText().toString().charAt(1));
-                    ccYear+=2000;
+                        int ccYear = Integer.valueOf(newBillingExp.getText().toString().charAt(3) + "" + newBillingExp.getText().toString().charAt(4));
+                        int ccMonth = Integer.valueOf(newBillingExp.getText().toString().charAt(0) + "" + newBillingExp.getText().toString().charAt(1));
+                        ccYear += 2000;
 
-                    if((year<ccYear)||(year==ccYear && month<=ccMonth)){
-                        String newCC =  newBillingCC.getText().toString();
-                        String ccExMonth = newBillingExp.getText().toString().substring(0, 2);
-                        String ccExYr = "20" + newBillingExp.getText().toString().substring(3, 5);
-                        String newExp = ccExMonth + "/" + ccExYr;
-                        String newCVV = newBillingCVV.getText().toString();
-                        updateCreditCard(newCC, newExp, newCVV);
+                        if ((year < ccYear) || (year == ccYear && month <= ccMonth)) {
+                            String newCC = newBillingCC.getText().toString();
+                            String ccExMonth = newBillingExp.getText().toString().substring(0, 2);
+                            String ccExYr = "20" + newBillingExp.getText().toString().substring(3, 5);
+                            String newExp = ccExMonth + "/" + ccExYr;
+                            String newCVV = newBillingCVV.getText().toString();
+                            updateCreditCard(newCC, newExp, newCVV);
+                        } else {
+                            progress.setVisibility(View.GONE);
+                            expTextInputLayout.setError("Invalid Expiration Date");
+                        }
+
                     } else {
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(), "Please enter a valid expiration date", Toast.LENGTH_SHORT).show();
+                        expTextInputLayout.setError("Invalid Expiration Date");
                     }
-
-                } else{
+                } else {
                     progress.setVisibility(View.GONE);
-                    Toast.makeText(getActivity(), "Please enter a valid expiration date", Toast.LENGTH_SHORT).show();
+                    expTextInputLayout.setError("Invalid CVV");
                 }
             } else {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Please enter a valid security code", Toast.LENGTH_SHORT).show();
+                expTextInputLayout.setError("Invalid Credit Card Number");
             }
-        }
-        else{
-            progress.setVisibility(View.GONE);
-            Toast.makeText(getActivity(), "Please enter a valid credit card", Toast.LENGTH_SHORT).show();
+        } else {
+            if(newBillingCVV.getText().toString().trim().isEmpty())
+                cvvTextInputLayout.setError("Required");
+            if(newBillingExp.getText().toString().trim().isEmpty())
+                expTextInputLayout.setError("Required");
+            if(newBillingCC.getText().toString().trim().isEmpty())
+                ccNumTextInputLayout.setError("Required");
         }
     }
 
