@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:11.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
+
     debugCompile('io.socket:socket.io-client:+') {
         exclude group: 'org.json', module: 'json'
     }
@@ -190,9 +191,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:27.0.2"
     compile "com.android.support:design:27.0.2"
 
-    //PatternLock
-    compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
-
     //Spinner
     compile 'com.jaredrummler:material-spinner:1.2.4'
 
@@ -201,6 +199,9 @@ dependencies {
 
     //Umano Sliding panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
+
+    compile 'com.google.android.exoplayer:exoplayer:2.7.1'
+    compile 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 }
 
 

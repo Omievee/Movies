@@ -12,6 +12,15 @@
         android:layout_height="270dp"
         android:animateLayoutChanges="true"
         android:foreground="@drawable/poster_gradient"
+        android:visibility="gone"
         fresco:actualImageScaleType="centerCrop" />
+
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/featuredVideo"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        app:auto_show="true"
+        app:use_controller="false" />
 
 </android.support.design.widget.CoordinatorLayout>
