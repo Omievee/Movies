@@ -9,6 +9,8 @@ import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,6 +80,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -204,6 +208,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
 
         });
+        
         return rootView;
     }
 
@@ -320,9 +325,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     infoTheaterName.setText(marker.getTitle());
                     infoTheaterAddress1.setText(marker.getSnippet());
 
-                    Log.d(TAG, "getInfoContents: " + marker.getZIndex());
-                    Log.d(TAG, "getInfoContents: " + marker.getTitle());
-
                     if (marker.getTitle() != null) {
                         if (markerTheaterMap.get(marker.getId()).getTicketType().matches("E_TICKET")) {
                             etickIcon.setVisibility(View.VISIBLE);
@@ -340,6 +342,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             }
             return true;
         });
+
         mMap.setOnInfoWindowClickListener(marker -> {
             Intent intent = new Intent(getActivity(), TheaterActivity.class);
             intent.putExtra("cinema", Parcels.wrap(Theater.class, markerTheaterMap.get(marker.getId())));
@@ -676,31 +679,40 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     void searchMap(String searchString) {
-        RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
-                .contains("city", searchString)
-                .or()
-                .contains("zip", searchString)
-                .or()
-                .findAll();
 
-        for (int i = 0; i < searchArea.size(); i++) {
-            LAT = searchArea.get(i).getLat();
-            LON = searchArea.get(i).getLon();
+        Geocoder geo = new Geocoder(myContext);
 
-            Log.d(TAG, "searchMap: " + LAT);
-            Log.d(TAG, "searchMap: " + LON);
 
+        try {
+            List<Address> addresses = geo.getFromLocationName(searchString, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                // Use the address as needed
+                queryRealmLoadTheaters(address.getLatitude(), address.getLongitude());
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+                mMap.animateCamera(cameraUpdate);
+            } else {
+                // Display appropriate message when Geocoder services are not available
+                RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
+                        .contains("city", searchString)
+                        .findAll();
+
+                for (int i = 0; i < searchArea.size(); i++) {
+                    LAT = searchArea.get(i).getLat();
+                    LON = searchArea.get(i).getLon();
+
+                    Log.d(TAG, "searchMap: " + LAT);
+                    Log.d(TAG, "searchMap: " + LON);
+                }
+                queryRealmLoadTheaters(LAT, LON);
+                LatLng latLng = new LatLng(LAT, LON);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+                mMap.animateCamera(cameraUpdate);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Log.d(TAG, "searchMap: " + LAT + " " + LON);
-        if (LAT != 0.0 && LON != 0.0) {
-            queryRealmLoadTheaters(LAT, LON);
-            LatLng latLng = new LatLng(LAT, LON);
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
-            mMap.animateCamera(cameraUpdate);
-        } else {
-            Toast.makeText(myContext, "No theaters found", Toast.LENGTH_SHORT).show();
-        }
-
 
     }
 
