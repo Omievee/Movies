@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -92,13 +93,16 @@ public class SignUpStepOneFragment extends Fragment {
         if (!isViewShown) {
             setButtonActions();
         }
-        signUpAddress1.setOnClickListener(new View.OnClickListener() {
+
+        signUpAddress1.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 if(firstClick){
                     callPlaceAutocompleteActivityIntent();
                     firstClick=false;
+                    return true;
                 }
+                return false;
             }
         });
 

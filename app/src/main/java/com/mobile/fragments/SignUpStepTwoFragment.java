@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -74,6 +75,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     EditText signup2Zip;
     Switch signup2SameAddressSwitch;
     LinearLayout fullBillingAddress, fullBillingAddress2;
+    TextInputLayout ccNumTextInputLayout, cvvTextInputLayout, expTextInputLayout;
     View progress;
 
     String MONTH, YEAR;
@@ -129,6 +131,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
         signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
+
+        ccNumTextInputLayout = view.findViewById(R.id.ccNumTextInputLayout);
+        cvvTextInputLayout = view.findViewById(R.id.cvvTextInputLayout);
+        expTextInputLayout = view.findViewById(R.id.expTextInputLayout);
 
 
         signup2ScanCardIcon.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +196,12 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
 
         signup2NextButton.setOnClickListener(view1 -> {
+            ccNumTextInputLayout.setError(null);
+            cvvTextInputLayout.setError(null);
+            expTextInputLayout.setError(null);
+            signup2CCNum.clearFocus();
+            signup2CCExp.clearFocus();
+            signup2CC_CVV.clearFocus();
             if (infoIsGood()) {
                 Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
@@ -211,14 +223,20 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    makeSnackbar("Please enter a valid expiration date");
+                    expTextInputLayout.setError("Invalid Expiration Date");
                 }
 
-            } else {
-                makeSnackbar("Fill out all required fields.");
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        signup2CCNum.setError(null);
+        signup2CC_CVV.setError(null);
+        signup2CCExp.setError(null);
     }
 
     public boolean infoIsGood() {
@@ -226,14 +244,33 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 && !signup2CCExp.getText().toString().isEmpty()
                 && signup2CCExp.getText().toString().length() == 5
                 && !signup2CC_CVV.getText().toString().isEmpty()
-                && signup2CC_CVV.getText().toString().length() <= 4) {
+                && signup2CC_CVV.getText().toString().length() <= 4 && signup2CC_CVV.length()>=3) {
             return true;
 
 
         }
         else{
-            if(signup2CCNum.length()!=16)
-                signup2CCNum.setError("Invalid credit card number");
+            if(signup2CCNum.length()!=16) {
+                if(signup2CCNum.getText().toString().trim().isEmpty())
+                    ccNumTextInputLayout.setError("Required");
+                else
+                    ccNumTextInputLayout.setError("Invalid Credit Card Number");
+                signup2CCNum.clearFocus();
+            }
+            if(signup2CC_CVV.length() != 4 && signup2CC_CVV.length()!=3){
+                if(signup2CC_CVV.getText().toString().trim().isEmpty())
+                    cvvTextInputLayout.setError("Required");
+                else
+                    cvvTextInputLayout.setError("Invalid CVV");
+                signup2CC_CVV.clearFocus();
+            }
+            if(signup2CCExp.length()!=5) {
+                if(signup2CCExp.getText().toString().trim().isEmpty())
+                    expTextInputLayout.setError("Required");
+                else
+                    expTextInputLayout.setError("Invalid Expiration Date");
+                signup2CCExp.clearFocus();
+            }
         }
         return false;
     }
@@ -296,7 +333,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                         if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") ||  signup2CCExp.equals("")
                                 || signup2CCNum.getText().length() < 16 || signup2CC_CVV.getText().length() < 3 || signup2CCExp.getText().length() < 5) {
 
-                            Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+                            infoIsGood();
                         } else {
                             signup2NextButton.setEnabled(true);
                             ((SignUpActivity) getActivity()).setPage();

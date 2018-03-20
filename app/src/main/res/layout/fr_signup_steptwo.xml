@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coord_main"
     android:layout_width="match_parent"
@@ -10,6 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_marginTop="120dp">
 
 
@@ -19,7 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/margin_minimum">
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,24 +74,40 @@
                         android:orientation="horizontal"
                         android:padding="@dimen/margin_half">
 
-                        <EditText
-                            android:id="@+id/SIGNUP2_CCNUM"
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/ccNumTextInputLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginEnd="@dimen/margin_half"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Credit Card Number"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="16"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white"
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
-                            android:textColorHint="@color/gray_icon" />
+                            <EditText
+                                android:id="@+id/SIGNUP2_CCNUM"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginEnd="@dimen/margin_half"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="Credit Card Number"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="16"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
+                        </android.support.design.widget.TextInputLayout>
 
                         <ImageButton
                             android:id="@+id/SIGNUP2_SCANCARD_ICON"
@@ -107,40 +125,74 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_half"
                         android:layout_marginStart="@dimen/margin_half"
-                        android:layout_marginTop="@dimen/margin_standard"
                         android:orientation="horizontal">
 
-
-                        <EditText
-                            android:id="@+id/SIGNUP2_EXPIRATION"
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/expTextInputLayout"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Expiration MM/YY"
-                            android:inputType="date"
-                            android:lines="1"
-                            android:maxLength="5"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white" />
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
+                            <EditText
+                                android:id="@+id/SIGNUP2_EXPIRATION"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:layout_weight="1"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="Expiration MM/YY"
+                                android:inputType="date"
+                                android:lines="1"
+                                android:maxLength="5"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
 
-                        <EditText
-                            android:id="@+id/SIGNUP2_CVV"
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/cvvTextInputLayout"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:backgroundTint="@color/white"
-                            android:hint="Security code (CVV)"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="4"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white" />
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                            <EditText
+                                android:id="@+id/SIGNUP2_CVV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="Security code (CVV)"
+                                android:inputType="number"
+                                android:lines="1"
+                                android:maxLength="4"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
+
+                        </android.support.design.widget.TextInputLayout>
 
                     </LinearLayout>
 
@@ -156,29 +208,32 @@
                     android:orientation="horizontal"
                     android:padding="@dimen/margin_half">
 
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.8"
                         android:text="Use shipping address for billing?"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/signup_yes_no"
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".2"
-                        android:text="YES"
-                        android:textSize="18sp" />
+                        android:layout_weight="0.2">
 
-                    <Switch
-                        android:id="@+id/SIGNUP2_SWITCH"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".2"
-                        android:checked="true" />
+                        <TextView
+                            android:id="@+id/signup_yes_no"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="YES"
+                            android:textSize="18sp" />
+
+                        <Switch
+                            android:id="@+id/SIGNUP2_SWITCH"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true" />
+                    </LinearLayout>
 
 
                 </LinearLayout>

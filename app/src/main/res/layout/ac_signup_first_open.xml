@@ -136,7 +136,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="@dimen/margin_standard">
 
                     <com.jaredrummler.materialspinner.MaterialSpinner
@@ -149,7 +148,7 @@
                         android:textSize="18sp"
                         app:ms_arrow_tint="@color/white"
                         app:ms_background_color="@color/test_black"
-                        app:ms_hint_color="@color/white"
+                        app:ms_hint_color="@color/white_80_opacity"
                         app:ms_text_color="@color/white" />
 
 
@@ -157,10 +156,12 @@
                         android:id="@+id/DOB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
+                        android:paddingRight="50dp"
+                        android:layout_toRightOf="@id/SPINNER"
                         android:layout_marginTop="@dimen/margin_half"
                         android:clickable="true"
                         android:editable="false"
+                        android:backgroundTint="@color/white_40_opacity"
                         android:focusable="false"
                         android:hint="Date of Birth" />
 

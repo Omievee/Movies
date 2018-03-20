@@ -92,6 +92,15 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             }
         });
 
+        spinnerGender.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                signupEmailConfirm.clearFocus();
+                signupEmailInput.clearFocus();
+                signupPasswordInput.clearFocus();
+            }
+        });
+
 
         signupNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
