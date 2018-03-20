@@ -133,7 +133,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
         ccNumTextInputLayout = rootView.findViewById(R.id.ccNumTextInputLayout);
         cvvTextInputLayout = rootView.findViewById(R.id.cvvTextInputLayout);
-        expTextInputLayout = rootView
+        expTextInputLayout = rootView.findViewById(R.id.)
 
         progress = rootView.findViewById(R.id.progress);
         loadUserInfo();
