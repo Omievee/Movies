@@ -144,7 +144,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
 
         mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
+                .Builder(myContext)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
@@ -163,11 +163,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         nearbyTheaters = new LinkedList<>();
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(myContext);
         slideup = rootView.findViewById(R.id.sliding_layout);
         /* Set up RecyclerView */
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
         theatersRECY.setLayoutManager(manager);
         theaterAdapter = new TheatersAdapter(nearbyTheaters);
@@ -287,9 +287,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
 
-            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style_json));
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(myContext, R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
-            mClusterManager = new ClusterManager<>(getActivity(), mMap);
+            mClusterManager = new ClusterManager<>(myContext, mMap);
             mClusterManager.setRenderer(new TheaterPinRenderer());
             mMap.setOnMarkerClickListener(mClusterManager);
 
@@ -347,16 +347,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
         mMap.setOnInfoWindowClickListener(marker -> {
-            Intent intent = new Intent(getActivity(), TheaterActivity.class);
+            Intent intent = new Intent(myContext, TheaterActivity.class);
             intent.putExtra("cinema", Parcels.wrap(Theater.class, markerTheaterMap.get(marker.getId())));
-            getActivity().startActivity(intent);
+            myContext.startActivity(intent);
         });
 
     }
 
 
     void locationUpdateRealm() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
         }
         mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
@@ -429,34 +429,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         if (searchThisArea.getVisibility() == View.VISIBLE) {
             searchThisArea.setVisibility(View.GONE);
             fadeOut(searchThisArea);
-        }
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        theaterAdapter.notifyDataSetChanged();
-        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                mRequestingLocationUpdates = false;
-                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-                GoWatchItSingleton.getInstance().searchEvent(place.getAddress().toString(), "theatrical_search", url);
-
-                LatLng latLng = new LatLng(place.getLatLng().latitude, place.getLatLng().longitude);
-                Log.d(TAG, "onActivityResult: " + place.getLatLng().latitude + " " + place.getLatLng().longitude);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
-                mMap.animateCamera(cameraUpdate);
-
-                double placeLocalLat = Double.parseDouble(String.format("%.2f", place.getLatLng().latitude));
-                double placeLocalLon = Double.parseDouble(String.format("%.2f", place.getLatLng().longitude));
-
-                queryRealmLoadTheaters(placeLocalLat, placeLocalLon);
-
-                theatersRECY.getRecycledViewPool().clear();
-
-
-            }
         }
     }
 
@@ -681,8 +653,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             List<Address> addresses = geo.getFromLocationName(searchString, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-
+                GoWatchItSingleton.getInstance().searchEvent(address.toString(), "theatrical_search", url);
                 queryRealmLoadTheaters(address.getLatitude(), address.getLongitude());
+                theaterAdapter.notifyDataSetChanged();
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
                 mMap.animateCamera(cameraUpdate);
@@ -690,6 +663,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
                         .contains("city", searchString)
                         .findAll();
+                GoWatchItSingleton.getInstance().searchEvent(searchString, "theatrical_search", url);
 
                 for (int i = 0; i < searchArea.size(); i++) {
                     LAT = searchArea.get(i).getLat();
@@ -699,6 +673,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     Log.d(TAG, "searchMap: " + LON);
                 }
                 queryRealmLoadTheaters(LAT, LON);
+                theaterAdapter.notifyDataSetChanged();
                 LatLng latLng = new LatLng(LAT, LON);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
                 mMap.animateCamera(cameraUpdate);
