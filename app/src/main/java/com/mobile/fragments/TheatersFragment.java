@@ -82,6 +82,7 @@ import org.parceler.Parcels;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -322,11 +323,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 public View getInfoContents(Marker marker) {
                     TextView infoTheaterName = customInfoWindow.findViewById(R.id.info_TheaterName);
                     TextView infoTheaterAddress1 = customInfoWindow.findViewById(R.id.info_TheaterAddress1);
+                    TextView infoTheaterAddress2 = customInfoWindow.findViewById(R.id.info_TheaterAddress2);
+
                     ImageView etickIcon = customInfoWindow.findViewById(R.id.info_Etix);
                     ImageView seatIcon = customInfoWindow.findViewById(R.id.info_Seat);
 
                     infoTheaterName.setText(marker.getTitle());
-                    infoTheaterAddress1.setText(marker.getSnippet());
+
+                    String address = marker.getSnippet();
+                    List<String> snippetString = Arrays.asList(address.split(",", -1));
+
+                    for (int i = 0; i < snippetString.size(); i++) {
+                        infoTheaterAddress1.setText(snippetString.get(0).trim());
+                        infoTheaterAddress2.setText(snippetString.get(1).trim());
+                    }
+
 
                     if (marker.getTitle() != null) {
                         if (markerTheaterMap.get(marker.getId()).getTicketType().matches("E_TICKET")) {
@@ -347,6 +358,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
         mMap.setOnInfoWindowClickListener(marker -> {
+            mProgress.setVisibility(View.VISIBLE);
             Intent intent = new Intent(myContext, TheaterActivity.class);
             intent.putExtra("cinema", Parcels.wrap(Theater.class, markerTheaterMap.get(marker.getId())));
             myContext.startActivity(intent);
@@ -457,8 +469,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         private final IconGenerator mClusterIconGenerator;
 
         public TheaterPinRenderer() {
-            super(getActivity(), mMap, mClusterManager);
-            mClusterIconGenerator = new IconGenerator(getActivity());
+            super(myContext, mMap, mClusterManager);
+            mClusterIconGenerator = new IconGenerator(myContext);
         }
 
         @Override
@@ -520,11 +532,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public boolean onClusterClick(final Cluster<TheaterPin> cluster) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), (float) Math.floor(mMap.getCameraPosition().zoom + 1)), 300, null);
         return true;
-    }
-
-
-    public interface OnFragmentInteractionListener {
-
     }
 
 
@@ -659,6 +666,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
                 mMap.animateCamera(cameraUpdate);
+                Log.d(TAG, "address: " + address);
             } else {
                 RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
                         .contains("city", searchString)
@@ -672,11 +680,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     Log.d(TAG, "searchMap: " + LAT);
                     Log.d(TAG, "searchMap: " + LON);
                 }
-                queryRealmLoadTheaters(LAT, LON);
-                theaterAdapter.notifyDataSetChanged();
-                LatLng latLng = new LatLng(LAT, LON);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
-                mMap.animateCamera(cameraUpdate);
+                if (LAT != 0.0 && LON != 0.0) {
+                    queryRealmLoadTheaters(LAT, LON);
+                    theaterAdapter.notifyDataSetChanged();
+                    LatLng latLng = new LatLng(LAT, LON);
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+                    mMap.animateCamera(cameraUpdate);
+                } else {
+                    Toast.makeText(myContext, "No Theaters found", Toast.LENGTH_SHORT).show();
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();

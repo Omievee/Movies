@@ -15,10 +15,10 @@
             android:id="@+id/info_TheaterName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLength="50"
             android:text="Theater Name"
             android:textColor="@color/black_text"
             android:textSize="15sp"
-            android:maxLength="50"
             android:textStyle="bold" />
 
         <TextView
@@ -32,12 +32,23 @@
             android:textColor="@color/black_text"
             android:textSize="15sp" />
 
+        <TextView
+            android:id="@+id/info_TheaterAddress2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_TheaterAddress1"
+            android:layout_marginTop="@dimen/margin_half"
+            android:maxLines="2"
+            android:text="Address 1"
+            android:textColor="@color/black_text"
+            android:textSize="15sp" />
+
 
         <ImageView
             android:id="@+id/info_Etix"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_below="@id/info_TheaterAddress1"
+            android:layout_below="@id/info_TheaterAddress2"
             android:layout_marginTop="@dimen/margin_half"
             android:src="@drawable/ticketnavwhite"
             android:tint="@color/black_text"
@@ -47,7 +58,7 @@
             android:id="@+id/info_Seat"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_below="@id/info_TheaterAddress1"
+            android:layout_below="@id/info_TheaterAddress2"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_half"
             android:layout_toEndOf="@id/info_Etix"
