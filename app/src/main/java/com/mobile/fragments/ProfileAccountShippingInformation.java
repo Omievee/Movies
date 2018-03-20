@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +30,8 @@ import com.mobile.network.RestClient;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +58,7 @@ public class ProfileAccountShippingInformation extends Fragment {
     boolean firstClick = true;
     private Context context;
     private ProfileActivityInterface mListener;
+    private TextInputLayout address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
 //    private OnFragmentInteractionListener mListener;
 
     public ProfileAccountShippingInformation() {
@@ -98,6 +102,11 @@ public class ProfileAccountShippingInformation extends Fragment {
         zip.addTextChangedListener(new CustomTextWatcher());
         state.addTextChangedListener(new CustomTextWatcher());
         city.addTextChangedListener(new CustomTextWatcher());
+
+        address1TextInputLayout = rootView.findViewById(R.id.address1TextInputLayout);
+        cityTextInputLayout = rootView.findViewById(R.id.cityTextInputLayout);
+        stateTextInputLayout = rootView.findViewById(R.id.stateTextInputLayout);
+        zipTextInputLayout = rootView.findViewById(R.id.zipTextInputLayout);
 
 
         progress.setVisibility(View.VISIBLE);
@@ -221,15 +230,22 @@ public class ProfileAccountShippingInformation extends Fragment {
                 });
             }
             else {
-                if(address1.getText().toString().trim().isEmpty())
-                    address1.setError("Error");
-                if(state.getText().toString().trim().isEmpty())
-                    state.setError("Error");
-                if(zip.getText().toString().trim().isEmpty())
-                    zip.setError("Error");
-                if(city.getText().toString().trim().isEmpty())
-                    city.setError("Error");
-                Toast.makeText(context, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                if(address1.getText().toString().trim().isEmpty()) {
+                    address1TextInputLayout.setError("Required");
+                    address1.clearFocus();
+                }
+                if(state.getText().toString().trim().isEmpty()) {
+                    stateTextInputLayout.setError("Required");
+                    state.clearFocus();
+                }
+                if(zip.getText().toString().trim().isEmpty()) {
+                    zipTextInputLayout.setError("Required");
+                    zip.clearFocus();
+                }
+                if(city.getText().toString().trim().isEmpty()) {
+                    cityTextInputLayout.setError("Required");
+                    city.clearFocus();
+                }
                 progress.setVisibility(View.GONE);
             }
 
