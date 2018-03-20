@@ -225,8 +225,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
-                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
-                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setView(R.layout.alertdialog_ticketverif);
                     alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         progress.setVisibility(View.VISIBLE);
                         reserve(screening, showtime);
