@@ -73,6 +73,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     UserInfoResponse userInfoResponse;
     private View progress;
     private TextInputLayout zipTextInputLayout, cityTextInputLayout, stateTextInputLayout, address1TextInputLayout, address2TextInputLayout;
+    private TextInputLayout ccNumTextInputLayout, cvvTextInputLayout, expTextInputLayout;
     private boolean updateBillingCard = false;
     private boolean updateBillingAddress = false;
     private boolean billingAddressSameAsShipping = false;
@@ -129,6 +130,10 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         stateTextInputLayout = rootView.findViewById(R.id.stateTextInputLayout);
         address1TextInputLayout = rootView.findViewById(R.id.address1TextInputLayout);
         address2TextInputLayout = rootView.findViewById(R.id.address2TextInputLayout);
+
+        ccNumTextInputLayout = rootView.findViewById(R.id.ccNumTextInputLayout);
+        cvvTextInputLayout = rootView.findViewById(R.id.cvvTextInputLayout);
+        expTextInputLayout = rootView
 
         progress = rootView.findViewById(R.id.progress);
         loadUserInfo();
