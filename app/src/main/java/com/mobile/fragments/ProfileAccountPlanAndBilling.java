@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -71,10 +72,10 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     private Switch billingSwitch;
     UserInfoResponse userInfoResponse;
     private View progress;
+    private TextInputLayout zipTextInputLayout, cityTextInputLayout, stateTextInputLayout, address1TextInputLayout, address2TextInputLayout;
     private boolean updateBillingCard = false;
     private boolean updateBillingAddress = false;
     private boolean billingAddressSameAsShipping = false;
-    ProfileAccountInformationFragment.CustomTextChange customTextChange;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
@@ -85,22 +86,10 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         // Required empty public constructor
     }
 
-//    public static ProfileAccountPlanAndBilling newInstance(String param1, String param2) {
-//        ProfileAccountPlanAndBilling fragment = new ProfileAccountPlanAndBilling();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
@@ -135,6 +124,11 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         state = rootView.findViewById(R.id.state);
         zip = rootView.findViewById(R.id.zip);
         billingAddressRoot = rootView.findViewById(R.id.Billing2);
+        zipTextInputLayout = rootView.findViewById(R.id.zipTextInputLayout);
+        cityTextInputLayout = rootView.findViewById(R.id.cityTextInputLayout);
+        stateTextInputLayout = rootView.findViewById(R.id.stateTextInputLayout);
+        address1TextInputLayout = rootView.findViewById(R.id.address1TextInputLayout);
+        address2TextInputLayout = rootView.findViewById(R.id.address2TextInputLayout);
 
         progress = rootView.findViewById(R.id.progress);
         loadUserInfo();
@@ -583,17 +577,17 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                     }
                 });
             }
-        }else {
-            if(address1.getText().toString().trim().isEmpty())
-                address1.setError("Error");
-            if(state.getText().toString().trim().isEmpty())
-                state.setError("Error");
-            if(zip.getText().toString().trim().isEmpty())
-                zip.setError("Error");
-            if(city.getText().toString().trim().isEmpty())
-                city.setError("Error");
-            Toast.makeText(context, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
-            progress.setVisibility(View.GONE);
+            else {
+                if(address1.getText().toString().trim().isEmpty())
+                    address1TextInputLayout.setError("Required");
+                if(state.getText().toString().trim().isEmpty())
+                    stateTextInputLayout.setError("Required");
+                if(zip.getText().toString().trim().isEmpty())
+                    zipTextInputLayout.setError("Required");
+                if(city.getText().toString().trim().isEmpty())
+                    cityTextInputLayout.setError("Required");
+                progress.setVisibility(View.GONE);
+            }
         }
 
     }

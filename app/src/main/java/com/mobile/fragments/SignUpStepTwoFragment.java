@@ -35,6 +35,8 @@ import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
 import com.moviepass.R;
 
+import java.util.Calendar;
+
 import butterknife.ButterKnife;
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
@@ -189,15 +191,29 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
         signup2NextButton.setOnClickListener(view1 -> {
             if (infoIsGood()) {
-                String ccNum = signup2CCNum.getText().toString();
-                String ccEx = signup2CCExp.getText().toString().substring(0, 2);
-                String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
-                String ccCVV = signup2CC_CVV.getText().toString();
-                creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
-                Log.d(TAG, "onViewCreated: " + ccNum + ccEx + ccEx2 + ccCVV);
-                if (((SignUpActivity) getActivity()) != null) {
-                    ((SignUpActivity) getActivity()).setPage();
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+
+                int ccYear = Integer.valueOf(signup2CCExp.getText().toString().charAt(3)+""+signup2CCExp.getText().toString().charAt(4));
+                int ccMonth = Integer.valueOf(signup2CCExp.getText().toString().charAt(0)+""+signup2CCExp.getText().toString().charAt(1));
+                ccYear+=2000;
+
+                if((year<ccYear)||(year==ccYear && month<=ccMonth)){
+                    String ccNum = signup2CCNum.getText().toString();
+                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
+                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
+                    String ccCVV = signup2CC_CVV.getText().toString();
+                    creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
+                    Log.d(TAG, "onViewCreated: " + ccNum + ccEx + ccEx2 + ccCVV);
+                    if (((SignUpActivity) getActivity()) != null) {
+                        ((SignUpActivity) getActivity()).setPage();
+                    }
+                } else {
+                    progress.setVisibility(View.GONE);
+                    makeSnackbar("Please enter a valid expiration date");
                 }
+
             } else {
                 makeSnackbar("Fill out all required fields.");
             }
@@ -213,18 +229,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 && signup2CC_CVV.getText().toString().length() <= 4) {
             return true;
 
-            //TODO: RETURN AND CHECK WHY NULL?
-//        } else if (
-//                !signup2SameAddressSwitch.isChecked()
-//                        && signup2CCNum.length() == 16
-//                        && !signup2CCExp.getText().toString().isEmpty()
-//                        && !signup2CC_CVV.getText().toString().isEmpty()
-//                        && !signup2CCName.getText().toString().isEmpty()
-//                        && !signup2Address.getText().toString().equals("")
-//                        && !signup2City.getText().toString().equals("")
-//                        && !signup2State.getSelectedItem().toString().equals("State")
-//                        && signup2Zip.getText().toString().length() == 5) {
-//            return true;
+
+        }
+        else{
+            if(signup2CCNum.length()!=16)
+                signup2CCNum.setError("Invalid credit card number");
         }
         return false;
     }

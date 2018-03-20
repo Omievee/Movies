@@ -50,8 +50,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_below="@id/ACCOUNTHEADER"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ACCOUNTHEADER">
 
         <LinearLayout
             android:id="@+id/billingdetails"
@@ -180,23 +180,39 @@
                     android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <EditText
-                        android:id="@+id/profile_ccnum"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ccNumTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginEnd="@dimen/margin_half"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/white"
-                        android:hint="Credit Card Number"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="16"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/profile_ccnum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginEnd="@dimen/margin_half"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Credit Card Number"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="16"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/profile_scanicon"
@@ -214,38 +230,72 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="horizontal"
                     android:visibility="gone">
 
-                    <EditText
-                        android:id="@+id/profile_expiration"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/expTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_minimum"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/white"
-                        android:hint="Expiration MM/YY"
-                        android:inputType="date"
-                        android:lines="1"
-                        android:maxLength="5"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/white" />
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
+                        <EditText
+                            android:id="@+id/profile_expiration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Expiration MM/YY"
+                            android:inputType="date"
+                            android:lines="1"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
 
-                    <EditText
-                        android:id="@+id/profile_cvv"
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cvvTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_minimum"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/white"
-                        android:hint="Security code (CVV)"
-                        android:inputType="number"
-                        android:lines="1"
-                        android:maxLength="4"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/white" />
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/profile_cvv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Security code (CVV)"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="4"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
 
 
                 </LinearLayout>
@@ -318,10 +368,13 @@
                     android:visibility="gone">
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address1TextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
                         app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                         <EditText
@@ -345,10 +398,13 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address2TextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
                         app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                         <EditText
@@ -380,11 +436,14 @@
                         android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/cityTextInputLayout"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.6"
                             android:textColorHint="@color/white_80_opacity"
                             android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
                             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                             <EditText
@@ -408,11 +467,14 @@
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/stateTextInputLayout"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.2"
                             android:textColorHint="@color/white_80_opacity"
                             android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
                             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                             <EditText
@@ -436,11 +498,14 @@
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
+                            android:id="@+id/zipTextInputLayout"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.2"
                             android:textColorHint="@color/white_80_opacity"
                             android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
                             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                             <EditText
