@@ -86,7 +86,6 @@ public class OnboardingActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         findTheaters.setVisibility(View.VISIBLE);
-
                         break;
                     case 1:
                         findTheaters.setVisibility(View.VISIBLE);
@@ -101,7 +100,6 @@ public class OnboardingActivity extends AppCompatActivity {
                         break;
                     case 4:
                         findTheaters.setVisibility(View.INVISIBLE);
-
                         break;
                 }
             }
