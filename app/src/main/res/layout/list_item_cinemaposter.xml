@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_standard"
+    android:id="@+id/CardShowtime"
     android:layout_marginEnd="@dimen/margin_half"
     android:layout_marginStart="@dimen/margin_half"
     android:layout_marginTop="@dimen/margin_half"

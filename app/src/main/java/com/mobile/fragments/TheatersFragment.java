@@ -86,6 +86,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -203,12 +204,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 public void onSearchConfirmed(CharSequence text) {
                     super.onSearchConfirmed(text);
                     searchMap(text.toString());
-
+                    fadeOut(searchGP);
+                    searchGP.setVisibility(View.GONE);
+                    fadeIn(mSearchClose);
+                    mSearchClose.setVisibility(View.VISIBLE);
                 }
             });
-
         });
-        
+
         return rootView;
     }
 
@@ -504,7 +507,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
 
-
                 // Draw multiple people.
                 // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(3, cluster.getSize()));
@@ -592,47 +594,44 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         }
 
-        for (int i = 0; i < nearbyTheaters.size(); i++) {
+
+        for (int i = nearbyTheaters.size() - 1; i > 0; i--) {
             smallLocal = new Location(LocationManager.GPS_PROVIDER);
             smallLocal.setLatitude(nearbyTheaters.get(i).getLat());
             smallLocal.setLongitude(nearbyTheaters.get(i).getLon());
 
             furthest = userCurrentLocation.distanceTo(smallLocal);
             Theater etixSelect = nearbyTheaters.get(i);
+
             if (etixSelect.getTicketType().matches("E_TICKET") || etixSelect.getTicketType().matches("SELECT_SEATING")) {
                 nearbyTheaters.remove(etixSelect);
                 nearbyTheaters.add(0, etixSelect);
-
-
-                mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-                    @Override
-                    public void onCameraMove() {
-                        Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
-                        cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
-                        cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
-
-
-                        double distance = userCurrentLocation.distanceTo(cameraLocal);
-                        double myLocationToCameraLocation = (distance / 1609.344);
-                        double myLocationToFurthestTheaterLocation = (furthest / 1609.344);
-
-                        if (myLocationToCameraLocation > myLocationToFurthestTheaterLocation) {
-                            fadeIn(searchThisArea);
-                            searchThisArea.setVisibility(View.VISIBLE);
-                            searchThisArea.setOnClickListener(v -> {
-                                double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
-                                double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
-                                mProgress.setVisibility(View.VISIBLE);
-                                queryRealmLoadTheaters(searchLat, searchLon);
-                                searchThisArea.setVisibility(View.GONE);
-                                fadeOut(searchThisArea);
-                            });
-                        }
-
-
-                    }
-                });
             }
+
+            mMap.setOnCameraMoveListener(() -> {
+                Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
+                cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
+                cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
+
+
+                double distance = userCurrentLocation.distanceTo(cameraLocal);
+                double myLocationToCameraLocation = (distance / 1609.344);
+                double myLocationToFurthestTheaterLocation = (furthest / 1609.344);
+
+                if (myLocationToCameraLocation > myLocationToFurthestTheaterLocation) {
+                    fadeIn(searchThisArea);
+                    searchThisArea.setVisibility(View.VISIBLE);
+                    searchThisArea.setOnClickListener(v -> {
+                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
+                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+                        mProgress.setVisibility(View.VISIBLE);
+                        queryRealmLoadTheaters(searchLat, searchLon);
+                        searchThisArea.setVisibility(View.GONE);
+                        fadeOut(searchThisArea);
+                    });
+                }
+            });
+
         }
 
 
@@ -647,7 +646,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     void displayTheatersFromRealm(LinkedList<Theater> theatersList) {
-        Log.d(TAG, "2nd size?: " + theatersList.size());
         mProgress.setVisibility(View.GONE);
         theaterAdapter.notifyDataSetChanged();
         slideup.setEnabled(true);
@@ -664,7 +662,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             mClusterManager.addItem(new TheaterPin(theater.getLat(), theater.getLon(), theater.getName(), R.drawable.theaterpinstandard, position, theater));
             mClusterManager.cluster();
 
-//            mMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
             final CameraPosition[] mPreviousCameraPosition = {null};
             mMap.setOnCameraIdleListener(() -> {
                 CameraPosition position1 = mMap.getCameraPosition();
@@ -679,21 +676,17 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     void searchMap(String searchString) {
-
         Geocoder geo = new Geocoder(myContext);
-
-
         try {
             List<Address> addresses = geo.getFromLocationName(searchString, 1);
             if (addresses != null && !addresses.isEmpty()) {
                 Address address = addresses.get(0);
-                // Use the address as needed
+
                 queryRealmLoadTheaters(address.getLatitude(), address.getLongitude());
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
                 mMap.animateCamera(cameraUpdate);
             } else {
-                // Display appropriate message when Geocoder services are not available
                 RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
                         .contains("city", searchString)
                         .findAll();
