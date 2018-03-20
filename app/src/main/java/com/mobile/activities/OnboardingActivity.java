@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobile.Constants;
@@ -35,7 +36,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     TextView nearMe;
     ImageView[] indicators;
-
+    RelativeLayout findTheaters;
     int page = 0;
 
     CoordinatorLayout mCoordinator;
@@ -55,7 +56,7 @@ public class OnboardingActivity extends AppCompatActivity {
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
         four = findViewById(R.id.intro_indicator_4);
-
+        findTheaters = findViewById(R.id.buttons);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -84,14 +85,23 @@ public class OnboardingActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                        findTheaters.setVisibility(View.VISIBLE);
+
                         break;
                     case 1:
+                        findTheaters.setVisibility(View.VISIBLE);
+
                         break;
                     case 2:
+                        findTheaters.setVisibility(View.INVISIBLE);
+
                         break;
                     case 3:
+                        findTheaters.setVisibility(View.INVISIBLE);
                         break;
                     case 4:
+                        findTheaters.setVisibility(View.INVISIBLE);
+
                         break;
                 }
             }
