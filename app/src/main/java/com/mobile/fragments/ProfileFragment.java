@@ -198,10 +198,10 @@ public class ProfileFragment extends Fragment {
 
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeIn.setInterpolator(new DecelerateInterpolator());
         fadeIn.setDuration(1000);
 
-        AnimationSet animation = new AnimationSet(false); //change to false
+        AnimationSet animation = new AnimationSet(false);
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 

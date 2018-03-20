@@ -1,21 +1,38 @@
 package com.mobile.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcel;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mobile.Constants;
+import com.mobile.activities.TheaterActivity;
+import com.mobile.activities.TheatersActivity;
+import com.mobile.fragments.TheatersFragment;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
+import org.parceler.Parcels;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,15 +43,12 @@ import butterknife.ButterKnife;
 
 public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
 
-    private final TheatersClickListener theatersClickListener;
-    private ArrayList<Theater> theatersArrayList;
-
+    private LinkedList<Theater> theatersArrayList;
+    public static final String THEATER = "cinema";
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
-    private Context context;
+    TextView etickets, nearby;
 
-    public TheatersAdapter(ArrayList<Theater> theatersArrayList, TheatersClickListener theatersClickListener) {
-        this.theatersClickListener = theatersClickListener;
+    public TheatersAdapter(LinkedList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
     }
 
@@ -54,6 +68,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         @BindView(R.id.icon_seat)
         ImageView iconSeat;
 
+        @BindView(R.id.distanceView)
+        RelativeLayout distanceView;
+
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
@@ -65,12 +82,15 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
             distance = v.findViewById(R.id.theater_distance);
             iconTicket = v.findViewById(R.id.icon_ticket);
             iconSeat = v.findViewById(R.id.icon_seat);
+            distanceView = v.findViewById(R.id.distanceView);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater, parent, false);
+
+
         return new ViewHolder(view);
     }
 
@@ -78,6 +98,17 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Theater theater = theatersArrayList.get(position);
+
+        if (theater.ticketTypeIsStandard()) {
+            holder.iconTicket.setVisibility(View.INVISIBLE);
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else if (theater.ticketTypeIsETicket()) {
+            holder.iconSeat.setVisibility(View.INVISIBLE);
+        } else {
+            holder.iconSeat.setVisibility(View.VISIBLE);
+            holder.iconTicket.setVisibility(View.VISIBLE);
+        }
+
 
         holder.name.setText(theater.getName());
         holder.address.setText(theater.getAddress());
@@ -103,17 +134,26 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         String formattedAddress = theater.getDistance() + " miles";
         holder.distance.setText(formattedAddress);
 
-        if (theater.ticketTypeIsStandard()) {
-            holder.iconTicket.setVisibility(View.INVISIBLE);
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        } else if (theater.ticketTypeIsETicket()) {
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        }
+        final Uri uri = Uri.parse("geo:" + theater.getLat() + "," + theater.getLon() + "?q=" + Uri.encode(theater.getName()));
+        holder.distanceView.setOnClickListener(v -> {
+            try {
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                mapIntent.setPackage("com.google.android.apps.maps");
+                holder.itemView.getContext().startActivity(mapIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(holder.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+            } catch (Exception x) {
+                x.getMessage();
+            }
 
-        Theater theaterSelected  = theater;
+        });
+
         holder.listItemTheater.setTag(position);
-        setSlideAnimation(holder.listItemTheater);
-        holder.itemView.setOnClickListener(v -> theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theaterSelected, (int) holder.itemView.getX(), (int) holder.itemView.getY()));
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
+            intent.putExtra(THEATER, Parcels.wrap(Theater.class, theater));
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -123,11 +163,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_ITEM;
+        return position;
     }
 
-    private void setSlideAnimation(View view) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up);
-        view.startAnimation(animation);
-    }
 }

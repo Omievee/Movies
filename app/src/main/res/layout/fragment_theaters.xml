@@ -1,87 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relative_layout"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:nestedScrollingEnabled="false"
+    sothree:umanoDragView="@+id/ListViewMaps"
+    sothree:umanoOverlay="true"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@id/listViewTheaters"
+    sothree:umanoShadowHeight="4dp">
 
-    <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mapView"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/search_inactive"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:background="@drawable/circle_white_alpha"
-        android:src="@drawable/ic_search_black_24dp"
-        android:tint="@color/white" />
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
 
-    <ImageView
-        android:id="@+id/myloc"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="14dp"
-        android:layout_marginTop="90dp"
-        android:background="@drawable/circle_white_alpha"
-        android:src="@drawable/locationicon"
-        android:tint="@color/new_red"
-        android:visibility="gone" />
+        <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mapView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
+        <ImageView
+            android:id="@+id/search_inactive"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/circle_white_alpha"
+            android:elevation="4dp"
+            android:src="@drawable/ic_search_black_24dp"
+            android:tint="@color/white" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:layoutAnimation="@anim/layout_animation"
-        android:listSelector="@android:color/transparent"
-        android:orientation="horizontal"
-        tools:listitem="@layout/list_item_theater" />
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/SearchGP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="40dp"
+            android:visibility="gone"
+            sothree:mt_backIconTint="@color/white"
+            sothree:mt_clearIconTint="@color/white"
+            sothree:mt_hint="Search City or Zip"
+            sothree:mt_hintColor="@color/white"
+            sothree:mt_navIconTint="@color/white"
+            sothree:mt_roundedSearchBarEnabled="true"
+            sothree:mt_searchBarColor="@color/test_black"
+            sothree:mt_searchIconTint="@color/white"
 
+            sothree:mt_textColor="@color/white">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:background="@android:drawable/screen_background_dark_transparent"
-        android:visibility="gone">
+        </com.mancj.materialsearchbar.MaterialSearchBar>
 
-    </android.support.v7.widget.RecyclerView>
+        <ImageView
+            android:id="@+id/myloc"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="80dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/circle_white_alpha"
+            android:elevation="4dp"
+            android:src="@drawable/mylocation"
+            android:tint="@color/white" />
 
+        <Button
+            android:id="@+id/SearchThisArea"
+            android:layout_width="145dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/searchthisarea"
+            android:backgroundTint="@color/test_black"
+            android:elevation="5dp"
+            android:paddingBottom="4dp"
+            android:text="Search this area"
+            android:textAlignment="gravity"
+            android:textAllCaps="false"
+            android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/List_Switch"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="@dimen/magin_MAX"
-        android:layout_marginEnd="@dimen/margin_standard"
-        android:background="@drawable/circle_white_alpha"
-        android:tint="@color/white"
-        android:visibility="invisible" />
+    </RelativeLayout>
 
-
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
+    <RelativeLayout
+        android:id="@+id/ListViewMaps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true" />
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@color/test_black">
 
-</RelativeLayout>
+
+        <TextView
+            android:id="@+id/ListViewText"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:text="List View"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/uparrow"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_toEndOf="@id/ListViewText"
+            android:src="@drawable/uparrow"
+            android:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/mapviewtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="20dp"
+            android:text="Map View"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/downarrow"
+            android:layout_width="17dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/icondown"
+            android:tint="@color/white"
+            android:visibility="gone" />
+
+
+        <RelativeLayout
+            android:id="@+id/goneList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listViewTheaters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:nestedScrollingEnabled="true"
+                tools:listitem="@layout/list_item_theater" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

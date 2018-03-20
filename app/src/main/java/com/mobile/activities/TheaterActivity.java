@@ -159,4 +159,8 @@ public class TheaterActivity extends BaseActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
     }
+
+
+
+
 }

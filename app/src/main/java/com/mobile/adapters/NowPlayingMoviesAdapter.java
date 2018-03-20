@@ -26,17 +26,19 @@ import com.moviepass.R;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+
 /**
  * Created by o_vicarra on 1/15/18.
  */
 
 public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMoviesAdapter.ViewHolder> {
-    private ArrayList<Movie> moviesArrayList;
+    private RealmList<Movie> moviesArrayList;
     private final MoviePosterClickListener moviePosterClickListener;
     private Context context;
 
 
-    public NowPlayingMoviesAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public NowPlayingMoviesAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviesArrayList = moviesArrayList;
         this.moviePosterClickListener = moviePosterClickListener;
         this.context = context;

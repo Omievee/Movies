@@ -30,6 +30,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
     EditText noStubReason;
     int reservationID;
     View progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +46,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Please enter a reason", Toast.LENGTH_SHORT).show();
             } else {
                 if (badExcuses.getExtras() != null) {
-
-
                     reservationID = badExcuses.getIntExtra(Constants.SCREENING, 0);
-
-                    Log.d(Constants.TAG, "onCreate:  " + reservationID);
                     progress.setVisibility(View.VISIBLE);
                     submitNoTicket();
                 }

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_standard"
+    android:id="@+id/CardShowtime"
     android:layout_marginEnd="@dimen/margin_half"
     android:layout_marginStart="@dimen/margin_half"
     android:layout_marginTop="@dimen/margin_half"
@@ -119,10 +120,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="This screening is not supported by MoviePass"
+        android:text="This premium screening is not supported by MoviePass"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:textStyle="bold"
         android:visibility="gone" />
 
 </android.support.v7.widget.CardView>

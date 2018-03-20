@@ -177,12 +177,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
-        url = "https://moviepass.com/go/theaters/"+theaterObject.getId();
-        if(!GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
-            url = url + "/" +GoWatchItSingleton.getInstance().getCampaign();
+        url = "https://moviepass.com/go/theaters/" + theaterObject.getId();
+        if (!GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
 
-        GoWatchItSingleton.getInstance().userOpenedTheater(theaterObject,url);
+        GoWatchItSingleton.getInstance().userOpenedTheater(theaterObject, url);
 
         return rootView;
     }
@@ -196,7 +196,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
 
@@ -212,9 +211,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final Screening screening1 = screening;
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
-        GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject,screening,showtime,String.valueOf(screening.getMoviepassId()),url);
+        GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
-
             Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
             if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
                 progress.setVisibility(View.VISIBLE);
@@ -224,11 +222,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (screening.getProvider().ticketType.matches("STANDARD")){
+            } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
-                    alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
-                    alert.setMessage(R.string.pre_pop_dialog);
+                    alert.setView(R.layout.alertdialog_ticketverif);
                     alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         progress.setVisibility(View.VISIBLE);
                         reserve(screening, showtime);
@@ -239,6 +236,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     reserve(screening, showtime);
                 }
 
+            } else {
+                progress.setVisibility(View.VISIBLE);
+                reserve(screening, showtime);
             }
         });
     }
@@ -273,9 +273,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void reserve(Screening screening, String showtime) {
         Screening screen = screening;
         String time = showtime;
-
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
+
+        buttonCheckIn.setEnabled(false);
         /* Standard Check In */
         String providerName = screening.getProvider().providerName;
         //PerformanceInfo
@@ -319,12 +320,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
                         showConfirmation(token);
-                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject,screening,showtime,"ticket_purchase",String.valueOf(theaterObject.getId()),url);
+                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
 
                     } else {
                         ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
                         showConfirmation(token);
-                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject,screening,showtime,"ticket_purchase",String.valueOf(theaterObject.getId()),url);
+                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
                     }
                 } else {
 
@@ -338,10 +339,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
                             Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            GoWatchItSingleton.getInstance().checkInEvent(theaterObject,screening,showtime,"ticket_purchase_attempt",String.valueOf(theaterObject.getId()),url);
+                            GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), url);
                         }
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -703,7 +703,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 //            }
 //        });
 //    }
-
 
 
 }
