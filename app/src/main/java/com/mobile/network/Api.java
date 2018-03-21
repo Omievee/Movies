@@ -29,6 +29,7 @@ import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.PersonalInfoResponse;
+import com.mobile.responses.PlanResponse;
 import com.mobile.responses.RegistrationPlanResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
@@ -88,9 +89,9 @@ public interface Api {
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
-//
-//    @GET("/rest/v1/register/amc_upgradeability/{myZip}")
-//    Call<RegistrationPlanResponse> getPlans(@Path("myZip") String zip);
+    
+    @GET("/register/plans")
+    Call<PlanResponse> getPlans();
 
     /* SignUp */
     @POST("mobile/register")
