@@ -201,14 +201,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(this, res2);
 
 
-        //Start location tasks
-//        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-//        mLocationBroadCast = new LocationUpdateBroadCast();
-//        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-
         currentLocationTasks();
-
-
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
@@ -469,11 +462,14 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
                                     if (screenID == ID) {
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
-
                                     }
 
-
                                 }
+                            }
+
+                            if (sortedScreeningList.size() == 0) {
+                                selectedTheatersRecyclerView.setVisibility(View.GONE);
+                                noTheaters.setVisibility(View.VISIBLE);
                             }
 
 
