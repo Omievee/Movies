@@ -158,13 +158,12 @@
         android:id="@+id/button_check_in"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_gravity="bottom"
         android:layout_marginBottom="56dp"
         android:animateLayoutChanges="true"
         android:background="@color/new_red"
         android:text="@string/fragment_theater_check_in"
-        android:visibility="gone"
-        app:layout_anchor="@+id/NESTED_SCROLL"
-        app:layout_anchorGravity="bottom" />
+        android:visibility="gone" />
 
     <!--<com.github.clans.fab.FloatingActionButton-->
     <!--android:id="@+id/FAB_LOADCARD"-->

@@ -293,6 +293,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
 
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
+        fadeIn(buttonCheckIn);
         buttonCheckIn.setVisibility(View.VISIBLE);
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(view -> {
