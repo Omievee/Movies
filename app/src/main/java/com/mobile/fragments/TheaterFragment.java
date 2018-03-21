@@ -214,8 +214,10 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final String time = showtime;
         final Screening screening1 = screening;
 
-        fadeIn(buttonCheckIn);
-        buttonCheckIn.setVisibility(View.VISIBLE);
+        if (buttonCheckIn.getVisibility() == View.GONE) {
+            fadeIn(buttonCheckIn);
+            buttonCheckIn.setVisibility(View.VISIBLE);
+        }
         buttonCheckIn.setEnabled(true);
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
