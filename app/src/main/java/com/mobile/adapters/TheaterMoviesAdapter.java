@@ -173,8 +173,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     cal.setTime(theaterTime);
                     cal.add(Calendar.MINUTE, 30);
 
-//                    Date extended = sdf.parse(String.valueOf(cal.getTimeInMillis()));
-//                    Log.d(TAG, "onBindViewHolder: " + extended);
 
 
                     if (myTime.after(cal.getTime())) {
