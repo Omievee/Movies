@@ -201,11 +201,15 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(this, res2);
 
 
+        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+        mLocationBroadCast = new LocationUpdateBroadCast();
+        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
         currentLocationTasks();
+
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
         int t = movie.getRunningTime();
-        int hours = t / 60; //since both are ints, you get an int
+        int hours = t / 60;
         int minutes = t % 60;
 
         if (t == 0) {
@@ -246,18 +250,15 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             url = url + "/" + campaign;
         GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()), url);
 
+        Log.d(TAG, "onCreate: ");
+
     }
 
 
-    // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
     public void onPause() {
         super.onPause();
-//        try {
-//            unregisterReceiver(mLocationBroadCast);
-//        } catch (IllegalArgumentException is) {
-//            is.printStackTrace();
-//        }
+
     }
 
     @Override
@@ -320,7 +321,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     void alertTicketVerifNotice(Theater theater, Screening screening, String showtime) {
-
         AlertDialog.Builder alert = new AlertDialog.Builder(MovieActivity.this, R.style.CUSTOM_ALERT);
         alert.setView(R.layout.alertdialog_ticketverif);
 
@@ -439,6 +439,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
+        Log.d(TAG, "MADE IT-------<<<<<: ");
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -636,15 +637,20 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
     public void currentLocationTasks() {
+        Log.d(TAG, "currentLocationTasks: ");
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
         UserLocationManagerFused.getLocationInstance(MovieActivity.this).startLocationUpdates();
         mLocationAcquired = false;
         boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
         if (!enabled) {
+            Log.d(TAG, "enabled: ");
         } else {
+            Log.d(TAG, "else: ");
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
+            Log.d(TAG, "currentLocationTasks: " + location);
             onLocationChanged(location);
             if (location != null) {
+                Log.d(TAG, "location not null: ");
                 UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), MovieActivity.this);
             }
         }
