@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:foreground="@drawable/poster_gradient_2"
-                fresco:failureImage="@drawable/film_reel_icon" />
+                fresco:failureImage="@drawable/filmreel1" />
 
 
             <RelativeLayout

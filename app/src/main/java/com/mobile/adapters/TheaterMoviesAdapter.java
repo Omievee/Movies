@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,12 @@ import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Screening;
 import com.moviepass.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +48,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
+    public static final String inputFormat = "HH:mm";
 
     View root;
     public static final String TAG = "found";
@@ -56,9 +62,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     public RadioButton currentTime;
     Screening passScreen;
     Context context;
-
+    String selectedShowTime;
     ViewHolder HOLDER;
-
+    SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, Locale.US);
+    private Date date;
+    private Date dateCompareOne;
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
         this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
@@ -156,21 +164,21 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setTextSize(16);
                 HOLDER.showtimeGrid.addView(showtime);
 
-//                Calendar now = Calendar.getInstance();
-//
-//                int hour = now.get(Calendar.HOUR);
-//                int minute = now.get(Calendar.MINUTE);
-//                int amPM = now.get(Calendar.AM_PM);
-//
-//                String AM_PM;
-//                if (amPM == 0) {
-//                    AM_PM = "AM";
-//                } else {
-//                    AM_PM = "PM";
-//                }
-//
-//                date = parseDate(hour + ":" + minute + " " + AM_PM);
-//                dateCompareOne = parseDate(screening.getStartTimes().get(i));
+                Calendar now = Calendar.getInstance();
+
+                int hour = now.get(Calendar.HOUR);
+                int minute = now.get(Calendar.MINUTE);
+                int amPM = now.get(Calendar.AM_PM);
+
+                String AM_PM;
+                if (amPM == 0) {
+                    AM_PM = "AM";
+                } else {
+                    AM_PM = "PM";
+                }
+
+                date = parseDate(hour + ":" + minute + " " + AM_PM);
+                dateCompareOne = parseDate(screening.getStartTimes().get(i));
 
 
                 showtime.setTextColor(root.getResources().getColor(R.color.white_ish));
@@ -196,23 +204,38 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
+                            HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
                             currentTime = checked;
-                            String selectedShowTime = currentTime.getText().toString();
+
+
+                            selectedShowTime = currentTime.getText().toString();
+                            Date d = new Date();
+                            CharSequence s = DateFormat.format("hh:mm ", d.getTime());
+                            Log.d(TAG, "showtime: " + selectedShowTime);
+                            Log.d(TAG, "screening: " + selectedScreening);
+                            Log.d(TAG, "provider: " + selectedScreening.getProvider());
+                            Log.d(TAG, "selected showtime: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime));
+                            Log.d(TAG, "s.tostring: " + selectedScreening.getProvider().getPerformanceInfo(s.toString()));
+
                             showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
-                            Log.d(TAG, "onBindViewHolder: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime).getExternalMovieId());
                         } else {
                             Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
-
             if (screening.getTitle().equals("Check In if Movie Missing")) {
                 HOLDER.movieRating.setVisibility(View.GONE);
+                HOLDER.showtimeGrid.removeView(showtime);
                 HOLDER.synopsis.setVisibility(View.GONE);
+                HOLDER.showtimeGrid.setVisibility(View.GONE);
                 HOLDER.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+                HOLDER.cinemaCardViewListItem.setOnClickListener(v -> {
+                    currentTime.setChecked(false);
+                    HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.new_red));
+                    showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, showtime.getText().toString());
+                });
             }
-
         }
         holder.synopsis.setOnClickListener(view -> {
             String synopsis = screening.getSynopsis();
@@ -220,7 +243,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             Bundle bundle = new Bundle();
             bundle.putString(MOVIE, synopsis);
             bundle.putString(TITLE, title);
-
             SynopsisFragment fragobj = new SynopsisFragment();
             fragobj.setArguments(bundle);
             FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
@@ -228,6 +250,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         });
     }
+
 
 
     @Override
@@ -238,6 +261,14 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
+    }
+
+    private Date parseDate(String date) {
+        try {
+            return inputParser.parse(date);
+        } catch (java.text.ParseException e) {
+            return new Date(0);
+        }
     }
 
 

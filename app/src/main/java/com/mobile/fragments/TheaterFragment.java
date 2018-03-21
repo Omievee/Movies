@@ -450,7 +450,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
     protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest(Screening screen, String time) {
 
-        Screening S = screen;
 
         if (screen.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
             int normalizedMovieId = screen.getMoviepassId();
@@ -510,7 +509,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         } else {
             //IF not movieXchange then it will simply request these parameters:
             int normalizedMovieId = screen.getMoviepassId();
-            String externalMovieId = S.getProvider().getPerformanceInfo(time).getExternalMovieId();
+            String externalMovieId = screen.getProvider().getPerformanceInfo(time).getExternalMovieId();
             String format = screen.getFormat();
             int tribuneTheaterId = screen.getTribuneTheaterId();
             int performanceNumber = screen.getProvider().getPerformanceInfo(time).getPerformanceNumber();
@@ -520,7 +519,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             String auditorium = screen.getProvider().getPerformanceInfo(time).getAuditorium();
             String performanceId = screen.getProvider().getPerformanceInfo(time).getPerformanceId();
             String sessionId = screen.getProvider().getPerformanceInfo(time).getSessionId();
-            int theater = screen.getProvider().getTheater();
 
             mPerformReq = new PerformanceInfoRequest(
                     dateTime,
