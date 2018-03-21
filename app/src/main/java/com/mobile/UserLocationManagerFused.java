@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,9 +24,7 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 
-public class UserLocationManagerFused implements LocationListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
+public class UserLocationManagerFused implements LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public Location mCurrentLocation;
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
@@ -104,6 +103,7 @@ public class UserLocationManagerFused implements LocationListener,
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         startLocationUpdates();
 
+        Log.d(Constants.TAG, "onConnected: " + mCurrentLocation);
         if (mCurrentLocation != null) {
             updateLocation(mCurrentLocation);
         }
@@ -117,16 +117,16 @@ public class UserLocationManagerFused implements LocationListener,
 
     public void startLocationUpdates() {
         if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
 
     }
 
     public void stopLocationUpdates() {
-        if(mGoogleApiClient!=null&&mGoogleApiClient.isConnected())
-        {LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);}
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+        }
     }
 
     @Override
@@ -213,8 +213,8 @@ public class UserLocationManagerFused implements LocationListener,
                     if (cityName == null) {
                         cityName = address.getSubLocality();
                     }
-                    zip = address.getPostalCode() != null?address.getPostalCode():"0";
-                    stateName = address.getAdminArea()!=null?address.getAdminArea().toLowerCase():"";
+                    zip = address.getPostalCode() != null ? address.getPostalCode() : "0";
+                    stateName = address.getAdminArea() != null ? address.getAdminArea().toLowerCase() : "";
                     stateNameAbrev = Constants.STATES_AND_STATES_ABREV.get(stateName);
 
                     UserPreferences.setLocation(formatCityAndState(cityName, stateNameAbrev), zip, lat, lon, isLocationUserDefined, isSubscriptionActivationRequired);

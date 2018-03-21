@@ -34,9 +34,9 @@
 
             <Button
                 android:id="@+id/ONBOARDING_JOIN_NOW"
-                android:layout_width="200dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/buttons"
+                android:layout_above="@id/dots"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/mpbutton1"
                 android:text="Sign Up Now"
@@ -48,17 +48,15 @@
                 android:id="@+id/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/dots"
-
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal">
+                android:layout_above="@id/ONBOARDING_JOIN_NOW"
+                android:layout_centerHorizontal="true">
 
                 <TextView
                     android:id="@+id/NearMe"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_half"
                     android:text="Find theaters near me"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -66,17 +64,18 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:layout_width="55dp"
+                    android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toRightOf="@id/NearMe"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@id/NearMe"
                     android:src="@drawable/arrowforward"
                     android:textAlignment="center"
                     android:tint="@color/new_red" />
 
 
             </RelativeLayout>
+
 
             <LinearLayout
                 android:id="@+id/dots"

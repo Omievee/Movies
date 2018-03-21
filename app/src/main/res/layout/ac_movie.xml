@@ -147,26 +147,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/test_black"
             android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/margin_half">
-
-                <!--<ImageView-->
-                <!--android:id="@+id/imgBg"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:scaleType="center"-->
-                <!--android:src="" />-->
-
-
-            </LinearLayout>
 
 
             <android.support.v7.widget.RecyclerView
@@ -176,6 +159,7 @@
                 android:layout_marginBottom="95dp"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
+                android:visibility="visible"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:listitem="@layout/list_item_theaters_and_showtimes">
 
@@ -186,11 +170,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/double_margin_standard"
-                android:text="No theaters found"
+                android:layout_marginTop="@dimen/quadruple_margin_standard"
+                android:padding="@dimen/margin_half"
+                android:text="There are no available screenings in your location today"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -208,20 +195,6 @@
         android:visibility="gone"
         app:layout_anchor="@+id/NESTED_SCROLL"
         app:layout_anchorGravity="bottom" />
-
-    <!--<com.github.clans.fab.FloatingActionButton-->
-    <!--android:id="@+id/FAB_LOADCARD"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="@dimen/quadruple_margin_standard"-->
-    <!--android:layout_marginEnd="5dp"-->
-    <!--android:animateLayoutChanges="true"-->
-    <!--android:elevation="5dp"-->
-    <!--android:visibility="visible"-->
-    <!--app:fab_colorNormal="@color/new_red"-->
-    <!--app:fab_size="normal"-->
-    <!--app:layout_anchor="@+id/NESTED_SCROLL"-->
-    <!--app:layout_anchorGravity="right | bottom" />-->
 
 
     <include

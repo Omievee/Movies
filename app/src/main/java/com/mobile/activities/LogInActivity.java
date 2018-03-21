@@ -102,7 +102,6 @@ public class LogInActivity extends AppCompatActivity {
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 forgotPassword();
             }
         });
@@ -111,7 +110,6 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logInWithReadPermissions(LogInActivity.this, Arrays.asList("public_profile", "email", "user_birthday"));
-
             }
         });
 
@@ -119,20 +117,16 @@ public class LogInActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
                 String device = UserPreferences.getDeviceUuid();
-
                 FacebookSignInRequest fbSigninRequest = new FacebookSignInRequest(loginResult.getAccessToken().getToken());
-
                 RestClient.getAuthenticated().loginWithFacebook(device, fbSigninRequest).enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.body() != null && response.isSuccessful()) {
                             moviePassLoginSucceeded(response.body());
                         } else if (response.errorBody() != null) {
-                            Toast.makeText(LogInActivity.this, "Please check your credentials and try again.", Toast.LENGTH_LONG).show();
                             progress.setVisibility(View.GONE);
+                            Toast.makeText(LogInActivity.this, "Please check your credentials and try again.", Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -206,6 +200,7 @@ public class LogInActivity extends AppCompatActivity {
 
             });
         } else {
+            progress.setVisibility(View.GONE);
             Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_credentials, Toast.LENGTH_SHORT).show();
         }
     }
