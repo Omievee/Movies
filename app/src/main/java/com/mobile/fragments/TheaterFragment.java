@@ -33,7 +33,6 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
-import com.mobile.activities.MovieActivity;
 import com.mobile.activities.SelectSeatActivity;
 import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
@@ -52,19 +51,14 @@ import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.responses.CardActivationResponse;
-import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
-import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;

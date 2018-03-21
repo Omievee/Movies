@@ -1,14 +1,10 @@
 package com.mobile.activities;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.net.Uri;
@@ -18,27 +14,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,36 +49,22 @@ import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
-import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
-import com.mobile.responses.CardActivationResponse;
-import com.mobile.responses.GoWatchItResponse;
-import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
-import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.security.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -110,17 +82,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     private static final String TAG = "TAG";
 
 
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-    HistoryResponse historyResponse;
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
     private Location mMyLocation;
     ArrayList<String> mShowtimesList;
     String campaign = "no_campaign";
     String url = "";
-
-    boolean isfirst;
 
     public Movie movie;
     Reservation reservation;
@@ -130,10 +97,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ScreeningsResponse screeningsResponse;
 
 
-    ImageView backButton;
     TextView THEATER_ADDRESS_LISTITEM, noTheaters;
     TextView selectedMovieTitle;
-    ImageButton selectedMovieSynopsis;
 
     ArrayList<Screening> selectedScreeningsList;
     ArrayList<Theater> theatersList;
