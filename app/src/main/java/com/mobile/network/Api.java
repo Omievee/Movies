@@ -89,7 +89,7 @@ public interface Api {
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
-    
+
     @GET("/register/plans")
     Call<PlanResponse> getPlans();
 
