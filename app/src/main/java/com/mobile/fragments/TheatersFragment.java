@@ -340,7 +340,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 }
             });
 
+
             if (marker.getTitle() != null) {
+                LatLng latLng = new LatLng(markerTheaterMap.get(marker.getId()).getLat(), markerTheaterMap.get(marker.getId()).getLon());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14);
+                mMap.animateCamera(cameraUpdate);
                 marker.showInfoWindow();
             }
             return true;

@@ -1,9 +1,12 @@
 package com.mobile.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +28,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -44,6 +48,9 @@ import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import io.realm.RealmList;
 
@@ -115,10 +122,26 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
         holder.moviePoster.setController(controller);
 
 
-        Uri vidURI = Uri.parse(String.valueOf(Uri.fromFile(new File(String.valueOf(R.raw.avengers_trailer2_h480p)))));
+        File file = new File(context.getFilesDir(), "movieURL");
+        String fileName = "featuredMovieURL";
+        String fileContents = "https://a1.moviepass.com/staging/videos/black_panther.mp4";
+        FileOutputStream outputStream;
 
-        holder.featuredVideo.setControllerHideOnTouch(true);
-        Handler mainHandler = new Handler();
+        try {
+            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            outputStream.write(fileContents.getBytes());
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        holder.featuredVideo.setControllerHideOnTouch(false);
+
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
@@ -126,24 +149,23 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         DefaultBandwidthMeter meter = new DefaultBandwidthMeter();
         DataSource.Factory data = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "moviepass"), meter);
-        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(vidURI);
+        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(Uri.parse(fileContents));
 
         player.prepare(video);
 
-        holder.moviePoster.setVisibility(View.VISIBLE);
-        holder.featuredVideo.setVisibility(View.INVISIBLE);
+        holder.moviePoster.setVisibility(View.GONE);
 
-        if (!player.isLoading()) {
-            Log.d(Constants.TAG, "loading?: ");
-            fadeOut(holder.moviePoster);
-            holder.moviePoster.setVisibility(View.INVISIBLE);
-            fadeIn(holder.featuredVideo);
-            holder.featuredVideo.setVisibility(View.VISIBLE);
-        }
+        holder.featuredVideo.setPlayer(player);
+        player.setRepeatMode(Player.REPEAT_MODE_ONE);
 
         player.setPlayWhenReady(true);
-        player.setRepeatMode(4);
-        holder.featuredVideo.setPlayer(player);
+
+        Log.d(Constants.TAG, "onBindViewHolder: " + player.getPlaybackState());
+        fadeOut(holder.moviePoster);
+        holder.moviePoster.setVisibility(View.INVISIBLE);
+        fadeIn(holder.featuredVideo);
+        holder.featuredVideo.setVisibility(View.VISIBLE);
+
         ViewCompat.setTransitionName(holder.moviePoster, movie.getImageUrl());
         holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
 
