@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.mobile.fragments.ConfirmationSignUpFragment;
+import com.mobile.fragments.SignUpFirstTime;
 import com.mobile.fragments.SignUpStepOneFragment;
 import com.mobile.fragments.SignUpStepThreeFragment;
 import com.mobile.fragments.SignUpStepTwoFragment;
@@ -34,6 +35,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String password;
     String zip;
     Plan mPlan;
+    String gender;
+    String dob;
 
     String firstName;
     String lastName;
@@ -54,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
+    SignUpFirstTime signUpFirstTime;
 
     int page = 0;
 
@@ -96,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepTwoFragment = new SignUpStepTwoFragment();
         signUpStepThreeFragment = new SignUpStepThreeFragment();
         signUpStepOneFragment = new SignUpStepOneFragment();
+        signUpFirstTime = new SignUpFirstTime();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -116,6 +121,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                     case 2:
                         break;
                     case 3:
+                        break;
+                    case 4:
                         break;
                 }
             }
@@ -211,15 +218,18 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             Fragment fragment = null;
             switch (pos) {
                 case 0:
-                    fragment = new SignUpStepOneFragment();
+                    fragment = new SignUpFirstTime();
                     break;
                 case 1:
-                    fragment = new SignUpStepTwoFragment();
+                    fragment = new SignUpStepOneFragment();
                     break;
                 case 2:
-                    fragment = new SignUpStepThreeFragment();
+                    fragment = new SignUpStepTwoFragment();
                     break;
                 case 3:
+                    fragment = new SignUpStepThreeFragment();
+                    break;
+                case 4:
                     fragment = new ConfirmationSignUpFragment();
                     break;
             }
@@ -302,6 +312,22 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
     }
 
+
+    /* Fragment First Open */
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+    public void setPassword(String password){
+        this.password = password;
+    }
+    public void setGender(String gender){
+        this.gender = gender;
+    }
+    public void setDOB(String dob){
+        this.dob = dob;
+    }
+
     /* Fragment One */
 
     public void setZip(String zipcode) {
@@ -368,9 +394,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(2);
         } else if (mViewPager.getCurrentItem() == 2) {
             mViewPager.setCurrentItem(3);
+        } else if(mViewPager.getCurrentItem() == 3){
+            mViewPager.setCurrentItem(4);
             logo.setVisibility(View.GONE);
             frame.setVisibility(View.GONE);
-
         }
     }
 
@@ -392,7 +419,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(0);
         } else if (mViewPager.getCurrentItem() == 2) {
             mViewPager.setCurrentItem(1);
-        } else {
+        } else if(mViewPager.getCurrentItem() == 3){
+            mViewPager.setCurrentItem(2);
+        } else{
             super.onBackPressed();
         }
     }

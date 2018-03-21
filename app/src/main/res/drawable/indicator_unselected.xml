@@ -5,4 +5,9 @@
     <solid android:color="@color/white" />
     <stroke android:width="2dp"
         android:color="@color/gun_metal"/>
+    <size
+        android:width="18dp"
+        android:height="18dp"/>
+
+    <item android:top="6px" android:right="6px"/>
 </shape>
