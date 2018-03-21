@@ -15,9 +15,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-
-
     <ImageView
         android:id="@+id/logo"
         android:layout_width="100dp"
@@ -27,8 +24,6 @@
         android:gravity="center_horizontal"
         android:src="@drawable/logo"
         android:tint="@color/new_red" />
-
-
 
     <!-- divider -->
 
