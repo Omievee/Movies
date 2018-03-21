@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +28,11 @@ import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Screening;
 import com.moviepass.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +45,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
-    public static final String inputFormat = "HH:mm";
-
     View root;
     public static final String TAG = "found";
     ShowtimeClickListener showtimeClickListener;
@@ -60,13 +55,10 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private final int TYPE_ITEM = 0;
     public RadioButton showtime;
     public RadioButton currentTime;
-    Screening passScreen;
     Context context;
     String selectedShowTime;
     ViewHolder HOLDER;
-    SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, Locale.US);
-    private Date date;
-    private Date dateCompareOne;
+
     public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
         this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
@@ -164,24 +156,25 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setTextSize(16);
                 HOLDER.showtimeGrid.addView(showtime);
 
-                Calendar now = Calendar.getInstance();
 
-                int hour = now.get(Calendar.HOUR);
-                int minute = now.get(Calendar.MINUTE);
-                int amPM = now.get(Calendar.AM_PM);
+                try {
+                    Date systemClock = new Date();
 
-                String AM_PM;
-                if (amPM == 0) {
-                    AM_PM = "AM";
-                } else {
-                    AM_PM = "PM";
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                    String curTime = sdf.format(systemClock);
+
+                    Date theaterTime = sdf.parse(screening.getStartTimes().get(i));
+                    Date myTime = sdf.parse(curTime);
+
+                    if (myTime.after(theaterTime)) {
+                        showtime.setTextColor(root.getResources().getColor(R.color.gray_icon));
+                        showtime.setClickable(false);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
 
-                date = parseDate(hour + ":" + minute + " " + AM_PM);
-                dateCompareOne = parseDate(screening.getStartTimes().get(i));
 
-
-                showtime.setTextColor(root.getResources().getColor(R.color.white_ish));
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showtime.setPadding(30, 20, 30, 20);
                 showtime.setButtonDrawable(null);
@@ -206,17 +199,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             }
                             HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
                             currentTime = checked;
-
-
                             selectedShowTime = currentTime.getText().toString();
-                            Date d = new Date();
-                            CharSequence s = DateFormat.format("hh:mm ", d.getTime());
-                            Log.d(TAG, "showtime: " + selectedShowTime);
-                            Log.d(TAG, "screening: " + selectedScreening);
-                            Log.d(TAG, "provider: " + selectedScreening.getProvider());
-                            Log.d(TAG, "selected showtime: " + selectedScreening.getProvider().getPerformanceInfo(selectedShowTime));
-                            Log.d(TAG, "s.tostring: " + selectedScreening.getProvider().getPerformanceInfo(s.toString()));
-
                             showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                         } else {
                             Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
@@ -252,7 +235,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     }
 
 
-
     @Override
     public int getItemCount() {
         return screeningsArrayList.size();
@@ -261,14 +243,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
-    }
-
-    private Date parseDate(String date) {
-        try {
-            return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
-            return new Date(0);
-        }
     }
 
 

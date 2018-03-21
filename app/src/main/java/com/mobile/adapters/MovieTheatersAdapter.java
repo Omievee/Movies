@@ -196,21 +196,21 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 //TODO: REMOVE SHOWTIMES ONCE THE TIME HAS PASSED
-//                Calendar now = Calendar.getInstance();
-//
-//                int hour = now.get(Calendar.HOUR);
-//                int minute = now.get(Calendar.MINUTE);
-//                int amPM = now.get(Calendar.AM_PM);
-//
-//                String AM_PM;
-//                if (amPM == 0) {
-//                    AM_PM = "AM";
-//                } else {
-//                    AM_PM = "PM";
-//                }
-//
-//                date = parseDate(hour + ":" + minute + " " + AM_PM);
-//                dateCompareOne = parseDate(screening.getStartTimes().get(i));
+                Calendar now = Calendar.getInstance();
+
+                int hour = now.get(Calendar.HOUR);
+                int minute = now.get(Calendar.MINUTE);
+                int amPM = now.get(Calendar.AM_PM);
+
+                String AM_PM;
+                if (amPM == 0) {
+                    AM_PM = "AM";
+                } else {
+                    AM_PM = "PM";
+                }
+
+                date = parseDate(hour + ":" + minute + " " + AM_PM);
+                dateCompareOne = parseDate(screening.getStartTimes().get(i));
                 showTime.setTextColor(root.getResources().getColor(R.color.white_ish));
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
                 showTime.setPadding(30, 20, 30, 20);
