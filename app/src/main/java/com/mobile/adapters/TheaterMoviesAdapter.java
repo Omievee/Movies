@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,9 @@ import com.moviepass.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -166,7 +169,15 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     Date theaterTime = sdf.parse(screening.getStartTimes().get(i));
                     Date myTime = sdf.parse(curTime);
 
-                    if (myTime.after(theaterTime)) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(theaterTime);
+                    cal.add(Calendar.MINUTE, 30);
+
+//                    Date extended = sdf.parse(String.valueOf(cal.getTimeInMillis()));
+//                    Log.d(TAG, "onBindViewHolder: " + extended);
+
+
+                    if (myTime.after(cal.getTime())) {
                         showtime.setTextColor(root.getResources().getColor(R.color.gray_icon));
                         showtime.setClickable(false);
                     }
