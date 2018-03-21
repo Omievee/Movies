@@ -76,7 +76,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     ScreeningsResponse screeningsResponse;
     RecyclerView theaterSelectedRecyclerView;
     ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
-    TextView theaterSelectedAddress, theaterSelectedAddressZip;
+    TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
@@ -127,8 +127,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         theaterSelectedAddressZip = rootView.findViewById(R.id.CINEMA_ZIPCITY);
         theaterSelectedAddress.setText(theaterObject.getAddress());
         theaterSelectedAddressZip.setText(theaterObject.getCity() + " " + theaterObject.getState() + " " + theaterObject.getZip());
-
-
+        noTheaters = rootView.findViewById(R.id.NoTheaters);
         final Uri uri = Uri.parse("geo:" + theaterObject.getLat() + "," + theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
 
         cinemaPin.setOnClickListener(v -> {
@@ -258,6 +257,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     if (theaterSelectedRecyclerView != null) {
                         theaterSelectedRecyclerView.getRecycledViewPool().clear();
                         theaterMoviesAdapter.notifyDataSetChanged();
+                    }
+
+                    if(moviesAtSelectedTheater.size() == 0){
+                        noTheaters.setVisibility(View.VISIBLE);
+                        theaterSelectedRecyclerView.setVisibility(View.GONE);
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
