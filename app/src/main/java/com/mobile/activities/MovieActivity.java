@@ -288,6 +288,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             is.printStackTrace();
         }
 
+        checkRestrictions();
+
     }
 
     @Override
@@ -338,6 +340,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         alert.show();
     }
+
 
     public void reserve(Theater theater, Screening screening, String showtime) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
