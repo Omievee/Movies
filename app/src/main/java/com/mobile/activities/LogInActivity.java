@@ -233,7 +233,6 @@ public class LogInActivity extends AppCompatActivity {
                             Toast.makeText(LogInActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
                         }
                     });
-
                     dialog.dismiss();
                 } else {
                     Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_email, Toast.LENGTH_SHORT).show();
