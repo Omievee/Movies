@@ -9,17 +9,27 @@ public class Plans {
     private String id;
     private String name, price;
     private String planDescription, disclaimer;
+    String isFeatured;
     private String paymentDisclaimer,confirmPlanDescription, confirmTotal;
 
-    public Plans(String id, String name, String price, String planDescription, String disclaimer, String paymentDisclaimer, String confirmPlanDescription, String confirmTotal) {
+    public Plans(String id, String name, String price, String planDescription, String disclaimer, String isFeatured, String paymentDisclaimer, String confirmPlanDescription, String confirmTotal) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.planDescription = planDescription;
         this.disclaimer = disclaimer;
+        this.isFeatured = isFeatured;
         this.paymentDisclaimer = paymentDisclaimer;
         this.confirmPlanDescription = confirmPlanDescription;
         this.confirmTotal = confirmTotal;
+    }
+
+    public String getIsFeatured() {
+        return isFeatured;
+    }
+
+    public void setIsFeatured(String isFeatured) {
+        this.isFeatured = isFeatured;
     }
 
     public String getId() {

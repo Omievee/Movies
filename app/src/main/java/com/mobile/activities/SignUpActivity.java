@@ -26,7 +26,10 @@ import com.mobile.fragments.SignUpStepOneFragment;
 import com.mobile.fragments.SignUpStepThreeFragment;
 import com.mobile.fragments.SignUpStepTwoFragment;
 import com.mobile.model.Plan;
+import com.mobile.model.Plans;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
 
 /**
  * Created by anubis on 6/15/17.
@@ -50,6 +53,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String addressZip;
     String price;
 
+    Plans selectedPlan;
 
     SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
@@ -90,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
+        selectedPlan = Parcels.unwrap(getIntent().getParcelableExtra(SignUpFirstOpenActivity.SELECTED_PLAN));
 
         zip = null;
         price = null;

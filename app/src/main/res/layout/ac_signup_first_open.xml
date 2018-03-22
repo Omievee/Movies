@@ -1,200 +1,221 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relative_layout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_black">
+    android:background="#202b36"
+    tools:context="com.mobile.fragments.SignUpMultiplePlansSelections"
+    android:fitsSystemWindows="true">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+    <RelativeLayout
+        android:id="@+id/logoRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="250dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:scaleType="fitCenter"
-            android:src="@drawable/moviepass_logo_red" />
+            android:layout_marginTop="@dimen/margin_half"
+            android:src="@drawable/logo"
+            android:tint="@color/new_red"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:text="@string/activity_sign_up_step_one_get_started"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/signIn"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="20sp"
+            android:text="Sign In" />
 
-        <ScrollView
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/pickYourPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoRelativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Pick your plan"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/planOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pickYourPlan"
+        android:padding="4dp"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard">
+
+        <RelativeLayout
+            android:id="@+id/titleAnnual"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_rounded_border">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/margin_standard"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="Annual"
+                android:id="@+id/titlePlanOne"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/emailTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.6"
-                    android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    android:hint="@string/Create_account"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
+        </RelativeLayout>
 
-                    <EditText
-                        android:id="@+id/SIGNUP_EMAIL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:animateLayoutChanges="true"
-                        android:backgroundTint="@color/white_40_opacity"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white_80_opacity"
-                        android:textColorLink="@android:color/transparent"
-                        android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="@color/white_40_opacity"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleAnnual"
+            android:background="@drawable/bottom_rounded_border">
 
-                </android.support.design.widget.TextInputLayout>
+            <TextView
+                android:id="@+id/planOnePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:text="$6.96/Month"
+                android:textColor="@color/new_red"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/email2TextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.6"
-                    android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
+            <TextView
+                android:id="@+id/planOneDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/planOnePrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:minHeight="40dp"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:gravity="center_horizontal"
+                android:text="Paid annually with a $6.55 proccessing fee."
+                android:textColor="#f7f7f7"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
-                    <EditText
-                        android:id="@+id/SIGNUP_EMAIL_confirm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Confirm Email"
-                        android:inputType="textEmailAddress"
-                        android:animateLayoutChanges="true"
-                        android:backgroundTint="@color/white_40_opacity"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white_80_opacity"
-                        android:textColorLink="@android:color/transparent"
-                        android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="@color/white_40_opacity" />
+        </RelativeLayout>
 
-                </android.support.design.widget.TextInputLayout>
+    </RelativeLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/planOneDisclaimer"
+        android:layout_below="@id/planOne"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="Total billed at time of purchase is $89.95 for the full year. ($6.95/month x 12 months + $6.55 processing fee.)"/>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/passwordTextInputLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.6"
-                    android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    app:passwordToggleEnabled="true"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
+    <RelativeLayout
+        android:id="@+id/planTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/planOneDisclaimer"
+        android:padding="4dp"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard">
 
-                    <EditText
-                        android:id="@+id/SIGNUP_PASSSWORD"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/activity_sign_up_step_one_password"
-                        android:inputType="textPassword"
-                        android:animateLayoutChanges="true"
-                        android:backgroundTint="@color/white_40_opacity"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white_80_opacity"
-                        android:textColorLink="@android:color/transparent"
-                        android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:backgroundTint="@color/white_40_opacity"/>
+        <RelativeLayout
+            android:id="@+id/titleMonthly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_rounded_border">
 
-                </android.support.design.widget.TextInputLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard">
-
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/SPINNER"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginTop="@dimen/margin_half"
-                        android:hint="Gender"
-                        android:textSize="18sp"
-                        app:ms_arrow_tint="@color/white"
-                        app:ms_background_color="@color/test_black"
-                        app:ms_hint_color="@color/white_80_opacity"
-                        app:ms_text_color="@color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="Monthly"
+                android:id="@+id/titlePlanTwo"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
 
-                    <EditText
-                        android:id="@+id/DOB"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="50dp"
-                        android:layout_toRightOf="@id/SPINNER"
-                        android:layout_marginTop="@dimen/margin_half"
-                        android:clickable="true"
-                        android:editable="false"
-                        android:backgroundTint="@color/white_40_opacity"
-                        android:focusable="false"
-                        android:hint="Date of Birth" />
+        </RelativeLayout>
 
-                </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleMonthly"
+            android:background="@drawable/bottom_rounded_border">
+
+            <TextView
+                android:id="@+id/planTwoPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:text="$9.95/Month"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/planTwoDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/planTwoPrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:minHeight="40dp"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:gravity="center_horizontal"
+                android:text="Paid monthly"
+                android:textColor="#f7f7f7"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
 
-                <Button
-                    android:id="@+id/SIGNUP_BUTTON"
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/inputPassword"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/quadruple_margin_standard"
-                    android:background="@drawable/mpbutton1"
-                    android:elevation="5dp"
-                    android:gravity="center"
-                    android:text="@string/activity_sign_up_step_one_sign_up"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+        </RelativeLayout>
 
-            </LinearLayout>
-        </ScrollView>
+    </RelativeLayout>
 
-    </LinearLayout>
-
+    <TextView
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/basic_button_height"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:background="@drawable/mpbutton1"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:text="@string/fragment_sign_up_step_one_next"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
     <include
         android:id="@+id/progress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 </RelativeLayout>
 
