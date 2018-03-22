@@ -288,8 +288,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             is.printStackTrace();
         }
 
-        checkRestrictions();
-
     }
 
     @Override

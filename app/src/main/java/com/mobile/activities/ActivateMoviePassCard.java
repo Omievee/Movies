@@ -118,6 +118,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                         intent.putExtra(MovieActivity.SCREENING, Parcels.wrap(screeningObject));
                         intent.putExtra(MovieActivity.SHOWTIME, selectedShowTime);
                         startActivity(intent);
+
                     } else {
                         progress.setVisibility(View.GONE);
                         Toast.makeText(ActivateMoviePassCard.this, response.message(), Toast.LENGTH_SHORT).show();
