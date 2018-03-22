@@ -29,7 +29,10 @@
 
     <!--TODO: DARKER COLORS?-->
     <color name="test_blue">#14171b</color>
-    <color name="test_black">#0e1013</color>
+    <color name="test_black">#202b36</color>
+    <!--<color name="test_black">#0e1013</color>-->
+
+
     <!--<color name="test_black">#202B36</color>-->
     <!--<color name="test_blue">#303A43</color>-->
 
