@@ -229,7 +229,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    expTextInputLayout.setError("Invalid Expiration Date");
+                    expTextInputLayout.setError("Invalid expiration");
                 }
 
             }
@@ -260,7 +260,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 if(signup2CCNum.getText().toString().trim().isEmpty())
                     ccNumTextInputLayout.setError("Required");
                 else
-                    ccNumTextInputLayout.setError("Invalid Credit Card Number");
+                    ccNumTextInputLayout.setError("Invalid credit card number");
                 signup2CCNum.clearFocus();
             }
             if(signup2CC_CVV.length() != 4 && signup2CC_CVV.length()!=3){
@@ -274,7 +274,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 if(signup2CCExp.getText().toString().trim().isEmpty())
                     expTextInputLayout.setError("Required");
                 else
-                    expTextInputLayout.setError("Invalid Expiration Date");
+                    expTextInputLayout.setError("Invalid expiration");
                 signup2CCExp.clearFocus();
             }
         }

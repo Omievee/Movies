@@ -499,12 +499,12 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                             updateCreditCard(newCC, newExp, newCVV);
                         } else {
                             progress.setVisibility(View.GONE);
-                            expTextInputLayout.setError("Invalid Expiration Date");
+                            expTextInputLayout.setError("Invalid expiration");
                         }
 
                     } else {
                         progress.setVisibility(View.GONE);
-                        expTextInputLayout.setError("Invalid Expiration Date");
+                        expTextInputLayout.setError("Invalid expiration");
                     }
                 } else {
                     progress.setVisibility(View.GONE);
@@ -512,7 +512,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 }
             } else {
                 progress.setVisibility(View.GONE);
-                ccNumTextInputLayout.setError("Invalid Credit Card Number");
+                ccNumTextInputLayout.setError("Invalid credit card number");
             }
         } else {
             progress.setVisibility(View.GONE);
