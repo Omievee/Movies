@@ -2,6 +2,7 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -59,6 +60,8 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
+import com.mobile.UserLocationManagerFused;
+import com.mobile.activities.MovieActivity;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.ContextSingleton;
@@ -270,8 +273,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMinZoomPreference(DEFAULT_ZOOM_LEVEL);
-        Log.d(TAG, "onMapReady: " + customInfoWindow);
-
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -279,6 +280,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(myContext, R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setCompassEnabled(false);
             mClusterManager = new ClusterManager<>(myContext, mMap);
             mClusterManager.setRenderer(new TheaterPinRenderer());
             mMap.setOnMarkerClickListener(mClusterManager);
@@ -376,8 +378,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                     CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                     mMap.moveCamera(current);
-
-
                 }
             }
         });
@@ -399,6 +399,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onResume() {
         mMapView.onResume();
+        locationUpdateRealm();
         super.onResume();
     }
 
@@ -411,6 +412,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     private void getMyLocation() {
+        boolean enabled = UserLocationManagerFused.getLocationInstance(myContext).isLocationEnabled();
+        if (!enabled) {
+            EnableLocation location = new EnableLocation();
+            android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+            location.show(fm, "fr_enablelocation");
+        }
         mProgress.setVisibility(View.VISIBLE);
         LatLng latLng = new LatLng(lat, lon);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
@@ -424,7 +431,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             fadeOut(searchThisArea);
         }
     }
-
 
     @Override
     public void onLocationChanged(Location location) {

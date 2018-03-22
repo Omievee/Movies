@@ -520,11 +520,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         return true;
     }
 
-    private void updateNavigationBarState() {
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
     void selectBottomNavigationBarItem(int itemId) {
         Menu menu = bottomNavigationView.getMenu();
         for (int i = 0, size = menu.size(); i < size; i++) {
