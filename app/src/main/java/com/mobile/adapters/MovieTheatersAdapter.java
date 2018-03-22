@@ -210,10 +210,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(theaterTime);
                     cal.add(Calendar.MINUTE, 30);
-
-
                     if (myTime.after(cal.getTime())) {
-                        if (cal.getTime().getHours() != 0) {
+                        if (cal.getTime().getHours() > 2) {
                             showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
                             showTime.setClickable(false);
                         }
@@ -244,6 +242,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
+
+
                         currentTime = checked;
                         String selectedShowTime = currentTime.getText().toString();
                         showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
