@@ -4,7 +4,7 @@
     android:id="@+id/COORDPARENT"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_black"
+    android:background="@color/dark"
     android:orientation="vertical">
 
 
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
-        android:background="@color/test_black"
+        android:background="@color/dark"
         android:visibility="visible" />
 
 

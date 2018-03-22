@@ -174,6 +174,13 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String sZip = ProspectUser.zip;
         String birthday = ProspectUser.dateOfBirth;
         String gender = ProspectUser.gender;
+        String selectedPlanId;
+
+        if(ProspectUser.plan==null)
+            selectedPlanId = null;
+         else{
+             selectedPlanId = ProspectUser.plan.getId();
+        }
 
 
         if (!confirmTermsAgreementSwitch.isChecked()) {
@@ -187,7 +194,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             bZip = ProspectUser.zip;
 
             completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender);
+                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
 
         }
 
@@ -197,15 +204,23 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     private void completeRegistration(String creditCardNumber, String month, String year, String cvv, String sStreet,
                                       String sStreet2, String sCity, String sState, String sZip, String bStreet,
                                       String bStreet2, String bCity, String bState, String bZip, String email,
-                                      String firstName, String lastName, String password, String birthday, String gender) {
+                                      String firstName, String lastName, String password, String birthday, String gender, String selectedPlanId) {
 
         if (confirmTermsAgreementSwitch.isChecked()) {
             progress.setVisibility(View.VISIBLE);
 
             confirmSubmit.setEnabled(false);
-            final SignUpRequest request = new SignUpRequest(creditCardNumber, month, year, cvv,
-                    sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
-                    email, firstName, lastName, password, birthday, gender);
+            SignUpRequest request;
+
+            if(selectedPlanId==null) {
+                request = new SignUpRequest(creditCardNumber, month, year, cvv,
+                        sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
+                        email, firstName, lastName, password, birthday, gender);
+            } else{
+                request = new SignUpRequest(creditCardNumber, month, year, cvv,
+                        sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
+                        email, firstName, lastName, password, birthday, gender, selectedPlanId);
+            }
 
             Log.d(TAG, "NAMES: " + firstName + "  " + lastName);
 
@@ -217,7 +232,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                     Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
 
-                    if (response.isSuccessful()) {
+                    if (response!=null && response.isSuccessful()) {
                         //transition to final viewpager pag & show confirmation
                         ((SignUpActivity) getActivity()).setPage();
 

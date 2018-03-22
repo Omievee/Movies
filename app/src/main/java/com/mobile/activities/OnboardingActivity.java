@@ -1,6 +1,7 @@
 package com.mobile.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,7 +22,17 @@ import android.widget.TextView;
 
 import com.mobile.Constants;
 import com.mobile.fragments.NearMe;
+import com.mobile.model.Plans;
+import com.mobile.model.ProspectUser;
+import com.mobile.network.RestClient;
+import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -35,15 +46,19 @@ public class OnboardingActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     TextView nearMe;
     ImageView[] indicators;
+    Plans planOne, planTwo;
 
     int page = 0;
 
     CoordinatorLayout mCoordinator;
+    private PlanResponse planResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
+
+        getPlans();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mCoordinator = findViewById(R.id.main_content);
@@ -110,8 +125,36 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         onboardingJoinNow.setOnClickListener(view -> {
+            if(planTwo!=null){
             Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
             startActivity(intent);
+            } else{
+                Intent intent = new Intent(OnboardingActivity.this,SignUpActivity.class);
+                intent.putExtra(SignUpFirstOpenActivity.SELECTED_PLAN, Parcels.wrap(planOne));
+                ProspectUser.plan = planOne;
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void getPlans(){
+        RestClient.getsAuthenticatedStagingRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+            @Override
+            public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
+                if(response!=null && response.isSuccessful()){
+                    planResponse = response.body();
+                    planOne = planResponse.getPlans().get(0);
+                    if(planResponse.getPlans().size()>1)
+                        planTwo = planResponse.getPlans().get(1);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlanResponse> call, Throwable t) {
+
+            }
+
         });
     }
 
