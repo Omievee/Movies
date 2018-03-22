@@ -25,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieTheatersAdapter;
+import com.mobile.fragments.EnableLocation;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
@@ -97,7 +99,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ScreeningsResponse screeningsResponse;
 
 
-    TextView THEATER_ADDRESS_LISTITEM, noTheaters;
+    TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg;
+    ImageView arrow;
     TextView selectedMovieTitle;
 
     ArrayList<Screening> selectedScreeningsList;
@@ -147,6 +150,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         url = getIntent().getStringExtra(DEEPLINK);
 
 
+        arrow = findViewById(R.id.arrow);
+        enableLocation = findViewById(R.id.EnableText);
+        locationMsg = findViewById(R.id.message);
         noTheaters = findViewById(R.id.NoTheaters);
         selectedMoviePoster = findViewById(R.id.SELECTED_MOVIE_IMAGE);
         selectedMovieTitle = findViewById(R.id.SELECTED_MOVIE_TITLE);
@@ -169,7 +175,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-        currentLocationTasks();
+
 
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
@@ -202,7 +208,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         selectedTheatersRecyclerView.setLayoutAnimation(animation2);
-
+        currentLocationTasks();
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
@@ -229,23 +235,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onStart() {
         super.onStart();
-
-        try {
-            registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        try {
-            registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-        } catch (IllegalArgumentException is) {
-            is.printStackTrace();
-        }
+        currentLocationTasks();
 
     }
 
@@ -611,9 +606,19 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         mLocationAcquired = false;
         boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
         if (!enabled) {
-            Log.d(TAG, "enabled: ");
+            ProgressBar.setVisibility(View.GONE);
+            selectedTheatersRecyclerView.setVisibility(View.GONE);
+            enableLocation.setVisibility(View.VISIBLE);
+            locationMsg.setVisibility(View.VISIBLE);
+            arrow.setVisibility(View.VISIBLE);
+            enableLocation.setOnClickListener(v -> startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
+
         } else {
-            Log.d(TAG, "else: ");
+            selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
+            enableLocation.setVisibility(View.GONE);
+            locationMsg.setVisibility(View.GONE);
+            arrow.setVisibility(View.GONE);
+
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
             Log.d(TAG, "currentLocationTasks: " + location);
             onLocationChanged(location);

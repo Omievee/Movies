@@ -44,22 +44,8 @@ import butterknife.ButterKnife;
 public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdapter.ViewHolder> {
     public static final String TAG = "Showtimes/";
     public Screening screening;
-
-    public static final String inputFormat = "HH:mm";
-
-    private Date date;
-    private Date dateCompareOne;
-    private Date dateCompareTwo;
-    SimpleDateFormat inputParser = new SimpleDateFormat(inputFormat, Locale.US);
-
     ViewHolder HOLDER;
-    private int EnabledButton;
-
-    public static int lastCheckedPos = -1;
-
-    public String selectedTheater;
     public String check;
-    int counter;
     View root;
     private ArrayList<Screening> screeningsArrayList;
     private ArrayList<Theater> theaterArrayList;
@@ -263,15 +249,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     @Override
     public int getItemViewType(int position) {
         return position;
-    }
-
-
-    private Date parseDate(String date) {
-        try {
-            return inputParser.parse(date);
-        } catch (java.text.ParseException e) {
-            return new Date(0);
-        }
     }
 
 
