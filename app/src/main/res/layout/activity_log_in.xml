@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_black">
+    android:background="@color/dark">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,15 +30,19 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
             android:text="@string/activity_sign_in_welcome_back"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_emailInputTextLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_height="match_parent"
+            android:textColorHint="@color/white_80_opacity"
+            android:theme="@style/EditTextStyle"
             android:layout_marginTop="@dimen/quadruple_margin_standard"
-            android:textColorHint="@color/white">
+            app:errorTextAppearance="@style/error_appearance"
+            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
 
             <EditText
                 android:id="@+id/input_email"
@@ -46,21 +50,27 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_in_email"
                 android:inputType="textEmailAddress"
+                android:backgroundTint="@color/white_40_opacity"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="18sp" />
+                android:textColorHighlight="@color/white_80_opacity"
+                android:textColorLink="@android:color/transparent"
+                android:textCursorDrawable="@color/white"
+                android:textAppearance="@style/normal_text_in_layout_Style"
+                android:textSize="14sp"
+                app:backgroundTint="@color/white_40_opacity"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_passwordInputTextLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:textColorHint="@color/white"
+            android:layout_height="match_parent"
+            android:textColorHint="@color/white_80_opacity"
+            android:theme="@style/EditTextStyle"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/new_red">
+            app:passwordToggleTint="@color/almost_white"
+            app:errorTextAppearance="@style/error_appearance"
+            app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_password"
@@ -68,24 +78,29 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_in_password"
                 android:inputType="textPassword"
+                android:backgroundTint="@color/white_40_opacity"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="18sp" />
+                android:textColorHighlight="@color/white_80_opacity"
+                android:textColorLink="@android:color/transparent"
+                android:textCursorDrawable="@color/white"
+                android:textAppearance="@style/normal_text_in_layout_Style"
+                android:textSize="14sp"
+                app:backgroundTint="@color/white_40_opacity"/>
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/button_log_in"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"
             android:layout_below="@+id/input_password"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/double_margin_standard"
             android:background="@drawable/mpbutton1"
             android:elevation="2dp"
             android:text="@string/activity_sign_in_log_in"
+            android:textStyle="bold"
             android:textAllCaps="false"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
 
 
         <RelativeLayout
@@ -96,24 +111,28 @@
 
             <ImageView
                 android:id="@+id/FACEBOOK_CLICK"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="14dp"
+                android:layout_height="29dp"
                 android:layout_marginTop="@dimen/margin_standard"
+                android:layout_centerVertical="true"
                 android:src="@drawable/facebookicon" />
 
             <Button
                 android:id="@+id/button_facebook_log_in"
-                android:layout_width="200dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_standard"
+                android:textColor="@color/almost_white"
                 android:background="@android:color/transparent"
                 android:paddingBottom="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_half"
+                android:layout_centerVertical="true"
                 android:paddingStart="@dimen/margin_standard"
                 android:paddingTop="@dimen/margin_standard"
                 android:text="Sign in with facebook"
                 android:textAllCaps="false"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="normal" />
 
 
@@ -137,8 +156,9 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/margin_standard"
             android:text="@string/activity_sign_in_dont_have_an_account"
+            android:layout_marginStart="@dimen/margin_standard"
             android:textColor="@color/red"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/forgot_password"
@@ -146,8 +166,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="@string/activity_sign_in_forgot_password"
+            android:layout_marginEnd="@dimen/margin_standard"
             android:textColor="@color/red"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
