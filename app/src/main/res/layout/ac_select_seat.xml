@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAYOUT1"
-            android:background="@color/charcoal"
+            android:background="@color/charcoalGrey"
             android:orientation="horizontal">
 
             <TextView
@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAYOUT2"
-            android:background="@color/charcoal"
+            android:background="@color/charcoalGrey"
             android:orientation="horizontal">
 
             <TextView
@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAYOUT3"
-            android:background="@color/charcoal">
+            android:background="@color/charcoalGrey">
 
             <TextView
                 android:id="@+id/SEATCHART_SHOWTIME"

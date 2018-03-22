@@ -50,7 +50,7 @@
             android:hint="Reason for Cancellation"
             android:textSize="20sp"
             app:ms_arrow_tint="@color/white"
-            app:ms_background_color="@color/charcoal"
+            app:ms_background_color="@color/charcoalGrey"
             app:ms_hint_color="@color/white"
             app:ms_text_color="@color/white">
 

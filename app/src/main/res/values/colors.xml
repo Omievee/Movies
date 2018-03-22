@@ -20,11 +20,14 @@
     <color name="white_80_opacity">#80FFFFFF</color>
     <color name="white_transparent">#40ffffff</color>
     <color name="gun_metal_mask">#404c5863</color>
-    <color name="charcoal">#303a43</color>
+    <color name="charcoalGrey">#303a43</color>
     <color name="gun_metal">#4c5863</color>
     <color name="gun_metal2">#4f5b66</color>
     <color name="almost_white">#f7f7f7</color>
     <color name="dark2">#263340</color>
+    <color name="dustyLavender">#d1ced2</color>
+    <color name="brightBlue">#007aff</color>
+    <color name="backgroundNavy">#65202b36</color>
 
 
     <!--TODO: DARKER COLORS?-->
