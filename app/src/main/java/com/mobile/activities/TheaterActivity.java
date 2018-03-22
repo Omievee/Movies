@@ -42,8 +42,6 @@ public class TheaterActivity extends BaseActivity {
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean mIsStateAlreadySaved = false;
     boolean mPendingShowDialog = false;
-    ArrayList<Screening> moviesList;
-    ArrayList<String> showtimesList;
 
     protected BottomNavigationView bottomNavigationView;
 
@@ -68,6 +66,7 @@ public class TheaterActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.CINEAM_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -75,15 +74,9 @@ public class TheaterActivity extends BaseActivity {
                 extras.get(THEATER);
             }
             theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
-            Log.d(Constants.TAG, "onCreate: " + theater);
+            theaterSelectedName.setText(theater.getName());
         }
 
-        theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
-        theaterSelectedName.setText(theater.getName());
-        moviesList = new ArrayList<>();
-        showtimesList = new ArrayList<>();
-        backArrow = findViewById(R.id.CINEMA_BACK);
-        backArrow.setOnClickListener(v -> onBackPressed());
 
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
 
@@ -159,8 +152,6 @@ public class TheaterActivity extends BaseActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
     }
-
-
 
 
 }

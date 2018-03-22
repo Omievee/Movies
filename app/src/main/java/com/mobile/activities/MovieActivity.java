@@ -169,6 +169,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+
+
         currentLocationTasks();
 
         loadMoviePosterData();
@@ -199,11 +201,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
-
-
         selectedTheatersRecyclerView.setLayoutAnimation(animation2);
-
-
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
 
@@ -611,7 +609,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         mLocationAcquired = false;
         boolean enabled = UserLocationManagerFused.getLocationInstance(MovieActivity.this).isLocationEnabled();
         if (!enabled) {
-            Log.d(TAG, "enabled: ");
+            Log.d(TAG, "enabled---------------: ");
         } else {
             Log.d(TAG, "else: ");
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
