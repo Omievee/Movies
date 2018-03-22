@@ -128,7 +128,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
+        fadeIn.setDuration(500);
 
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);

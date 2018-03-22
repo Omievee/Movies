@@ -138,7 +138,7 @@
             android:layout_marginBottom="@dimen/margin_standard"
             android:text="@string/activity_sign_in_dont_have_an_account"
             android:textColor="@color/red"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/forgot_password"
@@ -147,7 +147,7 @@
             android:layout_alignParentEnd="true"
             android:text="@string/activity_sign_in_forgot_password"
             android:textColor="@color/red"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
     </RelativeLayout>
 
