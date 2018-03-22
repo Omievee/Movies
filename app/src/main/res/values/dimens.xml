@@ -26,6 +26,12 @@
     <dimen name="basic_button_height">45dp</dimen>
     <dimen name="left_margin_circles">3dp</dimen>
 
+    <!-- TEXT SIZES -->
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>
 </resources>

@@ -5,24 +5,23 @@
     android:id="@+id/THEATERS_LISTITEM"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    app:cardElevation="-1dp"
     android:layout_marginBottom="@dimen/margin_standard"
+    android:animateLayoutChanges="true"
     android:background="@color/charcoalGrey"
-    android:paddingBottom="@dimen/margin_standard">
+    app:cardElevation="-1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/charcoalGrey"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/charcoalGrey">
 
 
         <LinearLayout
             android:id="@+id/ONE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_half"
             android:layout_marginLeft="@dimen/margin_half"
+            android:layout_marginRight="@dimen/margin_half"
             android:background="@color/charcoalGrey"
             android:orientation="vertical">
 
@@ -31,8 +30,8 @@
                 android:id="@+id/THEATER_NAME_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_half"
                 android:text="[MOVIE THEATER NAME]"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:textColor="@color/almost_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -42,7 +41,8 @@
                 android:id="@+id/THEATER_ADDRESS2_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:text="[ADDRESS]"
                 android:textColor="@color/almost_white"
                 android:textSize="12sp" />
@@ -50,7 +50,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:orientation="horizontal">
 
 
@@ -79,7 +80,6 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/margin_standard"
                     android:paddingEnd="@dimen/margin_half"
                     android:src="@drawable/locationiconsmallred"
                     android:tint="@color/new_red" />
@@ -89,6 +89,7 @@
 
             <HorizontalScrollView
                 android:id="@+id/SCROll"
+                android:layout_marginTop="@dimen/margin_half"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
