@@ -93,7 +93,7 @@ public class Theater extends RealmObject implements Serializable {
         if (name != null) {
             return name;
         }
-        return "";
+        return "Theater";
     }
 
     public boolean ticketTypeIsStandard() {

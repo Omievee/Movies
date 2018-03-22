@@ -388,7 +388,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         super.onStop();
         Log.d(TAG, "onStop: ");
         mGoogleApiClient.disconnect();
-        mClusterManager.clearItems();
     }
 
     @Override
@@ -403,16 +402,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.onResume();
         super.onResume();
 
-
     }
 
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "onDetach: ");
-        mClusterManager.clearItems();
-    }
 
     private void buildLocationSettingsRequest() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
