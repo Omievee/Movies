@@ -366,6 +366,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         return zip;
     }
 
+    public String getPlanPrice(){
+        return selectedPlan.getPrice();
+    }
+
+    public String getPaymentDisclaimer(){
+        return  selectedPlan.getPaymentDisclaimer();
+    }
+
 
 
     /* Fragment Three */

@@ -74,6 +74,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     Spinner signup2State;
     EditText signup2Zip;
     Switch signup2SameAddressSwitch;
+    TextView planPrice, paymentDisclaimer;
     LinearLayout fullBillingAddress, fullBillingAddress2;
     TextInputLayout ccNumTextInputLayout, cvvTextInputLayout, expTextInputLayout;
     View progress;
@@ -129,6 +130,12 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         cvvTextInputLayout = view.findViewById(R.id.cvvTextInputLayout);
         expTextInputLayout = view.findViewById(R.id.expTextInputLayout);
 
+        planPrice = view.findViewById(R.id.planPrice);
+        paymentDisclaimer = view.findViewById(R.id.paymentDisclaimer);
+
+        planPrice.setText(((SignUpActivity) getActivity()).getPlanPrice());
+        paymentDisclaimer.setText(((SignUpActivity) getActivity()).getPaymentDisclaimer());
+
 
         signup2ScanCardIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +143,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 creditCardClick();
             }
         });
+
 
 
         signup2SameAddressSwitch.setOnClickListener(new View.OnClickListener() {

@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_marginTop="120dp">
+        android:layout_marginTop="@dimen/more_a_lot_margin_standard">
 
 
         <LinearLayout
@@ -32,20 +32,21 @@
                 android:textAlignment="center"
                 android:id="@+id/planPrice"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/margin_half"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
                 android:id="@+id/paymentDisclaimer"
                 android:gravity="center_horizontal"
                 android:text="@string/fragment_sign_up_step_two_header"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
 
         </LinearLayout>
@@ -106,15 +107,15 @@
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
                                 android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
                         <ImageButton
                             android:id="@+id/SIGNUP2_SCANCARD_ICON"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:background="@color/test_blue"
                             android:scaleType="center"
                             android:src="@drawable/scanicon2" />
@@ -157,7 +158,8 @@
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
                                 android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
 
@@ -190,7 +192,8 @@
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="14sp"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
                                 android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
 
@@ -215,8 +218,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:text="Use shipping address for billing?"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textColor="@color/almost_white"
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -228,7 +231,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="YES"
-                            android:textSize="18sp" />
+                            android:textColor="@color/new_red"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
 
                         <Switch
                             android:id="@+id/SIGNUP2_SWITCH"
@@ -250,8 +255,8 @@
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:gravity="center_horizontal"
                     android:text="You'll be able to review details before being charged."
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="12sp"
                     android:textStyle="italic" />
 
 
@@ -362,7 +367,7 @@
 
     <TextView
         android:id="@+id/button_next2"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/basic_button_height"
         android:layout_centerHorizontal="true"
         android:layout_gravity="bottom |center_horizontal"
@@ -371,8 +376,9 @@
         android:elevation="5dp"
         android:gravity="center"
         android:text="@string/fragment_sign_up_step_one_next"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <include
         android:id="@+id/progress"

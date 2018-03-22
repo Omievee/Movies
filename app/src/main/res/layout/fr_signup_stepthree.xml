@@ -27,8 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Ship to:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/almost_white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -37,8 +37,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[ First + Last Name ]"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/CONFIRM_FULL_ADDRESS"
@@ -46,8 +46,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[ Address 1 + 2 ]"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
 
 
         </LinearLayout>
@@ -69,8 +69,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="[ City, State Zip ]"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
 
 
             <!--<TextView-->
@@ -86,6 +86,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/CONFIRM_BILLING"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,8 +106,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Billing:"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/almost_white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
 
@@ -112,8 +120,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="XXXX - XXXX - XXXX"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
 
                 <TextView
@@ -184,8 +192,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="Total "
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
+                            android:textColor="@color/almost_white"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -193,7 +201,7 @@
                             android:layout_height="match_parent"
                             android:text="$9.95/month "
                             android:textColor="@color/new_red"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -204,8 +212,8 @@
                         android:gravity="center_horizontal"
                         android:padding="@dimen/margin_half"
                         android:text="@string/fragment_sign_up_step_two_header"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textColor="@color/almost_white"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -235,7 +243,7 @@
                         android:layout_marginEnd="@dimen/margin_half"
                         android:maxLines="1"
                         android:text="@string/fragment_sign_up_step_three_terms"
-                        android:textSize="15sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/CONFIRM_ToS"
@@ -244,7 +252,7 @@
                         android:layout_toEndOf="@id/ToS"
                         android:text="@string/fragment_sign_up_step_three_terms_link"
                         android:textColor="@color/new_red"
-                        android:textSize="15sp" />
+                        android:textSize="12sp" />
 
 
                     <Switch
@@ -262,7 +270,7 @@
                         android:layout_below="@id/ToS"
                         android:text="@string/fragment_sign_up_step_three_terms2"
                         android:textAlignment="viewStart"
-                        android:textSize="15sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/CONFIRM_PRIVACY"
@@ -275,7 +283,7 @@
                         android:text="@string/fragment_sign_up_step_three_terms_link2"
                         android:textAlignment="viewStart"
                         android:textColor="@color/new_red"
-                        android:textSize="15sp" />
+                        android:textSize="12sp" />
 
 
                 </RelativeLayout>
@@ -294,7 +302,7 @@
 
                 <TextView
                     android:id="@+id/CONFIRM_SUBMIT"
-                    android:layout_width="200dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/basic_button_height"
                     android:layout_marginTop="70dp"
                     android:background="@drawable/mpbutton1"
@@ -303,7 +311,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/fragment_sign_up_step_three_submit"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
