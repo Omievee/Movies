@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue">
+    android:background="@color/dark">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relative_layout"
@@ -23,8 +23,8 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/double_margin_standard"
             android:text="@string/fragment_sign_up_step_one_header"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
 
         <ScrollView
@@ -74,7 +74,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -105,7 +106,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -146,7 +148,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -179,7 +182,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -220,7 +224,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -251,7 +256,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -283,7 +289,8 @@
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
@@ -301,17 +308,18 @@
 
     <TextView
         android:id="@+id/button_next"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/basic_button_height"
         android:layout_centerHorizontal="true"
         android:layout_gravity="bottom |center_horizontal"
-        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginBottom="@dimen/double_margin_standard"
         android:background="@drawable/mpbutton1"
         android:elevation="5dp"
         android:gravity="center"
         android:text="@string/fragment_sign_up_step_one_next"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <include
         android:id="@+id/progress"

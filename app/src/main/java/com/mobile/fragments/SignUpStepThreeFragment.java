@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -39,7 +40,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     public static final String CCNUM = "cc";
     View rootview;
     public static final String TAG = "foundit";
-    CoordinatorLayout coordinatorLayout;
+    RelativeLayout coordinatorLayout;
 
     public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
             confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
@@ -47,6 +48,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
     String num, month, year, ccv;
     View progress;
+    TextView price, paymentDisclaimer, planDescription;
 
 
     public SignUpStepThreeFragment() {
@@ -71,6 +73,10 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmTermsAgreementSwitch = rootview.findViewById(R.id.CONFIRM_SWITCH);
         confirmSubmit = rootview.findViewById(R.id.CONFIRM_SUBMIT);
 
+        price = rootview.findViewById(R.id.planPrice);
+        paymentDisclaimer = rootview.findViewById(R.id.paymentDisclaimer);
+        planDescription = rootview.findViewById(R.id.planDescription);
+
         Log.d(TAG, "vc: " + confirmCCNum.getId());
         Log.d(TAG, "1: " + num);
 
@@ -93,6 +99,12 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         confirmFullName.setText(ProspectUser.firstName + " " + ProspectUser.lastName);
         confirmFullAddress.setText(ProspectUser.address + " " + ProspectUser.address2);
         confirmCityStateZip.setText(ProspectUser.city + ", " + ProspectUser.state + " " + ProspectUser.zip);
+
+        price.setText(ProspectUser.plan.getConfirmTotal());
+        planDescription.setText(ProspectUser.plan.getConfirmPlanDescription());
+        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+
+
 
 
 //        confirmEditBilling.setOnClickListener(new View.OnClickListener() {

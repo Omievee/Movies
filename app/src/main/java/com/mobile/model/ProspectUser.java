@@ -18,4 +18,5 @@ public class ProspectUser {
     public static String state;
     public static String zip;
     public static String session;
+    public static Plans plan;
 }

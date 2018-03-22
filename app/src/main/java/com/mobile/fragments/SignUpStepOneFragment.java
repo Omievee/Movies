@@ -177,7 +177,7 @@ public class SignUpStepOneFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (canContinue()) {
-//                            processSignUpInfo();
+                            processSignUpInfo();
                             ((SignUpActivity) getActivity()).setPage();
 
                         } else {
@@ -261,7 +261,7 @@ public class SignUpStepOneFragment extends Fragment {
 
         ((SignUpActivity) getActivity()).setPage();
 
-        Log.d(TAG, "processSignUpInfo: " + ProspectUser.gender + " " + ProspectUser.dateOfBirth);
+        Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
 
 
 //        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,

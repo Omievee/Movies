@@ -161,7 +161,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     @Override
     public void OnCreditCardEntered(final String ccNum, final String ccExMonth, final String ccExYear, final String ccCVV) {
         viewpagerAdapter.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
-        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
+        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 3;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
         f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
         f.confirmCCNum.setText(" - " + ccNum.substring(12, 16));

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mobile.model.Plans;
+import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
@@ -88,6 +89,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpFirstOpenActivity.this,SignUpActivity.class);
                 intent.putExtra(SELECTED_PLAN, Parcels.wrap(selectedPlan));
+                ProspectUser.plan = selectedPlan;
                 startActivity(intent);
             }
         });
@@ -118,9 +120,11 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
                     if(planOne.getIsFeatured().equalsIgnoreCase("true")){
                         Drawable image=getResources().getDrawable(R.drawable.selected_border_color);
                         planOneView.setBackground(image);
+                        selectedPlan = planOne;
                     } else{
                         Drawable image=getResources().getDrawable(R.drawable.selected_border_color);
                         planTwoView.setBackground(image);
+                        selectedPlan = planTwo;
                     }
                 }
                 else{
