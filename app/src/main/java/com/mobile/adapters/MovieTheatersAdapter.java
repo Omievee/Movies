@@ -213,8 +213,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
 
                     if (myTime.after(cal.getTime())) {
-                        showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
-                        showTime.setClickable(false);
+                        if (cal.getTime().getHours() != 0) {
+                            showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
+                            showTime.setClickable(false);
+                        }
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
