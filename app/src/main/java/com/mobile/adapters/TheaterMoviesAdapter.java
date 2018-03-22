@@ -218,10 +218,11 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             }
             if (screening.getTitle().equals("Check In if Movie Missing")) {
                 HOLDER.movieRating.setVisibility(View.GONE);
+                HOLDER.cinemaTItle.setText("Unlisted Showtime");
                 HOLDER.showtimeGrid.removeView(showtime);
                 HOLDER.synopsis.setVisibility(View.GONE);
                 HOLDER.showtimeGrid.setVisibility(View.GONE);
-                HOLDER.movieTime.setText("Select this showtime to check in to a movie that is playing at this theater, but isn't appearing on the app.");
+                HOLDER.movieTime.setText("Click here to check in to a movie that is playing at this theater, but isn't appearing on the app.");
                 HOLDER.cinemaCardViewListItem.setOnClickListener(v -> {
                     currentTime.setChecked(false);
                     HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.new_red));
