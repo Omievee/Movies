@@ -1,6 +1,7 @@
 package com.mobile.activities;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.mobile.fragments.ConfirmationSignUpFragment;
 import com.mobile.fragments.SignUpFirstTime;
@@ -51,8 +54,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
-    ImageView zero, one, two, logo;
-    FrameLayout frame;
+    ImageView zero, one, two, logo,three;
+    RelativeLayout frame;
     ImageView[] indicators;
     SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
@@ -77,12 +80,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
+        three = findViewById(R.id.intro_indicator_3);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP);
         mViewPager.setAdapter(viewpagerAdapter);
 
-        indicators = new ImageView[]{zero, one, two};
+        indicators = new ImageView[]{zero, one, two,three};
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
@@ -309,6 +313,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
+                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
+                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
+            if(position!=i){
+                marginParams.setMargins(margin, margin, margin, margin);
+            }
+            else {
+                marginParams.setMargins(0, 0, 0, 0);
+            }
         }
     }
 
@@ -317,15 +329,19 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public void setEmail(String email){
         this.email = email;
+        Log.d("FIRST", "setEmail: "+email);
     }
     public void setPassword(String password){
         this.password = password;
+        Log.d("FIRST", "setEmail: "+password);
     }
     public void setGender(String gender){
         this.gender = gender;
+        Log.d("FIRST", "setEmail: "+gender);
     }
     public void setDOB(String dob){
         this.dob = dob;
+        Log.d("FIRST", "setEmail: "+dob);
     }
 
     /* Fragment One */

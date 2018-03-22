@@ -125,6 +125,9 @@ public class SignUpFirstTime extends Fragment {
                 signupPasswordInput.clearFocus();
                 signupEmailInput.clearFocus();
                 signupEmailConfirm.clearFocus();
+                emailTextInputLayout.setError(null);
+                email2TextInputLayout.setError(null);
+                passwordTextInputLayout.setError(null);
                 Log.d(Constants.TAG, "onClick: " + DOB.getText().toString());
                 if (!signupEmailConfirm.getText().toString().trim().isEmpty() && !signupEmailInput.getText().toString().trim().isEmpty() && !signupPasswordInput.getText().toString().trim().isEmpty()) {
                     if (!signupEmailInput.getText().toString().trim().equals(signupEmailConfirm.getText().toString().trim())) {

@@ -69,9 +69,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/indicator_selected"
-                        android:minHeight="24dp"
-                        android:minWidth="24dp" />
+                        android:background="@drawable/indicator_selected" />
 
                 </RelativeLayout>
 
@@ -83,6 +81,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="Account"
+                    android:textColor="@color/almost_white"
                     android:textAlignment="center"
                     android:textSize="12sp" />
 
@@ -125,6 +124,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="Shipping"
+                    android:textColor="@color/almost_white"
                     android:textAlignment="center"
                     android:textSize="12sp" />
 
@@ -167,6 +167,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="Payment"
+                    android:textColor="@color/almost_white"
                     android:textAlignment="center"
                     android:textSize="12sp" />
 
@@ -210,6 +211,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="Confirm"
+                    android:textColor="@color/almost_white"
                     android:textAlignment="center"
                     android:textSize="12sp" />
 

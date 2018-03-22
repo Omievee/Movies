@@ -12,27 +12,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:focusable="true"
+        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
         android:focusableInTouchMode="true"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:scaleType="fitCenter"
-            android:src="@drawable/moviepass_logo_red" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center_vertical"
-            android:text="@string/activity_sign_up_step_one_get_started"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:text="@string/Create_account"
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -40,7 +33,6 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/margin_standard"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -53,6 +45,7 @@
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
                     app:errorTextAppearance="@style/error_appearance"
+                    app:counterTextAppearance="@style/normal_text_in_layout_Style"
                     app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                     <EditText
@@ -64,12 +57,11 @@
                         android:animateLayoutChanges="true"
                         android:backgroundTint="@color/white_40_opacity"
                         android:layout_marginTop="@dimen/margin_standard"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
                         android:textColor="@color/white"
-                        android:textColorHighlight="@color/white_80_opacity"
+                        android:textColorHighlight="@color/red"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
                         app:backgroundTint="@color/white_40_opacity"/>
 
                 </android.support.design.widget.TextInputLayout>
@@ -97,8 +89,7 @@
                         android:textColorHighlight="@color/white_80_opacity"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
                         app:backgroundTint="@color/white_40_opacity" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -111,6 +102,8 @@
                     android:layout_weight="0.6"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/almost_white"
                     app:errorTextAppearance="@style/error_appearance"
                     app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
@@ -124,11 +117,11 @@
                         android:backgroundTint="@color/white_40_opacity"
                         android:layout_marginTop="@dimen/margin_standard"
                         android:textColor="@color/white"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
                         android:textColorHighlight="@color/white_80_opacity"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
+                        android:textSize="14sp"
                         app:backgroundTint="@color/white_40_opacity"/>
 
                 </android.support.design.widget.TextInputLayout>
@@ -145,10 +138,13 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginTop="@dimen/margin_half"
                         android:hint="Gender"
-                        android:textSize="18sp"
-                        app:ms_arrow_tint="@color/white"
+                        android:layout_centerVertical="true"
+                        android:textSize="14sp"
+                        style="@style/Widget.AppCompat.Spinner.Underlined"
+                        android:backgroundTint="@color/almost_white"
+                        app:ms_arrow_tint="@color/dark"
                         app:ms_background_color="@color/dark"
-                        app:ms_hint_color="@color/white_80_opacity"
+                        app:ms_hint_color="@color/almost_white"
                         app:ms_text_color="@color/white" />
 
 
@@ -160,9 +156,12 @@
                         android:layout_toRightOf="@id/SPINNER"
                         android:layout_marginTop="@dimen/margin_half"
                         android:clickable="true"
+                        android:layout_centerVertical="true"
                         android:editable="false"
                         android:backgroundTint="@color/white_40_opacity"
+                        android:textColor="@color/almost_white"
                         android:focusable="false"
+                        android:textSize="14sp"
                         android:hint="Date of Birth" />
 
                 </RelativeLayout>
@@ -178,6 +177,7 @@
                     android:background="@drawable/mpbutton1"
                     android:elevation="5dp"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:text="@string/activity_sign_up_step_one_sign_up"
                     android:textAllCaps="false"
                     android:textColor="@color/white"

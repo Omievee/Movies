@@ -52,6 +52,7 @@
                     android:layout_weight="0.6"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
+                    android:hint="@string/Create_account"
                     app:errorTextAppearance="@style/error_appearance"
                     app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
@@ -59,7 +60,6 @@
                         android:id="@+id/SIGNUP_EMAIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/activity_sign_up_step_one_email"
                         android:inputType="textEmailAddress"
                         android:animateLayoutChanges="true"
                         android:backgroundTint="@color/white_40_opacity"
@@ -111,6 +111,7 @@
                     android:layout_weight="0.6"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
+                    app:passwordToggleEnabled="true"
                     app:errorTextAppearance="@style/error_appearance"
                     app:hintTextAppearance="@style/text_in_layout_hint_Style">
 

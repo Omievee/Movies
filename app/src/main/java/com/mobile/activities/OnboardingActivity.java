@@ -110,7 +110,7 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         onboardingJoinNow.setOnClickListener(view -> {
-            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+            Intent intent = new Intent(OnboardingActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
     }
