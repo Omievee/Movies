@@ -15,8 +15,8 @@
         android:layout_marginTop="33dp"
         android:padding="@dimen/margin_half"
         android:text="Account Details"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textColor="@color/almost_white"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <RelativeLayout
@@ -26,7 +26,7 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:padding="5dp"
         android:animateLayoutChanges="true"
-        android:background="@color/test_blue">
+        android:background="@color/charcoalGrey">
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,8 +35,8 @@
             android:layout_alignParentTop="true"
             android:padding="@dimen/margin_half"
             android:text="Account Information"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/DOWN0"
@@ -60,7 +60,7 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:padding="5dp"
         android:animateLayoutChanges="true"
-        android:background="@color/test_blue">
+        android:background="@color/charcoalGrey">
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,8 +69,8 @@
             android:layout_alignParentTop="true"
             android:padding="@dimen/margin_half"
             android:text="Shipping Address"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/DOWN"
@@ -95,7 +95,7 @@
         android:padding="5dp"
         android:layout_marginTop="@dimen/margin_standard"
         android:animateLayoutChanges="true"
-        android:background="@color/test_blue">
+        android:background="@color/charcoalGrey">
 
 
         <TextView
@@ -105,8 +105,8 @@
             android:layout_alignParentTop="true"
             android:padding="@dimen/margin_half"
             android:text="Plan &amp; Billing Info"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/DOWN2"

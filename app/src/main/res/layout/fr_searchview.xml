@@ -16,7 +16,7 @@
         android:background="@android:color/transparent"
         android:text="Cancel"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/almost_white"
         android:textSize="18sp" />
 
     <com.mancj.materialsearchbar.MaterialSearchBar
@@ -33,10 +33,10 @@
         app:mt_borderlessRippleEnabled="true"
         app:mt_dividerColor="@color/new_red"
         app:mt_hint="Search for movies"
-        app:mt_hintColor="@color/white"
+        app:mt_hintColor="@color/almost_white"
         app:mt_maxSuggestionsCount="3"
         app:mt_roundedSearchBarEnabled="true"
-        app:mt_searchBarColor="@color/test_blue"
+        app:mt_searchBarColor="@color/charcoalGrey"
         app:mt_searchIconTint="@color/white"
         app:mt_textColor="@color/white" />
 

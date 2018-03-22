@@ -126,7 +126,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         protected TextView rating;
         protected TextView runTime;
         protected SimpleDraweeView image;
-        CardView cardView;
+        View cardView;
 
         public SuggestionHolder(View itemView) {
             super(itemView);
