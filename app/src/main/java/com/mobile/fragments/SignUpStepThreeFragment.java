@@ -77,6 +77,9 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         paymentDisclaimer = rootview.findViewById(R.id.paymentDisclaimer);
         planDescription = rootview.findViewById(R.id.planDescription);
 
+        if(ProspectUser.ccNum!=null)
+            confirmCCNum.setText(" - " + ProspectUser.ccNum.substring(12, 16));
+
         Log.d(TAG, "vc: " + confirmCCNum.getId());
         Log.d(TAG, "1: " + num);
 
@@ -104,22 +107,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         planDescription.setText(ProspectUser.plan.getConfirmPlanDescription());
         paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
 
-
-
-
-//        confirmEditBilling.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(1);
-//            }
-//        });
-//
-//        confirmEditAddress.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((SignUpActivity) getActivity()).mViewPager.setCurrentItem(0);
-//            }
-//        });
 
         return rootview;
     }

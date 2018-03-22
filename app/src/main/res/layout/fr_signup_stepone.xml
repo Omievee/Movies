@@ -76,7 +76,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -108,7 +107,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -150,7 +148,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -184,7 +181,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -226,7 +222,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -258,7 +253,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -291,7 +285,6 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
-                            android:textStyle="bold"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>

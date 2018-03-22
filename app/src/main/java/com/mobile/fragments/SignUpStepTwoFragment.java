@@ -34,6 +34,7 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
+import com.mobile.model.ProspectUser;
 import com.moviepass.R;
 
 import java.util.Calendar;
@@ -218,6 +219,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
                     String ccCVV = signup2CC_CVV.getText().toString();
                     creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
+                    ProspectUser.ccNum = ccNum;
+                    ProspectUser.ccExpMonth = ccEx;
+                    ProspectUser.ccExpYear = ccEx2;
+                    ProspectUser.ccCVV = ccCVV;
                     Log.d(TAG, "onViewCreated: " + ccNum + ccEx + ccEx2 + ccCVV);
                     if (((SignUpActivity) getActivity()) != null) {
                         ((SignUpActivity) getActivity()).setPage();

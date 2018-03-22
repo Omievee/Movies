@@ -259,7 +259,6 @@ public class SignUpStepOneFragment extends Fragment {
         ProspectUser.state = signup1State.getText().toString();
         ProspectUser.zip = signup1Zip.getText().toString();
 
-        ((SignUpActivity) getActivity()).setPage();
 
         Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
 

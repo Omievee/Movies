@@ -19,4 +19,8 @@ public class ProspectUser {
     public static String zip;
     public static String session;
     public static Plans plan;
+    public static String ccNum;
+    public static String ccExpMonth;
+    public static String ccExpYear;
+    public static String ccCVV;
 }
