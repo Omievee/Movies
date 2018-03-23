@@ -50,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/ONBOARDING_JOIN_NOW"
+                android:layout_marginBottom="@dimen/double_margin_standard"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
@@ -58,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_centerVertical="true"
                     android:text="Find theaters near me"
                     android:textAlignment="center"
                     android:textColor="@color/almost_white"
@@ -69,8 +70,8 @@
                     android:layout_width="55dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:layout_marginTop="10dp"
                     android:layout_toRightOf="@id/NearMe"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/arrowforward"
                     android:textAlignment="center"
                     android:tint="@color/new_red" />
