@@ -136,7 +136,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
     public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
 //        progress.setVisibility(View.VISIBLE);
-        makeSnackbar("Hola");
 
         String creditCardNumber = String.valueOf(cardNumber);
         String month = String.valueOf(cardExpMonth);
@@ -171,20 +170,20 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         }
 
 
-//        if (!confirmTermsAgreementSwitch.isChecked()) {
-//            makeSnackbar("You must agree to the Terms of Service");
-//
-//        } else {
-//            bStreet = ProspectUser.address;
-//            bStreet2 = ProspectUser.address2;
-//            bCity = ProspectUser.city;
-//            bState = ProspectUser.state;
-//            bZip = ProspectUser.zip;
-//
-//            completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-//                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
-//
-//        }
+        if (!confirmTermsAgreementSwitch.isChecked()) {
+            makeSnackbar("You must agree to the Terms of Service");
+
+        } else {
+            bStreet = ProspectUser.address;
+            bStreet2 = ProspectUser.address2;
+            bCity = ProspectUser.city;
+            bState = ProspectUser.state;
+            bZip = ProspectUser.zip;
+
+            completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
+                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
+
+        }
 
 
     }
@@ -214,6 +213,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
             Log.d(TAG, "completeRegistration: " + ProspectUser.session);
             Log.d(TAG, "completeRegistration: " + request);
+
+            ((SignUpActivity) getActivity()).setPage();
 
 
 //            RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
