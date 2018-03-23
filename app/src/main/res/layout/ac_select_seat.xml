@@ -111,6 +111,19 @@
                 android:textColor="@color/almost_white"
                 android:textSize="15sp" />
 
+            <TextView
+                android:id="@+id/SEATCHART_SEAT"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/LAYOUT2"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="A# "
+                android:textColor="@color/new_red"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -410,19 +423,6 @@
             layout="@layout/view_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/SEATCHART_SEAT"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/LAYOUT2"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:text="[ A# ] "
-            android:textColor="@color/new_red"
-            android:textSize="15sp"
-            android:textStyle="bold" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

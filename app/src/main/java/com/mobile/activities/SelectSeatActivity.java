@@ -335,7 +335,6 @@ public class SelectSeatActivity extends BaseActivity {
                 } else {
                     String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
                     mSelectedSeat.setText(formattedSeatName);
-
                 }
 
                 final SeatButton button = (SeatButton) sender;
