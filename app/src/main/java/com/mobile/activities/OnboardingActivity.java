@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -206,7 +207,7 @@ public class OnboardingActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
-        ImageView img;
+        SimpleDraweeView img;
 
         int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_3,
                 R.drawable.signupimage2, R.drawable.howitworks2};
@@ -239,31 +240,36 @@ public class OnboardingActivity extends AppCompatActivity {
             bodyText.setText(bodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
             img = rootView.findViewById(R.id.section_img);
-            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            if(getArguments().getInt(ARG_SECTION_NUMBER) - 1!=0)
+                img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            else {
+                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                        .setProgressiveRenderingEnabled(true)
+                        .build();
 
-//            final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
-//            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-//                    .setProgressiveRenderingEnabled(true)
-//                    .build();
-//
-//            DraweeController controller = Fresco.newDraweeControllerBuilder()
-//                    .setImageRequest(request)
-//                    .setTapToRetryEnabled(true)
-//                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
-//                        @RequiresApi(api = Build.VERSION_CODES.N)
-//                        @Override
-//                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-//                            super.onFinalImageSet(id, imageInfo, animatable);
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setTapToRetryEnabled(true)
+                        .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                                super.onFinalImageSet(id, imageInfo, animatable);
 //                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-//
-//                        }
-//
-//                        @Override
-//                        public void onFailure(String id, Throwable throwable) {
-//                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-//                        }
-//                    })
-//                    .build();
+
+
+                            }
+
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                            }
+                        })
+                        .build();
+
+                img.setController(controller);
+            }
 
             return rootView;
         }

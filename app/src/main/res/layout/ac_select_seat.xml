@@ -3,7 +3,7 @@
     android:id="@+id/mCoordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue"
+    android:background="@color/test_black"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -35,7 +35,7 @@
                 android:gravity="center_horizontal"
                 android:padding="@dimen/margin_half"
                 android:text="Choose Seats"
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="23sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -59,7 +59,7 @@
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:text="[ Movie Title ] "
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="Seat "
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -108,21 +108,8 @@
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:text="[ THEATER ] "
-                android:textColor="@color/white_ish"
+                android:textColor="@color/almost_white"
                 android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/SEATCHART_SEAT"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="[ A# ] "
-                android:textColor="@color/new_red"
-                android:textSize="15sp"
-                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -143,7 +130,7 @@
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:text="[ TIME ] "
-                android:textColor="@color/white_ish"
+                android:textColor="@color/almost_white"
                 android:textSize="15sp" />
 
         </LinearLayout>
@@ -223,15 +210,15 @@
             android:layout_above="@+id/SEATCHART_RESERVE"
             android:layout_centerHorizontal="true"
             android:text="*Scroll Sideways If Seating Chart Cuts Off"
-            android:textColor="@color/white"
+            android:textColor="@color/almost_white"
             android:textSize="13sp"
             android:textStyle="italic" />
 
 
         <Button
             android:id="@+id/SEATCHART_RESERVE"
-            android:layout_width="200dp"
-            android:layout_height="@dimen/button_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/SEATCHART_NAV"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/margin_standard"
@@ -239,8 +226,9 @@
             android:background="@drawable/mpbutton1"
             android:padding="@dimen/margin_standard"
             android:text="Continue"
-            android:textAlignment="center"
             android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/almost_white"
             android:textStyle="bold" />
 
 
@@ -252,6 +240,7 @@
             <HorizontalScrollView
                 android:id="@+id/HorizScroll"
                 android:layout_width="match_parent"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal">
 
@@ -421,6 +410,19 @@
             layout="@layout/view_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/SEATCHART_SEAT"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/LAYOUT2"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="[ A# ] "
+            android:textColor="@color/new_red"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
