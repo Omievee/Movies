@@ -77,9 +77,7 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-//                        holder.movieTitle.setText(nowPlaying.getTitle());
                         holder.moviePoster.setImageResource(R.drawable.filmreel1);
-//                        holder.movieTitle.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                         holder.moviePoster.setImageURI(imgUrl + "/original.jpg");
                     }
                 })

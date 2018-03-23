@@ -3,7 +3,7 @@
     android:id="@+id/ETIC"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue">
+    android:background="@color/charcoalGrey">
 
     <LinearLayout
         android:layout_width="match_parent"
