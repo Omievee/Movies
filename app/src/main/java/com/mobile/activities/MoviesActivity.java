@@ -319,7 +319,6 @@ public class MoviesActivity extends BaseActivity {
                         bundle.putString("tribuneTheaterId", tribuneTheaterId);
                         bundle.putString("showtime", showtime);
 
-
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
