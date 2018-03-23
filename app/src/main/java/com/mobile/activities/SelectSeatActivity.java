@@ -71,7 +71,7 @@ public class SelectSeatActivity extends BaseActivity {
     boolean mLocationAcquired;
     private Location mMyLocation;
 
-    CoordinatorLayout coordinatorLayout;
+    View coordinatorLayout;
     GridLayout mGridSeatsA, mGridSeatsB, mGridSeatsC, mGridSeatsD,
             mGridSeatsE, mGridSeatsF, mGridSeatsG, mGridSeatsH, mGridSeatsI,
             mGridSeatsJ, mGridSeatsK, mGridSeatsL, mGridSeatsM;
@@ -92,6 +92,7 @@ public class SelectSeatActivity extends BaseActivity {
     CheckInRequest mCheckinRequest;
     PerformanceInfoRequest mPerformReq;
     Movie movieObject;
+    boolean isSeatSelected = false;
     private ArrayList<SeatButton> mSeatButtons;
 
 
@@ -142,16 +143,21 @@ public class SelectSeatActivity extends BaseActivity {
         mScreeningShowtime.setText(selectedShowTime);
 
 
-        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
+//        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
 
         //PerformanceInfo
 
         Log.d(TAG, "onCreate: " + screeningObject.getProvider().getProviderName());
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
-        if (reserveSeatButton.getText().toString().matches(getString(R.string.activity_select_seat_activity_title))) {
-            reserveSeatButton.setOnClickListener(view -> makeSnackbar(getString(R.string.activity_select_seat_select_first)));
-        }
+
+        reserveSeatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isSeatSelected)
+                    makeSnackbar(getString(R.string.activity_select_seat_select_first));
+            }
+        });
 
         onBackButton.setOnClickListener(v -> SelectSeatActivity.super.onBackPressed());
     }
@@ -366,6 +372,7 @@ public class SelectSeatActivity extends BaseActivity {
         for (SeatButton button : mSeatButtons) {
             button.setSeatSelected(button.getSeatName().matches(seatName));
             reserveSeatButton.setText(R.string.activity_select_seat_reserve);
+            isSeatSelected = true;
         }
     }
 //

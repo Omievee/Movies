@@ -37,6 +37,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="false"
             android:textColorHint="@color/white_80_opacity"
             android:theme="@style/EditTextStyle"
             app:hintTextAppearance="@style/text_in_layout_hint_Style">
@@ -50,11 +51,11 @@
                 android:animateLayoutChanges="true"
                 android:backgroundTint="@color/white_40_opacity"
                 android:hint="Name"
+                android:focusable="false"
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
                 android:text="[USER NAME]"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white_80_opacity"
                 android:textColorLink="@android:color/transparent"
                 android:textCursorDrawable="@color/white"
                 android:textSize="18sp"
@@ -67,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_standard"
+            android:focusable="false"
             android:textColorHint="@color/white_80_opacity"
             android:theme="@style/EditTextStyle"
             app:hintTextAppearance="@style/text_in_layout_hint_Style">
@@ -78,13 +80,13 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="@dimen/margin_standard"
                 android:animateLayoutChanges="true"
+                android:focusable="false"
                 android:backgroundTint="@color/white_40_opacity"
                 android:hint="Email"
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
                 android:text="[USER NAME]"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white_80_opacity"
                 android:textColorLink="@android:color/transparent"
                 android:textCursorDrawable="@color/white"
                 android:textSize="18sp"
@@ -99,6 +101,7 @@
             android:layout_marginTop="@dimen/margin_standard"
             android:textColorHint="@color/white_80_opacity"
             android:theme="@style/EditTextStyle"
+            android:focusable="false"
             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
             <android.support.design.widget.TextInputEditText
@@ -112,8 +115,8 @@
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
                 android:text="[USER NAME]"
+                android:focusable="false"
                 android:textColor="@color/white"
-                android:textColorHighlight="@color/white_80_opacity"
                 android:textColorLink="@android:color/transparent"
                 android:textCursorDrawable="@color/white"
                 android:textSize="18sp"
