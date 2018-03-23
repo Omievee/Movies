@@ -1,9 +1,15 @@
 package com.mobile.activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +26,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.fragments.NearMe;
 import com.mobile.model.Plans;
@@ -29,6 +41,10 @@ import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -215,6 +231,30 @@ public class OnboardingActivity extends AppCompatActivity {
 
             img = rootView.findViewById(R.id.section_img);
             img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+            final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                    .setProgressiveRenderingEnabled(true)
+                    .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .setTapToRetryEnabled(true)
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                            super.onFinalImageSet(id, imageInfo, animatable);
+                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+                        }
+
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                        }
+                    })
+                    .build();
 
             return rootView;
         }
