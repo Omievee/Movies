@@ -36,21 +36,20 @@
                 android:id="@+id/ONBOARDING_JOIN_NOW"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/buttons"
+                android:layout_above="@id/dots"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/mpbutton1"
                 android:text="Sign Up Now"
                 android:textAllCaps="false"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/buttons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/dots"
-
+                android:layout_above="@id/ONBOARDING_JOIN_NOW"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
