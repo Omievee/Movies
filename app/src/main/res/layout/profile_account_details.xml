@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:background="@color/test_black"
-                                                 android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:text="Account Details"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/saveChanges"
@@ -46,7 +46,7 @@
                 android:text="Save"
                 android:textAllCaps="false"
                 android:textColor="@color/gray_icon"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/cancelChanges"
@@ -57,7 +57,7 @@
                 android:text="Cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/gray_icon"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
         </RelativeLayout>
 
@@ -65,8 +65,8 @@
         <ScrollView
             android:id="@+id/Scroll"
             android:layout_width="match_parent"
-            android:layout_below="@id/ACCOUNTHEADER"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ACCOUNTHEADER">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:text="Name:"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/USER_NAME"
@@ -97,12 +97,12 @@
                         android:layout_marginTop="@dimen/margin_standard"
                         android:text="[USER NAME]"
                         android:textColor="@color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:background="@color/white"/>
+                        android:background="@color/white" />
 
 
                     <TextView
@@ -111,7 +111,7 @@
                         android:layout_marginTop="@dimen/margin_standard"
                         android:text="Email:"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -121,12 +121,12 @@
                         android:layout_marginTop="@dimen/margin_standard"
                         android:text="[USER EMAIL]"
                         android:textColor="@color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:background="@color/white"/>
+                        android:background="@color/white" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -143,7 +143,7 @@
                             android:animateLayoutChanges="true"
                             android:text="MoviePass Card:"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/MPCardNum"
@@ -153,14 +153,14 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="[####]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <View
                             android:id="@+id/view2"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/MPCardNum"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
 
 
                     </RelativeLayout>
@@ -231,7 +231,7 @@
                         android:padding="@dimen/margin_half"
                         android:text="Shipping Address"
                         android:textColor="@color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/DOWN"
@@ -241,7 +241,7 @@
                         android:paddingTop="@dimen/margin_half"
                         android:src="@drawable/icondown"
                         android:textAlignment="center"
-                        android:tint="@color/white"/>
+                        android:tint="@color/white" />
 
 
                 </RelativeLayout>
@@ -262,7 +262,7 @@
                         android:animateLayoutChanges="true"
                         android:text="Address"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -277,7 +277,7 @@
                             android:animateLayoutChanges="true"
                             android:text="[Shipping]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/EDITSHIPPING"
@@ -288,7 +288,7 @@
                             android:animateLayoutChanges="true"
                             android:text="Change"
                             android:textColor="@color/new_red"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
 
                         <View
@@ -296,7 +296,7 @@
                             android:layout_height="1dp"
                             android:layout_below="@id/Address1"
                             android:animateLayoutChanges="true"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
 
                     </RelativeLayout>
 
@@ -310,7 +310,7 @@
                         android:hint="Suite / Apt"
                         android:text=""
                         android:textColor="@color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
 
                     <RelativeLayout
@@ -329,7 +329,7 @@
                             android:animateLayoutChanges="true"
                             android:text="City"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/state1"
@@ -340,7 +340,7 @@
                             android:animateLayoutChanges="true"
                             android:text="State"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <TextView
                             android:id="@+id/zip1"
@@ -351,7 +351,7 @@
                             android:animateLayoutChanges="true"
                             android:text="Zip"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
 
                     </RelativeLayout>
@@ -369,7 +369,7 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="[City]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
 
                         <TextView
@@ -380,7 +380,7 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="[ST]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/zip"
@@ -390,13 +390,13 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="Zip"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/city"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
 
 
                     </RelativeLayout>
@@ -421,7 +421,7 @@
                         android:padding="@dimen/margin_half"
                         android:text="Plan &amp; Billing Info"
                         android:textColor="@color/white"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <ImageView
                         android:id="@+id/DOWN2"
@@ -431,7 +431,7 @@
                         android:paddingTop="@dimen/margin_half"
                         android:src="@drawable/icondown"
                         android:textAlignment="center"
-                        android:tint="@color/white"/>
+                        android:tint="@color/white" />
 
                 </RelativeLayout>
 
@@ -450,7 +450,7 @@
                         android:layout_height="wrap_content"
                         android:text="Plan:"
                         android:textColor="@color/white"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -465,7 +465,7 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="[Monthly / Yearly]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
 
                         <TextView
@@ -476,7 +476,7 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="[$9.95]"
                             android:textColor="@color/white"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/PLan_cancel"
@@ -486,14 +486,14 @@
                             android:layout_marginTop="@dimen/margin_standard"
                             android:text="Cancel"
                             android:textColor="@color/new_red"
-                            android:textSize="18sp"/>
+                            android:textSize="18sp" />
 
                         <View
                             android:id="@+id/view"
                             android:layout_width="fill_parent"
                             android:layout_height="1dp"
                             android:layout_below="@id/Plan"
-                            android:background="@color/white"/>
+                            android:background="@color/white" />
 
 
                     </RelativeLayout>
@@ -509,7 +509,7 @@
                             android:layout_height="wrap_content"
                             android:text="Billing:"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <RelativeLayout
                             android:id="@+id/old_billing"
@@ -526,7 +526,7 @@
                                 android:layout_marginTop="@dimen/margin_standard"
                                 android:text="[####-####-####-0000]"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"/>
+                                android:textSize="18sp" />
 
 
                             <TextView
@@ -538,13 +538,13 @@
                                 android:text="Change"
                                 android:textColor="@color/new_red"
                                 android:textSize="18sp"
-                                android:visibility="visible"/>
+                                android:visibility="visible" />
 
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="1dp"
                                 android:layout_below="@id/USER_BILLING"
-                                android:background="@color/white"/>
+                                android:background="@color/white" />
 
 
                         </RelativeLayout>
@@ -573,7 +573,7 @@
                                 android:singleLine="true"
                                 android:textColor="@color/white"
                                 android:textColorHighlight="@color/white"
-                                android:textColorHint="@color/gray_icon"/>
+                                android:textColorHint="@color/gray_icon" />
 
                             <ImageButton
                                 android:id="@+id/profile_scanicon"
@@ -581,7 +581,7 @@
                                 android:layout_height="70dp"
                                 android:background="@color/test_blue"
                                 android:scaleType="center"
-                                android:src="@drawable/scanicon2"/>
+                                android:src="@drawable/scanicon2" />
 
 
                         </LinearLayout>
@@ -606,7 +606,7 @@
                                 android:maxLength="5"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white" />
 
 
                             <EditText
@@ -622,7 +622,7 @@
                                 android:maxLength="4"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white" />
 
 
                         </LinearLayout>
@@ -641,7 +641,7 @@
                             android:layout_height="wrap_content"
                             android:text="Billing Address:"
                             android:textColor="@color/white"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -658,7 +658,7 @@
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
 
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/YesNo"
@@ -670,7 +670,7 @@
                                 android:text="YES"
                                 android:textAlignment="center"
                                 android:textColor="@color/new_red"
-                                android:textSize="18sp"/>
+                                android:textSize="18sp" />
 
                             <Switch
                                 android:id="@+id/SWITCH"
@@ -678,7 +678,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginTop="@dimen/margin_standard"
-                                android:checked="true"/>
+                                android:checked="true" />
 
                         </RelativeLayout>
 
@@ -698,7 +698,7 @@
                                 android:animateLayoutChanges="true"
                                 android:text="Address"
                                 android:textColor="@color/white"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/AddressShipping2"
@@ -708,13 +708,13 @@
                                 android:animateLayoutChanges="true"
                                 android:text="Click to enter a new address"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"/>
+                                android:textSize="18sp" />
 
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="1dp"
                                 android:animateLayoutChanges="true"
-                                android:background="@color/white"/>
+                                android:background="@color/white" />
 
 
                             <TextView
@@ -723,7 +723,7 @@
                                 android:layout_marginTop="@dimen/margin_standard"
                                 android:text="Address 2"
                                 android:textColor="@color/white"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp" />
 
                             <EditText
                                 android:id="@+id/AddressShipping_EDIT"
@@ -733,7 +733,7 @@
                                 android:animateLayoutChanges="true"
                                 android:hint="Suite / Apt"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"/>
+                                android:textSize="18sp" />
 
 
                             <RelativeLayout
@@ -749,7 +749,7 @@
                                     android:animateLayoutChanges="true"
                                     android:text="City"
                                     android:textColor="@color/white"
-                                    android:textSize="15sp"/>
+                                    android:textSize="15sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -758,7 +758,7 @@
                                     android:animateLayoutChanges="true"
                                     android:text="State"
                                     android:textColor="@color/white"
-                                    android:textSize="15sp"/>
+                                    android:textSize="15sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -767,7 +767,7 @@
                                     android:animateLayoutChanges="true"
                                     android:text="Zip"
                                     android:textColor="@color/white"
-                                    android:textSize="15sp"/>
+                                    android:textSize="15sp" />
 
 
                             </RelativeLayout>
@@ -786,7 +786,7 @@
                                     android:hint="City"
 
                                     android:textColor="@color/white"
-                                    android:textSize="18sp"/>
+                                    android:textSize="18sp" />
 
 
                                 <TextView
@@ -797,7 +797,7 @@
                                     android:layout_marginTop="@dimen/margin_standard"
                                     android:hint="State"
                                     android:textColor="@color/white"
-                                    android:textSize="18sp"/>
+                                    android:textSize="18sp" />
 
                                 <TextView
                                     android:id="@+id/zip2"
@@ -807,13 +807,13 @@
                                     android:layout_marginTop="@dimen/margin_standard"
                                     android:hint="Zip Code"
                                     android:textColor="@color/white"
-                                    android:textSize="18sp"/>
+                                    android:textSize="18sp" />
 
                                 <View
                                     android:layout_width="fill_parent"
                                     android:layout_height="1dp"
                                     android:layout_below="@id/city2"
-                                    android:background="@color/white"/>
+                                    android:background="@color/white" />
 
 
                             </RelativeLayout>
@@ -833,7 +833,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Next Billing Date: "
                                 android:textColor="@color/white"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/BillingDate"
@@ -843,7 +843,7 @@
                                 android:text="[Billing Date]"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
 
                         </LinearLayout>
@@ -862,6 +862,6 @@
         android:id="@+id/progress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>
