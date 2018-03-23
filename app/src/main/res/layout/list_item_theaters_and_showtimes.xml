@@ -11,28 +11,53 @@
     app:cardElevation="-1dp">
 
     <RelativeLayout
+        android:id="@+id/R"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/charcoalGrey">
 
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/ONE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_half"
-            android:layout_marginRight="@dimen/margin_half"
             android:background="@color/charcoalGrey"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/margin_standard">
+
+                <ImageView
+                    android:id="@+id/icon_ticket"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_toEndOf="@id/icon_seat"
+                    android:src="@drawable/ticketnavwhite"
+                    android:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/icon_seat"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:src="@drawable/icon_seat_copy"
+                    android:textAlignment="viewEnd" />
+
+            </RelativeLayout>
 
 
             <TextView
                 android:id="@+id/THEATER_NAME_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[MOVIE THEATER NAME]"
-                android:layout_marginLeft="@dimen/margin_half"
                 android:textColor="@color/almost_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -42,17 +67,21 @@
                 android:id="@+id/THEATER_ADDRESS2_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_below="@id/THEATER_NAME_LISTITEM"
                 android:layout_marginLeft="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
                 android:text="[ADDRESS]"
                 android:textColor="@color/almost_white"
                 android:textSize="12sp" />
 
+
             <RelativeLayout
+                android:id="@+id/Last"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_below="@id/THEATER_ADDRESS2_LISTITEM"
                 android:layout_marginLeft="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
                 android:orientation="horizontal">
 
 
@@ -90,10 +119,11 @@
 
             <HorizontalScrollView
                 android:id="@+id/SCROll"
-                android:layout_marginTop="@dimen/margin_half"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_below="@id/Last"
                 android:animateLayoutChanges="true">
 
                 <RadioGroup
@@ -104,13 +134,14 @@
 
             </HorizontalScrollView>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/Not_Supported"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_margin="@dimen/margin_half"
             android:background="@android:color/transparent"
             android:text="This premium screening is not supported by MoviePass"
             android:textAlignment="center"

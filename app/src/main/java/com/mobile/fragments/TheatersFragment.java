@@ -603,7 +603,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         }
 
-
         if (nearbyTheaters.size() == 0) {
             slideup.setEnabled(false);
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
