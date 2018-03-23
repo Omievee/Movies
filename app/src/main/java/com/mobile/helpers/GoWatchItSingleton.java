@@ -1,6 +1,7 @@
 package com.mobile.helpers;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class GoWatchItSingleton {
     private String debug = "false";
     private String l = "0.0";
     private String ln = "0.0";
+    private String IDFA;
 //    String l = String.valueOf(UserPreferences.getLatitude());
 //    String ln = String.valueOf(UserPreferences.getLongitude());
 
@@ -45,7 +47,7 @@ public class GoWatchItSingleton {
     }
 
     public void setCampaign(String campaign) {
-        if (campaign != null)
+        if(campaign!=null)
             this.campaign = campaign;
     }
 
@@ -59,13 +61,13 @@ public class GoWatchItSingleton {
         }
     }
 
-    private String currentTimeStamp() {
-        Long tsLong = System.currentTimeMillis() / 1000;
+    private String currentTimeStamp(){
+        Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         return ts;
     }
 
-    public void userOpenedApp(Context context, String deepLink) {
+    public void userOpenedApp(Context context, String deepLink){
 
         String userId = String.valueOf(UserPreferences.getUserId());
         if (deepLink == null)
@@ -75,11 +77,11 @@ public class GoWatchItSingleton {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String lts = currentTimeStamp();
-
+        IDFA = UserPreferences.getAAID();
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Unset",
                 "-1", "app_open", thisCampaign, "app", "android", deepLink, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -106,11 +108,12 @@ public class GoWatchItSingleton {
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
+        IDFA = UserPreferences.getAAID();
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Movie",
                 String.valueOf(movieId), "impression", campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
 
@@ -135,6 +138,7 @@ public class GoWatchItSingleton {
     public void userClickedOnShowtime(Theater theater, Screening screening, String showtime, String movieId, String url) {
 
         String userId = String.valueOf(UserPreferences.getUserId());
+        IDFA = UserPreferences.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -161,7 +165,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement", "theater_click", tht, thd, tn, thc, thr, thz, tha, "Movie",
                 movieId, campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -183,6 +187,7 @@ public class GoWatchItSingleton {
     public void checkInEvent(Theater theater, Screening screening, String showtime, String engagement, String movieId, String url) {
 
         String userId = String.valueOf(UserPreferences.getUserId());
+        IDFA = UserPreferences.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -209,7 +214,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement, tht, thd, tn, thc, thr, thz, tha, "Movie",
                 movieId, campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -231,6 +236,7 @@ public class GoWatchItSingleton {
     public void searchEvent(String search, String engagement, String url) {
 
         String userId = String.valueOf(UserPreferences.getUserId());
+        IDFA = UserPreferences.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -240,7 +246,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().searchTheatersMovies(engagement,
                 "Movie", "-1", search, campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -260,6 +266,7 @@ public class GoWatchItSingleton {
     public void userOpenedTheater(Theater theaterObject, String url) {
 
         String userId = String.valueOf(UserPreferences.getUserId());
+        IDFA = UserPreferences.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -270,7 +277,7 @@ public class GoWatchItSingleton {
 
         RestClient.getAuthenticatedAPIGoWatchIt().openTheaterEvent("impression", theaterObject.getName(),
                 theaterObject.getCity(), theaterObject.getState(), theaterObject.getZip(), theaterObject.getAddress(), "Theater", "-1", campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -292,6 +299,7 @@ public class GoWatchItSingleton {
     public void userOpenedTheaterTab(String url, String et) {
 
         String userId = String.valueOf(UserPreferences.getUserId());
+        IDFA = UserPreferences.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
@@ -300,7 +308,7 @@ public class GoWatchItSingleton {
 
 
         RestClient.getAuthenticatedAPIGoWatchIt().openMapEvent("engagement", "Unset", "-1", et, campaign, "app", "android", url, "organic",
-                l, ln, userId, "IDFA", versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
+                l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
@@ -317,6 +325,8 @@ public class GoWatchItSingleton {
                 // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
     }
+
 
 }

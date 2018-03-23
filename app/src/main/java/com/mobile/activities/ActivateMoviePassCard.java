@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -20,12 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import io.card.payment.CardIOActivity;
@@ -112,6 +118,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                         intent.putExtra(MovieActivity.SCREENING, Parcels.wrap(screeningObject));
                         intent.putExtra(MovieActivity.SHOWTIME, selectedShowTime);
                         startActivity(intent);
+
                     } else {
                         progress.setVisibility(View.GONE);
                         Toast.makeText(ActivateMoviePassCard.this, response.message(), Toast.LENGTH_SHORT).show();

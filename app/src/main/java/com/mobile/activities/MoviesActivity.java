@@ -2,10 +2,8 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.net.Uri;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -14,14 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -34,9 +31,6 @@ import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Eid;
 import com.mobile.model.Movie;
-
-import com.mobile.network.RestClient;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestCallback;
@@ -45,12 +39,12 @@ import com.mobile.network.RestError;
 import com.mobile.requests.OpenAppEventRequest;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,8 +89,9 @@ public class MoviesActivity extends BaseActivity {
         if (intent != null && intent.getIntExtra(MOVIES, -1) != -1) {
             movieId = intent.getIntExtra(MOVIES, -1);
             loadMovies();
-//            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
-        } else {
+        }
+        else
+        {
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -118,10 +113,11 @@ public class MoviesActivity extends BaseActivity {
 
         checkRestrictions();
 
-
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
+
+
     }
 
     @Override
@@ -376,12 +372,13 @@ public class MoviesActivity extends BaseActivity {
                         ALLMOVIES.addAll(moviesResponse.getNowPlaying());
                         ALLMOVIES.addAll(moviesResponse.getFeatured());
 
-                        for (Movie AllMovies : ALLMOVIES) {
-                            if (AllMovies.getId() == movieId) {
+                        for(Movie AllMovies: ALLMOVIES){
+                            if(AllMovies.getId() == movieId){
                                 movie = AllMovies;
                                 startMovieActivity();
                             }
                         }
+
 
 
                     }
@@ -393,11 +390,9 @@ public class MoviesActivity extends BaseActivity {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
 
-
             }
         });
     }
-
 
     public void startMovieActivity() {
         Intent movieIntent = new Intent(this, MovieActivity.class);

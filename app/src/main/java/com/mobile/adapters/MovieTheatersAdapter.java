@@ -4,12 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -207,7 +209,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 }
 
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showTime.setTypeface(Typeface.DEFAULT_BOLD);
                 showTime.setPadding(30, 20, 30, 20);
+                showTime.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 showTime.setButtonDrawable(null);
                 RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 50, 30);

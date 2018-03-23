@@ -1,0 +1,211 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#202b36"
+    tools:context="com.mobile.fragments.SignUpMultiplePlansSelections">
+
+    <RelativeLayout
+        android:id="@+id/logoRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_half"
+            android:src="@drawable/logo"
+            android:tint="@color/new_red" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_half"
+            android:layout_marginTop="20sp"
+            android:text="Sign In" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/pickYourPlan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoRelativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Pick your plan"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/planOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pickYourPlan"
+        android:padding="4dp"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard">
+
+        <RelativeLayout
+            android:id="@+id/titleAnnual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_rounded_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="Annual"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleAnnual"
+            android:background="@drawable/bottom_rounded_border">
+
+            <TextView
+                android:id="@+id/planOnePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:text="$6.96/Month"
+                android:textColor="@color/new_red"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/planOneDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/planOnePrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:minHeight="30dp"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:gravity="center_horizontal"
+                android:text="Paid annually with a $6.55 proccessing fee."
+                android:textColor="#f7f7f7"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/planOneDisclaimer"
+        android:layout_below="@id/planOne"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="Total billed at time of purchase is $89.95 for the full year. ($6.95/month x 12 months + $6.55 processing fee.)"/>
+
+    <RelativeLayout
+        android:id="@+id/planTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/planOneDisclaimer"
+        android:padding="4dp"
+        android:layout_marginLeft="@dimen/double_margin_standard"
+        android:layout_marginRight="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard">
+
+        <RelativeLayout
+            android:id="@+id/titleMonthly"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_rounded_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="Monthly"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleMonthly"
+            android:background="@drawable/bottom_rounded_border">
+
+            <TextView
+                android:id="@+id/planTwoPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:text="$9.95/Month"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/planTwoDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/planTwoPrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/margin_half"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:minHeight="30dp"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:gravity="center_horizontal"
+                android:text="Paid monthly"
+                android:textColor="#f7f7f7"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/basic_button_height"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:background="@drawable/mpbutton1"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:text="@string/fragment_sign_up_step_one_next"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+
+</RelativeLayout>
+

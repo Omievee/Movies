@@ -1,6 +1,7 @@
 package com.mobile.responses;
 
 import com.mobile.model.Plan;
+import com.mobile.model.Plans;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ import java.util.List;
 
 public class PlanResponse {
 
-    public List<Plan> plans;
+    public List<Plans> plans;
 
-    public List<Plan> getPlans() {
+    public List<Plans> getPlans() {
         return plans ;
     }
 

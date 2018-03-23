@@ -1,6 +1,8 @@
 package com.mobile.activities;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -10,19 +12,32 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.mobile.fragments.ConfirmationSignUpFragment;
+import com.mobile.fragments.SignUpFirstTime;
 import com.mobile.fragments.SignUpStepOneFragment;
 import com.mobile.fragments.SignUpStepThreeFragment;
 import com.mobile.fragments.SignUpStepTwoFragment;
 import com.mobile.model.Plan;
+import com.mobile.model.Plans;
+import com.mobile.model.ProspectUser;
+import com.mobile.network.RestClient;
+import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 6/15/17.
@@ -34,6 +49,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String password;
     String zip;
     Plan mPlan;
+    String gender;
+    String dob;
 
     String firstName;
     String lastName;
@@ -44,22 +61,30 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String addressZip;
     String price;
 
+    Plans selectedPlan;
 
     SectionsPagerAdapter viewpagerAdapter;
     public NonSwipeableViewPager mViewPager;
 
-    ImageView zero, one, two, logo;
-    FrameLayout frame;
-    ImageView[] indicators;
+    ImageView zero, one, two, logo,three;
+    ImageView checkZero,checkOne,checkTwo,checkThree;
+    RelativeLayout frame;
+    ImageView[] indicators, checkMarks;
     SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
+    SignUpFirstTime signUpFirstTime;
+    boolean firstCompleted = false;
+    boolean secondCompleted = false;
+    boolean thirdCompleted = false;
+
 
     int page = 0;
 
     CoordinatorLayout mCoordinator;
 
     int mScrollProgress;
+    private PlanResponse planResponse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,15 +98,25 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
+        three = findViewById(R.id.intro_indicator_3);
+        checkZero = findViewById(R.id.intro_indicator_0_check);
+        checkOne = findViewById(R.id.intro_indicator_1_check);
+        checkTwo = findViewById(R.id.intro_indicator_2_check);
+        checkThree = findViewById(R.id.intro_indicator_3_check);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP);
         mViewPager.setAdapter(viewpagerAdapter);
 
-        indicators = new ImageView[]{zero, one, two};
+        indicators = new ImageView[]{zero, one, two,three};
+        checkMarks = new ImageView[]{checkZero, checkOne, checkTwo,checkThree};
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
+        selectedPlan = Parcels.unwrap(getIntent().getParcelableExtra(SignUpFirstOpenActivity.SELECTED_PLAN));
+        if(selectedPlan==null){
+            getPlans();
+        }
 
         zip = null;
         price = null;
@@ -96,6 +131,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepTwoFragment = new SignUpStepTwoFragment();
         signUpStepThreeFragment = new SignUpStepThreeFragment();
         signUpStepOneFragment = new SignUpStepOneFragment();
+        signUpFirstTime = new SignUpFirstTime();
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -117,6 +153,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                         break;
                     case 3:
                         break;
+                    case 4:
+                        break;
                 }
             }
 
@@ -127,6 +165,29 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         });
 
 
+    }
+
+    public void getPlans(){
+        RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+            @Override
+            public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
+                if(response!=null && response.isSuccessful()){
+                    planResponse = response.body();
+                    selectedPlan = planResponse.getPlans().get(0);
+                    ProspectUser.plan = selectedPlan;
+
+                }
+                else{
+                    Log.d("GET PLANS", "onResponse: Error getting plans");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlanResponse> call, Throwable t) {
+                Log.d("GET PLANS", "onResponse: Error getting plans");
+            }
+
+        });
     }
 
 
@@ -145,19 +206,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     @Override
     public void OnCreditCardEntered(final String ccNum, final String ccExMonth, final String ccExYear, final String ccCVV) {
         viewpagerAdapter.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
-        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 2;
+        String tag = "android:switcher:" + R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP + ":" + 3;
         final SignUpStepThreeFragment f = (SignUpStepThreeFragment) getSupportFragmentManager().findFragmentByTag(tag);
         f.OnCreditCardEntered(ccNum, ccExMonth, ccExYear, ccCVV);
         f.confirmCCNum.setText(" - " + ccNum.substring(12, 16));
         f.confirmSubmit.setOnClickListener(v -> {
             if (f.confirmTermsAgreementSwitch.isChecked()) {
-                f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
-                    }
-                });
-
+                f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
             } else {
                 f.makeSnackbar("You must agree to the Terms of Service.");
             }
@@ -203,7 +258,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -211,15 +266,18 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             Fragment fragment = null;
             switch (pos) {
                 case 0:
-                    fragment = new SignUpStepOneFragment();
+                    fragment = new SignUpFirstTime();
                     break;
                 case 1:
-                    fragment = new SignUpStepTwoFragment();
+                    fragment = new SignUpStepOneFragment();
                     break;
                 case 2:
-                    fragment = new SignUpStepThreeFragment();
+                    fragment = new SignUpStepTwoFragment();
                     break;
                 case 3:
+                    fragment = new SignUpStepThreeFragment();
+                    break;
+                case 4:
                     fragment = new ConfirmationSignUpFragment();
                     break;
             }
@@ -299,7 +357,47 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
+                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
+                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
+            if(position!=i){
+                marginParams.setMargins(margin, margin, margin, margin);
+            }
+            else {
+                marginParams.setMargins(0, 0, 0, 0);
+            }
         }
+        if(firstCompleted){
+            indicators[0].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[0].setVisibility(View.VISIBLE);
+        }
+        if(secondCompleted){
+            indicators[1].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[1].setVisibility(View.VISIBLE);
+        }
+        if(thirdCompleted){
+            indicators[2].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[2].setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    /* Fragment First Open */
+
+    public void setEmail(String email){
+        this.email = email;
+        Log.d("FIRST", "setEmail: "+email);
+    }
+    public void setPassword(String password){
+        this.password = password;
+        Log.d("FIRST", "setEmail: "+password);
+    }
+    public void setGender(String gender){
+        this.gender = gender;
+        Log.d("FIRST", "setEmail: "+gender);
+    }
+    public void setDOB(String dob){
+        this.dob = dob;
+        Log.d("FIRST", "setEmail: "+dob);
     }
 
     /* Fragment One */
@@ -317,6 +415,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         }
 
         return zip;
+    }
+
+    public String getPlanPrice(){
+        return selectedPlan.getPrice();
+    }
+
+    public String getPaymentDisclaimer(){
+        return  selectedPlan.getPaymentDisclaimer();
     }
 
 
@@ -360,17 +466,32 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     }
 
+    public void confirmFirstStep (){
+        firstCompleted = true;
+    }
+    public void confirmSecondStep(){
+        secondCompleted = true;
+    }
+
+    public void confirmThirdStep(){
+        thirdCompleted = true;
+    }
+
     public void setPage() {
         String TAG = "found";
         if (mViewPager.getCurrentItem() == 0) {
+            firstCompleted=true;
             mViewPager.setCurrentItem(1);
         } else if (mViewPager.getCurrentItem() == 1) {
+            secondCompleted=true;
             mViewPager.setCurrentItem(2);
         } else if (mViewPager.getCurrentItem() == 2) {
+            thirdCompleted=true;
             mViewPager.setCurrentItem(3);
+        } else if(mViewPager.getCurrentItem() == 3){
+            mViewPager.setCurrentItem(4);
             logo.setVisibility(View.GONE);
             frame.setVisibility(View.GONE);
-
         }
     }
 
@@ -392,7 +513,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(0);
         } else if (mViewPager.getCurrentItem() == 2) {
             mViewPager.setCurrentItem(1);
-        } else {
+        } else if(mViewPager.getCurrentItem() == 3){
+            mViewPager.setCurrentItem(2);
+        } else{
             super.onBackPressed();
         }
     }

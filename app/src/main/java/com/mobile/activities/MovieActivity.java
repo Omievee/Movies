@@ -294,6 +294,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         alert.show();
     }
 
+
     public void reserve(Theater theater, Screening screening, String showtime) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
@@ -371,7 +372,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
                     } catch (Exception e) {
-                        Toast.makeText(MovieActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onResponse: " + e.getMessage());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);

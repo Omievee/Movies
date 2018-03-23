@@ -7,23 +7,22 @@
     android:paddingRight="@dimen/margin_half"
     tools:context="com.mobile.activities.OnboardingActivity$PlaceholderFragment">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tutorial_body"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal |bottom"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="85dp"
             android:alpha=".8"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
+            android:layout_marginLeft="@dimen/double_margin_standard"
+            android:layout_marginRight="@dimen/double_margin_standard"
             android:text="Add a long description here about your app's important feature."
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
 
         <ImageView
@@ -33,6 +32,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:layout_marginBottom="@dimen/margin_half"
+            android:layout_centerInParent="true"
             android:scaleType="fitCenter"
             android:visibility="gone" />
 
@@ -43,13 +43,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:textColor="@android:color/white"
-            android:textSize="25sp"
+            android:textColor="@color/almost_white"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="@dimen/double_margin_standard"
+            android:layout_marginLeft="@dimen/double_margin_standard"
+            android:textSize="20sp"
             tools:text="Page One" />
 
-
-
-    </FrameLayout>
 
 
     <!--<LinearLayout-->

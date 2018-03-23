@@ -1,0 +1,576 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/margin_standard"
+    tools:context="com.mobile.fragments.ProfileAccountPlanAndBilling">
+
+    <RelativeLayout
+        android:id="@+id/ACCOUNTHEADER"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_half">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_half"
+            android:text="Plan &amp; Billing"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/saveChanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/gray_icon"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/cancelChanges"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/gray_icon"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ACCOUNTHEADER">
+
+        <LinearLayout
+            android:id="@+id/billingdetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_half"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plan"
+                android:textColor="@color/white_80_opacity"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/Plan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="8dp"
+                    android:text="[Monthly / Yearly]"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/Plan_Data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="[$9.95]"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/PLan_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="8dp"
+                    android:text="Cancel"
+                    android:textColor="@color/new_red"
+                    android:textSize="18sp" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/Plan"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/white_40_opacity" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Billing:"
+                    android:textColor="@color/white_80_opacity"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/old_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
+
+
+                    <TextView
+                        android:id="@+id/USER_BILLING"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="8dp"
+                        android:text="[####-####-####-0000]"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+
+                    <TextView
+                        android:id="@+id/Billing_Change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="8dp"
+                        android:text="Change"
+                        android:textColor="@color/new_red"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/USER_BILLING"
+                        android:background="@color/white_40_opacity" />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/profile_newBilling"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/ccNumTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/profile_ccnum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginEnd="@dimen/margin_half"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Credit Card Number"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="16"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/profile_scanicon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@color/test_blue"
+                        android:scaleType="center"
+                        android:src="@drawable/scanicon2" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/profile_newBilling2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/expTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        android:layout_weight="1"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/profile_expiration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Expiration MM/YY"
+                            android:inputType="date"
+                            android:lines="1"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/cvvTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        android:layout_weight="1"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/profile_cvv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_minimum"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Security code (CVV)"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="4"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Billing Address:"
+                    android:textColor="@color/white_80_opacity"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <TextView
+                        android:id="@+id/BillingQ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="Use shipping address for billing?"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/YesNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="45dp"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:paddingRight="5dp"
+                        android:text="YES"
+                        android:textAlignment="center"
+                        android:textColor="@color/new_red"
+                        android:textSize="18sp" />
+
+                    <Switch
+                        android:id="@+id/SWITCH"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:checked="true" />
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/Billing2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address1TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/Address1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Billing Address"
+                            android:inputType="text|textCapSentences"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/address2TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorEnabled="true"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/Address2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Billing Address 2"
+                            android:inputType="text|textCapSentences"
+                            android:maxLines="1"
+                            android:textColor="@color/white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:animateLayoutChanges="true"
+                        android:orientation="horizontal">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/cityTextInputLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                            <EditText
+                                android:id="@+id/city"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="City"
+                                android:inputType="text|textCapSentences"
+                                android:maxLines="1"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/stateTextInputLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                            <EditText
+                                android:id="@+id/state"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginTop="@dimen/margin_standard"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="State"
+                                android:inputType="text|textCapSentences"
+                                android:maxLines="1"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/zipTextInputLayout"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.2"
+                            android:textColorHint="@color/white_80_opacity"
+                            android:theme="@style/EditTextStyle"
+                            app:errorEnabled="true"
+                            app:errorTextAppearance="@style/error_appearance"
+                            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                            <EditText
+                                android:id="@+id/zip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:animateLayoutChanges="true"
+                                android:backgroundTint="@color/white_40_opacity"
+                                android:hint="Zip"
+                                android:inputType="text|textCapSentences"
+                                android:maxLines="1"
+                                android:textColor="@color/white"
+                                android:textColorHighlight="@color/white_80_opacity"
+                                android:textColorLink="@android:color/transparent"
+                                android:textCursorDrawable="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/white_40_opacity" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/Date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Next Billing Date: "
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/BillingDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard"
+                        android:text="[Billing Date]"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

@@ -65,7 +65,7 @@
     <!--<string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>-->
     <string name="activity_onboarding_header_5">How It Works</string>
 
-    <string name="activity_onboarding_body_1">See a movie a day in theaters for just $9.95 per month!</string>
+    <string name="activity_onboarding_body_1">See a movie a day in theaters; the way movies are supposed to be seen!</string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
     <!--<string name="activity_onboarding_body_3">Use the MoviePass apptestheck in to the movie and showtime you want to see.</string>-->
     <string name="activity_onboarding_body_3">You can see any 2D movie from its first day of release.</string>
@@ -134,6 +134,7 @@
 
     <!-- SignUpActivity -->
     <string name="activity_sign_up_step_one_get_started">Sign up and get your MoviePass!</string>
+    <string name="Create_account">Create Account</string>
     <string name="activity_sign_up_step_one_email">Email</string>
     <string name="activity_sign_up_step_one_password">Password</string>
     <string name="activity_sign_up_step_one_sign_up">Sign Up</string>

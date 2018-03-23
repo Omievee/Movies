@@ -5,21 +5,24 @@
     android:id="@+id/THEATERS_LISTITEM"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_half"
+    android:layout_marginBottom="@dimen/margin_standard"
     android:animateLayoutChanges="true"
-    android:paddingBottom="@dimen/margin_standard"
-    app:cardCornerRadius="5dp">
+    android:background="@color/charcoalGrey"
+    app:cardElevation="-1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/charcoalGrey">
 
 
         <LinearLayout
             android:id="@+id/ONE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/test_blue"
+            android:layout_marginLeft="@dimen/margin_half"
+            android:layout_marginRight="@dimen/margin_half"
+            android:background="@color/charcoalGrey"
             android:orientation="vertical">
 
 
@@ -27,9 +30,9 @@
                 android:id="@+id/THEATER_NAME_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_half"
                 android:text="[MOVIE THEATER NAME]"
-                android:textColor="@color/white_ish"
+                android:layout_marginLeft="@dimen/margin_half"
+                android:textColor="@color/almost_white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -38,15 +41,17 @@
                 android:id="@+id/THEATER_ADDRESS2_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:text="[ADDRESS]"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textColor="@color/almost_white"
+                android:textSize="12sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_half"
                 android:orientation="horizontal">
 
 
@@ -56,8 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:text="[ADDRESS]"
-                    android:textColor="@color/white_ish"
-                    android:textSize="13sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/THEATER_DISTANCE_LISTITEM"
@@ -67,15 +72,14 @@
                     android:layout_marginEnd="@dimen/double_margin_standard"
                     android:layout_marginTop="3dp"
                     android:text="[DISTANCE]"
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/THEATER_PIN_LISTITEM"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/margin_standard"
                     android:paddingEnd="@dimen/margin_half"
                     android:src="@drawable/locationiconsmallred"
                     android:tint="@color/new_red" />
@@ -85,6 +89,7 @@
 
             <HorizontalScrollView
                 android:id="@+id/SCROll"
+                android:layout_marginTop="@dimen/margin_half"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -108,8 +113,8 @@
             android:background="@android:color/transparent"
             android:text="This premium screening is not supported by MoviePass"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/almost_white"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
 

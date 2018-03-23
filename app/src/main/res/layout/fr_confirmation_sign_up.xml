@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_black"
+    android:background="@color/dark"
     tools:context="com.mobile.fragments.ConfirmationSignUpFragment">
 
     <FrameLayout
@@ -27,8 +27,8 @@
                 android:layout_height="wrap_content"
                 android:elevation="6dp"
                 android:text="Welcome to"
-                android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textColor="@color/almost_white"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <ImageView
@@ -45,8 +45,8 @@
                 android:alpha=".7"
                 android:text="Your personalized card has been ordered and should arrive in about 7-10 business days."
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
 
 
             <ImageView
@@ -80,6 +80,7 @@
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
+                    android:layout_centerHorizontal="true"
                     android:layout_toRightOf="@id/CONFIRM_GOTOLOGIN"
                     android:src="@drawable/arrowforward"
                     android:tint="@color/new_red" />

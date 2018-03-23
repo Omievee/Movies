@@ -1,11 +1,13 @@
 package com.mobile.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -27,13 +29,16 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.GsonBuilder;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -66,6 +71,9 @@ public class LogInActivity extends AppCompatActivity {
     Button facebook;
     CallbackManager callbackManager;
     LoginButton facebookLogInButton;
+    int offset = 3232323;
+    int userId;
+    public RestrictionsResponse restriction;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +92,8 @@ public class LogInActivity extends AppCompatActivity {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 progress.setVisibility(View.VISIBLE);
                 logIn();
             }
@@ -165,8 +175,6 @@ public class LogInActivity extends AppCompatActivity {
 
     private void logIn() {
         String email = mInputEmail.getText().toString().replace(" ", "");
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mInputEmail, InputMethodManager.SHOW_IMPLICIT);
         String password = mInputPassword.getText().toString();
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password);
@@ -176,7 +184,6 @@ public class LogInActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
                         moviePassLoginSucceeded(response.body());
-                        progress.setVisibility(View.GONE);
                     } else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -203,6 +210,71 @@ public class LogInActivity extends AppCompatActivity {
             progress.setVisibility(View.GONE);
             Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_credentials, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void checkRestrictions(User user) {
+        RestClient.getAuthenticated().getRestrictions(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    restriction = response.body();
+                    String status = restriction.getSubscriptionStatus();
+                    boolean fbPresent = restriction.getFacebookPresent();
+                    boolean threeDEnabled = restriction.get3dEnabled();
+                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restriction.getHasActiveCard();
+                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+
+                    //Setting User Preferences When User Logs In
+                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
+                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
+                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
+                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
+                    }
+
+                    //Checking restriction
+                    //If Missing - Account is cancelled, User can't log in
+                    if(restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")){
+                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+                        UserPreferences.clearUserId();
+                        progress.setVisibility(View.GONE);
+                    } else {
+//                        moviePassLoginSucceeded(user);
+                        if (!UserPreferences.getHasUserLoggedInBefore()) {
+                            UserPreferences.hasUserLoggedInBefore(true);
+                            Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+                            startActivity(i);
+                        } else {
+                             Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                            i.putExtra("launch", true);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(i);
+                        }
+//                        progress.setVisibility(View.GONE);
+//                        finish();
+                    }
+                } else {
+                    try {
+                        progress.setVisibility(View.GONE);
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: "+jObjError);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void forgotPassword() {
@@ -274,21 +346,22 @@ public class LogInActivity extends AppCompatActivity {
             String deviceUuid = user.getDeviceUuid();
             String authToken = user.getAuthToken();
 
-
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
-            if (!UserPreferences.getHasUserLoggedInBefore()) {
-                UserPreferences.hasUserLoggedInBefore(true);
-                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-                startActivity(i);
-            } else {
-                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-                i.putExtra("launch", true);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-            }
+            checkRestrictions(user);
+            //TODO delete if not needed - Moved to CheckRestrictions()
+//            if (!UserPreferences.getHasUserLoggedInBefore()) {
+//                UserPreferences.hasUserLoggedInBefore(true);
+//                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+//                startActivity(i);
+//            } else {
+//                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+//                i.putExtra("launch", true);
+//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(i);
+//            }
 
 
-            finish();
+//            finish();
         }
     }
 

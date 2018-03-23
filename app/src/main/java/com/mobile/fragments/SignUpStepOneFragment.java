@@ -3,9 +3,11 @@ package com.mobile.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -40,8 +42,10 @@ public class SignUpStepOneFragment extends Fragment {
     public static final String TAG = "Found0";
     RelativeLayout signup1CoordMain;
     public EditText signup1FirstName, signup1LastName;
-    public TextView signUpAddress1, signup1Address2, signup1City, signup1Zip, signup1State;
+    public EditText signUpAddress1, signup1Address2, signup1City, signup1Zip, signup1State;
+    public TextInputLayout firstNameTextInputLayout, lastNameTextInputLayout, address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
     TextView signup1NextButton;
+    public boolean firstClick = true;
     View progress;
 
 
@@ -68,16 +72,37 @@ public class SignUpStepOneFragment extends Fragment {
         signup1NextButton = rootView.findViewById(R.id.button_next);
         progress = getActivity().findViewById(R.id.progress);
 
+        firstNameTextInputLayout = rootView.findViewById(R.id.fistNameTextInputLayout);
+        lastNameTextInputLayout = rootView.findViewById(R.id.lastNameTextInputLayout);
+        address1TextInputLayout = rootView.findViewById(R.id.address1TextInputLayout);
+        cityTextInputLayout = rootView.findViewById(R.id.cityTextInputLayout);
+        stateTextInputLayout = rootView.findViewById(R.id.stateTextInputLayout);
+        zipTextInputLayout = rootView.findViewById(R.id.zipTextInputLayout);
+
+        signup1FirstName.clearFocus();
+        signup1LastName.clearFocus();
+        signUpAddress1.clearFocus();
+        signup1Address2.clearFocus();
+        signup1City.clearFocus();
+        signup1State.clearFocus();
+        signup1Zip.clearFocus();
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
         if (!isViewShown) {
             setButtonActions();
         }
-        signUpAddress1.setOnClickListener(new View.OnClickListener() {
+
+        signUpAddress1.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                callPlaceAutocompleteActivityIntent();
+            public boolean onTouch(View v, MotionEvent event) {
+                if(firstClick){
+                    callPlaceAutocompleteActivityIntent();
+                    firstClick=false;
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -152,8 +177,9 @@ public class SignUpStepOneFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         if (canContinue()) {
-//                            processSignUpInfo();
+                            processSignUpInfo();
                             ((SignUpActivity) getActivity()).setPage();
+                            ((SignUpActivity) getActivity()).confirmSecondStep();
 
                         } else {
                             if (!isFirstNameValid()) {
@@ -202,7 +228,6 @@ public class SignUpStepOneFragment extends Fragment {
 
     public boolean isAddressValid() {
         if (signUpAddress1.getText().toString().equals("")) {
-            Toast.makeText(getActivity(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;
@@ -235,9 +260,8 @@ public class SignUpStepOneFragment extends Fragment {
         ProspectUser.state = signup1State.getText().toString();
         ProspectUser.zip = signup1Zip.getText().toString();
 
-        ((SignUpActivity) getActivity()).setPage();
 
-        Log.d(TAG, "processSignUpInfo: " + ProspectUser.gender + " " + ProspectUser.dateOfBirth);
+        Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
 
 
 //        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
@@ -281,20 +305,50 @@ public class SignUpStepOneFragment extends Fragment {
         signup1NextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                removeErrors();
                 if (canContinue()) {
                     processSignUpInfo();
                 } else {
                     if (!isLastNameValid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
-                    } else if (!isLastNameValid()) {
-                        makeSnackbar(R.string.fragment_sign_up_step_one_valid_last_name);
-                    } else if (signUpAddress1.getText().toString().equals("")) {
-                        Toast.makeText(getActivity(), "Please enter a valid address", Toast.LENGTH_SHORT).show();
-
+                        if(signup1LastName.getText().toString().trim().isEmpty())
+                            lastNameTextInputLayout.setError("Required");
+                         else
+                             lastNameTextInputLayout.setError("Invalid Last Name");
+                        signup1LastName.clearFocus();
+                    }if (!isFirstNameValid()) {
+                        if(signup1FirstName.getText().toString().trim().isEmpty())
+                            firstNameTextInputLayout.setError("Required");
+                        else
+                            firstNameTextInputLayout.setError("Invalid First Name");
+                        signup1FirstName.clearFocus();
+                    }if (signUpAddress1.getText().toString().toString().trim().isEmpty()) {
+                        address1TextInputLayout.setError("Required");
+                        signUpAddress1.clearFocus();
+                    }
+                    if(signup1City.getText().toString().trim().isEmpty()){
+                        cityTextInputLayout.setError("Required");
+                        signup1City.clearFocus();
+                    }
+                    if(signup1State.getText().toString().trim().isEmpty()){
+                        stateTextInputLayout.setError("Required");
+                        signup1State.clearFocus();
+                    }
+                    if(signup1Zip.getText().toString().trim().isEmpty()){
+                        zipTextInputLayout.setError("Required");
+                        signup1Zip.clearFocus();
                     }
                 }
             }
         });
+    }
+
+    public void removeErrors(){
+        lastNameTextInputLayout.setError(null);
+        firstNameTextInputLayout.setError(null);
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
     }
 
 
