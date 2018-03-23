@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -62,6 +63,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     TextView nearMe;
     ImageView[] indicators;
+    RelativeLayout findTheaters;
     Plans planOne, planTwo;
 
     int page = 0;
@@ -86,7 +88,7 @@ public class OnboardingActivity extends AppCompatActivity {
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
         four = findViewById(R.id.intro_indicator_4);
-
+        findTheaters = findViewById(R.id.buttons);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -115,14 +117,21 @@ public class OnboardingActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                        findTheaters.setVisibility(View.VISIBLE);
                         break;
                     case 1:
+                        findTheaters.setVisibility(View.VISIBLE);
+
                         break;
                     case 2:
+                        findTheaters.setVisibility(View.INVISIBLE);
+
                         break;
                     case 3:
+                        findTheaters.setVisibility(View.INVISIBLE);
                         break;
                     case 4:
+                        findTheaters.setVisibility(View.INVISIBLE);
                         break;
                 }
             }
@@ -232,29 +241,29 @@ public class OnboardingActivity extends AppCompatActivity {
             img = rootView.findViewById(R.id.section_img);
             img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
-            final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-                    .setProgressiveRenderingEnabled(true)
-                    .build();
-
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setImageRequest(request)
-                    .setTapToRetryEnabled(true)
-                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
-                        @Override
-                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                            super.onFinalImageSet(id, imageInfo, animatable);
-                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
-                        }
-
-                        @Override
-                        public void onFailure(String id, Throwable throwable) {
-                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-                        }
-                    })
-                    .build();
+//            final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
+//            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+//                    .setProgressiveRenderingEnabled(true)
+//                    .build();
+//
+//            DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                    .setImageRequest(request)
+//                    .setTapToRetryEnabled(true)
+//                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+//                        @RequiresApi(api = Build.VERSION_CODES.N)
+//                        @Override
+//                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+//                            super.onFinalImageSet(id, imageInfo, animatable);
+//                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(String id, Throwable throwable) {
+//                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+//                        }
+//                    })
+//                    .build();
 
             return rootView;
         }

@@ -27,6 +27,7 @@ import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -197,25 +198,32 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setText(screening.getStartTimes().get(i));
                 showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
-//TODO: REMOVE SHOWTIMES ONCE THE TIME HAS PASSED
-//                Calendar now = Calendar.getInstance();
-//
-//                int hour = now.get(Calendar.HOUR);
-//                int minute = now.get(Calendar.MINUTE);
-//                int amPM = now.get(Calendar.AM_PM);
-//
-//                String AM_PM;
-//                if (amPM == 0) {
-//                    AM_PM = "AM";
-//                } else {
-//                    AM_PM = "PM";
-//                }
-//
-//                date = parseDate(hour + ":" + minute + " " + AM_PM);
-//                dateCompareOne = parseDate(screening.getStartTimes().get(i));
-                showTime.setTextColor(root.getResources().getColor(R.color.almost_white));
-                showTime.setTypeface(Typeface.DEFAULT_BOLD);
+
+
+                try {
+                    Date systemClock = new Date();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                    String curTime = sdf.format(systemClock);
+
+                    Date theaterTime = sdf.parse(screening.getStartTimes().get(i));
+                    Date myTime = sdf.parse(curTime);
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(theaterTime);
+                    cal.add(Calendar.MINUTE, 30);
+
+
+                    if (myTime.after(cal.getTime())) {
+                        showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
+                        showTime.setClickable(false);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 showTime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
+                showTime.setTypeface(Typeface.DEFAULT_BOLD);
                 showTime.setPadding(30, 20, 30, 20);
                 showTime.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 showTime.setButtonDrawable(null);
@@ -240,7 +248,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         }
                         currentTime = checked;
                         String selectedShowTime = currentTime.getText().toString();
-                        showtimeClickListener.onShowtimeClick(finalTheater,holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
 
 
