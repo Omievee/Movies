@@ -69,7 +69,16 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/indicator_selected" />
+                        android:background="@drawable/sign_up_indicator_completed" />
+
+                    <ImageView
+                        android:id="@+id/intro_indicator_0_check"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:src="@drawable/check_mark" />
 
                 </RelativeLayout>
 
@@ -114,6 +123,16 @@
                         android:layout_margin="3dp"
                         android:background="@drawable/indicator_unselected" />
 
+                    <ImageView
+                        android:id="@+id/intro_indicator_1_check"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:src="@drawable/check_mark" />
+
+
                 </RelativeLayout>
 
                 <TextView
@@ -156,6 +175,15 @@
                         android:layout_margin="3dp"
                         android:layout_centerVertical="true"
                         android:background="@drawable/indicator_unselected" />
+
+                    <ImageView
+                        android:id="@+id/intro_indicator_2_check"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:src="@drawable/check_mark" />
 
                 </RelativeLayout>
 
@@ -200,6 +228,15 @@
                         android:layout_centerHorizontal="true"
                         android:layout_margin="3dp"
                         android:background="@drawable/indicator_unselected" />
+
+                    <ImageView
+                        android:id="@+id/intro_indicator_3_check"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+                        android:src="@drawable/check_mark" />
 
                 </RelativeLayout>
 

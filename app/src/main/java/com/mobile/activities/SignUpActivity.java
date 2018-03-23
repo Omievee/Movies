@@ -67,12 +67,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     public NonSwipeableViewPager mViewPager;
 
     ImageView zero, one, two, logo,three;
+    ImageView checkZero,checkOne,checkTwo,checkThree;
     RelativeLayout frame;
-    ImageView[] indicators;
+    ImageView[] indicators, checkMarks;
     SignUpStepOneFragment signUpStepOneFragment;
     SignUpStepTwoFragment signUpStepTwoFragment;
     SignUpStepThreeFragment signUpStepThreeFragment;
     SignUpFirstTime signUpFirstTime;
+    boolean firstCompleted = false;
+    boolean secondCompleted = false;
+    boolean thirdCompleted = false;
+
 
     int page = 0;
 
@@ -94,12 +99,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
+        checkZero = findViewById(R.id.intro_indicator_0_check);
+        checkOne = findViewById(R.id.intro_indicator_1_check);
+        checkTwo = findViewById(R.id.intro_indicator_2_check);
+        checkThree = findViewById(R.id.intro_indicator_3_check);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.MAIN_FRAGMENT_CONTAINER_SIGNUP);
         mViewPager.setAdapter(viewpagerAdapter);
 
         indicators = new ImageView[]{zero, one, two,three};
+        checkMarks = new ImageView[]{checkZero, checkOne, checkTwo,checkThree};
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
@@ -356,6 +366,18 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                 marginParams.setMargins(0, 0, 0, 0);
             }
         }
+        if(firstCompleted){
+            indicators[0].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[0].setVisibility(View.VISIBLE);
+        }
+        if(secondCompleted){
+            indicators[1].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[1].setVisibility(View.VISIBLE);
+        }
+        if(thirdCompleted){
+            indicators[2].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+            checkMarks[2].setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -444,17 +466,30 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     }
 
+    public void confirmFirstStep (){
+        firstCompleted = true;
+    }
+    public void confirmSecondStep(){
+        secondCompleted = true;
+    }
+
+    public void confirmThirdStep(){
+        thirdCompleted = true;
+    }
+
     public void setPage() {
         String TAG = "found";
         if (mViewPager.getCurrentItem() == 0) {
+            firstCompleted=true;
             mViewPager.setCurrentItem(1);
         } else if (mViewPager.getCurrentItem() == 1) {
+            secondCompleted=true;
             mViewPager.setCurrentItem(2);
         } else if (mViewPager.getCurrentItem() == 2) {
+            thirdCompleted=true;
             mViewPager.setCurrentItem(3);
         } else if(mViewPager.getCurrentItem() == 3){
             mViewPager.setCurrentItem(4);
-            Log.d(TAG, "setPage: ----->>>>>>>>>>>>>>"+4);
             logo.setVisibility(View.GONE);
             frame.setVisibility(View.GONE);
         }

@@ -179,6 +179,7 @@ public class SignUpFirstTime extends Fragment {
                                             ((SignUpActivity) getActivity()).setGender(gender);
                                             ((SignUpActivity) getActivity()).setDOB(birthday);
                                             ((SignUpActivity) getActivity()).setPage();
+                                            ((SignUpActivity) getActivity()).confirmFirstStep();
 
                                             Log.d("BLABLA", "onResponse: "+ProspectUser.email);
                                         }

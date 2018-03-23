@@ -179,6 +179,7 @@ public class SignUpStepOneFragment extends Fragment {
                         if (canContinue()) {
                             processSignUpInfo();
                             ((SignUpActivity) getActivity()).setPage();
+                            ((SignUpActivity) getActivity()).confirmSecondStep();
 
                         } else {
                             if (!isFirstNameValid()) {

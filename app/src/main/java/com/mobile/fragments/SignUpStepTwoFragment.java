@@ -343,6 +343,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                         } else {
                             signup2NextButton.setEnabled(true);
                             ((SignUpActivity) getActivity()).setPage();
+                            ((SignUpActivity) getActivity()).confirmThirdStep();
                         }
                     });
                 }
