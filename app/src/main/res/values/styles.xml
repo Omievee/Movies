@@ -31,14 +31,14 @@
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
-        <item name="colorPrimary">@color/test_blue</item>
+        <item name="colorPrimary">@color/charcoalGrey</item>
         <item name="colorAccent">@color/new_red</item>
         <item name="colorPrimaryDark">@color/test_black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/almost_white</item>
         <item name="android:windowBackground">@color/test_black</item>
-        <item name="android:colorBackground">@color/test_blue</item>
+        <item name="android:colorBackground">@color/charcoalGrey</item>
     </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">

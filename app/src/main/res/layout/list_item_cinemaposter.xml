@@ -30,7 +30,7 @@
                 android:id="@+id/CINEMAPOSTER"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:foreground="@color/charcoalGrey"
+                android:foreground="@drawable/poster_gradient"
                 fresco:failureImage="@drawable/filmreel1" />
 
 
