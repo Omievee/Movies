@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/double_margin_standard"
         android:elegantTextHeight="true"
         android:lineSpacingExtra="4dp"
-        android:text="In order to view theaters &amp; showtimes for this movie, location services must be enabled."
+        android:text="In order to view theaters &amp; showtimes, location services must be enabled."
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="17sp" />
