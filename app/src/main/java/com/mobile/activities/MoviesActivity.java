@@ -113,6 +113,7 @@ public class MoviesActivity extends BaseActivity {
 
         checkRestrictions();
 
+        Log.d(Constants.TAG, "onCreate: "  + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }

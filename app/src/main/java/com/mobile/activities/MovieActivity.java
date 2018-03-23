@@ -64,6 +64,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -105,7 +106,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     ArrayList<Screening> selectedScreeningsList;
     ArrayList<Theater> theatersList;
-    ArrayList<Screening> sortedScreeningList;
+    LinkedList<Screening> sortedScreeningList;
 
     ArrayList<String> selectedShowtimesList;
 
@@ -174,7 +175,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
         mLocationBroadCast = new LocationUpdateBroadCast();
-       // registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
+        // registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         loadMoviePosterData();
         selectedMovieTitle.setText(movie.getTitle());
@@ -194,7 +195,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         selectedScreeningsList = new ArrayList<>();
         theatersList = new ArrayList<>();
-        sortedScreeningList = new ArrayList<>();
+        sortedScreeningList = new LinkedList<>();
 
 
         /* Theaters RecyclerView */
@@ -251,10 +252,18 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
     public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
 
+
+        Log.d(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
             buttonCheckIn.setVisibility(View.VISIBLE);
+        }
+
+        if (screening.getProvider().ticketTypeIsETicket() || screening.getProvider().ticketTypeIsSelectSeating()) {
+            buttonCheckIn.setText("Continue to E-Ticketing");
+        } else {
+            buttonCheckIn.setText("Check In");
         }
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(view -> {
@@ -335,7 +344,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             intent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
             intent.putExtra(THEATER, theater);
             startActivity(intent);
-            Log.d(TAG, "reserve: " + screening.getProvider().getProviderName());
             finish();
         }
 
@@ -367,7 +375,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "RESPONSE: " + jObjError.getString("messege").toString());
+                        Log.d(TAG, ":---------------------<<<<<<<<<<<<<<<>>>>>>>>>>>>>> " + jObjError.getString("messege").toString());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
@@ -427,6 +435,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                         sortedScreeningList.add(selectedScreeningsList.get(j));
                                     }
 
+
+                                    Screening etix = screeningsResponse.getScreenings().get(j);
+                                    if (etix.getProvider().ticketTypeIsETicket() || etix.getProvider().ticketTypeIsSelectSeating()) {
+                                        sortedScreeningList.remove(screeningsResponse.getScreenings().get(j));
+                                        sortedScreeningList.add(0, screeningsResponse.getScreenings().get(j));
+                                    }
                                 }
                             }
 
