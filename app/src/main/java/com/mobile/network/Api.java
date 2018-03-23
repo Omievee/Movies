@@ -219,12 +219,12 @@ public interface Api {
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 
+
     @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
-
 
 }
