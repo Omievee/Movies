@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_black"
+    android:background="@color/charcoalGrey"
     android:clickable="true">
 
 
@@ -35,8 +35,9 @@
         app:mt_hint="Search for movies"
         app:mt_hintColor="@color/almost_white"
         app:mt_maxSuggestionsCount="3"
+        app:mt_menuDividerEnabled="true"
         app:mt_roundedSearchBarEnabled="true"
-        app:mt_searchBarColor="@color/charcoalGrey"
+        app:mt_searchBarColor="@color/test_black"
         app:mt_searchIconTint="@color/white"
         app:mt_textColor="@color/white" />
 

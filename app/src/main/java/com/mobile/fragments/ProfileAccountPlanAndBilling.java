@@ -317,6 +317,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
                     }
 
+
+
                     String billingAddress = userInfoResponse.getBillingAddressLine2();
                     List<String> billingAddressList = Arrays.asList(billingAddress.split(",", -1));
                     String billingCity = "", billingState = "", billingZip = "";
@@ -371,7 +373,11 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                         billingDate.setText(userInfoResponse.getNextBillingDate());
 
                     }
-                    
+
+                    plan.setText(userInfoResponse.getPlan());
+
+                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
+
                     progress.setVisibility(View.GONE);
 
                 }
