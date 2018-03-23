@@ -135,7 +135,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
 
     public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
-//        progress.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
 
         String creditCardNumber = String.valueOf(cardNumber);
         String month = String.valueOf(cardExpMonth);
@@ -214,7 +214,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             Log.d(TAG, "completeRegistration: " + ProspectUser.session);
             Log.d(TAG, "completeRegistration: " + request);
 
-            ((SignUpActivity) getActivity()).setPage();
 
 
             RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
@@ -236,6 +235,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                         } catch (Exception e) {
                             progress.setVisibility(View.GONE);
                             makeSnackbar("Error processing payment");
+                            confirmSubmit.setEnabled(true);
                         }
                     }
                 }

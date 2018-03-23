@@ -178,7 +178,7 @@
                     android:elevation="5dp"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:text="@string/activity_sign_up_step_one_sign_up"
+                    android:text="Next"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="18sp" />

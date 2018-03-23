@@ -360,10 +360,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                 ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
                 int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
             if(position!=i){
-                marginParams.setMargins(margin, margin, margin, margin);
+                    marginParams.setMargins(margin, margin, margin, margin);
             }
             else {
-                marginParams.setMargins(0, 0, 0, 0);
+                if((i==0 && !firstCompleted) || (i==1 && !secondCompleted) || (i==2 && !thirdCompleted) || i==3)
+                    marginParams.setMargins(0, 0, 0, 0);
             }
         }
         if(firstCompleted){
