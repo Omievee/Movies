@@ -444,7 +444,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlaying.clear();
         featured.clear();
 
-
+        topBoxTXT.setVisibility(View.VISIBLE);
         fadeIn(topBoxTXT);
         comingSoonTXT.setVisibility(View.VISIBLE);
         fadeIn(comingSoonTXT);
@@ -453,7 +453,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingTXT.setVisibility(View.VISIBLE);
         fadeIn(nowPlayingTXT);
 
-        myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
                 .equalTo("type", "Top Box Office")
                 .or()
@@ -519,6 +519,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         fadeIn(searchicon);
 
         progress.setVisibility(View.GONE);
+        myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        
+
     }
 
 
