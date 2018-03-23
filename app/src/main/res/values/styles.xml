@@ -114,6 +114,13 @@
     <style name="error_appearance" parent="@android:style/TextAppearance">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/new_red</item>
+
+
+    </style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/charcoalGrey</item>
+        <item name="colorPrimary">@color/test_black</item>
     </style>
 
 </resources>

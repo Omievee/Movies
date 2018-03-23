@@ -217,41 +217,40 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             ((SignUpActivity) getActivity()).setPage();
 
 
-//            RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
-//                @Override
-//                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-//                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
-//
-//                    if (response.isSuccessful()) {
-//                        //transition to final viewpager pag & show confirmation
-//                        ((SignUpActivity) getActivity()).setPage();
-//                        progress.setVisibility(View.GONE);
-//
-//                    } else {
-//                        try {
-//                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
-//                            makeSnackbar(jObjError.toString());
-//                            progress.setVisibility(View.GONE);
-//                            confirmSubmit.setEnabled(true);
-//                        } catch (Exception e) {
-//                            progress.setVisibility(View.GONE);
-//                            makeSnackbar("Error processing payment");
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<SignUpResponse> call, Throwable t) {
-//                    progress.setVisibility(View.GONE);
-//                    confirmSubmit.setEnabled(true);
-//                    makeSnackbar(t.getMessage());
-//                    Log.d(TAG, "failed: " + t.getMessage());
-//
-//                }
-//            });
+            RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
+
+                    if (response.isSuccessful()) {
+                        //transition to final viewpager pag & show confirmation
+                        progress.setVisibility(View.GONE);
+                        ((SignUpActivity) getActivity()).setPage();
+
+                    } else {
+                        try {
+                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
+                            makeSnackbar(jObjError.toString());
+                            progress.setVisibility(View.GONE);
+                            confirmSubmit.setEnabled(true);
+                        } catch (Exception e) {
+                            progress.setVisibility(View.GONE);
+                            makeSnackbar("Error processing payment");
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                    progress.setVisibility(View.GONE);
+                    confirmSubmit.setEnabled(true);
+                    makeSnackbar(t.getMessage());
+                    Log.d(TAG, "failed: " + t.getMessage());
+
+                }
+            });
         } else {
-//            makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
-            makeSnackbar("HOLA");
+            makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
             Log.d(TAG, "completeRegistration: NAMES");
             progress.setVisibility(View.GONE);
             confirmSubmit.setEnabled(true);

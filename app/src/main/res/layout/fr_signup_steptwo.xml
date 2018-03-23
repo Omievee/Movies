@@ -11,41 +11,41 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_marginTop="@dimen/more_a_lot_margin_standard">
+        android:focusableInTouchMode="true">
 
 
         <LinearLayout
             android:id="@+id/LAYOUT_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_minimum">
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/planPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:text="@string/fragment_sign_up_step_two_header2"
                 android:textAlignment="center"
-                android:id="@+id/planPrice"
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/paymentDisclaimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginEnd="@dimen/margin_standard"
-                android:id="@+id/paymentDisclaimer"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:gravity="center_horizontal"
                 android:text="@string/fragment_sign_up_step_two_header"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="14sp" />
 
 
@@ -74,8 +74,7 @@
                         android:id="@+id/LAYOUT_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/margin_half">
+                        android:orientation="horizontal">
 
 
                         <android.support.design.widget.TextInputLayout
@@ -86,6 +85,7 @@
                             android:textColorHint="@color/white_80_opacity"
                             android:theme="@style/EditTextStyle"
                             app:errorTextAppearance="@style/error_appearance"
+                            android:layout_marginLeft="@dimen/margin_standard"
                             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                             <EditText
@@ -103,12 +103,11 @@
                                 android:maxLength="16"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:textColor="@color/white"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textAppearance="@style/normal_text_in_layout_Style"
-                                android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -117,7 +116,9 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:background="@color/test_blue"
-                            android:scaleType="center"
+                            android:scaleType="fitCenter"
+                            android:backgroundTint="@color/test_black"
+                            android:layout_marginEnd="@dimen/margin_standard"
                             android:src="@drawable/scanicon2" />
 
                     </LinearLayout>
@@ -126,8 +127,8 @@
                         android:id="@+id/LAYOUT_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_half"
-                        android:layout_marginStart="@dimen/margin_half"
+                        android:layout_marginEnd="@dimen/margin_standard"
+                        android:layout_marginStart="@dimen/margin_standard"
                         android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
@@ -154,13 +155,12 @@
                                 android:maxLength="5"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:textColor="@color/white"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
                                 android:textSize="14sp"
-                                android:textAppearance="@style/normal_text_in_layout_Style"
-                                android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
 
                         </android.support.design.widget.TextInputLayout>
@@ -188,13 +188,12 @@
                                 android:maxLength="4"
                                 android:maxLines="1"
                                 android:singleLine="true"
-                                android:textColor="@color/white"
+                                android:textAppearance="@style/normal_text_in_layout_Style"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
                                 android:textSize="14sp"
-                                android:textAppearance="@style/normal_text_in_layout_Style"
-                                android:textStyle="bold"
                                 app:backgroundTint="@color/white_40_opacity" />
 
                         </android.support.design.widget.TextInputLayout>
@@ -209,9 +208,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_2"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
                     android:layout_marginTop="@dimen/margin_standard"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/margin_half">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -224,6 +224,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/margin_standard"
                         android:layout_weight="0.2">
 
                         <TextView
@@ -232,8 +233,8 @@
                             android:layout_height="wrap_content"
                             android:text="YES"
                             android:textColor="@color/new_red"
-                            android:textStyle="bold"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <Switch
                             android:id="@+id/SIGNUP2_SWITCH"
@@ -267,41 +268,74 @@
                     android:layout_below="@id/paymentmsg"
                     android:layout_marginTop="@dimen/margin_standard"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_half"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginEnd="@dimen/margin_standard"
                     android:visibility="gone">
 
 
-                    <EditText
-                        android:id="@+id/SIGNUP2_ADDRESS"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/billingAddresInputLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/white"
-                        android:hint="Billing Address"
-                        android:inputType="text"
-                        android:lines="1"
-                        android:maxLength="26"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
+                        <EditText
+                            android:id="@+id/SIGNUP2_ADDRESS"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Billing Address"
+                            android:inputType="text"
+                            android:lines="1"
+                            android:maxLength="26"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorHint="@color/gray_icon"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/white_40_opacity" />
 
-                    <EditText
-                        android:id="@+id/SIGNUP2_ADDRESS2"
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/billingAddres2InputLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:backgroundTint="@color/white"
-                        android:hint="Billing Address 2"
-                        android:inputType="text"
-                        android:lines="1"
-                        android:maxLength="26"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/SIGNUP2_ADDRESS2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Billing Address 2"
+                            android:inputType="text"
+                            android:lines="1"
+                            android:maxLength="26"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorHint="@color/gray_icon"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
 
@@ -310,49 +344,110 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_6"
-                    android:layout_marginTop="@dimen/double_margin_standard"
+                    android:layout_marginBottom="@dimen/a_lot_margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginEnd="@dimen/margin_standard"
                     android:orientation="horizontal"
-                    android:padding="@dimen/margin_half"
                     android:visibility="gone">
 
-                    <EditText
-                        android:id="@+id/SIGNUP2_CITY"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/billingCityInputLayout"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:backgroundTint="@color/white"
-                        android:hint="@string/fragment_sign_up_step_one_city"
-                        android:inputType="text"
-                        android:maxLength="26"
-                        android:maxLines="1"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                        android:layout_weight="0.5"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/SIGNUP2_CITY"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="@string/fragment_sign_up_step_one_city"
+                            android:inputType="text"
+                            android:maxLength="26"
+                            android:maxLines="1"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/white_40_opacity" />
+                    </android.support.design.widget.TextInputLayout>
 
 
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/signup2Spinner"
-                        android:layout_width="160dp"
-                        android:layout_height="42dp"
-                        android:hint="@string/fragment_sign_up_step_one_state"
-                        android:prompt="@string/fragment_sign_up_step_one_state"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                    <!--<android.support.v7.widget.AppCompatSpinner-->
+                        <!--android:id="@+id/signup2Spinner"-->
+                        <!--android:layout_width="160dp"-->
+                        <!--android:layout_height="42dp"-->
+                        <!--android:hint="@string/fragment_sign_up_step_one_state"-->
+                        <!--android:prompt="@string/fragment_sign_up_step_one_state"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:textColorHint="@color/gray_icon" />-->
 
-
-                    <EditText
-                        android:id="@+id/SIGNUP2_ZIP"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/billingStateInputLayout"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:backgroundTint="@color/white"
-                        android:hint="@string/fragment_sign_up_step_one_zip"
-                        android:inputType="number"
-                        android:maxLength="5"
-                        android:maxLines="1"
-                        android:textColor="@color/white"
-                        android:textColorHighlight="@color/white"
-                        android:textColorHint="@color/gray_icon" />
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/SIGNUP2_STATE"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="@string/fragment_sign_up_step_one_state"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/billingZipInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="match_parent"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <EditText
+                            android:id="@+id/SIGNUP2_ZIP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="@string/fragment_sign_up_step_one_zip"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:textAppearance="@style/normal_text_in_layout_Style"
+                            android:textColor="@color/almost_white"
+                            android:textColorHighlight="@color/white_80_opacity"
+                            android:textColorLink="@android:color/transparent"
+                            android:textCursorDrawable="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="@color/white_40_opacity" />
+
+                    </android.support.design.widget.TextInputLayout>
 
 
                 </LinearLayout>
@@ -376,9 +471,9 @@
         android:elevation="5dp"
         android:gravity="center"
         android:text="@string/fragment_sign_up_step_one_next"
-        android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <include
         android:id="@+id/progress"
