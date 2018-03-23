@@ -15,13 +15,12 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/quadruple_margin_standard">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/section_img"
             android:layout_width="195dp"
             android:layout_height="195dp"
             android:layout_marginBottom="@dimen/double_margin_standard"
             android:layout_gravity="center"
-            android:background="@drawable/image_onboarding_1"
             android:scaleType="fitCenter" />
 
     </FrameLayout>
