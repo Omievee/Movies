@@ -211,6 +211,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             fadeIn(buttonCheckIn);
             buttonCheckIn.setVisibility(View.VISIBLE);
         }
+
+        if(screening.getProvider().ticketTypeIsSelectSeating() || screening.getProvider().ticketTypeIsETicket()) {
+            buttonCheckIn.setText("Continue to E-Ticketing");
+        }else {
+            buttonCheckIn.setText("Check In");
+        }
         buttonCheckIn.setEnabled(true);
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
@@ -275,6 +281,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        buttonCheckIn.setEnabled(true);
+    }
 
     public void reserve(Screening screening, String showtime) {
         Screening screen = screening;
