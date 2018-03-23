@@ -30,6 +30,7 @@
                 android:id="@+id/THEATER_NAME_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
                 android:text="[MOVIE THEATER NAME]"
                 android:layout_marginLeft="@dimen/margin_half"
                 android:textColor="@color/almost_white"
