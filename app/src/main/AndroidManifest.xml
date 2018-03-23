@@ -273,9 +273,14 @@
             android:name="io.fabric.ApiKey"
             android:value="817d4d68505df552813b127d4149583ade2132e1" />
 
-        <activity android:name="com.mobile.activities.EticketConfirmation" />
+        <activity
+            android:name="com.mobile.activities.EticketConfirmation"
+            android:screenOrientation="portrait" />
+
         <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
-        <activity android:name="com.mobile.activities.ActivatedCard_TutorialActivity" />
+        <activity
+            android:name="com.mobile.activities.ActivatedCard_TutorialActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.mobile.fragments.NearMe"
             android:label="@string/title_activity_near_me" />

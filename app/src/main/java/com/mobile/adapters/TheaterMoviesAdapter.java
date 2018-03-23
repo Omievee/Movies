@@ -209,7 +209,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
-                            HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.test_black));
+                            HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.charcoalGrey));
                             currentTime = checked;
                             selectedShowTime = currentTime.getText().toString();
                             showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
