@@ -401,6 +401,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.onResume();
         locationUpdateRealm();
         super.onResume();
+
+
     }
 
 
@@ -431,6 +433,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             fadeOut(searchThisArea);
         }
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
