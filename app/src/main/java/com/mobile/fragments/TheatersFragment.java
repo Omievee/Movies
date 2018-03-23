@@ -148,7 +148,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mProgress = rootView.findViewById(R.id.progress);
-        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView = rootView.findViewById(R.id.MPMAPVIEW);
         myloc = rootView.findViewById(R.id.myloc);
         mRequestingLocationUpdates = true;
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);

@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -41,6 +42,7 @@ import android.widget.Toast;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.activities.MovieActivity;
+import com.mobile.activities.MoviesActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
@@ -212,12 +214,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.MAIN_CONTAINER, searchFrag);
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("NR", Parcels.wrap(NEWRelease));
-//            bundle.putParcelable("NP", Parcels.wrap(nowPlaying));
-//            bundle.putParcelable("FE", Parcels.wrap(featured));
-//            bundle.putParcelable("TB", Parcels.wrap(TopBoxOffice));
-//            searchFrag.setArguments(bundle);
+
             transaction.addToBackStack(null);
             fragmentManager.popBackStack();
             transaction.commit();
@@ -249,11 +246,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         moviesRealm = Realm.getInstance(config);
         swiper.setOnRefreshListener(() -> {
-            newReleasesRecycler.setClickable(false);
-            topBoxOfficeRecycler.setClickable(false);
-            featuredRecycler.setClickable(false);
-            nowPlayingRecycler.setClickable(false);
 
+            myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             moviesRealm.executeTransaction(realm -> {
                 realm.deleteAll();
             });
@@ -450,12 +444,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlaying.clear();
         featured.clear();
 
-        topBoxOfficeRecycler.setEnabled(true);
-        featuredRecycler.setEnabled(true);
-        nowPlayingRecycler.setEnabled(true);
-        newReleasesRecycler.setEnabled(true);
 
-        topBoxTXT.setVisibility(View.VISIBLE);
         fadeIn(topBoxTXT);
         comingSoonTXT.setVisibility(View.VISIBLE);
         fadeIn(comingSoonTXT);
@@ -464,7 +453,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingTXT.setVisibility(View.VISIBLE);
         fadeIn(nowPlayingTXT);
 
-
+        myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
                 .equalTo("type", "Top Box Office")
                 .or()
