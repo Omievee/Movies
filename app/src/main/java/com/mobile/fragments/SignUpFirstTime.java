@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.support.v4.app.Fragment;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -115,6 +117,14 @@ public class SignUpFirstTime extends Fragment {
                 signupEmailConfirm.clearFocus();
                 signupEmailInput.clearFocus();
                 signupPasswordInput.clearFocus();
+            }
+        });
+
+        spinnerGender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 

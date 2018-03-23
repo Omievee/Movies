@@ -100,7 +100,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
     }
 
     public void getPlans(){
-        RestClient.getsAuthenticatedStagingRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+        RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
             @Override
             public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
                 if(response!=null && response.isSuccessful()){

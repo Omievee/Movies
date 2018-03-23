@@ -2,6 +2,7 @@ package com.mobile.activities;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,16 @@ import com.mobile.fragments.SignUpStepThreeFragment;
 import com.mobile.fragments.SignUpStepTwoFragment;
 import com.mobile.model.Plan;
 import com.mobile.model.Plans;
+import com.mobile.model.ProspectUser;
+import com.mobile.network.RestClient;
+import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by anubis on 6/15/17.
@@ -71,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     CoordinatorLayout mCoordinator;
 
     int mScrollProgress;
+    private PlanResponse planResponse;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +104,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
         selectedPlan = Parcels.unwrap(getIntent().getParcelableExtra(SignUpFirstOpenActivity.SELECTED_PLAN));
+        if(selectedPlan==null){
+            getPlans();
+        }
 
         zip = null;
         price = null;
@@ -145,6 +157,29 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     }
 
+    public void getPlans(){
+        RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+            @Override
+            public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
+                if(response!=null && response.isSuccessful()){
+                    planResponse = response.body();
+                    selectedPlan = planResponse.getPlans().get(0);
+                    ProspectUser.plan = selectedPlan;
+
+                }
+                else{
+                    Log.d("GET PLANS", "onResponse: Error getting plans");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlanResponse> call, Throwable t) {
+                Log.d("GET PLANS", "onResponse: Error getting plans");
+            }
+
+        });
+    }
+
 
     @Override
     protected void onStart() {
@@ -167,10 +202,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         f.confirmCCNum.setText(" - " + ccNum.substring(12, 16));
         f.confirmSubmit.setOnClickListener(v -> {
             if (f.confirmTermsAgreementSwitch.isChecked()) {
+
                 f.confirmSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+
                     }
                 });
 
@@ -425,6 +461,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(3);
         } else if(mViewPager.getCurrentItem() == 3){
             mViewPager.setCurrentItem(4);
+            Log.d(TAG, "setPage: ----->>>>>>>>>>>>>>"+4);
             logo.setVisibility(View.GONE);
             frame.setVisibility(View.GONE);
         }

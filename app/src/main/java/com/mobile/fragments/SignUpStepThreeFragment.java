@@ -135,7 +135,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
 
     public void beginRegistration(String cardNumber, String cardExpMonth, String cardExpYear, String cardCvv) {
-        progress.setVisibility(View.VISIBLE);
+//        progress.setVisibility(View.VISIBLE);
+        makeSnackbar("Hola");
 
         String creditCardNumber = String.valueOf(cardNumber);
         String month = String.valueOf(cardExpMonth);
@@ -170,20 +171,20 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         }
 
 
-        if (!confirmTermsAgreementSwitch.isChecked()) {
-            makeSnackbar("You must agree to the Terms of Service");
-
-        } else {
-            bStreet = ProspectUser.address;
-            bStreet2 = ProspectUser.address2;
-            bCity = ProspectUser.city;
-            bState = ProspectUser.state;
-            bZip = ProspectUser.zip;
-
-            completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
-
-        }
+//        if (!confirmTermsAgreementSwitch.isChecked()) {
+//            makeSnackbar("You must agree to the Terms of Service");
+//
+//        } else {
+//            bStreet = ProspectUser.address;
+//            bStreet2 = ProspectUser.address2;
+//            bCity = ProspectUser.city;
+//            bState = ProspectUser.state;
+//            bZip = ProspectUser.zip;
+//
+//            completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
+//                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
+//
+//        }
 
 
     }
@@ -194,7 +195,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                                       String firstName, String lastName, String password, String birthday, String gender, String selectedPlanId) {
 
         if (confirmTermsAgreementSwitch.isChecked()) {
-            progress.setVisibility(View.VISIBLE);
+//            progress.setVisibility(View.VISIBLE);
 
             confirmSubmit.setEnabled(false);
             SignUpRequest request;
@@ -206,7 +207,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             } else{
                 request = new SignUpRequest(creditCardNumber, month, year, cvv,
                         sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
-                        email, firstName, lastName, password, birthday, gender, selectedPlanId);
+                        email, firstName, lastName, password, birthday, gender, Integer.valueOf(selectedPlanId));
             }
 
             Log.d(TAG, "NAMES: " + firstName + "  " + lastName);
@@ -214,39 +215,43 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             Log.d(TAG, "completeRegistration: " + ProspectUser.session);
             Log.d(TAG, "completeRegistration: " + request);
 
-            RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
-                @Override
-                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
 
-                    if (response!=null && response.isSuccessful()) {
-                        //transition to final viewpager pag & show confirmation
-                        ((SignUpActivity) getActivity()).setPage();
-
-                    } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
-                            makeSnackbar(jObjError.toString());
-                            progress.setVisibility(View.GONE);
-                            confirmSubmit.setEnabled(true);
-                        } catch (Exception e) {
-                            progress.setVisibility(View.GONE);
-                            makeSnackbar("Error processing payment");
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SignUpResponse> call, Throwable t) {
-                    progress.setVisibility(View.GONE);
-                    confirmSubmit.setEnabled(true);
-                    makeSnackbar(t.getMessage());
-                    Log.d(TAG, "failed: " + t.getMessage());
-
-                }
-            });
+//            RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
+//                @Override
+//                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+//                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
+//
+//                    if (response.isSuccessful()) {
+//                        //transition to final viewpager pag & show confirmation
+//                        ((SignUpActivity) getActivity()).setPage();
+//                        progress.setVisibility(View.GONE);
+//
+//                    } else {
+//                        try {
+//                            JSONObject jObjError = new JSONObject(response.body().getGlobal());
+//                            makeSnackbar(jObjError.toString());
+//                            progress.setVisibility(View.GONE);
+//                            confirmSubmit.setEnabled(true);
+//                        } catch (Exception e) {
+//                            progress.setVisibility(View.GONE);
+//                            makeSnackbar("Error processing payment");
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<SignUpResponse> call, Throwable t) {
+//                    progress.setVisibility(View.GONE);
+//                    confirmSubmit.setEnabled(true);
+//                    makeSnackbar(t.getMessage());
+//                    Log.d(TAG, "failed: " + t.getMessage());
+//
+//                }
+//            });
         } else {
-            makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
+//            makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
+            makeSnackbar("HOLA");
+            Log.d(TAG, "completeRegistration: NAMES");
             progress.setVisibility(View.GONE);
             confirmSubmit.setEnabled(true);
         }

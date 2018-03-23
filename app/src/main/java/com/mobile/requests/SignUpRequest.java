@@ -14,7 +14,7 @@ public class SignUpRequest {
     String facebookToken;
     String birthday;
     String gender;
-    String selectedPlanId;
+    int selectedPlanId;
 
     //CC & No FB
     public SignUpRequest(String number, String month, String year, String ccv,
@@ -34,7 +34,7 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, String birthday, String gender, String selectedPlanId) {
+                         String lastName, String password, String birthday, String gender, int selectedPlanId) {
 
         this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
