@@ -129,6 +129,7 @@ public class SignUpStepOneFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            clearFocusOnAllEditTexts();
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
 
@@ -196,6 +197,7 @@ public class SignUpStepOneFragment extends Fragment {
         stateTextInputLayout.setError(null);
         cityTextInputLayout.setError(null);
         zipTextInputLayout.setError(null);
+        clearFocusOnAllEditTexts();
         if (isFirstNameValid() && isLastNameValid() && isAddressValid()) {
             return true;
         } else {
@@ -223,33 +225,89 @@ public class SignUpStepOneFragment extends Fragment {
         }
     }
 
-    public boolean isAddressValid() {
-        if (signUpAddress1.getText().toString().trim().isEmpty() || signup1City.getText().toString().trim().isEmpty() || signup1State.getText().toString().trim().isEmpty() || signup1Zip.getText().toString().trim().isEmpty()) {
-            if(signup1Zip.getText().toString().trim().isEmpty())
-                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_zip));
-            if(signup1State.getText().toString().trim().isEmpty())
-                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
-            if(signup1City.getText().toString().trim().isEmpty())
-                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
-            if(signUpAddress1.getText().toString().trim().isEmpty())
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
-            return false;
-        } else {
-            String[] arr = signUpAddress1.getText().toString().split("\\W+");
-            if(arr.length>=2){
-                if(arr[0].matches(".*\\d+.*")){
-                    Toast.makeText(getContext(), " "+arr[0], Toast.LENGTH_SHORT).show();
-                    return true;
-                }
+    private boolean isAddressValid() {
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+
+        int i = 0;
+        if (!signUpAddress1.getText().toString().trim().isEmpty() && !signup1City.getText().toString().trim().isEmpty() && !signup1Zip.getText().toString().trim().isEmpty() && !signup1State.getText().toString().trim().isEmpty()) {
+
+            //Validating Address
+            String[] address1Array = signUpAddress1.getText().toString().split("\\W+");
+            if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
+                i++;
+            }else {
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                signUpAddress1.clearFocus();
+                Log.d("ADDRESS", "isValidAddress: ");
             }
-            address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
-            return false;
+
+            //Validating City
+            String[] cityArray = signup1City.getText().toString().split("\\W+");
+            String cityWithNotWhiteSpaces = signup1City.getText().toString().replaceAll("\\s+","");
+            //If city has less than 3 words
+            if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                signup1City.clearFocus();
+            }
+
+            //Validating State
+            if (signup1State.getText().toString().trim().length() == 2 && signup1State.getText().toString().trim().matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                signup1State.clearFocus();
+            }
+
+            //Validating Zip Code
+            if (signup1Zip.getText().toString().trim().matches("^[0-9]+$") && signup1Zip.getText().toString().trim().length()>=5) {
+                i++;
+            } else {
+                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                signup1Zip.clearFocus();
+            }
+
+
+        } else {
+            if (signUpAddress1.getText().toString().trim().isEmpty()) {
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                signUpAddress1.clearFocus();
+            }
+            if (signup1State.getText().toString().trim().isEmpty()) {
+                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                signup1State.clearFocus();
+            }
+            if (signup1Zip.getText().toString().trim().isEmpty()) {
+                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                signup1Zip.clearFocus();
+            }
+            if (signup1City.getText().toString().trim().isEmpty()) {
+                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                signup1City.clearFocus();
+            }
         }
+        if(i==4)
+            return true;
+        return false;
     }
 
     public void makeSnackbar(int message) {
         final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
+    }
+
+    public void clearFocusOnAllEditTexts(){
+        signUpAddress1.clearFocus();
+        signup1Address2.clearFocus();
+        signup1City.clearFocus();
+        signup1State.clearFocus();
+        signup1Zip.clearFocus();
+        signup1FirstName.clearFocus();
+        signup1LastName.clearFocus();
     }
 
     public void processSignUpInfo() {
@@ -275,43 +333,6 @@ public class SignUpStepOneFragment extends Fragment {
 
 
         Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
-
-
-//        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
-//                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
-//                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.myZip);
-//
-//        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
-//            @Override
-//            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
-//                RestClient.getUnauthenticated().getPlans(ProspectUser.myZip).enqueue(new RestCallback<RegistrationPlanResponse>() {
-//                    @Override
-//                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
-//                        progress.setVisibility(View.GONE);
-//                        RegistrationPlanResponse registrationPlanResponse = response.body();
-//
-//                        if (registrationPlanResponse != null) {
-//                            String price = (registrationPlanResponse.getPrice());
-//
-//                            ((SignUpActivity) getActivity()).setPage();
-//                            Log.d("SUSOFprice", price);
-//                        } else if (response.errorBody() != null) {
-//                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void failure(RestError restError) {
-//                        Toast.makeText(getActivity(), "System Error; Please Try again", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onFailure(Call<PersonalInfoResponse> call, Throwable t) {
-//                Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     private void setButtonActions() {
@@ -319,6 +340,7 @@ public class SignUpStepOneFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 removeErrors();
+                clearFocusOnAllEditTexts();
                 if (canContinue()) {
                     processSignUpInfo();
                 } else {
