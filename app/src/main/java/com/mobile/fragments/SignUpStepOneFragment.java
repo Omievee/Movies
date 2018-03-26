@@ -239,7 +239,7 @@ public class SignUpStepOneFragment extends Fragment {
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
             }else {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
                 signUpAddress1.clearFocus();
                 Log.d("ADDRESS", "isValidAddress: ");
             }
@@ -274,7 +274,7 @@ public class SignUpStepOneFragment extends Fragment {
 
         } else {
             if (signUpAddress1.getText().toString().trim().isEmpty()) {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
                 signUpAddress1.clearFocus();
             }
             if (signup1State.getText().toString().trim().isEmpty()) {

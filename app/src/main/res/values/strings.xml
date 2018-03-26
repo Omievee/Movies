@@ -160,7 +160,7 @@
 
     <!-- Profile Activity -->
     <string name="activity_profile_password_match">Passwords must match</string>
-    <string name="activity_profile_password_more_than_6_characters">Use at least 6 chars</string>
+    <string name="activity_profile_password_more_than_6_characters">Use at least 6 characters</string>
 
     <!-- VerificationActivity -->
     <string name="activity_verification_header">We need you to verify your ticket purchase</string>
@@ -242,6 +242,10 @@
     <string name="fragment_profile_shipping_address_valid_state">Please enter a valid state</string>
     <string name="fragment_profile_shipping_address_valid_zip">Please enter a valid zip code</string>
     <string name="fragment_profile_shipping_address_updated">Shipping Address Updated</string>
+
+    <!-- ProfileAccountInformation -->
+    <string name="fragment_profile_account_information_email_valid">Please enter a valid email address</string>
+    <string name="fragment_profile_account_information_password_valid">Please enter a valid password</string>
 
     <!-- SignUpStepOneFragment -->
     <string name="fragment_sign_up_step_one_header">Tell us where to send your MoviePass card</string>

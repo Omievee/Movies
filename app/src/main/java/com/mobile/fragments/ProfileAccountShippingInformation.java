@@ -219,7 +219,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
             }else {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
                 address1.clearFocus();
                 Log.d("ADDRESS", "isValidAddress: ");
             }
@@ -254,7 +254,7 @@ public class ProfileAccountShippingInformation extends Fragment {
 
         } else {
             if (address1.getText().toString().trim().isEmpty()) {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
                 address1.clearFocus();
             }
             if (state.getText().toString().trim().isEmpty()) {
