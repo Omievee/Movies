@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +27,7 @@ public class EnableLocation extends BottomSheetDialogFragment {
     private String mParam1;
     private String mParam2;
     TextView enableLocations;
+    Context myContext;
 
     public EnableLocation() {
         // Required empty public constructor
@@ -61,7 +63,13 @@ public class EnableLocation extends BottomSheetDialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myContext = activity;
     }
 
     @Override

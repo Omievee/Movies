@@ -96,7 +96,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     MoviesResponse moviesResponse;
     SearchFragment searchFrag = new SearchFragment();
     ImageView movieLogo, searchicon;
-
+    Context myContext;
     RealmList<Movie> TopBoxOffice;
     RealmList<Movie> comingSoon;
     RealmList<Movie> NEWRelease;
@@ -312,6 +312,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
 
     }
 

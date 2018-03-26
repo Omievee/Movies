@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
@@ -60,7 +61,8 @@ public class PastReservations extends Fragment {
     TextView noMovies;
     View progress;
     HistoryResponse historyResponse;
-
+    Activity myActivity;
+    Context myContext;
     public PastReservations() {
     }
 
@@ -80,11 +82,11 @@ public class PastReservations extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int numOfColumns = calculateNoOfColumns(getActivity());
+        int numOfColumns = calculateNoOfColumns(myActivity);
 
-        GridLayoutManager manager = new GridLayoutManager(getActivity(), numOfColumns, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(getActivity(), historyList);
+        historyAdapter = new HistoryAdapter(myActivity, historyList);
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
@@ -134,5 +136,15 @@ public class PastReservations extends Fragment {
         return noOfColumns;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
 }

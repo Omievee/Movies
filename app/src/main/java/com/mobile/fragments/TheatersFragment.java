@@ -372,8 +372,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
-                    lat = Double.parseDouble(String.format(Locale.getDefault(),"%.2f", loc.getLatitude()));
-                    lon = Double.parseDouble(String.format(Locale.getDefault(),"%.2f", loc.getLongitude()));
+                    lat = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLatitude()));
+                    lon = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLongitude()));
 
                     queryRealmLoadTheaters(lat, lon);
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
@@ -393,7 +393,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onAttach(Activity context) {
         super.onAttach(context);
-        Log.d(TAG, "onAttach: ");
+        myContext = context;
     }
 
 
@@ -692,6 +692,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         super.onAttach(context);
         myContext = context;
     }
+
 
     @Override
     public void onDestroy() {
