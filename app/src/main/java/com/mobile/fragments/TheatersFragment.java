@@ -397,7 +397,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        myContext = activity;
+        myActivity = activity;
     }
 
 
