@@ -201,6 +201,7 @@ dependencies {
 
     //Umano Sliding panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
+    compile 'me.relex:photodraweeview:1.1.3'
 }
 
 
