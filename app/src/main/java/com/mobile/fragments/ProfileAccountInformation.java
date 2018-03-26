@@ -3,11 +3,13 @@ package com.mobile.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.Fragment;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,8 @@ public class ProfileAccountInformation extends Fragment {
     private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
+    private EditText password1, password2;
+    private TextInputLayout password1TextInputLayout, password2TextInputLayout;
     UserInfoResponse userInfoResponse;
 
     public ProfileAccountInformation() {
@@ -52,6 +56,10 @@ public class ProfileAccountInformation extends Fragment {
         userEmail = rootView.findViewById(R.id.USER_EMAIL);
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
+        password1 = rootView.findViewById(R.id.password1);
+        password2 = rootView.findViewById(R.id.password2);
+        password1TextInputLayout = rootView.findViewById(R.id.password1TextInputLayout);
+        password2TextInputLayout = rootView.findViewById(R.id.password2TextInputLayout);
 
         progress.setVisibility(View.VISIBLE);
         loadUserInfo();

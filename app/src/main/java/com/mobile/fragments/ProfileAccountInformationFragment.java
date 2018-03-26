@@ -66,7 +66,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class ProfileAccountInformationFragment extends Fragment {
-    
+
     Context context;
     View rootView, progress, accountInformation;
     RelativeLayout shippingClick, billingClick;
