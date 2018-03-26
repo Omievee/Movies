@@ -1,12 +1,14 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -632,6 +634,19 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+
+        if (context instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ProfileActivityInterface");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;

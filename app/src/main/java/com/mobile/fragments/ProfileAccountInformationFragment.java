@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -70,6 +71,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     private static boolean updateShipping = false, updateBillingAddress = false, updateBillingCard = false;
     private static int YES = 0, NO = 1;
     Context context;
+    Activity activity;
     ProfileCancellationFragment cancelSubscription;
     UserInfoResponse userInfoResponse;
     String addressSection, billingSection, creditCardSection;
@@ -848,11 +850,25 @@ public class ProfileAccountInformationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        Log.d(Constants.TAG, "onAttach cntx: ");
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement ProfileActivityInterface");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+        Log.d(Constants.TAG, "onAttach ACT: ");
+
+        if (activity instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement ProfileActivityInterface");
         }
     }
 
