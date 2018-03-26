@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -101,6 +102,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
     Context myContext;
+    Activity myActivity;
+    FragmentActivity myFragment;
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -208,6 +211,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -363,8 +367,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     void locationUpdateRealm() {
-        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
         }
         mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
             Location loc = task.getResult();
@@ -391,9 +395,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
     @Override
-    public void onAttach(Activity context) {
-        super.onAttach(context);
-        myContext = context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myContext = activity;
     }
 
 
@@ -476,7 +480,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
             try {
-                mClusterIconGenerator.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
+                mClusterIconGenerator.setBackground(ContextCompat.getDrawable(myActivity, R.drawable.icon_clustered_theater_pin));
                 mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
                 final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
@@ -608,7 +612,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             slideup.setEnabled(false);
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
             upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             displayTheatersFromRealm(nearbyTheaters);
         }

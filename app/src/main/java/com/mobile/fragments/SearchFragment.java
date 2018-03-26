@@ -1,6 +1,8 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -68,7 +70,8 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     ArrayList<Movie> noDuplicates;
     String url;
     Button cancel;
-
+    Activity myActivity;
+    Context myContext;
 
     Realm searchRealm;
 
@@ -120,10 +123,10 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         loadResults();
         cancel.setOnClickListener(v -> {
-            getActivity().getFragmentManager().popBackStack();
+            myActivity.getFragmentManager().popBackStack();
         });
 
-        LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater myInflater = (LayoutInflater)myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater, this);
         customAdapter.setSuggestions(ALLMOVIES);
         searchBar.setCustomSuggestionAdapter(customAdapter);
@@ -182,7 +185,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Server Response Failed; Try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity , "Server Response Failed; Try again", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -192,5 +195,19 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     public void getSearchString() {
         String url = "https://moviepass.com/go/movies";
         GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        myActivity = activity;
     }
 }

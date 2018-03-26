@@ -312,11 +312,11 @@ public class ProfileAccountInformationFragment extends Fragment {
 //
 //        if(option==YES){
 //            yesNo.setText("YES");
-//            yesNo.setTextColor(ContextCompat.getColor(context,R.color.new_red));
+//            yesNo.setTextColor(ContextCompat.getColor(myContext,R.color.new_red));
 //        } else{
 //
 //            yesNo.setText("NO");
-//            yesNo.setTextColor(ContextCompat.getColor(context,R.color.white));
+//            yesNo.setTextColor(ContextCompat.getColor(myContext,R.color.white));
 //        }
 //    }
 //
