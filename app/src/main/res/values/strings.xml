@@ -158,6 +158,10 @@
     <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
     <string name="activity_theater_button_action">[Action]</string>
 
+    <!-- Profile Activity -->
+    <string name="activity_profile_password_match">Passwords must match</string>
+    <string name="activity_profile_password_more_than_6_characters">Use at least 6 chars</string>
+
     <!-- VerificationActivity -->
     <string name="activity_verification_header">We need you to verify your ticket purchase</string>
     <string name="activity_verification_subheader">Please, take a photo of your ticket</string>

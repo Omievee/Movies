@@ -4,12 +4,18 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.Fragment;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +41,9 @@ public class ProfileAccountInformation extends Fragment {
     private TextView userName,userEmail,moviePassCard;
     private EditText password1, password2;
     private TextInputLayout password1TextInputLayout, password2TextInputLayout;
-    UserInfoResponse userInfoResponse;
+    private UserInfoResponse userInfoResponse;
+    private Button save, cancel;
+    private ImageView clear1, clear2;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -60,11 +68,104 @@ public class ProfileAccountInformation extends Fragment {
         password2 = rootView.findViewById(R.id.password2);
         password1TextInputLayout = rootView.findViewById(R.id.password1TextInputLayout);
         password2TextInputLayout = rootView.findViewById(R.id.password2TextInputLayout);
-
+        save = rootView.findViewById(R.id.saveChanges);
+        cancel = rootView.findViewById(R.id.cancelChanges);
         progress.setVisibility(View.VISIBLE);
+        clear1 = rootView.findViewById(R.id.clear1);
+        clear2 = rootView.findViewById(R.id.clear2);
         loadUserInfo();
+        save.setClickable(false);
+        cancel.setClickable(false);
+
+
+
+        password1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSaveAndCancel();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0) {
+                    clear1.setVisibility(View.VISIBLE);
+                } else {
+                    clear1.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        password2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSaveAndCancel();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() > 0) {
+                    clear2.setVisibility(View.VISIBLE);
+                } else {
+                    clear2.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        clear1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                password1.setText("");
+            }
+        });
+        clear2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                password2.setText("");
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                password1TextInputLayout.setError(null);
+                password2TextInputLayout.setError(null);
+                if(password1.getText().toString().trim().equalsIgnoreCase(password2.getText().toString().trim())){
+                    if(password1.getText().toString().length()>=6){
+                        Toast.makeText(context, "Changing password", Toast.LENGTH_SHORT).show();
+                    } else{
+                        password1TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_more_than_6_characters));
+                    }
+                } else {
+                    password2TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_match));
+                }
+            }
+        });
 
         return rootView;
+    }
+
+    public void enableSaveAndCancel(){
+        save.setClickable(true);
+        cancel.setClickable(true);
+        cancel.setTextColor(ContextCompat.getColor(context,R.color.almost_white));
+        save.setTextColor(ContextCompat.getColor(context,R.color.new_red));
+    }
+
+    public void disableSaveAndCancel(){
+        save.setClickable(false);
+        cancel.setClickable(false);
+        cancel.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
+        save.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
     }
 
     private void loadUserInfo() {
