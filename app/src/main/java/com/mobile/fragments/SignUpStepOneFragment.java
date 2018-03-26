@@ -180,13 +180,6 @@ public class SignUpStepOneFragment extends Fragment {
                             processSignUpInfo();
                             ((SignUpActivity) getActivity()).setPage();
                             ((SignUpActivity) getActivity()).confirmSecondStep();
-
-                        } else {
-                            if (!isFirstNameValid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_first_name);
-                            } else if (!isLastNameValid()) {
-                                makeSnackbar(R.string.fragment_sign_up_step_one_valid_last_name);
-                            }
                         }
                     }
                 });
@@ -197,6 +190,12 @@ public class SignUpStepOneFragment extends Fragment {
     }
 
     public boolean canContinue() {
+        address1TextInputLayout.setError(null);
+        firstNameTextInputLayout.setError(null);
+        lastNameTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
         if (isFirstNameValid() && isLastNameValid() && isAddressValid()) {
             return true;
         } else {
@@ -206,13 +205,10 @@ public class SignUpStepOneFragment extends Fragment {
 
     public boolean isFirstNameValid() {
         if (signup1FirstName.length() > 1 && signup1FirstName.length() <= 26 && !signup1FirstName.getText().toString().matches(".*\\d+.*")) {
-            Log.d(TAG, "true: ");
-
             return true;
         } else {
-            Log.d(TAG, "false: ");
-
             pos = 0;
+            firstNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_first_name));
             return false;
         }
     }
@@ -221,16 +217,33 @@ public class SignUpStepOneFragment extends Fragment {
         if (signup1LastName.length() > 1 && signup1LastName.length() <= 26 && !signup1LastName.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
+            lastNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_last_name));
             pos = 0;
             return false;
         }
     }
 
     public boolean isAddressValid() {
-        if (signUpAddress1.getText().toString().equals("")) {
+        if (signUpAddress1.getText().toString().trim().isEmpty() || signup1City.getText().toString().trim().isEmpty() || signup1State.getText().toString().trim().isEmpty() || signup1Zip.getText().toString().trim().isEmpty()) {
+            if(signup1Zip.getText().toString().trim().isEmpty())
+                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_zip));
+            if(signup1State.getText().toString().trim().isEmpty())
+                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+            if(signup1City.getText().toString().trim().isEmpty())
+                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+            if(signUpAddress1.getText().toString().trim().isEmpty())
+                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
             return false;
         } else {
-            return true;
+            String[] arr = signUpAddress1.getText().toString().split("\\W+");
+            if(arr.length>=2){
+                if(arr[0].matches(".*\\d+.*")){
+                    Toast.makeText(getContext(), " "+arr[0], Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            }
+            address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_billing_address_valid_address));
+            return false;
         }
     }
 
