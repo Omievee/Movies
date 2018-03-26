@@ -1,6 +1,9 @@
 package com.mobile.adapters;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -13,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,14 +56,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private LayoutInflater inflater;
     private Context context;
     ViewHolder HOLDER;
+
     public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList) {
         this.historyArrayList = historyArrayList;
         this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.historyCard)
-        RelativeLayout listItemHistory;
+        @BindView(R.id.frameContainer)
+        FrameLayout listItemHistory;
 
         @BindView(R.id.historyPoster)
         SimpleDraweeView posterImageView;
@@ -76,7 +82,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-            listItemHistory = v.findViewById(R.id.historyCard);
+            //   listItemHistory = v.findViewById(R.id.frameContainer);
             posterImageView = v.findViewById(R.id.historyPoster);
             //     saw = v.findViewById(R.id.Date_seen);
             //   title = v.findViewById(R.id.Title_Movie);
@@ -112,7 +118,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-                           // holder.title.setText(movie.getTitle());
+                            // holder.title.setText(movie.getTitle());
                         }
                     }
 
@@ -130,7 +136,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.posterImageView.setController(controller);
         holder.posterImageView.setOnClickListener(v -> {
 
-            //zoomImageFromThumb(holder.posterImageView, );
+   //         zoomImageFromThumb(holder.posterImageView, imgUrl);
         });
 
         mShortAnimationDuration = holder.itemView.getContext().getResources().getInteger(
@@ -148,8 +154,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
-
-//    private void zoomImageFromThumb(final View thumbView, int imageResId) {
+//
+//    private void zoomImageFromThumb(final View thumbView, Uri imageResId) {
 //        // If there's an animation in progress, cancel it
 //        // immediately and proceed with this one.
 //        if (mCurrentAnimator != null) {
@@ -157,9 +163,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 //        }
 //
 //        // Load the high-resolution "zoomed-in" image.
-//        final ImageView expandedImageView = (ImageView) findViewById(
-//                R.id.expanded_image);
-//        expandedImageView.setImageResource(imageResId);
+//        final SimpleDraweeView expandedImageView = HOLDER.itemView.findViewById(R.id.expanded_image);
+//        expandedImageView.setImageURI(imageResId);
 //
 //        // Calculate the starting and ending bounds for the zoomed-in image.
 //        // This step involves lots of math. Yay, math.
@@ -173,8 +178,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 //        // bounds, since that's the origin for the positioning animation
 //        // properties (X, Y).
 //        thumbView.getGlobalVisibleRect(startBounds);
-//        findViewById(R.id.container)
-//                .getGlobalVisibleRect(finalBounds, globalOffset);
+//        HOLDER.itemView.findViewById(R.id.frameContainer).getGlobalVisibleRect(finalBounds, globalOffset);
+//
 //        startBounds.offset(-globalOffset.x, -globalOffset.y);
 //        finalBounds.offset(-globalOffset.x, -globalOffset.y);
 //
@@ -258,7 +263,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 //                        .ofFloat(expandedImageView, View.X, startBounds.left))
 //                        .with(ObjectAnimator
 //                                .ofFloat(expandedImageView,
-//                                        View.Y,startBounds.top))
+//                                        View.Y, startBounds.top))
 //                        .with(ObjectAnimator
 //                                .ofFloat(expandedImageView,
 //                                        View.SCALE_X, startScaleFinal))
@@ -286,5 +291,5 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 //                mCurrentAnimator = set;
 //            }
 //        });
-    }
-
+//    }
+}
