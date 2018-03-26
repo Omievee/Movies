@@ -82,6 +82,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -371,8 +372,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
-                    lat = Double.parseDouble(String.format("%.2f", loc.getLatitude()));
-                    lon = Double.parseDouble(String.format("%.2f", loc.getLongitude()));
+                    lat = Double.parseDouble(String.format(Locale.getDefault(),"%.2f", loc.getLatitude()));
+                    lon = Double.parseDouble(String.format(Locale.getDefault(),"%.2f", loc.getLongitude()));
 
                     queryRealmLoadTheaters(lat, lon);
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());

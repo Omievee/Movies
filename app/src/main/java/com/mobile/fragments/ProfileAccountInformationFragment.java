@@ -852,8 +852,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
+            throw new RuntimeException(context.toString() + " must implement ProfileActivityInterface");
         }
     }
 
