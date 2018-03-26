@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.Fragment;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,6 +45,7 @@ public class ProfileAccountInformation extends Fragment {
     private UserInfoResponse userInfoResponse;
     private Button save, cancel;
     private ImageView clear1, clear2;
+    private boolean firstTimePassword = true, firstTouchPassword2 = true;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -76,21 +78,34 @@ public class ProfileAccountInformation extends Fragment {
         loadUserInfo();
         save.setClickable(false);
         cancel.setClickable(false);
+        password2.setEnabled(false);
 
 
 
         password1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSaveAndCancel();
+                if (firstTimePassword) {
+                    enableSaveAndCancel();
+                    firstTimePassword = false;
+                    password2.setEnabled(true);
+                }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() > 0) {
-                    clear1.setVisibility(View.VISIBLE);
-                } else {
-                    clear1.setVisibility(View.GONE);
+                if(!firstTimePassword) {
+                    if (s.length() > 0) {
+                        clear1.setVisibility(View.VISIBLE);
+                        if(s.length() >= 6)
+                            password1TextInputLayout.setError("");
+                    } else {
+                        clear1.setVisibility(View.GONE);
+                        if(firstTouchPassword2){
+                            firstTouchPassword2=false;
+                            password2.setText("");
+                        }
+                    }
                 }
             }
 
@@ -103,15 +118,17 @@ public class ProfileAccountInformation extends Fragment {
         password2.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSaveAndCancel();
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() > 0) {
-                    clear2.setVisibility(View.VISIBLE);
-                } else {
-                    clear2.setVisibility(View.GONE);
+                if(!firstTimePassword) {
+                    if (s.length() > 0) {
+                        clear2.setVisibility(View.VISIBLE);
+                    } else {
+                        clear2.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -139,15 +156,25 @@ public class ProfileAccountInformation extends Fragment {
             public void onClick(View v) {
                 password1TextInputLayout.setError(null);
                 password2TextInputLayout.setError(null);
+                password1.clearFocus();
+                password2.clearFocus();
                 if(password1.getText().toString().trim().equalsIgnoreCase(password2.getText().toString().trim())){
                     if(password1.getText().toString().length()>=6){
                         Toast.makeText(context, "Changing password", Toast.LENGTH_SHORT).show();
+                        disableSaveAndCancel();
                     } else{
                         password1TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_more_than_6_characters));
                     }
                 } else {
                     password2TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_match));
                 }
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableSaveAndCancel();
             }
         });
 
@@ -166,6 +193,19 @@ public class ProfileAccountInformation extends Fragment {
         cancel.setClickable(false);
         cancel.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
         save.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
+        password1.setText("password");
+        password2.setText("password");
+        password2.setEnabled(false);
+        clear2.setVisibility(View.GONE);
+        clear1.setVisibility(View.GONE);
+        password1.clearFocus();
+        password2.clearFocus();
+        firstTouchPassword2 = true;
+        firstTimePassword=true;
+        password2TextInputLayout.setError(null);
+        password1TextInputLayout.setError(null);
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
     private void loadUserInfo() {
