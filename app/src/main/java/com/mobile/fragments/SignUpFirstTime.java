@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -270,6 +272,31 @@ public class SignUpFirstTime extends Fragment {
     public void onDetach() {
         super.onDetach();
         context=null;
+    }
+
+    public class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if(signupEmailInput.hasFocus())
+                emailTextInputLayout.setError(null);
+            if(signupEmailConfirm.hasFocus())
+                email2TextInputLayout.setError(null);
+            if(signupPasswordInput.hasFocus())
+                passwordTextInputLayout.setError(null);
+
+        }
     }
 
 }
