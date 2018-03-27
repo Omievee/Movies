@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -86,6 +88,13 @@ public class SignUpStepOneFragment extends Fragment {
         signup1City.clearFocus();
         signup1State.clearFocus();
         signup1Zip.clearFocus();
+
+        signup1FirstName.addTextChangedListener(new CustomTextWatcher());
+        signup1LastName.addTextChangedListener(new CustomTextWatcher());
+        signUpAddress1.addTextChangedListener(new CustomTextWatcher());
+        signup1City.addTextChangedListener(new CustomTextWatcher());
+        signup1State.addTextChangedListener(new CustomTextWatcher());
+        signup1Zip.addTextChangedListener(new CustomTextWatcher());
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -198,7 +207,14 @@ public class SignUpStepOneFragment extends Fragment {
         cityTextInputLayout.setError(null);
         zipTextInputLayout.setError(null);
         clearFocusOnAllEditTexts();
-        if (isFirstNameValid() && isLastNameValid() && isAddressValid()) {
+        int i = 0;
+        if(isFirstNameValid())
+            i++;
+        if(isLastNameValid())
+            i++;
+        if(isAddressValid())
+            i++;
+        if (i==3) {
             return true;
         } else {
             return false;
@@ -295,11 +311,6 @@ public class SignUpStepOneFragment extends Fragment {
         return false;
     }
 
-    public void makeSnackbar(int message) {
-        final Snackbar snackbar = Snackbar.make(signup1CoordMain, message, Snackbar.LENGTH_SHORT);
-        snackbar.show();
-    }
-
     public void clearFocusOnAllEditTexts(){
         signUpAddress1.clearFocus();
         signup1Address2.clearFocus();
@@ -384,6 +395,37 @@ public class SignUpStepOneFragment extends Fragment {
         cityTextInputLayout.setError(null);
         stateTextInputLayout.setError(null);
         zipTextInputLayout.setError(null);
+    }
+
+    public class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if(signup1FirstName.hasFocus())
+                firstNameTextInputLayout.setError(null);
+            if(signup1LastName.hasFocus())
+                lastNameTextInputLayout.setError(null);
+            if(signUpAddress1.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(signup1City.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(signup1State.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(signup1Zip.hasFocus())
+                zipTextInputLayout.setError(null);
+
+        }
     }
 
 
