@@ -2,6 +2,8 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -164,11 +166,11 @@ public class PastReservations extends Fragment implements historyPosterClickList
         detailsFragment.setExitTransition(new Fade());
         detailsFragment.setSharedElementReturnTransition(new HistoryDetails());
 
+        FragmentManager fragmentManager = myActivity.getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.profile_container, detailsFragment);
+        transaction.addToBackStack("");
+        transaction.commit();
 
-        getFragmentManager()
-                .beginTransaction()
-                .addSharedElement(sharedView, ViewCompat.getTransitionName(sharedView))
-                .replace(R.id.profile_container, detailsFragment).addToBackStack(null)
-                .commit();
     }
 }

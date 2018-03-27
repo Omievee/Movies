@@ -2,23 +2,32 @@ package com.mobile.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.mobile.Interfaces.ProfileActivityInterface;
+import com.mobile.fragments.HistoryDetailsFragment;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
 import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.HistoryDetails;
 import com.moviepass.R;
+
+import jp.wasabeef.blurry.Blurry;
 
 /**
  * Created by anubis on 7/23/17.
@@ -29,6 +38,8 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
     public static final String TAG = "Found it";
     ProfileFragment profileFragment = new ProfileFragment();
     protected BottomNavigationView bottomNavigationView;
+
+    public ViewGroup CONTAINER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,8 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
@@ -71,7 +84,6 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
             return true;
 
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -154,6 +166,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
         transaction.replace(R.id.profile_container, billingFragment);
         transaction.addToBackStack("");
+
         transaction.commit();
     }
 
@@ -167,4 +180,5 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.addToBackStack("");
         transaction.commit();
     }
+
 }

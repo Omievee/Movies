@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.Profile;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -24,6 +27,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
+import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -44,6 +48,9 @@ public class HistoryDetailsFragment extends DialogFragment {
     Context myContext;
     SimpleDraweeView enlargedImage;
     TextView historyDate, historyTitle, historyLocal;
+    ImageView close;
+    public ViewGroup CONTAINER;
+    ProfileActivity prof;
 
     public HistoryDetailsFragment() {
     }
@@ -77,7 +84,7 @@ public class HistoryDetailsFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myActivity.startPostponedEnterTransition();
-        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.move).setDuration(4000));
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.fade));
     }
 
 
@@ -87,9 +94,9 @@ public class HistoryDetailsFragment extends DialogFragment {
 
         View root = inflater.inflate(R.layout.fr_historydetails, container, false);
 
+        CONTAINER = container;
 
-        Blurry.with(myActivity).radius(25).sampling(2).onto(container);
-
+        Blurry.with(myActivity).radius(25).sampling(3).onto(CONTAINER);
         return root;
     }
 
@@ -100,6 +107,13 @@ public class HistoryDetailsFragment extends DialogFragment {
         historyDate = view.findViewById(R.id.historyDate);
         historyLocal = view.findViewById(R.id.historyLocal);
         historyTitle = view.findViewById(R.id.HistoryTitle);
+        close = view.findViewById(R.id.close);
+
+
+        close.setOnClickListener(v -> {
+            myActivity.getFragmentManager().popBackStack();
+            Blurry.delete(prof.CONTAINER);
+        });
 
 
         Movie historyItem = getArguments().getParcelable(HISTORY_POSTER);
@@ -120,7 +134,6 @@ public class HistoryDetailsFragment extends DialogFragment {
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-
                         enlargedImage.setImageURI(imgUrl);
                     }
 
@@ -133,7 +146,6 @@ public class HistoryDetailsFragment extends DialogFragment {
                 })
                 .build();
 
-        Log.d(Constants.TAG, "MOVIE POSTER????: " + historyItem.getImageUrl());
 
         long createdAt = historyItem.getCreatedAt();
         SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy");
@@ -143,11 +155,5 @@ public class HistoryDetailsFragment extends DialogFragment {
         historyTitle.setText(historyItem.getTitle());
         enlargedImage.setTransitionName(transition);
         enlargedImage.setController(controller);
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        myActivity.getFragmentManager().popBackStack();
     }
 }
