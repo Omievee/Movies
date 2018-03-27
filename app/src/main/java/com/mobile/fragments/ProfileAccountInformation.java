@@ -158,12 +158,18 @@ public class ProfileAccountInformation extends Fragment {
                 password2TextInputLayout.setError(null);
                 password1.clearFocus();
                 password2.clearFocus();
+                final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+
                 if(password1.getText().toString().trim().equalsIgnoreCase(password2.getText().toString().trim())){
                     if(password1.getText().toString().length()>=6){
                         Toast.makeText(context, "Changing password", Toast.LENGTH_SHORT).show();
                         disableSaveAndCancel();
                     } else{
-                        password1TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_more_than_6_characters));
+                        if(password1.getText().toString().trim().isEmpty())
+                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_valid));
+                        else
+                            password1TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_more_than_6_characters));
                     }
                 } else {
                     password2TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_match));
@@ -251,6 +257,7 @@ public class ProfileAccountInformation extends Fragment {
                     + " must implement ProfileActivityInterface");
         }
     }
+    
 
     @Override
     public void onDetach() {

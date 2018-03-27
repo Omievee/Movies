@@ -248,8 +248,8 @@
     <string name="fragment_profile_shipping_address_updated">Shipping Address Updated</string>
 
     <!-- ProfileAccountInformation -->
-    <string name="fragment_profile_account_information_email_valid">Please enter a valid email address</string>
-    <string name="fragment_profile_account_information_password_valid">Please enter a valid password</string>
+    <string name="fragment_profile_account_information_email_valid">Enter your email address</string>
+    <string name="fragment_profile_account_information_password_valid">Enter your password</string>
 
     <!-- SignUpStepOneFragment -->
     <string name="fragment_sign_up_step_one_header">Tell us where to send your MoviePass card</string>
