@@ -8,8 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +31,9 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
+import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
+import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
@@ -51,18 +55,21 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment {
+public class PastReservations extends Fragment implements historyPosterClickListener {
+
+    public static final String TAG = PastReservations.class.getSimpleName();
+
 
     View rootview;
     HistoryAdapter historyAdapter;
     RecyclerView historyRecycler;
     ArrayList<Movie> historyList;
-    GridView historyGrid;
     TextView noMovies;
     View progress;
     HistoryResponse historyResponse;
     Activity myActivity;
     Context myContext;
+
     public PastReservations() {
     }
 
@@ -86,7 +93,7 @@ public class PastReservations extends Fragment {
 
         GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(myActivity, historyList);
+        historyAdapter = new HistoryAdapter(myActivity, historyList, this);
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
@@ -146,5 +153,23 @@ public class PastReservations extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         myActivity = activity;
+    }
+
+
+    @Override
+    public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
+        HistoryDetailsFragment detailsFragment = HistoryDetailsFragment.newInstance(historyposter, ViewCompat.getTransitionName(sharedView));
+        detailsFragment.setSharedElementEnterTransition(new HistoryDetails());
+        detailsFragment.setEnterTransition(new Fade());
+        detailsFragment.setExitTransition(new Fade());
+        detailsFragment.setSharedElementReturnTransition(new HistoryDetails());
+
+
+        getFragmentManager()
+                .beginTransaction()
+                .addSharedElement(sharedView, ViewCompat.getTransitionName(sharedView))
+                .addToBackStack(null)
+                .replace(R.id.profile_container, detailsFragment)
+                .commit();
     }
 }

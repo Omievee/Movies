@@ -174,7 +174,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     cal.add(Calendar.MINUTE, 30);
 
 
-
                     if (myTime.after(cal.getTime())) {
                         if (cal.getTime().getHours() != 0) {
 
@@ -195,6 +194,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
+                /** TODO: REMOVE 3D & IMAX FORMAT */
                 if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
                         screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
                     currentTime.setClickable(false);
