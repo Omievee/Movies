@@ -247,6 +247,23 @@
     <string name="fragment_profile_shipping_address_valid_zip">Required</string>
     <string name="fragment_profile_shipping_address_updated">Shipping Address Updated</string>
 
+    <!-- Address -->
+    <string name="address_address">Address</string>
+    <string name="saddress_address_two">Address Line 2</string>
+    <string name="address_city">City</string>
+    <string name="address_state">State</string>
+    <string name="address_zip">Zip</string>
+    <string name="address_invalid_address">Invalid Address</string>
+    <string name="address_invalid_address_two">Invalid Address Line 2</string>
+    <string name="address_invalid_city">Invalid City</string>
+    <string name="address_invalid_state">Invalid State</string>
+    <string name="address_invalid_zip">Invalid Zip</string>
+    <string name="address_empty_shipping_address">Enter your shipping address</string>
+    <string name="address_empty_billing_address">Enter your billing address</string>
+    <string name="address_empty_city">Enter your city</string>
+    <string name="address_empty_state">Required</string>
+    <string name="address_empty_zip">Required</string>
+
     <!-- ProfileAccountInformation -->
     <string name="fragment_profile_account_information_email_valid">Enter your email address</string>
     <string name="fragment_profile_account_information_password_valid">Enter your password</string>

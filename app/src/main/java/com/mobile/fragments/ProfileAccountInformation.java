@@ -257,7 +257,7 @@ public class ProfileAccountInformation extends Fragment {
                     + " must implement ProfileActivityInterface");
         }
     }
-    
+
 
     @Override
     public void onDetach() {

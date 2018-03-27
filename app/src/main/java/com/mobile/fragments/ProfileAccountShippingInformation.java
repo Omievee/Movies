@@ -219,7 +219,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
             }else {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 address1.clearFocus();
                 Log.d("ADDRESS", "isValidAddress: ");
             }
@@ -231,7 +231,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
                     i++;
             } else {
-                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
                 city.clearFocus();
             }
 
@@ -239,7 +239,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (state.getText().toString().trim().length() == 2 && state.getText().toString().trim().matches("^[a-zA-Z]+$")) {
                 i++;
             } else {
-                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
                 state.clearFocus();
             }
 
@@ -247,26 +247,26 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length()>=5) {
                 i++;
             } else {
-                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
                 zip.clearFocus();
             }
 
 
         } else {
             if (address1.getText().toString().trim().isEmpty()) {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.address_empty_shipping_address));
                 address1.clearFocus();
             }
             if (state.getText().toString().trim().isEmpty()) {
-                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                stateTextInputLayout.setError(getResources().getString(R.string.address_empty_state));
                 state.clearFocus();
             }
             if (zip.getText().toString().trim().isEmpty()) {
-                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                zipTextInputLayout.setError(getResources().getString(R.string.address_empty_zip));
                 zip.clearFocus();
             }
             if (city.getText().toString().trim().isEmpty()) {
-                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                cityTextInputLayout.setError(getResources().getString(R.string.address_empty_city));
                 city.clearFocus();
             }
         }
