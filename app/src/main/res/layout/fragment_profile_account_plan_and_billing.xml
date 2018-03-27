@@ -207,20 +207,19 @@
                             android:maxLength="16"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/profile_scanicon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:background="@color/test_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/test_black"
                         android:scaleType="center"
                         android:src="@drawable/scanicon2" />
 
@@ -258,11 +257,10 @@
                             android:maxLength="5"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -290,11 +288,10 @@
                             android:maxLength="4"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -393,12 +390,11 @@
                             android:hint="Billing Address"
                             android:inputType="text|textCapSentences"
                             android:maxLines="1"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -423,12 +419,11 @@
                             android:hint="Billing Address 2"
                             android:inputType="text|textCapSentences"
                             android:maxLines="1"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -462,12 +457,11 @@
                                 android:hint="City"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -493,12 +487,11 @@
                                 android:hint="State"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -523,12 +516,11 @@
                                 android:hint="Zip"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 

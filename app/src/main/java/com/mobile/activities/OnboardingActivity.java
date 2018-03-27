@@ -164,7 +164,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     public void getPlans(){
-        RestClient.getsAuthenticatedStagingRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+        RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
             @Override
             public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
                 if(response!=null && response.isSuccessful()){
@@ -172,10 +172,8 @@ public class OnboardingActivity extends AppCompatActivity {
                     planOne = planResponse.getPlans().get(0);
                     if(planResponse.getPlans().size()>1)
                         planTwo = planResponse.getPlans().get(1);
-
                 }
             }
-
             @Override
             public void onFailure(Call<PlanResponse> call, Throwable t) {
 

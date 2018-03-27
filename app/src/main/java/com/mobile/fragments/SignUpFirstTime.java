@@ -141,18 +141,13 @@ public class SignUpFirstTime extends Fragment {
                 email2TextInputLayout.setError(null);
                 passwordTextInputLayout.setError(null);
                 Log.d(Constants.TAG, "onClick: " + DOB.getText().toString());
-                if (!signupEmailConfirm.getText().toString().trim().isEmpty() && !signupEmailInput.getText().toString().trim().isEmpty() && !signupPasswordInput.getText().toString().trim().isEmpty()) {
-                    if (!signupEmailInput.getText().toString().trim().equals(signupEmailConfirm.getText().toString().trim())) {
-                        Toast.makeText(view.getContext(), "Emails do not match", Toast.LENGTH_SHORT).show();
-                    } else if (DOB.getText().toString().equals("") || spinnerGender.getText().toString().equals("Gender")) {
-                        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show();
-                    } else {
                         progress.setVisibility(View.VISIBLE);
                         final String email1 = signupEmailInput.getText().toString().trim();
+                        final String email2 = signupEmailConfirm.getText().toString().trim();
                         final String password = signupPasswordInput.getText().toString().trim();
                         final String gender = spinnerGender.getText().toString().trim();
                         final String birthday = DOB.getText().toString().trim();
-                        if (isValidEmail(email1) && isValidPassword(password)) {
+                        if(isValidEmail(email1, email2) && isValidPassword(password) && !birthday.isEmpty() && !gender.equals("Gender")) {
                             final CredentialsRequest request = new CredentialsRequest(email1);
                             RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
                                 @Override
@@ -167,13 +162,6 @@ public class SignUpFirstTime extends Fragment {
                                             ProspectUser.gender = gender;
                                             ProspectUser.dateOfBirth = birthday;
 
-//                                            Intent intent = new Intent(context, SignUpActivity.class);
-//                                            intent.putExtra("email1", email1);
-//                                            intent.putExtra("password", password);
-//                                            intent.putExtra("gender", gender);
-//                                            intent.putExtra("dateOfBirth", birthday);
-//                                            startActivity(intent);
-
                                             ((SignUpActivity) getActivity()).setEmail(email1);
                                             ((SignUpActivity) getActivity()).setPassword(password);
                                             ((SignUpActivity) getActivity()).setGender(gender);
@@ -181,11 +169,11 @@ public class SignUpFirstTime extends Fragment {
                                             ((SignUpActivity) getActivity()).setPage();
                                             ((SignUpActivity) getActivity()).confirmFirstStep();
 
-                                            Log.d("BLABLA", "onResponse: "+ProspectUser.email);
                                         }
 
                                     }
                                     else {
+                                        progress.setVisibility(View.GONE);
                                         Toast.makeText(context, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -195,89 +183,11 @@ public class SignUpFirstTime extends Fragment {
                             /* TODO : Handle failure situation */
                                 }
                             });
-                        } else if (!isValidEmail(email1)) {
-                            emailTextInputLayout.setError("Invalid Email Address");
-                            signupEmailInput.clearFocus();
-//                            Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid email1 address", Snackbar.LENGTH_INDEFINITE);
-//                            snackbar.setAction("OK", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//                                    progress.setVisibility(View.GONE);
-//                                }
-//                            });
-//
-//                            // Changing message text color
-//                            snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-//                            snackbar.show();
-                        } else if (!isValidPassword(password)) {
-                            passwordTextInputLayout.setError("Invalid password");
-                            signupPasswordInput.clearFocus();
-//                            if (password.length() < 4) {
-//                                Snackbar snackbar = Snackbar.make(relativeLayout, "Please create a password longer than four characters", Snackbar.LENGTH_INDEFINITE);
-//                                snackbar.setAction("OK", new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        progress.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                                // Changing message text color
-//                                snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-//                                snackbar.show();
-                        } else if (password.length() > 20) {
-                            passwordTextInputLayout.setError("Invalid password");
-                            signupPasswordInput.clearFocus();
-//                                Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password shorter than twenty characters", Snackbar.LENGTH_INDEFINITE);
-//                                snackbar.setAction("OK", new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        progress.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                                // Changing message text color
-//                                snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-//                                snackbar.show();
-                        } else if (password.contains(" ")) {
-                            passwordTextInputLayout.setError("Invalid password");
-                            signupPasswordInput.clearFocus();
-//                                Snackbar snackbar = Snackbar.make(relativeLayout, "Please create password without spaces", Snackbar.LENGTH_INDEFINITE);
-//                                snackbar.setAction("OK", new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        progress.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                                // Changing message text color
-//                                snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-//                                snackbar.show();
-                        } else {
-                            passwordTextInputLayout.setError("Invalid password");
-                            signupPasswordInput.clearFocus();
-//                                Snackbar snackbar = Snackbar.make(relativeLayout, "Please enter a valid password", Snackbar.LENGTH_INDEFINITE);
-//                                snackbar.setAction("OK", new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View view) {
-//                                        progress.setVisibility(View.GONE);
-//                                    }
-//                                });
-//                                // Changing message text color
-//                                snackbar.setActionTextColor(ContextCompat.getColor(SignUpFirstOpenActivity.this, R.color.red));
-//                                snackbar.show();
+                        }else{
+                            progress.setVisibility(View.GONE);
                         }
-                    }
-                } else {
-                    if(signupPasswordInput.getText().toString().trim().isEmpty()){
-                        passwordTextInputLayout.setError("Required");
-                        signupPasswordInput.clearFocus();
-                    }
-                    if(signupEmailInput.getText().toString().trim().isEmpty()){
-                        emailTextInputLayout.setError("Required");
-                        signupEmailInput.clearFocus();
-                    }
-                    if(signupEmailConfirm.getText().toString().trim().isEmpty()){
-                        email2TextInputLayout.setError("Required");
-                        signupEmailConfirm.clearFocus();
-                    }
-                }
+                        isValidEmail(email1, email2);
+                        isValidPassword(password);
             }
         });
     }
@@ -293,20 +203,46 @@ public class SignUpFirstTime extends Fragment {
         }
     }
 
-    public static boolean isValidEmail(CharSequence target) {
-        if (target == null) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    public boolean isValidEmail(CharSequence target, CharSequence target2) {
+        signupEmailInput.clearFocus();
+        signupEmailConfirm.clearFocus();
+        boolean valid = true;
+        if(target.toString().trim().isEmpty() || target2.toString().trim().isEmpty()) {
+            if(target.toString().trim().isEmpty())
+                emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_empty));
+            if(target2.toString().trim().isEmpty())
+                email2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_empty));
+            valid = false;
         }
+        if (target == null) {
+            emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
+            valid = false;
+        }
+        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()){
+            emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
+            valid = false;
+        }
+        if(!target.toString().equalsIgnoreCase(target2.toString())){
+            emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_match));
+            email2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_match));
+            valid = false;
+        }
+        return valid;
     }
 
-    public static boolean isValidPassword(CharSequence target) {
-        if (target == null || target.length() < 4 || target.length() > 20) {
+    public boolean isValidPassword(CharSequence target) {
+        signupPasswordInput.clearFocus();
+        if(target.toString().trim().isEmpty()){
+            passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_empty));
             return false;
-        } else {
-            return true;
+        } if(target.toString().trim().length()<6){
+            passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
+            return false;
+        } if(target.toString().trim().length()>20){
+            passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_invalid));
+            return false;
         }
+        return true;
     }
 
 

@@ -1,7 +1,6 @@
 package com.mobile.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -9,7 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.app.Fragment;
@@ -26,9 +24,6 @@ import com.mobile.UserPreferences;
 import com.mobile.network.RestClient;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
-
-import java.util.Arrays;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -167,12 +162,12 @@ public class ProfileAccountInformation extends Fragment {
                         disableSaveAndCancel();
                     } else{
                         if(password1.getText().toString().trim().isEmpty())
-                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_valid));
+                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_empty));
                         else
-                            password1TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_more_than_6_characters));
+                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
                     }
                 } else {
-                    password2TextInputLayout.setError(getResources().getString(R.string.activity_profile_password_match));
+                    password2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_match));
                 }
             }
         });

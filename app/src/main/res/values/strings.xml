@@ -162,9 +162,6 @@
     <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
     <string name="activity_theater_button_action">[Action]</string>
 
-    <!-- Profile Activity -->
-    <string name="activity_profile_password_match">Passwords must match</string>
-    <string name="activity_profile_password_more_than_6_characters">Use at least 6 characters</string>
 
     <!-- VerificationActivity -->
     <string name="activity_verification_header">We need you to verify your ticket purchase</string>
@@ -264,9 +261,23 @@
     <string name="address_empty_state">Required</string>
     <string name="address_empty_zip">Required</string>
 
+    <!-- Credit Card -->
+    <string name="credit_card_invalid_number">Invalid credit card number</string>
+    <string name="credit_card_invalid_cvv">Invalid CVV</string>
+    <string name="credit_card_invalid_expiration">Invalid expiration</string>
+    <string name="credit_card_empty_number">Enter credit card number</string>
+    <string name="credit_card_empty_cvv">Required</string>
+    <string name="credit_card_empty_exp">Required</string>
+
     <!-- ProfileAccountInformation -->
-    <string name="fragment_profile_account_information_email_valid">Enter your email address</string>
-    <string name="fragment_profile_account_information_password_valid">Enter your password</string>
+    <string name="fragment_profile_account_information_email_empty">Enter your email address</string>
+    <string name="fragment_profile_account_information_email_invalid">Invalid email address</string>
+    <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
+    <string name="fragment_profile_account_information_password_empty">Enter your password</string>
+    <string name="fragment_profile_account_information_password_match">Passwords must match</string>
+    <string name="fragment_profile_account_information_password_more_than_6_characters">Use at least 6 characters</string>
+    <string name="fragment_profile_account_information_email_match">Emails must match</string>
+
 
     <!-- SignUpStepOneFragment -->
     <string name="fragment_sign_up_step_one_header">Tell us where to send your MoviePass card</string>

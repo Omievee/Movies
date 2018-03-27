@@ -418,6 +418,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         save.setClickable(true);
         save.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
+            removeAllErrors();
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             if(updateBillingCard) {
@@ -480,9 +481,19 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 });
     }
 
+    public void removeAllErrors(){
+        ccNumTextInputLayout.setError(null);
+        cvvTextInputLayout.setError(null);
+        expTextInputLayout.setError(null);
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+    }
+
     public void updateCCData() {
         if(!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
-            if (newBillingCC.getText().toString().length() >= 16) {
+            if (newBillingCC.getText().toString().length() >= 15) {
                 ccNumTextInputLayout.setError(null);
                 if (newBillingCVV.getText().toString().length() >= 3) {
                     cvvTextInputLayout.setError(null);
@@ -505,29 +516,29 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                             updateCreditCard(newCC, newExp, newCVV);
                         } else {
                             progress.setVisibility(View.GONE);
-                            expTextInputLayout.setError("Invalid expiration");
+                            expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
                         }
 
                     } else {
                         progress.setVisibility(View.GONE);
-                        expTextInputLayout.setError("Invalid expiration");
+                        expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    cvvTextInputLayout.setError("Invalid CVV");
+                    cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
                 }
             } else {
                 progress.setVisibility(View.GONE);
-                ccNumTextInputLayout.setError("Invalid credit card number");
+                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_invalid_number));
             }
         } else {
             progress.setVisibility(View.GONE);
             if(newBillingCVV.getText().toString().trim().isEmpty())
-                cvvTextInputLayout.setError("Required");
+                cvvTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_cvv));
             if(newBillingExp.getText().toString().trim().isEmpty())
-                expTextInputLayout.setError("Required");
+                expTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_exp));
             if(newBillingCC.getText().toString().trim().isEmpty())
-                ccNumTextInputLayout.setError("Required");
+                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_number));
         }
     }
 
@@ -603,13 +614,13 @@ public class ProfileAccountPlanAndBilling extends Fragment {
             }
             else {
                 if(address1.getText().toString().trim().isEmpty())
-                    address1TextInputLayout.setError("Required");
+                    address1TextInputLayout.setError(getResources().getString(R.string.address_empty_billing_address));
                 if(state.getText().toString().trim().isEmpty())
-                    stateTextInputLayout.setError("Required");
+                    stateTextInputLayout.setError(getResources().getString(R.string.address_empty_state));
                 if(zip.getText().toString().trim().isEmpty())
-                    zipTextInputLayout.setError("Required");
+                    zipTextInputLayout.setError(getResources().getString(R.string.address_empty_zip));
                 if(city.getText().toString().trim().isEmpty())
-                    cityTextInputLayout.setError("Required");
+                    cityTextInputLayout.setError(getResources().getString(R.string.address_empty_city));
                 progress.setVisibility(View.GONE);
             }
         }
