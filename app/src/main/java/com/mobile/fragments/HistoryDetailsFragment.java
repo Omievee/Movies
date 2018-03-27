@@ -6,14 +6,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -25,18 +24,21 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends DialogFragment {
+public class HistoryDetailsFragment extends Fragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
     Activity myActivity;
     Context myContext;
     SimpleDraweeView enlargedImage;
-
+    TextView historyDate, historyTitle, historyLocal;
     public HistoryDetailsFragment() {
     }
 
@@ -68,10 +70,8 @@ public class HistoryDetailsFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            myActivity.startPostponedEnterTransition();
-            setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.fade));
-        }
+        myActivity.startPostponedEnterTransition();
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode));
     }
 
 
@@ -89,6 +89,10 @@ public class HistoryDetailsFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         enlargedImage = view.findViewById(R.id.enlargedImage);
+        historyDate = view.findViewById(R.id.historyDate);
+        historyLocal = view.findViewById(R.id.historyLocal);
+        historyTitle = view.findViewById(R.id.HistoryTitle);
+
 
         Movie historyItem = getArguments().getParcelable(HISTORY_POSTER);
         String transition = getArguments().getString(EXTRA_TRANSITION_NAME);
@@ -114,6 +118,13 @@ public class HistoryDetailsFragment extends DialogFragment {
                     }
                 })
                 .build();
+
+        long createdAt = historyItem.getCreatedAt();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        historyDate.setText(sdf.format(new Date(createdAt)));
+
+        historyLocal.setText(historyItem.getTheaterName());
+        historyTitle.setText(historyItem.getTitle());
         enlargedImage.setTransitionName(transition);
         enlargedImage.setController(controller);
     }

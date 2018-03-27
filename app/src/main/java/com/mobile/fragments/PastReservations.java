@@ -168,8 +168,7 @@ public class PastReservations extends Fragment implements historyPosterClickList
         getFragmentManager()
                 .beginTransaction()
                 .addSharedElement(sharedView, ViewCompat.getTransitionName(sharedView))
-                .addToBackStack(null)
-                .replace(R.id.profile_container, detailsFragment)
+                .replace(R.id.profile_container, detailsFragment).addToBackStack(null)
                 .commit();
     }
 }
