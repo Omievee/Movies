@@ -239,7 +239,7 @@ public class SignUpStepOneFragment extends Fragment {
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
             }else {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 signUpAddress1.clearFocus();
                 Log.d("ADDRESS", "isValidAddress: ");
             }
@@ -251,7 +251,7 @@ public class SignUpStepOneFragment extends Fragment {
             if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
                 i++;
             } else {
-                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
                 signup1City.clearFocus();
             }
 
@@ -259,7 +259,7 @@ public class SignUpStepOneFragment extends Fragment {
             if (signup1State.getText().toString().trim().length() == 2 && signup1State.getText().toString().trim().matches("^[a-zA-Z]+$")) {
                 i++;
             } else {
-                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
                 signup1State.clearFocus();
             }
 
@@ -267,7 +267,7 @@ public class SignUpStepOneFragment extends Fragment {
             if (signup1Zip.getText().toString().trim().matches("^[0-9]+$") && signup1Zip.getText().toString().trim().length()>=5) {
                 i++;
             } else {
-                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
                 signup1Zip.clearFocus();
             }
 
