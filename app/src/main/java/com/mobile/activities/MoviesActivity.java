@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.amazonaws.mobile.client.AWSMobileClient;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -49,6 +50,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.blurry.Blurry;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,9 +91,7 @@ public class MoviesActivity extends BaseActivity {
         if (intent != null && intent.getIntExtra(MOVIES, -1) != -1) {
             movieId = intent.getIntExtra(MOVIES, -1);
             loadMovies();
-        }
-        else
-        {
+        } else {
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
@@ -113,10 +113,11 @@ public class MoviesActivity extends BaseActivity {
 
         checkRestrictions();
 
-        Log.d(Constants.TAG, "onCreate: "  + UserPreferences.getRestrictionSubscriptionStatus());
+        Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
+
 
 
     }
@@ -373,13 +374,12 @@ public class MoviesActivity extends BaseActivity {
                         ALLMOVIES.addAll(moviesResponse.getNowPlaying());
                         ALLMOVIES.addAll(moviesResponse.getFeatured());
 
-                        for(Movie AllMovies: ALLMOVIES){
-                            if(AllMovies.getId() == movieId){
+                        for (Movie AllMovies : ALLMOVIES) {
+                            if (AllMovies.getId() == movieId) {
                                 movie = AllMovies;
                                 startMovieActivity();
                             }
                         }
-
 
 
                     }

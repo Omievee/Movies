@@ -9,12 +9,16 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.SwipeDismissBehavior;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +45,7 @@ import jp.wasabeef.blurry.Blurry;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends DialogFragment {
+public class HistoryDetailsFragment extends DialogFragment implements GestureDetector.OnGestureListener {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
@@ -50,7 +54,7 @@ public class HistoryDetailsFragment extends DialogFragment {
     SimpleDraweeView enlargedImage;
     TextView historyDate, historyTitle, historyLocal;
     ImageView close;
-//    public ViewGroup CONTAINER;
+    //    public ViewGroup CONTAINER;
     ProfileActivity prof;
 
     ProfileActivityInterface profInterface;
@@ -70,24 +74,12 @@ public class HistoryDetailsFragment extends DialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        myContext = context;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        myActivity = activity;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myActivity.startPostponedEnterTransition();
-        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.fade));
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.move).setDuration(20000));
     }
 
 
@@ -100,7 +92,11 @@ public class HistoryDetailsFragment extends DialogFragment {
 
         ((ProfileActivity) this.getActivity()).CONTAINER = container;
 
-        Blurry.with(myActivity).radius(25).sampling(3).onto( ((ProfileActivity) this.getActivity()).CONTAINER);
+
+
+
+
+        Blurry.with(myActivity).radius(25).sampling(3).onto(((ProfileActivity) this.getActivity()).CONTAINER);
         return root;
     }
 
@@ -116,7 +112,7 @@ public class HistoryDetailsFragment extends DialogFragment {
 
         close.setOnClickListener(v -> {
             myActivity.getFragmentManager().popBackStack();
-            Blurry.delete(prof.CONTAINER);
+            Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
         });
 
 
@@ -160,4 +156,58 @@ public class HistoryDetailsFragment extends DialogFragment {
         enlargedImage.setTransitionName(transition);
         enlargedImage.setController(controller);
     }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        dismiss();
+        Blurry.delete(((ProfileActivity) myActivity).CONTAINER);
+        return true;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        myActivity.getFragmentManager().popBackStack();
+        Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        myActivity = activity;
+    }
+
 }

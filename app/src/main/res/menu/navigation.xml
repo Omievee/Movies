@@ -3,11 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <!--<item-->
-    <!--android:id="@+id/action_reservations"-->
-    <!--android:enabled="true"-->
-    <!--android:icon="@drawable/ic_e_tickets"-->
-    <!--android:title="@string/menu_bottom_navigation_main_reservations" />-->
 
     <item
         android:id="@+id/action_movies"
@@ -30,11 +25,5 @@
         android:iconTint="@color/white"
         android:title="@string/menu_bottom_navigation_main_profile" />
 
-    <!--<item-->
-    <!--android:id="@+id/action_settings"-->
-    <!--android:enabled="true"-->
-    <!--android:icon="@drawable/iconsettingswhite"-->
-    <!--android:iconTint="@color/white"-->
-    <!--android:title="@string/menu_bottom_navigation_main_settings" />-->
 
 </menu>

@@ -67,6 +67,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -230,6 +231,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
 
         progress.setVisibility(View.VISIBLE);
+
         return rootView;
     }
 
@@ -639,6 +641,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
+
+
 
 
 }

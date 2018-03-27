@@ -188,5 +188,9 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         if(CONTAINER != null) {
             Blurry.delete(CONTAINER);
         }
+
+        if(bottomNavigationView.getVisibility() == View.GONE){
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        }
     }
 }

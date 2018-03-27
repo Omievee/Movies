@@ -143,7 +143,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -186,6 +186,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack(null);
             transaction.commit();
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
@@ -195,6 +196,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pendingReservationFragment);
             transaction.addToBackStack(null);
             transaction.commit();
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
