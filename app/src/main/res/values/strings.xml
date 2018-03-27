@@ -275,8 +275,11 @@
     <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
     <string name="fragment_profile_account_information_password_empty">Enter your password</string>
     <string name="fragment_profile_account_information_password_match">Passwords must match</string>
+    <string name="fragment_profile_account_information_empty_gender">Required</string>
+    <string name="fragment_profile_account_information_empty_birthday">Required</string>
     <string name="fragment_profile_account_information_password_more_than_6_characters">Use at least 6 characters</string>
     <string name="fragment_profile_account_information_email_match">Emails must match</string>
+    <string name="fragment_profile_account_information_under_age">Must be 18</string>
 
 
     <!-- SignUpStepOneFragment -->

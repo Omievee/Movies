@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -17,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,10 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
-import com.mobile.activities.SignUpFirstOpenActivity;
+import com.mobile.extensions.CustomAutoCompleteDropDown;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CredentialsRequest;
@@ -44,7 +42,8 @@ import retrofit2.Response;
 
 public class SignUpFirstTime extends Fragment {
 
-    MaterialSpinner spinnerGender;
+//    MaterialSpinner spinnerGender;
+    CustomAutoCompleteDropDown spinnerGender;
     RelativeLayout relativeLayout;
     View progress;
     static final int DATE_DIALOG_ID = 0;
@@ -54,7 +53,7 @@ public class SignUpFirstTime extends Fragment {
     int month, year, day;
     Calendar myCalendar;
     EditText signupEmailInput, signupEmailConfirm, signupPasswordInput;
-    TextInputLayout emailTextInputLayout, email2TextInputLayout, passwordTextInputLayout;
+    TextInputLayout emailTextInputLayout, email2TextInputLayout, passwordTextInputLayout, genderTextInputLayout, birthTextInputLayout;
     Context context;
 
 
@@ -91,8 +90,18 @@ public class SignUpFirstTime extends Fragment {
         emailTextInputLayout = view.findViewById(R.id.emailTextInputLayout);
         email2TextInputLayout = view.findViewById(R.id.email2TextInputLayout);
         passwordTextInputLayout = view.findViewById(R.id.passwordTextInputLayout);
+        genderTextInputLayout = view.findViewById(R.id.genderTextInputLayout);
+        birthTextInputLayout = view.findViewById(R.id.birthdayTextInputLayout);
 
-        spinnerGender.setItems("Gender", "Male", "Female", "Other");
+        signupEmailInput.addTextChangedListener(new CustomTextWatcher());
+        signupEmailConfirm.addTextChangedListener(new CustomTextWatcher());
+        signupPasswordInput.addTextChangedListener(new CustomTextWatcher());
+        spinnerGender.addTextChangedListener(new CustomTextWatcher());
+        DOB.addTextChangedListener(new CustomTextWatcher());
+
+//        spinnerGender.setItems("Gender", "Male", "Female", "Other");
+        String items[] = {"Male","Female","Other"};
+        spinnerGender.setAdapter(new ArrayAdapter<String>(context,R.layout.spinner_layout, items));
 
         myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -114,14 +123,14 @@ public class SignUpFirstTime extends Fragment {
             }
         });
 
-        spinnerGender.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                signupEmailConfirm.clearFocus();
-                signupEmailInput.clearFocus();
-                signupPasswordInput.clearFocus();
-            }
-        });
+//        spinnerGender.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+//                signupEmailConfirm.clearFocus();
+//                signupEmailInput.clearFocus();
+//                signupPasswordInput.clearFocus();
+//            }
+//        });
 
         spinnerGender.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,7 +158,7 @@ public class SignUpFirstTime extends Fragment {
                         final String password = signupPasswordInput.getText().toString().trim();
                         final String gender = spinnerGender.getText().toString().trim();
                         final String birthday = DOB.getText().toString().trim();
-                        if(isValidEmail(email1, email2) && isValidPassword(password) && !birthday.isEmpty() && !gender.equals("Gender")) {
+                        if(isValidEmail(email1, email2) && isValidPassword(password) && isValidBirthday() && isValidGender()) {
                             final CredentialsRequest request = new CredentialsRequest(email1);
                             RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
                                 @Override
@@ -190,6 +199,8 @@ public class SignUpFirstTime extends Fragment {
                         }
                         isValidEmail(email1, email2);
                         isValidPassword(password);
+                        isValidBirthday();
+                        isValidGender();
             }
         });
     }
@@ -197,39 +208,55 @@ public class SignUpFirstTime extends Fragment {
     private void updateLabel() {
         String myFormat = "MM/dd/yy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        if (myCalendar.get(Calendar.YEAR) <= 2000) {
-            DOB.setText(sdf.format(myCalendar.getTime()));
-        } else {
-            DOB.setText("");
-            Toast.makeText(context, "Must be 18 years of age or older", Toast.LENGTH_SHORT).show();
-        }
+        DOB.setText(sdf.format(myCalendar.getTime()));
+        birthTextInputLayout.setError(null);
     }
 
     public boolean isValidEmail(CharSequence target, CharSequence target2) {
         signupEmailInput.clearFocus();
         signupEmailConfirm.clearFocus();
         boolean valid = true;
-        if(target.toString().trim().isEmpty() || target2.toString().trim().isEmpty()) {
+        if(target.toString().trim().isEmpty()) {
             if(target.toString().trim().isEmpty())
                 emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_empty));
-            if(target2.toString().trim().isEmpty())
-                email2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_empty));
             valid = false;
         }
         if (target == null) {
             emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
             valid = false;
         }
-        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()){
+        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches() && !target.toString().trim().isEmpty()){
             emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
             valid = false;
         }
-        if(!target.toString().equalsIgnoreCase(target2.toString())){
-            emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_match));
+        if(!target.toString().equalsIgnoreCase(target2.toString()) || target2.toString().trim().isEmpty()){
             email2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_match));
             valid = false;
         }
         return valid;
+    }
+
+    public boolean isValidGender(){
+        if(spinnerGender.getText().toString().trim().isEmpty()){
+            genderTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_empty_gender));
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isValidBirthday() {
+        if (DOB.getText().toString().trim().isEmpty()) {
+            birthTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_empty_birthday));
+            return false;
+        } else {
+            String myFormat = "MM/dd/yy";
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+            if (!(myCalendar.get(Calendar.YEAR) <= 2000)) {
+                birthTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_under_age));
+                return false;
+            }
+            return true;
+        }
     }
 
     public boolean isValidPassword(CharSequence target) {
@@ -295,6 +322,11 @@ public class SignUpFirstTime extends Fragment {
                 email2TextInputLayout.setError(null);
             if(signupPasswordInput.hasFocus())
                 passwordTextInputLayout.setError(null);
+            if(spinnerGender.hasFocus())
+                genderTextInputLayout.setError(null);
+            if(DOB.hasFocus())
+                birthTextInputLayout.setError(null);
+
 
         }
     }

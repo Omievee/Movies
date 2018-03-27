@@ -128,33 +128,49 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginTop="@dimen/margin_standard">
 
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/SPINNER"
-                        style="@style/Widget.AppCompat.Spinner.Underlined"
-                        android:layout_width="wrap_content"
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/genderTextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.4"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginTop="@dimen/margin_half"
-                        android:backgroundTint="@color/almost_white"
-                        android:hint="Gender"
-                        android:textSize="@dimen/text_size_14"
-                        app:ms_arrow_tint="@color/dark"
-                        app:ms_background_color="@color/dark"
-                        app:ms_hint_color="@color/almost_white"
-                        app:ms_text_color="@color/white" />
+                        android:paddingRight="50dp"
+                        android:textColorHint="@color/white_80_opacity"
+                        android:theme="@style/EditTextStyle"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                        <com.mobile.extensions.CustomAutoCompleteDropDown
+                            android:id="@+id/SPINNER"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:backgroundTint="@color/white_40_opacity"
+                            android:hint="Gender"
+                            android:textColor="@color/almost_white"
+                            android:textSize="@dimen/text_size_14"
+                            app:ms_arrow_tint="@color/dark"
+                            app:ms_background_color="@color/dark"
+                            app:ms_hint_color="@color/almost_white"
+                            app:ms_text_color="@color/white" />
+
+                    </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/birthdayTextInputLayout"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.6"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/SPINNER"
+                        android:layout_toRightOf="@id/genderTextInputLayout"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
@@ -176,7 +192,7 @@
 
                     </android.support.design.widget.TextInputLayout>
 
-                </RelativeLayout>
+                </LinearLayout>
 
 
                 <Button
