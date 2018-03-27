@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
@@ -49,8 +50,10 @@ public class HistoryDetailsFragment extends DialogFragment {
     SimpleDraweeView enlargedImage;
     TextView historyDate, historyTitle, historyLocal;
     ImageView close;
-    public ViewGroup CONTAINER;
+//    public ViewGroup CONTAINER;
     ProfileActivity prof;
+
+    ProfileActivityInterface profInterface;
 
     public HistoryDetailsFragment() {
     }
@@ -94,9 +97,10 @@ public class HistoryDetailsFragment extends DialogFragment {
 
         View root = inflater.inflate(R.layout.fr_historydetails, container, false);
 
-        CONTAINER = container;
 
-        Blurry.with(myActivity).radius(25).sampling(3).onto(CONTAINER);
+        ((ProfileActivity) this.getActivity()).CONTAINER = container;
+
+        Blurry.with(myActivity).radius(25).sampling(3).onto( ((ProfileActivity) this.getActivity()).CONTAINER);
         return root;
     }
 

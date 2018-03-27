@@ -81,6 +81,9 @@ public class ProfileFragment extends Fragment {
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
         fadeIn(root);
+
+
+
         return root;
     }
 
@@ -178,7 +181,6 @@ public class ProfileFragment extends Fragment {
 
         history.setOnClickListener(view2 -> {
             FragmentManager fragmentManager = myActivity.getFragmentManager();
-
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pastReservations);

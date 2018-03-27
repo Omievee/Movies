@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
@@ -37,7 +38,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     public static final String TAG = "Found it";
     ProfileFragment profileFragment = new ProfileFragment();
-    protected BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
 
     public ViewGroup CONTAINER;
 
@@ -57,6 +58,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
+        Log.d(TAG, "onCreate: " + CONTAINER);
     }
 
     @Override
@@ -166,7 +168,6 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
         transaction.replace(R.id.profile_container, billingFragment);
         transaction.addToBackStack("");
-
         transaction.commit();
     }
 
@@ -181,4 +182,11 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(CONTAINER != null) {
+            Blurry.delete(CONTAINER);
+        }
+    }
 }
