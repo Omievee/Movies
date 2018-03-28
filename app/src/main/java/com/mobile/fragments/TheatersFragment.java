@@ -187,7 +187,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
         theatersRealm = Realm.getDefaultInstance();
-
         searchGP.setMaxSuggestionCount(3);
         mSearchClose.setOnClickListener(view -> {
             searchGP.enableSearch();
@@ -277,7 +276,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setMinZoomPreference(DEFAULT_ZOOM_LEVEL);
+        mMap.setMinZoomPreference(1);
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -349,7 +348,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             if (marker.getTitle() != null) {
                 LatLng latLng = new LatLng(markerTheaterMap.get(marker.getId()).getLat(), markerTheaterMap.get(marker.getId()).getLon());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14);
                 mMap.animateCamera(cameraUpdate);
                 marker.showInfoWindow();
             }
@@ -491,9 +490,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(3, cluster.getSize()));
                 for (TheaterPin p : cluster.getItems()) {
                     // Draw 4 at most.
-                    if (theaterPins.size() == 4) break;
+                    if (theaterPins.size() == 0) break;
                     Drawable drawable = getResources().getDrawable(R.drawable.theaterpineticket);
-                    //drawable.setBounds(0, 0, width, height);
                     theaterPins.add(drawable);
                 }
             } catch (Exception e) {
@@ -715,9 +713,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 LocalStorageTheaters locallyStoredTheaters = response.body();
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
                     theatersRealm.executeTransactionAsync(R -> {
+
                         for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
-                            Theater RLMTH = R.createObject(Theater.class);
-                            RLMTH.setId(locallyStoredTheaters.getTheaters().get(j).getId());
+                            Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
                             RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
                             RLMTH.setTribuneTheaterId(locallyStoredTheaters.getTheaters().get(j).getTribuneTheaterId());
                             RLMTH.setName(locallyStoredTheaters.getTheaters().get(j).getName());
@@ -729,6 +727,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                             RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
                             RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
+
                         }
                     }, () -> {
                         Log.d(TAG, "onSuccess: ");

@@ -160,8 +160,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
 
         /** New Releases RecyclerView */
-        LinearLayoutManager newReleasesLayoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
 
         newReleasesRecycler = rootView.findViewById(R.id.new_releases);
         newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
@@ -171,7 +170,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, NEWRelease, this);
 
         /** Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
 
         topBoxOfficeRecycler = rootView.findViewById(R.id.top_box_office);
         topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
@@ -182,7 +181,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(myActivity, TopBoxOffice, this);
 
         /** Coming Soon RecyclerView */
-        LinearLayoutManager comingSoonLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager comingSoonLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         comingSoonRecycler = rootView.findViewById(R.id.coming_soon);
         comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
         comingSoonRecycler.setItemAnimator(null);
@@ -192,7 +191,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonAdapter = new MoviesComingSoonAdapter(myActivity, comingSoon, this);
 
         /** NOW PLAYING */
-        LinearLayoutManager nowplayingManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager nowplayingManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
         nowPlayingRecycler.setLayoutManager(nowplayingManager);
         fadeIn(nowPlayingRecycler);
@@ -201,7 +200,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingAdapter = new NowPlayingMoviesAdapter(myActivity, nowPlaying, this);
 
         /** FEATURED */
-        LinearLayoutManager featuredManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager featuredManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
@@ -224,8 +223,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        LocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Provider = LocationManager.getBestProvider(criteria, true);
+        LocationManager = (LocationManager) myActivity.getSystemService(Context.LOCATION_SERVICE);
+        if (LocationManager != null) {
+            Provider = LocationManager.getBestProvider(criteria, true);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
@@ -258,6 +259,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         Log.d(Constants.TAG, "onViewCreated: " + moviesRealm.isEmpty());
+
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
         } else {
@@ -289,9 +291,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onResume() {
         super.onResume();
         if (checkLocationPermission()) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //Request location updates:
-                Toast.makeText(getActivity(), "GPS Location Is Required", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "GPS Location Is Required", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -326,7 +328,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     //TODO:
     public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
-        Intent movieIntent = new Intent(getActivity(), MovieActivity.class);
+        Intent movieIntent = new Intent(myActivity, MovieActivity.class);
         movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
         startActivity(movieIntent);
     }
@@ -523,7 +525,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.GONE);
         myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        
+
 
     }
 
@@ -553,7 +555,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(),
+                                ActivityCompat.requestPermissions(myActivity,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         LOCATION_PERMISSIONS);
                             }
@@ -592,7 +594,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     }
 
                 } else {
-                    Toast.makeText(getActivity(), "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myActivity, "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -641,8 +643,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
-
-
 
 
 }
