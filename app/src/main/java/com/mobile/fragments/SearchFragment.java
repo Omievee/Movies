@@ -97,7 +97,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
-        cancel = rootView.findViewById(R.id.CancelSearch);
+        //cancel = rootView.findViewById(R.id.CancelSearch);
         ALLMOVIES = new ArrayList<>();
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
@@ -122,9 +122,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
 
         loadResults();
-        cancel.setOnClickListener(v -> {
-            myActivity.getFragmentManager().popBackStack();
-        });
 
         LayoutInflater myInflater = (LayoutInflater)myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater, this);

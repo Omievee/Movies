@@ -2,64 +2,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/margin_half"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_standard"
-    android:layout_marginStart="@dimen/margin_half"
     android:layout_marginEnd="@dimen/margin_half"
-    android:layout_height="wrap_content">
+    android:layout_marginStart="@dimen/margin_half"
+    android:layout_marginTop="@dimen/margin_half">
 
-        <RelativeLayout
-            android:id="@+id/cardMovie"
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/cardMovie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_half">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/MovieSearch_Poster"
+            android:layout_width="85dp"
+            android:layout_height="125dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/margin_standard"
+            app:placeholderImage="@drawable/film_reel_icon" />
+
+
+        <TextView
+            android:id="@+id/MovieSearch_Title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/charcoalGrey"
-            android:orientation="horizontal">
+            android:layout_marginStart="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:layout_toEndOf="@id/MovieSearch_Poster"
+            android:text="[Movie Title"
+            android:textColor="@color/almost_white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/MovieSearch_Poster"
-                android:layout_width="75dp"
-                android:layout_height="115dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/margin_standard"
-                app:placeholderImage="@drawable/film_reel_icon" />
+        <TextView
+            android:id="@+id/MovieSearch_Rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/MovieSearch_Title"
+            android:layout_margin="@dimen/margin_half"
+            android:layout_toEndOf="@id/MovieSearch_Poster"
+            android:text="[Rated * ]"
+            android:textColor="@color/almost_white"
+            android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/MovieSearch_RunTIme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-            <TextView
-                android:id="@+id/MovieSearch_Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:layout_toEndOf="@id/MovieSearch_Poster"
-                android:text="[Movie Title"
-                android:textColor="@color/almost_white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            android:layout_below="@id/MovieSearch_Rating"
+            android:layout_margin="@dimen/margin_half"
+            android:layout_toEndOf="@id/MovieSearch_Poster"
+            android:text="[Run TIme]"
+            android:textColor="@color/almost_white"
+            android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/MovieSearch_Rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/MovieSearch_Title"
-                android:layout_margin="@dimen/margin_half"
-                android:layout_toEndOf="@id/MovieSearch_Poster"
-                android:text="[Rated * ]"
-                android:textColor="@color/almost_white"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/MovieSearch_RunTIme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_below="@id/MovieSearch_Rating"
-                android:layout_margin="@dimen/margin_half"
-                android:layout_toEndOf="@id/MovieSearch_Poster"
-                android:text="[Run TIme]"
-                android:textColor="@color/almost_white"
-                android:textSize="12sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_icon"
+            android:layout_marginStart="@dimen/margin_half"
+            android:layout_below="@id/MovieSearch_Poster"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_half" />
 
 
-        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
