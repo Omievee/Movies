@@ -126,6 +126,7 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
+            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(getActivity(), LogInActivity.class);
             startActivity(intent);

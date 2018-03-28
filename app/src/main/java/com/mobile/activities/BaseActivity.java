@@ -22,7 +22,10 @@ import android.widget.LinearLayout;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
@@ -123,9 +126,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
 
-                    Log.d("LOG_IN", "onResponse: USER EMAIL: "+UserPreferences.getUserEmail());
-
-
                     restriction = response.body();
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
@@ -134,6 +134,9 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                     boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restriction.getHasActiveCard();
                     boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+
+//                    Log.w("LOG_IN ",new GsonBuilder().setPrettyPrinting().create().toJson(response));
+
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -145,9 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
-
-                    Log.d("LOG_IN", "onResponse: USER RESTRICTION STATUS: "+UserPreferences.getRestrictionSubscriptionStatus());
-                    Log.d("LOG_IN", "onResponse: USER ACTIVE CARD: "+UserPreferences.getIsSubscriptionActivationRequired());
 
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {

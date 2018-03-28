@@ -106,6 +106,14 @@ public class UserPreferences {
 
     }
 
+    public static void clearEverything(){
+        boolean logIn = getHasUserLoggedInBefore();
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.clear().commit();
+
+        hasUserLoggedInBefore(logIn);
+    }
+
     public static void setLastCheckInAttempt(String date, String time){
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_DATE,date);
