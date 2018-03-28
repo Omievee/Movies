@@ -137,6 +137,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
 
         progress = rootView.findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
         loadUserInfo();
 
         billingSwitch.setOnClickListener(v -> {
@@ -387,6 +388,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                progress.setVisibility(View.GONE);
             }
         });
     }
@@ -534,11 +536,11 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         } else {
             progress.setVisibility(View.GONE);
             if(newBillingCVV.getText().toString().trim().isEmpty())
-                cvvTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_cvv));
+                cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
             if(newBillingExp.getText().toString().trim().isEmpty())
-                expTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_exp));
+                expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
             if(newBillingCC.getText().toString().trim().isEmpty())
-                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_number));
+                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_invalid_number));
         }
     }
 
@@ -578,10 +580,80 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         });
     }
 
+    private boolean isValidAddress() {
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+
+        int i = 0;
+        if (!address1.getText().toString().trim().isEmpty() && !city.getText().toString().trim().isEmpty() && !zip.getText().toString().trim().isEmpty() && !state.getText().toString().trim().isEmpty()) {
+
+            //Validating Address
+            String[] address1Array = address1.getText().toString().split("\\W+");
+            if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
+                i++;
+            }else {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
+                address1.clearFocus();
+                Log.d("ADDRESS", "isValidAddress: ");
+            }
+
+            //Validating City
+            String[] cityArray = city.getText().toString().split("\\W+");
+            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+","");
+            //If city has less than 3 words
+            if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
+                city.clearFocus();
+            }
+
+            //Validating State
+            if (state.getText().toString().trim().length() == 2 && state.getText().toString().trim().matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
+                state.clearFocus();
+            }
+
+            //Validating Zip Code
+            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length()>=5) {
+                i++;
+            } else {
+                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
+                zip.clearFocus();
+            }
+
+
+        } else {
+            if (address1.getText().toString().trim().isEmpty()) {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_empty_shipping_address));
+                address1.clearFocus();
+            }
+            if (state.getText().toString().trim().isEmpty()) {
+                stateTextInputLayout.setError(getResources().getString(R.string.address_empty_state));
+                state.clearFocus();
+            }
+            if (zip.getText().toString().trim().isEmpty()) {
+                zipTextInputLayout.setError(getResources().getString(R.string.address_empty_zip));
+                zip.clearFocus();
+            }
+            if (city.getText().toString().trim().isEmpty()) {
+                cityTextInputLayout.setError(getResources().getString(R.string.address_empty_city));
+                city.clearFocus();
+            }
+        }
+        if(i==4)
+            return true;
+        return false;
+    }
+
     public void updateBillingAddress() {
         int userId = UserPreferences.getUserId();
         if (address1.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
-            if (!address1.getText().toString().trim().isEmpty() && !city.getText().toString().trim().isEmpty() && !zip.getText().toString().trim().isEmpty() && !state.getText().toString().trim().isEmpty()) {
+            if (isValidAddress()) {
                 String newAddress = address1.getText().toString();
                 String newAddress2 = address2.getText().toString();
                 String newCity = city.getText().toString();
@@ -611,16 +683,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                         mListener.closeFragment();
                     }
                 });
-            }
-            else {
-                if(address1.getText().toString().trim().isEmpty())
-                    address1TextInputLayout.setError(getResources().getString(R.string.address_empty_billing_address));
-                if(state.getText().toString().trim().isEmpty())
-                    stateTextInputLayout.setError(getResources().getString(R.string.address_empty_state));
-                if(zip.getText().toString().trim().isEmpty())
-                    zipTextInputLayout.setError(getResources().getString(R.string.address_empty_zip));
-                if(city.getText().toString().trim().isEmpty())
-                    cityTextInputLayout.setError(getResources().getString(R.string.address_empty_city));
+            } else {
                 progress.setVisibility(View.GONE);
             }
         }
@@ -735,6 +798,21 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 updateBillingCard = true;
                 saveChanges();
             }
+            if(address1.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(state.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(city.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(zip.hasFocus())
+                zip.setError(null);
+            if(newBillingCC.hasFocus())
+                ccNumTextInputLayout.setError(null);
+            if(newBillingCVV.hasFocus())
+                cvvTextInputLayout.setError(null);
+            if(newBillingExp.hasFocus())
+                expTextInputLayout.setError(null);
+
         }
     }
 

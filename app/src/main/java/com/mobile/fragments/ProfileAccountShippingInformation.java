@@ -390,6 +390,14 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (address1.isFocused() || address2.isFocused() || city.isFocused() || state.isFocused() || zip.isFocused()) {
                 saveChanges();
             }
+            if(address1.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(city.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(state.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(zip.hasFocus())
+                zipTextInputLayout.setError(null);
         }
     }
 }

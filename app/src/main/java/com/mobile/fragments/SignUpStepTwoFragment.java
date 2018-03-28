@@ -120,6 +120,13 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2Zip = view.findViewById(R.id.SIGNUP2_ZIP);
         signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
 
+        signup2Address.addTextChangedListener(new CustomTextWatcher());
+        signup2Address2.addTextChangedListener(new CustomTextWatcher());
+        signup2City.addTextChangedListener(new CustomTextWatcher());
+        signup2State.addTextChangedListener(new CustomTextWatcher());
+        signup2Zip.addTextChangedListener(new CustomTextWatcher());
+        signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
+
         fullBillingAddress = view.findViewById(R.id.LAYOUT_6);
         fullBillingAddress2 = view.findViewById(R.id.LAYOUT_7);
         signup2NextButton = view.findViewById(R.id.button_next2);
@@ -127,6 +134,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
         signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
+
+        signup2CCNum.addTextChangedListener(new CustomTextWatcher());
+        signup2CC_CVV.addTextChangedListener(new CustomTextWatcher());
+        signup2CCExp.addTextChangedListener(new CustomTextWatcher());
 
         ccNumTextInputLayout = view.findViewById(R.id.ccNumTextInputLayout);
         cvvTextInputLayout = view.findViewById(R.id.cvvTextInputLayout);
@@ -236,7 +247,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         expTextInputLayout.setError(null);
         cvvTextInputLayout.setError(null);
         if(signup2CCNum.getText().toString().trim().isEmpty()) {
-            ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_number));
+            ccNumTextInputLayout.setError(getResources().getString(R.string.invalid_credit_card_number));
             valid = false;
         }
         else
@@ -247,7 +258,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }
         }
         if(signup2CC_CVV.getText().toString().trim().isEmpty()){
-            cvvTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_cvv));
+            cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
             valid=false;
         } else{
             if(signup2CC_CVV.getText().toString().length()<3 || signup2CC_CVV.getText().toString().length()>4){
@@ -256,7 +267,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }
         }
         if(signup2CCExp.getText().toString().trim().isEmpty()){
-            expTextInputLayout.setError(getResources().getString(R.string.credit_card_empty_exp));
+            expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
             valid=false;
         } else {
             if (signup2CCExp.getText().toString().length() < 5) {
@@ -493,7 +504,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
         } else {
             if (signup2Address.getText().toString().trim().isEmpty()) {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
+                address1TextInputLayout.setError(getResources().getString(R.string.address_empty_billing_address));
                 signup2Address.clearFocus();
             }
             if (signup2State.getText().toString().trim().isEmpty()) {
@@ -592,6 +603,39 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     public interface OnCreditCardEntered {
         void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
+    }
+
+    public class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if(signup2CCNum.hasFocus())
+                ccNumTextInputLayout.setError(null);
+            if(signup2CC_CVV.hasFocus())
+                cvvTextInputLayout.setError(null);
+            if(signup2CCExp.hasFocus())
+                expTextInputLayout.setError(null);
+            if(signup2Address.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(signup2State.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(signup2City.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(signup2Zip.hasFocus())
+                zipTextInputLayout.setError(null);
+
+        }
     }
 
 
