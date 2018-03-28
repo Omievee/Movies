@@ -106,6 +106,21 @@ public class UserPreferences {
 
     }
 
+    public static void setLastCheckInAttempt(String date, String time){
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_DATE,date);
+        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_TIME,time);
+        editor.apply();
+    }
+
+    public static String getLastCheckInAttemptDate(){
+        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_DATE,"0");
+    }
+
+    public static String getLastCheckInAttemptTime(){
+        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_TIME,"0");
+    }
+
     public static Location getLocation() {
         Location location = new Location("current");
         location.setLatitude(getLatitude());
