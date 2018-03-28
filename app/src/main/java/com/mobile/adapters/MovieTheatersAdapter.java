@@ -229,8 +229,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
-                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
+                if (!screening.isApproved()) {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -248,8 +247,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         String selectedShowTime = currentTime.getText().toString();
                         showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
-
-
                 }
             }
         }

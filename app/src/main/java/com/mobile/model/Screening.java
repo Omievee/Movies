@@ -30,6 +30,12 @@ public class Screening {
     int moviepassId;
     String programType;
     Provider provider;
+
+
+
+
+    boolean approved;
+    String disabledExplanation;
     String qualifiers;
     boolean qualifiersApproved;
     String releaseDate;
@@ -46,7 +52,13 @@ public class Screening {
 
     boolean popRequired;
 
+    public String getDisabledExplanation() {
+        return disabledExplanation;
+    }
 
+    public boolean isApproved() {
+        return approved;
+    }
     public boolean isPopRequired() {
         return popRequired;
     }
@@ -264,16 +276,6 @@ public class Screening {
         return programType.toLowerCase().matches("theatre event");
     }
 
-    public boolean isApproved() {
-
-        if (status == null || status.toLowerCase().matches("not_approved"))
-            return false;
-
-        if (!qualifiersApproved)
-            return false;
-
-        return true;
-    }
 
     public String getProviderName() {
         return provider.getProviderName();
