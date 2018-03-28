@@ -7,8 +7,8 @@
 extern "C" {
 JNIEXPORT jstring JNICALL
 Java_com_mobile_network_RestClient_getEndPoint(JNIEnv *env, jclass) {
-    jstring str = env->NewStringUTF("https://api.moviepass.com");
-//    jstring str = env->NewStringUTF("http://stg.moviepass.com");
+    //jstring str = env->NewStringUTF("https://api.moviepass.com");
+    jstring str = env->NewStringUTF("http://staging.moviepass.com");
 
     return str;
 }

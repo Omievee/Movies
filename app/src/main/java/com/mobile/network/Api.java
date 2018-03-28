@@ -220,7 +220,7 @@ public interface Api {
 
 
 
-    @GET("/prod/movies/current.json")
+    @GET("/staging/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
     /* ALL THEATERS */
