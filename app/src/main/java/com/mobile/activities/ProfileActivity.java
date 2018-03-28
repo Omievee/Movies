@@ -185,11 +185,11 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(CONTAINER != null) {
+        if (CONTAINER != null) {
             Blurry.delete(CONTAINER);
         }
 
-        if(bottomNavigationView.getVisibility() == View.GONE){
+        if (bottomNavigationView.getVisibility() == View.GONE && getFragmentManager().getBackStackEntryCount() == 0) {
             bottomNavigationView.setVisibility(View.VISIBLE);
         }
     }

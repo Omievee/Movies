@@ -2,27 +2,22 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.Profile;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -54,10 +49,6 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
     SimpleDraweeView enlargedImage;
     TextView historyDate, historyTitle, historyLocal;
     ImageView close;
-    //    public ViewGroup CONTAINER;
-    ProfileActivity prof;
-
-    ProfileActivityInterface profInterface;
 
     public HistoryDetailsFragment() {
     }
@@ -90,10 +81,7 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
         View root = inflater.inflate(R.layout.fr_historydetails, container, false);
 
 
-        ((ProfileActivity) this.getActivity()).CONTAINER = container;
-
-
-
+        ((ProfileActivity) myActivity).CONTAINER = container;
 
 
         Blurry.with(myActivity).radius(25).sampling(3).onto(((ProfileActivity) this.getActivity()).CONTAINER);
@@ -108,11 +96,12 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
         historyLocal = view.findViewById(R.id.historyLocal);
         historyTitle = view.findViewById(R.id.HistoryTitle);
         close = view.findViewById(R.id.close);
+        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
 
 
         close.setOnClickListener(v -> {
             myActivity.getFragmentManager().popBackStack();
-            Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
+            Blurry.delete(((ProfileActivity) myActivity).CONTAINER);
         });
 
 
