@@ -165,9 +165,10 @@ public class SignUpFirstTime extends Fragment {
                                 public void onResponse(Call<Object> call, Response<Object> response) {
                                     progress.setVisibility(View.GONE);
                                     if (response != null && response.isSuccessful()) {
-                                        if (response.body().toString().contains(" userExists=1.0")) {
+                                        if (response.body().toString().contains("user exists")) {
                                             Toast.makeText(context, "User already exists", Toast.LENGTH_SHORT).show();
                                         } else {
+                                            Log.d("------>", "onResponse: "+response.body());
                                             ProspectUser.email = email1;
                                             ProspectUser.password = password;
                                             ProspectUser.gender = gender;

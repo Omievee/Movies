@@ -120,7 +120,6 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-appindexing:11.0.0'
     implementation 'com.google.firebase:firebase-crash:11.0.0'
-    implementation 'com.google.firebase:firebase-core:12.0.0'
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger:$dagger_version"
