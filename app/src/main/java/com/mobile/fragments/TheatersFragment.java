@@ -271,7 +271,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
 
-        RealmTaskService.scheduleRepeatTask(myActivity);
+
 
 
     }
