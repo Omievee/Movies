@@ -88,7 +88,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
 
     SwipeRefreshLayout swiper;
-    Realm moviesRealm;
+    public static Realm moviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
@@ -248,6 +248,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         moviesRealm = Realm.getInstance(config);
+        TheatersFragment.tRealm = Realm.getDefaultInstance();
         swiper.setOnRefreshListener(() -> {
 
             myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -265,6 +266,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         } else {
             setAdaptersWithRealmOBjects();
         }
+
         String alarm = Context.ALARM_SERVICE;
         AlarmManager am = (AlarmManager) myActivity.getSystemService(alarm);
 
@@ -441,7 +443,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
 
-    void setAdaptersWithRealmOBjects() {
+    public void setAdaptersWithRealmOBjects() {
 
         TopBoxOffice.clear();
         comingSoon.clear();

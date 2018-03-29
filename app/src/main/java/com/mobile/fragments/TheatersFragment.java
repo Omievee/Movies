@@ -192,7 +192,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
 
-        tRealm = Realm.getDefaultInstance();
+//        tRealm = Realm.getDefaultInstance();
         searchGP.setMaxSuggestionCount(3);
         mSearchClose.setOnClickListener(view -> {
             searchGP.enableSearch();
