@@ -35,8 +35,8 @@
                 android:padding="@dimen/margin_half"
                 android:text="No current reservation at this time"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_16"
                 android:visibility="gone" />
 
 
@@ -58,8 +58,8 @@
                     android:ellipsize="marquee"
                     android:singleLine="true"
                     android:text="[ MOVIE TITLE ]"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_16"
                     android:textStyle="bold" />
 
                 <TextView
@@ -70,8 +70,8 @@
                     android:layout_below="@+id/PendingRes_Title"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="[ Pending Location ]"
-                    android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_16" />
 
 
                 <ImageView
@@ -92,8 +92,8 @@
                     android:layout_below="@id/PendingRes_Location"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="[ Pending Time ]"
-                    android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_16" />
 
                 <TextView
                     android:id="@+id/PendingRes_Seat"
@@ -105,7 +105,7 @@
                     android:layout_toRightOf="@id/PendingRes_Time"
                     android:text="[ Pending Seat ]"
                     android:textColor="@color/new_red"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/text_size_16"
                     android:visibility="invisible" />
 
 
@@ -127,6 +127,8 @@
                     android:text="You can now use your MoviePass card to purchase your ticket!"
                     android:textAlignment="center"
                     android:textColor="@color/white"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

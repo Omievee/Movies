@@ -53,6 +53,12 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         updateNavigationBarState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
     public void onPause() {

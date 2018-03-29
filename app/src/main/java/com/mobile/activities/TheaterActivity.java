@@ -89,6 +89,12 @@ public class TheaterActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
