@@ -88,12 +88,11 @@ public class OnboardingActivity extends AppCompatActivity {
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
-        four = findViewById(R.id.intro_indicator_4);
         findTheaters = findViewById(R.id.buttons);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        indicators = new ImageView[]{zero, one, two, three, four};
+        indicators = new ImageView[]{zero, one, two, three};
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -129,9 +128,6 @@ public class OnboardingActivity extends AppCompatActivity {
 
                         break;
                     case 3:
-                        findTheaters.setVisibility(View.INVISIBLE);
-                        break;
-                    case 4:
                         findTheaters.setVisibility(View.INVISIBLE);
                         break;
                 }
@@ -207,14 +203,13 @@ public class OnboardingActivity extends AppCompatActivity {
 
         SimpleDraweeView img;
 
-        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_3,
+        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1,
                 R.drawable.signupimage2, R.drawable.howitworks2};
 
-        int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
-                R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
+        int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
 
-        int[] bodies = new int[]{R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
-                R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4, R.string.activity_onboarding_body_5};
+        int[] bodies = new int[]{R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2
+                , R.string.activity_onboarding_body_4, R.string.activity_onboarding_body_5};
 
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
@@ -292,7 +287,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
 
         @Override
@@ -303,10 +298,8 @@ public class OnboardingActivity extends AppCompatActivity {
                 case 1:
                     return getResources().getString(R.string.activity_onboarding_header_2);
                 case 2:
-                    return getResources().getString(R.string.activity_onboarding_header_3);
-                case 3:
                     return getResources().getString(R.string.activity_onboarding_header_4);
-                case 4:
+                case 3:
                     return getResources().getString(R.string.activity_onboarding_header_5);
             }
             return null;
@@ -316,7 +309,7 @@ public class OnboardingActivity extends AppCompatActivity {
     public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(
-                    i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
+                    i == position ? R.drawable.indicator_selected_no_stroke : R.drawable.indicator_unselected_no_stroke
             );
         }
     }
