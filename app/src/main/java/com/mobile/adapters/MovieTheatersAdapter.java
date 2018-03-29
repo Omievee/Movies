@@ -193,7 +193,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
-                showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 
 
@@ -223,7 +222,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setTypeface(Typeface.DEFAULT_BOLD);
                 showTime.setPadding(30, 20, 30, 20);
                 showTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                showTime.setButtonDrawable(null);
                 RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.setMargins(0, 0, 50, 30);
                 showTime.setLayoutParams(params);
