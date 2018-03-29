@@ -2,7 +2,7 @@ package com.mobile.notifications;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import com.helpshift.support.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.helpshift.Core;

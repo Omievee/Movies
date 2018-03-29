@@ -5,7 +5,7 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import com.helpshift.support.Log
 import android.widget.Toast
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException

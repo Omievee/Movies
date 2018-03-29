@@ -2,7 +2,7 @@ package com.mobile.helpers;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.widget.Toast;
 
 import com.mobile.UserPreferences;

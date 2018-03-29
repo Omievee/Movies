@@ -3,7 +3,7 @@ package com.mobile.application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
+import com.helpshift.support.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;

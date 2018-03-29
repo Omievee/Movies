@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import com.helpshift.support.Log;
 
 import com.helpshift.util.HelpshiftContext;
 
