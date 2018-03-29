@@ -3,6 +3,7 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.helpshift.util.HelpshiftContext;
@@ -104,6 +105,15 @@ public class UserPreferences {
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
 
+    }
+
+    public static void saveFirebaseHelpshiftToken(String refreshedToken){
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.FIREBASE_TOKEN, refreshedToken).apply();
+    }
+
+    public static String getFirebaseHelpshiftToken(){
+        return sPrefs.getString(Constants.FIREBASE_TOKEN,"null");
     }
 
     public static void clearEverything(){

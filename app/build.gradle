@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:11.0.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation 'com.google.firebase:firebase-messaging:11.0.0'
     debugImplementation('io.socket:socket.io-client:+') {
         exclude group: 'org.json', module: 'json'
     }
@@ -120,6 +121,7 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-appindexing:11.0.0'
     implementation 'com.google.firebase:firebase-crash:11.0.0'
+    implementation 'com.google.firebase:firebase-messaging:11.0.0'
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -206,4 +208,4 @@ dependencies {
 
 
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
