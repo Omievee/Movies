@@ -57,7 +57,7 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment implements historyPosterClickListener {
+public class PastReservations extends Fragment {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
@@ -84,7 +84,7 @@ public class PastReservations extends Fragment implements historyPosterClickList
         historyList = new ArrayList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
         progress = rootview.findViewById(R.id.progress);
-
+        Log.d(TAG, "onCreateView: ");
         return rootview;
     }
 
@@ -95,13 +95,33 @@ public class PastReservations extends Fragment implements historyPosterClickList
 
         GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(myActivity, historyList, this);
+        historyAdapter = new HistoryAdapter(myActivity, historyList, (historyPosterClickListener) this.getActivity());
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
         loadHIstory();
+        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    public void onStop() {
+
+
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
 
     private void loadHIstory() {
         historyList.clear();
@@ -133,7 +153,6 @@ public class PastReservations extends Fragment implements historyPosterClickList
             public void onFailure(Call<HistoryResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-
             }
         });
     }
@@ -141,7 +160,7 @@ public class PastReservations extends Fragment implements historyPosterClickList
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        int noOfColumns = (int) (dpWidth / 110);
+        int noOfColumns = (int) (dpWidth / 120);
         return noOfColumns;
     }
 
@@ -158,19 +177,4 @@ public class PastReservations extends Fragment implements historyPosterClickList
     }
 
 
-    @Override
-    public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
-        HistoryDetailsFragment detailsFragment = HistoryDetailsFragment.newInstance(historyposter, ViewCompat.getTransitionName(sharedView));
-        detailsFragment.setSharedElementEnterTransition(new HistoryDetails());
-        detailsFragment.setEnterTransition(new Fade());
-        detailsFragment.setExitTransition(new Fade());
-        detailsFragment.setSharedElementReturnTransition(new HistoryDetails());
-
-        FragmentManager fragmentManager = myActivity.getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.profile_container, detailsFragment);
-        transaction.addToBackStack("");
-        transaction.commit();
-
-    }
 }

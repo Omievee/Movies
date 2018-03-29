@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
@@ -103,6 +105,8 @@ public class ProfileFragment extends Fragment {
             pushSwitch.setChecked(false);
         }
 
+        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
+
         pushSwitch.setOnClickListener(v -> {
             if (pushSwitch.isChecked()) {
                 UserPreferences.setPushPermission(true);
@@ -134,14 +138,12 @@ public class ProfileFragment extends Fragment {
             myActivity.finishAffinity();
         });
         details.setOnClickListener(view1 -> {
-
-
             FragmentManager fragmentManager = myActivity.getFragmentManager();
             fragmentManager.popBackStack();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
             ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
@@ -184,7 +186,7 @@ public class ProfileFragment extends Fragment {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pastReservations);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
             ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
@@ -194,7 +196,7 @@ public class ProfileFragment extends Fragment {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pendingReservationFragment);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
             ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
 

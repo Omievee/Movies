@@ -3,7 +3,8 @@
     xmlns:fresco="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:drawable/screen_background_dark_transparent">
+    android:background="@android:color/transparent"
+    android:clickable="true">
 
 
     <ImageView
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_half"
-        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginTop="30dp"
         android:src="@drawable/close_white"
         android:tint="@color/white" />
 
@@ -22,8 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/historyDate"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/margin_standard"
         android:text="Movie Ttle"
+        android:clickable="false"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -36,7 +38,9 @@
         android:layout_above="@id/historyLocal"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_half"
         android:text="January 1, 2018"
+        android:clickable="false"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -46,15 +50,18 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/enlargedImage"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+        android:layout_marginBottom="@dimen/margin_standard"
         android:text="NYC"
+        android:clickable="false"
         android:textColor="@color/white"
         android:textSize="18sp" />
+
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/enlargedImage"
         android:layout_width="200dp"
         android:layout_height="290dp"
+        android:clickable="false"
         android:layout_centerInParent="true"
         android:transitionName="historyPoster"
         fresco:scaleType="fitXY" />

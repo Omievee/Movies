@@ -290,12 +290,6 @@
         <activity android:name="com.mobile.activities.TicketVerification_NoStub"></activity>
 
 
-        <receiver android:name="com.mobile.helpers.UpdateRealmMovies">
-            <intent-filter>
-                <action android:name="REFRESH_THIS" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name="com.mobile.helpers.RealmTaskService"
             android:exported="true"

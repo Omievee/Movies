@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.SwipeDismissBehavior;
+import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.DragEvent;
@@ -44,7 +45,7 @@ import jp.wasabeef.blurry.Blurry;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends DialogFragment implements GestureDetector.OnGestureListener {
+public class HistoryDetailsFragment extends Fragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
@@ -74,7 +75,7 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myActivity.startPostponedEnterTransition();
-        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.move).setDuration(20000));
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(20000));
     }
 
 
@@ -86,8 +87,10 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
 
 
         ((ProfileActivity) myActivity).CONTAINER = container;
-        Blurry.with(myActivity).radius(35).sampling(5).onto(((ProfileActivity) this.getActivity()).CONTAINER);
+        Blurry.with(myActivity).radius(35).sampling(5).animate().onto(((ProfileActivity) myActivity).CONTAINER);
 
+
+        Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
 
         return root;
     }
@@ -101,12 +104,12 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
         historyLocal = view.findViewById(R.id.historyLocal);
         historyTitle = view.findViewById(R.id.HistoryTitle);
         close = view.findViewById(R.id.close);
-        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
+
+
 
 
         close.setOnClickListener(v -> {
-            myActivity.getFragmentManager().popBackStack();
-            Blurry.delete(((ProfileActivity) myActivity).CONTAINER);
+           myActivity.onBackPressed();
         });
 
 
@@ -151,44 +154,13 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
         enlargedImage.setController(controller);
     }
 
-    @Override
-    public boolean onDown(MotionEvent e) {
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        dismiss();
-        Blurry.delete(((ProfileActivity) myActivity).CONTAINER);
-        return true;
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        myActivity.getFragmentManager().popBackStack();
-        Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
-    }
+//    @Override
+//    public void onDismiss(DialogInterface dialog) {
+//        super.onDismiss(dialog);
+//        myActivity.getFragmentManager().popBackStack();
+//        Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
+//    }
 
 
     @Override
@@ -200,7 +172,6 @@ public class HistoryDetailsFragment extends DialogFragment implements GestureDet
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         myActivity = activity;
     }
 

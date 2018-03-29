@@ -595,7 +595,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
                 } else {
                     Toast.makeText(myActivity, "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
-
                 }
             }
 
