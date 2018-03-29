@@ -16,6 +16,7 @@ import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
+import com.mobile.fragments.ProfileCancellationFragment;
 import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.moviepass.R;
@@ -165,6 +166,17 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         ProfileAccountInformation accountInformation = new ProfileAccountInformation();
         transaction.replace(R.id.profile_container, accountInformation);
         transaction.addToBackStack("");
+        transaction.commit();
+    }
+
+    @Override
+    public void openCancellationFragment() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
+        transaction.replace(R.id.profile_container, cancelSubscription);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

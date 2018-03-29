@@ -1,6 +1,8 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -62,6 +64,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     private static int YES = 0, NO = 1;
 
     private Context context;
+    ProfileCancellationFragment cancelSubscription;
     private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
     private Button save, cancel;
@@ -152,6 +155,13 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 //TODO COMMENTED BECAUSE THIS CANT BE USED RIGHT NOW, SERVER NEEDS TO RETURN THE ACTUAL ADDRESS
 //                billingAddressSameAsShipping=true;
 //                saveChanges();
+            }
+        });
+
+        planCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mListener.openCancellationFragment();
             }
         });
 
