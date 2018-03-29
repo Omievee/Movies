@@ -144,16 +144,20 @@ public class SignUpStepOneFragment extends Fragment {
 
                 String local = place.getAddress().toString();
                 List<String> localList = Arrays.asList(local.split(",", -1));
+                if (localList.get(2).trim().length() < 8) {
+                    Toast.makeText(getContext(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                    firstClick=true;
+                }else {
+                    for (int i = 0; i < localList.size(); i++) {
+                        signUpAddress1.setText(localList.get(0));
+                        Log.d(TAG, "onActivityResult: " + localList.get(i));
+                        signup1City.setText(localList.get(1).trim());
+                        String State = localList.get(2).substring(0, 3).trim();
+                        String zip = localList.get(2).substring(4, 9).trim();
+                        signup1State.setText(State);
+                        signup1Zip.setText(zip);
 
-                for (int i = 0; i < localList.size(); i++) {
-                    signUpAddress1.setText(localList.get(0));
-                    Log.d(TAG, "onActivityResult: " + localList.get(i));
-                    signup1City.setText(localList.get(1).trim());
-                    String State = localList.get(2).substring(0, 3).trim();
-                    String zip = localList.get(2).substring(4, 9).trim();
-                    signup1State.setText(State);
-                    signup1Zip.setText(zip);
-
+                    }
                 }
 
 

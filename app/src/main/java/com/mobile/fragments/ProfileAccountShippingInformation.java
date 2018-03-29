@@ -165,7 +165,8 @@ public class ProfileAccountShippingInformation extends Fragment {
                 List<String> localList = Arrays.asList(address.split(",", -1));
                 for (int i = 0; i < localList.size(); i++) {
                     if (localList.get(2).trim().length() < 8) {
-                        Toast.makeText(context, "Invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Invalid Address", Toast.LENGTH_SHORT).show();
+                        firstClick=true;
                     } else {
                         address1.setText(localList.get(0));
                         city.setText(localList.get(1).trim());

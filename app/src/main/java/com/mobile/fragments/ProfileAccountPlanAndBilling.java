@@ -152,9 +152,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 collapse(billingAddressRoot);
                 billingSwithChangeState(YES);
                 yesNo.setTextColor(ContextCompat.getColor(v.getContext(),R.color.new_red));
-                //TODO COMMENTED BECAUSE THIS CANT BE USED RIGHT NOW, SERVER NEEDS TO RETURN THE ACTUAL ADDRESS
-//                billingAddressSameAsShipping=true;
-//                saveChanges();
+                billingAddressSameAsShipping=true;
+                saveChanges();
             }
         });
 
@@ -263,7 +262,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
                 for (int i = 0; i < localList.size(); i++) {
                     if (localList.get(2).trim().length() < 8) {
-                        Toast.makeText(getActivity(), "Invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                        firstClick=true;
                     } else {
                         address1.setText(localList.get(0));
                         city.setText(localList.get(1));
@@ -460,18 +460,20 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         String address = userInfoResponse.getShippingAddressLine2();
         List<String> addressList = Arrays.asList(address.split(",", -1));
         String shippingCity = "", shippingState = "", shippingZip ="";
-        String addres1 = userInfoResponse.getShippingAddressLine1();
+        String addres1 = userInfoResponse.getShippingAddressLine1().trim();
 
         for (int i = 0; i < addressList.size(); i++) {
-            shippingCity = (addressList.get(0));
-            shippingState = (addressList.get(1));
-            shippingZip = (addressList.get(2));
+            shippingCity = (addressList.get(0).trim());
+            shippingState = (addressList.get(1).trim());
+            shippingZip = (addressList.get(2).trim());
         }
 
         String type = "billingAddress";
+        android.util.Log.d("Billing address", "onResponse: Address: "+addres1+" State "+ shippingState+" City "+shippingCity+" Zip "+shippingZip);
 
                 AddressChangeRequest request = new AddressChangeRequest(addres1,"", shippingCity, shippingState, shippingZip, type);
-                RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+        String finalShippingState = shippingState;
+        RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response != null && response.isSuccessful()) {
@@ -479,7 +481,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                             Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
                             mListener.closeFragment();
                         } else {
-                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
                         }
                         progress.setVisibility(View.GONE);
                     }
