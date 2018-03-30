@@ -1,5 +1,7 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -49,6 +51,8 @@ public class SignUpStepOneFragment extends Fragment {
     TextView signup1NextButton;
     public boolean firstClick = true;
     View progress;
+    Context myContext;
+    Activity myActivity;
 
 
     int pos;
@@ -72,7 +76,7 @@ public class SignUpStepOneFragment extends Fragment {
         signup1State = rootView.findViewById(R.id.state);
         signup1Zip = rootView.findViewById(R.id.et_zip);
         signup1NextButton = rootView.findViewById(R.id.button_next);
-        progress = getActivity().findViewById(R.id.progress);
+        progress = rootView.findViewById(R.id.progress);
 
         firstNameTextInputLayout = rootView.findViewById(R.id.fistNameTextInputLayout);
         lastNameTextInputLayout = rootView.findViewById(R.id.lastNameTextInputLayout);
@@ -125,7 +129,7 @@ public class SignUpStepOneFragment extends Fragment {
                 .build();
 
         try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(myActivity);
 
 
             startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
@@ -140,14 +144,14 @@ public class SignUpStepOneFragment extends Fragment {
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             clearFocusOnAllEditTexts();
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                Place place = PlaceAutocomplete.getPlace(myActivity, data);
 
                 String local = place.getAddress().toString();
                 List<String> localList = Arrays.asList(local.split(",", -1));
                 if (localList.get(2).trim().length() < 8) {
                     Toast.makeText(getContext(), "Invalid Address", Toast.LENGTH_LONG).show();
-                    firstClick=true;
-                }else {
+                    firstClick = true;
+                } else {
                     for (int i = 0; i < localList.size(); i++) {
                         signUpAddress1.setText(localList.get(0));
                         Log.d(TAG, "onActivityResult: " + localList.get(i));
@@ -158,280 +162,329 @@ public class SignUpStepOneFragment extends Fragment {
                         signup1Zip.setText(zip);
 
                     }
+
+
+                    Log.i(Constants.TAG, "Place:" + place.toString());
+                }
+            }else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(myActivity, data);
+                    Log.i(Constants.TAG, status.getStatusMessage());
+                } else if (resultCode == RESULT_CANCELED) {
+
+                }
+            }
+        }
+
+        public static SignUpStepOneFragment newInstance (String text){
+            SignUpStepOneFragment f = new SignUpStepOneFragment();
+            Bundle b = new Bundle();
+            b.putString("msg", text);
+
+            f.setArguments(b);
+
+            return f;
+        }
+
+        // This is for actions only available when SignUpTwoFrag is visible
+        @Override
+        public void setMenuVisibility ( final boolean visible){
+            super.setMenuVisibility(visible);
+            if (getView() != null) {
+                if (visible) {
+                    signup1NextButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (canContinue()) {
+                                processSignUpInfo();
+                                ((SignUpActivity) getActivity()).setPage();
+                                ((SignUpActivity) getActivity()).confirmSecondStep();
+                            }
+                        }
+                    });
+                } else {
+                    isViewShown = false;
+                }
+            }
+        }
+
+        public boolean canContinue () {
+            address1TextInputLayout.setError(null);
+            firstNameTextInputLayout.setError(null);
+            lastNameTextInputLayout.setError(null);
+            stateTextInputLayout.setError(null);
+            cityTextInputLayout.setError(null);
+            zipTextInputLayout.setError(null);
+            clearFocusOnAllEditTexts();
+            int i = 0;
+            if (isFirstNameValid())
+                i++;
+            if (isLastNameValid())
+                i++;
+            if (isAddressValid())
+                i++;
+            if (i == 3) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public boolean isFirstNameValid () {
+            if (signup1FirstName.length() > 1 && signup1FirstName.length() <= 26 && !signup1FirstName.getText().toString().matches(".*\\d+.*")) {
+                return true;
+            } else {
+                pos = 0;
+                firstNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_first_name));
+                return false;
+            }
+        }
+
+        public boolean isLastNameValid () {
+            if (signup1LastName.length() > 1 && signup1LastName.length() <= 26 && !signup1LastName.getText().toString().matches(".*\\d+.*")) {
+                return true;
+            } else {
+                lastNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_last_name));
+                pos = 0;
+                return false;
+            }
+        }
+
+        private boolean isAddressValid () {
+            address1TextInputLayout.setError(null);
+            cityTextInputLayout.setError(null);
+            stateTextInputLayout.setError(null);
+            zipTextInputLayout.setError(null);
+
+            int i = 0;
+            if (!signUpAddress1.getText().toString().trim().isEmpty() && !signup1City.getText().toString().trim().isEmpty() && !signup1Zip.getText().toString().trim().isEmpty() && !signup1State.getText().toString().trim().isEmpty()) {
+
+                //Validating Address
+                String[] address1Array = signUpAddress1.getText().toString().split("\\W+");
+                if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
+                    i++;
+                } else {
+                    address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
+                    signUpAddress1.clearFocus();
+                    Log.d("ADDRESS", "isValidAddress: ");
+                }
+
+                //Validating City
+                String[] cityArray = signup1City.getText().toString().split("\\W+");
+                String cityWithNotWhiteSpaces = signup1City.getText().toString().replaceAll("\\s+", "");
+                //If city has less than 3 words
+                if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
+                    i++;
+                } else {
+                    cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
+                    signup1City.clearFocus();
+                }
+
+                //Validating State
+                if (signup1State.getText().toString().trim().length() == 2 && signup1State.getText().toString().trim().matches("^[a-zA-Z]+$")) {
+                    i++;
+                } else {
+                    stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
+                    signup1State.clearFocus();
+                }
+
+                //Validating Zip Code
+                if (signup1Zip.getText().toString().trim().matches("^[0-9]+$") && signup1Zip.getText().toString().trim().length() >= 5) {
+                    i++;
+                } else {
+                    zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
+                    signup1Zip.clearFocus();
                 }
 
 
-                Log.i(Constants.TAG, "Place:" + place.toString());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                Log.i(Constants.TAG, status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-
+            } else {
+                if (signUpAddress1.getText().toString().trim().isEmpty()) {
+                    address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
+                    signUpAddress1.clearFocus();
+                }
+                if (signup1State.getText().toString().trim().isEmpty()) {
+                    stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                    signup1State.clearFocus();
+                }
+                if (signup1Zip.getText().toString().trim().isEmpty()) {
+                    zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                    signup1Zip.clearFocus();
+                }
+                if (signup1City.getText().toString().trim().isEmpty()) {
+                    cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                    signup1City.clearFocus();
+                }
             }
+            if (i == 4)
+                return true;
+            return false;
         }
-    }
 
-    public static SignUpStepOneFragment newInstance(String text) {
-        SignUpStepOneFragment f = new SignUpStepOneFragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
+        public void clearFocusOnAllEditTexts () {
+            signUpAddress1.clearFocus();
+            signup1Address2.clearFocus();
+            signup1City.clearFocus();
+            signup1State.clearFocus();
+            signup1Zip.clearFocus();
+            signup1FirstName.clearFocus();
+            signup1LastName.clearFocus();
+        }
 
-        f.setArguments(b);
+        public void processSignUpInfo () {
+            ((SignUpActivity) getActivity()).setFirstName(signup1FirstName.getText().toString());
+            ((SignUpActivity) getActivity()).setLastName(signup1LastName.getText().toString());
+            ((SignUpActivity) getActivity()).setAddress(signUpAddress1.getText().toString());
+            ((SignUpActivity) getActivity()).setAddress2(signup1Address2.getText().toString());
+            ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
+            ((SignUpActivity) getActivity()).setState(signup1State.getText().toString());
+            ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
+            ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
 
-        return f;
-    }
+            String email = ((SignUpActivity) myContext).getEmail();
+            String password = ((SignUpActivity) myContext).getPassword();
 
-    // This is for actions only available when SignUpTwoFrag is visible
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (getView() != null) {
-            if (visible) {
-                signup1NextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (canContinue()) {
-                            processSignUpInfo();
-                            ((SignUpActivity) getActivity()).setPage();
-                            ((SignUpActivity) getActivity()).confirmSecondStep();
+            ProspectUser.firstName = signup1FirstName.getText().toString();
+            ProspectUser.lastName = signup1LastName.getText().toString();
+            ProspectUser.address = signUpAddress1.getText().toString();
+            ProspectUser.address2 = signup1Address2.getText().toString();
+            ProspectUser.city = signup1City.getText().toString();
+            ProspectUser.state = signup1State.getText().toString();
+            ProspectUser.zip = signup1Zip.getText().toString();
+
+
+            Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
+
+
+//        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
+//                ProspectUser.password, ProspectUser.firstName, ProspectUser.lastName, ProspectUser.address,
+//                ProspectUser.address2, ProspectUser.city, ProspectUser.state, ProspectUser.myZip);
+//
+//        RestClient.getUnauthenticated().registerPersonalInfo(request).enqueue(new Callback<PersonalInfoResponse>() {
+//            @Override
+//            public void onResponse(Call<PersonalInfoResponse> call, Response<PersonalInfoResponse> response) {
+//                RestClient.getUnauthenticated().getPlans(ProspectUser.myZip).enqueue(new RestCallback<RegistrationPlanResponse>() {
+//                    @Override
+//                    public void onResponse(Call<RegistrationPlanResponse> call, Response<RegistrationPlanResponse> response) {
+//                        progress.setVisibility(View.GONE);
+//                        RegistrationPlanResponse registrationPlanResponse = response.body();
+//
+//                        if (registrationPlanResponse != null) {
+//                            String price = (registrationPlanResponse.getPrice());
+//
+//                            ((SignUpActivity) getActivity()).setPage();
+//                            Log.d("SUSOFprice", price);
+//                        } else if (response.errorBody() != null) {
+//                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void failure(RestError restError) {
+//                        Toast.makeText(getActivity(), "System Error; Please Try again", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PersonalInfoResponse> call, Throwable t) {
+//                Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        }
+
+        private void setButtonActions () {
+            signup1NextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeErrors();
+                    clearFocusOnAllEditTexts();
+                    if (canContinue()) {
+                        processSignUpInfo();
+                    } else {
+                        if (!isLastNameValid()) {
+                            if (signup1LastName.getText().toString().trim().isEmpty())
+                                lastNameTextInputLayout.setError("Required");
+                            else
+                                lastNameTextInputLayout.setError("Invalid Last Name");
+                            signup1LastName.clearFocus();
+                        }
+                        if (!isFirstNameValid()) {
+                            if (signup1FirstName.getText().toString().trim().isEmpty())
+                                firstNameTextInputLayout.setError("Required");
+                            else
+                                firstNameTextInputLayout.setError("Invalid First Name");
+                            signup1FirstName.clearFocus();
+                        }
+                        if (signUpAddress1.getText().toString().toString().trim().isEmpty()) {
+                            address1TextInputLayout.setError("Required");
+                            signUpAddress1.clearFocus();
+                        }
+                        if (signup1City.getText().toString().trim().isEmpty()) {
+                            cityTextInputLayout.setError("Required");
+                            signup1City.clearFocus();
+                        }
+                        if (signup1State.getText().toString().trim().isEmpty()) {
+                            stateTextInputLayout.setError("Required");
+                            signup1State.clearFocus();
+                        }
+                        if (signup1Zip.getText().toString().trim().isEmpty()) {
+                            zipTextInputLayout.setError("Required");
+                            signup1Zip.clearFocus();
                         }
                     }
-                });
-            } else {
-                isViewShown = false;
-            }
-        }
-    }
-
-    public boolean canContinue() {
-        address1TextInputLayout.setError(null);
-        firstNameTextInputLayout.setError(null);
-        lastNameTextInputLayout.setError(null);
-        stateTextInputLayout.setError(null);
-        cityTextInputLayout.setError(null);
-        zipTextInputLayout.setError(null);
-        clearFocusOnAllEditTexts();
-        int i = 0;
-        if(isFirstNameValid())
-            i++;
-        if(isLastNameValid())
-            i++;
-        if(isAddressValid())
-            i++;
-        if (i==3) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isFirstNameValid() {
-        if (signup1FirstName.length() > 1 && signup1FirstName.length() <= 26 && !signup1FirstName.getText().toString().matches(".*\\d+.*")) {
-            return true;
-        } else {
-            pos = 0;
-            firstNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_first_name));
-            return false;
-        }
-    }
-
-    public boolean isLastNameValid() {
-        if (signup1LastName.length() > 1 && signup1LastName.length() <= 26 && !signup1LastName.getText().toString().matches(".*\\d+.*")) {
-            return true;
-        } else {
-            lastNameTextInputLayout.setError(getResources().getString(R.string.fragment_sign_up_step_one_valid_last_name));
-            pos = 0;
-            return false;
-        }
-    }
-
-    private boolean isAddressValid() {
-        address1TextInputLayout.setError(null);
-        cityTextInputLayout.setError(null);
-        stateTextInputLayout.setError(null);
-        zipTextInputLayout.setError(null);
-
-        int i = 0;
-        if (!signUpAddress1.getText().toString().trim().isEmpty() && !signup1City.getText().toString().trim().isEmpty() && !signup1Zip.getText().toString().trim().isEmpty() && !signup1State.getText().toString().trim().isEmpty()) {
-
-            //Validating Address
-            String[] address1Array = signUpAddress1.getText().toString().split("\\W+");
-            if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
-                i++;
-            }else {
-                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
-                signUpAddress1.clearFocus();
-                Log.d("ADDRESS", "isValidAddress: ");
-            }
-
-            //Validating City
-            String[] cityArray = signup1City.getText().toString().split("\\W+");
-            String cityWithNotWhiteSpaces = signup1City.getText().toString().replaceAll("\\s+","");
-            //If city has less than 3 words
-            if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
-                i++;
-            } else {
-                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
-                signup1City.clearFocus();
-            }
-
-            //Validating State
-            if (signup1State.getText().toString().trim().length() == 2 && signup1State.getText().toString().trim().matches("^[a-zA-Z]+$")) {
-                i++;
-            } else {
-                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
-                signup1State.clearFocus();
-            }
-
-            //Validating Zip Code
-            if (signup1Zip.getText().toString().trim().matches("^[0-9]+$") && signup1Zip.getText().toString().trim().length()>=5) {
-                i++;
-            } else {
-                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
-                signup1Zip.clearFocus();
-            }
-
-
-        } else {
-            if (signUpAddress1.getText().toString().trim().isEmpty()) {
-                address1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_address));
-                signUpAddress1.clearFocus();
-            }
-            if (signup1State.getText().toString().trim().isEmpty()) {
-                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
-                signup1State.clearFocus();
-            }
-            if (signup1Zip.getText().toString().trim().isEmpty()) {
-                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
-                signup1Zip.clearFocus();
-            }
-            if (signup1City.getText().toString().trim().isEmpty()) {
-                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
-                signup1City.clearFocus();
-            }
-        }
-        if(i==4)
-            return true;
-        return false;
-    }
-
-    public void clearFocusOnAllEditTexts(){
-        signUpAddress1.clearFocus();
-        signup1Address2.clearFocus();
-        signup1City.clearFocus();
-        signup1State.clearFocus();
-        signup1Zip.clearFocus();
-        signup1FirstName.clearFocus();
-        signup1LastName.clearFocus();
-    }
-
-    public void processSignUpInfo() {
-        ((SignUpActivity) getActivity()).setFirstName(signup1FirstName.getText().toString());
-        ((SignUpActivity) getActivity()).setLastName(signup1LastName.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress(signUpAddress1.getText().toString());
-        ((SignUpActivity) getActivity()).setAddress2(signup1Address2.getText().toString());
-        ((SignUpActivity) getActivity()).setCity(signup1City.getText().toString());
-        ((SignUpActivity) getActivity()).setState(signup1State.getText().toString());
-        ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
-        ((SignUpActivity) getActivity()).setAddressZip(signup1Zip.getText().toString());
-
-        String email = ((SignUpActivity) getActivity()).getEmail();
-        String password = ((SignUpActivity) getActivity()).getPassword();
-
-        ProspectUser.firstName = signup1FirstName.getText().toString();
-        ProspectUser.lastName = signup1LastName.getText().toString();
-        ProspectUser.address = signUpAddress1.getText().toString();
-        ProspectUser.address2 = signup1Address2.getText().toString();
-        ProspectUser.city = signup1City.getText().toString();
-        ProspectUser.state = signup1State.getText().toString();
-        ProspectUser.zip = signup1Zip.getText().toString();
-
-
-        Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
-    }
-
-    private void setButtonActions() {
-        signup1NextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeErrors();
-                clearFocusOnAllEditTexts();
-                if (canContinue()) {
-                    processSignUpInfo();
-                } else {
-                    if (!isLastNameValid()) {
-                        if(signup1LastName.getText().toString().trim().isEmpty())
-                            lastNameTextInputLayout.setError("Required");
-                         else
-                             lastNameTextInputLayout.setError("Invalid Last Name");
-                        signup1LastName.clearFocus();
-                    }if (!isFirstNameValid()) {
-                        if(signup1FirstName.getText().toString().trim().isEmpty())
-                            firstNameTextInputLayout.setError("Required");
-                        else
-                            firstNameTextInputLayout.setError("Invalid First Name");
-                        signup1FirstName.clearFocus();
-                    }if (signUpAddress1.getText().toString().toString().trim().isEmpty()) {
-                        address1TextInputLayout.setError("Required");
-                        signUpAddress1.clearFocus();
-                    }
-                    if(signup1City.getText().toString().trim().isEmpty()){
-                        cityTextInputLayout.setError("Required");
-                        signup1City.clearFocus();
-                    }
-                    if(signup1State.getText().toString().trim().isEmpty()){
-                        stateTextInputLayout.setError("Required");
-                        signup1State.clearFocus();
-                    }
-                    if(signup1Zip.getText().toString().trim().isEmpty()){
-                        zipTextInputLayout.setError("Required");
-                        signup1Zip.clearFocus();
-                    }
                 }
+            });
+        }
+
+        public void removeErrors () {
+            lastNameTextInputLayout.setError(null);
+            firstNameTextInputLayout.setError(null);
+            address1TextInputLayout.setError(null);
+            cityTextInputLayout.setError(null);
+            stateTextInputLayout.setError(null);
+            zipTextInputLayout.setError(null);
+        }
+
+        public class CustomTextWatcher implements TextWatcher {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
-        });
-    }
 
-    public void removeErrors(){
-        lastNameTextInputLayout.setError(null);
-        firstNameTextInputLayout.setError(null);
-        address1TextInputLayout.setError(null);
-        cityTextInputLayout.setError(null);
-        stateTextInputLayout.setError(null);
-        zipTextInputLayout.setError(null);
-    }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-    public class CustomTextWatcher implements TextWatcher {
+            }
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            @Override
+            public void afterTextChanged(Editable s) {
 
+                if (signup1FirstName.hasFocus())
+                    firstNameTextInputLayout.setError(null);
+                if (signup1LastName.hasFocus())
+                    lastNameTextInputLayout.setError(null);
+                if (signUpAddress1.hasFocus())
+                    address1TextInputLayout.setError(null);
+                if (signup1City.hasFocus())
+                    cityTextInputLayout.setError(null);
+                if (signup1State.hasFocus())
+                    stateTextInputLayout.setError(null);
+                if (signup1Zip.hasFocus())
+                    zipTextInputLayout.setError(null);
+
+            }
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        public void onAttach (Context context){
+            super.onAttach(context);
+            myContext = context;
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-
-            if(signup1FirstName.hasFocus())
-                firstNameTextInputLayout.setError(null);
-            if(signup1LastName.hasFocus())
-                lastNameTextInputLayout.setError(null);
-            if(signUpAddress1.hasFocus())
-                address1TextInputLayout.setError(null);
-            if(signup1City.hasFocus())
-                cityTextInputLayout.setError(null);
-            if(signup1State.hasFocus())
-                stateTextInputLayout.setError(null);
-            if(signup1Zip.hasFocus())
-                zipTextInputLayout.setError(null);
-
+        public void onAttach (Activity activity){
+            super.onAttach(activity);
+            myActivity = activity;
         }
     }
-
-
-}
 

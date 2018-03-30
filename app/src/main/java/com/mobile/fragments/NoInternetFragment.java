@@ -55,6 +55,8 @@ public class NoInternetFragment extends BottomSheetDialogFragment {
     }
 
 
+
+
     public boolean isOnline() {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE));
         NetworkInfo nInfo = connectivityManager.getActiveNetworkInfo();

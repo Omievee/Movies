@@ -193,7 +193,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
-                showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 
 
@@ -210,9 +209,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     cal.setTime(theaterTime);
                     cal.add(Calendar.MINUTE, 30);
                     if (myTime.after(cal.getTime())) {
-                        if (cal.getTime().getHours() > 2) {
-                            showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
-                            showTime.setClickable(false);
+                        if (cal.getTime().getHours() > 3) {
+                            holder.showTimesGrid.removeView(showTime);
                         }
                     }
                 } catch (ParseException e) {
@@ -229,10 +227,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
-                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
+                if (!screening.isApproved()) {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText(screening.getDisabledExplanation());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
@@ -248,8 +246,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         String selectedShowTime = currentTime.getText().toString();
                         showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
-
-
                 }
             }
         }

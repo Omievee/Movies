@@ -1,7 +1,9 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
@@ -85,6 +87,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     ArrayList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
     View progress;
+    Activity myActivity;
+    Context myContext;
     Reservation reservation;
     PerformanceInfoRequest mPerformReq;
     String url;
@@ -105,7 +109,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         ButterKnife.bind(this, rootView);
 
         //Object & Lists
-        theaterObject = Parcels.unwrap(getActivity().getIntent().getParcelableExtra(THEATER));
+        theaterObject = Parcels.unwrap(myActivity.getIntent().getParcelableExtra(THEATER));
         moviesAtSelectedTheater = new ArrayList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
@@ -134,13 +138,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             try {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
                 mapIntent.setPackage("com.google.android.apps.maps");
-                getActivity().startActivity(mapIntent);
+               myActivity.startActivity(mapIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(getActivity(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
             } catch (Exception x) {
                 x.getMessage();
             }
-
         });
 
         /* Start Location Tasks */
@@ -151,8 +154,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        qualifiersApproved = screening.getQualifiersApproved();
-        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this, qualifiersApproved);
+        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setLayoutAnimation(animation);
@@ -212,9 +214,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             buttonCheckIn.setVisibility(View.VISIBLE);
         }
 
-        if(screening.getProvider().ticketTypeIsSelectSeating() || screening.getProvider().ticketTypeIsETicket()) {
+        if (screening.getProvider().ticketTypeIsSelectSeating() || screening.getProvider().ticketTypeIsETicket()) {
             buttonCheckIn.setText("Continue to E-Ticketing");
-        }else {
+        } else {
             buttonCheckIn.setText("Check In");
         }
         buttonCheckIn.setEnabled(true);
@@ -231,7 +233,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                 reserve(screening, showtime);
             } else if (screening.getProvider().ticketType.matches("STANDARD")) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), R.style.CUSTOM_ALERT);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(myContext, R.style.CUSTOM_ALERT);
                     alert.setView(R.layout.alertdialog_ticketverif);
                     alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         progress.setVisibility(View.VISIBLE);
@@ -265,7 +267,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         theaterMoviesAdapter.notifyDataSetChanged();
                     }
 
-                    if(moviesAtSelectedTheater.size() == 0){
+                    if (moviesAtSelectedTheater.size() == 0) {
                         noTheaters.setVisibility(View.VISIBLE);
                         theaterSelectedRecyclerView.setVisibility(View.GONE);
                     }
@@ -313,7 +315,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         } else {
             progress.setVisibility(View.GONE);
-            Intent intent = new Intent(getActivity(), SelectSeatActivity.class);
+            Intent intent = new Intent(myActivity, SelectSeatActivity.class);
             intent.putExtra(SCREENING, Parcels.wrap(screen));
             intent.putExtra(SHOWTIME, time);
             intent.putExtra(THEATER, Parcels.wrap(theaterObject));
@@ -355,13 +357,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
-                            Toast.makeText(getActivity(), "You do not have an active card", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, "You do not have an active card", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                             GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), url);
                         }
                     } catch (Exception e) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(myActivity, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
@@ -572,15 +574,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(getActivity(), ConfirmationActivity.class);
+        Intent confirmationIntent = new Intent(myActivity, ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
-        getActivity().finish();
+       myActivity.finish();
     }
 
     private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
 
-        Intent intent = new Intent(getActivity(), EticketConfirmation.class);
+        Intent intent = new Intent(myActivity, EticketConfirmation.class);
 
         intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
         intent.putExtra(SHOWTIME, selectedShowTime);
@@ -598,6 +600,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 
 

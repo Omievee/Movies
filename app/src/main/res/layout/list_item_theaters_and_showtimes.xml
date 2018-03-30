@@ -143,7 +143,6 @@
             android:layout_centerInParent="true"
             android:layout_margin="@dimen/margin_half"
             android:background="@android:color/transparent"
-            android:text="This premium screening is not supported by MoviePass"
             android:textAlignment="center"
             android:textColor="@color/almost_white"
             android:textSize="14sp"

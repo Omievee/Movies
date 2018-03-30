@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
@@ -301,11 +303,14 @@
         <activity android:name="com.mobile.activities.TicketVerification_NoStub"></activity>
 
 
-        <receiver android:name="com.mobile.helpers.UpdateRealmMovies">
+        <service
+            android:name="com.mobile.helpers.RealmTaskService"
+            android:exported="true"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
             <intent-filter>
-                <action android:name="REFRESH_THIS" />
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
             </intent-filter>
-        </receiver>
+        </service>
     </application>
 
 </manifest>

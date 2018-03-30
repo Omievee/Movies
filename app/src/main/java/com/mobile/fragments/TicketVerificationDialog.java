@@ -130,7 +130,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         transferUtility = TransferUtility.builder()
                 .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                .s3Client(((Application) getContext().getApplicationContext()).getAmazonS3Client())
+                .s3Client(((Application) myActivity.getApplicationContext()).getAmazonS3Client())
                 .build();
 
         return root;
@@ -362,6 +362,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         super.onAttach(context);
         myContext = context;
     }
+
 }
 
 

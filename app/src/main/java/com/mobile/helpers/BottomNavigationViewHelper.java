@@ -10,6 +10,8 @@ import android.support.design.widget.BottomNavigationView;
 import com.helpshift.support.Log;
 import java.lang.reflect.Field;
 
+import jp.wasabeef.blurry.Blurry;
+
 public class BottomNavigationViewHelper {
 
     public static void disableShiftMode(BottomNavigationView view) {

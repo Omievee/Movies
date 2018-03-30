@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -74,6 +75,7 @@ public class ProfileAccountInformationFragment extends Fragment {
             Manifest.permission.CAMERA
     };
     private ProfileActivityInterface mListener;
+    Activity myActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,9 +86,13 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile_account_details, container, false);
+
+
+
         accountInformation = rootView.findViewById(R.id.UP);
         shippingClick = rootView.findViewById(R.id.MIDDLE);
         billingClick = rootView.findViewById(R.id.END);
+
         return rootView;
     }
 
@@ -126,12 +132,25 @@ public class ProfileAccountInformationFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+        Log.d(Constants.TAG, "onAttach cntx: ");
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
+            throw new RuntimeException(context.toString() + " must implement ProfileActivityInterface");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.myActivity = activity;
+        Log.d(Constants.TAG, "onAttach ACT: ");
+
+        if (activity instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) activity;
+        } else {
+            throw new RuntimeException(activity.toString() + " must implement ProfileActivityInterface");
         }
     }
 

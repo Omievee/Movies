@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
 import com.mobile.extensions.CustomAutoCompleteDropDown;
@@ -54,7 +57,8 @@ public class SignUpFirstTime extends Fragment {
     Calendar myCalendar;
     EditText signupEmailInput, signupEmailConfirm, signupPasswordInput;
     TextInputLayout emailTextInputLayout, email2TextInputLayout, passwordTextInputLayout, genderTextInputLayout, birthTextInputLayout;
-    Context context;
+    Context myContext;
+    Activity myActivity;
 
 
     public SignUpFirstTime() {
@@ -65,10 +69,7 @@ public class SignUpFirstTime extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
+
     }
 
     @Override
@@ -101,7 +102,7 @@ public class SignUpFirstTime extends Fragment {
 
 //        spinnerGender.setItems("Gender", "Male", "Female", "Other");
         String items[] = {"Male","Female","Other"};
-        spinnerGender.setAdapter(new ArrayAdapter<String>(context,R.layout.spinner_layout, items));
+        spinnerGender.setAdapter(new ArrayAdapter<String>(myContext,R.layout.spinner_layout, items));
 
         myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -117,7 +118,7 @@ public class SignUpFirstTime extends Fragment {
         DOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(context,R.style.MyDatePickerDialogTheme, date, myCalendar
+                new DatePickerDialog(myContext, R.style.MyDatePickerDialogTheme, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -135,7 +136,7 @@ public class SignUpFirstTime extends Fragment {
         spinnerGender.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) myContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 return false;
             }
@@ -166,7 +167,7 @@ public class SignUpFirstTime extends Fragment {
                                     progress.setVisibility(View.GONE);
                                     if (response != null && response.isSuccessful()) {
                                         if (response.body().toString().contains("user exists")) {
-                                            Toast.makeText(context, "User already exists", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(myContext, "User already exists", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Log.d("------>", "onResponse: "+response.body());
                                             ProspectUser.email = email1;
@@ -174,19 +175,19 @@ public class SignUpFirstTime extends Fragment {
                                             ProspectUser.gender = gender;
                                             ProspectUser.dateOfBirth = birthday;
 
-                                            ((SignUpActivity) getActivity()).setEmail(email1);
-                                            ((SignUpActivity) getActivity()).setPassword(password);
-                                            ((SignUpActivity) getActivity()).setGender(gender);
-                                            ((SignUpActivity) getActivity()).setDOB(birthday);
-                                            ((SignUpActivity) getActivity()).setPage();
-                                            ((SignUpActivity) getActivity()).confirmFirstStep();
+                                            ((SignUpActivity) myActivity).setEmail(email1);
+                                            ((SignUpActivity) myActivity).setPassword(password);
+                                            ((SignUpActivity) myActivity).setGender(gender);
+                                            ((SignUpActivity) myActivity).setDOB(birthday);
+                                            ((SignUpActivity) myActivity).setPage();
+                                            ((SignUpActivity) myActivity).confirmFirstStep();
 
                                         }
 
                                     }
                                     else {
                                         progress.setVisibility(View.GONE);
-                                        Toast.makeText(context, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(myActivity, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -287,7 +288,7 @@ public class SignUpFirstTime extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context=context;
+        this.myContext=context;
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
@@ -297,9 +298,15 @@ public class SignUpFirstTime extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
-        context=null;
+        myContext = null;
     }
 
     public class CustomTextWatcher implements TextWatcher {

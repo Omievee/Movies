@@ -1,5 +1,7 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,7 +43,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     View rootview;
     public static final String TAG = "foundit";
     RelativeLayout coordinatorLayout;
-
+    Context myContext;
+    Activity myActivity;
     public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
             confirmEditAddress, confirmEditBilling, confirmCCNum, confirmTermsText, confirmsPricacyText, confirmSubmit;
     public Switch confirmTermsAgreementSwitch;
@@ -77,7 +80,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         paymentDisclaimer = rootview.findViewById(R.id.paymentDisclaimer);
         planDescription = rootview.findViewById(R.id.planDescription);
 
-        if(ProspectUser.ccNum!=null)
+        if (ProspectUser.ccNum != null)
             confirmCCNum.setText(" - " + ProspectUser.ccNum.substring(12, 16));
 
         Log.d(TAG, "vc: " + confirmCCNum.getId());
@@ -163,10 +166,10 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String gender = ProspectUser.gender;
         String selectedPlanId;
 
-        if(ProspectUser.plan==null)
+        if (ProspectUser.plan == null)
             selectedPlanId = null;
-         else{
-             selectedPlanId = ProspectUser.plan.getId();
+        else {
+            selectedPlanId = ProspectUser.plan.getId();
         }
 
 
@@ -199,11 +202,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             confirmSubmit.setEnabled(false);
             SignUpRequest request;
 
-            if(selectedPlanId==null) {
+            if (selectedPlanId == null) {
                 request = new SignUpRequest(creditCardNumber, month, year, cvv,
                         sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
                         email, firstName, lastName, password, birthday, gender);
-            } else{
+            } else {
                 request = new SignUpRequest(creditCardNumber, month, year, cvv,
                         sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
                         email, firstName, lastName, password, birthday, gender, Integer.valueOf(selectedPlanId));
@@ -215,7 +218,6 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             Log.d(TAG, "completeRegistration: " + request);
 
 
-
             RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
                 @Override
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
@@ -224,7 +226,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                     if (response.isSuccessful()) {
                         //transition to final viewpager pag & show confirmation
                         progress.setVisibility(View.GONE);
-                        ((SignUpActivity) getActivity()).setPage();
+                        ((SignUpActivity) myActivity).setPage();
 
                     } else {
                         try {
@@ -269,5 +271,17 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         snackbar.show();
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
 
 }

@@ -637,6 +637,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
     }
 
+
     private void showActivateCardDialog(Screening screening, String showtime) {
         Intent activateCard = new Intent(MovieActivity.this, ActivateMoviePassCard.class);
         activateCard.putExtra(SCREENING, Parcels.wrap(screening));
@@ -645,4 +646,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     }
+
+
 }

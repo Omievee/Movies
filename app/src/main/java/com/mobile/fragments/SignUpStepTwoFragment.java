@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -53,7 +54,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     BraintreeFragment mBraintreeFragment;
 
     ArrayAdapter<CharSequence> statesAdapter;
-
+    Context myContext;
+    Activity myActivity;
     View view;
 
     public static final String CREDITCARD_DATA = "card data";
@@ -152,8 +154,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         planPrice = view.findViewById(R.id.planPrice);
         paymentDisclaimer = view.findViewById(R.id.paymentDisclaimer);
 
-        planPrice.setText(((SignUpActivity) getActivity()).getPlanPrice());
-        paymentDisclaimer.setText(((SignUpActivity) getActivity()).getPaymentDisclaimer());
+        planPrice.setText(((SignUpActivity) myActivity).getPlanPrice());
+        paymentDisclaimer.setText(((SignUpActivity) myActivity).getPaymentDisclaimer());
 
 
         signup2ScanCardIcon.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +164,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                 creditCardClick();
             }
         });
-
 
 
         signup2SameAddressSwitch.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +180,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     fullBillingAddress.requestFocus();
                     fullBillingAddress2.requestFocus();
 
-                    statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
+                    statesAdapter = ArrayAdapter.createFromResource(myActivity, R.array.states_abbrev, R.layout.item_white_spinner);
                     statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
 //                    signup2State.setAdapter(statesAdapter);
                 }
@@ -232,8 +233,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     ProspectUser.ccExpMonth = ccEx;
                     ProspectUser.ccExpYear = ccEx2;
                     ProspectUser.ccCVV = ccCVV;
-                    if (((SignUpActivity) getActivity()) != null) {
-                        ((SignUpActivity) getActivity()).setPage();
+                    if (((SignUpActivity) myActivity) != null) {
+                        ((SignUpActivity) myActivity).setPage();
                     }
 
             }
@@ -346,7 +347,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     }
 
     public void scanCard() {
-        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+        Intent scanIntent = new Intent(myActivity, CardIOActivity.class);
 
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
@@ -395,8 +396,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                             infoIsGood();
                         } else {
                             signup2NextButton.setEnabled(true);
-                            ((SignUpActivity) getActivity()).setPage();
-                            ((SignUpActivity) getActivity()).confirmThirdStep();
+                            ((SignUpActivity) myActivity).setPage();
+                            ((SignUpActivity) myActivity).confirmThirdStep();
                         }
                     });
                 }
@@ -605,6 +606,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
     }
 
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
+
     public class CustomTextWatcher implements TextWatcher {
 
         @Override
@@ -650,7 +656,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 //        try {
 //            if (BuildConfig.DEBUG) {
 //                String mAuthorization = getSandboxTokenizationKey();
-//                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
+//                mBraintreeFragment = BraintreeFragment.newInstance(getvity(), mAuthorization);
 //                progress.setVisibility(View.GONE);
 //                // mBraintreeFragment is ready to use!
 //

@@ -22,7 +22,9 @@
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
         android:layout_marginTop="@dimen/margin_half"
-        android:windowSoftInputMode="adjustPan"></FrameLayout>
+        android:windowSoftInputMode="adjustPan">
+
+    </FrameLayout>
 
 
     <include

@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -253,6 +254,19 @@ public class ProfileAccountInformation extends Fragment {
         }
     }
 
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
+
+        if (context instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ProfileActivityInterface");
+        }
+    }
 
     @Override
     public void onDetach() {
