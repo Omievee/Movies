@@ -286,20 +286,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
     @Override
     public void onAttach(Context context) {
