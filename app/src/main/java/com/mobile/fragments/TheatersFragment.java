@@ -272,9 +272,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
 
-
-
-
     }
 
     @Override
@@ -618,22 +615,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
 
         }
-        Handler h = new Handler();
-        h.postDelayed(() -> {
-            if (nearbyTheaters.size() == 0) {
-                slideup.setEnabled(false);
-                listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-                upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-                Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
-            } else {
-                displayTheatersFromRealm(nearbyTheaters);
-            }
-        },2000);
+
+        displayTheatersFromRealm(nearbyTheaters);
 
     }
 
     void displayTheatersFromRealm(LinkedList<Theater> theatersList) {
         mProgress.setVisibility(View.GONE);
+
+
         theaterAdapter.notifyDataSetChanged();
         slideup.setEnabled(true);
         listViewText.setTextColor(getResources().getColor(R.color.white));
@@ -659,6 +649,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
         }
         mClusterManager.cluster();
+
+        Log.d(TAG, "displayTheatersFromRealm: " + theatersList.size());
+
+
+        Handler han = new Handler();
+        han.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (theatersList.size() == 0) {
+                    slideup.setEnabled(false);
+                    listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                    upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                    Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, 3000);
+
     }
 
 
