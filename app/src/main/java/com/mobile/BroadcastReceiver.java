@@ -1,19 +1,22 @@
 package com.mobile;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.widget.Toast;
 
 import com.braintreepayments.api.Json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.helpshift.Core;
 import com.mobile.activities.MoviesActivity;
 import com.taplytics.sdk.TLGcmBroadcastReceiver;
+import com.taplytics.sdk.TLGcmIntentService;
 import com.taplytics.sdk.Taplytics;
 import com.taplytics.sdk.TaplyticsPushTokenListener;
 
@@ -79,6 +82,7 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
             }
         }
 
+
 //        if (intent.getDataString() != null) {
 //            Log.d("intent", intent.getDataString());
 //        }
@@ -95,6 +99,20 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
 //        } catch (Exception e) {
 //
 //        }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if(intent!=null){
+            String origin = intent.getExtras().getString("origin");
+            if(origin!=null && origin.equalsIgnoreCase("helpshift")){
+                Core.handlePush(context,intent);
+            }
+            ComponentName comp = new ComponentName(context.getPackageName(), TLGcmIntentService.class.getName());
+            startWakefulService(context,intent.setComponent(comp));
+            setResultCode(Activity.RESULT_OK);
+        }
     }
 
     @Override

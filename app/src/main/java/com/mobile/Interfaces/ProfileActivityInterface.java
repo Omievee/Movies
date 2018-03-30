@@ -10,4 +10,5 @@ public interface ProfileActivityInterface {
     void closeFragment();
     void openProfileAccountPlanAndInfo();
     void openProfileAccountInformation();
+    void openCancellationFragment();
 }

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,15 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import java.util.ArrayList;
+import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,11 +38,11 @@ import butterknife.ButterKnife;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private ArrayList<Movie> historyArrayList;
+
     private final int TYPE_ITEM = 0;
     private Context context;
     ViewHolder HOLDER;
     private final historyPosterClickListener historyListener;
-
 
     public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList, historyPosterClickListener historyListener) {
         this.historyArrayList = historyArrayList;

@@ -76,6 +76,7 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
+                            android:inputType="textCapSentences"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -107,6 +108,7 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
+                            android:inputType="textCapSentences"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -148,6 +150,7 @@
                             android:textCursorDrawable="@color/white"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textSize="14sp"
+                            android:inputType="textCapSentences"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -170,12 +173,12 @@
                             android:animateLayoutChanges="true"
                             android:backgroundTint="@color/white_40_opacity"
                             android:hint="Address 2"
-                            android:inputType="text"
                             android:lines="1"
                             android:maxLength="26"
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/white"
+                            android:inputType="textCapSentences"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
@@ -217,6 +220,7 @@
                             android:paddingStart="5dp"
                             android:singleLine="true"
                             android:textColor="@color/white"
+                            android:inputType="textCapSentences"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"

@@ -126,11 +126,15 @@
     <string name="activity_sign_in_dont_have_an_account">Don\'t have an account?</string>
     <string name="activity_sign_in_forgot_password">Forgot password?</string>
     <string name="activity_sign_in_forgot_password_title">Reset password</string>
-    <string name="activity_sign_in_forgot_password_body">Please enter your email address</string>
-    <string name="activity_sign_in_enter_valid_email">Please enter a valid email address</string>
+    <string name="activity_sign_in_forgot_password_body">Enter your email address</string>
+    <string name="activity_sign_in_enter_valid_email">Enter a valid email address</string>
     <string name="activity_sign_in_enter_valid_credentials">Please check your credentials and try again</string>
     <string name="activity_sign_in_useFingerprint">Scan your finger to sign in.</string>
 
+    <!-- Credit Card Errors-->
+    <string name="invalid_credit_card_number">Invalid credit card number</string>
+    <string name="invalid_exp">Invalid expiration</string>
+    <string name="invalid_cvv">Invalid CVV</string>
 
     <!-- SignUpActivity -->
     <string name="activity_sign_up_step_one_get_started">Sign up and get your MoviePass!</string>
@@ -157,6 +161,7 @@
     <string name="activity_theater_movie_time"> at what time?</string>
     <string name="activity_theater_showtime_placeholder">[12:00 AM]</string>
     <string name="activity_theater_button_action">[Action]</string>
+
 
     <!-- VerificationActivity -->
     <string name="activity_verification_header">We need you to verify your ticket purchase</string>
@@ -199,11 +204,11 @@
     <string name="fragment_profile_billing_address_state">State</string>
     <string name="fragment_profile_billing_address_zip">Zip</string>
     <string name="fragment_profile_billing_address_update">Update</string>
-    <string name="fragment_profile_billing_address_valid_address">Please enter a valid address</string>
+    <string name="fragment_profile_billing_address_valid_address">Enter your billing address</string>
     <string name="fragment_profile_billing_address_valid_address_two">Please enter a valid address line 2</string>
-    <string name="fragment_profile_billing_address_valid_city">Please enter a valid city</string>
-    <string name="fragment_profile_billing_address_valid_state">Please enter a valid state</string>
-    <string name="fragment_profile_billing_address_valid_zip">Please enter a valid zip code</string>
+    <string name="fragment_profile_billing_address_valid_city">Enter city</string>
+    <string name="fragment_profile_billing_address_valid_state">Required</string>
+    <string name="fragment_profile_billing_address_valid_zip">Required</string>
     <string name="fragment_profile_billing_address_updated">Billing Address Updated</string>
 
     <!-- ProfileCancellationFragment -->
@@ -232,12 +237,50 @@
     <string name="fragment_profile_shipping_address_state">State</string>
     <string name="fragment_profile_shipping_address_zip">Zip</string>
     <string name="fragment_profile_shipping_address_update">Update</string>
-    <string name="fragment_profile_shipping_address_valid_address">Please enter a valid address</string>
+    <string name="fragment_profile_shipping_address_valid_address">Enter your shipping address</string>
     <string name="fragment_profile_shipping_address_valid_address_two">Please enter a valid address line 2</string>
-    <string name="fragment_profile_shipping_address_valid_city">Please enter a valid city</string>
-    <string name="fragment_profile_shipping_address_valid_state">Please enter a valid state</string>
-    <string name="fragment_profile_shipping_address_valid_zip">Please enter a valid zip code</string>
+    <string name="fragment_profile_shipping_address_valid_city">Enter city</string>
+    <string name="fragment_profile_shipping_address_valid_state">Required</string>
+    <string name="fragment_profile_shipping_address_valid_zip">Required</string>
     <string name="fragment_profile_shipping_address_updated">Shipping Address Updated</string>
+
+    <!-- Address -->
+    <string name="address_address">Address</string>
+    <string name="saddress_address_two">Address Line 2</string>
+    <string name="address_city">City</string>
+    <string name="address_state">State</string>
+    <string name="address_zip">Zip</string>
+    <string name="address_invalid_address">Invalid Address</string>
+    <string name="address_invalid_address_two">Invalid Address Line 2</string>
+    <string name="address_invalid_city">Invalid City</string>
+    <string name="address_invalid_state">Invalid State</string>
+    <string name="address_invalid_zip">Invalid Zip</string>
+    <string name="address_empty_shipping_address">Enter your shipping address</string>
+    <string name="address_empty_billing_address">Enter your billing address</string>
+    <string name="address_empty_city">Enter your city</string>
+    <string name="address_empty_state">Required</string>
+    <string name="address_empty_zip">Required</string>
+
+    <!-- Credit Card -->
+    <string name="credit_card_invalid_number">Invalid credit card number</string>
+    <string name="credit_card_invalid_cvv">Invalid CVV</string>
+    <string name="credit_card_invalid_expiration">Invalid expiration</string>
+    <string name="credit_card_empty_number">Enter credit card number</string>
+    <string name="credit_card_empty_cvv">Required</string>
+    <string name="credit_card_empty_exp">Required</string>
+
+    <!-- ProfileAccountInformation -->
+    <string name="fragment_profile_account_information_email_empty">Enter your email address</string>
+    <string name="fragment_profile_account_information_email_invalid">Invalid email address</string>
+    <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
+    <string name="fragment_profile_account_information_password_empty">Enter your password</string>
+    <string name="fragment_profile_account_information_password_match">Passwords must match</string>
+    <string name="fragment_profile_account_information_empty_gender">Required</string>
+    <string name="fragment_profile_account_information_empty_birthday">Required</string>
+    <string name="fragment_profile_account_information_password_more_than_6_characters">Use at least 6 characters</string>
+    <string name="fragment_profile_account_information_email_match">Emails addresses do not match</string>
+    <string name="fragment_profile_account_information_under_age">Must be 18</string>
+
 
     <!-- SignUpStepOneFragment -->
     <string name="fragment_sign_up_step_one_header">Tell us where to send your MoviePass card</string>
@@ -249,8 +292,8 @@
     <string name="fragment_sign_up_step_one_state">State</string>
     <string name="fragment_sign_up_step_one_zip">Zip</string>
     <string name="fragment_sign_up_step_one_next">Next</string>
-    <string name="fragment_sign_up_step_one_valid_first_name">Please enter a valid first name</string>
-    <string name="fragment_sign_up_step_one_valid_last_name">Please enter a valid last name</string>
+    <string name="fragment_sign_up_step_one_valid_first_name">Enter your first name</string>
+    <string name="fragment_sign_up_step_one_valid_last_name">Enter your last name</string>
     <string name="fragment_sign_up_step_one_valid_address">Please enter a valid address</string>
     <string name="fragment_sign_up_step_one_valid_address_two">Please enter a valid address line 2</string>
     <string name="fragment_sign_up_step_one_valid_city">Please enter a valid city</string>

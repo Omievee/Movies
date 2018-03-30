@@ -16,7 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,33 +68,14 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountInformationFragment extends Fragment {
 
-    private static boolean updateShipping = false, updateBillingAddress = false, updateBillingCard = false;
-    private static int YES = 0, NO = 1;
     Context context;
-    Activity activity;
-    ProfileCancellationFragment cancelSubscription;
-    UserInfoResponse userInfoResponse;
-    String addressSection, billingSection, creditCardSection;
     View rootView, progress, accountInformation;
-    ImageView downArraow, backArrow, downArrow2;
-    Switch billingSwitch;
-    RelativeLayout userOldBilling, shippingClick, billingClick;
-    LinearLayout shippingDetails, bilingDetails, billing2, newBillingData, newBillingData2;
-    String userBillingAddress, getUserBillingAddress2, userBillingCity, userBillingState, userBillingZip;
-    TextView userName, userEmail, userBillingDate, userPlan, userPlanPrice, userPlanCancel, userBIllingCard, yesNo,
-            userBillingChange, userEditShipping, userMPCardNum, userMPExpirNum;
-
-    Button userSave, userCancel;
-    EditText userNewAddress2, userNewBillingCC, userNewBillingCVV, userNewBillingExp;
-    EditText userNewAddress, userNewCity, userNewState, userNewZip;
-    EditText userAddress, userAddress2, userCity, userState, userZip;
-    ImageButton userScanCard;
-    String MONTH, YEAR;
-    //    CustomTextChange customTextChange;
+    RelativeLayout shippingClick, billingClick;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
     private ProfileActivityInterface mListener;
+    Activity myActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,8 +99,6 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-//
     }
 
     @Override
@@ -146,6 +125,7 @@ public class ProfileAccountInformationFragment extends Fragment {
                 mListener.openProfileAccountPlanAndInfo();
             }
         });
+
     }
 
     @Override
@@ -164,7 +144,7 @@ public class ProfileAccountInformationFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.activity = activity;
+        this.myActivity = activity;
         Log.d(Constants.TAG, "onAttach ACT: ");
 
         if (activity instanceof ProfileActivityInterface) {

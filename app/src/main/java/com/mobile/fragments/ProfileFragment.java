@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +39,9 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,6 +135,7 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
+            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myActivity, LogInActivity.class);
             startActivity(intent);
@@ -163,13 +167,20 @@ public class ProfileFragment extends Fragment {
         help.setOnClickListener(view12 -> {
             Map<String, String[]> customIssueFileds = new HashMap<>();
             customIssueFileds.put("version name", new String[]{"sl", versionName});
+            String date = UserPreferences.getLastCheckInAttemptDate();
+            String time = UserPreferences.getLastCheckInAttemptTime();
+            customIssueFileds.put("lastCheckInAttemptDate",new String[]{"sl",date});
+            customIssueFileds.put("lastCheckInAttemptTime",new String[]{"sl",time});
+
             String[] tags = new String[]{versionName};
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("version", versionName);
+            userData.put("lastCheckInAttemptDate",date);
+            userData.put("lastCheckInAttemptTime",time);
             Metadata meta = new Metadata(userData, tags);
 
             ApiConfig apiConfig = new ApiConfig.Builder()
-                    .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
+                    .setEnableContactUs(Support.EnableContactUs.ALWAYS)
                     .setGotoConversationAfterContactUs(true)
                     .setRequireEmail(false)
                     .setCustomIssueFields(customIssueFileds)

@@ -21,7 +21,8 @@
             android:layout_marginTop="@dimen/margin_half"
             android:text="Plan &amp; Billing"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/text_size_16"
             android:textStyle="bold" />
 
         <Button
@@ -33,7 +34,7 @@
             android:text="Save"
             android:textAllCaps="false"
             android:textColor="@color/gray_icon"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_16" />
 
         <Button
             android:id="@+id/cancelChanges"
@@ -44,7 +45,7 @@
             android:text="Cancel"
             android:textAllCaps="false"
             android:textColor="@color/gray_icon"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_16" />
 
     </RelativeLayout>
 
@@ -69,8 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="Plan"
                 android:textColor="@color/white_80_opacity"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textSize="12sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -84,8 +84,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="8dp"
                     android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_14"
                     android:visibility="visible"
                     android:textStyle="bold" />
 
@@ -98,8 +98,8 @@
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
                     android:text="[$9.95]"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_14"
                     android:textStyle="bold" />
 
                 <TextView
@@ -110,7 +110,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Cancel"
                     android:textColor="@color/new_red"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_14" />
 
                 <View
                     android:id="@+id/view"
@@ -134,8 +134,7 @@
                     android:layout_height="wrap_content"
                     android:text="Billing:"
                     android:textColor="@color/white_80_opacity"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <RelativeLayout
                     android:id="@+id/old_billing"
@@ -151,8 +150,8 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginTop="8dp"
                         android:text="[####-####-####-0000]"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textColor="@color/almost_white"
+                        android:textSize="@dimen/text_size_14" />
 
 
                     <TextView
@@ -163,7 +162,7 @@
                         android:layout_marginTop="8dp"
                         android:text="Change"
                         android:textColor="@color/new_red"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_14"
                         android:visibility="visible" />
 
                     <View
@@ -208,20 +207,19 @@
                             android:maxLength="16"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/profile_scanicon"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:background="@color/test_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/test_black"
                         android:scaleType="center"
                         android:src="@drawable/scanicon2" />
 
@@ -259,11 +257,10 @@
                             android:maxLength="5"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -291,11 +288,10 @@
                             android:maxLength="4"
                             android:maxLines="1"
                             android:singleLine="true"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
 
                     </android.support.design.widget.TextInputLayout>
@@ -317,8 +313,7 @@
                     android:layout_height="wrap_content"
                     android:text="Billing Address:"
                     android:textColor="@color/white_80_opacity"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -331,9 +326,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
                         android:layout_marginTop="@dimen/margin_standard"
+                        android:layout_centerVertical="true"
                         android:text="Use shipping address for billing?"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_16"
 
                         android:textStyle="bold" />
 
@@ -347,14 +343,17 @@
                         android:paddingRight="5dp"
                         android:text="YES"
                         android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_centerVertical="true"
                         android:textColor="@color/new_red"
-                        android:textSize="18sp" />
+                        android:textSize="@dimen/text_size_16" />
 
                     <Switch
                         android:id="@+id/SWITCH"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginTop="@dimen/margin_standard"
                         android:checked="true" />
 
@@ -391,12 +390,11 @@
                             android:hint="Billing Address"
                             android:inputType="text|textCapSentences"
                             android:maxLines="1"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -421,12 +419,11 @@
                             android:hint="Billing Address 2"
                             android:inputType="text|textCapSentences"
                             android:maxLines="1"
-                            android:textColor="@color/white"
+                            android:textColor="@color/almost_white"
                             android:textColorHighlight="@color/white_80_opacity"
                             android:textColorLink="@android:color/transparent"
                             android:textCursorDrawable="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
+                            android:textSize="@dimen/text_size_14"
                             app:backgroundTint="@color/white_40_opacity" />
                     </android.support.design.widget.TextInputLayout>
 
@@ -460,12 +457,11 @@
                                 android:hint="City"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -491,12 +487,11 @@
                                 android:hint="State"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -521,12 +516,11 @@
                                 android:hint="Zip"
                                 android:inputType="text|textCapSentences"
                                 android:maxLines="1"
-                                android:textColor="@color/white"
+                                android:textColor="@color/almost_white"
                                 android:textColorHighlight="@color/white_80_opacity"
                                 android:textColorLink="@android:color/transparent"
                                 android:textCursorDrawable="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
+                                android:textSize="@dimen/text_size_14"
                                 app:backgroundTint="@color/white_40_opacity" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -547,8 +541,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Next Billing Date: "
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textColor="@color/almost_white"
+                        android:textSize="@dimen/text_size_14" />
 
                     <TextView
                         android:id="@+id/BillingDate"
@@ -557,7 +551,7 @@
                         android:layout_marginTop="@dimen/margin_standard"
                         android:text="[Billing Date]"
                         android:textColor="@color/white"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_16"
                         android:textStyle="bold" />
 
 

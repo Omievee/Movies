@@ -2,11 +2,12 @@ package com.mobile.helpers;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.widget.Toast;
 
 import com.mobile.UserPreferences;
 import com.mobile.activities.MoviesActivity;
+import com.mobile.model.ProspectUser;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
@@ -16,6 +17,7 @@ import com.mobile.responses.GoWatchItResponse;
 import com.moviepass.BuildConfig;
 
 import java.security.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -199,6 +201,16 @@ public class GoWatchItSingleton {
         thz = theater.getZip();
         tha = theater.getAddress();
         String lts = currentTimeStamp();
+
+        if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            String dateString = dateFormat.format(date);
+            //Get current time
+            SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+            String timeString = sdf.format(new Date());
+            UserPreferences.setLastCheckInAttempt(dateString,timeString);
+        }
 
         String result = "";
         thd = "";

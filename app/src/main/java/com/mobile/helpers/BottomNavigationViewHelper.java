@@ -7,8 +7,7 @@ package com.mobile.helpers;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.util.Log;
-
+import com.helpshift.support.Log;
 import java.lang.reflect.Field;
 
 import jp.wasabeef.blurry.Blurry;
@@ -36,8 +35,5 @@ public class BottomNavigationViewHelper {
         } catch (IllegalAccessException e) {
             Log.e("BNVHelper", "Unable to change value of shift mode", e);
         }
-
-
     }
-
 }

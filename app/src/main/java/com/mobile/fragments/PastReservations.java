@@ -15,7 +15,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

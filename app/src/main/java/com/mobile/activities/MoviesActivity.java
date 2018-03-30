@@ -12,7 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,6 +72,9 @@ public class MoviesActivity extends BaseActivity {
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
 
+    //Retrofit calls
+    Call<RestrictionsResponse> restrictionsResponseCall;
+
     public static final String MOVIES = "movies";
     View parentLayout;
     boolean firstBoot;
@@ -81,6 +84,7 @@ public class MoviesActivity extends BaseActivity {
     List<String> urlPath;
     String url;
     MoviesResponse moviesResponse;
+    private Call<MoviesResponse> loadMoviesCall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,11 +132,21 @@ public class MoviesActivity extends BaseActivity {
         updateNavigationBarState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+        if(restrictionsResponseCall!=null && !restrictionsResponseCall.isExecuted())
+            restrictionsResponseCall.cancel();
+        if(loadMoviesCall!=null && !loadMoviesCall.isExecuted())
+            loadMoviesCall.cancel();
     }
 
     int getContentViewId() {
@@ -161,6 +175,10 @@ public class MoviesActivity extends BaseActivity {
                 alert.show();
             } else {
                 if (itemId == R.id.action_profile) {
+                    if(loadMoviesCall!=null)
+                        loadMoviesCall.cancel();
+                    if(restrictionsResponseCall!=null)
+                        restrictionsResponseCall.cancel();
                     // item.setIcon(getDrawable(R.drawable.profilenavred));
                     if (UserPreferences.getUserId() == 0) {
                         Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
@@ -276,7 +294,8 @@ public class MoviesActivity extends BaseActivity {
 
 
     public void checkRestrictions() {
-        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
+        restrictionsResponseCall = RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset);
+        restrictionsResponseCall.enqueue(new Callback<RestrictionsResponse>() {
             @Override
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
@@ -358,8 +377,11 @@ public class MoviesActivity extends BaseActivity {
         }
     }
 
+
+
     public void loadMovies() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+        loadMoviesCall = RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude());
+        loadMoviesCall.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
