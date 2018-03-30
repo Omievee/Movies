@@ -1,5 +1,7 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -21,7 +23,8 @@ public class SynopsisFragment extends BottomSheetDialogFragment {
     public static final String TAG = " found it";
     public TextView synopsisText, synopsisTitle;
     public static final String SYNOPSIS = "synopsis";
-
+    Activity myActivity;
+    Context myContext;
     public SynopsisFragment() {
 
     }
@@ -54,6 +57,18 @@ public class SynopsisFragment extends BottomSheetDialogFragment {
         synopsisText = view.findViewById(R.id.SYNOPSIS_TEXT);
         synopsisText.setText(strtext);
         synopsisTitle.setText(title);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 }
 

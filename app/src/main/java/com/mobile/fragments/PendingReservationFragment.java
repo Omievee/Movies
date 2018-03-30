@@ -1,7 +1,9 @@
 package com.mobile.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +50,8 @@ public class PendingReservationFragment extends Fragment {
     FrameLayout frame;
     Button pendingResrvationCANCELBUTTON;
     RelativeLayout pendingData, StandardTicket, ETicket;
-
+    Activity myActivity;
+    Context myContext;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fr_pending, container, false);
@@ -136,7 +139,7 @@ public class PendingReservationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ActiveReservationResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Server error; Try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Server error; Try again", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -154,21 +157,21 @@ public class PendingReservationFragment extends Fragment {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
 
                     } catch (Exception e) {
 
                     }
                 } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
                 } else if (responseBody != null && response.isSuccessful()) {
-                    Toast.makeText(getActivity(), responseBody.getMessage(), Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                    Toast.makeText(myActivity, responseBody.getMessage(), Toast.LENGTH_LONG).show();
+                    myActivity.finish();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
-                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                        Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        myActivity.finish();
                     } catch (Exception e) {
 
                     }
@@ -178,8 +181,21 @@ public class PendingReservationFragment extends Fragment {
             @Override
             public void failure(RestError restError) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(myActivity, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 }

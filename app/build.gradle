@@ -23,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 101
-        versionName "3.0.6"
+        versionCode 103
+        versionName "3.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -201,6 +201,14 @@ dependencies {
 
     //Umano Sliding panel
     compile 'com.sothree.slidinguppanel:library:3.4.0'
+
+    //Burred Backgrounds
+    compile 'jp.wasabeef:blurry:2.1.1'
+
+    //Dismiss Dialog
+    compile 'com.github.andreilisun:swipedismissdialog:0.1'
+
+
 }
 
 

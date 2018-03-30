@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -94,6 +95,19 @@ public class ProfileAccountInformation extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
+
+        if (context instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ProfileActivityInterface");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;

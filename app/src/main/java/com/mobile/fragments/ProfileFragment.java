@@ -1,12 +1,15 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
@@ -52,7 +56,8 @@ public class ProfileFragment extends Fragment {
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
-
+    Activity myActivity;
+    Context myContext;
     public ProfileFragment() {
     }
 
@@ -78,6 +83,9 @@ public class ProfileFragment extends Fragment {
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
         fadeIn(root);
+
+
+
         return root;
     }
 
@@ -96,6 +104,8 @@ public class ProfileFragment extends Fragment {
         } else {
             pushSwitch.setChecked(false);
         }
+
+        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
 
         pushSwitch.setOnClickListener(v -> {
             if (pushSwitch.isChecked()) {
@@ -123,30 +133,31 @@ public class ProfileFragment extends Fragment {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
             HelpshiftContext.getCoreApi().logout();
-            Intent intent = new Intent(getActivity(), LogInActivity.class);
+            Intent intent = new Intent(myActivity, LogInActivity.class);
             startActivity(intent);
-            getActivity().finishAffinity();
+            myActivity.finishAffinity();
         });
         details.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
+            fragmentManager.popBackStack();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
-
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
 
             Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tosURL));
-            getActivity().startActivity(notifIntent);
+            myActivity.startActivity(notifIntent);
         });
 
         PP.setOnClickListener(view14 -> {
 
             Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ppURL));
-            getActivity().startActivity(notifIntent);
+            myActivity.startActivity(notifIntent);
         });
 
         help.setOnClickListener(view12 -> {
@@ -167,30 +178,32 @@ public class ProfileFragment extends Fragment {
                     .setShowConversationResolutionQuestion(false)
                     .build();
 
-            Support.showFAQs(getActivity(), apiConfig);
+            Support.showFAQs(myActivity, apiConfig);
         });
 
         history.setOnClickListener(view2 -> {
-            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pastReservations);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = getActivity().getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pendingReservationFragment);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
+            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
         howToUse.setOnClickListener(view15 -> {
-            Intent intent = new Intent(getActivity(), ActivatedCard_TutorialActivity.class);
+            Intent intent = new Intent(myActivity, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
 
@@ -205,5 +218,17 @@ public class ProfileFragment extends Fragment {
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 }

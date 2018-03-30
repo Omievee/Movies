@@ -17,6 +17,7 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.RealmTaskService;
 import com.mobile.network.RestClient;
 import com.taplytics.sdk.Taplytics;
 
@@ -57,7 +58,7 @@ public class Application extends MultiDexApplication {
         s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
-
+        RealmTaskService.scheduleRepeatTask(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
