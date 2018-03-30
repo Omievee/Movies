@@ -1,6 +1,8 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -42,6 +44,8 @@ public class ProfileCancellationFragment extends Fragment {
     String cancelReasons;
     long cancelSubscriptionReason;
     CancellationResponse cancellationResponse;
+    Activity myActivity;
+    Context myContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class ProfileCancellationFragment extends Fragment {
                 cancelReasons = (String) view.getItems().get(position);
                 if (cancelReasons.equals("Reason for Cancellation")) {
                     buttonCancel.setEnabled(false);
-                    Toast.makeText(getActivity(), "Please make a selection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myActivity, "Please make a selection", Toast.LENGTH_SHORT).show();
                 } else {
                     buttonCancel.setEnabled(true);
                 }
@@ -83,7 +87,7 @@ public class ProfileCancellationFragment extends Fragment {
         cancelBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                myActivity.onBackPressed();
             }
         });
 
@@ -138,12 +142,12 @@ public class ProfileCancellationFragment extends Fragment {
                 cancellationResponse = response.body();
                 progress.setVisibility(View.GONE);
                 if (cancellationResponse != null && response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Cancellation successful", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                    Toast.makeText(myActivity, "Cancellation successful", Toast.LENGTH_SHORT).show();
+                    myActivity.finish();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Toast.makeText(getActivity(), jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
 
                     }
@@ -154,8 +158,21 @@ public class ProfileCancellationFragment extends Fragment {
             @Override
             public void onFailure(Call<CancellationResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Server Error; Try again later", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Server Error; Try again later", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 }

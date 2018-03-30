@@ -209,9 +209,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     cal.setTime(theaterTime);
                     cal.add(Calendar.MINUTE, 30);
                     if (myTime.after(cal.getTime())) {
-                        if (cal.getTime().getHours() > 2) {
-                            showTime.setTextColor(root.getResources().getColor(R.color.gray_icon));
-                            showTime.setClickable(false);
+                        if (cal.getTime().getHours() > 3) {
+                            holder.showTimesGrid.removeView(showTime);
                         }
                     }
                 } catch (ParseException e) {

@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,6 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         } catch (Exception e) {
 
         }
+
 
         checkRestrictions();
     }

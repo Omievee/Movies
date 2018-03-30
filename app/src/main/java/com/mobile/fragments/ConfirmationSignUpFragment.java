@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -99,5 +100,11 @@ public class ConfirmationSignUpFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myContext = activity;
     }
 }
