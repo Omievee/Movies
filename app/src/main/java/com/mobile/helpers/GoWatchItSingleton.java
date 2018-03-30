@@ -203,11 +203,11 @@ public class GoWatchItSingleton {
         String lts = currentTimeStamp();
 
         if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = new Date();
             String dateString = dateFormat.format(date);
             //Get current time
-            SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+            SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
             String timeString = sdf.format(new Date());
             UserPreferences.setLastCheckInAttempt(dateString,timeString);
         }

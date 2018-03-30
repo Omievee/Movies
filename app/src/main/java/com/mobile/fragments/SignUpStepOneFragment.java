@@ -145,7 +145,7 @@ public class SignUpStepOneFragment extends Fragment {
                 String local = place.getAddress().toString();
                 List<String> localList = Arrays.asList(local.split(",", -1));
                 if (localList.get(2).trim().length() < 8) {
-                    Toast.makeText(getContext(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Invalid Address", Toast.LENGTH_LONG).show();
                     firstClick=true;
                 }else {
                     for (int i = 0; i < localList.size(); i++) {

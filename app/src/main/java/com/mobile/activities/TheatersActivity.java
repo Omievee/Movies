@@ -63,7 +63,13 @@ public class TheatersActivity extends BaseActivity{
         updateNavigationBarState();
     }
 
-//
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
+    //
 //    @Override
 //    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
 //
