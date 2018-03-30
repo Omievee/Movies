@@ -124,7 +124,7 @@ class SplashActivity : AppCompatActivity() {
         private val SPLASH_TIME_OUT = 1000
     }
 
-    private inner class getAAID : AsyncTask<String, String, String>() {
+    private  inner class getAAID : AsyncTask<String, String, String>() {
         override fun onPostExecute(result: String) {
             UserPreferences.saveAAID(result)
         }
