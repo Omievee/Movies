@@ -38,7 +38,6 @@ public class Application extends MultiDexApplication {
     private static CognitoCachingCredentialsProvider sCredProvider;
 
     private native static String getCognitoKey();
-
     static String cognitoPoolId = String.valueOf(getCognitoKey());
 
     public static Application getInstance() {
@@ -62,7 +61,6 @@ public class Application extends MultiDexApplication {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
-
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());

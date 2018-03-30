@@ -17,7 +17,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId 'com.moviepass.mobile'
@@ -207,7 +207,6 @@ dependencies {
 
     //Dismiss Dialog
     compile 'com.github.andreilisun:swipedismissdialog:0.1'
-
 
 }
 
