@@ -260,26 +260,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         });
 
 
-        Log.d(Constants.TAG, "onViewCreated: " + moviesRealm.isEmpty());
 
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
         } else {
             setAdaptersWithRealmOBjects();
-        }
-
-        String alarm = Context.ALARM_SERVICE;
-        AlarmManager am = (AlarmManager) myActivity.getSystemService(alarm);
-
-        Intent i = new Intent("REFRESH_THIS");
-        PendingIntent pi = PendingIntent.getBroadcast(myActivity, 0, i, 0);
-
-        int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-        long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-        long triggerTime = SystemClock.elapsedRealtime() + interval;
-
-        if (am != null) {
-            am.setRepeating(type, triggerTime, interval, pi);
         }
 
 
