@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,6 +91,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
         @BindView(R.id.Not_Supported)
         TextView notSupported;
 
+        CardView CardShowtime;
+
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
@@ -101,6 +104,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             movieRating = v.findViewById(R.id.cinema_movieRating);
             movieTime = v.findViewById(R.id.cinema_movieTime);
             synopsis = v.findViewById(R.id.cinema_Synopsis);
+            CardShowtime = v.findViewById(R.id.CardShowtime);
         }
     }
 
@@ -151,6 +155,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         HOLDER.movieRating.setText("Rated: " + screening.getRating());
         HOLDER.showtimeGrid.removeAllViews();
+
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -179,6 +184,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             holder.showtimeGrid.removeView(showtime);
                         }
                     }
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -217,6 +223,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     });
                 }
             }
+
+
             if (screening.getTitle().equals("Check In if Movie Missing")) {
                 HOLDER.movieRating.setVisibility(View.GONE);
                 HOLDER.cinemaTItle.setText("Unlisted Showtime");
