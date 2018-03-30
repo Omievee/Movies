@@ -193,7 +193,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
-                showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 
 
@@ -228,10 +227,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
-                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
+                if (!screening.isApproved()) {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText(screening.getDisabledExplanation());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
@@ -247,8 +246,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         String selectedShowTime = currentTime.getText().toString();
                         showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
-
-
                 }
             }
         }

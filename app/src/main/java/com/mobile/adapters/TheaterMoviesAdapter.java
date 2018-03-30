@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     private ArrayList<Screening> screeningsArrayList;
     ArrayList<String> showtimesArrayList;
     List<String> startTimes;
-    private boolean qualifiersApproved;
     private final int TYPE_ITEM = 0;
     public RadioButton showtime;
     public RadioButton currentTime;
@@ -63,10 +63,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     String selectedShowTime;
     ViewHolder HOLDER;
 
-    public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener, boolean qualifiersApproved) {
+    public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
         this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
-        this.qualifiersApproved = qualifiersApproved;
         this.showtimesArrayList = showtimesArrayList;
         this.context = context;
     }
@@ -161,7 +160,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
-                showtime.setTextSize(16);
+                showtime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 HOLDER.showtimeGrid.addView(showtime);
 
 
@@ -198,11 +197,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
-                /** TODO: REMOVE 3D & IMAX FORMAT */
-                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
-                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
+
+                if (!screening.isApproved()) {
+
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText(screening.getDisabledExplanation());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }

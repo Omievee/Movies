@@ -154,8 +154,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        qualifiersApproved = screening.getQualifiersApproved();
-        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this, qualifiersApproved);
+        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setLayoutAnimation(animation);
