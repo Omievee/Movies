@@ -87,7 +87,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     String Provider;
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
 
-    SwipeRefreshLayout swiper;
+    public static SwipeRefreshLayout swiper;
     public static Realm moviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
@@ -249,6 +249,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         moviesRealm = Realm.getInstance(config);
         TheatersFragment.tRealm = Realm.getDefaultInstance();
+
         swiper.setOnRefreshListener(() -> {
 
             myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

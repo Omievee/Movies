@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -617,15 +618,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
 
         }
+        Handler h = new Handler();
+        h.postDelayed(() -> {
+            if (nearbyTheaters.size() == 0) {
+                slideup.setEnabled(false);
+                listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+            } else {
+                displayTheatersFromRealm(nearbyTheaters);
+            }
+        },2000);
 
-        if (nearbyTheaters.size() == 0) {
-            slideup.setEnabled(false);
-            listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-            upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-            Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
-        } else {
-            displayTheatersFromRealm(nearbyTheaters);
-        }
     }
 
     void displayTheatersFromRealm(LinkedList<Theater> theatersList) {

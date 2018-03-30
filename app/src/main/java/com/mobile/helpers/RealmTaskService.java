@@ -50,8 +50,7 @@ public class RealmTaskService extends GcmTaskService {
                 @Override
                 public void run() {
                     getTheatersBucket();
-                    //getMoviesBucket();
-                   // Toast.makeText(RealmTaskService.this, "Bitcoin Transation Complete", Toast.LENGTH_SHORT).show();
+                    getMoviesBucket();
                 }
             });
         }
@@ -66,9 +65,9 @@ public class RealmTaskService extends GcmTaskService {
                     //specify target service - must extend GcmTaskService
                     .setService(RealmTaskService.class)
                     //repeat every 60 seconds
-                    .setPeriod(15)
+                    .setPeriod(43200)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(5)
+                    .setFlex(7200)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot
@@ -218,8 +217,7 @@ public class RealmTaskService extends GcmTaskService {
                         }
                     }, () -> {
                         Log.d(Constants.TAG, "onSuccess: ");
-                        MoviesFragment frag = new MoviesFragment();
-                        frag.setAdaptersWithRealmOBjects();
+
                     }, error -> {
                         Log.d(Constants.TAG, "onResponse: " + error.getMessage());
                     });
