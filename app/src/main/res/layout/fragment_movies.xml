@@ -42,7 +42,6 @@
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:src="@drawable/logo2"
                     android:textAlignment="center"
-                    android:tint="@color/white"
                     app:layout_collapseMode="pin" />
 
 
