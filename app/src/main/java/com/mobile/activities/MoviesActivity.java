@@ -352,8 +352,6 @@ public class MoviesActivity extends BaseActivity {
                         activateAlert.putExtra("dismissable", restriction.getAlert().isDismissable());
 
                         startActivity(activateAlert);
-
-
                     }
 
                 } else {
