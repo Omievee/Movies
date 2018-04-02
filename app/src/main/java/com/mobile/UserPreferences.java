@@ -39,7 +39,6 @@ public class UserPreferences {
 
     public static void saveAAID(String id){
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putString(Constants.AAID, id);
         editor.apply();
     }
@@ -58,7 +57,6 @@ public class UserPreferences {
         String aa = String.valueOf(id);
         String xx = ss + aa;
         Log.d(Constants.TAG, "setUserCredentials: " + xx);
-
 
         editor.putInt(Constants.USER_ID, userId);
         editor.putString(Constants.USER_DEVICE_UUID, deviceUUID);

@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/a_lot_margin_standard"
         android:padding="@dimen/margin_half"
-        android:text=""
+        android:text="Heads up!"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -43,8 +43,7 @@
         android:text="Black Panther is temporarily unavailable for some theaters. It will be reactivated on 5/21"
         android:textAlignment="center"
         android:textColor="@color/white_ish"
-        android:textSize="18sp"
-        android:visibility="invisible" />
+        android:textSize="18sp" />
 
 
     <FrameLayout
@@ -52,27 +51,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/alertMessage"
-        android:layout_marginTop="@dimen/a_lot_margin_standard"
-        android:visibility="invisible">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/a_lot_margin_standard">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:padding="@dimen/margin_standard"
-            android:text="Update to the latest version of the app in order to continue"
+            android:text="Read our updated terms of service"
             android:textAlignment="center"
             android:textColor="@color/new_red"
             android:textSize="18sp" />
-
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="25dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/a_lot_margin_standard"
-            android:layout_marginTop="38dp"
-            android:src="@drawable/arrowforward"
-            android:tint="@color/new_red" />
 
 
     </FrameLayout>

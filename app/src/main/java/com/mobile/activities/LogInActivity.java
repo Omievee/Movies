@@ -11,7 +11,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+
 import com.helpshift.support.Log;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -246,7 +248,7 @@ public class LogInActivity extends AppCompatActivity {
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
-                    if(restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")){
+                    if (restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")) {
                         Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
                         UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
@@ -257,7 +259,7 @@ public class LogInActivity extends AppCompatActivity {
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
                             startActivity(i);
                         } else {
-                             Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
                             i.putExtra("launch", true);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(i);
@@ -269,7 +271,7 @@ public class LogInActivity extends AppCompatActivity {
                     try {
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: "+jObjError);
+                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
                     } catch (Exception e) {
 
                     }
@@ -354,20 +356,6 @@ public class LogInActivity extends AppCompatActivity {
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
             checkRestrictions(user);
-            //TODO delete if not needed - Moved to CheckRestrictions()
-//            if (!UserPreferences.getHasUserLoggedInBefore()) {
-//                UserPreferences.hasUserLoggedInBefore(true);
-//                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-//                startActivity(i);
-//            } else {
-//                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-//                i.putExtra("launch", true);
-//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i);
-//            }
-
-
-//            finish();
         }
     }
 

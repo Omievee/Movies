@@ -305,6 +305,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
 
+        tRealm = Realm.getDefaultInstance();
 
         if (tRealm.isEmpty()) {
             getAllTheatersForStorage();

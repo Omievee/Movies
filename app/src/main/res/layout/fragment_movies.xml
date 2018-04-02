@@ -192,7 +192,7 @@
                         android:dividerHeight="0dp"
                         android:layoutAnimation="@anim/layout_animation"
                         android:listSelector="@android:color/transparent"
-                        tools:listitem="@layout/list_item_movie_poster_withbottom" />
+                       />
 
 
                 </LinearLayout>
@@ -212,4 +212,5 @@
 
         </RelativeLayout>
     </ScrollView>
+
 </android.support.v4.widget.SwipeRefreshLayout>
