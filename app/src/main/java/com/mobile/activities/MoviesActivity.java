@@ -117,12 +117,6 @@ public class MoviesActivity extends BaseActivity {
 
         checkRestrictions();
 
-        Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
-        if (UserPreferences.getIsSubscriptionActivationRequired()) {
-            activateMoviePassCardSnackBar();
-        }
-
-
 
     }
 
@@ -136,6 +130,9 @@ public class MoviesActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         updateNavigationBarState();
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            activateMoviePassCardSnackBar();
+        }
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -275,11 +272,11 @@ public class MoviesActivity extends BaseActivity {
     }
 
     public void activateMoviePassCardSnackBar() {
-        parentLayout = findViewById(R.id.COORDPARENT);
+        parentLayout = findViewById(R.id.MAIN_CONTAINER);
         Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-        params.setMargins(0, 0, 0, 180);
-        snack.getView().setLayoutParams(params);
+//        params.setMargins(0, 0, 0, 0);
+//        snack.getView().setLayoutParams(params);
         snack.show();
         View sb = snack.getView();
         snack.getView().setHovered(true);

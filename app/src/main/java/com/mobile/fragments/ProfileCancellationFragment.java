@@ -1,10 +1,12 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +15,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.jaredrummler.materialspinner.MaterialSpinner;
-import com.mobile.activities.ConfirmationActivity;
+import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
+import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -46,6 +54,8 @@ public class ProfileCancellationFragment extends Fragment {
     CancellationResponse cancellationResponse;
     Activity myActivity;
     Context myContext;
+    private UserInfoResponse userInfoResponse;
+    private String billingDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +71,7 @@ public class ProfileCancellationFragment extends Fragment {
         buttonCancel.setEnabled(false);
 
         spinnerCancelReason.setItems("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other");
+        loadUserInfo();
 
         return rootView;
     }
@@ -94,8 +105,7 @@ public class ProfileCancellationFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                cancelFlow();
+               showCancellationConfirmationDialog();
             }
         });
 
@@ -105,6 +115,31 @@ public class ProfileCancellationFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+    }
+
+    public void showCancellationConfirmationDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(spinnerCancelReason.getContext(), R.style.CUSTOM_ALERT);
+        String message;
+        if(billingDate!=null)
+           message  = "You account will remain active until "+billingDate+" (paid through date).";
+        else
+            message = "Are you sure you want to cancel your membership?";
+        builder.setMessage(message)
+                .setTitle("Cancel Membership")
+                .setPositiveButton("Cancel Membership", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        progress.setVisibility(View.VISIBLE);
+                        cancelFlow();
+                    }
+                })
+                .setNegativeButton("Keep", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+        builder.create();
+        builder.show();
     }
 
 
@@ -159,6 +194,27 @@ public class ProfileCancellationFragment extends Fragment {
             public void onFailure(Call<CancellationResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
                 Toast.makeText(myActivity, "Server Error; Try again later", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadUserInfo() {
+        int userId = UserPreferences.getUserId();
+        RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
+            @Override
+            public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
+                userInfoResponse = response.body();
+                if (userInfoResponse != null) {
+                    if (userInfoResponse.getNextBillingDate().equals("")) {
+                    } else {
+                        billingDate = (userInfoResponse.getNextBillingDate());
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<UserInfoResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }

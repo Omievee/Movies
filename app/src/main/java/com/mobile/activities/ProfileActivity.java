@@ -227,8 +227,8 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openCancellationFragment() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
         transaction.replace(R.id.profile_container, cancelSubscription);
