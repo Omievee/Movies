@@ -47,6 +47,7 @@ import com.moviepass.R;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -95,8 +96,10 @@ public class LogInActivity extends AppCompatActivity {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+//                InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+//                if (inputMethodManager != null) {
+//                    inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), 0);
+//                }
                 progress.setVisibility(View.VISIBLE);
                 logIn();
             }
