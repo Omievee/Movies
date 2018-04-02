@@ -278,7 +278,7 @@ public class MoviesActivity extends BaseActivity {
         parentLayout = findViewById(R.id.COORDPARENT);
         Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-        params.setMargins(0, 0, 0, 180);
+        params.setMargins(0, 0, 0, 0);
         snack.getView().setLayoutParams(params);
         snack.show();
         View sb = snack.getView();
