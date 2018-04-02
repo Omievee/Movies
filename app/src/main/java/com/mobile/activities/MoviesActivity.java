@@ -12,7 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+
 import com.helpshift.support.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,7 +125,6 @@ public class MoviesActivity extends BaseActivity {
         }
 
 
-
     }
 
     @Override
@@ -143,9 +144,9 @@ public class MoviesActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
-        if(restrictionsResponseCall!=null && !restrictionsResponseCall.isExecuted())
+        if (restrictionsResponseCall != null && !restrictionsResponseCall.isExecuted())
             restrictionsResponseCall.cancel();
-        if(loadMoviesCall!=null && !loadMoviesCall.isExecuted())
+        if (loadMoviesCall != null && !loadMoviesCall.isExecuted())
             loadMoviesCall.cancel();
     }
 
@@ -175,9 +176,9 @@ public class MoviesActivity extends BaseActivity {
                 alert.show();
             } else {
                 if (itemId == R.id.action_profile) {
-                    if(loadMoviesCall!=null)
+                    if (loadMoviesCall != null)
                         loadMoviesCall.cancel();
-                    if(restrictionsResponseCall!=null)
+                    if (restrictionsResponseCall != null)
                         restrictionsResponseCall.cancel();
                     // item.setIcon(getDrawable(R.drawable.profilenavred));
                     if (UserPreferences.getUserId() == 0) {
@@ -318,7 +319,6 @@ public class MoviesActivity extends BaseActivity {
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
-
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
                         int reservationId = restriction.getPopInfo().getReservationId();
@@ -339,6 +339,21 @@ public class MoviesActivity extends BaseActivity {
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                    }
+                    //Alert data to create Alert Activity on launch...
+                    if (restriction.getAlert() != null) {
+
+                        Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
+
+                        activateAlert.putExtra("title", restriction.getAlert().getTitle());
+                        activateAlert.putExtra("body", restriction.getAlert().getBody());
+                        activateAlert.putExtra("url", restriction.getAlert().getUrl());
+                        activateAlert.putExtra("urlTitle", restriction.getAlert().getUrlTitle());
+                        activateAlert.putExtra("dismissable", restriction.getAlert().isDismissable());
+
+                        startActivity(activateAlert);
+
+
                     }
 
                 } else {
@@ -376,7 +391,6 @@ public class MoviesActivity extends BaseActivity {
             dialog.show(fm, "fr_ticketverification_banner");
         }
     }
-
 
 
     public void loadMovies() {

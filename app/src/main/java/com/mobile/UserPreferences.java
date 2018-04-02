@@ -234,6 +234,4 @@ public class UserPreferences {
         HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
 
-
-
 }

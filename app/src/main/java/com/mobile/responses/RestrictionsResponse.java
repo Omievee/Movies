@@ -1,5 +1,6 @@
 package com.mobile.responses;
 
+import com.mobile.model.Alert;
 import com.mobile.model.PopInfo;
 
 /**
@@ -16,6 +17,7 @@ public class RestrictionsResponse {
     boolean proofOfPurchaseRequired;
     PopInfo popInfo;
     boolean hasActiveCard;
+    Alert alert;
 
 
     public boolean isSubscriptionActivationRequired() {
@@ -58,5 +60,7 @@ public class RestrictionsResponse {
     public boolean getHasActiveCard() {
         return hasActiveCard;
     }
-
+    public Alert getAlert() {
+        return alert;
+    }
 }
