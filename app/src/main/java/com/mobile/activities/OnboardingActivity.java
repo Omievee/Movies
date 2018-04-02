@@ -16,6 +16,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.helpshift.support.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -262,6 +264,11 @@ public class OnboardingActivity extends AppCompatActivity {
                         .build();
 
                 img.setController(controller);
+
+
+                ImagePipeline pipeline = Fresco.getImagePipeline();
+                pipeline.clearMemoryCaches();
+                pipeline.clearDiskCaches();
             }
 
             return rootView;
