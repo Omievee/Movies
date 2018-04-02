@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,6 +122,11 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
             }
         });
+
+
+        ImagePipeline pipeline = Fresco.getImagePipeline();
+        pipeline.clearMemoryCaches();
+        pipeline.clearDiskCaches();
     }
 
     @Override
