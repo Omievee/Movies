@@ -3,7 +3,8 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.util.Log;
+import android.preference.PreferenceManager;
+import com.helpshift.support.Log;
 
 import com.helpshift.util.HelpshiftContext;
 
@@ -104,6 +105,43 @@ public class UserPreferences {
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
 
+    }
+
+    public static void saveFirebaseHelpshiftToken(String refreshedToken){
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.FIREBASE_TOKEN, refreshedToken).apply();
+    }
+
+    public static String getFirebaseHelpshiftToken(){
+        return sPrefs.getString(Constants.FIREBASE_TOKEN,"null");
+    }
+
+    public static void clearEverything(){
+        boolean logIn = getHasUserLoggedInBefore();
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.clear().commit();
+
+        hasUserLoggedInBefore(logIn);
+    }
+
+    public static void setLastCheckInAttempt(String date, String time){
+        SharedPreferences.Editor editor = sPrefs.edit();
+        String dateKey, timeKey;
+        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
+        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
+        editor.putString(dateKey,date);
+        editor.putString(timeKey,time);
+        editor.apply();
+    }
+
+    public static String getLastCheckInAttemptDate(){
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
+        return sPrefs.getString(dateKey,"0");
+    }
+
+    public static String getLastCheckInAttemptTime(){
+        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
+        return sPrefs.getString(timeKey,"0");
     }
 
     public static Location getLocation() {

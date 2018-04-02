@@ -93,7 +93,7 @@
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected" />
+                    android:background="@drawable/indicator_unselected_no_stroke" />
 
                 <ImageView
                     android:id="@+id/intro_indicator_1"
@@ -101,30 +101,21 @@
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_half"
                     android:layout_marginRight="@dimen/margin_standard"
-                    android:background="@drawable/indicator_unselected" />
+                    android:background="@drawable/indicator_unselected_no_stroke" />
 
                 <ImageView
                     android:id="@+id/intro_indicator_2"
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected" />
+                    android:background="@drawable/indicator_unselected_no_stroke" />
 
                 <ImageView
                     android:id="@+id/intro_indicator_3"
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected" />
-
-
-                <ImageView
-                    android:id="@+id/intro_indicator_4"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected" />
-
+                    android:background="@drawable/indicator_unselected_no_stroke" />
 
             </LinearLayout>
 

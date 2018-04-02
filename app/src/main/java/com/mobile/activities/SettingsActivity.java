@@ -3,6 +3,7 @@ package com.mobile.activities;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -103,6 +104,7 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 UserPreferences.clearUserId();
                 UserPreferences.clearFbToken();
+//                UserPreferences.clearEverything();
                 HelpshiftContext.getCoreApi().logout();
                 Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
                 startActivity(intent);

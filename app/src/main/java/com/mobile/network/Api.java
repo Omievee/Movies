@@ -167,7 +167,7 @@ public interface Api {
     Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci,
                                          @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -177,7 +177,7 @@ public interface Api {
                                             @Query("ct") String ct, @Query("ci") String ci,
                                             @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                             @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                             @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -187,7 +187,7 @@ public interface Api {
                                            @Query("ct") String ct, @Query("ci") String ci,
                                            @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                            @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                           @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                           @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                            @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -196,7 +196,7 @@ public interface Api {
                                                  @Query("tr") String tr,
                                                  @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                                  @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                                  @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -206,7 +206,7 @@ public interface Api {
                                              @Query("ct") String ct, @Query("ci") String ci,
                                              @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                              @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                              @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -215,7 +215,7 @@ public interface Api {
                                          @Query("et") String et,
                                          @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 

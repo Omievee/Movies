@@ -23,4 +23,6 @@ public class ProspectUser {
     public static String ccExpMonth;
     public static String ccExpYear;
     public static String ccCVV;
+    public static String lastCheckInAttemptDate;
+    public static String lastCheckInAttemptTime;
 }

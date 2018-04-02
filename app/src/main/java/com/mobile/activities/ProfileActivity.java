@@ -27,6 +27,7 @@ import com.mobile.fragments.HistoryDetailsFragment;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
+import com.mobile.fragments.ProfileCancellationFragment;
 import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
@@ -34,6 +35,7 @@ import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import jp.wasabeef.blurry.Blurry;
+
 
 /**
  * Created by anubis on 7/23/17.
@@ -69,6 +71,12 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
     @Override
     protected void onStart() {
         super.onStart();
+        updateNavigationBarState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateNavigationBarState();
     }
 
@@ -215,5 +223,16 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
         Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
 
+    }
+
+    @Override
+    public void openCancellationFragment() {
+        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
+        transaction.replace(R.id.profile_container, cancelSubscription);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

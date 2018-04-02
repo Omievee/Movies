@@ -32,6 +32,7 @@
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
 
+
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>
 </resources>

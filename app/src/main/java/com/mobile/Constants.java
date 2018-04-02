@@ -75,4 +75,11 @@ public class Constants {
     //Taplytics Notifs
     public static final String CUSTOM_DATA = "custom_keys";
 
+    //Check In Attempt
+    public static final String LAST_CHECK_IN_ATTEMPT_DATE = "lastCheckInAttemptDate";
+    public static final String LAST_CHECK_IN_ATTEMPT_TIME = "lastCheckInAttemptTime";
+
+    //FIREBASE
+    public static final String FIREBASE_TOKEN = "firebase_token";
+
 }

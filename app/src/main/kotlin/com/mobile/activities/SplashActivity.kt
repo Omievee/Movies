@@ -5,7 +5,7 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import com.helpshift.support.Log
 import android.widget.Toast
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -124,7 +124,7 @@ class SplashActivity : AppCompatActivity() {
         private val SPLASH_TIME_OUT = 1000
     }
 
-    private inner class getAAID : AsyncTask<String, String, String>() {
+    private  inner class getAAID : AsyncTask<String, String, String>() {
         override fun onPostExecute(result: String) {
             UserPreferences.saveAAID(result)
         }

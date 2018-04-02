@@ -1,7 +1,7 @@
 package com.mobile.network;
 
 import android.content.Context;
-import android.util.Log;
+import com.helpshift.support.Log;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
