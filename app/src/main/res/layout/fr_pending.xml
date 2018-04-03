@@ -6,8 +6,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:scrollbars="none"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,8 +28,8 @@
                 android:id="@+id/NO_Current_Res"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/a_lot_margin_standard"
                 android:layout_below="@id/HEADER"
+                android:layout_marginTop="@dimen/a_lot_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:text="No current reservation at this time"
                 android:textAlignment="center"
@@ -42,13 +42,13 @@
                 android:id="@+id/PENDING_DATA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_standard"
                 android:layout_below="@id/HEADER"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:background="@color/charcoalGrey"
-                android:paddingTop="@dimen/margin_standard"
+                android:paddingBottom="@dimen/margin_standard"
                 android:paddingEnd="@dimen/margin_standard"
                 android:paddingStart="@dimen/margin_standard"
-                android:paddingBottom="@dimen/margin_standard"
+                android:paddingTop="@dimen/margin_standard"
                 android:visibility="gone">
 
                 <TextView
@@ -124,12 +124,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="@dimen/margin_standard_and_half"
+                    android:layout_marginStart="@dimen/margin_standard_and_half"
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:text="You can now use your MoviePass card to purchase your ticket!"
                     android:textAlignment="center"
                     android:textColor="@color/almost_white"
-                    android:layout_marginStart="@dimen/margin_standard_and_half"
-                    android:layout_marginEnd="@dimen/margin_standard_and_half"
                     android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
 
@@ -137,9 +137,9 @@
                     android:id="@+id/Frame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:layout_below="@id/STandardMSG"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/double_margin_standard">
 
 
                     <ImageView
@@ -156,8 +156,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/Frame"
                     android:layout_centerHorizontal="true"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="@dimen/quadruple_margin_standard"
+                    android:gravity="center_horizontal"
                     android:text="If asked, provide this zip code:" />
 
                 <TextView
@@ -166,16 +166,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ifAsked"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:background="@drawable/confirmation_code_confirm"
-                    android:text="[ Code ]"
-                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingBottom="@dimen/margin_half"
                     android:paddingEnd="@dimen/margin_standard"
-                    android:padding="@dimen/margin_standard"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingTop="@dimen/margin_half"
+                    android:text="[ Code ]"
                     android:textAlignment="center"
                     android:textColor="@color/black_text"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
-                    android:layout_marginTop="@dimen/margin_standard"
                     android:visibility="visible" />
 
 
@@ -185,12 +186,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/PendingZip"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:background="@android:color/transparent"
                     android:padding="@dimen/margin_half"
                     android:text="Cancel/Change Check-In"
                     android:textAllCaps="false"
-                    android:layout_marginBottom="@dimen/double_margin_standard"
-                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
                     android:textColor="@color/new_red"
                     android:textSize="@dimen/text_size_16" />
 
@@ -235,10 +236,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ConfirmCode"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
                     android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:text="Present this code at the theater to get your ticket!"
                     android:textAlignment="center"
-                    android:layout_marginBottom="@dimen/double_margin_standard"
                     android:textSize="@dimen/text_size_16" />
 
 
