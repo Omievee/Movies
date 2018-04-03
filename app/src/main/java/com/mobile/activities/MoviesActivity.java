@@ -67,7 +67,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity {
+public class MoviesActivity extends BaseActivity implements MoviesFragment.cardActivationSnackBar{
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
@@ -85,6 +85,7 @@ public class MoviesActivity extends BaseActivity {
     String url;
     MoviesResponse moviesResponse;
     private Call<MoviesResponse> loadMoviesCall;
+    private Snackbar snack;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class MoviesActivity extends BaseActivity {
 
         checkRestrictions();
 
-
+        Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
     }
 
     @Override
@@ -129,10 +130,8 @@ public class MoviesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        activateMoviePassCardSnackBar();
         updateNavigationBarState();
-        if (UserPreferences.getIsSubscriptionActivationRequired()) {
-            activateMoviePassCardSnackBar();
-        }
     }
 
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
@@ -265,6 +264,7 @@ public class MoviesActivity extends BaseActivity {
             alert.show();
         } else if (getFragmentManager().getBackStackEntryCount() == 1) {
             getFragmentManager().popBackStack();
+            activateMoviePassCardSnackBar();
         }
 
         // do nothing. We want to force user to stay in this activity and not drop out.
@@ -272,21 +272,24 @@ public class MoviesActivity extends BaseActivity {
     }
 
     public void activateMoviePassCardSnackBar() {
-        parentLayout = findViewById(R.id.MAIN_CONTAINER);
-        Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-//        params.setMargins(0, 0, 0, 0);
-//        snack.getView().setLayoutParams(params);
-        snack.show();
-        View sb = snack.getView();
-        snack.getView().setHovered(true);
-        sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-        snack.setActionTextColor(getResources().getColor(R.color.white));
-        snack.setAction("Ok", v -> {
-            Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-            startActivity(activateCard);
-        });
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            parentLayout = findViewById(R.id.COORDPARENT);
+            snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height));
+            snack.getView().setLayoutParams(params);
+            snack.show();
+            View sb = snack.getView();
+            snack.getView().setHovered(true);
+            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+            sb.setElevation(0);
+            snack.setActionTextColor(getResources().getColor(R.color.almost_white));
+            snack.setAction("Ok", v -> {
+                Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+                startActivity(activateCard);
+            });
+        }
     }
 
 
@@ -421,5 +424,20 @@ public class MoviesActivity extends BaseActivity {
         startActivity(movieIntent);
     }
 
+
+    @Override
+    public void hideSnackBar() {
+        if(snack!=null && snack.isShown()){
+            snack.dismiss();
+        }
+    }
+
+    @Override
+    public void showSnackbar() {
+        Log.d("SNACKBAR", "showSnackbar: PAUSE WAS CALLED");
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            activateMoviePassCardSnackBar();
+        }
+    }
 
 }
