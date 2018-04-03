@@ -284,6 +284,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 Toast.makeText(myActivity, "GPS Location Is Required", Toast.LENGTH_SHORT).show();
             }
         }
+
+        config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        moviesRealm = Realm.getInstance(config);
+        TheatersFragment.tRealm = Realm.getDefaultInstance();
+
     }
 
 

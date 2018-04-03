@@ -21,6 +21,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +32,12 @@ import retrofit2.Response;
 
 public class RealmTaskService extends GcmTaskService {
 
+
+    Realm moviesRealm;
+    RealmConfiguration config;
+
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
+    private Realm tRealm;
 
     @Override
     public void onInitializeTasks() {
@@ -51,6 +57,7 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getTheatersBucket();
                     getMoviesBucket();
+                    Toast.makeText(RealmTaskService.this, "Task complete", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -65,9 +72,9 @@ public class RealmTaskService extends GcmTaskService {
                     //specify target service - must extend GcmTaskService
                     .setService(RealmTaskService.class)
                     //repeat every 60 seconds
-                    .setPeriod(43200)
+                    .setPeriod(10)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(7200)
+                    .setFlex(5)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot
@@ -87,13 +94,15 @@ public class RealmTaskService extends GcmTaskService {
 
     void getTheatersBucket() {
 
+        tRealm = Realm.getDefaultInstance();
 
         RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
             public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
                 LocalStorageTheaters locallyStoredTheaters = response.body();
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
-                    TheatersFragment.tRealm.executeTransactionAsync(R -> {
+
+                  tRealm.executeTransactionAsync(R -> {
 
                         for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                             Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
@@ -126,14 +135,22 @@ public class RealmTaskService extends GcmTaskService {
     }
 
     void getMoviesBucket() {
-        MoviesFragment.moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
+        config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        moviesRealm = Realm.getInstance(config);
+
+        moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
         RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
             @Override
             public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
                 LocalStorageMovies localStorageMovies = response.body();
-                if (response.isSuccessful() && localStorageMovies != null) {
+                if (localStorageMovies != null && response.isSuccessful()) {
 
-                    MoviesFragment.moviesRealm.executeTransactionAsync(realm -> {
+                moviesRealm.executeTransactionAsync(realm -> {
                         for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
                             Movie newReleaseMovies = realm.createObject(Movie.class);
                             newReleaseMovies.setType("New Releases");
@@ -212,6 +229,7 @@ public class RealmTaskService extends GcmTaskService {
                             topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
                         }
                     }, () -> {
+
                         Log.d(Constants.TAG, "onSuccess: ");
 
                     }, error -> {

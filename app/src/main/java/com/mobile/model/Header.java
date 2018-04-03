@@ -24,5 +24,5 @@ public class Header {
     public void setNearby(String nearby) {
         this.nearby = nearby;
     }
-    
+
 }

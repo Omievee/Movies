@@ -187,6 +187,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
     }
@@ -602,17 +614,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        myContext = context;
-    }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-    }
 
 
 }
