@@ -86,6 +86,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     android.location.LocationManager LocationManager;
     String Provider;
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
+    cardActivationSnackBar cardActivationSnackbarListener;
 
     public static SwipeRefreshLayout swiper;
     public static Realm moviesRealm;
@@ -210,6 +211,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         /** SEARCH */
         searchicon.setOnClickListener(view -> {
+            cardActivationSnackbarListener.hideSnackBar();
             FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -291,7 +293,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onAttach(Context context) {
         super.onAttach(context);
         myContext = context;
+        if(context instanceof cardActivationSnackBar){
+            cardActivationSnackbarListener = (cardActivationSnackBar) context;
+        }
 
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        myContext = null;
+        cardActivationSnackbarListener = null;
     }
 
     @Override
@@ -503,10 +515,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     }
 
-
-    public interface OnFragmentInteractionListener {
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -576,6 +584,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
 
+
     @Override
     public void onLocationChanged(Location location) {
 
@@ -596,7 +605,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     }
 
-
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
@@ -616,6 +624,13 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
     }
+
+    public interface cardActivationSnackBar{
+         void hideSnackBar();
+         void showSnackbar();
+    }
+
+
 
 
 }
