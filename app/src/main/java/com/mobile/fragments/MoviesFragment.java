@@ -250,14 +250,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         moviesRealm = Realm.getInstance(config);
         TheatersFragment.tRealm = Realm.getDefaultInstance();
 
-//        swiper.setOnRefreshListener(() -> {
-//
-//            myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//            moviesRealm.executeTransaction(realm -> {
-//                realm.deleteAll();
-//            });
-//            getMoviesForStorage();
-//        });
+        swiper.setOnRefreshListener(() -> {
+
+            myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            moviesRealm.executeTransaction(realm -> {
+                realm.deleteAll();
+            });
+            getMoviesForStorage();
+        });
 
 
 
