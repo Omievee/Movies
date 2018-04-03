@@ -28,13 +28,15 @@
         android:layout_marginBottom="@dimen/margin_half"
         android:layout_marginTop="@dimen/double_margin_standard"
         app:mt_borderlessRippleEnabled="true"
-        app:mt_hint="Search a movie"
+        app:mt_hint="search a movie"
         app:mt_hintColor="@color/almost_white"
         app:mt_clearIconTint="@color/white"
         android:animateLayoutChanges="true"
         app:mt_backIconDrawable="@android:color/transparent"
         app:mt_searchBarColor="@color/test_black"
+        app:mt_middleTextSelectorTint="@color/white"
         app:mt_searchIconTint="@color/white"
+
         app:mt_textColor="@color/white" />
 
 
