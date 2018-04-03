@@ -61,6 +61,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -84,7 +85,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     boolean qualifiersApproved;
     Button buttonCheckIn;
     Screening screening = new Screening();
-    ArrayList<Screening> moviesAtSelectedTheater;
+    LinkedList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
     View progress;
     Activity myActivity;
@@ -110,7 +111,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
         //Object & Lists
         theaterObject = Parcels.unwrap(myActivity.getIntent().getParcelableExtra(THEATER));
-        moviesAtSelectedTheater = new ArrayList<>();
+        moviesAtSelectedTheater = new LinkedList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
 
@@ -154,7 +155,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), showtimesAtSelectedTheater, moviesAtSelectedTheater, this);
+        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), moviesAtSelectedTheater, this);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setLayoutAnimation(animation);
@@ -278,6 +279,16 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         theaterSelectedRecyclerView.getRecycledViewPool().clear();
                         theaterMoviesAdapter.notifyDataSetChanged();
                     }
+
+//                    for (int i = 0; i < moviesAtSelectedTheater.size() ; i++) {
+//                        Screening notApproved = moviesAtSelectedTheater.get(i);
+//                        if(!notApproved.isApproved()) {
+//                            moviesAtSelectedTheater.remove(notApproved);
+//                            moviesAtSelectedTheater.addLast(notApproved);
+//                            theaterMoviesAdapter.notifyDataSetChanged();
+//                        }
+//
+//                    }
 
                     if (moviesAtSelectedTheater.size() == 0) {
                         noTheaters.setVisibility(View.VISIBLE);

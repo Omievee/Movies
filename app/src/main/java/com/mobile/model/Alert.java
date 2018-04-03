@@ -24,11 +24,11 @@ public class Alert {
         return url;
     }
 
-    public boolean isDismissable() {
-        return dismissable;
+    public boolean isDismissible() {
+        return dismissible;
     }
 
-    boolean dismissable;
+    boolean dismissible;
 
     public Alert() {
     }

@@ -1,6 +1,7 @@
 package com.mobile.network;
 
 import android.content.Context;
+
 import com.helpshift.support.Log;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -43,6 +44,7 @@ public class RestClient {
     static String baseURL = String.valueOf(getEndPoint());
     static String registrationURL = "https://registration.moviepass.com/";
     static String staticRegistrationURL = "https://registration-stg.herokuapp.com";
+    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
 
     private static Api sAuthenticatedAPI;
     private static Api sAuthenticatedAPIGoWatchIt;
@@ -50,12 +52,19 @@ public class RestClient {
     private static Api sAuthenticatedRegistrationAPI;
     private static Api sAuthenticatedStagingRegistrationAPI;
 
+    public static Api getsAuthenticatedMicroServiceAPI() {
+        return sAuthenticatedMicroServiceAPI;
+    }
+
+    private static Api sAuthenticatedMicroServiceAPI;
+
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sAuthenticatedInstanceGoWatchIt;
     private static Retrofit sUnauthenticatedInstance;
     private static Retrofit localStorageInstance;
     private static Retrofit sAuthenticatedRegistrationInstance;
     private static Retrofit sAuthenticatedStagingRegistrationInstance;
+    private static Retrofit sAuthenticatedMicroServiceInstance;
 
     private static Api localStorageAPI;
 
@@ -391,5 +400,58 @@ public class RestClient {
                 .client(httpClient.build())
                 .build();
         sAuthenticatedRegistrationAPI = sAuthenticatedRegistrationInstance.create(Api.class);
+    }
+
+
+    public static void setupMicroService(Context context) {
+
+        sAuthenticatedMicroServiceAPI = null;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+
+        if (Constants.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
+        httpClient.addInterceptor(logging);
+
+        CookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+
+        httpClient.cookieJar(cookieJar);
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
+                // Request customization: add request headers
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("user_id", "" + UserPreferences.getUserId())
+                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("auth_token", UserPreferences.getAuthToken())
+                        .addHeader("Content-type", "application/json")
+                        .addHeader("Accept", "application/json")
+                        .addHeader("User-Agent", "20180301");
+                Request request = requestBuilder.build();
+
+                return chain.proceed(request);
+            }
+        });
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        sAuthenticatedMicroServiceInstance = new Retrofit.Builder()
+                .baseUrl(microServiceURL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(httpClient.build())
+                .build();
+        sAuthenticatedMicroServiceAPI = sAuthenticatedMicroServiceInstance.create(Api.class);
     }
 }

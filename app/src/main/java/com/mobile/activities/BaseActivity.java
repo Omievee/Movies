@@ -96,7 +96,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
 
-        checkRestrictions();
+      //  checkRestrictions();
     }
 
 
@@ -108,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-        checkRestrictions();
+    //    checkRestrictions();
         if (!isOnline()) {
             NoInternetFragment fragobj = new NoInternetFragment();
             FragmentManager fm = getSupportFragmentManager();

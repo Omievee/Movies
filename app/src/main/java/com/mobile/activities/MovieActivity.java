@@ -64,6 +64,8 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import butterknife.BindView;
@@ -104,8 +106,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     ImageView arrow;
     TextView selectedMovieTitle;
 
-    ArrayList<Screening> selectedScreeningsList;
-    ArrayList<Theater> theatersList;
+    LinkedList<Screening> selectedScreeningsList;
+    LinkedList<Theater> theatersList;
     LinkedList<Screening> sortedScreeningList;
 
     ArrayList<String> selectedShowtimesList;
@@ -193,8 +195,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedRuntime.setText(translatedRunTime);
         }
 
-        selectedScreeningsList = new ArrayList<>();
-        theatersList = new ArrayList<>();
+        selectedScreeningsList = new LinkedList<>();
+        theatersList = new LinkedList<>();
         sortedScreeningList = new LinkedList<>();
 
 
@@ -412,7 +414,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         Log.d(TAG, "MADE IT-------<<<<<: ");
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId)
                 .enqueue(new retrofit2.Callback<ScreeningsResponse>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
+
                     @Override
                     public void onResponse(Call<ScreeningsResponse> call, final Response<ScreeningsResponse> response) {
                         if (response != null && response.isSuccessful()) {
@@ -444,6 +446,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 }
                             }
 
+                            for (int i = 0; i <sortedScreeningList.size() ; i++) {
+                                Screening notApproved = sortedScreeningList.get(i);
+                                if(!notApproved.isApproved()) {
+                                    sortedScreeningList.remove(notApproved);
+                                    sortedScreeningList.addLast(notApproved);
+                                    movieTheatersAdapter.notifyDataSetChanged();
+                                }
+
+                            }
+
                             if (sortedScreeningList.size() == 0) {
                                 selectedTheatersRecyclerView.setVisibility(View.GONE);
                                 noTheaters.setVisibility(View.VISIBLE);
@@ -454,6 +466,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 selectedTheatersRecyclerView.getRecycledViewPool().clear();
                                 movieTheatersAdapter.notifyDataSetChanged();
                             }
+
+
+
                             selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                             ProgressBar.setVisibility(View.GONE);
 

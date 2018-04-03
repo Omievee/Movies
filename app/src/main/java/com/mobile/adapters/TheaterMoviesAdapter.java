@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,7 +54,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     View root;
     public static final String TAG = "found";
     ShowtimeClickListener showtimeClickListener;
-    private ArrayList<Screening> screeningsArrayList;
+    private LinkedList<Screening> screeningsArrayList;
     ArrayList<String> showtimesArrayList;
     List<String> startTimes;
     private final int TYPE_ITEM = 0;
@@ -63,10 +64,10 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     String selectedShowTime;
     ViewHolder HOLDER;
 
-    public TheaterMoviesAdapter(Context context, ArrayList<String> showtimesArrayList, ArrayList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
+    public TheaterMoviesAdapter(Context context,  LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
         this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
-        this.showtimesArrayList = showtimesArrayList;
+
         this.context = context;
     }
 
