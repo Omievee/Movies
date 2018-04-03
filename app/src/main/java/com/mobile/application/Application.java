@@ -49,6 +49,9 @@ public class Application extends MultiDexApplication {
         mApplication = this;
     }
 
+
+
+    //giguyigfyug
     @Override
     public void onCreate() {
         super.onCreate();

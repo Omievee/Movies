@@ -76,10 +76,7 @@ public class TheaterActivity extends BaseActivity {
             theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
             theaterSelectedName.setText(theater.getName());
         }
-
-
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-
     }
 
     @Override
