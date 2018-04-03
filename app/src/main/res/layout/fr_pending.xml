@@ -130,33 +130,23 @@
                     android:textColor="@color/almost_white"
                     android:layout_marginStart="@dimen/margin_standard_and_half"
                     android:layout_marginEnd="@dimen/margin_standard_and_half"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
 
                 <FrameLayout
                     android:id="@+id/Frame"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:layout_below="@id/STandardMSG"
                     android:layout_centerHorizontal="true">
 
 
                     <ImageView
                         android:id="@+id/PendingRes_IMage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/quadruple_margin_standard"
-                        android:layout_marginEnd="@dimen/quadruple_margin_standard"
+                        android:layout_width="234dp"
+                        android:layout_height="155dp"
                         android:src="@drawable/mpmastercard2" />
-
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:layout_marginEnd="@dimen/doubledouble_margin_standard"
-                        android:elevation="2dp"
-                        android:src="@drawable/loadedsuccession" />
 
                 </FrameLayout>
 
@@ -167,6 +157,7 @@
                     android:layout_below="@id/Frame"
                     android:layout_centerHorizontal="true"
                     android:gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:text="If asked, provide this zip code:" />
 
                 <TextView
@@ -175,13 +166,16 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ifAsked"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_half"
                     android:background="@drawable/confirmation_code_confirm"
                     android:text="[ Code ]"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingEnd="@dimen/margin_standard"
+                    android:padding="@dimen/margin_standard"
                     android:textAlignment="center"
                     android:textColor="@color/black_text"
                     android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:visibility="visible" />
 
 
@@ -191,14 +185,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/PendingZip"
                     android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/margin_half"
                     android:background="@android:color/transparent"
                     android:padding="@dimen/margin_half"
                     android:text="Cancel/Change Check-In"
                     android:textAllCaps="false"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
+                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
                     android:textColor="@color/new_red"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_16" />
 
 
             </RelativeLayout>
