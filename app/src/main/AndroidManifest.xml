@@ -262,7 +262,7 @@
             android:name="com.mobile.activities.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize|stateAlwaysVisible"/>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="com.mobile.activities.TheaterActivity"
             android:parentActivityName="com.mobile.activities.TheatersActivity"

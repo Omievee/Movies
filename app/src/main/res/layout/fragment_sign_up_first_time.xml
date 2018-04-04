@@ -1,35 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/dark"
-    android:fillViewport="true">
+    android:layout_height="match_parent"
+    android:background="@color/dark">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:text="@string/Create_account"
-            android:textColor="@color/almost_white"
-            android:textSize="@dimen/text_size_16" />
+            android:layout_marginTop="@dimen/margin_standard_and_half"
+            android:gravity="center_horizontal"
+            android:src="@drawable/logo"
+            android:tint="@color/new_red" />
 
-        <ScrollView
+        <!-- divider -->
+
+        <RelativeLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_half"
+                android:layout_marginTop="28dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25">
+
+                    <RelativeLayout
+                        android:id="@+id/relative01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:id="@id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignStart="@id/intro_indicator_0"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="5dp"
+                            android:background="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/indicator_selected" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_0_check"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/check_mark"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/relative01"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_half"
+                        android:text="Account"
+                        android:textAlignment="center"
+                        android:textColor="@color/almost_white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25">
+
+                    <RelativeLayout
+                        android:id="@+id/relative02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:id="@id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/indicator_unselected" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_1_check"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/check_mark"
+                            android:visibility="gone" />
+
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/shipping"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/relative02"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_half"
+                        android:text="Shipping"
+                        android:textAlignment="center"
+                        android:textColor="@color/almost_white"
+                        android:textSize="12sp" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25">
+
+                    <RelativeLayout
+                        android:id="@+id/relative03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:id="@id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_centerVertical="true"
+                            android:background="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/indicator_unselected" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_2_check"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/check_mark"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/payment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/relative03"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_half"
+                        android:text="Payment"
+                        android:textAlignment="center"
+                        android:textColor="@color/almost_white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25">
+
+
+                    <RelativeLayout
+                        android:id="@+id/relative04"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:id="@id/line"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_alignEnd="@id/intro_indicator_3"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="5dp"
+                            android:background="@android:color/white" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/indicator_unselected" />
+
+                        <ImageView
+                            android:id="@+id/intro_indicator_3_check"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/check_mark"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/confirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/relative04"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/margin_half"
+                        android:text="Confirm"
+                        android:textAlignment="center"
+                        android:textColor="@color/almost_white"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/dots"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"></RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:text="@string/Create_account"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_16" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,18 +288,19 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/emailTextInputLayout"
+                    app:counterTextAppearance="@style/normal_text_in_layout_Style"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
                     android:nextFocusDown="@id/email2TextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    app:counterTextAppearance="@style/normal_text_in_layout_Style"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                    android:theme="@style/EditTextStyle">
 
                     <EditText
                         android:id="@+id/SIGNUP_EMAIL"
+                        app:backgroundTint="@color/white_40_opacity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_standard"
@@ -63,24 +313,24 @@
                         android:textColorHighlight="@color/red"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="@dimen/text_size_14"
-                        app:backgroundTint="@color/white_40_opacity" />
+                        android:textSize="@dimen/text_size_14" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/email2TextInputLayout"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
                     android:nextFocusDown="@id/passwordTextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                    android:theme="@style/EditTextStyle">
 
                     <EditText
                         android:id="@+id/SIGNUP_EMAIL_confirm"
+                        app:backgroundTint="@color/white_40_opacity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_standard"
@@ -93,26 +343,26 @@
                         android:textColorHighlight="@color/white_80_opacity"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="@dimen/text_size_14"
-                        app:backgroundTint="@color/white_40_opacity" />
+                        android:textSize="@dimen/text_size_14" />
 
                 </android.support.design.widget.TextInputLayout>
 
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/passwordTextInputLayout"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/almost_white"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
                     android:textColorHint="@color/white_80_opacity"
-                    android:theme="@style/EditTextStyle"
-                    app:errorTextAppearance="@style/error_appearance"
-                    app:hintTextAppearance="@style/text_in_layout_hint_Style"
-                    app:passwordToggleEnabled="true"
-                    app:passwordToggleTint="@color/almost_white">
+                    android:theme="@style/EditTextStyle">
 
                     <EditText
                         android:id="@+id/SIGNUP_PASSSWORD"
+                        app:backgroundTint="@color/white_40_opacity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_standard"
@@ -126,8 +376,7 @@
                         android:textColorHighlight="@color/white_80_opacity"
                         android:textColorLink="@android:color/transparent"
                         android:textCursorDrawable="@color/white"
-                        android:textSize="@dimen/text_size_14"
-                        app:backgroundTint="@color/white_40_opacity" />
+                        android:textSize="@dimen/text_size_14" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -139,18 +388,22 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/genderTextInputLayout"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_weight="0.4"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                        android:theme="@style/EditTextStyle">
 
                         <com.mobile.extensions.CustomAutoCompleteDropDown
                             android:id="@+id/SPINNER"
+                            app:ms_arrow_tint="@color/dark"
+                            app:ms_background_color="@color/dark"
+                            app:ms_hint_color="@color/almost_white"
+                            app:ms_text_color="@color/white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -159,16 +412,14 @@
                             android:backgroundTint="@color/white_40_opacity"
                             android:hint="Gender"
                             android:textColor="@color/almost_white"
-                            android:textSize="@dimen/text_size_14"
-                            app:ms_arrow_tint="@color/dark"
-                            app:ms_background_color="@color/dark"
-                            app:ms_hint_color="@color/almost_white"
-                            app:ms_text_color="@color/white" />
+                            android:textSize="@dimen/text_size_14" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/birthdayTextInputLayout"
+                        app:errorTextAppearance="@style/error_appearance"
+                        app:hintTextAppearance="@style/text_in_layout_hint_Style"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -176,9 +427,7 @@
                         android:layout_weight="0.6"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                        android:theme="@style/EditTextStyle">
 
                         <EditText
                             android:id="@+id/DOB"
@@ -215,17 +464,22 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-        </ScrollView>
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
+</ScrollView>
 
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-</RelativeLayout>
+
+
+
 
 
