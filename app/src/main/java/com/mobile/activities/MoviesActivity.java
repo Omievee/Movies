@@ -401,9 +401,7 @@ public class MoviesActivity extends BaseActivity {
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
                     }
                     //Alert data to create Alert Activity on launch...
-                    if (restrict.getAlert() != null & !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
-
-
+                    if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
                         Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
 
