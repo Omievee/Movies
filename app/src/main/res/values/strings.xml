@@ -37,6 +37,7 @@
     <!-- Internet Connection -->
     <string name="activity_no_internet_error_message">We can\'t reach the network. Please check your internet connection.</string>
     <string name="activity_no_internet_button">Retry</string>
+    <string name="activity_no_internet_toast_message">The internet connection appears to be offline</string>
 
 
     <!-- MainActivity -->
