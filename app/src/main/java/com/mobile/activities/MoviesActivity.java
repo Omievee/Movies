@@ -420,10 +420,9 @@ public class MoviesActivity extends BaseActivity {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         //IF API ERROR LOG OUT TO LOG BACK IN
-                        /*
                         if (jObjError.getString("message").matches("INVALID API REQUEST")) {
 
-                        */
+                        }
 
                     } catch (Exception e) {
 
