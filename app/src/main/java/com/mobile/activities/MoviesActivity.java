@@ -271,91 +271,91 @@ public class MoviesActivity extends BaseActivity {
     }
 
 
-    public void checkRestrictions() {
-        restrictionsResponseCall = RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset);
-        restrictionsResponseCall.enqueue(new Callback<RestrictionsResponse>() {
-            @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    restriction = response.body();
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+//    public void checkRestrictions() {
+//        restrictionsResponseCall = RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset);
+//        restrictionsResponseCall.enqueue(new Callback<RestrictionsResponse>() {
+//            @Override
+//            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+//                if (response.body() != null && response.isSuccessful()) {
+//                    restriction = response.body();
+//                    String status = restriction.getSubscriptionStatus();
+//                    boolean fbPresent = restriction.getFacebookPresent();
+//                    boolean threeDEnabled = restriction.get3dEnabled();
+//                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+//                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
+//                    boolean hasActiveCard = restriction.getHasActiveCard();
+//                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+//
+//                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
+//                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+//                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+//                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+//                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
+//                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
+//                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+//
+//                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
+//                    }
+//                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
+//                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
+//                        int reservationId = restriction.getPopInfo().getReservationId();
+//                        String movieTitle = restriction.getPopInfo().getMovieTitle();
+//                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
+//                        String theaterName = restriction.getPopInfo().getTheaterName();
+//                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
+//                        String showtime = restriction.getPopInfo().getShowtime();
+//
+//                        bundle = new Bundle();
+//                        bundle.putInt("reservationId", reservationId);
+//                        bundle.putString("mSelectedMovieTitle", movieTitle);
+//                        bundle.putString("tribuneMovieId", tribuneMovieId);
+//                        bundle.putString("mTheaterSelected", theaterName);
+//                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+//                        bundle.putString("showtime", showtime);
+//
+//                        TicketVerificationDialog dialog = new TicketVerificationDialog();
+//                        FragmentManager fm = getSupportFragmentManager();
+//                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+//                    }
+//                    //Alert data to create Alert Activity on launch...
+//                    if (restriction.getAlert() != null) {
+//
+//                        Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
+//
+//                        activateAlert.putExtra("title", restriction.getAlert().getTitle());
+//                        activateAlert.putExtra("body", restriction.getAlert().getBody());
+//                        activateAlert.putExtra("url", restriction.getAlert().getUrl());
+//                        activateAlert.putExtra("urlTitle", restriction.getAlert().getUrlTitle());
+//                        activateAlert.putExtra("dismissable", restriction.getAlert().isDismissible());
+//
+//                        startActivity(activateAlert);
+//                    }
+//
+//                } else {
+//                    try {
+//                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+//
+//                        //IF API ERROR LOG OUT TO LOG BACK IN
+//                        /*
+//                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
+//
+//                        */
+//
+//                    } catch (Exception e) {
+//
+//                    }
+//                }
+//            }
+//
+//            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 
-                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+    public void newRestrictions() {
 
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-                    }
-                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
-                        int reservationId = restriction.getPopInfo().getReservationId();
-                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-                        String theaterName = restriction.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-                        String showtime = restriction.getPopInfo().getShowtime();
-
-                        bundle = new Bundle();
-                        bundle.putInt("reservationId", reservationId);
-                        bundle.putString("mSelectedMovieTitle", movieTitle);
-                        bundle.putString("tribuneMovieId", tribuneMovieId);
-                        bundle.putString("mTheaterSelected", theaterName);
-                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-                        bundle.putString("showtime", showtime);
-
-                        TicketVerificationDialog dialog = new TicketVerificationDialog();
-                        FragmentManager fm = getSupportFragmentManager();
-                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
-                    }
-                    //Alert data to create Alert Activity on launch...
-                    if (restriction.getAlert() != null) {
-
-                        Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
-
-                        activateAlert.putExtra("title", restriction.getAlert().getTitle());
-                        activateAlert.putExtra("body", restriction.getAlert().getBody());
-                        activateAlert.putExtra("url", restriction.getAlert().getUrl());
-                        activateAlert.putExtra("urlTitle", restriction.getAlert().getUrlTitle());
-                        activateAlert.putExtra("dismissable", restriction.getAlert().isDismissible());
-
-                        startActivity(activateAlert);
-                    }
-
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                        //IF API ERROR LOG OUT TO LOG BACK IN
-                        /*
-                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
-
-                        */
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    void newRestrictions() {
-
-        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId()+offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
+        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
             public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
                 MicroServiceRestrictionsResponse restrict = response.body();
@@ -400,10 +400,13 @@ public class MoviesActivity extends BaseActivity {
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
                     }
                     //Alert data to create Alert Activity on launch...
-                    if (restrict.getAlert() != null) {
+                    if (restrict.getAlert() != null & !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
+
+
 
                         Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
 
+                        activateAlert.putExtra("id", restrict.getAlert().getId());
                         activateAlert.putExtra("title", restrict.getAlert().getTitle());
                         activateAlert.putExtra("body", restrict.getAlert().getBody());
                         activateAlert.putExtra("url", restrict.getAlert().getUrl());

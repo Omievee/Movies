@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
+
 import com.helpshift.support.Log;
 
 import com.helpshift.util.HelpshiftContext;
@@ -37,13 +38,13 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static void saveAAID(String id){
+    public static void saveAAID(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.AAID, id);
         editor.apply();
     }
 
-    public static String getAAID(){
+    public static String getAAID() {
         return sPrefs.getString(Constants.AAID, "IDFA");
     }
 
@@ -105,16 +106,16 @@ public class UserPreferences {
 
     }
 
-    public static void saveFirebaseHelpshiftToken(String refreshedToken){
+    public static void saveFirebaseHelpshiftToken(String refreshedToken) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.FIREBASE_TOKEN, refreshedToken).apply();
     }
 
-    public static String getFirebaseHelpshiftToken(){
-        return sPrefs.getString(Constants.FIREBASE_TOKEN,"null");
+    public static String getFirebaseHelpshiftToken() {
+        return sPrefs.getString(Constants.FIREBASE_TOKEN, "null");
     }
 
-    public static void clearEverything(){
+    public static void clearEverything() {
         boolean logIn = getHasUserLoggedInBefore();
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.clear().commit();
@@ -122,19 +123,19 @@ public class UserPreferences {
         hasUserLoggedInBefore(logIn);
     }
 
-    public static void setLastCheckInAttempt(String date, String time){
+    public static void setLastCheckInAttempt(String date, String time) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_DATE,date);
-        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_TIME,time);
+        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_DATE, date);
+        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_TIME, time);
         editor.apply();
     }
 
-    public static String getLastCheckInAttemptDate(){
-        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_DATE,"0");
+    public static String getLastCheckInAttemptDate() {
+        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_DATE, "0");
     }
 
-    public static String getLastCheckInAttemptTime(){
-        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_TIME,"0");
+    public static String getLastCheckInAttemptTime() {
+        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_TIME, "0");
     }
 
     public static Location getLocation() {
@@ -185,6 +186,18 @@ public class UserPreferences {
         editor.apply();
     }
 
+    public static void setAlertDisplayedId(String alertID) {
+
+        SharedPreferences.Editor edit = sPrefs.edit();
+        edit.putString(Constants.ALERT_ID, alertID);
+        edit.apply();
+
+    }
+
+    public static String getAlertDisplayedId() {
+        return sPrefs.getString(Constants.ALERT_ID, "id");
+    }
+
     public static String getRestrictionSubscriptionStatus() {
         return sPrefs.getString(Constants.SUBSCRIPTION_STATUS, "status");
     }
@@ -200,6 +213,7 @@ public class UserPreferences {
     public static boolean getRestrictionAllFormatsEnabled() {
         return sPrefs.getBoolean(Constants.ALL_FORMATS_ENABLED, true);
     }
+
     public static boolean getRestrictionVerificationRequired() {
         return sPrefs.getBoolean(Constants.VERIFICATION_REQUIRED, true);
     }
