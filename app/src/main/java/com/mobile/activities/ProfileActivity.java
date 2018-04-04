@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Interfaces.ProfileActivityInterface;
@@ -151,21 +152,25 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountInformationFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.profile_container, profileFragment);
-        transaction.commit();
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.profile_container, profileFragment);
+            transaction.commit();
     }
 
     @Override
     public void openProfileAccountShippingInformation() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-        ProfileAccountShippingInformation shippingFragment = new ProfileAccountShippingInformation();
-        transaction.replace(R.id.profile_container, shippingFragment);
-        transaction.addToBackStack("");
-        transaction.commit();
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
+        } else {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            ProfileAccountShippingInformation shippingFragment = new ProfileAccountShippingInformation();
+            transaction.replace(R.id.profile_container, shippingFragment);
+            transaction.addToBackStack("");
+            transaction.commit();
+        }
     }
 
     @Override
@@ -175,24 +180,32 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountPlanAndInfo() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-        ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
-        transaction.replace(R.id.profile_container, billingFragment);
-        transaction.addToBackStack("");
-        transaction.commit();
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
+        } else {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
+            transaction.replace(R.id.profile_container, billingFragment);
+            transaction.addToBackStack("");
+            transaction.commit();
+        }
     }
 
     @Override
     public void openProfileAccountInformation() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-        ProfileAccountInformation accountInformation = new ProfileAccountInformation();
-        transaction.replace(R.id.profile_container, accountInformation);
-        transaction.addToBackStack("");
-        transaction.commit();
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
+        } else {
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            ProfileAccountInformation accountInformation = new ProfileAccountInformation();
+            transaction.replace(R.id.profile_container, accountInformation);
+            transaction.addToBackStack("");
+            transaction.commit();
+        }
     }
 
     @Override
@@ -227,12 +240,16 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openCancellationFragment() {
-        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-        ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
-        transaction.replace(R.id.profile_container, cancelSubscription);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
+        } else {
+            android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+            ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
+            transaction.replace(R.id.profile_container, cancelSubscription);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 }
