@@ -95,7 +95,7 @@ public class MoviesActivity extends BaseActivity {
 
 
 //        checkRestrictions();
-        newRestrictions();
+       // newRestrictions();
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
@@ -113,7 +113,7 @@ public class MoviesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        newRestrictions();
+       newRestrictions();
         updateNavigationBarState();
     }
 
