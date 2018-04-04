@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/dark">
-
+    android:layout_height="wrap_content"
+    android:background="@color/dark"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
+                    android:nextFocusDown="@id/email2TextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
                     app:counterTextAppearance="@style/normal_text_in_layout_Style"
@@ -72,6 +73,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
+                    android:nextFocusDown="@id/passwordTextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
                     app:errorTextAppearance="@style/error_appearance"
@@ -117,6 +119,7 @@
                         android:animateLayoutChanges="true"
                         android:backgroundTint="@color/white_40_opacity"
                         android:hint="@string/activity_sign_up_step_one_password"
+                        android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:textAppearance="@style/normal_text_in_layout_Style"
                         android:textColor="@color/white"
@@ -131,15 +134,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/margin_standard">
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/genderTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.4"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_weight="0.4"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
@@ -167,10 +170,10 @@
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/birthdayTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.6"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/genderTextInputLayout"
+                        android:layout_weight="0.6"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
@@ -224,4 +227,5 @@
         android:layout_height="match_parent" />
 
 </RelativeLayout>
+
 
