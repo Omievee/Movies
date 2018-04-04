@@ -358,14 +358,14 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
                 ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
-                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
-            if(position!=i){
-                    marginParams.setMargins(margin, margin, margin, margin);
-            }
-            else {
-                if((i==0 && !firstCompleted) || (i==1 && !secondCompleted) || (i==2 && !thirdCompleted) || i==3)
-                    marginParams.setMargins(0, 0, 0, 0);
-            }
+//                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
+//            if(position!=i){
+//                    marginParams.setMargins(margin, margin, margin, margin);
+//            }
+//            else {
+//                if((i==0 && !firstCompleted) || (i==1 && !secondCompleted) || (i==2 && !thirdCompleted) || i==3)
+//                    marginParams.setMargins(0, 0, 0, 0);
+//            }
         }
         if(firstCompleted){
             indicators[0].setBackgroundResource(R.drawable.sign_up_indicator_completed);
