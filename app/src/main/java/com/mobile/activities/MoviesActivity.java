@@ -113,6 +113,7 @@ public class MoviesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        newRestrictions();
         updateNavigationBarState();
     }
 
