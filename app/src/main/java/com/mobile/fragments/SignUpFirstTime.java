@@ -289,11 +289,11 @@ public class SignUpFirstTime extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.myContext=context;
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
+//        if (context instanceof onAlertClickListener) {
+//            mListener = (onAlertClickListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement onAlertClickListener");
 //        }
     }
 

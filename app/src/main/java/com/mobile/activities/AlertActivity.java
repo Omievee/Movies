@@ -34,55 +34,47 @@ public class AlertActivity extends AppCompatActivity {
         setContentView(R.layout.ac_alert);
 
 
-        alertHeaderString = getIntent().getStringExtra("title");
-        alertMessageString = getIntent().getStringExtra("body");
-        alertURLTitle = getIntent().getStringExtra("urlTitle");
-        alertURLlink = getIntent().getStringExtra("url");
-        dismissable = getIntent().getBooleanExtra("dismissible", true);
-        alertId = getIntent().getStringExtra("id");
-
-
-        linkText = findViewById(R.id.LinkText);
-        alertTitle = findViewById(R.id.alertTitle);
-        alertBody = findViewById(R.id.alertMessage);
-        close = findViewById(R.id.dismissAlert);
-        alertClickMessage = findViewById(R.id.alertClickMessage);
-
-
-        Log.d(Constants.TAG, "ALERT ID!!!!!--------------->: " + alertId);
-
-
-        alertTitle.setText(alertHeaderString);
-        alertBody.setText(alertMessageString);
-
-
-        if (dismissable) {
-            close.setOnClickListener(v -> finish());
-            UserPreferences.setAlertDisplayedId(alertId);
-        } else {
-            close.setVisibility(View.INVISIBLE);
-        }
-
-
-        if (alertURLTitle == null || alertURLlink == null) {
-            alertClickMessage.setVisibility(View.INVISIBLE);
-        } else {
-            linkText.setText(alertURLTitle);
-            alertClickMessage.setOnClickListener(v -> {
-                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(alertURLlink));
-                startActivity(alertIntentClick);
-            });
-        }
-
-//        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+//        alertHeaderString = getIntent().getStringExtra("title");
+//        alertMessageString = getIntent().getStringExtra("body");
+//        alertURLTitle = getIntent().getStringExtra("urlTitle");
+//        alertURLlink = getIntent().getStringExtra("url");
+//        dismissable = getIntent().getBooleanExtra("dismissible", true);
+//        alertId = getIntent().getStringExtra("id");
 //
-//        Handler h = new Handler();
-//        h.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Blurry.with(getApplicationContext()).radius(35).sampling(5).onto(viewGroup);
-//            }
-//        },500);
+//
+//        linkText = findViewById(R.id.LinkText);
+//        alertTitle = findViewById(R.id.alertTitle);
+//        alertBody = findViewById(R.id.alertMessage);
+//        close = findViewById(R.id.dismissAlert);
+//        alertClickMessage = findViewById(R.id.alertClickMessage);
+//
+//
+//        Log.d(Constants.TAG, "ALERT ID!!!!!--------------->: " + alertId);
+//
+//
+//        alertTitle.setText(alertHeaderString);
+//        alertBody.setText(alertMessageString);
+//
+//
+//        if (dismissable) {
+//            close.setOnClickListener(v -> finish());
+//            UserPreferences.setAlertDisplayedId(alertId);
+//        } else {
+//            close.setVisibility(View.INVISIBLE);
+//        }
+//
+//
+//        if (alertURLTitle == null || alertURLlink == null) {
+//            alertClickMessage.setVisibility(View.INVISIBLE);
+//        } else {
+//            linkText.setText(alertURLTitle);
+//            alertClickMessage.setOnClickListener(v -> {
+//                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(alertURLlink));
+//                startActivity(alertIntentClick);
+//            });
+//        }
+//
+
     }
 
 

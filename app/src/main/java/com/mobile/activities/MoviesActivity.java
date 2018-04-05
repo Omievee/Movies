@@ -3,6 +3,7 @@ package com.mobile.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -17,12 +18,15 @@ import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.mobile.Constants;
 
 import com.mobile.UserPreferences;
+import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
+import com.mobile.fragments.SynopsisFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.model.Movie;
@@ -38,6 +42,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,11 +51,12 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity {
+public class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
 
+    public ViewGroup CONTAIN;
     //Retrofit calls
     Call<RestrictionsResponse> restrictionsResponseCall;
 
@@ -93,9 +99,6 @@ public class MoviesActivity extends BaseActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
 
-
-//        checkRestrictions();
-       // newRestrictions();
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
@@ -113,7 +116,7 @@ public class MoviesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       newRestrictions();
+        newRestrictions();
         updateNavigationBarState();
     }
 
@@ -226,7 +229,12 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+
+        android.util.Log.d(Constants.TAG, "onBackPressed: " + CONTAIN);
+        if (CONTAIN != null) {
+            Blurry.delete(CONTAIN);
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             AlertDialog alert;
             AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
             builder.setMessage("Do you want to quit MoviePass?");
@@ -403,16 +411,20 @@ public class MoviesActivity extends BaseActivity {
                     //Alert data to create Alert Activity on launch...
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
-                        Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
+                        AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
+                                restrict.getAlert().getId(),
+                                restrict.getAlert().getTitle(),
+                                restrict.getAlert().getBody(),
+                                restrict.getAlert().getUrl(),
+                                restrict.getAlert().getUrlTitle(),
+                                restrict.getAlert().isDismissible());
 
-                        activateAlert.putExtra("id", restrict.getAlert().getId());
-                        activateAlert.putExtra("title", restrict.getAlert().getTitle());
-                        activateAlert.putExtra("body", restrict.getAlert().getBody());
-                        activateAlert.putExtra("url", restrict.getAlert().getUrl());
-                        activateAlert.putExtra("urlTitle", restrict.getAlert().getUrlTitle());
-                        activateAlert.putExtra("dismissible", restrict.getAlert().isDismissible());
-
-                        startActivity(activateAlert);
+                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.MAIN_CONTAINER, alertScreen);
+                        transaction.addToBackStack("");
+                        transaction.commit();
+                        bottomNavigationView.setVisibility(View.GONE);
                     }
 
                 } else {
@@ -498,5 +510,11 @@ public class MoviesActivity extends BaseActivity {
         startActivity(movieIntent);
     }
 
+
+    @Override
+    public void onAlertClickListener(String alertId) {
+        UserPreferences.setAlertDisplayedId(alertId);
+        super.onBackPressed();
+    }
 
 }
