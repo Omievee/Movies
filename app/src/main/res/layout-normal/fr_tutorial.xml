@@ -13,9 +13,9 @@
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@id/finePrint"
         android:layout_gravity="center_horizontal |bottom"
-        android:layout_marginBottom="85dp"
+        android:layout_marginBottom="@dimen/margin_half"
         android:alpha=".8"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
@@ -23,6 +23,17 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
+
+    <TextView
+        android:id="@+id/finePrint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="75dp"
+        android:text="*Your subscription will begin upon your first e-ticket check-in."
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/tutorial_images"
@@ -47,6 +58,32 @@
         android:textColor="@android:color/white"
         android:textSize="25sp"
         tools:text="Page One" />
+
+
+    <RelativeLayout
+        android:id="@+id/relfinal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tutorial_header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_half"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/lastText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Look for the e-ticket icon: "
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+        <ImageView
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_toEndOf="@id/lastText"
+            android:src="@drawable/ticketnavwhite" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

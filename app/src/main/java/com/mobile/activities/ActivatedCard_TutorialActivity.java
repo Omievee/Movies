@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobile.model.Screening;
@@ -57,7 +58,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         tutorialViewPager = findViewById(R.id.tutorial_container);
         tutorialAdapter = new tutorialAdapter(getSupportFragmentManager());
         tutorialViewPager.setAdapter(tutorialAdapter);
-        indicators = new ImageView[]{one, two, three, four};
+        indicators = new ImageView[]{one, two, three, four, five};
         activityLayout = findViewById(R.id.TUTORIAL_MAIN_ACTIVITY);
 
         Intent intent = getIntent();
@@ -196,7 +197,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fr_tutorial, container, false);
-
+            RelativeLayout relativeEtick = rootView.findViewById(R.id.relfinal);
+            TextView finePrint = rootView.findViewById(R.id.finePrint);
             TextView textView = rootView.findViewById(R.id.tutorial_header);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(tutorialHeaders[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
@@ -204,6 +206,12 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
             TextView bodyText = rootView.findViewById(R.id.tutorial_body);
             bodyText.setText(tutorialBodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+            if(getArguments().getInt(ARG_SECTION_NUMBER) - 1 == 4){
+                relativeEtick.setVisibility(View.VISIBLE);
+                finePrint.setVisibility(View.VISIBLE);
+            }
+
 
 
 
