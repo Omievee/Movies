@@ -229,8 +229,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public void onBackPressed() {
-
-        android.util.Log.d(Constants.TAG, "onBackPressed: " + CONTAIN);
+        android.util.Log.d(Constants.TAG, "onBackPressed: " + getSupportFragmentManager().getBackStackEntryCount());
         if (CONTAIN != null) {
             Blurry.delete(CONTAIN);
         }
@@ -253,8 +252,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             });
             alert = builder.create();
             alert.show();
-        } else if (getFragmentManager().getBackStackEntryCount() == 1) {
-            getFragmentManager().popBackStack();
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            getSupportFragmentManager().popBackStack();
         }
 
         // do nothing. We want to force user to stay in this activity and not drop out.
