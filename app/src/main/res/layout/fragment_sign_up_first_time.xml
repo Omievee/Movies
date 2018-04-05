@@ -11,6 +11,252 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- LOGO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard_and_half"
+                android:gravity="center_horizontal"
+                android:src="@drawable/logo"
+                android:tint="@color/new_red" />
+
+            <!-- divider -->
+
+            <RelativeLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignStart="@id/intro_indicator_0"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative01"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Account"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/shipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative02"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Shipping"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative03"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Payment"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+
+                        <RelativeLayout
+                            android:id="@+id/relative04"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignEnd="@id/intro_indicator_3"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative04"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Confirm"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,6 +275,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_vertical"
                 android:text="@string/Create_account"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:textColor="@color/almost_white"
                 android:textSize="@dimen/text_size_16" />
 

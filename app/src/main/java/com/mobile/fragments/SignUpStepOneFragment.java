@@ -44,7 +44,7 @@ import static android.app.Activity.RESULT_OK;
 public class SignUpStepOneFragment extends Fragment {
 
     public static final String TAG = "Found0";
-    RelativeLayout signup1CoordMain;
+    View signup1CoordMain;
     public EditText signup1FirstName, signup1LastName;
     public EditText signUpAddress1, signup1Address2, signup1City, signup1Zip, signup1State;
     public TextInputLayout firstNameTextInputLayout, lastNameTextInputLayout, address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
