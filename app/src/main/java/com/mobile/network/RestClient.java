@@ -44,8 +44,8 @@ public class RestClient {
     static String baseURL = String.valueOf(getEndPoint());
     static String registrationURL = "https://registration.moviepass.com/";
     static String staticRegistrationURL = "https://registration-stg.herokuapp.com";
-    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
-//    static String microServiceURL = "https://auth.moviepass.com/";
+//    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
+    static String microServiceURL = "https://auth.moviepass.com/";
 
     private static Api sAuthenticatedAPI;
     private static Api sAuthenticatedAPIGoWatchIt;

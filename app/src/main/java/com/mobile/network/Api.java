@@ -221,7 +221,7 @@ public interface Api {
 
 
     /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/staging/movies/current.json")
+    @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
 
@@ -235,6 +235,7 @@ public interface Api {
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
 
 
+    //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
     Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 

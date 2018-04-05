@@ -75,14 +75,16 @@ public class AlertScreenFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fr_alert_screen, container, false);
 
 
         ((MoviesActivity) myActivity).CONTAIN = container;
-        Blurry.with((myContext)).radius(35).sampling(5).animate().onto(((MoviesActivity) myActivity).CONTAIN);
-        Log.d(Constants.TAG, "onCreateView: " + container);
+        Blurry.with(myActivity).radius(35).sampling(5).animate().async().onto(((MoviesActivity) myActivity).CONTAIN);
+
+
+        Log.d(Constants.TAG, "onCreateView: " + ((MoviesActivity) myActivity).getSupportFragmentManager().getBackStackEntryCount());
 
 
         return root;

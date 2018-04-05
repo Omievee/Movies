@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -42,7 +41,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
 import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,6 +74,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+        FrameLayout main = findViewById(R.id.movies_container);
 
         Intent intent = getIntent();
         if (intent != null && intent.getIntExtra(MOVIES, -1) != -1) {
@@ -83,10 +82,11 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             loadMovies();
         } else {
             Fragment moviesFragment = new MoviesFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.movies_container, moviesFragment).commit();
-            FrameLayout main = findViewById(R.id.movies_container);
-            fadeIn(main);
+            FragmentManager support = getSupportFragmentManager();
+            FragmentTransaction ft = support.beginTransaction();
+            ft.replace(R.id.movies_container, moviesFragment);
+            ft.commit();
+//            fadeIn(main);
         }
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -105,6 +105,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             activateMoviePassCardSnackBar();
         }
 
+        microServiceRestrictions();
 
     }
 
@@ -117,7 +118,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     @Override
     protected void onResume() {
         super.onResume();
-        newRestrictions();
         updateNavigationBarState();
     }
 
@@ -205,19 +205,11 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             AlertDialog alert;
             AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
             builder.setMessage("Do you want to quit MoviePass?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    finish(); // finish activity
-                }
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.dismiss();
+                finish(); // finish activity
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
             builder.show();
             alert = builder.create();
             alert.show();
@@ -254,9 +246,10 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             alert = builder.create();
             alert.show();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId()) ) {
+            if (!restrict.getAlert().isDismissible()) {
                 Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
             } else {
+            //    UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
                 getSupportFragmentManager().popBackStack();
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
@@ -284,90 +277,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         });
     }
 
-
-//    public void checkRestrictions() {
-//        restrictionsResponseCall = RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset);
-//        restrictionsResponseCall.enqueue(new Callback<RestrictionsResponse>() {
-//            @Override
-//            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-//                if (response.body() != null && response.isSuccessful()) {
-//                    restriction = response.body();
-//                    String status = restriction.getSubscriptionStatus();
-//                    boolean fbPresent = restriction.getFacebookPresent();
-//                    boolean threeDEnabled = restriction.get3dEnabled();
-//                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-//                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-//                    boolean hasActiveCard = restriction.getHasActiveCard();
-//                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-//
-//                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-//                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-//                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-//                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-//                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-//                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-//                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
-//
-//                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-//                    }
-//                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-//                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
-//                        int reservationId = restriction.getPopInfo().getReservationId();
-//                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-//                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-//                        String theaterName = restriction.getPopInfo().getTheaterName();
-//                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-//                        String showtime = restriction.getPopInfo().getShowtime();
-//
-//                        bundle = new Bundle();
-//                        bundle.putInt("reservationId", reservationId);
-//                        bundle.putString("mSelectedMovieTitle", movieTitle);
-//                        bundle.putString("tribuneMovieId", tribuneMovieId);
-//                        bundle.putString("mTheaterSelected", theaterName);
-//                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-//                        bundle.putString("showtime", showtime);
-//
-//                        TicketVerificationDialog dialog = new TicketVerificationDialog();
-//                        FragmentManager fm = getSupportFragmentManager();
-//                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
-//                    }
-//                    //Alert data to create Alert Activity on launch...
-//                    if (restriction.getAlert() != null) {
-//
-//                        Intent activateAlert = new Intent(MoviesActivity.this, AlertActivity.class);
-//
-//                        activateAlert.putExtra("title", restriction.getAlert().getTitle());
-//                        activateAlert.putExtra("body", restriction.getAlert().getBody());
-//                        activateAlert.putExtra("url", restriction.getAlert().getUrl());
-//                        activateAlert.putExtra("urlTitle", restriction.getAlert().getUrlTitle());
-//                        activateAlert.putExtra("dismissable", restriction.getAlert().isDismissible());
-//
-//                        startActivity(activateAlert);
-//                    }
-//
-//                } else {
-//                    try {
-//                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-//
-//                        //IF API ERROR LOG OUT TO LOG BACK IN
-//                        /*
-//                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
-//
-//                        */
-//
-//                    } catch (Exception e) {
-//
-//                    }
-//                }
-//            }
-//
-//            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-//
-//            }
-//        });
-//    }
-
-    public void newRestrictions() {
+    public void microServiceRestrictions() {
 
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
@@ -526,7 +436,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public void onAlertClickListener(String alertId) {
-        UserPreferences.setAlertDisplayedId(alertId);
+        //  UserPreferences.setAlertDisplayedId(alertId);
         android.util.Log.d(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
         getSupportFragmentManager().popBackStack();
         bottomNavigationView.setVisibility(View.VISIBLE);
@@ -534,7 +444,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public void onSearchMoviesInterface() {
-
         SearchFragment searchFrag = new SearchFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
