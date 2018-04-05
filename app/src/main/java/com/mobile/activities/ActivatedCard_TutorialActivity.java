@@ -28,7 +28,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
     Screening screeningObject;
     String selectedShowTime;
-    ImageView zero, one, two, three, four;
+    ImageView zero, one, two, three, four, five;
     TextView done;
     Theater theater;
     ViewPager tutorialViewPager;
@@ -51,7 +51,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         two = findViewById(R.id.tutorial_indicator_2);
         three = findViewById(R.id.tutorial_indicator_3);
         four = findViewById(R.id.tutorial_indicator_4);
-
+        five =  findViewById(R.id.tutorial_indicator_5);
         dots = findViewById(R.id.dots);
         done = findViewById(R.id.TUTORIAL_DONE);
         tutorialViewPager = findViewById(R.id.tutorial_container);
@@ -99,7 +99,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                     case 0:
                         dots.setVisibility(View.VISIBLE);
                         break;
-                    case 3:
+                    case 4:
                         done.setVisibility(View.VISIBLE);
                         fadeIn(done);
                         break;
@@ -144,7 +144,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
 
         @Override
@@ -158,6 +158,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                     return getResources().getString(R.string.tutorial_header_3);
                 case 3:
                     return getResources().getString(R.string.tutorial_header_4);
+                case 4:
+                    return getResources().getString(R.string.activity_onboarding_header_final);
             }
             return null;
         }
@@ -173,13 +175,13 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         ImageView img;
 
         int[] tutorialImages = new int[]{R.drawable.tutorial_1, R.drawable.tutorial_2,
-                R.drawable.tutorial_3, R.drawable.tutorial_4};
+                R.drawable.tutorial_3, R.drawable.tutorial_4, R.drawable.image_onboarding_final};
 
         int[] tutorialHeaders = new int[]{R.string.tutorial_header_1,
-                R.string.tutorial_header_2, R.string.tutorial_header_3, R.string.tutorial_header_4};
+                R.string.tutorial_header_2, R.string.tutorial_header_3, R.string.tutorial_header_4, R.string.activity_onboarding_header_final};
 
         int[] tutorialBodies = new int[]{R.string.tutorial_body_1, R.string.tutorial_body_2,
-                R.string.tutorial_body_3, R.string.tutorial_body_4};
+                R.string.tutorial_body_3, R.string.tutorial_body_4, R.string.tutorial_body_final};
 
 
         public static ActivatedCard_TutorialActivity.PlaceholderFragment newInstance(int sectionNumber) {
@@ -202,6 +204,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
             TextView bodyText = rootView.findViewById(R.id.tutorial_body);
             bodyText.setText(tutorialBodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+
 
 
             img = rootView.findViewById(R.id.tutorial_images);

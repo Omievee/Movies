@@ -64,6 +64,7 @@
 
     <!--<string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>-->
     <string name="activity_onboarding_header_5">How It Works</string>
+    <string name="activity_onboarding_header_final">Have a MoviePass Supported E-ticketing Theater Near You?</string>
 
     <string name="activity_onboarding_body_1">See a movie a day in theaters; the way movies are supposed to be seen!</string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
@@ -75,6 +76,8 @@
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
     <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+    <string name="activity_onboarding_body_final">Look for the e-ticket icon: </string>
+    <string name="tutorial_body_final">You can reserve same-day e-tickets right on the app from any location, even before receiving your card.* </string>
 
 
     <!--Tutorial-->
