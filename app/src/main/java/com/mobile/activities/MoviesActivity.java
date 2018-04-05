@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
+import com.mobile.fragments.SearchFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
@@ -40,6 +42,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmList;
 import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +52,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener {
+public class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
@@ -251,7 +254,13 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             alert = builder.create();
             alert.show();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            getSupportFragmentManager().popBackStack();
+            if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId()) ) {
+                Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
+            } else {
+                getSupportFragmentManager().popBackStack();
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }
+
         }
 
 
@@ -407,6 +416,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     //Alert data to create Alert Activity on launch...
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
+                        android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
 
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
@@ -517,7 +527,21 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     @Override
     public void onAlertClickListener(String alertId) {
         UserPreferences.setAlertDisplayedId(alertId);
-        super.onBackPressed();
+        android.util.Log.d(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
+        getSupportFragmentManager().popBackStack();
+        bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onSearchMoviesInterface() {
+
+        SearchFragment searchFrag = new SearchFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        transaction.replace(R.id.movies_container, searchFrag);
+        transaction.addToBackStack("");
+        transaction.commit();
+        bottomNavigationView.setVisibility(View.GONE);
+    }
 }

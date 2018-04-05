@@ -307,7 +307,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.mobile.activities.AlertActivity"></activity>
     </application>
 
 </manifest>

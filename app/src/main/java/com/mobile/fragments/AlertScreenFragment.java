@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -78,11 +80,23 @@ public class AlertScreenFragment extends Fragment {
         View root = inflater.inflate(R.layout.fr_alert_screen, container, false);
 
 
-        linkText = root.findViewById(R.id.LinkText);
-        alertTitle = root.findViewById(R.id.alertTitle);
-        alertBody = root.findViewById(R.id.alertMessage);
-        close = root.findViewById(R.id.dismissAlert);
-        alertClickMessage = root.findViewById(R.id.alertClickMessage);
+        ((MoviesActivity) myActivity).CONTAIN = container;
+        Blurry.with((myContext)).radius(35).sampling(5).animate().onto(((MoviesActivity) myActivity).CONTAIN);
+        Log.d(Constants.TAG, "onCreateView: " + container);
+
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        linkText = view.findViewById(R.id.LinkText);
+        alertTitle = view.findViewById(R.id.alertTitle);
+        alertBody = view.findViewById(R.id.alertMessage);
+        close = view.findViewById(R.id.dismissAlert);
+        alertClickMessage = view.findViewById(R.id.alertClickMessage);
 
         alertTitle.setText(title);
         alertBody.setText(body);
@@ -92,7 +106,7 @@ public class AlertScreenFragment extends Fragment {
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(Constants.TAG, "onClick: ");
+
                     onButtonPressed(id);
                 }
             });
@@ -112,11 +126,6 @@ public class AlertScreenFragment extends Fragment {
         }
 
 
-        ((MoviesActivity) myActivity).CONTAIN = container;
-        Blurry.with(((MoviesActivity) myActivity)).radius(35).sampling(5).animate().onto( ((MoviesActivity) myActivity).CONTAIN);
-        Log.d(Constants.TAG, "onCreateView: " + container);
-
-        return root;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -134,6 +143,7 @@ public class AlertScreenFragment extends Fragment {
         } else {
             throw new RuntimeException(context.toString() + " must implement onAlertClickListener");
         }
+        myContext = context;
     }
 
     @Override

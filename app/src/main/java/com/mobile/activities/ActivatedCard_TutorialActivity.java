@@ -213,9 +213,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             }
 
 
-
-
-
             img = rootView.findViewById(R.id.tutorial_images);
             img.setVisibility(View.VISIBLE);
 

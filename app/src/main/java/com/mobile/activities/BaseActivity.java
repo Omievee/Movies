@@ -68,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     };
 
     UserInfoResponse userInfoResponse;
-    protected BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
 
     public String myZip;
 

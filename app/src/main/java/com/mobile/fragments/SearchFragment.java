@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +43,7 @@ import static com.facebook.GraphRequest.TAG;
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends Fragment implements AfterSearchListener {
+public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
     MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
@@ -57,18 +58,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     public SearchFragment() {
     }
 
-
-//    public static SearchFragment newInstance(Movie movie) {
-//        SearchFragment fragment = new SearchFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelable("NR", movie);
-//        args.putParcelable("FE", movie);
-//        args.putParcelable("NP", movie);
-//        args.putParcelable("TB", movie);
-//
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Nullable
     @Override
