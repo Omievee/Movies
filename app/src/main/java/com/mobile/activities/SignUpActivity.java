@@ -143,8 +143,10 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             @Override
             public void onGlobalLayout() {
                 int heightDiff = mCoordinator.getRootView().getHeight() - mCoordinator.getHeight();
-                if (heightDiff > dpToPx(mCoordinator.getContext(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                    Toast.makeText(SignUpActivity.this, "KEYBOARD IS OPEN", Toast.LENGTH_SHORT).show();
+                if (heightDiff > 100) { // if more than 200 dp, it's probably a keyboard...
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
                 }
             }
         });
