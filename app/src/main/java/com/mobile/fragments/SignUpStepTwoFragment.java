@@ -589,6 +589,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
         if (context instanceof OnCreditCardEntered) {
 
             creditCardDataListener = (OnCreditCardEntered) context;
@@ -602,6 +603,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public void onDetach() {
         super.onDetach();
         creditCardDataListener = null;
+        myContext = null;
     }
 
     public interface OnCreditCardEntered {
