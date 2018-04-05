@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,8 @@ public class AlertScreenFragment extends Fragment {
             urlTitle = getArguments().getString("urlTitle");
             dismissible = getArguments().getBoolean("dismissible");
         }
+        myActivity.startPostponedEnterTransition();
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.fade).setDuration(20000));
     }
 
     @Override
@@ -80,13 +83,6 @@ public class AlertScreenFragment extends Fragment {
         alertBody = root.findViewById(R.id.alertMessage);
         close = root.findViewById(R.id.dismissAlert);
         alertClickMessage = root.findViewById(R.id.alertClickMessage);
-
-
-
-        ((MoviesActivity) myActivity).CONTAIN = container;
-        Log.d(Constants.TAG, "onCreateView: " +  ((MoviesActivity) myActivity).CONTAIN );
-        Log.d(Constants.TAG, "onCreateView: " + container);
-        Blurry.with(myActivity).radius(35).sampling(5).animate().onto(((MoviesActivity) myActivity).CONTAIN);
 
         alertTitle.setText(title);
         alertBody.setText(body);
@@ -115,6 +111,10 @@ public class AlertScreenFragment extends Fragment {
             });
         }
 
+
+        ((MoviesActivity) myActivity).CONTAIN = container;
+        Blurry.with(((MoviesActivity) myActivity)).radius(35).sampling(5).animate().onto( ((MoviesActivity) myActivity).CONTAIN);
+        Log.d(Constants.TAG, "onCreateView: " + container);
 
         return root;
     }

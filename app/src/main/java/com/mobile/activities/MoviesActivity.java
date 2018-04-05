@@ -3,8 +3,8 @@ package com.mobile.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -12,23 +12,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-
-import com.helpshift.support.Log;
-
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.helpshift.support.Log;
 import com.mobile.Constants;
-
 import com.mobile.UserPreferences;
 import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
-import com.mobile.fragments.SynopsisFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
@@ -55,7 +53,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
-
+    MicroServiceRestrictionsResponse restrict;
     public ViewGroup CONTAIN;
     //Retrofit calls
     Call<RestrictionsResponse> restrictionsResponseCall;
@@ -83,8 +81,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         } else {
             Fragment moviesFragment = new MoviesFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
-            FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+            ft.replace(R.id.movies_container, moviesFragment).commit();
+            FrameLayout main = findViewById(R.id.movies_container);
             fadeIn(main);
         }
         bottomNavigationView = findViewById(R.id.navigation);
@@ -256,7 +254,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             getSupportFragmentManager().popBackStack();
         }
 
-        // do nothing. We want to force user to stay in this activity and not drop out.
 
     }
 
@@ -366,7 +363,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
             public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
-                MicroServiceRestrictionsResponse restrict = response.body();
+                restrict = response.body();
                 if (response != null && response.isSuccessful()) {
                     String status = restrict.getSubscriptionStatus();
                     boolean fbPresent = restrict.getFacebookPresent();
@@ -410,6 +407,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     //Alert data to create Alert Activity on launch...
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
+
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
                                 restrict.getAlert().getTitle(),
@@ -418,12 +416,19 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                                 restrict.getAlert().getUrlTitle(),
                                 restrict.getAlert().isDismissible());
 
-                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.MAIN_CONTAINER, alertScreen);
+                        alertScreen.setSharedElementEnterTransition(new HistoryDetails());
+                        alertScreen.setEnterTransition(new Fade());
+                        alertScreen.setExitTransition(new Fade());
+                        alertScreen.setSharedElementReturnTransition(new HistoryDetails());
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.movies_container, alertScreen);
                         transaction.addToBackStack("");
                         transaction.commit();
+
                         bottomNavigationView.setVisibility(View.GONE);
+
                     }
 
                 } else {
@@ -444,7 +449,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
             @Override
             public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
-
             }
         });
     }

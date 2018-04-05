@@ -91,7 +91,6 @@ public class HistoryDetailsFragment extends Fragment {
 
 
         Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
-
         return root;
     }
 
@@ -155,12 +154,6 @@ public class HistoryDetailsFragment extends Fragment {
     }
 
 
-//    @Override
-//    public void onDismiss(DialogInterface dialog) {
-//        super.onDismiss(dialog);
-//        myActivity.getFragmentManager().popBackStack();
-//        Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
-//    }
 
 
     @Override

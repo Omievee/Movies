@@ -213,7 +213,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.MAIN_CONTAINER, searchFrag);
+            transaction.replace(R.id.movies_container, searchFrag);
 
             transaction.addToBackStack(null);
             fragmentManager.popBackStack();
