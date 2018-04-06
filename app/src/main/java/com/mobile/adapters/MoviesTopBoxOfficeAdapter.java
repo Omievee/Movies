@@ -116,9 +116,9 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
         });
 
 
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
     }
 
     @Override

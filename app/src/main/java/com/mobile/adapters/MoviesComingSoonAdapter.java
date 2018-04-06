@@ -152,10 +152,10 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 .build();
         holder.mComingSoonMoviePosterDV.setController(controller);
 
-
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
+//
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
 
         android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 

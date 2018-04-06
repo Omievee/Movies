@@ -123,10 +123,10 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
             }
         });
 
-
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
+//
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
     }
 
     @Override
