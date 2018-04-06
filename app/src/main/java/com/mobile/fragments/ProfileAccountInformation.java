@@ -47,13 +47,7 @@ public class ProfileAccountInformation extends Fragment {
     private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
-    private EditText password1, password2, oldPassword;
-    private TextInputLayout password1TextInputLayout, password2TextInputLayout, oldPasswordTextInputLayout;
     private UserInfoResponse userInfoResponse;
-    private Button save, cancel;
-    private ImageView clear1, clear2, clear0;
-    private boolean firstTimePassword = true, firstTouchPassword2 = true;
-    private ChangePasswordResponse changePasswordResponse;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -74,124 +68,12 @@ public class ProfileAccountInformation extends Fragment {
         userEmail = rootView.findViewById(R.id.USER_EMAIL);
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
-        oldPassword = rootView.findViewById(R.id.oldPassword);
-        password1 = rootView.findViewById(R.id.password1);
-        password2 = rootView.findViewById(R.id.password2);
-        password1TextInputLayout = rootView.findViewById(R.id.password1TextInputLayout);
-        password2TextInputLayout = rootView.findViewById(R.id.password2TextInputLayout);
-        oldPasswordTextInputLayout = rootView.findViewById(R.id.oldPasswordTextInputLayout);
-        save = rootView.findViewById(R.id.saveChanges);
-        cancel = rootView.findViewById(R.id.cancelChanges);
         progress.setVisibility(View.VISIBLE);
-        clear1 = rootView.findViewById(R.id.clear1);
-        clear2 = rootView.findViewById(R.id.clear2);
-        clear0 = rootView.findViewById(R.id.clear0);
         loadUserInfo();
-        save.setClickable(false);
-        cancel.setClickable(false);
-        password2.setEnabled(false);
-        password1TextInputLayout.setVisibility(View.GONE);
-        password2TextInputLayout.setVisibility(View.GONE);
-
-
 
         return rootView;
     }
 
-    private void changePassword() {
-        int userId = UserPreferences.getUserId();
-//        String oldPassword = UserPreferences.getP
-        ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(),password1.getText().toString().trim(), userId);
-        RestClient.getAuthenticated().changePassword(request).enqueue(new Callback<ChangePasswordResponse>() {
-            @Override
-            public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
-                if(response!=null && response.isSuccessful()){
-                    changePasswordResponse = response.body();
-                    logIn();
-                } else {
-                    Toast.makeText(context, "Wrong current password", Toast.LENGTH_SHORT).show();
-                    progress.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-                progress.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void logIn() {
-        String email = UserPreferences.getUserEmail().trim();
-        String password = password1.getText().toString().trim();
-        LogInRequest request = new LogInRequest(email, password);
-        android.util.Log.d(TAG, "logIn: USER EMAIL "+email+" USER PASSWORD "+password);
-        String deviceId = DeviceID.getID(context);
-        RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    moviePassLoginSucceeded(response.body());
-                    Toast.makeText(context, "Password changed", Toast.LENGTH_LONG).show();
-                    password1TextInputLayout.setVisibility(View.GONE);
-                    password2TextInputLayout.setVisibility(View.GONE);
-                    oldPassword.setText("");
-                    progress.setVisibility(View.GONE);
-                } else{
-                    progress.setVisibility(View.GONE);
-                    android.util.Log.d(TAG, "onResponse: FAILURE LOG IN "+response.toString());
-                }
-                disableSaveAndCancel();
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                progress.setVisibility(View.GONE);
-//                   Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private void moviePassLoginSucceeded(User user) {
-        if (user != null) {
-
-            int us = user.getId();
-            String deviceUuid = user.getDeviceUuid();
-            String authToken = user.getAuthToken();
-
-            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
-        }
-    }
-
-    public void enableSaveAndCancel(){
-        save.setClickable(true);
-        cancel.setClickable(true);
-        cancel.setTextColor(ContextCompat.getColor(context,R.color.almost_white));
-        save.setTextColor(ContextCompat.getColor(context,R.color.new_red));
-    }
-
-    public void disableSaveAndCancel(){
-        save.setClickable(false);
-        cancel.setClickable(false);
-        cancel.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
-        save.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
-        password1.setText("password");
-        password2.setText("password");
-        password2.setEnabled(false);
-        clear2.setVisibility(View.GONE);
-        clear1.setVisibility(View.GONE);
-        clear0.setVisibility(View.GONE);
-        password1.clearFocus();
-        password2.clearFocus();
-        firstTouchPassword2 = true;
-        firstTimePassword=true;
-        password2TextInputLayout.setError(null);
-        password1TextInputLayout.setError(null);
-        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-    }
 
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();

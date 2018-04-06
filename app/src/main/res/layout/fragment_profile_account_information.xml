@@ -24,28 +24,6 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/saveChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
-            android:text="Save"
-            android:textAllCaps="false"
-            android:textColor="@color/gray_icon"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/cancelChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/gray_icon"
-            android:textSize="16sp" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -74,11 +52,12 @@
                 android:layout_marginTop="@dimen/margin_standard"
                 android:animateLayoutChanges="true"
                 android:backgroundTint="@color/white_40_opacity"
+                android:enabled="false"
                 android:focusable="false"
                 android:hint="Name"
-                android:text=" "
                 android:inputType="text|textCapSentences"
                 android:maxLines="1"
+                android:text=" "
                 android:textColor="@color/white"
                 android:textColorLink="@android:color/transparent"
                 android:textCursorDrawable="@color/white"
@@ -104,6 +83,7 @@
                 android:layout_marginTop="@dimen/margin_standard"
                 android:animateLayoutChanges="true"
                 android:backgroundTint="@color/white_40_opacity"
+                android:enabled="false"
                 android:focusable="false"
                 android:hint="Email"
                 android:inputType="text|textCapSentences"
@@ -133,6 +113,7 @@
                 android:layout_alignParentStart="true"
                 android:animateLayoutChanges="true"
                 android:backgroundTint="@color/white_40_opacity"
+                android:enabled="false"
                 android:focusable="false"
                 android:hint="MoviePass Card"
                 android:inputType="text|textCapSentences"
@@ -145,7 +126,6 @@
                 app:backgroundTint="@color/white_40_opacity" />
 
         </android.support.design.widget.TextInputLayout>
-
 
 
     </LinearLayout>

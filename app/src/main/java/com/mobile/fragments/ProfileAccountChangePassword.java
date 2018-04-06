@@ -1,7 +1,6 @@
 package com.mobile.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -40,12 +40,14 @@ import static com.mobile.fragments.PendingReservationFragment.TAG;
 public class ProfileAccountChangePassword extends Fragment {
 
 
+    private ProfileActivityInterface listener;
     private EditText oldPassword, newPassword1, newPassword2;
     private TextInputLayout oldPasswordTextInputLayout, newPassword1TextInputLayout, newPassword2TextInputLayout;
     private Button save, cancel;
     private View progress;
     private ChangePasswordResponse changePasswordResponse;
     private UserInfoResponse userInfoResponse;
+    private boolean firstTime = true;
 
     public ProfileAccountChangePassword() {
         // Required empty public constructor
@@ -71,6 +73,7 @@ public class ProfileAccountChangePassword extends Fragment {
         save = view.findViewById(R.id.saveChanges);
         cancel = view.findViewById(R.id.cancelChanges);
         progress = view.findViewById(R.id.progress);
+
     }
 
     @Override
@@ -87,12 +90,14 @@ public class ProfileAccountChangePassword extends Fragment {
         oldPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                newPassword1TextInputLayout.setVisibility(View.VISIBLE);
-                newPassword2TextInputLayout.setVisibility(View.VISIBLE);
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(firstTime){
+                    enableSaveAndCancel();
+                }
             }
 
             @Override
@@ -100,8 +105,6 @@ public class ProfileAccountChangePassword extends Fragment {
 
             }
         });
-
-
 
         newPassword1.addTextChangedListener(new TextWatcher() {
             @Override
@@ -111,7 +114,11 @@ public class ProfileAccountChangePassword extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+               if(firstTime) {
+                   enableSaveAndCancel();
+                   newPassword2.setEnabled(true);
+                   firstTime=false;
+               }
             }
 
             @Override
@@ -119,24 +126,6 @@ public class ProfileAccountChangePassword extends Fragment {
 
             }
         });
-
-        newPassword2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +152,8 @@ public class ProfileAccountChangePassword extends Fragment {
                             newPassword1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
                     }
                 } else {
+                    if(oldPassword.getText().toString().trim().isEmpty())
+                        oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_old_password_empty));
                     newPassword2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_match));
                 }
             }
@@ -178,8 +169,7 @@ public class ProfileAccountChangePassword extends Fragment {
 
     private void changePassword() {
         int userId = UserPreferences.getUserId();
-//        String oldPassword = UserPreferences.getP
-        ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(),password1.getText().toString().trim(), userId);
+        ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(),newPassword1.getText().toString().trim(), userId);
         RestClient.getAuthenticated().changePassword(request).enqueue(new Callback<ChangePasswordResponse>() {
             @Override
             public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
@@ -187,7 +177,7 @@ public class ProfileAccountChangePassword extends Fragment {
                     changePasswordResponse = response.body();
                     logIn();
                 } else {
-                    Toast.makeText(getContext(), "Wrong current password", Toast.LENGTH_SHORT).show();
+                    oldPasswordTextInputLayout.setError("Wrong password");
                     progress.setVisibility(View.GONE);
                 }
             }
@@ -213,15 +203,13 @@ public class ProfileAccountChangePassword extends Fragment {
                 if (response.body() != null && response.isSuccessful()) {
                     moviePassLoginSucceeded(response.body());
                     Toast.makeText(getContext(), "Password changed", Toast.LENGTH_LONG).show();
-                    newPassword1.setText("");
-                    newPassword2.setText("");
-                    oldPassword.setText("");
                     progress.setVisibility(View.GONE);
+                    disableSaveAndCancel();
+                    listener.closeFragment();
                 } else{
                     progress.setVisibility(View.GONE);
                     android.util.Log.d(TAG, "onResponse: FAILURE LOG IN "+response.toString());
                 }
-                disableSaveAndCancel();
             }
 
             @Override
@@ -265,22 +253,20 @@ public class ProfileAccountChangePassword extends Fragment {
         newPassword2TextInputLayout.setError(null);
         newPassword1TextInputLayout.setError(null);
         oldPasswordTextInputLayout.setError(null);
+        firstTime=true;
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
-    
-
-
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof ProfileActivityInterface) {
+            listener = (ProfileActivityInterface) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement ProfileActivityInterface");
+        }
     }
 
     @Override

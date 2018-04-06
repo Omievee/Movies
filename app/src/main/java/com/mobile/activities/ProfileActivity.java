@@ -25,6 +25,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.fragments.HistoryDetailsFragment;
+import com.mobile.fragments.ProfileAccountChangePassword;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
@@ -251,5 +252,16 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
             transaction.addToBackStack(null);
             transaction.commit();
         }
+    }
+
+    @Override
+    public void openChangePassword() {
+        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountChangePassword changePassword = new ProfileAccountChangePassword();
+        transaction.replace(R.id.profile_container, changePassword);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
