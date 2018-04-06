@@ -246,10 +246,10 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             alert = builder.create();
             alert.show();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            if (!restrict.getAlert().isDismissible()) {
+            if (restrict.getAlert() != null && !restrict.getAlert().isDismissible()) {
                 Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
             } else {
-            //    UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
+                //    UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
                 getSupportFragmentManager().popBackStack();
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
