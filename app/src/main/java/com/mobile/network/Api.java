@@ -7,6 +7,7 @@ import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.requests.CardActivationRequest;
+import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.CredentialsRequest;
@@ -23,6 +24,7 @@ import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
@@ -73,6 +75,10 @@ public interface Api {
     /* Get Cards? */
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
+
+    /** Change Password */
+    @POST("rest/v1/passwordChange")
+    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
