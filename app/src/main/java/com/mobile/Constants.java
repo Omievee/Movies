@@ -23,13 +23,20 @@ public class Constants {
     public static final String TOKEN = "token";
     public static final String SEAT = "seat";
 
+    //RESTRICTIONS
+    public static final String ACTIVE = "ACTIVE";
+    public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
+    public static final String PENDING_FREE_TRIAL = "PENDING_FREE_TRIAL";
+    public static final String ENDED_FREE_TRIAL = "ENDED_FREE_TRIAL";
+    public static final String CANCELLED = "CANCELLED";
+    public static final String CANCELLED_PAST_DUE = "CANCELLED_PAST_DUE";
+    public static final String MISSING = "MISSING";
+
     //PERMISSION CODES
     public final static int REQUEST_CAMERA_CODE = 0;
     public static final int REQUEST_STORAGE_CODE = 2;
-
     public static final int REQUEST_TICKET_VERIF = 00;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
-
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
 
     /* TODO REMOVE GENERIC VALUES */
@@ -38,7 +45,6 @@ public class Constants {
     public static final String USER_AUTH_TOKEN = "AUTH";
     public static final String FB_TOKEN = "token";
     public static final String AAID = "AAID";
-
     public static final String USER_FIRST_NAME = "CATHERINE";
     public static final String USER_EMAIL = "BOB@LOBLAW.COM";
 
