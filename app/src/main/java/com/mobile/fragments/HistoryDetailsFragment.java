@@ -1,24 +1,17 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,9 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.github.andreilisun.swipedismissdialog.SwipeDismissDialog;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;

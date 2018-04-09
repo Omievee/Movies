@@ -202,7 +202,8 @@ dependencies {
     //Burred Backgrounds
     implementation 'jp.wasabeef:blurry:2.1.1'
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 
 

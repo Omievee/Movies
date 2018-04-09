@@ -1,14 +1,9 @@
 package com.mobile.adapters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,11 +42,6 @@ import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import io.realm.RealmList;
 
 /**
@@ -81,22 +71,20 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final Movie movie = featuredMovie.get(position);
+        holder.moviePoster.setMinimumHeight(9 * holder.itemView.getContext().getResources().getDisplayMetrics().heightPixels / 16);
+
         Uri imgURI = null;
+        Uri videoURI = null;
 
         if (movie != null) {
             imgURI = Uri.parse(movie.getLandscapeImageUrl());
+            videoURI = Uri.parse(movie.getTeaserVideoUrl());
         }
-
-        holder.moviePoster.setMinimumHeight(9 * holder.itemView.getContext().getResources().getDisplayMetrics().heightPixels / 16);
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgURI)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgURI)
                 .build();
-
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
 
         Uri finalImgURI = imgURI;
         DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -120,26 +108,6 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 .build();
 
         holder.moviePoster.setController(controller);
-
-
-        File file = new File(context.getFilesDir(), "movieURL");
-        String fileName = "featuredMovieURL";
-        String fileContents = "https://a1.moviepass.com/staging/videos/black_panther.mp4";
-        FileOutputStream outputStream;
-
-        try {
-            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-            outputStream.write(fileContents.getBytes());
-            outputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
         holder.featuredVideo.setControllerHideOnTouch(false);
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -149,26 +117,26 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         DefaultBandwidthMeter meter = new DefaultBandwidthMeter();
         DataSource.Factory data = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "moviepass"), meter);
-        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(Uri.parse(fileContents));
+        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(videoURI);
 
         player.prepare(video);
-
         holder.moviePoster.setVisibility(View.GONE);
-
         holder.featuredVideo.setPlayer(player);
         player.setRepeatMode(Player.REPEAT_MODE_ONE);
 
         player.setPlayWhenReady(true);
 
-        Log.d(Constants.TAG, "onBindViewHolder: " + player.getPlaybackState());
         fadeOut(holder.moviePoster);
-        holder.moviePoster.setVisibility(View.INVISIBLE);
+        holder.moviePoster.setVisibility(View.GONE);
         fadeIn(holder.featuredVideo);
         holder.featuredVideo.setVisibility(View.VISIBLE);
 
-        ViewCompat.setTransitionName(holder.moviePoster, movie.getImageUrl());
         holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
 
+
+        ImagePipeline pipeline = Fresco.getImagePipeline();
+        pipeline.clearMemoryCaches();
+        pipeline.clearDiskCaches();
     }
 
     @Override
