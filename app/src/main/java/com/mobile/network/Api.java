@@ -30,6 +30,7 @@ import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PersonalInfoResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.RegistrationPlanResponse;
@@ -225,12 +226,23 @@ public interface Api {
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 
-
+    /*ALL MOVIES FOR MAIN PAGE */
     @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
+
+
+    /* ALL MOVIES FOR SEARCH */
+    @GET("/prod/movies/all.json")
+    Call<LocalStorageMovies> getAllMovies();
+
 
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
+
+
+    //NEW RESTRICTIONS
+    @GET("auth/v1/session/{userId}")
+    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
 }

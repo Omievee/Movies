@@ -52,7 +52,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public String check;
     View root;
     private LinkedList<Screening> screeningsArrayList;
-    private ArrayList<Theater> theaterArrayList;
+    private LinkedList<Theater> theaterArrayList;
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
 
@@ -61,7 +61,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public RadioButton showTime;
 
 
-    public MovieTheatersAdapter(ArrayList<Theater> theaterArrayList, LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
+    public MovieTheatersAdapter(LinkedList<Theater> theaterArrayList, LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
 
         this.screeningsArrayList = screeningsArrayList;
         this.theaterArrayList = theaterArrayList;

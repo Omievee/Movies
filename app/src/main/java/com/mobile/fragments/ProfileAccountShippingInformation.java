@@ -60,7 +60,7 @@ public class ProfileAccountShippingInformation extends Fragment {
     private Context context;
     private ProfileActivityInterface mListener;
     private TextInputLayout address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
-//    private OnFragmentInteractionListener mListener;
+//    private onAlertClickListener mListener;
 
     public ProfileAccountShippingInformation() {
         // Required empty public constructor
@@ -383,7 +383,7 @@ public class ProfileAccountShippingInformation extends Fragment {
 //        mListener = null;
     }
 //
-//    public interface OnFragmentInteractionListener {
+//    public interface onAlertClickListener {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }

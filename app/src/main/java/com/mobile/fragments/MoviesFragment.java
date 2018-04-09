@@ -24,7 +24,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import com.helpshift.support.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +107,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     RealmList<Movie> featured;
     RealmList<Movie> nowPlaying;
 
+
+    private searchMoviesInterface searchMovies;
 
     public ArrayList<Movie> ALLMOVIES;
     ArrayList<String> lastSuggestions;
@@ -211,15 +215,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         /** SEARCH */
         searchicon.setOnClickListener(view -> {
-            cardActivationSnackbarListener.hideSnackBar();
-            FragmentManager fragmentManager = myActivity.getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.MAIN_CONTAINER, searchFrag);
 
-            transaction.addToBackStack(null);
-            fragmentManager.popBackStack();
-            transaction.commit();
+            searchMovies.onSearchMoviesInterface();
         });
 
 
@@ -262,7 +259,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         });
 
 
-
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
         } else {
@@ -286,17 +282,27 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 Toast.makeText(myActivity, "GPS Location Is Required", Toast.LENGTH_SHORT).show();
             }
         }
+
+        config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        moviesRealm = Realm.getInstance(config);
+        TheatersFragment.tRealm = Realm.getDefaultInstance();
+
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        myContext = context;
-        if(context instanceof cardActivationSnackBar){
+        if (context instanceof searchMoviesInterface) {
+            searchMovies = (searchMoviesInterface) context;
+
+        } else if (context instanceof cardActivationSnackBar) {
             cardActivationSnackbarListener = (cardActivationSnackBar) context;
         }
-
+        myContext = context;
     }
 
     @Override
@@ -585,7 +591,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
 
-
     @Override
     public void onLocationChanged(Location location) {
 
@@ -626,12 +631,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         view.setAnimation(animation);
     }
 
-    public interface cardActivationSnackBar{
-         void hideSnackBar();
-         void showSnackbar();
+    public interface cardActivationSnackBar {
+        void hideSnackBar();
+
+        void showSnackbar();
     }
 
+    public interface searchMoviesInterface {
 
+        void onSearchMoviesInterface();
+
+    }
 
 
 }

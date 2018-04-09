@@ -47,6 +47,7 @@ import com.moviepass.R;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -352,20 +353,6 @@ public class LogInActivity extends AppCompatActivity {
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
             checkRestrictions(user);
-            //TODO delete if not needed - Moved to CheckRestrictions()
-//            if (!UserPreferences.getHasUserLoggedInBefore()) {
-//                UserPreferences.hasUserLoggedInBefore(true);
-//                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-//                startActivity(i);
-//            } else {
-//                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-//                i.putExtra("launch", true);
-//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i);
-//            }
-
-
-//            finish();
         }
     }
 

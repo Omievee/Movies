@@ -88,4 +88,7 @@ public class Constants {
     //FIREBASE
     public static final String FIREBASE_TOKEN = "firebase_token";
 
+    //ALERT ID
+    public static final String ALERT_ID = "id";
+
 }

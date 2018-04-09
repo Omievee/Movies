@@ -9,13 +9,14 @@
 
 
     <!--MAIN SKELETON FOR MAIN MOVIES PAGE, FRAME LAYOUT HOUSES LOGO ABOVE ALL ELSE-->
-
     <FrameLayout
-        android:id="@+id/MAIN_CONTAINER"
+        android:id="@+id/movies_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/dark"
+        android:layout_above="@id/navigation"
+        android:background="@android:color/transparent"
         android:visibility="visible" />
+
 
     <include
         android:id="@+id/navigation"
@@ -24,6 +25,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" />
-
 
 </RelativeLayout>

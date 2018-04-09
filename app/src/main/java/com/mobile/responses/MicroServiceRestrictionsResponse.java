@@ -3,11 +3,12 @@ package com.mobile.responses;
 import com.mobile.model.Alert;
 import com.mobile.model.PopInfo;
 
-/**
- * Created by anubis on 7/17/17.
- */
+public class MicroServiceRestrictionsResponse {
 
-public class RestrictionsResponse {
+
+    public MicroServiceRestrictionsResponse() {
+    }
+
 
     int countdown;
     String subscriptionStatus;
@@ -26,8 +27,6 @@ public class RestrictionsResponse {
 
     boolean subscriptionActivationRequired;
 
-    public RestrictionsResponse() {
-    }
 
     public int getCountdown() {
         return countdown;
@@ -60,6 +59,7 @@ public class RestrictionsResponse {
     public boolean getHasActiveCard() {
         return hasActiveCard;
     }
+
     public Alert getAlert() {
         return alert;
     }

@@ -91,7 +91,7 @@ public class HistoryDetailsFragment extends Fragment {
 
 
         Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
-
+        Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity ) myActivity).getSupportFragmentManager().getBackStackEntryCount());
         return root;
     }
 
@@ -104,7 +104,6 @@ public class HistoryDetailsFragment extends Fragment {
         historyLocal = view.findViewById(R.id.historyLocal);
         historyTitle = view.findViewById(R.id.HistoryTitle);
         close = view.findViewById(R.id.close);
-
 
 
 
@@ -155,12 +154,6 @@ public class HistoryDetailsFragment extends Fragment {
     }
 
 
-//    @Override
-//    public void onDismiss(DialogInterface dialog) {
-//        super.onDismiss(dialog);
-//        myActivity.getFragmentManager().popBackStack();
-//        Blurry.delete(((ProfileActivity) this.getActivity()).CONTAINER);
-//    }
 
 
     @Override
