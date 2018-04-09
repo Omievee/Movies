@@ -194,7 +194,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
 //        tRealm = Realm.getDefaultInstance();
-        searchGP.setMaxSuggestionCount(3);
         mSearchClose.setOnClickListener(view -> {
             searchGP.enableSearch();
             fadeIn(searchGP);

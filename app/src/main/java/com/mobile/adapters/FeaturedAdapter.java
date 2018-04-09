@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
@@ -59,9 +61,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 .setSource(imgURI)
                 .build();
 
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
+
+        Log.d(Constants.TAG, "onBindViewHolder: " + imgURI);
 
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -91,6 +92,11 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster);
             }
         });
+
+        ImagePipeline pipeline = Fresco.getImagePipeline();
+        pipeline.clearMemoryCaches();
+        pipeline.clearDiskCaches();
+
 
     }
 
