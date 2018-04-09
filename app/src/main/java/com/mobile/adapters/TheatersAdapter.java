@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import com.helpshift.support.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +47,9 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
     private LinkedList<Theater> theatersArrayList;
     public static final String THEATER = "cinema";
-    private final int TYPE_ITEM = 0;
-    TextView etickets, nearby;
+
+    public static final int TYPE_HEADeR = 0;
+    public static final int TYPE_ITEM = 1;
 
     public TheatersAdapter(LinkedList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;

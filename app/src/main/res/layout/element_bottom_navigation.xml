@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:layout_alignParentBottom="true"
-    android:background="@android:color/black"
+    android:background="@color/dark2"
     android:elevation="4dp"
     app:itemIconTint="@color/drawer_item"
     app:itemTextColor="@color/drawer_item"

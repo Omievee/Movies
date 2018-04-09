@@ -7,6 +7,7 @@ import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.requests.CardActivationRequest;
+import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.CredentialsRequest;
@@ -23,12 +24,15 @@ import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PersonalInfoResponse;
+import com.mobile.responses.PlanResponse;
 import com.mobile.responses.RegistrationPlanResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
@@ -73,6 +77,10 @@ public interface Api {
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
+    /** Change Password */
+    @POST("rest/v1/passwordChange")
+    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
+
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
@@ -88,9 +96,9 @@ public interface Api {
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
-//
-//    @GET("/rest/v1/register/amc_upgradeability/{myZip}")
-//    Call<RegistrationPlanResponse> getPlans(@Path("myZip") String zip);
+
+    @GET("/register/plans")
+    Call<PlanResponse> getPlans();
 
     /* SignUp */
     @POST("mobile/register")
@@ -166,7 +174,7 @@ public interface Api {
     Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci,
                                          @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -176,7 +184,7 @@ public interface Api {
                                             @Query("ct") String ct, @Query("ci") String ci,
                                             @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                             @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                             @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -186,7 +194,7 @@ public interface Api {
                                            @Query("ct") String ct, @Query("ci") String ci,
                                            @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                            @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                           @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                           @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                            @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -195,7 +203,7 @@ public interface Api {
                                                  @Query("tr") String tr,
                                                  @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                                  @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                                 @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                                  @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -205,7 +213,7 @@ public interface Api {
                                              @Query("ct") String ct, @Query("ci") String ci,
                                              @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                              @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                              @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
@@ -214,16 +222,27 @@ public interface Api {
                                          @Query("et") String et,
                                          @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
-                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[idfa]") String idfa,
+                                         @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 
+    /*ALL MOVIES FOR MAIN PAGE */
     @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
+
+
+    /* ALL MOVIES FOR SEARCH */
+    @GET("/prod/movies/all.json")
+    Call<LocalStorageMovies> getAllMovies();
+
 
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
 
+
+    //NEW RESTRICTIONS
+    @GET("auth/v1/session/{userId}")
+    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
 }

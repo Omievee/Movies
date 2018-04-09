@@ -15,13 +15,15 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,10 +61,13 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
+import com.mobile.Constants;
+import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.helpers.RealmTaskService;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
@@ -79,6 +84,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -90,13 +96,20 @@ import retrofit2.Response;
 
 public class TheatersFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
-    Realm theatersRealm;
+
+    public static final String GCM_ONEOFF_TAG = "oneoff|[0,0]";
+    public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
+
+    private final static String senderID = "11111111111";
+    public static Realm tRealm;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
     public static final int LOCATION_PERMISSIONS = 99;
     public boolean expanded;
     private HashMap<LatLng, Theater> mMapData;
     private HashMap<String, Theater> markerTheaterMap;
     Context myContext;
+    Activity myActivity;
+    FragmentActivity myFragment;
     private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -125,6 +138,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     Location smallLocal;
     View customInfoWindow;
 
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,7 +159,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mProgress = rootView.findViewById(R.id.progress);
-        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView = rootView.findViewById(R.id.MPMAPVIEW);
         myloc = rootView.findViewById(R.id.myloc);
         mRequestingLocationUpdates = true;
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);
@@ -179,11 +193,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         ContextSingleton.getInstance(getContext()).getGlobalContext();
 
 
-        theatersRealm = Realm.getDefaultInstance();
-
-        searchGP.setMaxSuggestionCount(3);
+//        tRealm = Realm.getDefaultInstance();
         mSearchClose.setOnClickListener(view -> {
+
             searchGP.enableSearch();
+            searchGP.setMaxSuggestionCount(0);
             fadeIn(searchGP);
             searchGP.setVisibility(View.VISIBLE);
             fadeOut(mSearchClose);
@@ -204,6 +218,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -256,6 +271,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 }
             }
         });
+
+
     }
 
     @Override
@@ -269,9 +286,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
-        mMap.setMinZoomPreference(DEFAULT_ZOOM_LEVEL);
-        Log.d(TAG, "onMapReady: " + customInfoWindow);
-
+        mMap.setMinZoomPreference(1);
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -279,6 +294,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(myContext, R.raw.map_style_json));
             mMap.getUiSettings().setMapToolbarEnabled(false);
+            mMap.getUiSettings().setCompassEnabled(false);
             mClusterManager = new ClusterManager<>(myContext, mMap);
             mClusterManager.setRenderer(new TheaterPinRenderer());
             mMap.setOnMarkerClickListener(mClusterManager);
@@ -290,13 +306,15 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
 
-        if (theatersRealm.isEmpty()) {
+        tRealm = Realm.getDefaultInstance();
+
+        if (tRealm.isEmpty()) {
             getAllTheatersForStorage();
         } else {
             locationUpdateRealm();
         }
         mProgress.setVisibility(View.VISIBLE);
-        customInfoWindow = View.inflate(getContext(), R.layout.fr_theaters_infowindow, null);
+        customInfoWindow = View.inflate(myActivity, R.layout.fr_theaters_infowindow, null);
         mMap.setOnMarkerClickListener(marker -> {
             ImageView etickIcon = customInfoWindow.findViewById(R.id.info_Etix);
             ImageView seatIcon = customInfoWindow.findViewById(R.id.info_Seat);
@@ -361,8 +379,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     void locationUpdateRealm() {
-        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
         }
         mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
             Location loc = task.getResult();
@@ -370,15 +388,13 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
-                    lat = Double.parseDouble(String.format("%.2f", loc.getLatitude()));
-                    lon = Double.parseDouble(String.format("%.2f", loc.getLongitude()));
+                    lat = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLatitude()));
+                    lon = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLongitude()));
 
                     queryRealmLoadTheaters(lat, lon);
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
                     CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
                     mMap.moveCamera(current);
-
-
                 }
             }
         });
@@ -387,21 +403,21 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: ");
         mGoogleApiClient.disconnect();
     }
 
     @Override
-    public void onAttach(Activity context) {
-        super.onAttach(context);
-        Log.d(TAG, "onAttach: ");
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
     }
 
 
     @Override
     public void onResume() {
-        mMapView.onResume();
         super.onResume();
+        mMapView.onResume();
+        locationUpdateRealm();
 
     }
 
@@ -414,6 +430,12 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
     private void getMyLocation() {
+        boolean enabled = UserLocationManagerFused.getLocationInstance(myContext).isLocationEnabled();
+        if (!enabled) {
+            EnableLocation location = new EnableLocation();
+            android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+            location.show(fm, "fr_enablelocation");
+        }
         mProgress.setVisibility(View.VISIBLE);
         LatLng latLng = new LatLng(lat, lon);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
@@ -469,7 +491,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         @Override
         protected void onBeforeClusterRendered(Cluster<TheaterPin> cluster, MarkerOptions markerOptions) {
             try {
-                mClusterIconGenerator.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.icon_clustered_theater_pin));
+                mClusterIconGenerator.setBackground(ContextCompat.getDrawable(myActivity, R.drawable.icon_clustered_theater_pin));
                 mClusterIconGenerator.setTextAppearance(R.style.ThemeOverlay_AppCompat_Dark);
 
                 final Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
@@ -480,9 +502,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 List<Drawable> theaterPins = new ArrayList<>(Math.min(3, cluster.getSize()));
                 for (TheaterPin p : cluster.getItems()) {
                     // Draw 4 at most.
-                    if (theaterPins.size() == 4) break;
+                    if (theaterPins.size() == 0) break;
                     Drawable drawable = getResources().getDrawable(R.drawable.theaterpineticket);
-                    //drawable.setBounds(0, 0, width, height);
                     theaterPins.add(drawable);
                 }
             } catch (Exception e) {
@@ -525,9 +546,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         userCurrentLocation.setLatitude(newLat);
         userCurrentLocation.setLongitude(newLong);
 
-        RealmResults<Theater> allTheaters = theatersRealm.where(Theater.class).findAll();
+        RealmResults<Theater> allTheaters = tRealm.where(Theater.class).findAll();
 
-        Log.d(TAG, "queryRealmLoadTheaters: " + allTheaters.size());
+        Log.d(TAG, "THEATERS SIZE???!?!?!?!?: " + allTheaters.size());
         for (int K = 0; K < allTheaters.size(); K++) {
             Location pointB = new Location(LocationManager.GPS_PROVIDER);
 
@@ -546,9 +567,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
-            theatersRealm.beginTransaction();
+            tRealm.beginTransaction();
             nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
-            theatersRealm.commitTransaction();
+            tRealm.commitTransaction();
         }
         //Sort through shorter list..
         Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
@@ -597,19 +618,14 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         }
 
+        displayTheatersFromRealm(nearbyTheaters);
 
-        if (nearbyTheaters.size() == 0) {
-            slideup.setEnabled(false);
-            listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-            upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-        } else {
-            displayTheatersFromRealm(nearbyTheaters);
-        }
     }
 
     void displayTheatersFromRealm(LinkedList<Theater> theatersList) {
         mProgress.setVisibility(View.GONE);
+
+
         theaterAdapter.notifyDataSetChanged();
         slideup.setEnabled(true);
         listViewText.setTextColor(getResources().getColor(R.color.white));
@@ -635,6 +651,23 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             });
         }
         mClusterManager.cluster();
+
+        Log.d(TAG, "displayTheatersFromRealm: " + theatersList.size());
+
+
+        Handler han = new Handler();
+        han.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (theatersList.size() == 0) {
+                    slideup.setEnabled(false);
+                    listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                    upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                    Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, 3000);
+
     }
 
 
@@ -652,7 +685,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 mMap.animateCamera(cameraUpdate);
                 Log.d(TAG, "address: " + address);
             } else {
-                RealmResults<Theater> searchArea = theatersRealm.where(Theater.class)
+                RealmResults<Theater> searchArea = tRealm.where(Theater.class)
                         .contains("city", searchString)
                         .findAll();
                 GoWatchItSingleton.getInstance().searchEvent(searchString, "theatrical_search", url);
@@ -687,54 +720,18 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         myContext = context;
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        theatersRealm.close();
+        tRealm.close();
     }
 
 
     /**
      * REALM CODE
      */
-    public void getAllTheatersForStorage() {
-        RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
-            @Override
-            public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
-                LocalStorageTheaters locallyStoredTheaters = response.body();
-                if (locallyStoredTheaters != null && response.isSuccessful()) {
-                    theatersRealm.executeTransactionAsync(R -> {
-                        for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
-                            Theater RLMTH = R.createObject(Theater.class);
-                            RLMTH.setId(locallyStoredTheaters.getTheaters().get(j).getId());
-                            RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
-                            RLMTH.setTribuneTheaterId(locallyStoredTheaters.getTheaters().get(j).getTribuneTheaterId());
-                            RLMTH.setName(locallyStoredTheaters.getTheaters().get(j).getName());
-                            RLMTH.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
-                            RLMTH.setCity(locallyStoredTheaters.getTheaters().get(j).getCity());
-                            RLMTH.setState(locallyStoredTheaters.getTheaters().get(j).getState());
-                            RLMTH.setZip(locallyStoredTheaters.getTheaters().get(j).getZip());
-                            RLMTH.setDistance(locallyStoredTheaters.getTheaters().get(j).getDistance());
-                            RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
-                            RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
-                            RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
-                        }
-                    }, () -> {
-                        Log.d(TAG, "onSuccess: ");
-                        locationUpdateRealm();
-                    }, error -> {
-                        // Transaction failed and was automatically canceled.
-                        Log.d(TAG, "Realm onError: " + error.getMessage());
-                    });
-                }
-            }
 
-            @Override
-            public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
-                Toast.makeText(getContext(), "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
@@ -753,6 +750,46 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    public void getAllTheatersForStorage() {
+        RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+            @Override
+            public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
+                LocalStorageTheaters locallyStoredTheaters = response.body();
+                if (locallyStoredTheaters != null && response.isSuccessful()) {
+                    tRealm.executeTransactionAsync(R -> {
+
+                        for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
+                            Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
+                            RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
+                            RLMTH.setTribuneTheaterId(locallyStoredTheaters.getTheaters().get(j).getTribuneTheaterId());
+                            RLMTH.setName(locallyStoredTheaters.getTheaters().get(j).getName());
+                            RLMTH.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
+                            RLMTH.setCity(locallyStoredTheaters.getTheaters().get(j).getCity());
+                            RLMTH.setState(locallyStoredTheaters.getTheaters().get(j).getState());
+                            RLMTH.setZip(locallyStoredTheaters.getTheaters().get(j).getZip());
+                            RLMTH.setDistance(locallyStoredTheaters.getTheaters().get(j).getDistance());
+                            RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
+                            RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
+                            RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
+
+                        }
+                    }, () -> {
+                        Log.d(Constants.TAG, "onSuccess: ");
+                        locationUpdateRealm();
+                    }, error -> {
+                        // Transaction failed and was automatically canceled.
+                        Log.d(Constants.TAG, "Realm onError: " + error.getMessage());
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
+                Toast.makeText(myActivity, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

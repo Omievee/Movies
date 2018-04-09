@@ -20,8 +20,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_half"
             android:text="Account"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textColor="@color/almost_white"
+            android:textSize="16sp"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:textStyle="bold" />
 
     </RelativeLayout>
@@ -48,7 +49,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Profile"
                 android:textColor="@color/new_red"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
 
             <RelativeLayout
@@ -57,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ProfileTag"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/test_blue"
+                android:background="@color/charcoalGrey"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_half">
 
@@ -70,8 +71,8 @@
                     android:layout_centerInParent="true"
                     android:paddingStart="@dimen/margin_half"
                     android:text="Account Details"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
 
                 <ImageView
@@ -91,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/Details"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/test_blue"
+                android:background="@color/charcoalGrey"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_half">
 
@@ -105,8 +106,8 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Current Reservation"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="25dp"
@@ -126,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/Current"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/test_blue"
+                android:background="@color/charcoalGrey"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_half">
 
@@ -140,8 +141,8 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="History"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="25dp"
@@ -163,7 +164,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Help"
                 android:textColor="@color/new_red"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
 
             <RelativeLayout
@@ -172,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/HelpTag"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/test_blue"
+                android:background="@color/charcoalGrey"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_half"
                 android:visibility="visible">
@@ -186,8 +187,8 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="How To Use MoviePass"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
 
                 <ImageView
@@ -206,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/HowTO"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/test_blue"
+                android:background="@color/charcoalGrey"
                 android:orientation="horizontal"
                 android:padding="@dimen/margin_half">
 
@@ -214,14 +215,13 @@
                     android:id="@+id/HELP_TEXT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
                     android:paddingStart="@dimen/margin_half"
                     android:text="Help"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="25dp"
@@ -230,6 +230,7 @@
                     android:layout_centerInParent="true"
                     android:src="@drawable/arrowforward"
                     android:tint="@color/white" />
+
 
 
             </RelativeLayout>
@@ -252,7 +253,8 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Notifications"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/NOTIF_SUM"
@@ -262,8 +264,9 @@
                     android:layout_marginTop="@dimen/margin_half"
                     android:lineSpacingExtra="3dp"
                     android:paddingStart="@dimen/margin_half"
+                    android:textColor="@color/almost_white"
                     android:text="Be the first to hear about new movies, features, and promotions from MoviePass"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
 
 
                 <Switch
@@ -273,6 +276,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
                     android:checked="true" />
+
 
             </RelativeLayout>
 
@@ -286,7 +290,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Terms of Use"
                 android:textColor="@color/new_red"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/PP"
@@ -297,18 +301,18 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Privacy Policy"
                 android:textColor="@color/new_red"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/SignOut"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/PP"
-                android:layout_marginTop="@dimen/double_margin_standard"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Sign Out"
                 android:textColor="@color/new_red"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/VERSIOn"
@@ -317,6 +321,8 @@
                 android:layout_below="@id/SignOut"
                 android:layout_gravity="bottom"
                 android:padding="@dimen/margin_half"
+                android:textSize="10dp"
+                android:layout_marginBottom="@dimen/margin_standard"
                 android:paddingStart="@dimen/margin_standard" />
 
         </LinearLayout>

@@ -16,7 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,7 +130,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         transferUtility = TransferUtility.builder()
                 .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                .s3Client(((Application) getContext().getApplicationContext()).getAmazonS3Client())
+                .s3Client(((Application) myActivity.getApplicationContext()).getAmazonS3Client())
                 .build();
 
         return root;
@@ -362,6 +362,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         super.onAttach(context);
         myContext = context;
     }
+
 }
 
 

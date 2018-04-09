@@ -11,12 +11,15 @@ import java.util.List;
 public class LocalStorageMovies {
     List<Movie> newReleases;
     List<Movie> featured;
+    List<Movie> topBoxOffice;
+    List<Movie> nowPlaying;
+    List<Movie> comingSoon;
+
 
     public List<Movie> getTopBoxOffice() {
         return topBoxOffice;
     }
 
-    List<Movie> topBoxOffice;
 
     public List<Movie> getFeatured() {
         return featured;
@@ -30,8 +33,7 @@ public class LocalStorageMovies {
         return comingSoon;
     }
 
-    List<Movie> nowPlaying;
-    List<Movie> comingSoon;
+
 
     public List<Movie> getNewReleases() {
         return newReleases;

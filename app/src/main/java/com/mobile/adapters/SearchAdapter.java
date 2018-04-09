@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -126,7 +126,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         protected TextView rating;
         protected TextView runTime;
         protected SimpleDraweeView image;
-        CardView cardView;
+        View cardView;
 
         public SuggestionHolder(View itemView) {
             super(itemView);

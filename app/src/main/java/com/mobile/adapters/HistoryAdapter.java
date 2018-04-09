@@ -1,16 +1,16 @@
 package com.mobile.adapters;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
+import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -27,9 +28,6 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -42,39 +40,26 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     private ArrayList<Movie> historyArrayList;
 
     private final int TYPE_ITEM = 0;
-    private LayoutInflater inflater;
     private Context context;
+    ViewHolder HOLDER;
+    private final historyPosterClickListener historyListener;
 
-    public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList) {
+    public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList, historyPosterClickListener historyListener) {
         this.historyArrayList = historyArrayList;
         this.context = context;
+        this.historyListener = historyListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.historyCard)
-        CardView listItemHistory;
 
         @BindView(R.id.historyPoster)
         SimpleDraweeView posterImageView;
-        @BindView(R.id.Date_seen)
-        TextView saw;
 
-        @BindView(R.id.Title_Movie)
-        TextView title;
-//        @BindView(R.id.Theater)
-//        TextView theater;
-//        @BindView(R.id.Date)
-//        TextView date;
 
         public ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
-            listItemHistory = v.findViewById(R.id.historyCard);
             posterImageView = v.findViewById(R.id.historyPoster);
-            saw = v.findViewById(R.id.Date_seen);
-            title = v.findViewById(R.id.Title_Movie);
-//            theater = v.findViewById(R.id.Theater);
-//            date = v.findViewById(R.id.Date);
         }
     }
 
@@ -90,15 +75,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         holder.posterImageView.setImageURI(imgUrl);
         holder.posterImageView.getHierarchy().setFadeDuration(500);
-
-
-        Log.d(Constants.TAG, "PAST URL: " + imgUrl);
+        HOLDER = holder;
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
                 .build();
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setUri(imgUrl)
                 .setImageRequest(request)
                 .setOldController(holder.posterImageView.getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
@@ -106,7 +90,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imgUrl.toString().contains("default")) {
-                            holder.title.setText(movie.getTitle());
+                            // holder.title.setText(movie.getTitle());
                         }
                     }
 
@@ -121,14 +105,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             holder.posterImageView.refreshDrawableState();
         }
         holder.posterImageView.setController(controller);
-        long createdAt = movie.getCreatedAt();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-//
-////
-//        holder.title.setText(movieTitle);
-//        holder.theater.setText(movie.getTheaterName());
-        holder.saw.setText(sdf.format(new Date(createdAt)));
-        holder.listItemHistory.setTag(position);
+
+        ViewCompat.setTransitionName(holder.posterImageView, movie.getTitle());
+
+        holder.itemView.setOnClickListener(v -> {
+
+            historyListener.onPosterClicked(position, movie, holder.posterImageView);
+
+        });
+
+
     }
 
     @Override
@@ -140,5 +126,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public int getItemViewType(int position) {
         return TYPE_ITEM;
     }
+
 
 }

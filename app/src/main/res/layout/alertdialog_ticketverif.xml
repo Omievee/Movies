@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="@color/test_black">
+    android:layout_marginBottom="@dimen/margin_half"
+    app:cardBackgroundColor="@color/charcoalGrey">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +18,8 @@
             android:layout_marginTop="@dimen/margin_half"
             android:text="Ticket Verification"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,8 +30,8 @@
             android:layout_marginTop="@dimen/margin_half"
             android:text="@string/pre_pop_dialog"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,8 +42,8 @@
             android:layout_marginTop="@dimen/margin_half"
             android:text="@string/pre_pop_dialog2"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="14sp" />
 
 
     </LinearLayout>

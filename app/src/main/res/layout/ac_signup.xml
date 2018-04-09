@@ -3,121 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/SIGNUP_MAINLAYOUT"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@color/test_black"
-    android:fitsSystemWindows="true">
-
+    android:layout_height="match_parent">
 
     <view
         android:id="@+id/MAIN_FRAGMENT_CONTAINER_SIGNUP"
         class="com.mobile.activities.SignUpActivity$NonSwipeableViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-
-
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_half"
-        android:gravity="center_horizontal"
-        android:src="@drawable/logo"
-        android:tint="@color/new_red" />
-
-
-
-    <!-- divider -->
-
-    <FrameLayout
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/quadruple_margin_standard">
-
-
-        <LinearLayout
-            android:layout_width="315dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="@dimen/margin_half"
-            android:layout_marginTop="28dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shipping"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:text="Payment"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="65dp"
-                android:text="Confirm"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-
-        </LinearLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/dots"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-
-            <View
-                android:id="@id/line"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/margin_half"
-                android:background="@android:color/white" />
-
-            <ImageView
-                android:id="@+id/intro_indicator_0"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentStart="true"
-                android:background="@drawable/indicator_unselected" />
-
-
-            <ImageView
-                android:id="@+id/intro_indicator_1"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/indicator_unselected" />
-
-            <ImageView
-                android:id="@+id/intro_indicator_2"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/indicator_unselected" />
-
-
-        </RelativeLayout>
-
-
-    </FrameLayout>
-
+        android:layout_marginTop="@dimen/double_margin_standard" />
 
     <include
         android:id="@+id/progress"

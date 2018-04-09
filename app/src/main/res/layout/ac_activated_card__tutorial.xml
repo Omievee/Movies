@@ -5,7 +5,7 @@
     android:id="@+id/TUTORIAL_MAIN_ACTIVITY"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/test_blue"
+    android:background="@color/test_black"
     tools:context="com.mobile.activities.ActivatedCard_TutorialActivity">
 
 
@@ -19,7 +19,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <TextView
             android:id="@+id/TUTORIAL_DONE"
@@ -80,6 +79,14 @@
                 android:layout_height="10dp"
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:background="@drawable/indicator_unselected" />
+
+            <ImageView
+                android:id="@+id/tutorial_indicator_5"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:background="@drawable/indicator_unselected" />
+
 
 
         </LinearLayout>

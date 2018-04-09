@@ -2,10 +2,7 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.content.SharedPreferences;
-import android.net.Uri;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -14,55 +11,38 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.transition.Fade;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.amazonaws.mobile.client.AWSMobileClient;
-
-import com.github.clans.fab.FloatingActionMenu;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
-
 import com.mobile.UserPreferences;
+import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
+import com.mobile.fragments.SearchFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
-import com.mobile.helpers.GoWatchItSingleton;
-import com.mobile.model.Eid;
+import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
-
-import com.mobile.network.RestClient;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.model.MoviesResponse;
-import com.mobile.network.Api;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
-import com.mobile.requests.OpenAppEventRequest;
-import com.mobile.responses.ChangedMindResponse;
-import com.mobile.responses.GoWatchItResponse;
-import com.moviepass.BuildConfig;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Headers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Header;
-
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,10 +51,14 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity {
+public  class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
+    MicroServiceRestrictionsResponse restrict;
+    public ViewGroup CONTAIN;
+    //Retrofit calls
+    Call<RestrictionsResponse> restrictionsResponseCall;
 
     public static final String MOVIES = "movies";
     View parentLayout;
@@ -85,22 +69,25 @@ public class MoviesActivity extends BaseActivity {
     List<String> urlPath;
     String url;
     MoviesResponse moviesResponse;
+    private Call<MoviesResponse> loadMoviesCall;
+    private Snackbar snack;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
+        FrameLayout main = findViewById(R.id.movies_container);
 
         Intent intent = getIntent();
         if (intent != null && intent.getIntExtra(MOVIES, -1) != -1) {
             movieId = intent.getIntExtra(MOVIES, -1);
             loadMovies();
-//            GoWatchItSingleton.getInstance().userOpenedApp(this,url);
         } else {
             Fragment moviesFragment = new MoviesFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MAIN_CONTAINER, moviesFragment).commit();
-            FrameLayout main = findViewById(R.id.MAIN_CONTAINER);
+            FragmentManager support = getSupportFragmentManager();
+            FragmentTransaction ft = support.beginTransaction();
+            ft.replace(R.id.movies_container, moviesFragment);
+            ft.commit();
             fadeIn(main);
         }
         bottomNavigationView = findViewById(R.id.navigation);
@@ -112,16 +99,14 @@ public class MoviesActivity extends BaseActivity {
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
 
-
-        checkRestrictions();
-
-
+        Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
+
+        microServiceRestrictions();
+
     }
 
     @Override
@@ -130,11 +115,22 @@ public class MoviesActivity extends BaseActivity {
         updateNavigationBarState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activateMoviePassCardSnackBar();
+        updateNavigationBarState();
+    }
+
     // Remove inter-activity transition to avoid screen tossing on tapping bottom navigation items
     @Override
     public void onPause() {
         super.onPause();
         overridePendingTransition(0, 0);
+        if (restrictionsResponseCall != null && !restrictionsResponseCall.isExecuted())
+            restrictionsResponseCall.cancel();
+        if (loadMoviesCall != null && !loadMoviesCall.isExecuted())
+            loadMoviesCall.cancel();
     }
 
     int getContentViewId() {
@@ -163,6 +159,10 @@ public class MoviesActivity extends BaseActivity {
                 alert.show();
             } else {
                 if (itemId == R.id.action_profile) {
+                    if (loadMoviesCall != null)
+                        loadMoviesCall.cancel();
+                    if (restrictionsResponseCall != null)
+                        restrictionsResponseCall.cancel();
                     // item.setIcon(getDrawable(R.drawable.profilenavred));
                     if (UserPreferences.getUserId() == 0) {
                         Intent intent = new Intent(MoviesActivity.this, LogInActivity.class);
@@ -206,19 +206,11 @@ public class MoviesActivity extends BaseActivity {
             AlertDialog alert;
             AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
             builder.setMessage("Do you want to quit MoviePass?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    finish(); // finish activity
-                }
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                dialog.dismiss();
+                finish(); // finish activity
             });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
             builder.show();
             alert = builder.create();
             alert.show();
@@ -231,7 +223,11 @@ public class MoviesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+        android.util.Log.d(Constants.TAG, "onBackPressed: " + getSupportFragmentManager().getBackStackEntryCount());
+        if (CONTAIN != null) {
+            Blurry.delete(CONTAIN);
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             AlertDialog alert;
             AlertDialog.Builder builder = new AlertDialog.Builder(MoviesActivity.this, R.style.AlertDialogCustom);
             builder.setMessage("Do you want to quit MoviePass?");
@@ -250,46 +246,57 @@ public class MoviesActivity extends BaseActivity {
             });
             alert = builder.create();
             alert.show();
-        } else if (getFragmentManager().getBackStackEntryCount() == 1) {
-            getFragmentManager().popBackStack();
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            if (restrict.getAlert() != null && !restrict.getAlert().isDismissible()) {
+                Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
+            } else if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())){
+                UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
+                getSupportFragmentManager().popBackStack();
+                activateMoviePassCardSnackBar();
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }else {
+                getSupportFragmentManager().popBackStack();
+                activateMoviePassCardSnackBar();
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }
         }
-
-        // do nothing. We want to force user to stay in this activity and not drop out.
-
     }
 
     public void activateMoviePassCardSnackBar() {
-        parentLayout = findViewById(R.id.COORDPARENT);
-        Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-        params.setMargins(0, 0, 0, 180);
-        snack.getView().setLayoutParams(params);
-        snack.show();
-        View sb = snack.getView();
-        snack.getView().setHovered(true);
-        sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-        snack.setActionTextColor(getResources().getColor(R.color.white));
-        snack.setAction("Ok", v -> {
-            Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-            startActivity(activateCard);
-        });
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            parentLayout = findViewById(R.id.COORDPARENT);
+            snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height));
+            snack.getView().setLayoutParams(params);
+            snack.show();
+            View sb = snack.getView();
+            snack.getView().setHovered(true);
+            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+            sb.setElevation(0);
+            snack.setActionTextColor(getResources().getColor(R.color.almost_white));
+            snack.setAction("Ok", v -> {
+                Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+                startActivity(activateCard);
+            });
+        }
     }
 
+    public void microServiceRestrictions() {
 
-    public void checkRestrictions() {
-        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
+        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    restriction = response.body();
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+            public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
+                restrict = response.body();
+                if (response != null && response.isSuccessful()) {
+                    String status = restrict.getSubscriptionStatus();
+                    boolean fbPresent = restrict.getFacebookPresent();
+                    boolean threeDEnabled = restrict.get3dEnabled();
+                    boolean allFormatsEnabled = restrict.getAllFormatsEnabled();
+                    boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restrict.getHasActiveCard();
+                    boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -301,15 +308,14 @@ public class MoviesActivity extends BaseActivity {
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
-
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
-                        int reservationId = restriction.getPopInfo().getReservationId();
-                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-                        String theaterName = restriction.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-                        String showtime = restriction.getPopInfo().getShowtime();
+                    if (UserPreferences.getProofOfPurchaseRequired() && restrict.getPopInfo() != null) {
+                        int reservationId = restrict.getPopInfo().getReservationId();
+                        String movieTitle = restrict.getPopInfo().getMovieTitle();
+                        String tribuneMovieId = restrict.getPopInfo().getTribuneMovieId();
+                        String theaterName = restrict.getPopInfo().getTheaterName();
+                        String tribuneTheaterId = restrict.getPopInfo().getTribuneTheaterId();
+                        String showtime = restrict.getPopInfo().getShowtime();
 
                         bundle = new Bundle();
                         bundle.putInt("reservationId", reservationId);
@@ -319,10 +325,36 @@ public class MoviesActivity extends BaseActivity {
                         bundle.putString("tribuneTheaterId", tribuneTheaterId);
                         bundle.putString("showtime", showtime);
 
-
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
                         addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                    }
+                    //Alert data to create Alert Activity on launch...
+                    if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
+
+                        android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
+
+                        AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
+                                restrict.getAlert().getId(),
+                                restrict.getAlert().getTitle(),
+                                restrict.getAlert().getBody(),
+                                restrict.getAlert().getUrl(),
+                                restrict.getAlert().getUrlTitle(),
+                                restrict.getAlert().isDismissible());
+
+                        alertScreen.setSharedElementEnterTransition(new HistoryDetails());
+                        alertScreen.setEnterTransition(new Fade());
+                        alertScreen.setExitTransition(new Fade());
+                        alertScreen.setSharedElementReturnTransition(new HistoryDetails());
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.movies_container, alertScreen);
+                        transaction.addToBackStack("");
+                        transaction.commit();
+
+                        bottomNavigationView.setVisibility(View.GONE);
+
                     }
 
                 } else {
@@ -330,19 +362,19 @@ public class MoviesActivity extends BaseActivity {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
 
                         //IF API ERROR LOG OUT TO LOG BACK IN
-                        /*
                         if (jObjError.getString("message").matches("INVALID API REQUEST")) {
 
-                        */
+                        }
 
                     } catch (Exception e) {
 
                     }
                 }
+
             }
 
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-
+            @Override
+            public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
             }
         });
     }
@@ -361,8 +393,10 @@ public class MoviesActivity extends BaseActivity {
         }
     }
 
+
     public void loadMovies() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+        loadMoviesCall = RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude());
+        loadMoviesCall.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
 
@@ -394,11 +428,9 @@ public class MoviesActivity extends BaseActivity {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
 
-
             }
         });
     }
-
 
     public void startMovieActivity() {
         Intent movieIntent = new Intent(this, MovieActivity.class);
@@ -407,5 +439,40 @@ public class MoviesActivity extends BaseActivity {
         startActivity(movieIntent);
     }
 
+
+    @Override
+    public void onAlertClickListener(String alertId) {
+        UserPreferences.setAlertDisplayedId(alertId);
+        android.util.Log.d(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
+        getSupportFragmentManager().popBackStack();
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSearchMoviesInterface() {
+        SearchFragment searchFrag = new SearchFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        transaction.replace(R.id.movies_container, searchFrag);
+        transaction.addToBackStack("");
+        transaction.commit();
+        bottomNavigationView.setVisibility(View.GONE);
+        hideSnackBar();
+    }
+
+    @Override
+    public void hideSnackBar() {
+        if (snack != null && snack.isShown()) {
+            snack.dismiss();
+        }
+    }
+
+    @Override
+    public void showSnackbar() {
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            activateMoviePassCardSnackBar();
+        }
+    }
 
 }

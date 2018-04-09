@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list_item_theater"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="wrap_content"
+    app:cardElevation="-1dp"
     android:layout_marginBottom="@dimen/margin_standard"
-    android:elevation="@dimen/basic_elevation"
-    app:cardBackgroundColor="@color/test_blue">
+    app:cardBackgroundColor="@color/charcoalGrey">
 
     <RelativeLayout
         android:id="@+id/rel_container"
@@ -25,8 +25,8 @@
             android:maxLines="1"
             android:text="@string/fragment_theaters_name"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textColor="@color/almost_white"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -38,8 +38,8 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="12sp" />
 
 
         <TextView
@@ -51,14 +51,15 @@
             android:paddingStart="@dimen/more_spacing"
             android:text="@string/fragment_theaters_address"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:id="@+id/distanceView"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:layout_below="@id/theater_address">
 
 
@@ -69,15 +70,17 @@
                 android:layout_marginEnd="@dimen/margin_half"
                 android:layout_toStartOf="@id/PIN"
                 android:text="@string/fragment_theaters_distance"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/almost_white"
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/PIN"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="22dp"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/locationiconsmallred"
                 android:textAlignment="viewStart"
                 android:tint="@color/new_red" />
@@ -90,11 +93,10 @@
             android:layout_alignParentEnd="true"
             android:layout_margin="@dimen/margin_standard">
 
-
             <ImageView
                 android:id="@+id/icon_ticket"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="@dimen/margin_standard"
                 android:layout_toEndOf="@id/icon_seat"
                 android:src="@drawable/ticketnavwhite"
@@ -102,13 +104,11 @@
 
             <ImageView
                 android:id="@+id/icon_seat"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="@dimen/margin_half"
                 android:src="@drawable/icon_seat_copy"
                 android:textAlignment="viewEnd" />
-
-
         </RelativeLayout>
 
 

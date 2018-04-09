@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -63,7 +63,13 @@ public class TheatersActivity extends BaseActivity{
         updateNavigationBarState();
     }
 
-//
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
+    //
 //    @Override
 //    public void onTheaterSelect(int pos, Theater theater, int cx, int cy) {
 //

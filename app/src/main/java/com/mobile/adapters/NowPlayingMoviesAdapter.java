@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,9 +77,7 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-//                        holder.movieTitle.setText(nowPlaying.getTitle());
                         holder.moviePoster.setImageResource(R.drawable.filmreel1);
-//                        holder.movieTitle.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                         holder.moviePoster.setImageURI(imgUrl + "/original.jpg");
                     }
                 })

@@ -7,7 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,15 +76,18 @@ public class TheaterActivity extends BaseActivity {
             theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
             theaterSelectedName.setText(theater.getName());
         }
-
-
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        updateNavigationBarState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateNavigationBarState();
     }
 

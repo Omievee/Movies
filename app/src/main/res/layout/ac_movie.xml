@@ -145,7 +145,7 @@
         android:background="@color/test_black"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/test_black"
@@ -157,9 +157,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="95dp"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 tools:listitem="@layout/list_item_theaters_and_showtimes">
 
@@ -169,8 +170,8 @@
                 android:id="@+id/NoTheaters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/quadruple_margin_standard"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/doubledouble_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:text="There are no available screenings in your location today"
                 android:textAlignment="center"
@@ -179,7 +180,49 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="55dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="@dimen/a_lot_margin_standard"
+                android:elegantTextHeight="true"
+                android:lineSpacingExtra="4dp"
+                android:text="In order to view theaters &amp; showtimes for this movie, location services must be enabled."
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/EnableText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/message"
+                android:layout_centerHorizontal="true"
+                android:padding="@dimen/margin_half"
+                android:text="Enable location services"
+                android:textAlignment="center"
+                android:textColor="@color/new_red"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="25dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/message"
+                android:layout_toEndOf="@id/EnableText"
+                android:src="@drawable/arrowforward"
+                android:tint="@color/new_red"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
 
 
     </android.support.v4.widget.NestedScrollView>
@@ -189,6 +232,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="56dp"
+        android:textAllCaps="false"
         android:animateLayoutChanges="true"
         android:background="@color/new_red"
         android:text="@string/fragment_theater_check_in"

@@ -5,7 +5,9 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +114,11 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mTopBoxMovieDV);
             }
         });
+
+
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
     }
 
     @Override

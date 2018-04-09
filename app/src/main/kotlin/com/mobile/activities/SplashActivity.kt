@@ -1,11 +1,16 @@
 package com.mobile.activities
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import com.helpshift.support.Log
 import android.widget.Toast
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.mobile.Constants
 
 import com.mobile.UserPreferences
 import com.mobile.helpers.GoWatchItSingleton
@@ -19,6 +24,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
 
@@ -30,6 +36,7 @@ class SplashActivity : AppCompatActivity() {
         val intent = intent
         val data = intent.data
 
+        getAAID().execute()
         if (data != null && data.path.length >= 2) run {
             var movieIdEncripted: String
             var movieOrTheater: String
@@ -91,20 +98,26 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             } else {
-                if(typeMovie==0){
-                    val i = Intent(this@SplashActivity, MoviesActivity::class.java)
-                    i.putExtra(MoviesActivity.MOVIES,id)
-                    startActivity(i)
-                    finish()
-                }
-                if(typeMovie==1){
-                    val i = Intent(this@SplashActivity, TheatersActivity::class.java)
-                    i.putExtra(TheatersActivity.THEATER,id)
-                    startActivity(i)
-                    finish()
-                }
-                if(typeMovie==2){
-                    val i = Intent(this@SplashActivity, MoviesActivity::class.java)
+                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) && UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL)) {
+                    if (typeMovie == 0) {
+                        val i = Intent(this@SplashActivity, MoviesActivity::class.java)
+                        i.putExtra(MoviesActivity.MOVIES, id)
+                        startActivity(i)
+                        finish()
+                    }
+                    if (typeMovie == 1) {
+                        val i = Intent(this@SplashActivity, TheatersActivity::class.java)
+                        i.putExtra(TheatersActivity.THEATER, id)
+                        startActivity(i)
+                        finish()
+                    }
+                    if (typeMovie == 2) {
+                        val i = Intent(this@SplashActivity, MoviesActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
+                }else{
+                    val i = Intent(this@SplashActivity, LogInActivity::class.java)
                     startActivity(i)
                     finish()
                 }
@@ -116,6 +129,32 @@ class SplashActivity : AppCompatActivity() {
     companion object {
         // Splash screen timer
         private val SPLASH_TIME_OUT = 1000
+    }
+
+    private  inner class getAAID : AsyncTask<String, String, String>() {
+        override fun onPostExecute(result: String) {
+            UserPreferences.saveAAID(result)
+        }
+
+        override fun doInBackground(vararg strings: String): String {
+            var adInfo: AdvertisingIdClient.Info? = null
+            try {
+                adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
+
+            } catch (e: IOException) {
+                // Unrecoverable error connecting to Google Play services (e.g.,
+                // the old version of the service doesn't support getting AdvertisingId).
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                // Google Play services is not available entirely.
+            } catch (e: GooglePlayServicesRepairableException) {
+                e.printStackTrace()
+            }
+
+            val id = adInfo!!.id
+            val isLAT = adInfo.isLimitAdTrackingEnabled
+
+            return id
+        }
     }
 
 

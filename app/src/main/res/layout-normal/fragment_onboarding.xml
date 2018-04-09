@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -11,35 +12,38 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/quadruple_margin_standard">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/section_img"
             android:layout_width="195dp"
             android:layout_height="195dp"
-            android:layout_marginBottom="@dimen/double_margin_standard"
             android:layout_gravity="center"
-            android:background="@drawable/image_onboarding_1"
+            android:layout_marginBottom="@dimen/double_margin_standard"
             android:scaleType="fitCenter" />
 
     </FrameLayout>
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/quadruple_margin_standard"
+        android:paddingEnd="@dimen/margin_standard"
+        android:paddingStart="@dimen/margin_standard">
 
         <TextView
             android:id="@+id/section_label"
             style="@style/TextAppearance.AppCompat.Headline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/new_red"
-            android:textSize="30sp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/almost_white"
+            android:textSize="24sp"
+            android:textStyle="bold"
             tools:text="Page One" />
 
         <TextView
@@ -47,15 +51,18 @@
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/section_label"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:alpha=".8"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
-            android:text="Add a long description here about your app's important feature."
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+            android:text=""
+            android:textColor="@color/almost_white"
+            android:textSize="16sp" />
 
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
