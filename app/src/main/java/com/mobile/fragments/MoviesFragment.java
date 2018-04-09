@@ -2,10 +2,6 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -44,7 +39,6 @@ import android.widget.Toast;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.activities.MovieActivity;
-import com.mobile.activities.MoviesActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
@@ -61,7 +55,6 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +62,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,7 +80,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     android.location.LocationManager LocationManager;
     String Provider;
     TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
-    cardActivationSnackBar cardActivationSnackbarListener;
 
     public static SwipeRefreshLayout swiper;
     public static Realm moviesRealm;
@@ -108,7 +99,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     RealmList<Movie> nowPlaying;
 
 
-    private searchMoviesInterface searchMovies;
+    private searchMoviesInterface searchMoviesInterface;
 
     public ArrayList<Movie> ALLMOVIES;
     ArrayList<String> lastSuggestions;
@@ -216,7 +207,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         /** SEARCH */
         searchicon.setOnClickListener(view -> {
 
-            searchMovies.onSearchMoviesInterface();
+            searchMoviesInterface.onSearchMoviesInterface();
         });
 
 
@@ -297,10 +288,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof searchMoviesInterface) {
-            searchMovies = (searchMoviesInterface) context;
-
-        } else if (context instanceof cardActivationSnackBar) {
-            cardActivationSnackbarListener = (cardActivationSnackBar) context;
+            searchMoviesInterface = (searchMoviesInterface) context;
         }
         myContext = context;
     }
@@ -309,7 +297,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public void onDetach() {
         super.onDetach();
         myContext = null;
-        cardActivationSnackbarListener = null;
+        searchMoviesInterface = null;
     }
 
     @Override
@@ -631,15 +619,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         view.setAnimation(animation);
     }
 
-    public interface cardActivationSnackBar {
-        void hideSnackBar();
-
-        void showSnackbar();
-    }
 
     public interface searchMoviesInterface {
-
         void onSearchMoviesInterface();
+        void hideSnackBar();
+        void showSnackbar();
 
     }
 

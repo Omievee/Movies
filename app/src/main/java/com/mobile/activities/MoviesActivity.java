@@ -51,7 +51,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public  class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface, MoviesFragment.cardActivationSnackBar {
+public  class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
@@ -458,6 +458,7 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
         transaction.addToBackStack("");
         transaction.commit();
         bottomNavigationView.setVisibility(View.GONE);
+        hideSnackBar();
     }
 
     @Override
@@ -469,7 +470,6 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
 
     @Override
     public void showSnackbar() {
-        Log.d("SNACKBAR", "showSnackbar: PAUSE WAS CALLED");
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
