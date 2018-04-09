@@ -13,6 +13,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -126,10 +128,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         player.setPlayWhenReady(true);
 
-        fadeOut(holder.moviePoster);
-        holder.moviePoster.setVisibility(View.GONE);
-        fadeIn(holder.featuredVideo);
-        holder.featuredVideo.setVisibility(View.VISIBLE);
+
+        holder.videoTitle.setText(movie.getTitle());
 
         holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
 
@@ -147,14 +147,17 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         SimpleDraweeView moviePoster;
         PlayerView featuredVideo;
+        FrameLayout videoLayout;
+        TextView videoTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
             featuredVideo = itemView.findViewById(R.id.featuredVideo);
             moviePoster = itemView.findViewById(R.id.featuredPoster);
+            videoLayout = itemView.findViewById(R.id.videoFrameLayout);
+            videoTitle = itemView.findViewById(R.id.videoTitle);
         }
     }
-
 
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
