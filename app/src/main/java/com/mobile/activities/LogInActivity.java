@@ -243,7 +243,8 @@ public class LogInActivity extends AppCompatActivity {
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
-                    if(restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")){
+                    if(restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING)||restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED)||
+                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)){
                         Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
                         UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
