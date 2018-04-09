@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/black_text">
+    android:layout_height="wrap_content">
 
     <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
 
@@ -13,7 +12,7 @@
         android:layout_height="270dp"
         android:animateLayoutChanges="true"
         android:foreground="@drawable/poster_gradient"
-        android:visibility="gone"
+        android:visibility="visible"
         fresco:actualImageScaleType="centerCrop" />
 
 
@@ -21,7 +20,7 @@
         android:id="@+id/videoFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <com.google.android.exoplayer2.ui.PlayerView
@@ -64,10 +63,10 @@
                 android:textSize="15sp" />
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="18dp"
+                android:layout_width="18dp"
+                android:layout_height="15dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="4dp"
                 android:layout_toEndOf="@id/seeTimes"
                 android:elevation="5dp"
                 android:src="@drawable/arrowforward"
