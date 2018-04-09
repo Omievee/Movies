@@ -34,6 +34,11 @@
     <string name="activity_confirmation_confirmation_text">If asked, provide this zip code.</string>
     <string name="activity_confirmation_seat_selected"> Seat: </string>
 
+    <!-- Internet Connection -->
+    <string name="activity_no_internet_error_message">We can\'t reach the network. Please check your internet connection.</string>
+    <string name="activity_no_internet_button">Retry</string>
+    <string name="activity_no_internet_toast_message">The internet connection appears to be offline</string>
+
 
     <!-- MainActivity -->
     <string name="activity_main_mandatory_permissions">You must grant these permissions to use MoviePass</string>
@@ -277,6 +282,7 @@
     <string name="fragment_profile_account_information_email_invalid">Invalid email address</string>
     <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
     <string name="fragment_profile_account_information_password_empty">Enter your password</string>
+    <string name="fragment_profile_account_information_old_password_empty">Enter current password</string>
     <string name="fragment_profile_account_information_password_match">Passwords must match</string>
     <string name="fragment_profile_account_information_empty_gender">Required</string>
     <string name="fragment_profile_account_information_empty_birthday">Required</string>

@@ -47,7 +47,7 @@ public class SignUpFirstTime extends Fragment {
 
 //    MaterialSpinner spinnerGender;
     CustomAutoCompleteDropDown spinnerGender;
-    RelativeLayout relativeLayout;
+    View relativeLayout;
     View progress;
     static final int DATE_DIALOG_ID = 0;
     Button signupNowButton;

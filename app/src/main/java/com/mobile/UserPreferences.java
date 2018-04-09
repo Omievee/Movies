@@ -123,19 +123,24 @@ public class UserPreferences {
         hasUserLoggedInBefore(logIn);
     }
 
-    public static void setLastCheckInAttempt(String date, String time) {
+    public static void setLastCheckInAttempt(String date, String time){
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_DATE, date);
-        editor.putString(Constants.LAST_CHECK_IN_ATTEMPT_TIME, time);
+        String dateKey, timeKey;
+        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
+        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
+        editor.putString(dateKey,date);
+        editor.putString(timeKey,time);
         editor.apply();
     }
 
-    public static String getLastCheckInAttemptDate() {
-        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_DATE, "0");
+    public static String getLastCheckInAttemptDate(){
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
+        return sPrefs.getString(dateKey,"0");
     }
 
-    public static String getLastCheckInAttemptTime() {
-        return sPrefs.getString(Constants.LAST_CHECK_IN_ATTEMPT_TIME, "0");
+    public static String getLastCheckInAttemptTime(){
+        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
+        return sPrefs.getString(timeKey,"0");
     }
 
     public static Location getLocation() {

@@ -75,6 +75,8 @@
                 android:textColorHint="@color/gray_dark"
                 app:counterEnabled="true"
                 app:counterMaxLength="250"
+                android:layout_marginRight="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_half"
                 app:counterTextAppearance="@style/MyOverflowText"
                 app:hintEnabled="true">
 

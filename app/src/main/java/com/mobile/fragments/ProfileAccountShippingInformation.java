@@ -345,6 +345,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(context, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                mListener.closeFragment();
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });

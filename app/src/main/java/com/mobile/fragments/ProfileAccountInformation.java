@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import com.helpshift.support.Log;
 import android.view.LayoutInflater;
@@ -20,15 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.DeviceID;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
+import com.mobile.activities.LogInActivity;
+import com.mobile.model.User;
 import com.mobile.network.RestClient;
+import com.mobile.requests.ChangePasswordRequest;
+import com.mobile.requests.LogInRequest;
+import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
+
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.mobile.fragments.PendingReservationFragment.TAG;
 
 public class ProfileAccountInformation extends Fragment {
 
@@ -36,12 +47,7 @@ public class ProfileAccountInformation extends Fragment {
     private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
-    private EditText password1, password2;
-    private TextInputLayout password1TextInputLayout, password2TextInputLayout;
     private UserInfoResponse userInfoResponse;
-    private Button save, cancel;
-    private ImageView clear1, clear2;
-    private boolean firstTimePassword = true, firstTouchPassword2 = true;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -62,153 +68,12 @@ public class ProfileAccountInformation extends Fragment {
         userEmail = rootView.findViewById(R.id.USER_EMAIL);
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
-        password1 = rootView.findViewById(R.id.password1);
-        password2 = rootView.findViewById(R.id.password2);
-        password1TextInputLayout = rootView.findViewById(R.id.password1TextInputLayout);
-        password2TextInputLayout = rootView.findViewById(R.id.password2TextInputLayout);
-        save = rootView.findViewById(R.id.saveChanges);
-        cancel = rootView.findViewById(R.id.cancelChanges);
         progress.setVisibility(View.VISIBLE);
-        clear1 = rootView.findViewById(R.id.clear1);
-        clear2 = rootView.findViewById(R.id.clear2);
         loadUserInfo();
-        save.setClickable(false);
-        cancel.setClickable(false);
-        password2.setEnabled(false);
-
-
-
-        password1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (firstTimePassword) {
-                    enableSaveAndCancel();
-                    firstTimePassword = false;
-                    password2.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!firstTimePassword) {
-                    if (s.length() > 0) {
-                        clear1.setVisibility(View.VISIBLE);
-                        if(s.length() >= 6)
-                            password1TextInputLayout.setError("");
-                    } else {
-                        clear1.setVisibility(View.GONE);
-                        if(firstTouchPassword2){
-                            firstTouchPassword2=false;
-                            password2.setText("");
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        password2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!firstTimePassword) {
-                    if (s.length() > 0) {
-                        clear2.setVisibility(View.VISIBLE);
-                    } else {
-                        clear2.setVisibility(View.GONE);
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        clear1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                password1.setText("");
-            }
-        });
-        clear2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                password2.setText("");
-            }
-        });
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                password1TextInputLayout.setError(null);
-                password2TextInputLayout.setError(null);
-                password1.clearFocus();
-                password2.clearFocus();
-                final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-
-                if(password1.getText().toString().trim().equalsIgnoreCase(password2.getText().toString().trim())){
-                    if(password1.getText().toString().length()>=6){
-                        Toast.makeText(context, "Changing password", Toast.LENGTH_SHORT).show();
-                        disableSaveAndCancel();
-                    } else{
-                        if(password1.getText().toString().trim().isEmpty())
-                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_empty));
-                        else
-                            password1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
-                    }
-                } else {
-                    password2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_match));
-                }
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableSaveAndCancel();
-            }
-        });
 
         return rootView;
     }
 
-    public void enableSaveAndCancel(){
-        save.setClickable(true);
-        cancel.setClickable(true);
-        cancel.setTextColor(ContextCompat.getColor(context,R.color.almost_white));
-        save.setTextColor(ContextCompat.getColor(context,R.color.new_red));
-    }
-
-    public void disableSaveAndCancel(){
-        save.setClickable(false);
-        cancel.setClickable(false);
-        cancel.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
-        save.setTextColor(ContextCompat.getColor(context,R.color.gray_icon));
-        password1.setText("password");
-        password2.setText("password");
-        password2.setEnabled(false);
-        clear2.setVisibility(View.GONE);
-        clear1.setVisibility(View.GONE);
-        password1.clearFocus();
-        password2.clearFocus();
-        firstTouchPassword2 = true;
-        firstTimePassword=true;
-        password2TextInputLayout.setError(null);
-        password1TextInputLayout.setError(null);
-        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-    }
 
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();

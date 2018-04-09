@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.transition.Fade;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +51,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
+public  class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface, MoviesFragment.cardActivationSnackBar {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
@@ -69,6 +70,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     String url;
     MoviesResponse moviesResponse;
     private Call<MoviesResponse> loadMoviesCall;
+    private Snackbar snack;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             FragmentTransaction ft = support.beginTransaction();
             ft.replace(R.id.movies_container, moviesFragment);
             ft.commit();
-//            fadeIn(main);
+            fadeIn(main);
         }
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -97,8 +99,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         movieSearchALLMOVIES = new ArrayList<>();
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean firstBoot = prefs.getBoolean(getString(R.string.firstBoot), true);
 
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
@@ -118,6 +118,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     @Override
     protected void onResume() {
         super.onResume();
+        activateMoviePassCardSnackBar();
         updateNavigationBarState();
     }
 
@@ -248,33 +249,38 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             if (restrict.getAlert() != null && !restrict.getAlert().isDismissible()) {
                 Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
-            } else {
-                //    UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
+            } else if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())){
+                UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
                 getSupportFragmentManager().popBackStack();
+                activateMoviePassCardSnackBar();
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }else {
+                getSupportFragmentManager().popBackStack();
+                activateMoviePassCardSnackBar();
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
-
         }
-
-
     }
 
     public void activateMoviePassCardSnackBar() {
-        parentLayout = findViewById(R.id.COORDPARENT);
-        Snackbar snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
-        params.setMargins(0, 0, 0, 0);
-        snack.getView().setLayoutParams(params);
-        snack.show();
-        View sb = snack.getView();
-        snack.getView().setHovered(true);
-        sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        sb.setBackgroundColor(getResources().getColor(R.color.new_red));
-        snack.setActionTextColor(getResources().getColor(R.color.white));
-        snack.setAction("Ok", v -> {
-            Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
-            startActivity(activateCard);
-        });
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            parentLayout = findViewById(R.id.COORDPARENT);
+            snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height));
+            snack.getView().setLayoutParams(params);
+            snack.show();
+            View sb = snack.getView();
+            snack.getView().setHovered(true);
+            sb.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            sb.setBackgroundColor(getResources().getColor(R.color.new_red));
+            sb.setElevation(0);
+            snack.setActionTextColor(getResources().getColor(R.color.almost_white));
+            snack.setAction("Ok", v -> {
+                Intent activateCard = new Intent(MoviesActivity.this, ActivateMoviePassCard.class);
+                startActivity(activateCard);
+            });
+        }
     }
 
     public void microServiceRestrictions() {
@@ -436,7 +442,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public void onAlertClickListener(String alertId) {
-        //  UserPreferences.setAlertDisplayedId(alertId);
+        UserPreferences.setAlertDisplayedId(alertId);
         android.util.Log.d(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
         getSupportFragmentManager().popBackStack();
         bottomNavigationView.setVisibility(View.VISIBLE);
@@ -453,4 +459,20 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         transaction.commit();
         bottomNavigationView.setVisibility(View.GONE);
     }
+
+    @Override
+    public void hideSnackBar() {
+        if (snack != null && snack.isShown()) {
+            snack.dismiss();
+        }
+    }
+
+    @Override
+    public void showSnackbar() {
+        Log.d("SNACKBAR", "showSnackbar: PAUSE WAS CALLED");
+        if (UserPreferences.getIsSubscriptionActivationRequired()) {
+            activateMoviePassCardSnackBar();
+        }
+    }
+
 }

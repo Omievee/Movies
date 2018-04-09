@@ -104,7 +104,7 @@ public class SettingsActivity extends BaseActivity {
             public void onClick(View v) {
                 UserPreferences.clearUserId();
                 UserPreferences.clearFbToken();
-                UserPreferences.clearEverything();
+//                UserPreferences.clearEverything();
                 HelpshiftContext.getCoreApi().logout();
                 Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
                 startActivity(intent);

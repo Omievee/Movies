@@ -11,4 +11,5 @@ public interface ProfileActivityInterface {
     void openProfileAccountPlanAndInfo();
     void openProfileAccountInformation();
     void openCancellationFragment();
+    void openChangePassword();
 }

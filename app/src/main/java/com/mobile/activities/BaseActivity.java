@@ -10,9 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-
 import com.helpshift.support.Log;
-
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -20,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -36,6 +35,7 @@ import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
@@ -109,11 +109,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-        //    checkRestrictions();
-        if (!isOnline()) {
-            NoInternetFragment fragobj = new NoInternetFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_no_internet");
+
+        //COMMENTED OUT - ALEXIS WANTED A TOAST INSTEAD
+
+        checkInternetConnection();
+    }
+
+    public void checkInternetConnection(){
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         }
     }
 

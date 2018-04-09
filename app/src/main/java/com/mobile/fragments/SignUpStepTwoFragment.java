@@ -64,7 +64,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     OnCreditCardEntered creditCardDataListener;
 
-    CoordinatorLayout coordinatorLayout;
+    View coordinatorLayout;
     ImageButton signup2ScanCardIcon;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
@@ -173,8 +173,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     fullBillingAddress.setVisibility(View.GONE);
                     fullBillingAddress2.setVisibility(View.GONE);
                     signupYesNo.setText("YES");
+                    signupYesNo.setTextColor(ContextCompat.getColor(myContext, R.color.new_red));
                 } else {
-                    signupYesNo.setText("No");
+                    signupYesNo.setText("NO");
+                    signupYesNo.setTextColor(ContextCompat.getColor(myContext, R.color.almost_white));
                     fullBillingAddress.setVisibility(View.VISIBLE);
                     fullBillingAddress2.setVisibility(View.VISIBLE);
                     fullBillingAddress.requestFocus();
@@ -587,6 +589,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
         if (context instanceof OnCreditCardEntered) {
 
             creditCardDataListener = (OnCreditCardEntered) context;
@@ -600,6 +603,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public void onDetach() {
         super.onDetach();
         creditCardDataListener = null;
+        myContext = null;
     }
 
     public interface OnCreditCardEntered {

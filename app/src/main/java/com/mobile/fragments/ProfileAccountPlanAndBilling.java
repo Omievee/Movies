@@ -400,6 +400,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                mListener.closeFragment();
                 progress.setVisibility(View.GONE);
             }
         });

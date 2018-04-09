@@ -30,21 +30,22 @@
             android:layout_below="@id/WIFI"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_standard"
-            android:text="No internet connection found"
+            android:text="@string/activity_no_internet_error_message"
             android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textColor="@color/almost_white"
+            android:textSize="@dimen/text_size_16" />
 
         <Button
             android:id="@+id/Tryagain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/TEXT"
+            android:textColor="@color/almost_white"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/double_margin_standard"
             android:background="@android:color/transparent"
             android:text="Try again"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_size_16" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

@@ -69,7 +69,7 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileAccountInformationFragment extends Fragment {
 
     Context context;
-    View rootView, progress, accountInformation;
+    View rootView, progress, accountInformation, changePassword;
     RelativeLayout shippingClick, billingClick;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
@@ -92,6 +92,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         accountInformation = rootView.findViewById(R.id.UP);
         shippingClick = rootView.findViewById(R.id.MIDDLE);
         billingClick = rootView.findViewById(R.id.END);
+        changePassword = rootView.findViewById(R.id.changePassword);
 
         return rootView;
     }
@@ -125,6 +126,15 @@ public class ProfileAccountInformationFragment extends Fragment {
                 mListener.openProfileAccountPlanAndInfo();
             }
         });
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.openChangePassword();
+            }
+        });
+
+
 
     }
 

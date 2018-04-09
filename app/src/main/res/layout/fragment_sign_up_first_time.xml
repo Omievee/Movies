@@ -1,35 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_vertical"
-            android:text="@string/Create_account"
-            android:textColor="@color/almost_white"
-            android:textSize="@dimen/text_size_16" />
-
-        <ScrollView
+        <!-- LOGO -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard_and_half"
+                android:gravity="center_horizontal"
+                android:src="@drawable/logo"
+                android:tint="@color/new_red" />
+
+            <!-- divider -->
+
+            <RelativeLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignStart="@id/intro_indicator_0"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative01"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Account"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/shipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative02"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Shipping"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative03"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Payment"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+
+                        <RelativeLayout
+                            android:id="@+id/relative04"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignEnd="@id/intro_indicator_3"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative04"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Confirm"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:text="@string/Create_account"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_16" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,6 +290,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
+                    android:nextFocusDown="@id/email2TextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
                     app:counterTextAppearance="@style/normal_text_in_layout_Style"
@@ -72,6 +321,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
+                    android:nextFocusDown="@id/passwordTextInputLayout"
                     android:textColorHint="@color/white_80_opacity"
                     android:theme="@style/EditTextStyle"
                     app:errorTextAppearance="@style/error_appearance"
@@ -117,6 +367,7 @@
                         android:animateLayoutChanges="true"
                         android:backgroundTint="@color/white_40_opacity"
                         android:hint="@string/activity_sign_up_step_one_password"
+                        android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:textAppearance="@style/normal_text_in_layout_Style"
                         android:textColor="@color/white"
@@ -131,15 +382,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/margin_standard">
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/genderTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.4"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_weight="0.4"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
@@ -167,10 +418,10 @@
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/birthdayTextInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.6"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/genderTextInputLayout"
+                        android:layout_weight="0.6"
                         android:paddingRight="50dp"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
@@ -212,7 +463,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-        </ScrollView>
 
     </LinearLayout>
 
@@ -223,5 +473,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+
+
+
 
