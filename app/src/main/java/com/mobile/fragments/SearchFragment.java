@@ -1,10 +1,8 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.mancj.materialsearchbar.MaterialSearchBar;
@@ -23,15 +21,11 @@ import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
-import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
-import io.realm.Realm;
-import io.realm.RealmList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +38,7 @@ import static com.facebook.GraphRequest.TAG;
  */
 
 public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
-    MaterialSearchBar searchBar;
+    public static MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
     ArrayList<Movie> ALLMOVIES;
@@ -107,7 +101,6 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 customAdapter.getFilter().filter(searchBar.getText());
-
             }
 
             @Override
@@ -115,6 +108,9 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 
             }
         });
+
+
+
 
     }
 
@@ -170,5 +166,14 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         super.onAttach(activity);
 
         myActivity = activity;
+    }
+
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
