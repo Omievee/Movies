@@ -50,7 +50,6 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
         final Movie movie = featuredMovie.get(position);
         final Uri imgURI = Uri.parse(movie.getLandscapeImageUrl());
 
