@@ -333,7 +333,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                                 newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                                 newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
-                                newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
+                               // newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -349,7 +349,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                                 nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                                 nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
-                                nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
+                               // nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -365,7 +365,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
-                                featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
+                              //  featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -385,7 +385,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                                 comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                                 comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
-                                comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
+                              // comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
                             }
                             for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
@@ -400,7 +400,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                                 topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                                 topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-                                topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
+                                //topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
                             }
                         }
                     }, () -> {
