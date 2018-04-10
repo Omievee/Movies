@@ -12,11 +12,12 @@ public class HistoryResponse {
 
 
     public List<Movie> reservations;
-//    public Movie reservations;
+    String rating;
 
-//    public Movie getReservations() {
-//        return reservations;
-//    }
+
+    public HistoryResponse(String rating) {
+        this.rating = rating;
+    }
     public List<Movie> getReservations() {
         return reservations;
     }

@@ -67,4 +67,40 @@
         fresco:scaleType="fitXY" />
 
 
+    <TextView
+        android:id="@+id/liketext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enlargedImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:text="Did you like it?"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/liketext"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/doubledouble_margin_standard">
+
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/thumbsup" />
+
+        <ImageView
+            android:id="@+id/dislike"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/double_margin_standard"
+            android:layout_toEndOf="@id/like"
+            android:src="@drawable/thumbsdown" />
+
+    </RelativeLayout>
+
+
 </RelativeLayout>
