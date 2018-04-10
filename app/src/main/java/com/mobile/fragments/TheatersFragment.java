@@ -195,7 +195,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 //        tRealm = Realm.getDefaultInstance();
         mSearchClose.setOnClickListener(view -> {
+
             searchGP.enableSearch();
+            searchGP.setMaxSuggestionCount(0);
             fadeIn(searchGP);
             searchGP.setVisibility(View.VISIBLE);
             fadeOut(mSearchClose);
@@ -356,6 +358,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 }
             });
 
+
             if (marker.getTitle() != null) {
                 LatLng latLng = new LatLng(markerTheaterMap.get(marker.getId()).getLat(), markerTheaterMap.get(marker.getId()).getLon());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14);
@@ -415,7 +418,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         super.onResume();
         mMapView.onResume();
         locationUpdateRealm();
-
 
     }
 

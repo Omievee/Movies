@@ -19,9 +19,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.helpshift.support.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.activities.MovieActivity;
@@ -335,6 +333,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                                 newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                                 newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
+                               // newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -350,6 +349,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                                 nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                                 nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
+                               // nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -365,6 +365,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                              //  featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -384,7 +385,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                                 comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                                 comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
-
+                              // comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
                             }
                             for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
@@ -399,6 +400,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                                 topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                                 topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
+                                //topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
                             }
                         }
                     }, () -> {
@@ -506,7 +508,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.GONE);
         myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
 
     }
 
@@ -622,12 +623,31 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public interface searchMoviesInterface {
         void onSearchMoviesInterface();
+
         void hideSnackBar();
+
         void showSnackbar();
 
     }
 
-
+//    private void makeTempVideoFile(String videoFilefromRealm) {
+//
+//        String filename = "videoURI";
+//
+//
+//        FileOutputStream outputStream;
+//
+//        try {
+//            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+//            outputStream.write(videoFilefromRealm.getBytes());
+//            outputStream.close();
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }
 
 

@@ -166,8 +166,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    // Picasso
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
@@ -191,9 +190,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:27.0.2"
     implementation "com.android.support:design:27.0.2"
 
-    //PatternLock
-    implementation 'com.andrognito.patternlockview:patternlockview:1.0.0'
-
     //Spinner
     implementation 'com.jaredrummler:material-spinner:1.2.4'
 
@@ -206,8 +202,10 @@ dependencies {
     //Burred Backgrounds
     implementation 'jp.wasabeef:blurry:2.1.1'
 
-    //Dismiss Dialog
-    implementation 'com.github.andreilisun:swipedismissdialog:0.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
+
 
 }
 
