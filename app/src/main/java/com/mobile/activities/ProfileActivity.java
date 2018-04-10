@@ -236,7 +236,6 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.commit();
 
         Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
-
     }
 
     @Override
