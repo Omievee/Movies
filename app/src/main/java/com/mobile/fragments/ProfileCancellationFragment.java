@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.helpshift.support.Log;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
@@ -56,6 +57,7 @@ public class ProfileCancellationFragment extends Fragment {
     Context myContext;
     private UserInfoResponse userInfoResponse;
     private String billingDate;
+    private ProfileActivityInterface listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,7 +180,7 @@ public class ProfileCancellationFragment extends Fragment {
                 progress.setVisibility(View.GONE);
                 if (cancellationResponse != null && response.isSuccessful()) {
                     Toast.makeText(myActivity, "Cancellation successful", Toast.LENGTH_SHORT).show();
-                    myActivity.finish();
+                    listener.logOutUserAfterCancellation();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -223,6 +225,9 @@ public class ProfileCancellationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof ProfileActivityInterface){
+            listener = (ProfileActivityInterface) context;
+        }
         myContext = context;
     }
 

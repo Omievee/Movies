@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
+import com.mobile.UserPreferences;
 import com.mobile.fragments.HistoryDetailsFragment;
 import com.mobile.fragments.ProfileAccountChangePassword;
 import com.mobile.fragments.ProfileAccountInformation;
@@ -270,5 +271,13 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.replace(R.id.profile_container, profileAccountInformationFragment);
         transaction.commit();
         bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void logOutUserAfterCancellation() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        UserPreferences.clearUserId();
+        startActivity(intent);
     }
 }

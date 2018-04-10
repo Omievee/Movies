@@ -31,6 +31,7 @@ public class Constants {
     public static final String CANCELLED = "CANCELLED";
     public static final String CANCELLED_PAST_DUE = "CANCELLED_PAST_DUE";
     public static final String MISSING = "MISSING";
+    public static final String PENDING_ACTIVATION = "PENDING_ACTIVATION";
 
     //PERMISSION CODES
     public final static int REQUEST_CAMERA_CODE = 0;
