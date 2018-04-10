@@ -40,7 +40,6 @@ import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
 import com.moviepass.R;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
