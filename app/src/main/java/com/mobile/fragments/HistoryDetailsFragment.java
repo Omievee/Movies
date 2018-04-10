@@ -192,7 +192,7 @@ public class HistoryDetailsFragment extends Fragment {
                         shrink(dislike);
                     }
                     Handler h = new Handler();
-                    h.postDelayed(() -> myActivity.onBackPressed(), 1000);
+//                    h.postDelayed(() -> myActivity.onBackPressed(), 1000);
                 }
             }
 
@@ -232,17 +232,17 @@ public class HistoryDetailsFragment extends Fragment {
         ScaleAnimation expand = new ScaleAnimation(
                 1f, 1.5f,
                 1f, 1.5f,
-                Animation.RELATIVE_TO_PARENT, 0,
-                Animation.RELATIVE_TO_PARENT, 0);
-        expand.setDuration(1000);
+                Animation.RELATIVE_TO_SELF, 0,
+                Animation.RELATIVE_TO_SELF, 0);
+        expand.setDuration(500);
 
         ScaleAnimation shrink = new ScaleAnimation(
                 1.5f, 1f,
                 1.5f, 1f,
-                Animation.RELATIVE_TO_PARENT, 0f,
-                Animation.RELATIVE_TO_PARENT, 0f);
-        shrink.setStartOffset(1000);
-        shrink.setDuration(1000);
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f);
+        shrink.setStartOffset(500);
+        shrink.setDuration(500);
 
         expandAndShrink.addAnimation(expand);
         expandAndShrink.addAnimation(shrink);
