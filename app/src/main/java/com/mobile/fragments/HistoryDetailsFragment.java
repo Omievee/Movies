@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +55,7 @@ public class HistoryDetailsFragment extends Fragment {
     Activity myActivity;
     Context myContext;
     SimpleDraweeView enlargedImage;
-    TextView historyDate, historyTitle, historyLocal;
+    TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
     public HistoryDetailsFragment() {
@@ -107,7 +109,7 @@ public class HistoryDetailsFragment extends Fragment {
         close = view.findViewById(R.id.close);
         like = view.findViewById(R.id.like);
         dislike = view.findViewById(R.id.dislike);
-
+        likeittext = view.findViewById(R.id.liketext);
 
         close.setOnClickListener(v -> {
             myActivity.onBackPressed();
@@ -116,6 +118,21 @@ public class HistoryDetailsFragment extends Fragment {
 
         Movie historyItem = getArguments().getParcelable(HISTORY_POSTER);
         String transition = getArguments().getString(EXTRA_TRANSITION_NAME);
+
+        if (historyItem.getUserRating() != null) {
+            likeittext.setVisibility(View.GONE);
+            if (historyItem.getUserRating().equals("GOOD")) {
+                dislike.setVisibility(View.GONE);
+            } else if (historyItem.getUserRating().equals("BAD")) {
+                like.setVisibility(View.GONE);
+            }
+
+        } else {
+
+            like.setOnClickListener(v -> rateMovie(historyItem.getId(), "GOOD"));
+
+            dislike.setOnClickListener(v -> rateMovie(historyItem.getId(), "BAD"));
+        }
 
         Uri imgUrl = Uri.parse(historyItem.getImageUrl());
 
@@ -155,19 +172,6 @@ public class HistoryDetailsFragment extends Fragment {
         enlargedImage.setController(controller);
 
 
-        like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rateMovie(historyItem.getId(), "GOOD");
-            }
-        });
-
-        dislike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rateMovie(historyItem.getId(), "BAD");
-            }
-        });
     }
 
 
@@ -181,17 +185,14 @@ public class HistoryDetailsFragment extends Fragment {
                     if (userRating.equals("GOOD")) {
                         dislike.setVisibility(View.GONE);
                         fadeOut(dislike);
+                        shrink(like);
                     } else if (userRating.equals("BAD")) {
                         like.setVisibility(View.GONE);
                         fadeOut(like);
+                        shrink(dislike);
                     }
                     Handler h = new Handler();
-                    h.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            myActivity.onBackPressed();
-                        }
-                    }, 1000);
+                    h.postDelayed(() -> myActivity.onBackPressed(), 1000);
                 }
             }
 
@@ -224,6 +225,31 @@ public class HistoryDetailsFragment extends Fragment {
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    public void shrink (View view ) {
+        AnimationSet expandAndShrink = new AnimationSet(true);
+        ScaleAnimation expand = new ScaleAnimation(
+                1f, 1.5f,
+                1f, 1.5f,
+                Animation.RELATIVE_TO_PARENT, 0,
+                Animation.RELATIVE_TO_PARENT, 0);
+        expand.setDuration(1000);
+
+        ScaleAnimation shrink = new ScaleAnimation(
+                1.5f, 1f,
+                1.5f, 1f,
+                Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 0f);
+        shrink.setStartOffset(1000);
+        shrink.setDuration(1000);
+
+        expandAndShrink.addAnimation(expand);
+        expandAndShrink.addAnimation(shrink);
+        expandAndShrink.setFillAfter(true);
+        expandAndShrink.setInterpolator(new AccelerateInterpolator(1.0f));
+
+        view.startAnimation(expandAndShrink);
     }
 
 

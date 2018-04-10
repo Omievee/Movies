@@ -4,11 +4,7 @@ import android.os.Parcelable;
 
 import org.parceler.Parcel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
 @Parcel(value = Parcel.Serialization.BEAN, analyze = {Movie.class})
@@ -29,6 +25,11 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
     protected boolean viewed;
     protected long createdAt;
 
+    public String getUserRating() {
+        return userRating;
+    }
+
+    String userRating;
     public void setType(String type) {
         this.type = type;
     }
