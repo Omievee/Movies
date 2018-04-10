@@ -42,8 +42,8 @@ public class RestClient {
 
     static String a1URL = "http://a1.moviepass.com ";
     static String baseURL = String.valueOf(getEndPoint());
-    static String registrationURL = "https://registration.moviepass.com/";
-    static String staticRegistrationURL = "https://registration-stg.herokuapp.com";
+//    static String registrationURL = "https://registration.moviepass.com/";
+    static String registrationURL = "https://registration-stg.herokuapp.com";
 //    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
     static String microServiceURL = "https://auth.moviepass.com/";
 
@@ -105,46 +105,46 @@ public class RestClient {
     public static void setupAuthenticatedStagingRegistrationClient(Context context) {
 
         sAuthenticatedStagingRegistrationAPI = null;
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-
-        if (Constants.DEBUG) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(20, TimeUnit.SECONDS);
-        httpClient.readTimeout(20, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
-
-        CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
-        httpClient.cookieJar(cookieJar);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder();
-                Request request = requestBuilder.build();
-
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-        sAuthenticatedStagingRegistrationInstance = new Retrofit.Builder()
-                .baseUrl(staticRegistrationURL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(httpClient.build())
-                .build();
-        sAuthenticatedStagingRegistrationAPI = sAuthenticatedStagingRegistrationInstance.create(Api.class);
+//
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//
+//        if (Constants.DEBUG) {
+//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        } else {
+//            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+//        }
+//
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+//        httpClient.readTimeout(20, TimeUnit.SECONDS);
+//        httpClient.addInterceptor(logging);
+//
+//        CookieJar cookieJar =
+//                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+//
+//        httpClient.cookieJar(cookieJar);
+//        httpClient.addInterceptor(new Interceptor() {
+//            @Override
+//            public Response intercept(Interceptor.Chain chain) throws IOException {
+//                Request original = chain.request();
+//                // Request customization: add request headers
+//                Request.Builder requestBuilder = original.newBuilder();
+//                Request request = requestBuilder.build();
+//
+//                return chain.proceed(request);
+//            }
+//        });
+//
+//        Gson gson = new GsonBuilder()
+//                .setLenient()
+//                .create();
+//
+//        sAuthenticatedStagingRegistrationInstance = new Retrofit.Builder()
+//                .baseUrl()
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .client(httpClient.build())
+//                .build();
+//        sAuthenticatedStagingRegistrationAPI = sAuthenticatedStagingRegistrationInstance.create(Api.class);
     }
 
     public static void setupAuthenticatedWebClient(Context context) {
