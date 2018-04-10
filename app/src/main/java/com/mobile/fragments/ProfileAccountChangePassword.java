@@ -243,6 +243,7 @@ public class ProfileAccountChangePassword extends Fragment {
     }
 
     public void disableSaveAndCancel(){
+        firstTime=true;
         save.setClickable(false);
         cancel.setClickable(false);
         cancel.setTextColor(ContextCompat.getColor(getContext(),R.color.gray_icon));
