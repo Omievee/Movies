@@ -141,8 +141,12 @@ public class ProfileAccountChangePassword extends Fragment {
 
                 if(newPassword1.getText().toString().trim().equalsIgnoreCase(newPassword2.getText().toString().trim()) && !oldPassword.getText().toString().trim().isEmpty()){
                     if(newPassword1.getText().toString().length()>=6){
-                        progress.setVisibility(View.VISIBLE);
-                        changePassword();
+                        if(!newPassword1.getText().toString().trim().equalsIgnoreCase(oldPassword.getText().toString().trim())){
+                            progress.setVisibility(View.VISIBLE);
+                            changePassword();
+                        } else{
+                            oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_new_password_same_as_old));
+                        }
                     } else{
                         if(oldPassword.getText().toString().trim().isEmpty())
                             oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_old_password_empty));

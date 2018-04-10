@@ -98,7 +98,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             } else {
-                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) && UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL)) {
+                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL)) {
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)
