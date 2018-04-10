@@ -24,26 +24,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
@@ -85,7 +66,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         if (movie != null) {
             imgURI = Uri.parse(movie.getLandscapeImageUrl());
-            videoURI = Uri.parse(movie.getTeaserVideoUrl());
+           // videoURI = Uri.parse(movie.getTeaserVideoUrl());
         }
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgURI)
@@ -116,92 +97,92 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         holder.moviePoster.setController(controller);
 
-
-        holder.featuredVideo.setControllerHideOnTouch(false);
-
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-
-        DefaultBandwidthMeter meter = new DefaultBandwidthMeter();
-        DataSource.Factory data = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "moviepass"), meter);
-        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(videoURI);
-
-        player.prepare(video);
-        holder.featuredVideo.setPlayer(player);
-        player.setRepeatMode(Player.REPEAT_MODE_ONE);
-
-        Log.d(Constants.TAG, "Video------>>>>>: " + player.getPlaybackState());
-
-
-        player.addListener(new Player.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-
-            }
-
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-                if(isLoading) {
-                    fadeOut(holder.videoLayout);
-                    holder.videoLayout.setVisibility(View.GONE);
-                    fadeIn(holder.moviePoster);
-                    holder.moviePoster.setVisibility(View.VISIBLE);
-                }else {
-                    fadeOut(holder.moviePoster);
-                    holder.moviePoster.setVisibility(View.GONE);
-                    fadeIn(holder.videoLayout);
-                    holder.videoLayout.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-            }
-
-            @Override
-            public void onRepeatModeChanged(int repeatMode) {
-
-            }
-
-            @Override
-            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-//                fadeOut(holder.videoLayout);
-//                holder.videoLayout.setVisibility(View.GONE);
-//                fadeIn(holder.moviePoster);
-//                holder.moviePoster.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onPositionDiscontinuity(int reason) {
-
-            }
-
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-            }
-
-            @Override
-            public void onSeekProcessed() {
-
-            }
-        });
-
-        player.setPlayWhenReady(true);
-        player.setVolume(Player.DISCONTINUITY_REASON_INTERNAL);
+//
+//        holder.featuredVideo.setControllerHideOnTouch(false);
+//
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+//        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+//        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+//
+//        DefaultBandwidthMeter meter = new DefaultBandwidthMeter();
+//        DataSource.Factory data = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "moviepass"), meter);
+//        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(videoURI);
+//
+//        player.prepare(video);
+//        holder.featuredVideo.setPlayer(player);
+//        player.setRepeatMode(Player.REPEAT_MODE_ONE);
+//
+//        Log.d(Constants.TAG, "Video------>>>>>: " + player.getPlaybackState());
+//
+//
+//        player.addListener(new Player.EventListener() {
+//            @Override
+//            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+//
+//            }
+//
+//            @Override
+//            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingChanged(boolean isLoading) {
+//                if(isLoading) {
+//                    fadeOut(holder.videoLayout);
+//                    holder.videoLayout.setVisibility(View.GONE);
+//                    fadeIn(holder.moviePoster);
+//                    holder.moviePoster.setVisibility(View.VISIBLE);
+//                }else {
+//                    fadeOut(holder.moviePoster);
+//                    holder.moviePoster.setVisibility(View.GONE);
+//                    fadeIn(holder.videoLayout);
+//                    holder.videoLayout.setVisibility(View.VISIBLE);
+//                }
+//            }
+//
+//            @Override
+//            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+//
+//            }
+//
+//            @Override
+//            public void onRepeatModeChanged(int repeatMode) {
+//
+//            }
+//
+//            @Override
+//            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+//
+//            }
+//
+//            @Override
+//            public void onPlayerError(ExoPlaybackException error) {
+////                fadeOut(holder.videoLayout);
+////                holder.videoLayout.setVisibility(View.GONE);
+////                fadeIn(holder.moviePoster);
+////                holder.moviePoster.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onPositionDiscontinuity(int reason) {
+//
+//            }
+//
+//            @Override
+//            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+//
+//            }
+//
+//            @Override
+//            public void onSeekProcessed() {
+//
+//            }
+//        });
+//
+//        player.setPlayWhenReady(true);
+//        player.setVolume(Player.DISCONTINUITY_REASON_INTERNAL);
 
 
         holder.videoTitle.setText(movie.getTitle());

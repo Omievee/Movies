@@ -223,7 +223,7 @@ public interface Api {
 
 
     /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/staging/movies/current.json")
+    @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
 
