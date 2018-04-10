@@ -145,7 +145,6 @@ public class ProfileFragment extends Fragment {
             myActivity.finishAffinity();
         });
         details.setOnClickListener(view1 -> {
-//            listener.openProfileAccountInformationFragment();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -153,7 +152,6 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-//            bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
