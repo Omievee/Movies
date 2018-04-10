@@ -2,9 +2,6 @@ package com.mobile.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +9,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -69,7 +67,7 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileAccountInformationFragment extends Fragment {
 
     Context context;
-    View rootView, progress, accountInformation;
+    View rootView, progress, accountInformation, changePassword;
     RelativeLayout shippingClick, billingClick;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
@@ -92,6 +90,7 @@ public class ProfileAccountInformationFragment extends Fragment {
         accountInformation = rootView.findViewById(R.id.UP);
         shippingClick = rootView.findViewById(R.id.MIDDLE);
         billingClick = rootView.findViewById(R.id.END);
+        changePassword = rootView.findViewById(R.id.changePassword);
 
         return rootView;
     }
@@ -125,6 +124,15 @@ public class ProfileAccountInformationFragment extends Fragment {
                 mListener.openProfileAccountPlanAndInfo();
             }
         });
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.openChangePassword();
+            }
+        });
+
+
 
     }
 

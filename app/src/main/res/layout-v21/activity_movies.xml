@@ -10,11 +10,11 @@
 
     <!--MAIN SKELETON FOR MAIN MOVIES PAGE, FRAME LAYOUT HOUSES LOGO ABOVE ALL ELSE-->
     <FrameLayout
-        android:id="@+id/MAIN_CONTAINER"
+        android:id="@+id/movies_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
-        android:background="@color/dark"
+        android:background="@android:color/transparent"
         android:visibility="visible" />
 
 

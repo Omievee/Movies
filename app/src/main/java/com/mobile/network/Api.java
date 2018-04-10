@@ -7,6 +7,7 @@ import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.requests.CardActivationRequest;
+import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.CredentialsRequest;
@@ -14,23 +15,21 @@ import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookLinkRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
-import com.mobile.requests.OpenAppEventRequest;
 import com.mobile.requests.PerformanceInfoRequest;
-import com.mobile.requests.PersonalInfoRequest;
 import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
-import com.mobile.responses.PersonalInfoResponse;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
-import com.mobile.responses.RegistrationPlanResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -73,6 +72,10 @@ public interface Api {
     /* Get Cards? */
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
+
+    /** Change Password */
+    @POST("rest/v1/passwordChange")
+    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -219,12 +222,23 @@ public interface Api {
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
 
-
+    /*ALL MOVIES FOR MAIN PAGE */
     @GET("/prod/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
+
+
+    /* ALL MOVIES FOR SEARCH */
+    @GET("/prod/movies/all.json")
+    Call<LocalStorageMovies> getAllMovies();
+
 
     /* ALL THEATERS */
     @GET("/theaters/all.json")
     Call<LocalStorageTheaters> getAllMoviePassTheaters();
+
+
+    //NEW RESTRICTIONS
+    @GET("auth/v1/session/{userId}")
+    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
 }

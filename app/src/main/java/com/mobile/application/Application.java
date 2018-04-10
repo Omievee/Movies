@@ -3,6 +3,7 @@ package com.mobile.application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+
 import com.helpshift.support.Log;
 
 
@@ -38,6 +39,7 @@ public class Application extends MultiDexApplication {
     private static CognitoCachingCredentialsProvider sCredProvider;
 
     private native static String getCognitoKey();
+
     static String cognitoPoolId = String.valueOf(getCognitoKey());
 
     public static Application getInstance() {
@@ -48,7 +50,6 @@ public class Application extends MultiDexApplication {
         super();
         mApplication = this;
     }
-
 
 
     //giguyigfyug
@@ -71,6 +72,7 @@ public class Application extends MultiDexApplication {
         RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
         RestClient.setupAuthenticatedStagingRegistrationClient(getApplicationContext());
+        RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {

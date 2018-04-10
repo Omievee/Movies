@@ -12,14 +12,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import com.helpshift.support.Log;
+
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mobile.fragments.ConfirmationSignUpFragment;
 import com.mobile.fragments.SignUpFirstTime;
@@ -91,6 +96,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_signup);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         viewpagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mCoordinator = findViewById(R.id.SIGNUP_MAINLAYOUT);
@@ -133,6 +139,18 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepOneFragment = new SignUpStepOneFragment();
         signUpFirstTime = new SignUpFirstTime();
 
+        mCoordinator.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = mCoordinator.getRootView().getHeight() - mCoordinator.getHeight();
+                if (heightDiff > 100) { // if more than 200 dp, it's probably a keyboard...
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
+                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
+                }
+            }
+        });
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -166,6 +184,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
 
     }
+
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
+
 
     public void getPlans(){
         RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
@@ -355,30 +379,30 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     }
 
     public void updateIndicators(int position) {
-        for (int i = 0; i < indicators.length; i++) {
-            indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
-                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
-                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
-            if(position!=i){
-                    marginParams.setMargins(margin, margin, margin, margin);
-            }
-            else {
-                if((i==0 && !firstCompleted) || (i==1 && !secondCompleted) || (i==2 && !thirdCompleted) || i==3)
-                    marginParams.setMargins(0, 0, 0, 0);
-            }
-        }
-        if(firstCompleted){
-            indicators[0].setBackgroundResource(R.drawable.sign_up_indicator_completed);
-            checkMarks[0].setVisibility(View.VISIBLE);
-        }
-        if(secondCompleted){
-            indicators[1].setBackgroundResource(R.drawable.sign_up_indicator_completed);
-            checkMarks[1].setVisibility(View.VISIBLE);
-        }
-        if(thirdCompleted){
-            indicators[2].setBackgroundResource(R.drawable.sign_up_indicator_completed);
-            checkMarks[2].setVisibility(View.VISIBLE);
-        }
+//        for (int i = 0; i < indicators.length; i++) {
+//            indicators[i].setBackgroundResource(i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
+//                ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) indicators[i].getLayoutParams();
+////                int margin = getResources().getDimensionPixelSize(R.dimen.left_margin_circles);
+////            if(position!=i){
+////                    marginParams.setMargins(margin, margin, margin, margin);
+////            }
+////            else {
+////                if((i==0 && !firstCompleted) || (i==1 && !secondCompleted) || (i==2 && !thirdCompleted) || i==3)
+////                    marginParams.setMargins(0, 0, 0, 0);
+////            }
+//        }
+//        if(firstCompleted){
+//            indicators[0].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+//            checkMarks[0].setVisibility(View.VISIBLE);
+//        }
+//        if(secondCompleted){
+//            indicators[1].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+//            checkMarks[1].setVisibility(View.VISIBLE);
+//        }
+//        if(thirdCompleted){
+//            indicators[2].setBackgroundResource(R.drawable.sign_up_indicator_completed);
+//            checkMarks[2].setVisibility(View.VISIBLE);
+//        }
     }
 
 
@@ -491,8 +515,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(3);
         } else if(mViewPager.getCurrentItem() == 3){
             mViewPager.setCurrentItem(4);
-            logo.setVisibility(View.GONE);
-            frame.setVisibility(View.GONE);
+//            logo.setVisibility(View.GONE);
+////            frame.setVisibility(View.GONE);
         }
     }
 

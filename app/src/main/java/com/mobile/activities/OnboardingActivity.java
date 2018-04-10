@@ -1,9 +1,8 @@
 package com.mobile.activities;
 
 import android.content.Intent;
-import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +15,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.helpshift.support.Log;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -44,9 +45,7 @@ import com.moviepass.R;
 
 import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.lang.reflect.Type;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +65,7 @@ public class OnboardingActivity extends AppCompatActivity {
     ImageView[] indicators;
     RelativeLayout findTheaters;
     Plans planOne, planTwo;
-
+    ImageView ticketIconFinal;
     int page = 0;
 
     CoordinatorLayout mCoordinator;
@@ -124,12 +123,15 @@ public class OnboardingActivity extends AppCompatActivity {
 
                         break;
                     case 2:
+
                         findTheaters.setVisibility(View.INVISIBLE);
 
                         break;
                     case 3:
+
                         findTheaters.setVisibility(View.INVISIBLE);
                         break;
+
                 }
             }
 
@@ -147,11 +149,11 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         onboardingJoinNow.setOnClickListener(view -> {
-            if(planTwo!=null){
-            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-            startActivity(intent);
-            } else{
-                Intent intent = new Intent(OnboardingActivity.this,SignUpActivity.class);
+            if (planTwo != null) {
+                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(OnboardingActivity.this, SignUpActivity.class);
                 intent.putExtra(SignUpFirstOpenActivity.SELECTED_PLAN, Parcels.wrap(planOne));
                 ProspectUser.plan = planOne;
                 startActivity(intent);
@@ -159,17 +161,18 @@ public class OnboardingActivity extends AppCompatActivity {
         });
     }
 
-    public void getPlans(){
+    public void getPlans() {
         RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
             @Override
             public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
-                if(response!=null && response.isSuccessful()){
+                if (response != null && response.isSuccessful()) {
                     planResponse = response.body();
                     planOne = planResponse.getPlans().get(0);
-                    if(planResponse.getPlans().size()>1)
+                    if (planResponse.getPlans().size() > 1)
                         planTwo = planResponse.getPlans().get(1);
                 }
             }
+
             @Override
             public void onFailure(Call<PlanResponse> call, Throwable t) {
 
@@ -178,30 +181,16 @@ public class OnboardingActivity extends AppCompatActivity {
         });
     }
 
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     public static class PlaceholderFragment extends Fragment {
-
+        ImageView ticketIconFinal;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
         SimpleDraweeView img;
+
 
         int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1,
                 R.drawable.signupimage2, R.drawable.howitworks2};
@@ -224,16 +213,17 @@ public class OnboardingActivity extends AppCompatActivity {
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
-            Log.d(Constants.TAG, "onCreateView: " );
             TextView textView = rootView.findViewById(R.id.section_label);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
             TextView bodyText = rootView.findViewById(R.id.section_body);
             bodyText.setText(bodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
+
+
+
             img = rootView.findViewById(R.id.section_img);
-            if(getArguments().getInt(ARG_SECTION_NUMBER) - 1!=0)
+            if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0)
                 img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             else {
                 final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
@@ -262,6 +252,11 @@ public class OnboardingActivity extends AppCompatActivity {
                         .build();
 
                 img.setController(controller);
+
+
+                ImagePipeline pipeline = Fresco.getImagePipeline();
+                pipeline.clearMemoryCaches();
+                pipeline.clearDiskCaches();
             }
 
             return rootView;
@@ -294,12 +289,18 @@ public class OnboardingActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
+                    ticketIconFinal.setVisibility(View.GONE);
                     return getResources().getString(R.string.activity_onboarding_header_1);
                 case 1:
+                    ticketIconFinal.setVisibility(View.GONE);
+
                     return getResources().getString(R.string.activity_onboarding_header_2);
                 case 2:
+                    ticketIconFinal.setVisibility(View.GONE);
+
                     return getResources().getString(R.string.activity_onboarding_header_4);
                 case 3:
+                    ticketIconFinal.setVisibility(View.GONE);
                     return getResources().getString(R.string.activity_onboarding_header_5);
             }
             return null;

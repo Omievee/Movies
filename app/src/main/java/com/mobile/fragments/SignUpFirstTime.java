@@ -47,7 +47,7 @@ public class SignUpFirstTime extends Fragment {
 
 //    MaterialSpinner spinnerGender;
     CustomAutoCompleteDropDown spinnerGender;
-    RelativeLayout relativeLayout;
+    View relativeLayout;
     View progress;
     static final int DATE_DIALOG_ID = 0;
     Button signupNowButton;
@@ -208,7 +208,7 @@ public class SignUpFirstTime extends Fragment {
     }
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy";
+        String myFormat = "MM/dd/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         DOB.setText(sdf.format(myCalendar.getTime()));
         birthTextInputLayout.setError(null);
@@ -289,11 +289,11 @@ public class SignUpFirstTime extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.myContext=context;
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
+//        if (context instanceof onAlertClickListener) {
+//            mListener = (onAlertClickListener) context;
 //        } else {
 //            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
+//                    + " must implement onAlertClickListener");
 //        }
     }
 

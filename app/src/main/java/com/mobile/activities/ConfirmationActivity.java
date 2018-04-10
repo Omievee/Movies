@@ -470,7 +470,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                         public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
                             if (response != null && response.isSuccessful()) {
                                 whiteProgress.setVisibility(View.GONE);
-                                Toast.makeText(ConfirmationActivity.this, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ConfirmationActivity.this, "You ticketIconFinal stub has been submitted", Toast.LENGTH_LONG).show();
                                 finish();
                             } else {
                                 JSONObject jObjError = null;
@@ -478,7 +478,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                                     jObjError = new JSONObject(response.errorBody().string());
                                     if (jObjError.getString("message").equals("Verification status is different from PENDING_SUBMISSION")) {
                                         progress.setVisibility(View.GONE);
-                                        Toast.makeText(ConfirmationActivity.this, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ConfirmationActivity.this, "You ticketIconFinal stub has been submitted", Toast.LENGTH_LONG).show();
                                         finish();
                                     }
                                 } catch (JSONException e) {

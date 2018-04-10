@@ -1,18 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/a_lot_margin_standard"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
+
+        <!-- LOGO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard_and_half"
+                android:gravity="center_horizontal"
+                android:src="@drawable/logo"
+                android:tint="@color/new_red" />
+
+            <!-- divider -->
+
+            <RelativeLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignStart="@id/intro_indicator_0"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative01"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Account"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/shipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative02"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Shipping"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative03"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Payment"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+
+                        <RelativeLayout
+                            android:id="@+id/relative04"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignEnd="@id/intro_indicator_3"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative04"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Confirm"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
         <TextView
@@ -21,309 +266,278 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
             android:text="@string/fragment_sign_up_step_one_header"
             android:textColor="@color/almost_white"
             android:textSize="16sp" />
 
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:id="@+id/scroll"
-            android:paddingRight="@dimen/margin_half"
-            android:paddingLeft="@dimen/margin_half"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:paddingEnd="@dimen/margin_standard"
+            android:paddingStart="@dimen/margin_standard">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/fistNameTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:textColorHint="@color/white_80_opacity"
+                android:theme="@style/EditTextStyle"
+                app:errorTextAppearance="@style/error_appearance"
+                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                <EditText
+                    android:id="@+id/et_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:backgroundTint="@color/white_40_opacity"
+                    android:hint="@string/fragment_sign_up_step_one_first_name"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/normal_text_in_layout_Style"
+                    android:textColor="@color/white"
+                    android:textColorHighlight="@color/white_80_opacity"
+                    android:textColorLink="@android:color/transparent"
+                    android:textCursorDrawable="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/white_40_opacity" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/lastNameTextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:textColorHint="@color/white_80_opacity"
+                android:theme="@style/EditTextStyle"
+                app:errorTextAppearance="@style/error_appearance"
+                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                <EditText
+                    android:id="@+id/et_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:backgroundTint="@color/white_40_opacity"
+                    android:hint="@string/fragment_sign_up_step_one_last_name"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/normal_text_in_layout_Style"
+                    android:textColor="@color/white"
+                    android:textColorHighlight="@color/white_80_opacity"
+                    android:textColorLink="@android:color/transparent"
+                    android:textCursorDrawable="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/white_40_opacity" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/address1TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColorHint="@color/white_80_opacity"
+                android:theme="@style/EditTextStyle"
+                app:errorTextAppearance="@style/error_appearance"
+                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+
+                <EditText
+                    android:id="@+id/first_Addreess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:backgroundTint="@color/white_40_opacity"
+                    android:hint="Address"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:singleLine="true"
+                    android:textAppearance="@style/normal_text_in_layout_Style"
+                    android:textColor="@color/white"
+                    android:textColorHighlight="@color/white_80_opacity"
+                    android:textColorLink="@android:color/transparent"
+                    android:textCursorDrawable="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/white_40_opacity" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/address2TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:textColorHint="@color/white_80_opacity"
+                android:theme="@style/EditTextStyle"
+                app:errorTextAppearance="@style/error_appearance"
+                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+
+                <EditText
+                    android:id="@+id/et_address_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:animateLayoutChanges="true"
+                    android:backgroundTint="@color/white_40_opacity"
+                    android:hint="Address 2"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:maxLength="26"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/normal_text_in_layout_Style"
+                    android:textColor="@color/white"
+                    android:textColorHighlight="@color/white_80_opacity"
+                    android:textColorLink="@android:color/transparent"
+                    android:textCursorDrawable="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="@color/white_40_opacity" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
+                android:id="@+id/LAYOUT3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/doubledouble_margin_standard"
-                android:orientation="vertical">
+                android:layout_below="@id/LAYOUT2"
+                android:orientation="horizontal">
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/cityTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".5"
+                    android:textColorHint="@color/white_80_opacity"
+                    android:theme="@style/EditTextStyle"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
-                <LinearLayout
-                    android:id="@+id/LAYOUT1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/copy"
-                    android:layout_marginTop="@dimen/double_margin_standard"
-                    android:orientation="vertical">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/fistNameTextInputLayout"
+                    <EditText
+                        android:id="@+id/et_city"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.6"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:backgroundTint="@color/white_40_opacity"
+                        android:hint="@string/fragment_sign_up_step_one_city"
+                        android:inputType="textCapSentences"
+                        android:lines="1"
+                        android:maxLines="1"
+                        android:paddingStart="5dp"
+                        android:singleLine="true"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white_80_opacity"
+                        android:textColorLink="@android:color/transparent"
+                        android:textCursorDrawable="@color/white"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/white_40_opacity" />
 
-                        <EditText
-                            android:id="@+id/et_first_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="@string/fragment_sign_up_step_one_first_name"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            android:inputType="textCapSentences"
-                            app:backgroundTint="@color/white_40_opacity" />
+                </android.support.design.widget.TextInputLayout>
 
-                    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/stateTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:textColorHint="@color/white_80_opacity"
+                    android:theme="@style/EditTextStyle"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/lastNameTextInputLayout"
+                    <EditText
+                        android:id="@+id/state"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.6"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:backgroundTint="@color/white_40_opacity"
+                        android:hint="State"
+                        android:inputType="textCapCharacters"
+                        android:lines="1"
+                        android:maxLength="3"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white_80_opacity"
+                        android:textColorLink="@android:color/transparent"
+                        android:textCursorDrawable="@color/white"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/white_40_opacity" />
 
-                        <EditText
-                            android:id="@+id/et_last_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="@string/fragment_sign_up_step_one_last_name"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            android:inputType="textCapSentences"
-                            app:backgroundTint="@color/white_40_opacity" />
+                </android.support.design.widget.TextInputLayout>
 
-                    </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/zipTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".3"
+                    android:textColorHint="@color/white_80_opacity"
+                    android:theme="@style/EditTextStyle"
+                    app:errorTextAppearance="@style/error_appearance"
+                    app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LAYOUT2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/LAYOUT1"
-                    android:orientation="vertical">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/address1TextInputLayout"
+                    <EditText
+                        android:id="@+id/et_zip"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:backgroundTint="@color/white_40_opacity"
+                        android:hint="@string/fragment_sign_up_step_one_zip"
+                        android:inputType="number"
+                        android:lines="1"
+                        android:maxLength="5"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textAppearance="@style/normal_text_in_layout_Style"
+                        android:textColor="@color/white"
+                        android:textColorHighlight="@color/white_80_opacity"
+                        android:textColorLink="@android:color/transparent"
+                        android:textCursorDrawable="@color/white"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/white_40_opacity" />
+
+                </android.support.design.widget.TextInputLayout>
 
 
-                        <EditText
-                            android:id="@+id/first_Addreess"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="Address"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:paddingStart="5dp"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            android:inputType="textCapSentences"
-                            app:backgroundTint="@color/white_40_opacity" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/address2TextInputLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.6"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
-
-                        <EditText
-                            android:id="@+id/et_address_two"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_standard"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="Address 2"
-                            android:lines="1"
-                            android:maxLength="26"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:inputType="textCapSentences"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            app:backgroundTint="@color/white_40_opacity" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LAYOUT3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/LAYOUT2"
-                    android:orientation="horizontal">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/cityTextInputLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".5"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
-
-                        <EditText
-                            android:id="@+id/et_city"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="@string/fragment_sign_up_step_one_city"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:paddingStart="5dp"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:inputType="textCapSentences"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            app:backgroundTint="@color/white_40_opacity" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/stateTextInputLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
-
-                        <EditText
-                            android:id="@+id/state"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="State"
-                            android:inputType="textCapCharacters"
-                            android:lines="1"
-                            android:maxLines="1"
-                            android:maxLength="3"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            app:backgroundTint="@color/white_40_opacity" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/zipTextInputLayout"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:textColorHint="@color/white_80_opacity"
-                        android:theme="@style/EditTextStyle"
-                        app:errorTextAppearance="@style/error_appearance"
-                        app:hintTextAppearance="@style/text_in_layout_hint_Style">
-
-                        <EditText
-                            android:id="@+id/et_zip"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:backgroundTint="@color/white_40_opacity"
-                            android:hint="@string/fragment_sign_up_step_one_zip"
-                            android:inputType="number"
-                            android:lines="1"
-                            android:maxLength="5"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/white_80_opacity"
-                            android:textColorLink="@android:color/transparent"
-                            android:textCursorDrawable="@color/white"
-                            android:textAppearance="@style/normal_text_in_layout_Style"
-                            android:textSize="14sp"
-                            app:backgroundTint="@color/white_40_opacity" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-
-                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
-        </ScrollView>
+        <TextView
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/basic_button_height"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom |center_horizontal"
+            android:layout_marginBottom="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/margin_standard_and_half"
+            android:background="@drawable/mpbutton1"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:text="@string/fragment_sign_up_step_one_next"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </RelativeLayout>
-
-
-    <TextView
-        android:id="@+id/button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/basic_button_height"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom |center_horizontal"
-        android:layout_marginBottom="@dimen/double_margin_standard"
-        android:background="@drawable/mpbutton1"
-        android:elevation="5dp"
-        android:gravity="center"
-        android:text="@string/fragment_sign_up_step_one_next"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    </LinearLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

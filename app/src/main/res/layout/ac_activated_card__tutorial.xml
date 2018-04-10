@@ -80,6 +80,14 @@
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:background="@drawable/indicator_unselected" />
 
+            <ImageView
+                android:id="@+id/tutorial_indicator_5"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:background="@drawable/indicator_unselected" />
+
+
 
         </LinearLayout>
 

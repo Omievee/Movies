@@ -34,6 +34,11 @@
     <string name="activity_confirmation_confirmation_text">If asked, provide this zip code.</string>
     <string name="activity_confirmation_seat_selected"> Seat: </string>
 
+    <!-- Internet Connection -->
+    <string name="activity_no_internet_error_message">We can\'t reach the network. Please check your internet connection.</string>
+    <string name="activity_no_internet_button">Retry</string>
+    <string name="activity_no_internet_toast_message">The internet connection appears to be offline</string>
+
 
     <!-- MainActivity -->
     <string name="activity_main_mandatory_permissions">You must grant these permissions to use MoviePass</string>
@@ -64,6 +69,7 @@
 
     <!--<string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>-->
     <string name="activity_onboarding_header_5">How It Works</string>
+    <string name="activity_onboarding_header_final">Have a MoviePass Supported E-ticketing Theater Near You?</string>
 
     <string name="activity_onboarding_body_1">See a movie a day in theaters; the way movies are supposed to be seen!</string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
@@ -75,6 +81,8 @@
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
     <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+    <string name="activity_onboarding_body_final">Look for the e-ticket icon: </string>
+    <string name="tutorial_body_final">You can reserve same-day e-tickets right on the app from any location, even before receiving your card.* </string>
 
 
     <!--Tutorial-->
@@ -274,6 +282,8 @@
     <string name="fragment_profile_account_information_email_invalid">Invalid email address</string>
     <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
     <string name="fragment_profile_account_information_password_empty">Enter your password</string>
+    <string name="fragment_profile_account_information_old_password_empty">Enter current password</string>
+    <string name="fragment_profile_account_information_new_password_same_as_old">New password can not be the same as the current password</string>
     <string name="fragment_profile_account_information_password_match">Passwords must match</string>
     <string name="fragment_profile_account_information_empty_gender">Required</string>
     <string name="fragment_profile_account_information_empty_birthday">Required</string>

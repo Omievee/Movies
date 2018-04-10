@@ -21,6 +21,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +32,12 @@ import retrofit2.Response;
 
 public class RealmTaskService extends GcmTaskService {
 
+
+    Realm moviesRealm;
+    RealmConfiguration config;
+
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
+    private Realm tRealm;
 
     @Override
     public void onInitializeTasks() {
@@ -51,6 +57,7 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getTheatersBucket();
                     getMoviesBucket();
+                    Toast.makeText(RealmTaskService.this, "Task complete", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -87,13 +94,15 @@ public class RealmTaskService extends GcmTaskService {
 
     void getTheatersBucket() {
 
+        tRealm = Realm.getDefaultInstance();
 
         RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
             @Override
             public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
                 LocalStorageTheaters locallyStoredTheaters = response.body();
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
-                    TheatersFragment.tRealm.executeTransactionAsync(R -> {
+
+                  tRealm.executeTransactionAsync(R -> {
 
                         for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                             Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
@@ -108,7 +117,6 @@ public class RealmTaskService extends GcmTaskService {
                             RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
                             RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
-
                         }
                     }, () -> {
                         Log.d(Constants.TAG, "onSuccess: ");
@@ -127,95 +135,101 @@ public class RealmTaskService extends GcmTaskService {
     }
 
     void getMoviesBucket() {
-        MoviesFragment.moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
+        config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        moviesRealm = Realm.getInstance(config);
+
+        moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
         RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
             @Override
             public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
                 LocalStorageMovies localStorageMovies = response.body();
-                if (response.isSuccessful() && localStorageMovies != null) {
+                if (localStorageMovies != null && response.isSuccessful()) {
 
-                    MoviesFragment.moviesRealm.executeTransactionAsync(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
-                                Movie newReleaseMovies = realm.createObject(Movie.class);
-                                newReleaseMovies.setType("New Releases");
-                                newReleaseMovies.setId(localStorageMovies.getNewReleases().get(i).getId());
-                                newReleaseMovies.setRunningTime(localStorageMovies.getNewReleases().get(i).getRunningTime());
-                                newReleaseMovies.setSynopsis(localStorageMovies.getNewReleases().get(i).getSynopsis());
-                                newReleaseMovies.setImageUrl(localStorageMovies.getNewReleases().get(i).getImageUrl());
-                                newReleaseMovies.setLandscapeImageUrl(localStorageMovies.getNewReleases().get(i).getLandscapeImageUrl());
-                                newReleaseMovies.setTheaterName(localStorageMovies.getNewReleases().get(i).getTheaterName());
-                                newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
-                                newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
-                                newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
+                moviesRealm.executeTransactionAsync(realm -> {
+                        for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
+                            Movie newReleaseMovies = realm.createObject(Movie.class);
+                            newReleaseMovies.setType("New Releases");
+                            newReleaseMovies.setId(localStorageMovies.getNewReleases().get(i).getId());
+                            newReleaseMovies.setRunningTime(localStorageMovies.getNewReleases().get(i).getRunningTime());
+                            newReleaseMovies.setSynopsis(localStorageMovies.getNewReleases().get(i).getSynopsis());
+                            newReleaseMovies.setImageUrl(localStorageMovies.getNewReleases().get(i).getImageUrl());
+                            newReleaseMovies.setLandscapeImageUrl(localStorageMovies.getNewReleases().get(i).getLandscapeImageUrl());
+                            newReleaseMovies.setTheaterName(localStorageMovies.getNewReleases().get(i).getTheaterName());
+                            newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
+                            newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
+                            newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
 
 
-                            }
-                            for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
-                                Movie nowPlayingMovies = realm.createObject(Movie.class);
-                                nowPlayingMovies.setType("Now Playing");
-                                nowPlayingMovies.setId(localStorageMovies.getNowPlaying().get(i).getId());
-                                nowPlayingMovies.setRunningTime(localStorageMovies.getNowPlaying().get(i).getRunningTime());
-                                nowPlayingMovies.setSynopsis(localStorageMovies.getNowPlaying().get(i).getSynopsis());
-                                nowPlayingMovies.setImageUrl(localStorageMovies.getNowPlaying().get(i).getImageUrl());
-                                nowPlayingMovies.setLandscapeImageUrl(localStorageMovies.getNowPlaying().get(i).getLandscapeImageUrl());
-                                nowPlayingMovies.setTheaterName(localStorageMovies.getNowPlaying().get(i).getTheaterName());
-                                nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
-                                nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
-                                nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
+                        }
+                        for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
+                            Movie nowPlayingMovies = realm.createObject(Movie.class);
+                            nowPlayingMovies.setType("Now Playing");
+                            nowPlayingMovies.setId(localStorageMovies.getNowPlaying().get(i).getId());
+                            nowPlayingMovies.setRunningTime(localStorageMovies.getNowPlaying().get(i).getRunningTime());
+                            nowPlayingMovies.setSynopsis(localStorageMovies.getNowPlaying().get(i).getSynopsis());
+                            nowPlayingMovies.setImageUrl(localStorageMovies.getNowPlaying().get(i).getImageUrl());
+                            nowPlayingMovies.setLandscapeImageUrl(localStorageMovies.getNowPlaying().get(i).getLandscapeImageUrl());
+                            nowPlayingMovies.setTheaterName(localStorageMovies.getNowPlaying().get(i).getTheaterName());
+                            nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
+                            nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
+                            nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
 
 
-                            }
-                            for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
-                                Movie featuredMovie = realm.createObject(Movie.class);
-                                featuredMovie.setType("Featured");
-                                featuredMovie.setId(localStorageMovies.getFeatured().get(i).getId());
-                                featuredMovie.setRunningTime(localStorageMovies.getFeatured().get(i).getRunningTime());
-                                featuredMovie.setSynopsis(localStorageMovies.getFeatured().get(i).getSynopsis());
-                                featuredMovie.setImageUrl(localStorageMovies.getFeatured().get(i).getImageUrl());
-                                featuredMovie.setLandscapeImageUrl(localStorageMovies.getFeatured().get(i).getLandscapeImageUrl());
-                                featuredMovie.setTheaterName(localStorageMovies.getFeatured().get(i).getTheaterName());
-                                featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
-                                featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
-                                featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                        }
+                        for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
+                            Movie featuredMovie = realm.createObject(Movie.class);
+                            featuredMovie.setType("Featured");
+                            featuredMovie.setId(localStorageMovies.getFeatured().get(i).getId());
+                            featuredMovie.setRunningTime(localStorageMovies.getFeatured().get(i).getRunningTime());
+                            featuredMovie.setSynopsis(localStorageMovies.getFeatured().get(i).getSynopsis());
+                            featuredMovie.setImageUrl(localStorageMovies.getFeatured().get(i).getImageUrl());
+                            featuredMovie.setLandscapeImageUrl(localStorageMovies.getFeatured().get(i).getLandscapeImageUrl());
+                            featuredMovie.setTheaterName(localStorageMovies.getFeatured().get(i).getTheaterName());
+                            featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
+                            featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
+                            featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
 
 
-                            }
+                        }
 
 
-                            for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
-                                Movie comingSoonMovies = realm.createObject(Movie.class);
-                                comingSoonMovies.setType("Coming Soon");
-                                comingSoonMovies.setId(localStorageMovies.getComingSoon().get(i).getId());
-                                comingSoonMovies.setRunningTime(localStorageMovies.getComingSoon().get(i).getRunningTime());
-                                comingSoonMovies.setSynopsis(localStorageMovies.getComingSoon().get(i).getSynopsis());
-                                comingSoonMovies.setImageUrl(localStorageMovies.getComingSoon().get(i).getImageUrl());
-                                comingSoonMovies.setLandscapeImageUrl(localStorageMovies.getComingSoon().get(i).getLandscapeImageUrl());
-                                comingSoonMovies.setTheaterName(localStorageMovies.getComingSoon().get(i).getTheaterName());
-                                comingSoonMovies.setTitle(localStorageMovies.getComingSoon().get(i).getTitle());
-                                comingSoonMovies.setTribuneId(localStorageMovies.getComingSoon().get(i).getTribuneId());
-                                comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
-                                comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
-                                comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
+                        for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
+                            Movie comingSoonMovies = realm.createObject(Movie.class);
+                            comingSoonMovies.setType("Coming Soon");
+                            comingSoonMovies.setId(localStorageMovies.getComingSoon().get(i).getId());
+                            comingSoonMovies.setRunningTime(localStorageMovies.getComingSoon().get(i).getRunningTime());
+                            comingSoonMovies.setSynopsis(localStorageMovies.getComingSoon().get(i).getSynopsis());
+                            comingSoonMovies.setImageUrl(localStorageMovies.getComingSoon().get(i).getImageUrl());
+                            comingSoonMovies.setLandscapeImageUrl(localStorageMovies.getComingSoon().get(i).getLandscapeImageUrl());
+                            comingSoonMovies.setTheaterName(localStorageMovies.getComingSoon().get(i).getTheaterName());
+                            comingSoonMovies.setTitle(localStorageMovies.getComingSoon().get(i).getTitle());
+                            comingSoonMovies.setTribuneId(localStorageMovies.getComingSoon().get(i).getTribuneId());
+                            comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
+                            comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
+                            comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
 
 
-                            }
-                            for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
-                                Movie topBoxOfficeMovies = realm.createObject(Movie.class);
-                                topBoxOfficeMovies.setType("Top Box Office");
-                                topBoxOfficeMovies.setId(localStorageMovies.getTopBoxOffice().get(i).getId());
-                                topBoxOfficeMovies.setRunningTime(localStorageMovies.getTopBoxOffice().get(i).getRunningTime());
-                                topBoxOfficeMovies.setSynopsis(localStorageMovies.getTopBoxOffice().get(i).getSynopsis());
-                                topBoxOfficeMovies.setImageUrl(localStorageMovies.getTopBoxOffice().get(i).getImageUrl());
-                                topBoxOfficeMovies.setLandscapeImageUrl(localStorageMovies.getTopBoxOffice().get(i).getLandscapeImageUrl());
-                                topBoxOfficeMovies.setTheaterName(localStorageMovies.getTopBoxOffice().get(i).getTheaterName());
-                                topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
-                                topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
-                                topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-                            }
+                        }
+                        for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
+                            Movie topBoxOfficeMovies = realm.createObject(Movie.class);
+                            topBoxOfficeMovies.setType("Top Box Office");
+                            topBoxOfficeMovies.setId(localStorageMovies.getTopBoxOffice().get(i).getId());
+                            topBoxOfficeMovies.setRunningTime(localStorageMovies.getTopBoxOffice().get(i).getRunningTime());
+                            topBoxOfficeMovies.setSynopsis(localStorageMovies.getTopBoxOffice().get(i).getSynopsis());
+                            topBoxOfficeMovies.setImageUrl(localStorageMovies.getTopBoxOffice().get(i).getImageUrl());
+                            topBoxOfficeMovies.setLandscapeImageUrl(localStorageMovies.getTopBoxOffice().get(i).getLandscapeImageUrl());
+                            topBoxOfficeMovies.setTheaterName(localStorageMovies.getTopBoxOffice().get(i).getTheaterName());
+                            topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
+                            topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
+                            topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
                         }
                     }, () -> {
+
                         Log.d(Constants.TAG, "onSuccess: ");
 
                     }, error -> {

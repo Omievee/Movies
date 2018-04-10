@@ -1,55 +1,31 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import com.helpshift.support.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.helpshift.All;
-import com.helpshift.support.contracts.SearchResultListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
-import com.mobile.Constants;
 import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
-import com.mobile.model.Theater;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
-import com.mobile.responses.GoWatchItResponse;
-import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
-import org.parceler.Parcels;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,35 +37,21 @@ import static com.facebook.GraphRequest.TAG;
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends Fragment implements AfterSearchListener {
-    MaterialSearchBar searchBar;
+public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
+    public static MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
     ArrayList<Movie> ALLMOVIES;
     View progress;
     ArrayList<Movie> noDuplicates;
     String url;
-    Button cancel;
     Activity myActivity;
     Context myContext;
 
-    Realm searchRealm;
 
     public SearchFragment() {
     }
 
-
-//    public static SearchFragment newInstance(Movie movie) {
-//        SearchFragment fragment = new SearchFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelable("NR", movie);
-//        args.putParcelable("FE", movie);
-//        args.putParcelable("NP", movie);
-//        args.putParcelable("TB", movie);
-//
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     @Nullable
     @Override
@@ -97,8 +59,11 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
-        //cancel = rootView.findViewById(R.id.CancelSearch);
+
+
         ALLMOVIES = new ArrayList<>();
+
+
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
         if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
@@ -123,7 +88,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         loadResults();
 
-        LayoutInflater myInflater = (LayoutInflater)myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater myInflater = (LayoutInflater) myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater, this);
         customAdapter.setSuggestions(ALLMOVIES);
         searchBar.setCustomSuggestionAdapter(customAdapter);
@@ -136,7 +101,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 customAdapter.getFilter().filter(searchBar.getText());
-
             }
 
             @Override
@@ -146,9 +110,12 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         });
 
 
+
+
     }
 
     public void loadResults() {
+        Log.d(TAG, "loadResults: ");
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
 
             @Override
@@ -157,7 +124,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
                 if (response.isSuccessful() && response != null) {
                     progress.setVisibility(View.GONE);
                     ALLMOVIES.clear();
-
                     ALLMOVIES.addAll(info.getFeatured());
                     ALLMOVIES.addAll(info.getNewReleases());
                     ALLMOVIES.addAll(info.getNowPlaying());
@@ -168,12 +134,6 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
                     }
                     ALLMOVIES.clear();
                     for (Movie movie : movieHashMap.values()) {
-                        Collections.sort(ALLMOVIES, new Comparator<Movie>() {
-                            @Override
-                            public int compare(Movie o1, Movie o2) {
-                                return o1.getTitle().trim().compareTo(o2.getTitle().trim());
-                            }
-                        });
                         ALLMOVIES.add(movie);
                     }
                 }
@@ -182,7 +142,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                Toast.makeText(myActivity , "Server Response Failed; Try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Server Response Failed; Try again", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -206,5 +166,14 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         super.onAttach(activity);
 
         myActivity = activity;
+    }
+
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

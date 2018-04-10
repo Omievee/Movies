@@ -10,13 +10,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="com.moviepass.mobile.permission.C2D_MESSAGE" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <supports-screens
@@ -28,7 +26,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.WIFI"
         android:required="false" />
@@ -50,7 +47,8 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
-        <service android:name="com.mobile.notifications.MyFirebaseMessagingService"
+        <service
+            android:name="com.mobile.notifications.MyFirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -62,7 +60,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
 
         <!-- Taplytics -->
         <receiver
@@ -226,15 +223,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
-        <activity
-            android:name="com.mobile.activities.ReservationsActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:screenOrientation="portrait"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
+        <!--<activity-->
+            <!--android:name="com.mobile.activities.ReservationsActivity"-->
+            <!--android:parentActivityName="com.mobile.activities.MoviesActivity"-->
+            <!--android:theme="@style/AppTheme">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:screenOrientation="portrait"-->
+                <!--android:value="com.mobile.activities.MoviesActivity" />-->
+        <!--</activity>-->
         <activity
             android:name="com.mobile.activities.SelectSeatActivity"
             android:screenOrientation="portrait"
@@ -262,7 +259,7 @@
             android:name="com.mobile.activities.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="com.mobile.activities.TheaterActivity"
             android:parentActivityName="com.mobile.activities.TheatersActivity"
@@ -291,7 +288,6 @@
         <activity
             android:name="com.mobile.activities.EticketConfirmation"
             android:screenOrientation="portrait" />
-
         <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
         <activity
             android:name="com.mobile.activities.ActivatedCard_TutorialActivity"
@@ -299,9 +295,8 @@
         <activity
             android:name="com.mobile.fragments.NearMe"
             android:label="@string/title_activity_near_me" />
-        <activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />
-        <activity android:name="com.mobile.activities.TicketVerification_NoStub"></activity>
-
+        <!--<activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />-->
+        <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
 
         <service
             android:name="com.mobile.helpers.RealmTaskService"
@@ -311,6 +306,7 @@
                 <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

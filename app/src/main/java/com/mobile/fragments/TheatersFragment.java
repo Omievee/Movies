@@ -194,9 +194,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
 
 //        tRealm = Realm.getDefaultInstance();
-        searchGP.setMaxSuggestionCount(3);
         mSearchClose.setOnClickListener(view -> {
+
             searchGP.enableSearch();
+            searchGP.setMaxSuggestionCount(0);
             fadeIn(searchGP);
             searchGP.setVisibility(View.VISIBLE);
             fadeOut(mSearchClose);
@@ -305,6 +306,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
 
+        tRealm = Realm.getDefaultInstance();
 
         if (tRealm.isEmpty()) {
             getAllTheatersForStorage();
@@ -355,6 +357,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     return customInfoWindow;
                 }
             });
+
 
             if (marker.getTitle() != null) {
                 LatLng latLng = new LatLng(markerTheaterMap.get(marker.getId()).getLat(), markerTheaterMap.get(marker.getId()).getLon());
@@ -415,7 +418,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         super.onResume();
         mMapView.onResume();
         locationUpdateRealm();
-
 
     }
 

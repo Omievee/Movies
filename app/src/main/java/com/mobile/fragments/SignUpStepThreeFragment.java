@@ -42,7 +42,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     public static final String CCNUM = "cc";
     View rootview;
     public static final String TAG = "foundit";
-    RelativeLayout coordinatorLayout;
+    View coordinatorLayout;
     Context myContext;
     Activity myActivity;
     public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,

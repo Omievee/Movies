@@ -18,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -34,6 +35,7 @@ import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
@@ -66,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     };
 
     UserInfoResponse userInfoResponse;
-    protected BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
 
     public String myZip;
 
@@ -96,7 +98,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
 
-        checkRestrictions();
     }
 
 
@@ -108,11 +109,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-        checkRestrictions();
-        if (!isOnline()) {
-            NoInternetFragment fragobj = new NoInternetFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_no_internet");
+
+        //COMMENTED OUT - ALEXIS WANTED A TOAST INSTEAD
+
+        checkInternetConnection();
+    }
+
+    public void checkInternetConnection(){
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -122,93 +127,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         overridePendingTransition(0, 0);
     }
 
-    public void checkRestrictions() {
-        RestClient.getAuthenticated().getRestrictions(UserPreferences.getUserId() + offset).enqueue(new Callback<RestrictionsResponse>() {
-            @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-
-                    restriction = response.body();
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-
-//                    Log.w("LOG_IN ",new GsonBuilder().setPrettyPrinting().create().toJson(response));
-
-
-                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
-
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-                    }
-
-                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (UserPreferences.getProofOfPurchaseRequired() && restriction.getPopInfo() != null) {
-                        int reservationId = restriction.getPopInfo().getReservationId();
-                        String movieTitle = restriction.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restriction.getPopInfo().getTribuneMovieId();
-                        String theaterName = restriction.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restriction.getPopInfo().getTribuneTheaterId();
-                        String showtime = restriction.getPopInfo().getShowtime();
-
-                        bundle = new Bundle();
-                        bundle.putInt("reservationId", reservationId);
-                        bundle.putString("mSelectedMovieTitle", movieTitle);
-                        bundle.putString("tribuneMovieId", tribuneMovieId);
-                        bundle.putString("mTheaterSelected", theaterName);
-                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-                        bundle.putString("showtime", showtime);
-
-
-                        TicketVerificationDialog dialog = new TicketVerificationDialog();
-                        FragmentManager fm = getSupportFragmentManager();
-                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
-                    }
-
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                        //IF API ERROR LOG OUT TO LOG BACK IN
-                        /*
-                        if (jObjError.getString("message").matches("INVALID API REQUEST")) {
-
-                        */
-
-                    } catch (Exception e) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
-        // Make sure the current transaction finishes first
-        fragmentManager.executePendingTransactions();
-        // If there is no fragment yet with this tag...
-        if (fragmentManager.findFragmentByTag(tag) == null) {
-            TicketVerificationDialog dialog = new TicketVerificationDialog();
-            dialog.setArguments(bundle);
-            FragmentManager fm = getSupportFragmentManager();
-            dialog.setCancelable(false);
-            dialog.show(fm, "fr_ticketverification_banner");
-        }
-    }
 
     public boolean isOnline() {
         final ConnectivityManager connectivityManager = ((ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE));

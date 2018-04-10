@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import com.helpshift.support.Log;
@@ -60,7 +60,7 @@ public class ProfileAccountShippingInformation extends Fragment {
     private Context context;
     private ProfileActivityInterface mListener;
     private TextInputLayout address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
-//    private OnFragmentInteractionListener mListener;
+//    private onAlertClickListener mListener;
 
     public ProfileAccountShippingInformation() {
         // Required empty public constructor
@@ -345,6 +345,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(context, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                mListener.closeFragment();
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
@@ -382,7 +383,7 @@ public class ProfileAccountShippingInformation extends Fragment {
 //        mListener = null;
     }
 //
-//    public interface OnFragmentInteractionListener {
+//    public interface onAlertClickListener {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }

@@ -30,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_half"
-            android:layout_marginTop="@dimen/margin_standard"
             android:layout_toEndOf="@id/MovieSearch_Poster"
             android:text="[Movie Title"
             android:textColor="@color/almost_white"
@@ -62,11 +61,12 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height=".5dp"
             android:background="@color/gray_icon"
-            android:layout_marginStart="@dimen/margin_half"
+            android:layout_marginStart="6dp"
+            android:alpha=".3"
             android:layout_below="@id/MovieSearch_Poster"
-            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginEnd="6dp"
             android:layout_marginTop="@dimen/margin_half" />
 
 
