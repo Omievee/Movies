@@ -283,6 +283,7 @@
     <string name="fragment_profile_account_information_password_invalid">Invalid password</string>
     <string name="fragment_profile_account_information_password_empty">Enter your password</string>
     <string name="fragment_profile_account_information_old_password_empty">Enter current password</string>
+    <string name="fragment_profile_account_information_new_password_same_as_old">New password can not be the same as the current password</string>
     <string name="fragment_profile_account_information_password_match">Passwords must match</string>
     <string name="fragment_profile_account_information_empty_gender">Required</string>
     <string name="fragment_profile_account_information_empty_birthday">Required</string>
