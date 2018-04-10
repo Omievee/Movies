@@ -515,8 +515,8 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(3);
         } else if(mViewPager.getCurrentItem() == 3){
             mViewPager.setCurrentItem(4);
-            logo.setVisibility(View.GONE);
-            frame.setVisibility(View.GONE);
+//            logo.setVisibility(View.GONE);
+////            frame.setVisibility(View.GONE);
         }
     }
 
