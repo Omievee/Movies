@@ -8,7 +8,9 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by ryan on 4/26/17.
@@ -46,13 +49,13 @@ import butterknife.ButterKnife;
 public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSoonAdapter.ViewHolder> {
     public static final String TAG = "FOUND IT.. ";
     private final MoviePosterClickListener moviePosterClickListener;
-    private ArrayList<Movie> moviesArrayList;
+    private RealmList<Movie> moviesArrayList;
 
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
 
-    public MoviesComingSoonAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public MoviesComingSoonAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
         this.moviesArrayList = moviesArrayList;
         this.context = context;
@@ -101,6 +104,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 .setProgressiveRenderingEnabled(true)
                 .build();
 
+
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
                 .setTapToRetryEnabled(true)
@@ -146,6 +151,12 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 })
                 .build();
         holder.mComingSoonMoviePosterDV.setController(controller);
+
+//
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
+
         android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 
 

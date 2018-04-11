@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +30,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
     EditText noStubReason;
     int reservationID;
     View progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +46,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Please enter a reason", Toast.LENGTH_SHORT).show();
             } else {
                 if (badExcuses.getExtras() != null) {
-
-
                     reservationID = badExcuses.getIntExtra(Constants.SCREENING, 0);
-
-                    Log.d(Constants.TAG, "onCreate:  " + reservationID);
                     progress.setVisibility(View.VISIBLE);
                     submitNoTicket();
                 }

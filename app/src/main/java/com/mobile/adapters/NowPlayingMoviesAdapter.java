@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +26,19 @@ import com.moviepass.R;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+
 /**
  * Created by o_vicarra on 1/15/18.
  */
 
 public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMoviesAdapter.ViewHolder> {
-    private ArrayList<Movie> moviesArrayList;
+    private RealmList<Movie> moviesArrayList;
     private final MoviePosterClickListener moviePosterClickListener;
     private Context context;
 
 
-    public NowPlayingMoviesAdapter(Context context, ArrayList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
+    public NowPlayingMoviesAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviesArrayList = moviesArrayList;
         this.moviePosterClickListener = moviePosterClickListener;
         this.context = context;
@@ -75,9 +77,7 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-//                        holder.movieTitle.setText(nowPlaying.getTitle());
                         holder.moviePoster.setImageResource(R.drawable.filmreel1);
-//                        holder.movieTitle.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
                         holder.moviePoster.setImageURI(imgUrl + "/original.jpg");
                     }
                 })

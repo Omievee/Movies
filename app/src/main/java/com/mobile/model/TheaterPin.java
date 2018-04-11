@@ -15,6 +15,12 @@ public class TheaterPin implements ClusterItem {
     public int theaterPinIcon;
     private double latitude;
     private double longitude;
+
+    public boolean isTicketType() {
+        return ticketType;
+    }
+
+    private boolean ticketType;
     private Theater mTheater;
 
     public TheaterPin() {
@@ -75,14 +81,24 @@ public class TheaterPin implements ClusterItem {
 
     @Override
     public String getSnippet() {
-        return mSnippet;
+        return mTheater.getAddress() + ", " + mTheater.getCity() + " " + mTheater.getState();
     }
 
-    public int getArrayPosition() { return mArrayPosition; }
 
-    public double getLatitude() { return latitude; }
 
-    public double getLongitude() { return longitude; }
+    public int getArrayPosition() {
+        return mArrayPosition;
+    }
 
-    public Theater getTheater() { return mTheater; }
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public Theater getTheater() {
+        return mTheater;
+    }
 }

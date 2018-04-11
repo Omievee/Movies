@@ -7,7 +7,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +42,6 @@ public class TheaterActivity extends BaseActivity {
     TheaterMoviesAdapter theaterMoviesAdapter;
     boolean mIsStateAlreadySaved = false;
     boolean mPendingShowDialog = false;
-    ArrayList<Screening> moviesList;
-    ArrayList<String> showtimesList;
 
     protected BottomNavigationView bottomNavigationView;
 
@@ -68,6 +66,7 @@ public class TheaterActivity extends BaseActivity {
         bottomNavigationView = findViewById(R.id.CINEAM_NAV);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -75,23 +74,20 @@ public class TheaterActivity extends BaseActivity {
                 extras.get(THEATER);
             }
             theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
-            Log.d(Constants.TAG, "onCreate: " + theater);
+            theaterSelectedName.setText(theater.getName());
         }
-
-        theaterSelectedName = findViewById(R.id.CINEMA_TITLE);
-        theaterSelectedName.setText(theater.getName());
-        moviesList = new ArrayList<>();
-        showtimesList = new ArrayList<>();
-        backArrow = findViewById(R.id.CINEMA_BACK);
-        backArrow.setOnClickListener(v -> onBackPressed());
-
         UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        updateNavigationBarState();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         updateNavigationBarState();
     }
 
@@ -159,8 +155,6 @@ public class TheaterActivity extends BaseActivity {
     protected void onResumeFragments() {
         super.onResumeFragments();
     }
-
-
 
 
 }

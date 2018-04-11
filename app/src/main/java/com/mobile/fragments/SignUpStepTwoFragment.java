@@ -1,18 +1,20 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,10 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
+import com.mobile.model.ProspectUser;
 import com.moviepass.R;
+
+import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import io.card.payment.CardIOActivity;
@@ -49,7 +54,8 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     BraintreeFragment mBraintreeFragment;
 
     ArrayAdapter<CharSequence> statesAdapter;
-
+    Context myContext;
+    Activity myActivity;
     View view;
 
     public static final String CREDITCARD_DATA = "card data";
@@ -58,7 +64,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     OnCreditCardEntered creditCardDataListener;
 
-    CoordinatorLayout coordinatorLayout;
+    View coordinatorLayout;
     ImageButton signup2ScanCardIcon;
     ImageButton buttonPaypal;
     ImageButton buttonAndroidPay;
@@ -68,10 +74,13 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     EditText signup2Address2;
     TextView signupYesNo;
     EditText signup2City;
-    Spinner signup2State;
+    EditText signup2State;
     EditText signup2Zip;
     Switch signup2SameAddressSwitch;
+    TextView planPrice, paymentDisclaimer;
     LinearLayout fullBillingAddress, fullBillingAddress2;
+    TextInputLayout ccNumTextInputLayout, cvvTextInputLayout, expTextInputLayout;
+    TextInputLayout address1TextInputLayout, address2TextInputLayout, stateTextInputLayout, cityTextInputLayout, zipTextInputLayout;
     View progress;
 
     String MONTH, YEAR;
@@ -109,8 +118,15 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2Address = view.findViewById(R.id.SIGNUP2_ADDRESS);
         signup2Address2 = view.findViewById(R.id.SIGNUP2_ADDRESS2);
         signup2City = view.findViewById(R.id.SIGNUP2_CITY);
-        signup2State = view.findViewById(R.id.signup2Spinner);
+        signup2State = view.findViewById(R.id.SIGNUP2_STATE);
         signup2Zip = view.findViewById(R.id.SIGNUP2_ZIP);
+        signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
+
+        signup2Address.addTextChangedListener(new CustomTextWatcher());
+        signup2Address2.addTextChangedListener(new CustomTextWatcher());
+        signup2City.addTextChangedListener(new CustomTextWatcher());
+        signup2State.addTextChangedListener(new CustomTextWatcher());
+        signup2Zip.addTextChangedListener(new CustomTextWatcher());
         signup2SameAddressSwitch = view.findViewById(R.id.SIGNUP2_SWITCH);
 
         fullBillingAddress = view.findViewById(R.id.LAYOUT_6);
@@ -120,6 +136,26 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         signup2CCNum = view.findViewById(R.id.SIGNUP2_CCNUM);
         signup2CC_CVV = view.findViewById(R.id.SIGNUP2_CVV);
         signup2CCExp = view.findViewById(R.id.SIGNUP2_EXPIRATION);
+
+        signup2CCNum.addTextChangedListener(new CustomTextWatcher());
+        signup2CC_CVV.addTextChangedListener(new CustomTextWatcher());
+        signup2CCExp.addTextChangedListener(new CustomTextWatcher());
+
+        ccNumTextInputLayout = view.findViewById(R.id.ccNumTextInputLayout);
+        cvvTextInputLayout = view.findViewById(R.id.cvvTextInputLayout);
+        expTextInputLayout = view.findViewById(R.id.expTextInputLayout);
+
+        address1TextInputLayout = view.findViewById(R.id.billingAddresInputLayout);
+        address2TextInputLayout = view.findViewById(R.id.billingAddres2InputLayout);
+        stateTextInputLayout = view.findViewById(R.id.billingStateInputLayout);
+        cityTextInputLayout = view.findViewById(R.id.billingCityInputLayout);
+        zipTextInputLayout = view.findViewById(R.id.billingZipInputLayout);
+
+        planPrice = view.findViewById(R.id.planPrice);
+        paymentDisclaimer = view.findViewById(R.id.paymentDisclaimer);
+
+        planPrice.setText(((SignUpActivity) myActivity).getPlanPrice());
+        paymentDisclaimer.setText(((SignUpActivity) myActivity).getPaymentDisclaimer());
 
 
         signup2ScanCardIcon.setOnClickListener(new View.OnClickListener() {
@@ -137,16 +173,18 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                     fullBillingAddress.setVisibility(View.GONE);
                     fullBillingAddress2.setVisibility(View.GONE);
                     signupYesNo.setText("YES");
+                    signupYesNo.setTextColor(ContextCompat.getColor(myContext, R.color.new_red));
                 } else {
-                    signupYesNo.setText("No");
+                    signupYesNo.setText("NO");
+                    signupYesNo.setTextColor(ContextCompat.getColor(myContext, R.color.almost_white));
                     fullBillingAddress.setVisibility(View.VISIBLE);
                     fullBillingAddress2.setVisibility(View.VISIBLE);
                     fullBillingAddress.requestFocus();
                     fullBillingAddress2.requestFocus();
 
-                    statesAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.states_abbrev, R.layout.item_white_spinner);
+                    statesAdapter = ArrayAdapter.createFromResource(myActivity, R.array.states_abbrev, R.layout.item_white_spinner);
                     statesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-                    signup2State.setAdapter(statesAdapter);
+//                    signup2State.setAdapter(statesAdapter);
                 }
             }
         });
@@ -181,45 +219,122 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
 
         signup2NextButton.setOnClickListener(view1 -> {
+            ccNumTextInputLayout.setError(null);
+            cvvTextInputLayout.setError(null);
+            expTextInputLayout.setError(null);
+            signup2CCNum.clearFocus();
+            signup2CCExp.clearFocus();
+            signup2CC_CVV.clearFocus();
             if (infoIsGood()) {
-                String ccNum = signup2CCNum.getText().toString();
-                String ccEx = signup2CCExp.getText().toString().substring(0, 2);
-                String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
-                String ccCVV = signup2CC_CVV.getText().toString();
-                creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
-                Log.d(TAG, "onViewCreated: " + ccNum + ccEx + ccEx2 + ccCVV);
-                if (((SignUpActivity) getActivity()) != null) {
-                    ((SignUpActivity) getActivity()).setPage();
-                }
-            } else {
-                makeSnackbar("Fill out all required fields.");
+                    String ccNum = signup2CCNum.getText().toString();
+                    String ccEx = signup2CCExp.getText().toString().substring(0, 2);
+                    String ccEx2 = signup2CCExp.getText().toString().substring(3, 5);
+                    String ccCVV = signup2CC_CVV.getText().toString();
+                    creditCardDataListener.OnCreditCardEntered(ccNum, ccEx, ccEx2, ccCVV);
+                    ProspectUser.ccNum = ccNum;
+                    ProspectUser.ccExpMonth = ccEx;
+                    ProspectUser.ccExpYear = ccEx2;
+                    ProspectUser.ccCVV = ccCVV;
+                    if (((SignUpActivity) myActivity) != null) {
+                        ((SignUpActivity) myActivity).setPage();
+                    }
+
             }
         });
 
     }
 
-    public boolean infoIsGood() {
-        if (signup2CCNum.length() == 16
-                && !signup2CCExp.getText().toString().isEmpty()
-                && signup2CCExp.getText().toString().length() == 5
-                && !signup2CC_CVV.getText().toString().isEmpty()
-                && signup2CC_CVV.getText().toString().length() <= 4) {
-            return true;
-
-            //TODO: RETURN AND CHECK WHY NULL?
-//        } else if (
-//                !signup2SameAddressSwitch.isChecked()
-//                        && signup2CCNum.length() == 16
-//                        && !signup2CCExp.getText().toString().isEmpty()
-//                        && !signup2CC_CVV.getText().toString().isEmpty()
-//                        && !signup2CCName.getText().toString().isEmpty()
-//                        && !signup2Address.getText().toString().equals("")
-//                        && !signup2City.getText().toString().equals("")
-//                        && !signup2State.getSelectedItem().toString().equals("State")
-//                        && signup2Zip.getText().toString().length() == 5) {
-//            return true;
+    public boolean isValidCreditCard() {
+        boolean valid = true;
+        ccNumTextInputLayout.setError(null);
+        expTextInputLayout.setError(null);
+        cvvTextInputLayout.setError(null);
+        if(signup2CCNum.getText().toString().trim().isEmpty()) {
+            ccNumTextInputLayout.setError(getResources().getString(R.string.invalid_credit_card_number));
+            valid = false;
         }
-        return false;
+        else
+        {
+            if(signup2CCNum.getText().toString().length()<15){
+                ccNumTextInputLayout.setError(getResources().getString(R.string.invalid_credit_card_number));
+                valid=false;
+            }
+        }
+        if(signup2CC_CVV.getText().toString().trim().isEmpty()){
+            cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
+            valid=false;
+        } else{
+            if(signup2CC_CVV.getText().toString().length()<3 || signup2CC_CVV.getText().toString().length()>4){
+                cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
+                valid=false;
+            }
+        }
+        if(signup2CCExp.getText().toString().trim().isEmpty()){
+            expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
+            valid=false;
+        } else {
+            if (signup2CCExp.getText().toString().length() < 5) {
+                expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
+                valid = false;
+            }
+            if (signup2CCExp.getText().toString().length() > 4) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+
+                int ccYear = Integer.valueOf(signup2CCExp.getText().toString().charAt(3) + "" + signup2CCExp.getText().toString().charAt(4));
+                int ccMonth = Integer.valueOf(signup2CCExp.getText().toString().charAt(0) + "" + signup2CCExp.getText().toString().charAt(1));
+                ccYear += 2000;
+
+                if (!((year < ccYear) || (year == ccYear && month <= ccMonth))) {
+                    expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
+                    valid = false;
+                }
+            }
+        }
+        return valid;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        signup2CCNum.setError(null);
+        signup2CC_CVV.setError(null);
+        signup2CCExp.setError(null);
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+
+        if (signup2SameAddressSwitch.isChecked()) {
+            fullBillingAddress.setVisibility(View.GONE);
+            fullBillingAddress2.setVisibility(View.GONE);
+            signupYesNo.setText("YES");
+            signup2Address.clearFocus();
+            signup2Address2.clearFocus();
+            signup2State.clearFocus();
+            signup2City.clearFocus();
+            signup2Zip.clearFocus();
+        } else {
+            signupYesNo.setText("No");
+            fullBillingAddress.setVisibility(View.VISIBLE);
+            fullBillingAddress2.setVisibility(View.VISIBLE);
+            fullBillingAddress.requestFocus();
+            fullBillingAddress2.requestFocus();
+        }
+    }
+
+    public boolean infoIsGood() {
+        boolean valid = true;
+        valid = isValidCreditCard();
+        if(!signup2SameAddressSwitch.isChecked())
+        {
+            if(canContinue() && valid)
+                valid = true;
+            else{
+                valid = false; }
+        }
+        return valid;
     }
 
     public void creditCardClick() {
@@ -234,7 +349,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     }
 
     public void scanCard() {
-        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+        Intent scanIntent = new Intent(myActivity, CardIOActivity.class);
 
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
@@ -280,10 +395,11 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
                         if (signup2CCNum.getText().equals("") || signup2CC_CVV.equals("") || signup2CCExp.equals("")
                                 || signup2CCNum.getText().length() < 16 || signup2CC_CVV.getText().length() < 3 || signup2CCExp.getText().length() < 5) {
 
-                            Toast.makeText(getActivity(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+                            infoIsGood();
                         } else {
                             signup2NextButton.setEnabled(true);
-                            ((SignUpActivity) getActivity()).setPage();
+                            ((SignUpActivity) myActivity).setPage();
+                            ((SignUpActivity) myActivity).confirmThirdStep();
                         }
                     });
                 }
@@ -321,45 +437,128 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 //
 
     public boolean canContinue() {
-        if (isAddressValid() && isAddress2Valid() && isCityValid() && isStateValid() && isZipValid()) {
-            return true;
-        } else {
-            return false;
-        }
+        address1TextInputLayout.setError(null);
+        address2TextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+        return isAddressValid();
     }
 
 
-    public boolean isAddressValid() {
-        if (signup2Address.length() > 2 && signup2Address.length() <= 26) {
-            return true;
+//    public boolean isAddressValid() {
+//        if (signup2Address.length() > 2 && signup2Address.length() <= 26) {
+//            return true;
+//        } else {
+//            if(signup2Address.getText().toString().trim().isEmpty())
+//                address1.setError("Required");
+//            else
+//                address1.setError("Invalid address");
+//            return false;
+//        }
+//    }
+
+    private boolean isAddressValid() {
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+
+        int i = 0;
+        if (!signup2Address.getText().toString().trim().isEmpty() && !signup2City.getText().toString().trim().isEmpty() && !signup2Zip.getText().toString().trim().isEmpty() && !signup2State.getText().toString().trim().isEmpty()) {
+
+            //Validating Address
+            String[] address1Array = signup2Address.getText().toString().split("\\W+");
+            if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
+                i++;
+            }else {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
+                signup2Address.clearFocus();
+                Log.d("ADDRESS", "isValidAddress: ");
+            }
+
+            //Validating City
+            String[] cityArray = signup2City.getText().toString().split("\\W+");
+            String cityWithNotWhiteSpaces = signup2City.getText().toString().replaceAll("\\s+","");
+            //If city has less than 3 words
+            if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
+                signup2City.clearFocus();
+            }
+
+            //Validating State
+            if (signup2State.getText().toString().trim().length() == 2 && signup2State.getText().toString().trim().matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
+                signup2State.clearFocus();
+            }
+
+            //Validating Zip Code
+            if (signup2Zip.getText().toString().trim().matches("^[0-9]+$") && signup2Zip.getText().toString().trim().length()>=5) {
+                i++;
+            } else {
+                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
+                signup2Zip.clearFocus();
+            }
+
+
         } else {
-            return false;
+            if (signup2Address.getText().toString().trim().isEmpty()) {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_empty_billing_address));
+                signup2Address.clearFocus();
+            }
+            if (signup2State.getText().toString().trim().isEmpty()) {
+                stateTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_state));
+                signup2State.clearFocus();
+            }
+            if (signup2Zip.getText().toString().trim().isEmpty()) {
+                zipTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_zip));
+                signup2Zip.clearFocus();
+            }
+            if (signup2City.getText().toString().trim().isEmpty()) {
+                cityTextInputLayout.setError(getResources().getString(R.string.fragment_profile_shipping_address_valid_city));
+                signup2City.clearFocus();
+            }
         }
+        if(i==4)
+            return true;
+        return false;
     }
 
     public boolean isAddress2Valid() {
-        if ((signup2Address2.length() > 0 && signup2Address2.length() <= 26)
-                || signup2Address2.getText().toString().equals("")) {
-            return true;
-        } else {
-            Log.d("mAddress2", signup2Address2.getText().toString());
-            return false;
-        }
+//        if ((signup2Address2.length() > 0 && signup2Address2.length() <= 26)
+//                || signup2Address2.getText().toString().equals("")) {
+//            return true;
+//        } else {
+//            Log.d("mAddress2", signup2Address2.getText().toString());
+//            return false;
+//        }
+        return true;
     }
 
     public boolean isCityValid() {
         if (signup2City.length() > 2 && signup2City.length() <= 26 && !signup2City.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
+            if(signup2City.getText().toString().trim().isEmpty())
+                cityTextInputLayout.setError("Required");
+            else
+                cityTextInputLayout.setError("Invalid city");
             return false;
         }
     }
 
     public boolean isStateValid() {
-        if (!signup2State.getSelectedItem().toString().equals("State")) {
-            Log.d("mStateValue: ", signup2State.getSelectedItem().toString());
+        if (signup2State.length() > 2 && signup2State.length() <= 26 && !signup2State.getText().toString().matches(".*\\d+.*")) {
             return true;
         } else {
+            if(signup2State.getText().toString().trim().isEmpty())
+                stateTextInputLayout.setError("Required");
+            else
+                stateTextInputLayout.setError("Invalid state");
             return false;
         }
     }
@@ -368,6 +567,10 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
         if (signup2Zip.length() == 5) {
             return true;
         } else {
+            if(signup2Zip.getText().toString().trim().isEmpty())
+                zipTextInputLayout.setError("Required");
+            else
+                zipTextInputLayout.setError("Invalid zip code");
             return false;
         }
     }
@@ -386,6 +589,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
         if (context instanceof OnCreditCardEntered) {
 
             creditCardDataListener = (OnCreditCardEntered) context;
@@ -399,10 +603,49 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
     public void onDetach() {
         super.onDetach();
         creditCardDataListener = null;
+        myContext = null;
     }
 
     public interface OnCreditCardEntered {
         void OnCreditCardEntered(String ccNum, String ccExMonth, String ccExYear, String ccCVV);
+    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
+
+    public class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+            if(signup2CCNum.hasFocus())
+                ccNumTextInputLayout.setError(null);
+            if(signup2CC_CVV.hasFocus())
+                cvvTextInputLayout.setError(null);
+            if(signup2CCExp.hasFocus())
+                expTextInputLayout.setError(null);
+            if(signup2Address.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(signup2State.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(signup2City.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(signup2Zip.hasFocus())
+                zipTextInputLayout.setError(null);
+
+        }
     }
 
 
@@ -417,7 +660,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 //        try {
 //            if (BuildConfig.DEBUG) {
 //                String mAuthorization = getSandboxTokenizationKey();
-//                mBraintreeFragment = BraintreeFragment.newInstance(getActivity(), mAuthorization);
+//                mBraintreeFragment = BraintreeFragment.newInstance(getvity(), mAuthorization);
 //                progress.setVisibility(View.GONE);
 //                // mBraintreeFragment is ready to use!
 //

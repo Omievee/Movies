@@ -12,6 +12,68 @@
         android:layout_height="270dp"
         android:animateLayoutChanges="true"
         android:foreground="@drawable/poster_gradient"
+        android:visibility="visible"
         fresco:actualImageScaleType="centerCrop" />
+
+
+    <FrameLayout
+        android:id="@+id/videoFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/featuredVideo"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            app:auto_show="true"
+            app:resize_mode="zoom"
+            app:use_controller="false" />
+
+
+        <TextView
+            android:id="@+id/videoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+            android:layout_marginStart="@dimen/margin_half"
+            android:elevation="5dp"
+            android:text="Movie Title"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/margin_half"
+            android:layout_marginStart="@dimen/margin_half">
+
+
+            <TextView
+                android:id="@+id/seeTimes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:text="See Showtimes"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="15dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+                android:layout_toEndOf="@id/seeTimes"
+                android:elevation="5dp"
+                android:src="@drawable/arrowforward"
+                android:tint="@color/white" />
+
+        </RelativeLayout>
+    </FrameLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

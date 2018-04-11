@@ -3,7 +3,8 @@ package com.mobile.application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
+
+import com.helpshift.support.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -17,6 +18,7 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.RealmTaskService;
 import com.mobile.network.RestClient;
 import com.taplytics.sdk.Taplytics;
 
@@ -49,6 +51,8 @@ public class Application extends MultiDexApplication {
         mApplication = this;
     }
 
+
+    //giguyigfyug
     @Override
     public void onCreate() {
         super.onCreate();
@@ -57,18 +61,18 @@ public class Application extends MultiDexApplication {
         s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
-
+        RealmTaskService.scheduleRepeatTask(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
-        Log.d(TAG, "REALM PATH!! ---->: " + config.getPath());
         Realm.setDefaultConfiguration(config);
-
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
         RestClient.setupUnauthenticatedWebClient(getApplicationContext());
         RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
+        RestClient.setupAuthenticatedStagingRegistrationClient(getApplicationContext());
+        RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {

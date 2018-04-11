@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@color/dark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:colorBackground">@color/dark</item>
+        <item name="android:windowFullscreen">false</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
@@ -31,14 +32,14 @@
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
-        <item name="colorPrimary">@color/test_blue</item>
+        <item name="colorPrimary">@color/charcoalGrey</item>
         <item name="colorAccent">@color/new_red</item>
         <item name="colorPrimaryDark">@color/test_black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/almost_white</item>
         <item name="android:windowBackground">@color/test_black</item>
-        <item name="android:colorBackground">@color/test_blue</item>
+        <item name="android:colorBackground">@color/charcoalGrey</item>
     </style>
 
     <style name="CircularProgress" parent="Theme.AppCompat.Light">
@@ -66,11 +67,11 @@
     <!-- Style for Alert Dialogs -->
     <style name="CUSTOM_ALERT" parent="Theme.AppCompat.Dialog.Alert">
         <!-- SET BUTTON COLOR IN DIALOG BUILDER -->
-        <item name="colorPrimary">@color/test_black</item>
+        <item name="colorPrimary">@color/charcoalGrey</item>
         <item name="colorAccent">@color/new_red</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/almost_white</item>
         <item name="android:colorPrimary">@color/new_red</item>
-        <item name="android:windowBackground">@color/test_black</item>
+        <item name="android:windowBackground">@color/charcoalGrey</item>
     </style>
 
     <!-- Style to get white text on toolbars -->
@@ -95,6 +96,32 @@
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="EditTextStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorControlActivated">@color/white_80_opacity</item>
+    </style>
+
+    <style name="text_in_layout_hint_Style">
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="normal_text_in_layout_Style">
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/new_red</item>
+
+
+    </style>
+
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/charcoalGrey</item>
+        <item name="colorPrimary">@color/test_black</item>
     </style>
 
 </resources>

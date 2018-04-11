@@ -5,11 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -17,7 +18,15 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
@@ -26,11 +35,15 @@ import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     };
 
     UserInfoResponse userInfoResponse;
-    protected BottomNavigationView bottomNavigationView;
+    public BottomNavigationView bottomNavigationView;
 
     public String myZip;
 
@@ -66,6 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             JSONObject attributes = new JSONObject();
             attributes.put("email", UserPreferences.getUserEmail());
@@ -76,11 +90,14 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         } catch (JSONException e) {
 
         }
+
         try {
             HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
         } catch (Exception e) {
 
         }
+
+
     }
 
 
@@ -92,10 +109,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isOnline()) {
-            NoInternetFragment fragobj = new NoInternetFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_no_internet");
+
+        //COMMENTED OUT - ALEXIS WANTED A TOAST INSTEAD
+
+        checkInternetConnection();
+    }
+
+    public void checkInternetConnection(){
+        if(!isOnline()){
+            Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -128,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
+        fadeIn.setDuration(500);
 
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);

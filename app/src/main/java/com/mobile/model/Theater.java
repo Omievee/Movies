@@ -6,14 +6,30 @@ import org.parceler.Parcel;
 import java.io.Serializable;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
 
 @Parcel(value = Parcel.Serialization.BEAN, analyze = {Theater.class})
 @RealmClass
 public class Theater extends RealmObject implements Serializable {
 
+    @PrimaryKey
     int id;
 
+
+
+
+    String name;
+    String address;
+    String city;
+    String state;
+    String zip;
+    double distance;
+    double lon;
+    double lat;
+    String theaterChainName;
+    String ticketType;
+    String synopsis;
     int moviepassId;
     int tribuneTheaterId;
 
@@ -74,17 +90,6 @@ public class Theater extends RealmObject implements Serializable {
         this.synopsis = synopsis;
     }
 
-    String name;
-    String address;
-    String city;
-    String state;
-    String zip;
-    double distance;
-    double lon;
-    double lat;
-    String theaterChainName;
-    String ticketType;
-    String synopsis;
 
     public Theater() {
     }
@@ -93,7 +98,7 @@ public class Theater extends RealmObject implements Serializable {
         if (name != null) {
             return name;
         }
-        return "";
+        return "Theater";
     }
 
     public boolean ticketTypeIsStandard() {

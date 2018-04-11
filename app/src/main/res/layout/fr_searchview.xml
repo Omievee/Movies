@@ -7,17 +7,17 @@
     android:clickable="true">
 
 
-    <Button
-        android:id="@+id/CancelSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="30dp"
-        android:background="@android:color/transparent"
-        android:text="Cancel"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+    <!--<Button-->
+    <!--android:id="@+id/CancelSearch"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_marginTop="30dp"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:text="Cancel"-->
+    <!--android:textAllCaps="false"-->
+    <!--android:textColor="@color/almost_white"-->
+    <!--android:textSize="18sp" />-->
 
     <com.mancj.materialsearchbar.MaterialSearchBar
         android:id="@+id/searchBar"
@@ -26,18 +26,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/FRAME"
         android:layout_marginBottom="@dimen/margin_half"
-        android:layout_marginEnd="@dimen/margin_half"
-        android:layout_marginStart="@dimen/margin_half"
-        android:layout_marginTop="85dp"
-        app:mt_backIconTint="@color/white"
+        android:layout_marginTop="@dimen/double_margin_standard"
         app:mt_borderlessRippleEnabled="true"
-        app:mt_dividerColor="@color/new_red"
-        app:mt_hint="Search for movies"
-        app:mt_hintColor="@color/white"
-        app:mt_maxSuggestionsCount="3"
-        app:mt_roundedSearchBarEnabled="true"
-        app:mt_searchBarColor="@color/test_blue"
+        app:mt_hint="search a movie"
+        app:mt_hintColor="@color/almost_white"
+        app:mt_clearIconTint="@color/white"
+        android:animateLayoutChanges="true"
+        app:mt_backIconDrawable="@android:color/transparent"
+        app:mt_searchBarColor="@color/test_black"
+        app:mt_middleTextSelectorTint="@color/white"
         app:mt_searchIconTint="@color/white"
+
         app:mt_textColor="@color/white" />
 
 

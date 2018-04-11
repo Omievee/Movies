@@ -1,27 +1,55 @@
 package com.mobile.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.helpshift.support.Log;
+
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.fragments.NearMe;
+import com.mobile.model.Plans;
+import com.mobile.model.ProspectUser;
+import com.mobile.network.RestClient;
+import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
+
+import org.parceler.Parcels;
+
+import java.lang.reflect.Type;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class OnboardingActivity extends AppCompatActivity {
@@ -35,15 +63,20 @@ public class OnboardingActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     TextView nearMe;
     ImageView[] indicators;
-
+    RelativeLayout findTheaters;
+    Plans planOne, planTwo;
+    ImageView ticketIconFinal;
     int page = 0;
 
     CoordinatorLayout mCoordinator;
+    private PlanResponse planResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
+
+        getPlans();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mCoordinator = findViewById(R.id.main_content);
@@ -54,12 +87,11 @@ public class OnboardingActivity extends AppCompatActivity {
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
-        four = findViewById(R.id.intro_indicator_4);
-
+        findTheaters = findViewById(R.id.buttons);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        indicators = new ImageView[]{zero, one, two, three, four};
+        indicators = new ImageView[]{zero, one, two, three};
 
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -84,15 +116,22 @@ public class OnboardingActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                        findTheaters.setVisibility(View.VISIBLE);
                         break;
                     case 1:
+                        findTheaters.setVisibility(View.VISIBLE);
+
                         break;
                     case 2:
+
+                        findTheaters.setVisibility(View.INVISIBLE);
+
                         break;
                     case 3:
+
+                        findTheaters.setVisibility(View.INVISIBLE);
                         break;
-                    case 4:
-                        break;
+
                 }
             }
 
@@ -110,44 +149,56 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         onboardingJoinNow.setOnClickListener(view -> {
-            Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-            startActivity(intent);
+            if (planTwo != null) {
+                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(OnboardingActivity.this, SignUpActivity.class);
+                intent.putExtra(SignUpFirstOpenActivity.SELECTED_PLAN, Parcels.wrap(planOne));
+                ProspectUser.plan = planOne;
+                startActivity(intent);
+            }
         });
     }
 
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    public void getPlans() {
+        RestClient.getsAuthenticatedRegistrationAPI().getPlans().enqueue(new Callback<PlanResponse>() {
+            @Override
+            public void onResponse(Call<PlanResponse> call, Response<PlanResponse> response) {
+                if (response != null && response.isSuccessful()) {
+                    planResponse = response.body();
+                    planOne = planResponse.getPlans().get(0);
+                    if (planResponse.getPlans().size() > 1)
+                        planTwo = planResponse.getPlans().get(1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlanResponse> call, Throwable t) {
+
+            }
+
+        });
+    }
+
 
     public static class PlaceholderFragment extends Fragment {
-
+        ImageView ticketIconFinal;
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
-        ImageView img;
+        SimpleDraweeView img;
 
-        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1, R.drawable.image_onboarding_3,
+
+        int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1,
                 R.drawable.signupimage2, R.drawable.howitworks2};
 
-        int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2,
-                R.string.activity_onboarding_header_3, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
+        int[] headers = new int[]{R.string.activity_onboarding_header_1, R.string.activity_onboarding_header_2, R.string.activity_onboarding_header_4, R.string.activity_onboarding_header_5};
 
-        int[] bodies = new int[]{R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2,
-                R.string.activity_onboarding_body_3, R.string.activity_onboarding_body_4, R.string.activity_onboarding_body_5};
+        int[] bodies = new int[]{R.string.activity_onboarding_body_1, R.string.activity_onboarding_body_2
+                , R.string.activity_onboarding_body_4, R.string.activity_onboarding_body_5};
 
 
         public static PlaceholderFragment newInstance(int sectionNumber) {
@@ -162,16 +213,51 @@ public class OnboardingActivity extends AppCompatActivity {
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
 
-            Log.d(Constants.TAG, "onCreateView: " );
             TextView textView = rootView.findViewById(R.id.section_label);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
             textView.setText(headers[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
             TextView bodyText = rootView.findViewById(R.id.section_body);
             bodyText.setText(bodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
+
+
+
             img = rootView.findViewById(R.id.section_img);
-            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0)
+                img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            else {
+                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/prod/images/onboarding_step1.png");
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                        .setProgressiveRenderingEnabled(true)
+                        .build();
+
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setImageRequest(request)
+                        .setTapToRetryEnabled(true)
+                        .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
+                            @Override
+                            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                                super.onFinalImageSet(id, imageInfo, animatable);
+//                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+
+
+                            }
+
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                            }
+                        })
+                        .build();
+
+                img.setController(controller);
+
+
+                ImagePipeline pipeline = Fresco.getImagePipeline();
+                pipeline.clearMemoryCaches();
+                pipeline.clearDiskCaches();
+            }
 
             return rootView;
         }
@@ -196,21 +282,25 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 4;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
+                    ticketIconFinal.setVisibility(View.GONE);
                     return getResources().getString(R.string.activity_onboarding_header_1);
                 case 1:
+                    ticketIconFinal.setVisibility(View.GONE);
+
                     return getResources().getString(R.string.activity_onboarding_header_2);
                 case 2:
-                    return getResources().getString(R.string.activity_onboarding_header_3);
-                case 3:
+                    ticketIconFinal.setVisibility(View.GONE);
+
                     return getResources().getString(R.string.activity_onboarding_header_4);
-                case 4:
+                case 3:
+                    ticketIconFinal.setVisibility(View.GONE);
                     return getResources().getString(R.string.activity_onboarding_header_5);
             }
             return null;
@@ -220,7 +310,7 @@ public class OnboardingActivity extends AppCompatActivity {
     public void updateIndicators(int position) {
         for (int i = 0; i < indicators.length; i++) {
             indicators[i].setBackgroundResource(
-                    i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
+                    i == position ? R.drawable.indicator_selected_no_stroke : R.drawable.indicator_unselected_no_stroke
             );
         }
     }
