@@ -4,65 +4,67 @@
     android:layout_height="match_parent"
     android:background="@color/dark"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mobile.activities.OnboardingActivity$PlaceholderFragment">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/quadruple_margin_standard">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/section_img"
-            android:layout_width="195dp"
-            android:layout_height="195dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/double_margin_standard"
-            android:scaleType="fitCenter" />
-
-    </FrameLayout>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/section_img"
+        android:layout_width="255dp"
+        android:layout_height="255dp"
+        android:adjustViewBounds="true"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="@dimen/quadruple_margin_standard"
-        android:paddingEnd="@dimen/margin_standard"
-        android:paddingStart="@dimen/margin_standard">
+        android:layout_marginTop="@dimen/double_margin_standard">
 
-        <TextView
-            android:id="@+id/section_label"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/almost_white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            tools:text="Page One" />
-
-        <TextView
-            android:id="@+id/section_body"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/section_label"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:alpha=".8"
-            android:gravity="center"
-            android:lineSpacingExtra="2dp"
-            android:text=""
-            android:textColor="@color/almost_white"
-            android:textSize="18sp" />
+            android:orientation="vertical">
 
 
+            <ImageView
+                android:id="@+id/moviepasslogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/logomediumred" />
 
+            <TextView
+                android:id="@+id/section_label"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/almost_white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="Page One" />
+
+            <TextView
+                android:id="@+id/section_body"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/double_margin_standard"
+                android:layout_marginStart="@dimen/double_margin_standard"
+                android:alpha=".8"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:text="Join Americas #1 Movie Subscription Service!"
+                android:textColor="@color/almost_white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>
