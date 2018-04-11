@@ -29,10 +29,39 @@ android {
         multiDexEnabled true
     }
 
-    buildTypes {
+    signingConfigs {
         release {
+            keyAlias 'upload'
+            keyPassword 'moviepass'
+            storeFile file('/Users/ivonne/Documents/MoviePass/android/app/upload_key.jks')
+            storePassword 'moviepass'
+        }
+    }
+
+    buildTypes {
+        staging {
+            signingConfig signingConfigs.debug
+            debuggable true
+            buildConfigField "String", "baseUrl", '"http://staging.moviepass.com"'
+            buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
+            buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
+        }
+        release {
+            signingConfig signingConfigs.release
             minifyEnabled false
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
+            buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
+            buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
+        }
+
+        debug{
+            signingConfig signingConfigs.debug
+            debuggable true
+            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
+            buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
+            buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
         }
     }
 
@@ -41,6 +70,7 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        staging { java.srcDirs = ['src/staging/java', 'src/staging/java/staging'] }
     }
 
     packagingOptions {
@@ -202,6 +232,7 @@ dependencies {
     //Burred Backgrounds
     implementation 'jp.wasabeef:blurry:2.1.1'
 
+    //EZXOPLAYER
     implementation 'com.google.android.exoplayer:exoplayer-core:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'

@@ -57,6 +57,8 @@ public interface Api {
     String HEADER_UUIDD = "deviceUuid";
     String HEADER_GOWATCHIT = "x-api-key";
 
+
+
     /* LogIn */
     @POST("/rest/v1/session")
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
