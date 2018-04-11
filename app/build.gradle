@@ -215,13 +215,14 @@ dependencies {
 
     //material serach
     implementation 'com.github.mancj:MaterialSearchBar:0.7.5'
-
+g
     //Umano Sliding panel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
     //Burred Backgrounds
     implementation 'jp.wasabeef:blurry:2.1.1'
 
+    //EZXOPLAYER
     implementation 'com.google.android.exoplayer:exoplayer-core:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
