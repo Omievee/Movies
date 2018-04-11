@@ -1,7 +1,6 @@
 package com.mobile.activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
@@ -15,10 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.helpshift.support.Log;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +27,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mobile.Constants;
 import com.mobile.fragments.NearMe;
 import com.mobile.model.Plans;
 import com.mobile.model.ProspectUser;
@@ -44,8 +39,6 @@ import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
-
-import java.lang.reflect.Type;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -226,7 +219,7 @@ public class OnboardingActivity extends AppCompatActivity {
             if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0)
                 img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             else {
-                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
+                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/prod/images/onboarding_step1.png");
                 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                         .setProgressiveRenderingEnabled(true)
                         .build();
@@ -239,8 +232,6 @@ public class OnboardingActivity extends AppCompatActivity {
                             @Override
                             public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                                 super.onFinalImageSet(id, imageInfo, animatable);
-//                            img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-
 
                             }
 

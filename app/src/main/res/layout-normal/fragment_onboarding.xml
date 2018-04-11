@@ -59,7 +59,7 @@
             android:lineSpacingExtra="2dp"
             android:text=""
             android:textColor="@color/almost_white"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
 
 
