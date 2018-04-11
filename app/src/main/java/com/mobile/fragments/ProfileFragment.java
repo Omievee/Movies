@@ -27,11 +27,9 @@ import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
-import com.mobile.activities.SettingsActivity;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -58,6 +56,7 @@ public class ProfileFragment extends Fragment {
     boolean pushValue;
     Activity myActivity;
     Context myContext;
+
     public ProfileFragment() {
     }
 
@@ -83,7 +82,6 @@ public class ProfileFragment extends Fragment {
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
         fadeIn(root);
-
 
 
         return root;
@@ -126,7 +124,6 @@ public class ProfileFragment extends Fragment {
             }
 
         });
-
 
 
         signout.setOnClickListener(view16 -> {
@@ -188,7 +185,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {

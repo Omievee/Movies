@@ -21,6 +21,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -180,25 +181,25 @@ public class HistoryDetailsFragment extends Fragment {
         RestClient.getAuthenticated().submitRating(historyId, rating).enqueue(new Callback<HistoryResponse>() {
             @Override
             public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-
+                Handler h = new Handler();
                 if (response.isSuccessful()) {
                     if (userRating.equals("GOOD")) {
                         dislike.setVisibility(View.GONE);
                         fadeOut(dislike);
-                        shrink(like);
+                        animate(like);
                     } else if (userRating.equals("BAD")) {
                         like.setVisibility(View.GONE);
                         fadeOut(like);
-                        shrink(dislike);
+                        animate(dislike);
                     }
-                    Handler h = new Handler();
-//                    h.postDelayed(() -> myActivity.onBackPressed(), 1000);
+                    h.postDelayed(() -> myActivity.onBackPressed(), 2000);
                 }
             }
 
             @Override
             public void onFailure(Call<HistoryResponse> call, Throwable t) {
-
+                Toast.makeText(myActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
 
@@ -227,7 +228,7 @@ public class HistoryDetailsFragment extends Fragment {
         view.setAnimation(animation);
     }
 
-    public void shrink (View view ) {
+    public void animate(View view) {
         AnimationSet expandAndShrink = new AnimationSet(true);
         ScaleAnimation expand = new ScaleAnimation(
                 1f, 1.5f,
