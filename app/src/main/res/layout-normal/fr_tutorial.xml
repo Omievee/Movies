@@ -7,38 +7,44 @@
     android:paddingRight="@dimen/margin_half"
     tools:context="com.mobile.activities.OnboardingActivity$PlaceholderFragment">
 
-
-    <TextView
-        android:id="@+id/tutorial_body"
-        style="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/finePrint"
-        android:layout_gravity="center_horizontal |bottom"
-        android:layout_marginBottom="@dimen/margin_half"
-        android:alpha=".8"
-        android:gravity="center"
-        android:lineSpacingExtra="2dp"
-        android:text="Add a long description here about your app's important feature."
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
-
-    <TextView
-        android:id="@+id/finePrint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/double_margin_standard"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="75dp"
-        android:text="*Your subscription will begin upon your first e-ticket check-in."
-        android:textSize="14sp"
-        android:textStyle="italic"
-        android:visibility="invisible" />
+        android:layout_gravity="center_horizontal |bottom">
+
+        <TextView
+            android:id="@+id/tutorial_body"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha=".8"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="Add a long description here about your app's important feature."
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/finePrint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tutorial_body"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_half"
+            android:text="*Your subscription will begin upon your first e-ticket check-in."
+            android:textSize="13sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/tutorial_images"
-        android:layout_width="235dp"
-        android:layout_height="235dp"
+        android:layout_width="265dp"
+        android:layout_height="265dp"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/margin_half"
@@ -54,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="50dp"
         android:textColor="@android:color/white"
         android:textSize="25sp"
         tools:text="Page One" />
