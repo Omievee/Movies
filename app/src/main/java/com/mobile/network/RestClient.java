@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.moviepass.BuildConfig;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -41,11 +42,11 @@ public class RestClient {
     private native static String getEndPoint();
 
     static String a1URL = "http://a1.moviepass.com ";
-    static String baseURL = String.valueOf(getEndPoint());
-    static String registrationURL = "https://registration.moviepass.com/";
-//    static String registrationURL = "https://registration-stg.herokuapp.com";
-//    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
-    static String microServiceURL = "https://auth.moviepass.com/";
+//    static String baseURL = String.valueOf(getEndPoint());
+//    static String registrationURL = "https://registration.moviepass.com/";
+////    static String registrationURL = "https://registration-stg.herokuapp.com";
+////    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
+//    static String microServiceURL = "https://auth.moviepass.com/";
 
     private static Api sAuthenticatedAPI;
     private static Api sAuthenticatedAPIGoWatchIt;
@@ -191,7 +192,7 @@ public class RestClient {
                 .create();
 
         sAuthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(baseURL)
+                .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
@@ -291,7 +292,7 @@ public class RestClient {
                 .setLenient()
                 .create();
         sUnauthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(baseURL)
+                .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
                 .build();
@@ -395,7 +396,7 @@ public class RestClient {
                 .create();
 
         sAuthenticatedRegistrationInstance = new Retrofit.Builder()
-                .baseUrl(registrationURL)
+                .baseUrl(BuildConfig.registrationURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
@@ -448,7 +449,7 @@ public class RestClient {
                 .create();
 
         sAuthenticatedMicroServiceInstance = new Retrofit.Builder()
-                .baseUrl(microServiceURL)
+                .baseUrl(BuildConfig.microServiceURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())

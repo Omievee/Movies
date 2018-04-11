@@ -1,5 +1,3 @@
-package com.mobile.network;
-
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
 import com.mobile.model.TheatersResponse;
@@ -225,12 +223,12 @@ public interface Api {
 
 
     /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/prod/movies/current.json")
+    @GET("/staging/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
 
     /* ALL MOVIES FOR SEARCH */
-    @GET("/prod/movies/all.json")
+    @GET("/staging/movies/all.json")
     Call<LocalStorageMovies> getAllMovies();
 
 
