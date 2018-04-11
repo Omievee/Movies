@@ -226,7 +226,7 @@ public class OnboardingActivity extends AppCompatActivity {
             if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0)
                 img.setBackgroundResource(bgs[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             else {
-                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/staging/images/onboarding_step1.png");
+                final Uri imgUrl = Uri.parse("https://a1.moviepass.com/prod/images/onboarding_step1.png");
                 ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                         .setProgressiveRenderingEnabled(true)
                         .build();
