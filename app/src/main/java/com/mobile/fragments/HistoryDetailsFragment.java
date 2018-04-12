@@ -31,7 +31,6 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
-import com.mobile.Interfaces.historyDetailDismissListener;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
@@ -60,7 +59,8 @@ public class HistoryDetailsFragment extends Fragment {
     TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
-    historyDetailDismissListener historyListener;
+    onDismissFragmentListener historyListener;
+
     public HistoryDetailsFragment() {
     }
 
@@ -193,6 +193,7 @@ public class HistoryDetailsFragment extends Fragment {
                         fadeOut(like);
                         animate(dislike);
                     }
+                    historyListener.dismissedFragment();
                     h.postDelayed(() -> myActivity.onBackPressed(), 2000);
                 }
             }
@@ -210,7 +211,11 @@ public class HistoryDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        myContext = context;
+        if (context instanceof onDismissFragmentListener) {
+            historyListener = (onDismissFragmentListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement onAlertClickListener");
+        }
     }
 
     @Override
@@ -227,6 +232,8 @@ public class HistoryDetailsFragment extends Fragment {
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+
+
     }
 
     public void animate(View view) {
@@ -252,6 +259,10 @@ public class HistoryDetailsFragment extends Fragment {
         expandAndShrink.setInterpolator(new AccelerateInterpolator(1.0f));
 
         view.startAnimation(expandAndShrink);
+    }
+
+    public interface onDismissFragmentListener {
+        void dismissedFragment();
     }
 
 
