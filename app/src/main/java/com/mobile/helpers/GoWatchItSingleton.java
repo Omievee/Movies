@@ -3,10 +3,14 @@ package com.mobile.helpers;
 import android.content.Context;
 import android.os.AsyncTask;
 import com.helpshift.support.Log;
+
+import android.view.View;
 import android.widget.Toast;
 
 import com.mobile.UserPreferences;
 import com.mobile.activities.MoviesActivity;
+import com.mobile.model.Movie;
+import com.mobile.model.MoviesResponse;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
@@ -20,10 +24,16 @@ import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.taplytics.genet.getActivity;
 
 /**
  * Created by ivonneortega on 3/11/18.
@@ -37,10 +47,13 @@ public class GoWatchItSingleton {
     private String l = "0.0";
     private String ln = "0.0";
     private String IDFA;
+    private List<Movie> ALLMOVIES;
 //    String l = String.valueOf(UserPreferences.getLatitude());
 //    String ln = String.valueOf(UserPreferences.getLongitude());
 
     private GoWatchItSingleton() {
+        ALLMOVIES = new ArrayList<>();
+        getMovies();
         campaign = "no_campaign";
     }
 
@@ -201,6 +214,7 @@ public class GoWatchItSingleton {
         thz = theater.getZip();
         tha = theater.getAddress();
         String lts = currentTimeStamp();
+        String movieTitle = getMovieTitle(Integer.getInteger(movieId));
 
         if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -338,6 +352,37 @@ public class GoWatchItSingleton {
             }
         });
 
+    }
+
+    public String getMovieTitle(int id){
+        for (Movie movie: ALLMOVIES) {
+            if(movie.getId() == id){
+                return movie.getTitle();
+            }
+        }
+        return null;
+    }
+
+    public void getMovies(){
+        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
+
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                MoviesResponse info = response.body();
+                if (response.isSuccessful() && response != null) {
+                    ALLMOVIES.clear();
+                    ALLMOVIES.addAll(info.getFeatured());
+                    ALLMOVIES.addAll(info.getNewReleases());
+                    ALLMOVIES.addAll(info.getNowPlaying());
+                    ALLMOVIES.addAll(info.getTopBoxOffice());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+
+            }
+        });
     }
 
 

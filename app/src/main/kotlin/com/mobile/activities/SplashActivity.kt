@@ -25,6 +25,7 @@ class SplashActivity : AppCompatActivity() {
         val data = intent.data
 
         getAAID().execute()
+        GoWatchItSingleton.getInstance().getMovies()
         if (data != null && data.path.length >= 2) run {
             var movieIdEncripted: String
             var movieOrTheater: String
