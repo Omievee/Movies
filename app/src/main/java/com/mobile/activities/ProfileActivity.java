@@ -237,8 +237,8 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         detailsFragment.setExitTransition(new Fade());
         detailsFragment.setSharedElementReturnTransition(new HistoryDetails());
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.profile_container, detailsFragment);
         transaction.addToBackStack("");
         transaction.commit();

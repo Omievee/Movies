@@ -1,15 +1,12 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +48,7 @@ import retrofit2.Response;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends Fragment {
+public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
