@@ -1,79 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coord_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/dark"
+    android:fillViewport="true"
     tools:context="com.mobile.fragments.SignUpStepTwoFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
         android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-
+        <!-- LOGO -->
         <LinearLayout
-            android:id="@+id/LAYOUT_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/planPrice"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard_and_half"
                 android:gravity="center_horizontal"
-                android:text="@string/fragment_sign_up_step_two_header2"
-                android:textAlignment="center"
-                android:textColor="@color/almost_white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:src="@drawable/logo"
+                android:tint="@color/new_red" />
 
-            <TextView
-                android:id="@+id/paymentDisclaimer"
-                android:layout_width="wrap_content"
+            <!-- divider -->
+
+            <RelativeLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="@dimen/margin_standard"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:gravity="center_horizontal"
-                android:text="@string/fragment_sign_up_step_two_header"
-                android:textAlignment="center"
-                android:textColor="@color/almost_white"
-                android:textSize="14sp" />
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignStart="@id/intro_indicator_0"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative01"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Account"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/shipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative02"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Shipping"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative03"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Payment"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+
+                        <RelativeLayout
+                            android:id="@+id/relative04"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignEnd="@id/intro_indicator_3"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/indicator_unselected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative04"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Confirm"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/Scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/LAYOUT_1"
-            android:layout_marginBottom="@dimen/quadruple_margin_standard">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <LinearLayout
-                    android:id="@+id/LAYOUT_2"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/planPrice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_sign_up_step_two_header2"
+                    android:textAlignment="center"
+                    android:textColor="@color/almost_white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/paymentDisclaimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/margin_standard"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:gravity="center_horizontal"
+                    android:text="@string/fragment_sign_up_step_two_header"
+                    android:textAlignment="center"
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
 
 
                     <LinearLayout
                         android:id="@+id/LAYOUT_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_standard_and_half"
                         android:orientation="horizontal">
 
 
@@ -81,11 +301,11 @@
                             android:id="@+id/ccNumTextInputLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_standard"
                             android:layout_weight="1"
                             android:textColorHint="@color/white_80_opacity"
                             android:theme="@style/EditTextStyle"
                             app:errorTextAppearance="@style/error_appearance"
-                            android:layout_marginLeft="@dimen/margin_standard"
                             app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
                             <EditText
@@ -115,10 +335,10 @@
                             android:id="@+id/SIGNUP2_SCANCARD_ICON"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:background="@color/test_blue"
-                            android:scaleType="fitCenter"
-                            android:backgroundTint="@color/test_black"
                             android:layout_marginEnd="@dimen/margin_standard"
+                            android:background="@color/test_blue"
+                            android:backgroundTint="@color/test_black"
+                            android:scaleType="fitCenter"
                             android:src="@drawable/scanicon2" />
 
                     </LinearLayout>
@@ -200,17 +420,14 @@
 
                     </LinearLayout>
 
-                </LinearLayout>
-
 
                 <LinearLayout
                     android:id="@+id/LAYOUT_5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/LAYOUT_2"
                     android:layout_marginEnd="@dimen/margin_standard"
                     android:layout_marginStart="@dimen/margin_standard"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard_and_half"
                     android:orientation="horizontal">
 
                     <TextView
@@ -254,7 +471,7 @@
                     android:layout_below="@id/LAYOUT_5"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/double_margin_standard"
-                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
                     android:text="You'll be able to review details before being charged."
                     android:textColor="@color/almost_white"
                     android:textSize="12sp"
@@ -266,11 +483,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/paymentmsg"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_standard"
                     android:layout_marginEnd="@dimen/margin_standard"
-                    android:visibility="gone">
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:visibility="gone"
+                    android:orientation="vertical">
 
 
                     <android.support.design.widget.TextInputLayout
@@ -345,16 +562,16 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/LAYOUT_6"
                     android:layout_marginBottom="@dimen/a_lot_margin_standard"
-                    android:layout_marginStart="@dimen/margin_standard"
                     android:layout_marginEnd="@dimen/margin_standard"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/billingCityInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.5"
                         android:layout_height="match_parent"
+                        android:layout_weight="0.5"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
                         app:errorTextAppearance="@style/error_appearance"
@@ -380,20 +597,11 @@
                     </android.support.design.widget.TextInputLayout>
 
 
-                    <!--<android.support.v7.widget.AppCompatSpinner-->
-                        <!--android:id="@+id/signup2Spinner"-->
-                        <!--android:layout_width="160dp"-->
-                        <!--android:layout_height="42dp"-->
-                        <!--android:hint="@string/fragment_sign_up_step_one_state"-->
-                        <!--android:prompt="@string/fragment_sign_up_step_one_state"-->
-                        <!--android:textColor="@color/white"-->
-                        <!--android:textColorHint="@color/gray_icon" />-->
-
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/billingStateInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.3"
                         android:layout_height="match_parent"
+                        android:layout_weight="0.3"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
                         app:errorTextAppearance="@style/error_appearance"
@@ -406,8 +614,8 @@
                             android:animateLayoutChanges="true"
                             android:backgroundTint="@color/white_40_opacity"
                             android:hint="@string/fragment_sign_up_step_one_state"
-                            android:inputType="number"
-                            android:maxLength="5"
+                            android:inputType="textCapCharacters"
+                            android:maxLength="2"
                             android:maxLines="1"
                             android:textAppearance="@style/normal_text_in_layout_Style"
                             android:textColor="@color/almost_white"
@@ -422,8 +630,8 @@
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/billingZipInputLayout"
                         android:layout_width="0dp"
-                        android:layout_weight="0.3"
                         android:layout_height="match_parent"
+                        android:layout_weight="0.3"
                         android:textColorHint="@color/white_80_opacity"
                         android:theme="@style/EditTextStyle"
                         app:errorTextAppearance="@style/error_appearance"
@@ -452,33 +660,29 @@
 
                 </LinearLayout>
 
-            </RelativeLayout>
 
-        </ScrollView>
+        <TextView
+            android:id="@+id/button_next2"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/basic_button_height"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom |center_horizontal"
+            android:layout_marginBottom="@dimen/double_margin_standard"
+            android:layout_marginTop="@dimen/margin_standard_and_half"
+            android:background="@drawable/mpbutton1"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:text="@string/fragment_sign_up_step_one_next"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/button_next2"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/basic_button_height"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom |center_horizontal"
-        android:layout_marginBottom="@dimen/double_margin_standard"
-        android:background="@drawable/mpbutton1"
-        android:elevation="5dp"
-        android:gravity="center"
-        android:text="@string/fragment_sign_up_step_one_next"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <include
-        android:id="@+id/progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

@@ -4,10 +4,12 @@
     <dimen name="less_spacing">5dp</dimen>
     <dimen name="more_spacing">10dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="bottom_navigation_height">56dp</dimen>
     <dimen name="button_height">48dp</dimen>
     <dimen name="margin_quarter">4dp</dimen>
     <dimen name="margin_half">8dp</dimen>
     <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_standard_and_half">24dp</dimen>
     <dimen name="margin_minimum">2dp</dimen>
     <dimen name="double_margin_standard">32dp</dimen>
     <dimen name="doubledouble_margin_standard">48dp</dimen>
@@ -31,6 +33,8 @@
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
+
 
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>

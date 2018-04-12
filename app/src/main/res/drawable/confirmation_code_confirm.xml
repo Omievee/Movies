@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listview_background_shape">
     <stroke
-        android:width="4dp"
+        android:width="2dp"
         android:color="@color/new_red"
         android:dashGap="@dimen/margin_standard" />
 
@@ -12,6 +12,6 @@
         android:left="6dp"
         android:right="6dp"
         android:top="6dp" />
-    <corners android:radius="8dp" />
+    <corners android:radius="40dp" />
     <solid android:color="@color/white" />
 </shape>

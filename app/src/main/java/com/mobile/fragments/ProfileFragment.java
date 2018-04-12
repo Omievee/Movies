@@ -26,6 +26,7 @@ import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
@@ -56,7 +57,7 @@ public class ProfileFragment extends Fragment {
     boolean pushValue;
     Activity myActivity;
     Context myContext;
-
+    ProfileActivityInterface listener;
     public ProfileFragment() {
     }
 
@@ -82,6 +83,7 @@ public class ProfileFragment extends Fragment {
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
         fadeIn(root);
+
 
 
         return root;
@@ -129,6 +131,7 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
+//            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myActivity, LogInActivity.class);
             startActivity(intent);
@@ -142,7 +145,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -160,13 +163,20 @@ public class ProfileFragment extends Fragment {
         help.setOnClickListener(view12 -> {
             Map<String, String[]> customIssueFileds = new HashMap<>();
             customIssueFileds.put("version name", new String[]{"sl", versionName});
+            String date = UserPreferences.getLastCheckInAttemptDate();
+            String time = UserPreferences.getLastCheckInAttemptTime();
+            customIssueFileds.put("lastCheckInAttemptDate",new String[]{"sl",date});
+            customIssueFileds.put("lastCheckInAttemptTime",new String[]{"sl",time});
+
             String[] tags = new String[]{versionName};
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("version", versionName);
+            userData.put("lastCheckInAttemptDate",date);
+            userData.put("lastCheckInAttemptTime",time);
             Metadata meta = new Metadata(userData, tags);
 
             ApiConfig apiConfig = new ApiConfig.Builder()
-                    .setEnableContactUs(Support.EnableContactUs.AFTER_VIEWING_FAQS)
+                    .setEnableContactUs(Support.EnableContactUs.ALWAYS)
                     .setGotoConversationAfterContactUs(true)
                     .setRequireEmail(false)
                     .setCustomIssueFields(customIssueFileds)
@@ -185,7 +195,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
@@ -195,7 +205,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pendingReservationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
@@ -220,6 +230,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof ProfileActivityInterface){
+            listener = (ProfileActivityInterface) context;
+        }
         myContext = context;
     }
 

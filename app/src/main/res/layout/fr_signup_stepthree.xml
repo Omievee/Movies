@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/CONFIRM_COORD"
     android:layout_width="match_parent"
@@ -7,345 +7,587 @@
     android:fitsSystemWindows="true"
     tools:context="com.mobile.fragments.SignUpStepThreeFragment">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/more_a_lot_margin_standard"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:isScrollContainer="false"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_standard"
+        android:paddingStart="@dimen/margin_standard">
 
-
-        <RelativeLayout
-            android:id="@+id/relative_layout"
+        <!-- LOGO -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:isScrollContainer="false"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/margin_standard"
-            android:paddingStart="@dimen/margin_standard">
+            android:id="@+id/logo_indicators"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_standard_and_half"
+                android:gravity="center_horizontal"
+                android:src="@drawable/logo"
+                android:tint="@color/new_red" />
+
+            <!-- divider -->
+
+            <RelativeLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/margin_half"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignStart="@id/intro_indicator_0"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_0_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative01"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Account"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_1_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/shipping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative02"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Shipping"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+                        <RelativeLayout
+                            android:id="@+id/relative03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_centerVertical="true"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_2_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative03"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Payment"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25">
+
+
+                        <RelativeLayout
+                            android:id="@+id/relative04"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:id="@id/line"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_alignEnd="@id/intro_indicator_3"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="5dp"
+                                android:background="@android:color/white" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/indicator_selected" />
+
+                            <ImageView
+                                android:id="@+id/intro_indicator_3_check"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/check_mark"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/confirm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/relative04"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/margin_half"
+                            android:text="Confirm"
+                            android:textAlignment="center"
+                            android:textColor="@color/almost_white"
+                            android:textSize="12sp" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/CONFIRM_SHIPTO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/logo_indicators"
+            android:layout_marginTop="@dimen/margin_half"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Ship to:"
+                android:textColor="@color/almost_white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/CONFIRM_FULL_NAME"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="[ First + Last Name ]"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/CONFIRM_FULL_ADDRESS"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_half"
+                android:text="[ Address 1 + 2 ]"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/CONFIRM_SHIPTO2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CONFIRM_SHIPTO"
+            android:layout_marginTop="@dimen/margin_minimum"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/CONFIRM_CITYSTATEZIP"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="[ City, State Zip ]"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/CONFIRM_EDIT_ADDRESS"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight=".2"-->
+            <!--android:text="Edit"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textColor="@color/new_red"-->
+            <!--android:textSize="18sp" />-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/plans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/CONFIRM_SHIPTO2"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plan:"
+                android:textColor="@color/almost_white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/planDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:text="DESCRIPTION"
+                android:textColor="@color/almost_white" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/CONFIRM_BILLING"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/plans"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Billing:"
+                android:textColor="@color/almost_white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
 
             <LinearLayout
-                android:id="@+id/CONFIRM_SHIPTO"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Ship to:"
-                    android:textColor="@color/almost_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/CONFIRM_FULL_NAME"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:text="[ First + Last Name ]"
+                    android:text="XXXX - XXXX - XXXX"
                     android:textColor="@color/almost_white"
                     android:textSize="14sp" />
 
+
                 <TextView
-                    android:id="@+id/CONFIRM_FULL_ADDRESS"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/CONFIRM_NUMBER"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:text="[ Address 1 + 2 ]"
-                    android:textColor="@color/almost_white"
+                    android:layout_weight=".3"
+                    android:text="-1234 ]"
+                    android:textColor="@color/white"
                     android:textSize="14sp" />
+
+                <!--<TextView-->
+                <!--android:id="@+id/CONFIRM_EDIT_BILLING"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginEnd="@dimen/margin_standard"-->
+                <!--android:layout_weight=".3"-->
+                <!--android:text="Edit"-->
+                <!--android:textAlignment="viewEnd"-->
+                <!--android:textColor="@color/new_red"-->
+                <!--android:textSize="18sp" />-->
 
 
             </LinearLayout>
 
 
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/CONFIRM_BILLING"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:background="@color/almost_white"
+            android:backgroundTint="@color/almost_white" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            android:orientation="vertical">
+
+
             <LinearLayout
-                android:id="@+id/CONFIRM_SHIPTO2"
+                android:id="@+id/CONFIRM_DETAILS_MSG"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/CONFIRM_SHIPTO"
-                android:layout_marginTop="@dimen/margin_minimum"
+                android:layout_below="@id/divider"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Total: "
+                        android:textColor="@color/almost_white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/planPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="$9.95/month "
+                        android:textColor="@color/new_red"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/paymentDisclaimer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/margin_half"
+                    android:text="@string/fragment_sign_up_step_two_header"
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:padding="@dimen/margin_minimum"
+                    android:text="Please allow 7-10 business days for shipping"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    android:textStyle="italic" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/CONFIRM_TERMS_TEXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
                 android:orientation="horizontal">
 
 
                 <TextView
-                    android:id="@+id/CONFIRM_CITYSTATEZIP"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="[ City, State Zip ]"
-                    android:textColor="@color/almost_white"
-                    android:textSize="14sp" />
-
-
-                <!--<TextView-->
-                <!--android:id="@+id/CONFIRM_EDIT_ADDRESS"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight=".2"-->
-                <!--android:text="Edit"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textColor="@color/new_red"-->
-                <!--android:textSize="18sp" />-->
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/plans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/CONFIRM_SHIPTO2"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:orientation="vertical">
-
-
-                <TextView
+                    android:id="@+id/ToS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Plan:"
-                    android:textColor="@color/almost_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginEnd="@dimen/margin_half"
+                    android:maxLines="1"
+                    android:text="@string/fragment_sign_up_step_three_terms"
+                    android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/planDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="as;ldfjasd;lkfjasdl;kfjasdl;kfjasdl;kfjasdl;kjfasdl;kjfl;aksdjfl;kasdjfl;kasdjfl;aksdjfads;lkjfal;sk;dfjalskdfja;slkdfja;lskdfjasl;kdfjaslkdfjas;ldkfjasl;kdfjasd;lkfjasl;dkfjas;ldkfja;lskdfja;lsdkfja;sldkfjasl;dkfjas;ldkfjas;ldkfja;lsdkfjasl;dkfja;lsdkfja;lskdfjas;ldkfjaslk;djfa;slkdfjas;ldkfjaskld;fja;lsdkfjasl;kdfjasl;dkfjas;ldkfjasd;lkfjasdlkfjasdlkfjal;sdkfjasl;dkfjasldkfjalsdkjfasldkjfasdl;kfjasl;dkfjasl;dkfjasl;dkfjasl;dkfjaslkdjfsaldkjfsald;kfjasl;dkfjalsdkjfasld;kfjasldkjfas;ldkfjasl;dkfjasdlkfjasldk;fj"
-                    android:textColor="@color/almost_white" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/CONFIRM_BILLING"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/plans"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:orientation="vertical">
-
-                <TextView
+                    android:id="@+id/CONFIRM_ToS"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Billing:"
-                    android:textColor="@color/almost_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_toEndOf="@id/ToS"
+                    android:text="@string/fragment_sign_up_step_three_terms_link"
+                    android:textColor="@color/new_red"
+                    android:textSize="12sp" />
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Switch
+                    android:id="@+id/CONFIRM_SWITCH"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="@dimen/margin_standard" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="XXXX - XXXX - XXXX"
-                        android:textColor="@color/almost_white"
-                        android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/AND"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ToS"
+                    android:text="@string/fragment_sign_up_step_three_terms2"
+                    android:textAlignment="viewStart"
+                    android:textSize="12sp" />
 
-
-                    <TextView
-                        android:id="@+id/CONFIRM_NUMBER"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight=".3"
-                        android:text="-1234 ]"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                    <!--<TextView-->
-                    <!--android:id="@+id/CONFIRM_EDIT_BILLING"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginEnd="@dimen/margin_standard"-->
-                    <!--android:layout_weight=".3"-->
-                    <!--android:text="Edit"-->
-                    <!--android:textAlignment="viewEnd"-->
-                    <!--android:textColor="@color/new_red"-->
-                    <!--android:textSize="18sp" />-->
+                <TextView
+                    android:id="@+id/CONFIRM_PRIVACY"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ToS"
+                    android:layout_marginEnd="@dimen/quadruple_margin_standard"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@id/AND"
+                    android:text="@string/fragment_sign_up_step_three_terms_link2"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/new_red"
+                    android:textSize="12sp" />
 
 
-                </LinearLayout>
+            </RelativeLayout>
 
 
-            </LinearLayout>
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/CONFIRM_BILLING"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:background="@color/almost_white"
-                android:backgroundTint="@color/almost_white" />
-
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/Legalcopy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/divider"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/margin_half"
+                android:alpha=".7"
+                android:text="*MoviePass may from time to time change the terms of our service and offerings, including participating theaters, in order to work with theater chains that are closely aligned with out customer service vales. Always check for updates."
+                android:textColor="@color/white"
+                android:textSize="13sp" />
 
 
-                <LinearLayout
-                    android:id="@+id/CONFIRM_DETAILS_MSG"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/divider"
-                    android:layout_marginTop="@dimen/margin_standard"
-                    android:orientation="vertical">
+            <TextView
+                android:id="@+id/CONFIRM_SUBMIT"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/basic_button_height"
+                android:layout_gravity="bottom | center_horizontal"
+                android:layout_marginBottom="@dimen/double_margin_standard"
+                android:layout_marginTop="70dp"
+                android:background="@drawable/mpbutton1"
+                android:elevation="5dp"
+                android:gravity="center"
+                android:text="@string/fragment_sign_up_step_three_submit"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_standard"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="Total: "
-                            android:textColor="@color/almost_white"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/planPrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="$9.95/month "
-                            android:textColor="@color/new_red"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/paymentDisclaimer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:padding="@dimen/margin_half"
-                        android:text="@string/fragment_sign_up_step_two_header"
-                        android:textColor="@color/almost_white"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:padding="@dimen/margin_minimum"
-                        android:text="Please allow 7-10 business days for shipping"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="italic" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/CONFIRM_TERMS_TEXT"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/double_margin_standard"
-                    android:orientation="horizontal">
+        <include
+            android:id="@+id/step3_progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
-                    <TextView
-                        android:id="@+id/ToS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_half"
-                        android:maxLines="1"
-                        android:text="@string/fragment_sign_up_step_three_terms"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/CONFIRM_ToS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/ToS"
-                        android:text="@string/fragment_sign_up_step_three_terms_link"
-                        android:textColor="@color/new_red"
-                        android:textSize="12sp" />
+    </RelativeLayout>
 
 
-                    <Switch
-                        android:id="@+id/CONFIRM_SWITCH"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="@dimen/margin_standard" />
-
-                    <TextView
-                        android:id="@+id/AND"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ToS"
-                        android:text="@string/fragment_sign_up_step_three_terms2"
-                        android:textAlignment="viewStart"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/CONFIRM_PRIVACY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ToS"
-                        android:layout_marginEnd="@dimen/quadruple_margin_standard"
-                        android:layout_marginStart="5dp"
-                        android:layout_toEndOf="@id/AND"
-                        android:text="@string/fragment_sign_up_step_three_terms_link2"
-                        android:textAlignment="viewStart"
-                        android:textColor="@color/new_red"
-                        android:textSize="12sp" />
-
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:id="@+id/Legalcopy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:alpha=".7"
-                    android:text="*MoviePass may from time to time change the terms of our service and offerings, including participating theaters, in order to work with theater chains that are closely aligned with out customer service vales. Always check for updates."
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
-
-
-                <TextView
-                    android:id="@+id/CONFIRM_SUBMIT"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/basic_button_height"
-                    android:layout_gravity="bottom | center_horizontal"
-                    android:layout_marginBottom="@dimen/double_margin_standard"
-                    android:layout_marginTop="70dp"
-                    android:background="@drawable/mpbutton1"
-                    android:elevation="5dp"
-                    android:gravity="center"
-                    android:text="@string/fragment_sign_up_step_three_submit"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </ScrollView>
-
-    <include
-        android:id="@+id/step3_progress"
-        layout="@layout/view_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-</RelativeLayout>
+</ScrollView>

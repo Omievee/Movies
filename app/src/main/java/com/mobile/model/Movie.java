@@ -30,6 +30,15 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
     }
 
     String userRating;
+    public void setTeaserVideoUrl(String teaserVideoUrl) {
+        this.teaserVideoUrl = teaserVideoUrl;
+    }
+
+    public String getTeaserVideoUrl() {
+        return teaserVideoUrl;
+    }
+
+    String teaserVideoUrl;
     public void setType(String type) {
         this.type = type;
     }

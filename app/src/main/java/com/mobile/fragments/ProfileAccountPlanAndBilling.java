@@ -1,20 +1,16 @@
 package com.mobile.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +32,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
@@ -58,12 +55,13 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileAccountPlanAndBilling extends Fragment {
+public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
 
     private static int YES = 0, NO = 1;
 
     private Context context;
+    ProfileCancellationFragment cancelSubscription;
     private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
     private Button save, cancel;
@@ -139,6 +137,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
 
         progress = rootView.findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
         loadUserInfo();
 
         billingSwitch.setOnClickListener(v -> {
@@ -150,9 +149,15 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 collapse(billingAddressRoot);
                 billingSwithChangeState(YES);
                 yesNo.setTextColor(ContextCompat.getColor(v.getContext(),R.color.new_red));
-                //TODO COMMENTED BECAUSE THIS CANT BE USED RIGHT NOW, SERVER NEEDS TO RETURN THE ACTUAL ADDRESS
-//                billingAddressSameAsShipping=true;
-//                saveChanges();
+                billingAddressSameAsShipping=true;
+                saveChanges();
+            }
+        });
+
+        planCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mListener.openCancellationFragment();
             }
         });
 
@@ -254,7 +259,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
                 for (int i = 0; i < localList.size(); i++) {
                     if (localList.get(2).trim().length() < 8) {
-                        Toast.makeText(getActivity(), "Invalid", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                        firstClick=true;
                     } else {
                         address1.setText(localList.get(0));
                         city.setText(localList.get(1));
@@ -389,6 +395,8 @@ public class ProfileAccountPlanAndBilling extends Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                mListener.closeFragment();
+                progress.setVisibility(View.GONE);
             }
         });
     }
@@ -420,6 +428,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         save.setClickable(true);
         save.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
+            removeAllErrors();
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             if(updateBillingCard) {
@@ -449,18 +458,20 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         String address = userInfoResponse.getShippingAddressLine2();
         List<String> addressList = Arrays.asList(address.split(",", -1));
         String shippingCity = "", shippingState = "", shippingZip ="";
-        String addres1 = userInfoResponse.getShippingAddressLine1();
+        String addres1 = userInfoResponse.getShippingAddressLine1().trim();
 
         for (int i = 0; i < addressList.size(); i++) {
-            shippingCity = (addressList.get(0));
-            shippingState = (addressList.get(1));
-            shippingZip = (addressList.get(2));
+            shippingCity = (addressList.get(0).trim());
+            shippingState = (addressList.get(1).trim());
+            shippingZip = (addressList.get(2).trim());
         }
 
         String type = "billingAddress";
+        android.util.Log.d("Billing address", "onResponse: Address: "+addres1+" State "+ shippingState+" City "+shippingCity+" Zip "+shippingZip);
 
                 AddressChangeRequest request = new AddressChangeRequest(addres1,"", shippingCity, shippingState, shippingZip, type);
-                RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
+        String finalShippingState = shippingState;
+        RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response != null && response.isSuccessful()) {
@@ -468,7 +479,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                             Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
                             mListener.closeFragment();
                         } else {
-                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
                         }
                         progress.setVisibility(View.GONE);
                     }
@@ -482,9 +493,19 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 });
     }
 
+    public void removeAllErrors(){
+        ccNumTextInputLayout.setError(null);
+        cvvTextInputLayout.setError(null);
+        expTextInputLayout.setError(null);
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+    }
+
     public void updateCCData() {
         if(!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
-            if (newBillingCC.getText().toString().length() >= 16) {
+            if (newBillingCC.getText().toString().length() >= 15) {
                 ccNumTextInputLayout.setError(null);
                 if (newBillingCVV.getText().toString().length() >= 3) {
                     cvvTextInputLayout.setError(null);
@@ -507,29 +528,29 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                             updateCreditCard(newCC, newExp, newCVV);
                         } else {
                             progress.setVisibility(View.GONE);
-                            expTextInputLayout.setError("Invalid expiration");
+                            expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
                         }
 
                     } else {
                         progress.setVisibility(View.GONE);
-                        expTextInputLayout.setError("Invalid expiration");
+                        expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    cvvTextInputLayout.setError("Invalid CVV");
+                    cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
                 }
             } else {
                 progress.setVisibility(View.GONE);
-                ccNumTextInputLayout.setError("Invalid credit card number");
+                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_invalid_number));
             }
         } else {
             progress.setVisibility(View.GONE);
             if(newBillingCVV.getText().toString().trim().isEmpty())
-                cvvTextInputLayout.setError("Required");
+                cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
             if(newBillingExp.getText().toString().trim().isEmpty())
-                expTextInputLayout.setError("Required");
+                expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
             if(newBillingCC.getText().toString().trim().isEmpty())
-                ccNumTextInputLayout.setError("Required");
+                ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_invalid_number));
         }
     }
 
@@ -569,10 +590,80 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         });
     }
 
+    private boolean isValidAddress() {
+        address1TextInputLayout.setError(null);
+        cityTextInputLayout.setError(null);
+        stateTextInputLayout.setError(null);
+        zipTextInputLayout.setError(null);
+
+        int i = 0;
+        if (!address1.getText().toString().trim().isEmpty() && !city.getText().toString().trim().isEmpty() && !zip.getText().toString().trim().isEmpty() && !state.getText().toString().trim().isEmpty()) {
+
+            //Validating Address
+            String[] address1Array = address1.getText().toString().split("\\W+");
+            if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
+                i++;
+            }else {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
+                address1.clearFocus();
+                Log.d("ADDRESS", "isValidAddress: ");
+            }
+
+            //Validating City
+            String[] cityArray = city.getText().toString().split("\\W+");
+            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+","");
+            //If city has less than 3 words
+            if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
+                city.clearFocus();
+            }
+
+            //Validating State
+            if (state.getText().toString().trim().length() == 2 && state.getText().toString().trim().matches("^[a-zA-Z]+$")) {
+                i++;
+            } else {
+                stateTextInputLayout.setError(getResources().getString(R.string.address_invalid_state));
+                state.clearFocus();
+            }
+
+            //Validating Zip Code
+            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length()>=5) {
+                i++;
+            } else {
+                zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
+                zip.clearFocus();
+            }
+
+
+        } else {
+            if (address1.getText().toString().trim().isEmpty()) {
+                address1TextInputLayout.setError(getResources().getString(R.string.address_empty_shipping_address));
+                address1.clearFocus();
+            }
+            if (state.getText().toString().trim().isEmpty()) {
+                stateTextInputLayout.setError(getResources().getString(R.string.address_empty_state));
+                state.clearFocus();
+            }
+            if (zip.getText().toString().trim().isEmpty()) {
+                zipTextInputLayout.setError(getResources().getString(R.string.address_empty_zip));
+                zip.clearFocus();
+            }
+            if (city.getText().toString().trim().isEmpty()) {
+                cityTextInputLayout.setError(getResources().getString(R.string.address_empty_city));
+                city.clearFocus();
+            }
+        }
+        if(i==4)
+            return true;
+        return false;
+    }
+
     public void updateBillingAddress() {
         int userId = UserPreferences.getUserId();
         if (address1.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
-            if (!address1.getText().toString().trim().isEmpty() && !city.getText().toString().trim().isEmpty() && !zip.getText().toString().trim().isEmpty() && !state.getText().toString().trim().isEmpty()) {
+            if (isValidAddress()) {
                 String newAddress = address1.getText().toString();
                 String newAddress2 = address2.getText().toString();
                 String newCity = city.getText().toString();
@@ -602,16 +693,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                         mListener.closeFragment();
                     }
                 });
-            }
-            else {
-                if(address1.getText().toString().trim().isEmpty())
-                    address1TextInputLayout.setError("Required");
-                if(state.getText().toString().trim().isEmpty())
-                    stateTextInputLayout.setError("Required");
-                if(zip.getText().toString().trim().isEmpty())
-                    zipTextInputLayout.setError("Required");
-                if(city.getText().toString().trim().isEmpty())
-                    cityTextInputLayout.setError("Required");
+            } else {
                 progress.setVisibility(View.GONE);
             }
         }
@@ -634,21 +716,6 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
@@ -741,6 +808,21 @@ public class ProfileAccountPlanAndBilling extends Fragment {
                 updateBillingCard = true;
                 saveChanges();
             }
+            if(address1.hasFocus())
+                address1TextInputLayout.setError(null);
+            if(state.hasFocus())
+                stateTextInputLayout.setError(null);
+            if(city.hasFocus())
+                cityTextInputLayout.setError(null);
+            if(zip.hasFocus())
+                zip.setError(null);
+            if(newBillingCC.hasFocus())
+                ccNumTextInputLayout.setError(null);
+            if(newBillingCVV.hasFocus())
+                cvvTextInputLayout.setError(null);
+            if(newBillingExp.hasFocus())
+                expTextInputLayout.setError(null);
+
         }
     }
 

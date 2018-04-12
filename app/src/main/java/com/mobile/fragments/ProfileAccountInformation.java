@@ -2,16 +2,14 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.Fragment;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
@@ -19,20 +17,17 @@ import com.mobile.network.RestClient;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
-import java.util.Arrays;
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileAccountInformation extends Fragment {
+public class ProfileAccountInformation extends android.app.Fragment {
 
     private ProfileActivityInterface mListener;
     private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
-    UserInfoResponse userInfoResponse;
+    private UserInfoResponse userInfoResponse;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -53,12 +48,12 @@ public class ProfileAccountInformation extends Fragment {
         userEmail = rootView.findViewById(R.id.USER_EMAIL);
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
-
         progress.setVisibility(View.VISIBLE);
         loadUserInfo();
 
         return rootView;
     }
+
 
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();
@@ -103,6 +98,7 @@ public class ProfileAccountInformation extends Fragment {
                     + " must implement ProfileActivityInterface");
         }
     }
+
 
     @Override
     public void onAttach(Activity activity) {

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +25,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.model.User;
@@ -37,6 +42,7 @@ import com.moviepass.R;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -211,6 +217,7 @@ public class LogInActivity extends AppCompatActivity {
             public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
+
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
@@ -233,7 +240,8 @@ public class LogInActivity extends AppCompatActivity {
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
-                    if(restriction.getSubscriptionStatus().equalsIgnoreCase("MISSING")){
+                    if(restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING)||restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED)||
+                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)){
                         Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
                         UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
@@ -341,20 +349,6 @@ public class LogInActivity extends AppCompatActivity {
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
             checkRestrictions(user);
-            //TODO delete if not needed - Moved to CheckRestrictions()
-//            if (!UserPreferences.getHasUserLoggedInBefore()) {
-//                UserPreferences.hasUserLoggedInBefore(true);
-//                Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-//                startActivity(i);
-//            } else {
-//                Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-//                i.putExtra("launch", true);
-//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i);
-//            }
-
-
-//            finish();
         }
     }
 

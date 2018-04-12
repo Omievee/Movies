@@ -1,0 +1,101 @@
+{
+  "project_info": {
+    "project_number": "941385304025",
+    "firebase_url": "https://moviepass-2e284.firebaseio.com",
+    "project_id": "moviepass-2e284",
+    "storage_bucket": "moviepass-2e284.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941385304025:android:a48a8ad0a1760bf3",
+        "android_client_info": {
+          "package_name": "com.moviepass.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941385304025-9q7020fs56b337v44mqh87blfik37o2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPz4ZuBIijRWvdCrmZHI7qeto3aYznIos"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941385304025:android:e07acd482a9fbce1",
+        "android_client_info": {
+          "package_name": "com.moviepass.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941385304025-vl3pdoqdr1ok4o1sjj3r6hdsu94rntto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moviepass.mobile",
+            "certificate_hash": "16d03211deb8ceea0f849ea46c886fce66684edc"
+          }
+        },
+        {
+          "client_id": "941385304025-slvpg9m7mm63gs420nsv85tekpd9tlrd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moviepass.mobile",
+            "certificate_hash": "61d39e533f516d616a157480960d2e28ba935fe6"
+          }
+        },
+        {
+          "client_id": "941385304025-9q7020fs56b337v44mqh87blfik37o2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPz4ZuBIijRWvdCrmZHI7qeto3aYznIos"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941385304025-9q7020fs56b337v44mqh87blfik37o2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "941385304025-bmn2sja5pt7fkc51fhobias4kmihgl7i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.moviepass.MoviePass"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

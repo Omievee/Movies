@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +41,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     public static final String CCNUM = "cc";
     View rootview;
     public static final String TAG = "foundit";
-    RelativeLayout coordinatorLayout;
+    View coordinatorLayout;
     Context myContext;
     Activity myActivity;
     public TextView confirmFullName, confirmFullAddress, confirmCityStateZip,
@@ -107,7 +107,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
         price.setText(ProspectUser.plan.getConfirmTotal());
         planDescription.setText(ProspectUser.plan.getConfirmPlanDescription());
-        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+
+        //CHANGING PAYMENT DISCLAIMER
+//        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+        paymentDisclaimer.setText(getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_one)+ " "+ProspectUser.plan.getConfirmTotal()+" "+
+                getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_two)+" "+getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_three));
 
 
         return rootview;

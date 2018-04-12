@@ -4,36 +4,36 @@
     android:layout_height="match_parent"
     android:background="@color/test_black">
 
-    <TextView
-        android:id="@+id/HEADER"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:text="Current Reservation"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="20sp" />
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/HEADER">
+        android:scrollbars="none">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/HEADER"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:text="Current Reservation"
+                android:textColor="@color/almost_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/NO_Current_Res"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/HEADER"
                 android:layout_marginTop="@dimen/a_lot_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:text="No current reservation at this time"
                 android:textAlignment="center"
-                android:textColor="@color/white"
+                android:textColor="@color/almost_white"
                 android:textSize="18sp"
                 android:visibility="gone" />
 
@@ -42,22 +42,25 @@
                 android:id="@+id/PENDING_DATA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_half"
+                android:layout_below="@id/HEADER"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:background="@color/charcoalGrey"
-                android:padding="@dimen/margin_half"
+                android:paddingBottom="@dimen/margin_standard"
+                android:paddingEnd="@dimen/margin_standard"
+                android:paddingStart="@dimen/margin_standard"
+                android:paddingTop="@dimen/margin_standard"
                 android:visibility="gone">
 
                 <TextView
                     android:id="@+id/PendingRes_Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_standard"
                     android:elevation="5dp"
                     android:ellipsize="marquee"
                     android:singleLine="true"
                     android:text="[ MOVIE TITLE ]"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_16"
                     android:textStyle="bold" />
 
                 <TextView
@@ -68,8 +71,8 @@
                     android:layout_below="@+id/PendingRes_Title"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="[ Pending Location ]"
-                    android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_14" />
 
 
                 <ImageView
@@ -90,8 +93,8 @@
                     android:layout_below="@id/PendingRes_Location"
                     android:layout_marginTop="@dimen/margin_half"
                     android:text="[ Pending Time ]"
-                    android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_14" />
 
                 <TextView
                     android:id="@+id/PendingRes_Seat"
@@ -103,7 +106,7 @@
                     android:layout_toRightOf="@id/PendingRes_Time"
                     android:text="[ Pending Seat ]"
                     android:textColor="@color/new_red"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/text_size_14"
                     android:visibility="invisible" />
 
 
@@ -121,11 +124,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginEnd="@dimen/margin_standard_and_half"
+                    android:layout_marginStart="@dimen/margin_standard_and_half"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:text="You can now use your MoviePass card to purchase your ticket!"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
 
                 <FrameLayout
@@ -133,48 +138,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/STandardMSG"
-                    android:layout_centerHorizontal="true">
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/double_margin_standard">
 
 
                     <ImageView
                         android:id="@+id/PendingRes_IMage"
-                        android:layout_width="300dp"
-                        android:layout_height="200dp"
-                        android:layout_marginTop="@dimen/double_margin_standard"
+                        android:layout_width="234dp"
+                        android:layout_height="155dp"
                         android:src="@drawable/mpmastercard2" />
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:src="@drawable/loadedsuccession" />
-
                 </FrameLayout>
-
-
-                <TextView
-                    android:id="@+id/PendingConrimCode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/Frame"
-                    android:layout_marginBottom="@dimen/margin_standard"
-                    android:paddingEnd="@dimen/quadruple_margin_standard"
-                    android:paddingStart="@dimen/quadruple_margin_standard"
-                    android:text="You have 30 minutes to purchase your ticket"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/ifAsked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/PendingConrimCode"
+                    android:layout_below="@id/Frame"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                    android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:gravity="center_horizontal"
-                    android:text="If asked, please provide this zip" />
+                    android:text="If asked, provide this zip code:" />
 
                 <TextView
                     android:id="@+id/PendingZip"
@@ -182,12 +166,16 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ifAsked"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_half"
+                    android:layout_marginTop="@dimen/margin_standard"
                     android:background="@drawable/confirmation_code_confirm"
+                    android:paddingBottom="@dimen/margin_half"
+                    android:paddingEnd="@dimen/margin_standard"
+                    android:paddingStart="@dimen/margin_standard"
+                    android:paddingTop="@dimen/margin_half"
                     android:text="[ Code ]"
                     android:textAlignment="center"
                     android:textColor="@color/black_text"
-                    android:textSize="20dp"
+                    android:textSize="@dimen/text_size_16"
                     android:textStyle="bold"
                     android:visibility="visible" />
 
@@ -198,15 +186,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/PendingZip"
                     android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/margin_half"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:background="@android:color/transparent"
                     android:padding="@dimen/margin_half"
-                    android:text="Cancel or Change Reservation"
+                    android:text="Cancel/Change Check-In"
                     android:textAllCaps="false"
                     android:textColor="@color/new_red"
-                    android:textSize="13sp"
-                    />
+                    android:textSize="@dimen/text_size_16" />
 
 
             </RelativeLayout>
@@ -226,8 +213,8 @@
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:text="Here is your redemption code:"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textColor="@color/almost_white"
+                    android:textSize="@dimen/text_size_16" />
 
                 <TextView
                     android:id="@+id/ConfirmCode"
@@ -241,7 +228,7 @@
                     android:text="W12345"
                     android:textAlignment="center"
                     android:textColor="@color/black_text"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/text_size_18"
                     android:textStyle="bold" />
 
 
@@ -249,10 +236,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ConfirmCode"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
                     android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:text="Present this code at the theater to get your ticket!"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/text_size_16" />
 
 
             </RelativeLayout>

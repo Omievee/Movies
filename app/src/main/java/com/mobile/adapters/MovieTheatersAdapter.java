@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -32,11 +30,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +47,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public String check;
     View root;
     private LinkedList<Screening> screeningsArrayList;
-    private ArrayList<Theater> theaterArrayList;
+    private LinkedList<Theater> theaterArrayList;
     private ArrayList<String> ShowtimesList;
     private ShowtimeClickListener showtimeClickListener;
 
@@ -61,7 +56,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     public RadioButton showTime;
 
 
-    public MovieTheatersAdapter(ArrayList<Theater> theaterArrayList, LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
+    public MovieTheatersAdapter(LinkedList<Theater> theaterArrayList, LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
 
         this.screeningsArrayList = screeningsArrayList;
         this.theaterArrayList = theaterArrayList;
@@ -142,6 +137,9 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         String theaterName = screeningsArrayList.get(position).getTheaterName();
 
 
+
+
+
         for (int i = 0; i < theaterArrayList.size(); i++) {
             if (theaterArrayList.get(i).getTribuneTheaterId() == theaterID) {
                 double distance = theaterArrayList.get(i).getDistance();
@@ -193,7 +191,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
                 showTime = new RadioButton(root.getContext());
                 showTime.setText(screening.getStartTimes().get(i));
-                showTime.setTextSize(16);
                 HOLDER.showTimesGrid.addView(showTime);
 
 
@@ -212,7 +209,11 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     if (myTime.after(cal.getTime())) {
                         if (cal.getTime().getHours() > 3) {
                             holder.showTimesGrid.removeView(showTime);
+//                            if(holder.showTimesGrid.getChildCount() == 0) {
+//                                holder.theaterCardViewListItem.setVisibility(View.GONE);
+//                            }
                         }
+
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -228,10 +229,10 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 showTime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showTime;
-                if (screening.getFormat().matches("3D") || screening.getFormat().matches("IMAX") || screening.isTheatreEvent() ||
-                        screening.getProgramType().equals("Theatre Event") || !screening.isApproved()) {
+                if (!screening.isApproved()) {
                     currentTime.setClickable(false);
                     holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText(screening.getDisabledExplanation());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                     }
@@ -242,15 +243,18 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
-
-                        currentTime = checked;
-                        String selectedShowTime = currentTime.getText().toString();
-                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        if(checked.isChecked()){
+                            currentTime = checked;
+                            String selectedShowTime = currentTime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        }
+//                        currentTime = checked;
+//                        String selectedShowTime = currentTime.getText().toString();
+//                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
-
-
                 }
             }
+            Log.d(TAG, "onBindViewHolder: " + holder.showTimesGrid.getChildCount() + " " + screening.getTheaterName());
         }
     }
 

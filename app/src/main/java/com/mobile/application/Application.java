@@ -3,7 +3,8 @@ package com.mobile.application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
+
+import com.helpshift.support.Log;
 
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -50,6 +51,8 @@ public class Application extends MultiDexApplication {
         mApplication = this;
     }
 
+
+    //giguyigfyug
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,7 +65,6 @@ public class Application extends MultiDexApplication {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
-
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
@@ -70,6 +72,7 @@ public class Application extends MultiDexApplication {
         RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
         RestClient.setupAuthenticatedStagingRegistrationClient(getApplicationContext());
+        RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
         try {

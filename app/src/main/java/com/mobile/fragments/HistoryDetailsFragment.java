@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
@@ -50,7 +51,7 @@ import retrofit2.Response;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends DialogFragment {
+public class HistoryDetailsFragment extends Fragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
@@ -83,11 +84,7 @@ public class HistoryDetailsFragment extends DialogFragment {
         setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(20000));
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Log.d(Constants.TAG, "onDismiss: ");
-    }
+
 
     @Nullable
     @Override

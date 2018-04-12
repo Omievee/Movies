@@ -8,7 +8,9 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +104,8 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 .setProgressiveRenderingEnabled(true)
                 .build();
 
+
+
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
                 .setTapToRetryEnabled(true)
@@ -147,6 +151,12 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 })
                 .build();
         holder.mComingSoonMoviePosterDV.setController(controller);
+
+//
+//        ImagePipeline pipeline = Fresco.getImagePipeline();
+//        pipeline.clearMemoryCaches();
+//        pipeline.clearDiskCaches();
+
         android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
 
 

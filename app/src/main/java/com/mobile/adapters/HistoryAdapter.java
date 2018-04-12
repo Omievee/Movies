@@ -1,6 +1,5 @@
 package com.mobile.adapters;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -34,11 +33,11 @@ import butterknife.ButterKnife;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private ArrayList<Movie> historyArrayList;
+
     private final int TYPE_ITEM = 0;
     private Context context;
     ViewHolder HOLDER;
     private final historyPosterClickListener historyListener;
-
 
     public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList, historyPosterClickListener historyListener) {
         this.historyArrayList = historyArrayList;

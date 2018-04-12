@@ -50,6 +50,12 @@ public class TheatersActivity extends BaseActivity{
         updateNavigationBarState();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateNavigationBarState();
+    }
+
 
     int getContentViewId() {
         return R.layout.activity_theaters;
