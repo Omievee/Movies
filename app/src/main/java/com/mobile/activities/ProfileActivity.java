@@ -2,18 +2,14 @@ package com.mobile.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.fragments.HistoryDetailsFragment;
+import com.mobile.fragments.PastReservations;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
@@ -201,6 +198,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
+        PastReservations past = new PastReservations();
         HistoryDetailsFragment detailsFragment = HistoryDetailsFragment.newInstance(historyposter, ViewCompat.getTransitionName(sharedView));
         detailsFragment.setSharedElementEnterTransition(new HistoryDetails());
         detailsFragment.setEnterTransition(new Fade());
@@ -216,4 +214,6 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
 
     }
+
+
 }

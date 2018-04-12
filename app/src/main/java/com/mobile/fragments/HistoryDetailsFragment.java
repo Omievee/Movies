@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
+import com.mobile.Interfaces.historyDetailDismissListener;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
@@ -59,6 +60,7 @@ public class HistoryDetailsFragment extends Fragment {
     TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
+    historyDetailDismissListener historyListener;
     public HistoryDetailsFragment() {
     }
 
@@ -69,7 +71,6 @@ public class HistoryDetailsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putParcelable(HISTORY_POSTER, moviePoster);
         bundle.putString(EXTRA_TRANSITION_NAME, transitionName);
-
         fragment.setArguments(bundle);
         return fragment;
     }

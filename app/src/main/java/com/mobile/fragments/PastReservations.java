@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mobile.Constants;
+import com.mobile.Interfaces.historyDetailDismissListener;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
 import com.mobile.model.Movie;
@@ -33,7 +34,7 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment {
+public class PastReservations extends Fragment implements historyDetailDismissListener {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
@@ -153,4 +154,8 @@ public class PastReservations extends Fragment {
     }
 
 
+    @Override
+    public void onDetailsFragmentDismissed() {
+        loadHIstory();
+    }
 }
