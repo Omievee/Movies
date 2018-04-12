@@ -108,7 +108,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
         price.setText(ProspectUser.plan.getConfirmTotal());
         planDescription.setText(ProspectUser.plan.getConfirmPlanDescription());
-        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+
+        //CHANGING PAYMENT DISCLAIMER
+//        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+        paymentDisclaimer.setText(getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_one)+ " "+ProspectUser.plan.getConfirmTotal()+" "+
+                getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_two)+" "+getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_three));
 
 
         return rootview;
