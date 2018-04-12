@@ -33,22 +33,33 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment implements HistoryDetailsFragment.onDismissFragmentListener {
+public class PastReservations extends Fragment  {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
 
     View rootview;
-    HistoryAdapter historyAdapter;
-    RecyclerView historyRecycler;
-    ArrayList<Movie> historyList;
-    TextView noMovies;
-    View progress;
-    HistoryResponse historyResponse;
+    static HistoryAdapter historyAdapter;
+    static RecyclerView historyRecycler;
+    static ArrayList<Movie> historyList;
+    static TextView noMovies;
+    static View progress;
+    static HistoryResponse historyResponse;
     Activity myActivity;
     Context myContext;
 
     public PastReservations() {
+    }
+
+
+    public static PastReservations newInstance() {
+
+        Bundle args = new Bundle();
+
+        PastReservations fragment = new PastReservations();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Nullable
@@ -99,7 +110,7 @@ public class PastReservations extends Fragment implements HistoryDetailsFragment
         Log.d(TAG, "onResume: ");
     }
 
-    private void loadHIstory() {
+    public void loadHIstory() {
         historyList.clear();
         RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
             @Override
@@ -122,7 +133,6 @@ public class PastReservations extends Fragment implements HistoryDetailsFragment
                         historyAdapter.notifyDataSetChanged();
                     }
                 }
-
             }
 
             @Override
@@ -131,6 +141,7 @@ public class PastReservations extends Fragment implements HistoryDetailsFragment
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
+
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -154,8 +165,4 @@ public class PastReservations extends Fragment implements HistoryDetailsFragment
 
 
 
-    @Override
-    public void dismissedFragment() {
-        loadHIstory();
-    }
 }

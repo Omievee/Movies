@@ -36,7 +36,7 @@ import jp.wasabeef.blurry.Blurry;
  * Created by anubis on 7/23/17.
  */
 
-public class ProfileActivity extends BaseActivity implements ProfileActivityInterface, historyPosterClickListener {
+public class ProfileActivity extends BaseActivity implements ProfileActivityInterface, historyPosterClickListener{
 
     public static final String TAG = "Found it";
     ProfileFragment profileFragment = new ProfileFragment();
@@ -214,6 +214,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
 
     }
+
 
 
 }

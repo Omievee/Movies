@@ -2,12 +2,13 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +50,7 @@ import retrofit2.Response;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends Fragment {
+public class HistoryDetailsFragment extends DialogFragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
@@ -59,7 +60,6 @@ public class HistoryDetailsFragment extends Fragment {
     TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
-    onDismissFragmentListener historyListener;
 
     public HistoryDetailsFragment() {
     }
@@ -83,6 +83,11 @@ public class HistoryDetailsFragment extends Fragment {
         setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(20000));
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        Log.d(Constants.TAG, "onDismiss: ");
+    }
 
     @Nullable
     @Override
@@ -100,6 +105,10 @@ public class HistoryDetailsFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -124,12 +133,15 @@ public class HistoryDetailsFragment extends Fragment {
         if (historyItem.getUserRating() != null) {
             likeittext.setVisibility(View.GONE);
             if (historyItem.getUserRating().equals("GOOD")) {
+                like.setImageDrawable(getResources().getDrawable(R.drawable.thumbsupselect));
                 dislike.setVisibility(View.GONE);
             } else if (historyItem.getUserRating().equals("BAD")) {
+                dislike.setImageDrawable(getResources().getDrawable(R.drawable.thumbsdownselect));
                 like.setVisibility(View.GONE);
             }
 
         } else {
+
 
             like.setOnClickListener(v -> rateMovie(historyItem.getId(), "GOOD"));
 
@@ -193,7 +205,7 @@ public class HistoryDetailsFragment extends Fragment {
                         fadeOut(like);
                         animate(dislike);
                     }
-                    historyListener.dismissedFragment();
+                    PastReservations.newInstance().loadHIstory();
                     h.postDelayed(() -> myActivity.onBackPressed(), 2000);
                 }
             }
@@ -211,11 +223,6 @@ public class HistoryDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof onDismissFragmentListener) {
-            historyListener = (onDismissFragmentListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement onAlertClickListener");
-        }
     }
 
     @Override
@@ -259,10 +266,6 @@ public class HistoryDetailsFragment extends Fragment {
         expandAndShrink.setInterpolator(new AccelerateInterpolator(1.0f));
 
         view.startAnimation(expandAndShrink);
-    }
-
-    public interface onDismissFragmentListener {
-        void dismissedFragment();
     }
 
 
