@@ -112,8 +112,7 @@
                     android:id="@+id/planDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_standard"
-                    android:text="DESCRIPTION"
+                    android:text="as;ldfjasd;lkfjasdl;kfjasdl;kfjasdl;kfjasdl;kjfasdl;kjfl;aksdjfl;kasdjfl;kasdjfl;aksdjfads;lkjfal;sk;dfjalskdfja;slkdfja;lskdfjasl;kdfjaslkdfjas;ldkfjasl;kdfjasd;lkfjasl;dkfjas;ldkfja;lskdfja;lsdkfja;sldkfjasl;dkfjas;ldkfjas;ldkfja;lsdkfjasl;dkfja;lsdkfja;lskdfjas;ldkfjaslk;djfa;slkdfjas;ldkfjaskld;fja;lsdkfjasl;kdfjasl;dkfjas;ldkfjasd;lkfjasdlkfjasdlkfjal;sdkfjasl;dkfjasldkfjalsdkjfasldkjfasdl;kfjasl;dkfjasl;dkfjasl;dkfjasl;dkfjaslkdjfsaldkjfsald;kfjasl;dkfjalsdkjfasld;kfjasldkjfas;ldkfjasl;dkfjasdlkfjasldk;fj"
                     android:textColor="@color/almost_white" />
 
 

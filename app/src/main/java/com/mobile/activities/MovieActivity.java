@@ -38,7 +38,6 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.MovieTheatersAdapter;
-import com.mobile.fragments.EnableLocation;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
@@ -253,8 +252,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
 
 
-        Log.d(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());
-        GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
             buttonCheckIn.setVisibility(View.VISIBLE);
@@ -266,6 +263,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             buttonCheckIn.setText("Check In");
         }
         buttonCheckIn.setEnabled(true);
+        Log.d(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());
+        GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         buttonCheckIn.setOnClickListener(view -> {
 
             if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
