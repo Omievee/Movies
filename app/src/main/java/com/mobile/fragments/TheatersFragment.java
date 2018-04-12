@@ -257,8 +257,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     String url = "https://www.moviepass.com/go/list";
                     GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"list_view_click");
 
-                    String url = "http://moviepass.com/go/list";
-                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
+//                    String url = "http://moviepass.com/go/list";
+//                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
 
                 } else {
                     fadeOut(downArrow);
