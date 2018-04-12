@@ -73,16 +73,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/enlargedImage"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginTop="@dimen/margin_standard"
         android:text="Did you like it?"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="200dp"
         android:layout_below="@id/liketext"
-        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:gravity="center_horizontal">
 
 
