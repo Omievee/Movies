@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -60,7 +61,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
     private static int YES = 0, NO = 1;
 
-    private Context context;
+    private Context myContext;
     ProfileCancellationFragment cancelSubscription;
     private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
@@ -82,6 +83,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     };
     private boolean firstClick = true;
     String MONTH, YEAR;
+    private Activity myActivity;
 
     public ProfileAccountPlanAndBilling() {
         // Required empty public constructor
@@ -704,18 +706,18 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
         if(option==YES){
             yesNo.setText("YES");
-            yesNo.setTextColor(ContextCompat.getColor(context,R.color.new_red));
+            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
         } else{
 
             yesNo.setText("NO");
-            yesNo.setTextColor(ContextCompat.getColor(context,R.color.white));
+            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.myContext = context;
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
@@ -826,4 +828,9 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+    }
 }
