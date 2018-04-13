@@ -1,12 +1,11 @@
 package com.mobile.activities;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -81,8 +80,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             loadMovies();
         } else {
             Fragment moviesFragment = new MoviesFragment();
-            FragmentManager support = getSupportFragmentManager();
-            FragmentTransaction ft = support.beginTransaction();
+            android.app.FragmentManager support = getFragmentManager();
+            android.app.FragmentTransaction ft = support.beginTransaction();
             ft.replace(R.id.movies_container, moviesFragment);
             ft.commit();
             fadeIn(main);
@@ -333,7 +332,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
                         android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
-
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
                                 restrict.getAlert().getTitle(),
@@ -342,13 +340,14 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                                 restrict.getAlert().getUrlTitle(),
                                 restrict.getAlert().isDismissible());
 
+
                         alertScreen.setSharedElementEnterTransition(new HistoryDetails());
                         alertScreen.setEnterTransition(new Fade());
                         alertScreen.setExitTransition(new Fade());
                         alertScreen.setSharedElementReturnTransition(new HistoryDetails());
 
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        android.app.FragmentManager fragmentManager = getFragmentManager();
+                        android.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.movies_container, alertScreen);
                         transaction.addToBackStack("");
                         transaction.commit();
@@ -417,8 +416,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                                 startMovieActivity();
                             }
                         }
-
-
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */

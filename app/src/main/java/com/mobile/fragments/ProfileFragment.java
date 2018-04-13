@@ -1,14 +1,15 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.helpshift.support.ApiConfig;
-import com.helpshift.support.Log;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
@@ -128,7 +128,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
@@ -139,13 +138,14 @@ public class ProfileFragment extends Fragment {
             myActivity.finishAffinity();
         });
         details.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
+            fragmentManager.popBackStack();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -189,23 +189,23 @@ public class ProfileFragment extends Fragment {
         });
 
         history.setOnClickListener(view2 -> {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pendingReservationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
