@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ import com.moviepass.R;
 import jp.wasabeef.blurry.Blurry;
 
 
-public class AlertScreenFragment extends android.app.Fragment {
+public class AlertScreenFragment extends Fragment {
 
     TextView alertTitle, alertBody, linkText;
     ImageView close;

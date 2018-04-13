@@ -23,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 107
-        versionName "3.0.10"
+        versionCode 108
+        versionName "3.0.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -33,7 +33,7 @@ android {
         release {
             keyAlias 'upload'
             keyPassword 'moviepass'
-            storeFile file('/Users/ivonne/Documents/MoviePass/android/app/upload_key.jks')
+            storeFile file('/Users/o_viscarra/Desktop/UPLOAD/upload_key.jks')
             storePassword 'moviepass'
         }
     }
