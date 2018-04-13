@@ -832,5 +832,12 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         myActivity = activity;
+
+        if (myActivity instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) myActivity;
+        } else {
+            throw new RuntimeException(myActivity.toString()
+                    + " must implement ProfileActivityInterface");
+        }
     }
 }
