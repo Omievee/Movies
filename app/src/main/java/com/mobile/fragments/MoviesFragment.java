@@ -42,10 +42,12 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
+import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
@@ -245,6 +247,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 realm.deleteAll();
             });
             getMoviesForStorage();
+            GoWatchItSingleton.getInstance().getMovies();
         });
 
 

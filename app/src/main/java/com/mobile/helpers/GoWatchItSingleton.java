@@ -2,28 +2,42 @@ package com.mobile.helpers;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.google.gson.GsonBuilder;
 import com.helpshift.support.Log;
+
+import android.view.View;
 import android.widget.Toast;
 
 import com.mobile.UserPreferences;
 import com.mobile.activities.MoviesActivity;
+import com.mobile.model.Movie;
+import com.mobile.model.MoviesResponse;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.GoWatchItResponse;
+import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.BuildConfig;
 
 import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.taplytics.genet.getActivity;
 
 /**
  * Created by ivonneortega on 3/11/18.
@@ -37,10 +51,12 @@ public class GoWatchItSingleton {
     private String l = "0.0";
     private String ln = "0.0";
     private String IDFA;
+    private List<AllMoviesResponse> ALLMOVIES;
 //    String l = String.valueOf(UserPreferences.getLatitude());
 //    String ln = String.valueOf(UserPreferences.getLongitude());
 
     private GoWatchItSingleton() {
+        getMovies();
         campaign = "no_campaign";
     }
 
@@ -82,7 +98,7 @@ public class GoWatchItSingleton {
         IDFA = UserPreferences.getAAID();
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Unset",
-                "-1", "app_open", thisCampaign, "app", "android", deepLink, "organic",
+                "-1", "-1","app_open", thisCampaign, "app", "android", deepLink, "organic",
                 l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -111,10 +127,11 @@ public class GoWatchItSingleton {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
         IDFA = UserPreferences.getAAID();
-
+        android.util.Log.d("WATCH", "userOpenedMovie: "+movieId);
+        String movieTitle = getMovieTitle(movieId);
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Movie",
-                String.valueOf(movieId), "impression", campaign, "app", "android", url, "organic",
+                String.valueOf(movieId),movieTitle, "impression", campaign, "app", "android", url, "organic",
                 l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -152,6 +169,7 @@ public class GoWatchItSingleton {
         thz = theater.getZip();
         tha = theater.getAddress();
         String lts = currentTimeStamp();
+        String movieTitle = getMovieTitle(movieId);
 
         String result = "";
         thd = "";
@@ -166,7 +184,7 @@ public class GoWatchItSingleton {
         }
 
         RestClient.getAuthenticatedAPIGoWatchIt().clickOnShowtime("engagement", "theater_click", tht, thd, tn, thc, thr, thz, tha, "Movie",
-                movieId, campaign, "app", "android", url, "organic",
+                movieId,movieTitle, campaign, "app", "android", url, "organic",
                 l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -201,6 +219,7 @@ public class GoWatchItSingleton {
         thz = theater.getZip();
         tha = theater.getAddress();
         String lts = currentTimeStamp();
+        String movieTitle = getMovieTitle(movieId);
 
         if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -225,7 +244,7 @@ public class GoWatchItSingleton {
         }
 
         RestClient.getAuthenticatedAPIGoWatchIt().ticketPurchase(engagement, tht, thd, tn, thc, thr, thz, tha, "Movie",
-                movieId, campaign, "app", "android", url, "organic",
+                movieId,movieTitle, campaign, "app", "android", url, "organic",
                 l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -338,6 +357,33 @@ public class GoWatchItSingleton {
             }
         });
 
+    }
+
+    public String getMovieTitle(String id){
+        android.util.Log.d("click.moviepass.com", "getMovieTitle: "+ALLMOVIES.size());
+        for (AllMoviesResponse movie: ALLMOVIES) {
+            if(movie.getId().equalsIgnoreCase(id)){
+                return movie.getTitle();
+            }
+        }
+        return null;
+    }
+
+    public void getMovies(){
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+            @Override
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                     info   = response.body();
+                if (response.isSuccessful() && response != null) {
+                    ALLMOVIES = info;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+            }
+        });
     }
 
 
