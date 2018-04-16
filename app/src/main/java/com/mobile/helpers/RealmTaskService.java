@@ -12,8 +12,6 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.mobile.Constants;
-import com.mobile.fragments.MoviesFragment;
-import com.mobile.fragments.TheatersFragment;
 import com.mobile.model.Movie;
 import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
@@ -57,7 +55,6 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getTheatersBucket();
                     getMoviesBucket();
-                    Toast.makeText(RealmTaskService.this, "Task complete", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -56,7 +56,7 @@ android {
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
         }
 
-        debug{
+        debug {
             signingConfig signingConfigs.debug
             debuggable true
             buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
