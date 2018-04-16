@@ -9,12 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
@@ -33,22 +33,33 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment {
+public class PastReservations extends Fragment  {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
 
     View rootview;
-    HistoryAdapter historyAdapter;
-    RecyclerView historyRecycler;
-    ArrayList<Movie> historyList;
-    TextView noMovies;
-    View progress;
-    HistoryResponse historyResponse;
+    static HistoryAdapter historyAdapter;
+    static RecyclerView historyRecycler;
+    static ArrayList<Movie> historyList;
+    static TextView noMovies;
+    static View progress;
+    static HistoryResponse historyResponse;
     Activity myActivity;
     Context myContext;
 
     public PastReservations() {
+    }
+
+
+    public static PastReservations newInstance() {
+
+        Bundle args = new Bundle();
+
+        PastReservations fragment = new PastReservations();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Nullable
@@ -99,7 +110,7 @@ public class PastReservations extends Fragment {
         Log.d(TAG, "onResume: ");
     }
 
-    private void loadHIstory() {
+    public void loadHIstory() {
         historyList.clear();
         RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
             @Override
@@ -122,7 +133,6 @@ public class PastReservations extends Fragment {
                         historyAdapter.notifyDataSetChanged();
                     }
                 }
-
             }
 
             @Override
@@ -131,6 +141,7 @@ public class PastReservations extends Fragment {
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
+
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -151,6 +162,7 @@ public class PastReservations extends Fragment {
         super.onAttach(activity);
         myActivity = activity;
     }
+
 
 
 }

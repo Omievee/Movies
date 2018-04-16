@@ -4,15 +4,12 @@ import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import com.helpshift.support.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import android.view.LayoutInflater;
 import android.widget.Filter;
+import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -21,19 +18,16 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mobile.Constants;
 import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.activities.MovieActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by o_vicarra on 1/29/18.
@@ -103,7 +97,6 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
             movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
             holder.itemView.getContext().startActivity(movieIntent);
         });
-
 
     }
 
@@ -177,6 +170,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
         };
 
     }
+
 
 }
 

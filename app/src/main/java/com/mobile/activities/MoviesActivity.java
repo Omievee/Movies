@@ -2,9 +2,7 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -12,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.transition.Fade;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +39,6 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +47,7 @@ import retrofit2.Response;
  * Created by anubis on 8/4/17.
  */
 
-public  class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
+public class MoviesActivity extends BaseActivity implements AlertScreenFragment.onAlertClickListener, MoviesFragment.searchMoviesInterface {
     ArrayList<Movie> movieSearchNEWRELEASE;
     ArrayList<Movie> movieSearchTOPBOXOFFICE;
     ArrayList<Movie> movieSearchALLMOVIES;
@@ -67,6 +63,7 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
     Movie movie;
     int movieId;
     List<String> urlPath;
+
     String url;
     MoviesResponse moviesResponse;
     private Call<MoviesResponse> loadMoviesCall;
@@ -223,9 +220,8 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
 
     @Override
     public void onBackPressed() {
-        android.util.Log.d(Constants.TAG, "onBackPressed: " + getSupportFragmentManager().getBackStackEntryCount());
         if (CONTAIN != null) {
-            Blurry.delete(CONTAIN);
+//            Blurry.delete(CONTAIN);
         }
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             AlertDialog alert;
@@ -247,17 +243,21 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
             alert = builder.create();
             alert.show();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            android.util.Log.d(Constants.TAG, "onBackPressed: ");
             if (restrict.getAlert() != null && !restrict.getAlert().isDismissible()) {
                 Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
-            } else if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())){
+            } else if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
                 UserPreferences.setAlertDisplayedId(restrict.getAlert().getId());
                 getSupportFragmentManager().popBackStack();
                 activateMoviePassCardSnackBar();
                 bottomNavigationView.setVisibility(View.VISIBLE);
-            }else {
+            } else {
+
                 getSupportFragmentManager().popBackStack();
                 activateMoviePassCardSnackBar();
                 bottomNavigationView.setVisibility(View.VISIBLE);
+
+
             }
         }
     }
@@ -333,7 +333,6 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
                         android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
-
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
                                 restrict.getAlert().getTitle(),
@@ -341,6 +340,7 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
                                 restrict.getAlert().getUrl(),
                                 restrict.getAlert().getUrlTitle(),
                                 restrict.getAlert().isDismissible());
+
 
                         alertScreen.setSharedElementEnterTransition(new HistoryDetails());
                         alertScreen.setEnterTransition(new Fade());
@@ -417,8 +417,6 @@ public  class MoviesActivity extends BaseActivity implements AlertScreenFragment
                                 startMovieActivity();
                             }
                         }
-
-
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */

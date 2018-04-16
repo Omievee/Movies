@@ -5,11 +5,13 @@ package com.mobile.Interfaces;
  */
 
 public interface ProfileActivityInterface {
-    void openProfileAccountInformationFragment();
+    void openProfileFragment();
     void openProfileAccountShippingInformation();
     void closeFragment();
     void openProfileAccountPlanAndInfo();
     void openProfileAccountInformation();
     void openCancellationFragment();
     void openChangePassword();
+    void openProfileAccountInformationFragment();
+    void logOutUserAfterCancellation();
 }

@@ -27,7 +27,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/double_margin_standard"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:text="Done"
             android:textColor="@color/white"
             android:visibility="gone"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
             android:orientation="horizontal">
 
             <ImageView

@@ -29,7 +29,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_standard">
+            android:layout_marginBottom="@dimen/margin_half">
 
 
             <Button
@@ -50,7 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/ONBOARDING_JOIN_NOW"
-                android:layout_marginBottom="@dimen/double_margin_standard"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
@@ -60,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/double_margin_standard"
                     android:text="Find theaters near me"
                     android:textAlignment="center"
                     android:textColor="@color/almost_white"
@@ -67,11 +67,10 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:layout_width="55dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:layout_toRightOf="@id/NearMe"
+                    android:layout_width="45dp"
+                    android:layout_height="25dp"
                     android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/NearMe"
                     android:src="@drawable/arrowforward"
                     android:textAlignment="center"
                     android:tint="@color/new_red" />
@@ -85,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -116,7 +115,6 @@
                     android:layout_height="8dp"
                     android:layout_marginEnd="@dimen/margin_half"
                     android:background="@drawable/indicator_unselected_no_stroke" />
-
 
 
             </LinearLayout>

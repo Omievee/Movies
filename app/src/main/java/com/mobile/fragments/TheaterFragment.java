@@ -222,6 +222,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final String time = showtime;
         final Screening screening1 = screening;
 
+        Log.d(TAG, "onShowtimeClick: ");
+        
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
             buttonCheckIn.setVisibility(View.VISIBLE);

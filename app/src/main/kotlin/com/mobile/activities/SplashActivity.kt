@@ -2,28 +2,16 @@ package com.mobile.activities
 
 import android.content.Intent
 import android.os.AsyncTask
+import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import com.helpshift.support.Log
-import android.widget.Toast
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.Constants
-
 import com.mobile.UserPreferences
 import com.mobile.helpers.GoWatchItSingleton
-import com.mobile.model.Eid
-import com.mobile.network.Api
-import com.mobile.requests.OpenAppEventRequest
-import com.mobile.responses.GoWatchItResponse
 import com.moviepass.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
@@ -37,6 +25,7 @@ class SplashActivity : AppCompatActivity() {
         val data = intent.data
 
         getAAID().execute()
+        GoWatchItSingleton.getInstance().getMovies()
         if (data != null && data.path.length >= 2) run {
             var movieIdEncripted: String
             var movieOrTheater: String
@@ -98,7 +87,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(i)
                 finish()
             } else {
-                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) && UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL)) {
+                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)

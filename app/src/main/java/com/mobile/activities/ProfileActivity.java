@@ -2,18 +2,14 @@ package com.mobile.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +20,11 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
+import com.mobile.UserPreferences;
 import com.mobile.fragments.HistoryDetailsFragment;
 import com.mobile.fragments.ProfileAccountChangePassword;
 import com.mobile.fragments.ProfileAccountInformation;
+import com.mobile.fragments.ProfileAccountInformationFragment;
 import com.mobile.fragments.ProfileAccountPlanAndBilling;
 import com.mobile.fragments.ProfileAccountShippingInformation;
 import com.mobile.fragments.ProfileCancellationFragment;
@@ -37,7 +35,6 @@ import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import jp.wasabeef.blurry.Blurry;
-
 
 /**
  * Created by anubis on 7/23/17.
@@ -60,7 +57,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        openProfileAccountInformationFragment();
+        openProfileFragment();
 
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
@@ -153,15 +150,26 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountInformationFragment() {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.profile_container, profileFragment);
-            transaction.commit();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
+        transaction.replace(R.id.profile_container, profileAccountInformationFragment);
+        transaction.commit();
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void openProfileFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.profile_container, profileFragment);
+        transaction.commit();
     }
 
     @Override
     public void openProfileAccountShippingInformation() {
-        if(!isOnline()){
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
             FragmentManager manager = getFragmentManager();
@@ -181,7 +189,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountPlanAndInfo() {
-        if(!isOnline()){
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
             FragmentManager manager = getFragmentManager();
@@ -236,32 +244,40 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.commit();
 
         Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
-
     }
 
     @Override
     public void openCancellationFragment() {
-        if(!isOnline()){
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
-            android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
             transaction.replace(R.id.profile_container, cancelSubscription);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack("");
             transaction.commit();
         }
     }
 
     @Override
     public void openChangePassword() {
-        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileAccountChangePassword changePassword = new ProfileAccountChangePassword();
         transaction.replace(R.id.profile_container, changePassword);
-        transaction.addToBackStack(null);
+        transaction.addToBackStack("");
         transaction.commit();
+    }
+
+
+    @Override
+    public void logOutUserAfterCancellation() {
+        Intent intent = new Intent(this, LogInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        UserPreferences.clearUserId();
+        startActivity(intent);
     }
 }

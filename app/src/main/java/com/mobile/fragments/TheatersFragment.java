@@ -65,7 +65,6 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.adapters.TheatersAdapter;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
@@ -83,7 +82,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.ButterKnife;
 import io.realm.Realm;
@@ -186,13 +184,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
-
-        //Hide Keyboard when not in use
-        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        ContextSingleton.getInstance(getContext()).getGlobalContext();
-
-
-//        tRealm = Realm.getDefaultInstance();
         mSearchClose.setOnClickListener(view -> {
 
             searchGP.enableSearch();
@@ -253,9 +244,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     listViewText.setVisibility(View.INVISIBLE);
                     fadeOut(upArrow);
                     upArrow.setVisibility(View.INVISIBLE);
+                    String url = "https://www.moviepass.com/go/list";
+                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"list_view_click");
 
-                    String url = "http://moviepass.com/go/list";
-                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
+//                    String url = "http://moviepass.com/go/list";
+//                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
 
                 } else {
                     fadeOut(downArrow);
@@ -387,8 +380,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
                     Log.d(TAG, "*******HIT******: ");
-                    lat = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLatitude()));
-                    lon = Double.parseDouble(String.format(Locale.getDefault(), "%.2f", loc.getLongitude()));
+                    lat = loc.getLatitude();
+                    lon = loc.getLongitude();
 
                     queryRealmLoadTheaters(lat, lon);
                     LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());

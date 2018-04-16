@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.helpshift.support.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +26,11 @@ import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
+import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
-import com.mobile.activities.SettingsActivity;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -39,9 +38,6 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,6 +57,7 @@ public class ProfileFragment extends Fragment {
     boolean pushValue;
     Activity myActivity;
     Context myContext;
+    ProfileActivityInterface listener;
     public ProfileFragment() {
     }
 
@@ -131,7 +128,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
@@ -149,7 +145,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -199,7 +195,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
@@ -209,7 +205,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pendingReservationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
@@ -234,6 +230,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof ProfileActivityInterface){
+            listener = (ProfileActivityInterface) context;
+        }
         myContext = context;
     }
 
