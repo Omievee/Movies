@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     PastReservations pastReservations = new PastReservations();
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     View root;
-    RelativeLayout details, history, currentRes, howToUse, help;
+    RelativeLayout details, history, currentRes, howToUse, help, referAFriend;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
@@ -82,6 +82,8 @@ public class ProfileFragment extends Fragment {
         TOS = root.findViewById(R.id.TOS);
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
+
+        referAFriend = root.findViewById(R.id.ReferAFriend);
         fadeIn(root);
 
 
@@ -146,6 +148,20 @@ public class ProfileFragment extends Fragment {
             transaction.addToBackStack("");
             transaction.commit();
             ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+        });
+
+        referAFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = myActivity.getFragmentManager();
+                fragmentManager.popBackStack();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.profile_container, profileAccountInformationFragment);
+                transaction.addToBackStack("");
+                transaction.commit();
+                ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+            }
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -213,6 +229,8 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(myActivity, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
+
+
 
     }
 
