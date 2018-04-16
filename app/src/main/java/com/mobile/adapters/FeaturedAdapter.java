@@ -134,6 +134,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                     }
 
                     @Override
+
                     public void onRepeatModeChanged(int repeatMode) {
 
                     }
