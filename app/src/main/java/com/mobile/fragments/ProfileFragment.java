@@ -50,6 +50,7 @@ public class ProfileFragment extends Fragment {
     ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
     PastReservations pastReservations = new PastReservations();
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
+    ReferAFriend refer = new ReferAFriend();
     View root;
     RelativeLayout details, history, currentRes, howToUse, help, referAFriend;
     TextView version, TOS, PP, signout;
@@ -157,7 +158,7 @@ public class ProfileFragment extends Fragment {
                 fragmentManager.popBackStack();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.profile_container, profileAccountInformationFragment);
+                transaction.replace(R.id.profile_container, refer);
                 transaction.addToBackStack("");
                 transaction.commit();
                 ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);

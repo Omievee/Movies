@@ -8,8 +8,29 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/RefferHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="33dp"
+        android:padding="@dimen/margin_half"
+        android:text="Referrals"
+        android:textColor="@color/almost_white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/RefferHeader"
+        android:layout_marginTop="30dp"
+        android:padding="@dimen/margin_standard"
+        android:text="Refer a friend to MoviePass! "
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

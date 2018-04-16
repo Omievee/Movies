@@ -25,9 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_standard"
-        android:padding="5dp"
-        android:animateLayoutChanges="true"
-        android:background="@color/charcoalGrey">
+        android:padding="@dimen/margin_half">
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,12 +42,23 @@
             android:layout_width="60dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_half"
             android:rotation="270"
-            android:layout_centerVertical="true"
             android:src="@drawable/icondown"
             android:textAlignment="center"
             android:tint="@color/white" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
+            android:alpha=".5"
+
+            android:background="@color/gray_icon" />
+
 
     </RelativeLayout>
 
@@ -58,9 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_standard"
-        android:padding="5dp"
         android:animateLayoutChanges="true"
-        android:background="@color/charcoalGrey">
+        android:padding="5dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,12 +85,13 @@
             android:layout_width="60dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_half"
             android:rotation="270"
-            android:layout_centerVertical="true"
             android:src="@drawable/icondown"
             android:textAlignment="center"
             android:tint="@color/white" />
+
 
     </RelativeLayout>
 
@@ -92,9 +101,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_standard"
-        android:padding="5dp"
         android:animateLayoutChanges="true"
-        android:background="@color/charcoalGrey">
+        android:background="@color/charcoalGrey"
+        android:padding="5dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,9 +120,9 @@
             android:layout_width="60dp"
             android:layout_height="35dp"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_half"
             android:rotation="270"
-            android:layout_centerVertical="true"
             android:src="@drawable/icondown"
             android:textAlignment="center"
             android:tint="@color/white" />
@@ -126,10 +135,10 @@
         android:id="@+id/END"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_marginTop="@dimen/margin_standard"
         android:animateLayoutChanges="true"
-        android:background="@color/charcoalGrey">
+        android:background="@color/charcoalGrey"
+        android:padding="5dp">
 
 
         <TextView
