@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +48,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     private ChangePasswordResponse changePasswordResponse;
     private UserInfoResponse userInfoResponse;
     private boolean firstTime = true;
+    private Activity myActivity;
 
     public ProfileAccountChangePassword() {
         // Required empty public constructor
@@ -62,7 +64,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
 //        }
     }
 
-    public void setUpView(View view){
+    public void setUpView(View view) {
         oldPassword = view.findViewById(R.id.oldPassword);
         oldPasswordTextInputLayout = view.findViewById(R.id.oldPasswordTextInputLayout);
         newPassword1 = view.findViewById(R.id.password1);
@@ -94,7 +96,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(firstTime){
+                if (firstTime) {
                     enableSaveAndCancel();
                 }
             }
@@ -113,11 +115,11 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-               if(firstTime) {
-                   enableSaveAndCancel();
-                   newPassword2.setEnabled(true);
-                   firstTime=false;
-               }
+                if (firstTime) {
+                    enableSaveAndCancel();
+                    newPassword2.setEnabled(true);
+                    firstTime = false;
+                }
             }
 
             @Override
@@ -138,24 +140,24 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
                 final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 
-                if(newPassword1.getText().toString().trim().equalsIgnoreCase(newPassword2.getText().toString().trim()) && !oldPassword.getText().toString().trim().isEmpty()){
-                    if(newPassword1.getText().toString().length()>=6){
-                        if(!newPassword1.getText().toString().trim().equalsIgnoreCase(oldPassword.getText().toString().trim())){
+                if (newPassword1.getText().toString().trim().equalsIgnoreCase(newPassword2.getText().toString().trim()) && !oldPassword.getText().toString().trim().isEmpty()) {
+                    if (newPassword1.getText().toString().length() >= 6) {
+                        if (!newPassword1.getText().toString().trim().equalsIgnoreCase(oldPassword.getText().toString().trim())) {
                             progress.setVisibility(View.VISIBLE);
                             changePassword();
-                        } else{
+                        } else {
                             oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_new_password_same_as_old));
                         }
-                    } else{
-                        if(oldPassword.getText().toString().trim().isEmpty())
+                    } else {
+                        if (oldPassword.getText().toString().trim().isEmpty())
                             oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_old_password_empty));
-                        if(newPassword1.getText().toString().trim().isEmpty())
+                        if (newPassword1.getText().toString().trim().isEmpty())
                             newPassword1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_empty));
                         else
                             newPassword1TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
                     }
                 } else {
-                    if(oldPassword.getText().toString().trim().isEmpty())
+                    if (oldPassword.getText().toString().trim().isEmpty())
                         oldPasswordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_old_password_empty));
                     newPassword2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_match));
                 }
@@ -172,11 +174,11 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
 
     private void changePassword() {
         int userId = UserPreferences.getUserId();
-        ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(),newPassword1.getText().toString().trim(), userId);
+        ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(), newPassword1.getText().toString().trim(), userId);
         RestClient.getAuthenticated().changePassword(request).enqueue(new Callback<ChangePasswordResponse>() {
             @Override
             public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
-                if(response!=null && response.isSuccessful()){
+                if (response != null && response.isSuccessful()) {
                     changePasswordResponse = response.body();
                     logIn();
                 } else {
@@ -198,20 +200,20 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         String email = UserPreferences.getUserEmail().trim();
         String password = newPassword1.getText().toString().trim();
         LogInRequest request = new LogInRequest(email, password);
-        android.util.Log.d(TAG, "logIn: USER EMAIL "+email+" USER PASSWORD "+password);
-        String deviceId = DeviceID.getID(getContext());
+        android.util.Log.d(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
+        String deviceId = DeviceID.getID(myActivity);
         RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     moviePassLoginSucceeded(response.body());
-                    Toast.makeText(getContext(), "Password changed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(myActivity, "Password changed", Toast.LENGTH_LONG).show();
                     progress.setVisibility(View.GONE);
                     disableSaveAndCancel();
                     listener.closeFragment();
-                } else{
+                } else {
                     progress.setVisibility(View.GONE);
-                    android.util.Log.d(TAG, "onResponse: FAILURE LOG IN "+response.toString());
+                    android.util.Log.d(TAG, "onResponse: FAILURE LOG IN " + response.toString());
                 }
             }
 
@@ -234,19 +236,19 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         }
     }
 
-    public void enableSaveAndCancel(){
+    public void enableSaveAndCancel() {
         save.setClickable(true);
         cancel.setClickable(true);
-        cancel.setTextColor(ContextCompat.getColor(getContext(),R.color.almost_white));
-        save.setTextColor(ContextCompat.getColor(getContext(),R.color.new_red));
+        cancel.setTextColor(ContextCompat.getColor(myActivity, R.color.almost_white));
+        save.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
     }
 
-    public void disableSaveAndCancel(){
-        firstTime=true;
+    public void disableSaveAndCancel() {
+        firstTime = true;
         save.setClickable(false);
         cancel.setClickable(false);
-        cancel.setTextColor(ContextCompat.getColor(getContext(),R.color.gray_icon));
-        save.setTextColor(ContextCompat.getColor(getContext(),R.color.gray_icon));
+        cancel.setTextColor(ContextCompat.getColor(myActivity, R.color.gray_icon));
+        save.setTextColor(ContextCompat.getColor(myActivity, R.color.gray_icon));
         newPassword1.setText("");
         newPassword2.setText("");
         oldPassword.setText("");
@@ -257,7 +259,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         newPassword2TextInputLayout.setError(null);
         newPassword1TextInputLayout.setError(null);
         oldPasswordTextInputLayout.setError(null);
-        firstTime=true;
+        firstTime = true;
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
@@ -272,6 +274,19 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
                     + " must implement ProfileActivityInterface");
         }
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+        if (myActivity instanceof ProfileActivityInterface) {
+            listener = (ProfileActivityInterface) myActivity;
+        } else {
+            throw new RuntimeException(myActivity.toString()
+                    + " must implement ProfileActivityInterface");
+        }
+    }
+
 
     @Override
     public void onDetach() {
