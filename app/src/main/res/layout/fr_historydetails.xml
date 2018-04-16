@@ -24,8 +24,8 @@
         android:layout_above="@id/historyDate"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_standard"
-        android:text="Movie Ttle"
         android:clickable="false"
+        android:text="Movie Ttle"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -39,8 +39,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_half"
         android:layout_marginTop="@dimen/margin_half"
-        android:text="January 1, 2018"
         android:clickable="false"
+        android:text="January 1, 2018"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -51,8 +51,8 @@
         android:layout_above="@id/enlargedImage"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_standard"
-        android:text="NYC"
         android:clickable="false"
+        android:text="NYC"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
@@ -61,10 +61,46 @@
         android:id="@+id/enlargedImage"
         android:layout_width="200dp"
         android:layout_height="290dp"
-        android:clickable="false"
         android:layout_centerInParent="true"
+        android:clickable="false"
         android:transitionName="historyPoster"
         fresco:scaleType="fitXY" />
+
+
+    <TextView
+        android:id="@+id/liketext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enlargedImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:text="Did you like it?"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/liketext"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:gravity="center_horizontal">
+
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/thumbsup" />
+
+        <ImageView
+            android:id="@+id/dislike"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/double_margin_standard"
+            android:layout_toEndOf="@id/like"
+            android:src="@drawable/thumbsdown" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

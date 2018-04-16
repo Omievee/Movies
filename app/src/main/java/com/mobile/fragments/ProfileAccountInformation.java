@@ -3,45 +3,25 @@ package com.mobile.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.Constants;
-import com.mobile.DeviceID;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
-import com.mobile.activities.LogInActivity;
-import com.mobile.model.User;
 import com.mobile.network.RestClient;
-import com.mobile.requests.ChangePasswordRequest;
-import com.mobile.requests.LogInRequest;
-import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
-
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mobile.fragments.PendingReservationFragment.TAG;
-
-public class ProfileAccountInformation extends Fragment {
+public class ProfileAccountInformation extends android.app.Fragment {
 
     private ProfileActivityInterface mListener;
     private Context context;

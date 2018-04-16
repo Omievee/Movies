@@ -13,7 +13,6 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -70,7 +69,7 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
+public class MoviesFragment extends android.app.Fragment implements MoviePosterClickListener, LocationListener {
 
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";

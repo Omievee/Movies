@@ -5,15 +5,22 @@ import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -25,26 +32,32 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.model.Movie;
+import com.mobile.network.RestClient;
+import com.mobile.responses.HistoryResponse;
 import com.moviepass.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jp.wasabeef.blurry.Blurry;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends Fragment {
+public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
     Activity myActivity;
     Context myContext;
     SimpleDraweeView enlargedImage;
-    TextView historyDate, historyTitle, historyLocal;
-    ImageView close;
+    TextView historyDate, historyTitle, historyLocal, likeittext;
+    ImageView close, like, dislike;
+
 
     public HistoryDetailsFragment() {
     }
@@ -56,7 +69,6 @@ public class HistoryDetailsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putParcelable(HISTORY_POSTER, moviePoster);
         bundle.putString(EXTRA_TRANSITION_NAME, transitionName);
-
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -68,6 +80,7 @@ public class HistoryDetailsFragment extends Fragment {
         myActivity.startPostponedEnterTransition();
         setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(20000));
     }
+
 
 
     @Nullable
@@ -82,10 +95,14 @@ public class HistoryDetailsFragment extends Fragment {
 
 
         Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
-        Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity ) myActivity).getSupportFragmentManager().getBackStackEntryCount());
+
         return root;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -95,16 +112,35 @@ public class HistoryDetailsFragment extends Fragment {
         historyLocal = view.findViewById(R.id.historyLocal);
         historyTitle = view.findViewById(R.id.HistoryTitle);
         close = view.findViewById(R.id.close);
-
-
+        like = view.findViewById(R.id.like);
+        dislike = view.findViewById(R.id.dislike);
+        likeittext = view.findViewById(R.id.liketext);
 
         close.setOnClickListener(v -> {
-           myActivity.onBackPressed();
+            myActivity.onBackPressed();
         });
 
 
         Movie historyItem = getArguments().getParcelable(HISTORY_POSTER);
         String transition = getArguments().getString(EXTRA_TRANSITION_NAME);
+
+        if (historyItem.getUserRating() != null) {
+            likeittext.setVisibility(View.GONE);
+            if (historyItem.getUserRating().equals("GOOD")) {
+                like.setImageDrawable(getResources().getDrawable(R.drawable.thumbsupselect));
+                dislike.setVisibility(View.GONE);
+            } else if (historyItem.getUserRating().equals("BAD")) {
+                dislike.setImageDrawable(getResources().getDrawable(R.drawable.thumbsdownselect));
+                like.setVisibility(View.GONE);
+            }
+
+        } else {
+
+
+            like.setOnClickListener(v -> rateMovie(historyItem.getId(), "GOOD"));
+
+            dislike.setOnClickListener(v -> rateMovie(historyItem.getId(), "BAD"));
+        }
 
         Uri imgUrl = Uri.parse(historyItem.getImageUrl());
 
@@ -142,15 +178,45 @@ public class HistoryDetailsFragment extends Fragment {
         historyTitle.setText(historyItem.getTitle());
         enlargedImage.setTransitionName(transition);
         enlargedImage.setController(controller);
+
+
     }
 
 
+    private void rateMovie(int historyId, String userRating) {
+        HistoryResponse rating = new HistoryResponse(userRating);
+        RestClient.getAuthenticated().submitRating(historyId, rating).enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                Handler h = new Handler();
+                if (response.isSuccessful()) {
+                    if (userRating.equals("GOOD")) {
+                        dislike.setVisibility(View.GONE);
+                        fadeOut(dislike);
+                        animate(like);
+                    } else if (userRating.equals("BAD")) {
+                        like.setVisibility(View.GONE);
+                        fadeOut(like);
+                        animate(dislike);
+                    }
+                    PastReservations.newInstance().loadHIstory();
+                    h.postDelayed(() -> myActivity.onBackPressed(), 2000);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+                Toast.makeText(myActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        myContext = context;
     }
 
     @Override
@@ -158,5 +224,43 @@ public class HistoryDetailsFragment extends Fragment {
         super.onAttach(activity);
         myActivity = activity;
     }
+
+
+    public void fadeOut(View view) {
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(300);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        view.setAnimation(animation);
+
+
+    }
+
+    public void animate(View view) {
+        AnimationSet expandAndShrink = new AnimationSet(true);
+        ScaleAnimation expand = new ScaleAnimation(
+                1f, 1.5f,
+                1f, 1.5f,
+                Animation.RELATIVE_TO_SELF, 0,
+                Animation.RELATIVE_TO_SELF, 0);
+        expand.setDuration(500);
+
+        ScaleAnimation shrink = new ScaleAnimation(
+                1.5f, 1f,
+                1.5f, 1f,
+                Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_SELF, 0f);
+        shrink.setStartOffset(500);
+        shrink.setDuration(500);
+
+        expandAndShrink.addAnimation(expand);
+        expandAndShrink.addAnimation(shrink);
+        expandAndShrink.setFillAfter(true);
+        expandAndShrink.setInterpolator(new AccelerateInterpolator(1.0f));
+
+        view.startAnimation(expandAndShrink);
+    }
+
 
 }

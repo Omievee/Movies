@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +26,9 @@ import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -43,7 +39,7 @@ import retrofit2.Response;
  * Created by anubis on 9/1/17.
  */
 
-public class ProfileCancellationFragment extends Fragment {
+public class ProfileCancellationFragment extends android.app.Fragment {
 
     MaterialSpinner spinnerCancelReason;
     EditText cancelComments;
