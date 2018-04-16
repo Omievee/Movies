@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,6 +23,7 @@
 
 
     <TextView
+        android:id="@+id/Refermsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/RefferHeader"
@@ -33,4 +35,154 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/ReferName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Refermsg"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:layout_marginStart="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:textColorHint="@color/white"
+        android:theme="@style/EditTextStyle"
+        app:errorTextAppearance="@style/error_appearance"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:passwordToggleTint="@color/white_40_opacity">
+
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:hint="Frist Name"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/ReferLast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ReferName"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:layout_marginStart="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:textColorHint="@color/white"
+        android:theme="@style/EditTextStyle"
+        app:errorTextAppearance="@style/error_appearance"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:passwordToggleTint="@color/white_40_opacity">
+
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:hint="Last Name"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/ReferEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ReferLast"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:layout_marginStart="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:textColorHint="@color/white"
+        android:theme="@style/EditTextStyle"
+        app:errorTextAppearance="@style/error_appearance"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:passwordToggleTint="@color/white_40_opacity">
+
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:hint="Email"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/ReferSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height"
+        android:layout_below="@+id/ReferEmail"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@drawable/mpbutton1"
+        android:elevation="2dp"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/Refermsg2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ReferSubmit"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:text="Spread the word about MoviePass!  "
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Refermsg2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/FacebookRefer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/TwitterRefer"
+            android:src="@drawable/facebookicon" />
+
+        <ImageView
+            android:id="@+id/TwitterRefer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/doubledouble_margin_standard"
+            android:src="@drawable/twitterlogo" />
+
+    </RelativeLayout>
 </RelativeLayout>
