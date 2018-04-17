@@ -31,27 +31,32 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmList;
+
 /**
  * Created by o_vicarra on 1/29/18.
  */
 
-public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.SuggestionHolder> {
-
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SuggestionHolder>{
 
     View root;
     AfterSearchListener listener;
+    private RealmList<Movie> moviesArrayList;
 
-    public SearchAdapter(LayoutInflater inflater) {
-        super(inflater);
-    }
-
-    public SearchAdapter(LayoutInflater inflater, AfterSearchListener listener) {
-        super(inflater);
+    public SearchAdapter(AfterSearchListener listener, RealmList<Movie> moviesArrayList) {
         this.listener = listener;
+        this.moviesArrayList = moviesArrayList;
     }
 
     @Override
-    public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
+    public SuggestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_moviesearch, parent, false);
+        return new SuggestionHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(SuggestionHolder holder, int position) {
+        Movie suggestion = moviesArrayList.get(holder.getAdapterPosition());
         holder.title.setText(suggestion.getTitle());
         holder.rating.setText("Rated " + suggestion.getRating());
         int t = suggestion.getRunningTime();
@@ -102,21 +107,80 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
 
     }
 
-    @Override
-    public int getSingleViewHeight() {
-        return 80;
+    public void updateList(RealmList<Movie> list){
+        moviesArrayList = list;
+        notifyDataSetChanged();
     }
 
     @Override
-    public SuggestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        root = getLayoutInflater().inflate(R.layout.list_item_moviesearch, parent, false);
-
-
-        return new SuggestionHolder(root);
+    public int getItemCount() {
+        return moviesArrayList.size();
     }
 
+//    public SearchAdapter(LayoutInflater inflater) {
+//        super(inflater);
+//    }
+//
+//    public SearchAdapter(LayoutInflater inflater, AfterSearchListener listener) {
+//        super(inflater);
+//        this.listener = listener;
+//    }
 
-    static class SuggestionHolder extends RecyclerView.ViewHolder {
+//    @Override
+//    public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
+//        holder.title.setText(suggestion.getTitle());
+//        holder.rating.setText("Rated " + suggestion.getRating());
+//        int t = suggestion.getRunningTime();
+//        int hours = t / 60; //since both are ints, you get an int
+//        int minutes = t % 60;
+//        if (t == 0) {
+//            holder.runTime.setVisibility(View.GONE);
+//        } else if (hours > 1) {
+//            String translatedRunTime = hours + " hours " + minutes + " minutes";
+//            holder.runTime.setText(translatedRunTime);
+//        } else {
+//            String translatedRunTime = hours + " hour " + minutes + " minutes";
+//            holder.runTime.setText(translatedRunTime);
+//        }
+//
+//        final Uri imgUrl = Uri.parse(suggestion.getImageUrl());
+//        holder.image.setImageURI(imgUrl);
+//        holder.image.getHierarchy().setFadeDuration(500);
+//
+//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+//                .setProgressiveRenderingEnabled(true)
+//                .build();
+//
+//        DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                .setImageRequest(request)
+//                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+//                    @Override
+//                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+//                        super.onFinalImageSet(id, imageInfo, animatable);
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String id, Throwable throwable) {
+//                        holder.image.setImageURI(imgUrl + "/original.jpg");
+//                    }
+//                })
+//                .build();
+//
+//        holder.image.setController(controller);
+//
+//        holder.cardView.setOnClickListener(view -> {
+//            listener.getSearchString();
+//            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
+//            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
+//            holder.itemView.getContext().startActivity(movieIntent);
+//        });
+//
+//    }
+
+
+
+    public class SuggestionHolder extends RecyclerView.ViewHolder {
         protected TextView title;
         protected TextView rating;
         protected TextView runTime;
@@ -134,45 +198,45 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
     }
 
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                FilterResults results = new FilterResults();
-                String movieSearch = charSequence.toString();
-                boolean isMovieDuplicated = false;
-                if (movieSearch.equals("")) {
-                    suggestions = suggestions_clone;
-                } else {
-                    suggestions = new ArrayList<>();
-                    for (Movie movieTitle : suggestions_clone) {
-                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
-                            for (Movie movieDuplicate : suggestions) {
-                                if (movieDuplicate.getId() == movieTitle.getId()) {
-                                    isMovieDuplicated = true;
-                                }
-
-                            }
-                            if (isMovieDuplicated == false)
-                                suggestions.add(movieTitle);
-                        }
-                    }
-                }
-                results.values = suggestions;
-                Log.d(Constants.TAG, "performFiltering: "+results.values);
-
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                suggestions = (List<Movie>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-
-    }
+//    @Override
+//    public Filter getFilter() {
+//        return new Filter() {
+//            @Override
+//            protected FilterResults performFiltering(CharSequence charSequence) {
+//                FilterResults results = new FilterResults();
+//                String movieSearch = charSequence.toString();
+//                boolean isMovieDuplicated = false;
+//                if (movieSearch.equals("")) {
+//                    suggestions = suggestions_clone;
+//                } else {
+//                    suggestions = new ArrayList<>();
+//                    for (Movie movieTitle : suggestions_clone) {
+//                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
+//                            for (Movie movieDuplicate : suggestions) {
+//                                if (movieDuplicate.getId() == movieTitle.getId()) {
+//                                    isMovieDuplicated = true;
+//                                }
+//
+//                            }
+//                            if (isMovieDuplicated == false)
+//                                suggestions.add(movieTitle);
+//                        }
+//                    }
+//                }
+//                results.values = suggestions;
+//                Log.d(Constants.TAG, "performFiltering: "+results.values);
+//
+//                return results;
+//            }
+//
+//            @Override
+//            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+//                suggestions = (List<Movie>) filterResults.values;
+//                notifyDataSetChanged();
+//            }
+//        };
+//
+//    }
 
 
 }

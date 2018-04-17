@@ -668,6 +668,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
 
     public interface searchMoviesInterface {
         void onSearchMoviesInterface();
+        void closeFragment();
 
         void hideSnackBar();
 

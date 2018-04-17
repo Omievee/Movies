@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,9 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
@@ -25,6 +32,7 @@ import com.moviepass.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -42,7 +50,7 @@ import static com.facebook.GraphRequest.TAG;
  */
 
 public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
-    public MaterialSearchBar searchBar;
+    public EditText searchBar;
     View rootView;
     SearchAdapter customAdapter;
     RealmList<Movie> ALLMOVIES;
@@ -53,6 +61,9 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     Context myContext;
     private RealmResults<Movie> movies;
     private RealmResults<Movie> allMovies;
+    private RecyclerView recyclerView;
+    private RealmList<Movie> suggestions;
+    private ImageView backArrow;
 
 
     public SearchFragment() {
@@ -65,6 +76,8 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         rootView = inflater.inflate(R.layout.fr_searchview, container, false);
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        backArrow = rootView.findViewById(R.id.backArrow);
 
         ALLMOVIES = new RealmList<>();
 
@@ -79,7 +92,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     @Override
     public void onResume() {
         super.onResume();
-        searchBar.enableSearch();
+//        searchBar.enableSearch();
     }
 
 
@@ -89,12 +102,16 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 
         progress.setVisibility(View.VISIBLE);
         LayoutInflater myInflater = (LayoutInflater) myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
-        customAdapter = new SearchAdapter(myInflater, this);
+//        customAdapter = new SearchAdapter(myInflater, this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        searchBar.requestFocus();
+
 
 //        loadResults();
         getMovies();
 
-        searchBar.addTextChangeListener(new TextWatcher() {
+        searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -102,12 +119,41 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                customAdapter.getFilter().filter(searchBar.getText());
+//                customAdapter.getFilter().filter(searchBar.getText());
+                Log.d(TAG, "onTextChanged: "+charSequence.toString());
+                String movieSearch = charSequence.toString();
+                boolean isMovieDuplicated = false;
+                if (movieSearch.equals("")) {
+                    customAdapter.updateList(ALLMOVIES);
+                } else {
+                    suggestions = new RealmList<>();
+                    for (Movie movieTitle : ALLMOVIES) {
+                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
+                            for (Movie movieDuplicate : suggestions) {
+                                if (movieDuplicate.getId() == movieTitle.getId()) {
+                                    isMovieDuplicated = true;
+                                }
+
+                            }
+                            if (isMovieDuplicated == false)
+                                suggestions.add(movieTitle);
+                        }
+                    }
+                    customAdapter.updateList(suggestions);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(myActivity);
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -154,9 +200,12 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
             ALLMOVIES.add(movie);
         }
         Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
-        customAdapter.setSuggestions(ALLMOVIES);
-        searchBar.setCustomSuggestionAdapter(customAdapter);
+        customAdapter = new SearchAdapter(this,ALLMOVIES);
+        recyclerView.setAdapter(customAdapter);
+//        customAdapter.setSuggestions(ALLMOVIES);
+//        searchBar.setCustomSuggestionAdapter(customAdapter);
         progress.setVisibility(View.GONE);
+        showSfotKeyboard();
     }
 
     public void loadResults() {
@@ -195,7 +244,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     @Override
     public void getSearchString() {
         String url = "https://moviepass.com/go/movies";
-        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
+//        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
     }
 
     @Override
@@ -210,6 +259,11 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         super.onAttach(activity);
 
         myActivity = activity;
+    }
+
+    public void showSfotKeyboard(){
+        InputMethodManager imm = (InputMethodManager) myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(myActivity.getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
     }
 
 
