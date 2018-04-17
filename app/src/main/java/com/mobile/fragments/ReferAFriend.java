@@ -4,13 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.mobile.network.RestClient;
+import com.mobile.responses.ReferAFriendResponse;
 import com.moviepass.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ReferAFriend extends android.app.Fragment {
@@ -19,9 +27,9 @@ public class ReferAFriend extends android.app.Fragment {
     // TODO: Rename and change types of parameters
     Activity myActivity;
     Context myContext;
-
+    Button submitReferralButton;
     ImageView twitter, facebok;
-    EditText firstName, lastName, email;
+    TextInputEditText firstName, lastName, email;
 
     public ReferAFriend() {
         // Required empty public constructor
@@ -45,10 +53,18 @@ public class ReferAFriend extends android.app.Fragment {
         super.onViewCreated(view, savedInstanceState);
         twitter = view.findViewById(R.id.TwitterRefer);
         facebok = view.findViewById(R.id.FacebookRefer);
-        firstName = view.findViewById(R.id.ReferName);
-        lastName = view.findViewById(R.id.ReferLast);
-        email = view.findViewById(R.id.ReferEmail);
+        firstName = view.findViewById(R.id.RF);
+        lastName = view.findViewById(R.id.RL);
+        email = view.findViewById(R.id.RE);
+        submitReferralButton = view.findViewById(R.id.ReferSubmit);
 
+
+        submitReferralButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitReferral();
+            }
+        });
     }
 
     @Override
@@ -69,8 +85,28 @@ public class ReferAFriend extends android.app.Fragment {
         myActivity = activity;
     }
 
-    void submitReferral() {
 
+    void submitReferral() {
+        ReferAFriendResponse referralResponse = new ReferAFriendResponse();
+
+        RestClient.getAuthenticated().referAFriend().enqueue(new Callback<ReferAFriendResponse>() {
+            @Override
+            public void onResponse(Call<ReferAFriendResponse> call, Response<ReferAFriendResponse> response) {
+                ReferAFriendResponse referral = response.body();
+                if (response.isSuccessful()) {
+
+                    referral.setEmail(email.getText().toString());
+                    referral.setFirstName(firstName.getText().toString());
+                    referral.setLastName(lastName.getText().toString());
+                    Toast.makeText(myActivity, "You have successfully sent your friend a referral! Make sure to keep spreading the word!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReferAFriendResponse> call, Throwable t) {
+
+            }
+        });
 
     }
 }

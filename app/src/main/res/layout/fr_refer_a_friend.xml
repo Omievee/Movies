@@ -46,20 +46,18 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:errorTextAppearance="@style/error_appearance"
         app:hintTextAppearance="@style/text_in_layout_hint_Style"
-        app:passwordToggleTint="@color/white_40_opacity">
+        >
 
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/RF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Frist Name"
-            android:inputType="textPassword"
-            android:maxLength="16"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
@@ -78,20 +76,18 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:errorTextAppearance="@style/error_appearance"
         app:hintTextAppearance="@style/text_in_layout_hint_Style"
-        app:passwordToggleTint="@color/white_40_opacity">
+      >
 
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/RL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Last Name"
-            android:inputType="textPassword"
-            android:maxLength="16"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
@@ -110,20 +106,18 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:errorTextAppearance="@style/error_appearance"
         app:hintTextAppearance="@style/text_in_layout_hint_Style"
-        app:passwordToggleTint="@color/white_40_opacity">
+      >
 
 
         <android.support.design.widget.TextInputEditText
+            android:id="@+id/RE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Email"
-            android:inputType="textPassword"
-            android:maxLength="16"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
@@ -159,7 +153,8 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 
     <RelativeLayout
@@ -168,7 +163,8 @@
         android:layout_below="@id/Refermsg2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/doubledouble_margin_standard"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/FacebookRefer"
