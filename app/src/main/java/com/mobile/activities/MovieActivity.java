@@ -59,8 +59,12 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 
 import butterknife.BindView;
@@ -432,8 +436,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                 sortedScreeningList.add(selectedScreeningsList.get(j));
 
                             }
-
-
                             Screening etix = screeningsResponse.getScreenings().get(j);
                             if (etix.getProvider().ticketTypeIsETicket() || etix.getProvider().ticketTypeIsSelectSeating()) {
                                 sortedScreeningList.remove(screeningsResponse.getScreenings().get(j));
@@ -442,39 +444,58 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         }
                     }
 
-                    for (int i = 0; i < sortedScreeningList.size(); i++) {
+                    int i=0;
+                    int count = sortedScreeningList.size();
+                    while (i < sortedScreeningList.size() && count>0) {
                         Screening notApproved = sortedScreeningList.get(i);
                         if (!notApproved.isApproved()) {
-                            sortedScreeningList.remove(notApproved);
+                            sortedScreeningList.remove(i);
                             sortedScreeningList.addLast(notApproved);
-                            movieTheatersAdapter.notifyDataSetChanged();
+                            i--;
                         }
+                        count--;
+                        i++;
+                    }
 
-//                        try {
-//                            Date systemClock = new Date();
-//
-//                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-//                            String curTime = sdf.format(systemClock);
-//
-//                            Date theaterTime = sdf.parse(sortedScreeningList.get(i).getStartTimes().get(i));
-//                            Date myTime = sdf.parse(curTime);
-//
-//                            Calendar cal = Calendar.getInstance();
-//                            cal.setTime(theaterTime);
-//                            cal.add(Calendar.MINUTE, 30);
-//                            if (myTime.after(cal.getTime())) {
-//                                if (cal.getTime().getHours() > 3) {
-//                                    sortedScreeningList.get(i).getStartTimes().remove()
-////                            if(holder.showTimesGrid.getChildCount() == 0) {
-////                                holder.theaterCardViewListItem.setVisibility(View.GONE);
-////                            }
-//                                }
-//
-//                            }
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
+                    i=0;
+                    int currentShowTimes = 0;
+                    while( i< sortedScreeningList.size()){
+                        Screening currentScreening = sortedScreeningList.get(i);
+                        currentShowTimes = currentScreening.getStartTimes().size();
+                        if (currentScreening.getStartTimes() != null) {
 
+                            for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
+
+                                try {
+                                    Date systemClock = new Date();
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String curTime = sdf.format(systemClock);
+
+                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(j));
+                                    Date myTime = sdf.parse(curTime);
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(theaterTime);
+                                    cal.add(Calendar.MINUTE, 30);
+
+
+                                    if (myTime.after(cal.getTime())) {
+                                        if (cal.getTime().getHours() > 3) {
+                                            currentShowTimes--;
+                                        }
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if(currentShowTimes==0){
+                                sortedScreeningList.remove(i);
+                                i--;
+                            }
+                        }
+                        i++;
                     }
                 }
 

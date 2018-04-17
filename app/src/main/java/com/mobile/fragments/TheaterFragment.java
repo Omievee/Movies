@@ -322,6 +322,20 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                 i--;
                             }
                         }
+                        i++;
+                    }
+                    i=0;
+                    int count = moviesAtSelectedTheater.size();
+                    while (i < moviesAtSelectedTheater.size() && count>0) {
+                        Screening notApproved = moviesAtSelectedTheater.get(i);
+                        if (!notApproved.isApproved()) {
+                            moviesAtSelectedTheater.remove(i);
+                            moviesAtSelectedTheater.addLast(notApproved);
+                            i--;
+                        }
+                        count--;
+                        i++;
+                    }
                         if (theaterSelectedRecyclerView != null) {
                             theaterSelectedRecyclerView.getRecycledViewPool().clear();
                             theaterMoviesAdapter.notifyDataSetChanged();
@@ -341,8 +355,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                             noTheaters.setVisibility(View.VISIBLE);
                             theaterSelectedRecyclerView.setVisibility(View.GONE);
                         }
-                        i++;
-                    }
+
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
                     Log.d("else", "else" + response.message());
