@@ -63,7 +63,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     private RealmResults<Movie> allMovies;
     private RecyclerView recyclerView;
     private RealmList<Movie> suggestions;
-    private ImageView backArrow;
+    private ImageView backArrow, removeIcon;
 
 
     public SearchFragment() {
@@ -78,6 +78,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         progress = rootView.findViewById(R.id.progress);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         backArrow = rootView.findViewById(R.id.backArrow);
+        removeIcon = rootView.findViewById(R.id.removeIcon);
 
         ALLMOVIES = new RealmList<>();
 
@@ -92,7 +93,6 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     @Override
     public void onResume() {
         super.onResume();
-//        searchBar.enableSearch();
     }
 
 
@@ -102,13 +102,11 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 
         progress.setVisibility(View.VISIBLE);
         LayoutInflater myInflater = (LayoutInflater) myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
-//        customAdapter = new SearchAdapter(myInflater, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         searchBar.requestFocus();
 
 
-//        loadResults();
         getMovies();
 
         searchBar.addTextChangedListener(new TextWatcher() {
@@ -119,8 +117,6 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                customAdapter.getFilter().filter(searchBar.getText());
-                Log.d(TAG, "onTextChanged: "+charSequence.toString());
                 String movieSearch = charSequence.toString();
                 boolean isMovieDuplicated = false;
                 if (movieSearch.equals("")) {
@@ -154,6 +150,16 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
             public void onClick(View v) {
                 hideSoftKeyboard(myActivity);
                 getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        removeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!searchBar.getText().toString().trim().isEmpty()){
+                    customAdapter.updateList(ALLMOVIES);
+                    searchBar.setText("");
+                }
             }
         });
 
@@ -202,49 +208,15 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
         customAdapter = new SearchAdapter(this,ALLMOVIES);
         recyclerView.setAdapter(customAdapter);
-//        customAdapter.setSuggestions(ALLMOVIES);
-//        searchBar.setCustomSuggestionAdapter(customAdapter);
         progress.setVisibility(View.GONE);
         showSfotKeyboard();
     }
 
-    public void loadResults() {
-        RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
-
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                MoviesResponse info = response.body();
-                if (response.isSuccessful() && response != null) {
-                    progress.setVisibility(View.GONE);
-                    ALLMOVIES.clear();
-                    ALLMOVIES.addAll(info.getFeatured());
-                    ALLMOVIES.addAll(info.getNewReleases());
-                    ALLMOVIES.addAll(info.getNowPlaying());
-                    ALLMOVIES.addAll(info.getTopBoxOffice());
-                    HashMap<Integer, Movie> movieHashMap = new HashMap<>();
-                    for (Movie movie : ALLMOVIES) {
-                        movieHashMap.put(movie.getId(), movie);
-                    }
-                    ALLMOVIES.clear();
-                    for (Movie movie : movieHashMap.values()) {
-                        ALLMOVIES.add(movie);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                progress.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), "Server Response Failed; Try again", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
 
     @Override
     public void getSearchString() {
         String url = "https://moviepass.com/go/movies";
-//        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
+        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
     }
 
     @Override

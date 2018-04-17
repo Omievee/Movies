@@ -80,13 +80,13 @@
             android:layout_width="0dp"
             android:layout_weight="0.1"
             android:padding="@dimen/margin_half"
-            android:src="@drawable/re"
+            android:src="@drawable/ic_close_white_24dp"
             android:backgroundTint="@color/almost_white"
-            android:id="@+id/rightIcon"
+            android:id="@+id/removeIcon"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content" />
 
-
+rr
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
