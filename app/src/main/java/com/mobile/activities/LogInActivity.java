@@ -213,7 +213,6 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-                    Log.w("RESTRICTIONS => ",new GsonBuilder().setPrettyPrinting().create().toJson(response));
 
 
                     String status = restriction.getSubscriptionStatus();
