@@ -46,6 +46,7 @@ import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
@@ -54,6 +55,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +84,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
 
     public static SwipeRefreshLayout swiper;
     public static Realm moviesRealm;
+    Realm allMoviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
@@ -118,6 +121,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
     public RealmConfiguration config;
 
     View progress;
+    private RealmConfiguration allMoviesConfig;
 
 
     public static MoviesFragment newInstance() {
@@ -246,16 +250,55 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                 realm.deleteAll();
             });
             getMoviesForStorage();
-            GoWatchItSingleton.getInstance().getMovies();
+//            GoWatchItSingleton.getInstance().getMovies();
         });
 
 
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
+            getAllMovies();
         } else {
             setAdaptersWithRealmOBjects();
         }
 
+
+    }
+
+    void getAllMovies(){
+        android.util.Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        allMoviesConfig = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+            @Override
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                info   = response.body();
+                if (response.isSuccessful() && response != null) {
+                    List<AllMoviesResponse> finalInfo = info;
+                    allMoviesRealm.executeTransaction(realm -> {
+                        for(AllMoviesResponse movie: finalInfo){
+                            Movie newMovie = realm.createObject(Movie.class);
+                            newMovie.setId(Integer.parseInt(movie.getId()));
+                            newMovie.setTitle(movie.getTitle());
+                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
+                            newMovie.setRating(movie.getRating());
+                            newMovie.setSynopsis(movie.getSynopsis());
+                            newMovie.setImageUrl(movie.getImageUrl());
+                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+            }
+        });
 
     }
 

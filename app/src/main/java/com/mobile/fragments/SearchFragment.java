@@ -26,6 +26,10 @@ import com.moviepass.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,15 +42,17 @@ import static com.facebook.GraphRequest.TAG;
  */
 
 public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
-    public static MaterialSearchBar searchBar;
+    public MaterialSearchBar searchBar;
     View rootView;
     SearchAdapter customAdapter;
-    ArrayList<Movie> ALLMOVIES;
+    RealmList<Movie> ALLMOVIES;
     View progress;
     ArrayList<Movie> noDuplicates;
     String url;
     Activity myActivity;
     Context myContext;
+    private RealmResults<Movie> movies;
+    private RealmResults<Movie> allMovies;
 
 
     public SearchFragment() {
@@ -60,9 +66,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         searchBar = rootView.findViewById(R.id.searchBar);
         progress = rootView.findViewById(R.id.progress);
 
-
-        ALLMOVIES = new ArrayList<>();
-
+        ALLMOVIES = new RealmList<>();
 
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
@@ -84,14 +88,12 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         super.onViewCreated(view, savedInstanceState);
 
         progress.setVisibility(View.VISIBLE);
-
-
-        loadResults();
-
         LayoutInflater myInflater = (LayoutInflater) myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
         customAdapter = new SearchAdapter(myInflater, this);
-        customAdapter.setSuggestions(ALLMOVIES);
-        searchBar.setCustomSuggestionAdapter(customAdapter);
+
+//        loadResults();
+        getMovies();
+
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -109,13 +111,55 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
             }
         });
 
+    }
 
+    public void getMovies(){
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm moviesRealm = Realm.getInstance(config);
+        movies = moviesRealm.where(Movie.class)
+                .equalTo("type", "Top Box Office")
+                .or()
+                .equalTo("type", "New Releases")
+                .or()
+                .equalTo("type", "Coming Soon")
+                .or()
+                .equalTo("type", "Now Playing")
+                .or()
+                .equalTo("type", "Featured")
+                .findAll();
 
+        getAllMovies();
+    }
 
+    public void getAllMovies(){
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm moviesRealm = Realm.getInstance(config);
+        allMovies = moviesRealm.where(Movie.class).findAll();
+
+        HashMap<Integer, Movie> movieHashMap = new HashMap<>();
+        for (Movie movie : movies) {
+            movieHashMap.put(movie.getId(), movie);
+        }
+        for (Movie movie : allMovies) {
+            movieHashMap.put(movie.getId(), movie);
+        }
+        ALLMOVIES.clear();
+        for (Movie movie : movieHashMap.values()) {
+            ALLMOVIES.add(movie);
+        }
+        Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
+        customAdapter.setSuggestions(ALLMOVIES);
+        searchBar.setCustomSuggestionAdapter(customAdapter);
+        progress.setVisibility(View.GONE);
     }
 
     public void loadResults() {
-        Log.d(TAG, "loadResults: ");
         RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude()).enqueue(new Callback<MoviesResponse>() {
 
             @Override

@@ -5,6 +5,7 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
+import com.mobile.Constants;
 import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.activities.MovieActivity;
 import com.mobile.model.Movie;
@@ -144,7 +146,7 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
                     suggestions = suggestions_clone;
                 } else {
                     suggestions = new ArrayList<>();
-                    for (Movie movieTitle : suggestions_clone)
+                    for (Movie movieTitle : suggestions_clone) {
                         if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
                             for (Movie movieDuplicate : suggestions) {
                                 if (movieDuplicate.getId() == movieTitle.getId()) {
@@ -155,9 +157,10 @@ public class SearchAdapter extends SuggestionsAdapter<Movie, SearchAdapter.Sugge
                             if (isMovieDuplicated == false)
                                 suggestions.add(movieTitle);
                         }
+                    }
                 }
                 results.values = suggestions;
-
+                Log.d(Constants.TAG, "performFiltering: "+results.values);
 
                 return results;
             }
