@@ -69,9 +69,9 @@ public class RealmTaskService extends GcmTaskService {
                     //specify target service - must extend GcmTaskService
                     .setService(RealmTaskService.class)
                     //repeat every 60 seconds
-                    .setPeriod(43200)
+                    .setPeriod(7200)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(7200)
+                    .setFlex(10000)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot

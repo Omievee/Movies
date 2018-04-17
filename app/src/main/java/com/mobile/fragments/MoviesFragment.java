@@ -421,6 +421,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
                 Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
                 swiper.setRefreshing(false);
+                ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
             }
         });
     }

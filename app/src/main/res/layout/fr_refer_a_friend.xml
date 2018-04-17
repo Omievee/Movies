@@ -46,8 +46,7 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:hintTextAppearance="@style/text_in_layout_hint_Style"
-        >
+        app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
 
         <android.support.design.widget.TextInputEditText
@@ -58,8 +57,8 @@
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Frist Name"
-            android:maxLines="1"
             android:inputType="textPersonName"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
             android:textCursorDrawable="@color/white"
@@ -78,8 +77,7 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:hintTextAppearance="@style/text_in_layout_hint_Style"
-      >
+        app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
 
         <android.support.design.widget.TextInputEditText
@@ -110,20 +108,19 @@
         android:layout_marginTop="@dimen/margin_standard"
         android:textColorHint="@color/white"
         android:theme="@style/EditTextStyle"
-        app:hintTextAppearance="@style/text_in_layout_hint_Style"
-      >
+        app:hintTextAppearance="@style/text_in_layout_hint_Style">
 
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/RE"
             android:layout_width="match_parent"
-            android:inputType="textEmailAddress"
-
             android:layout_height="wrap_content"
+
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Email"
+            android:inputType="textEmailAddress"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
