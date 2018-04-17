@@ -3,10 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_standard"
     android:layout_marginEnd="@dimen/margin_half"
-    android:layout_marginStart="@dimen/margin_half"
-    android:layout_marginTop="@dimen/margin_half">
+    android:layout_marginStart="@dimen/margin_half">
 
     <RelativeLayout
         android:id="@+id/cardMovie"
@@ -21,7 +19,6 @@
             android:layout_width="85dp"
             android:layout_height="125dp"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="@dimen/margin_standard"
             app:placeholderImage="@drawable/film_reel_icon" />
 
 
@@ -33,7 +30,7 @@
             android:layout_toEndOf="@id/MovieSearch_Poster"
             android:text="[Movie Title"
             android:textColor="@color/almost_white"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_size_16"
             android:textStyle="bold" />
 
         <TextView
@@ -45,29 +42,26 @@
             android:layout_toEndOf="@id/MovieSearch_Poster"
             android:text="[Rated * ]"
             android:textColor="@color/almost_white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_14" />
 
         <TextView
             android:id="@+id/MovieSearch_RunTIme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_below="@id/MovieSearch_Rating"
             android:layout_margin="@dimen/margin_half"
             android:layout_toEndOf="@id/MovieSearch_Poster"
             android:text="[Run TIme]"
             android:textColor="@color/almost_white"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_14" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height=".5dp"
-            android:background="@color/gray_icon"
-            android:layout_marginStart="6dp"
-            android:alpha=".3"
             android:layout_below="@id/MovieSearch_Poster"
-            android:layout_marginEnd="6dp"
-            android:layout_marginTop="@dimen/margin_half" />
+            android:layout_marginTop="@dimen/margin_standard"
+            android:alpha=".3"
+            android:background="@color/gray_icon" />
 
 
     </RelativeLayout>

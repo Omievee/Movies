@@ -15,8 +15,12 @@ import com.mobile.Constants;
 import com.mobile.model.Movie;
 import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -32,7 +36,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
     Realm moviesRealm;
+    Realm allMoviesRealm;
     RealmConfiguration config;
+    RealmConfiguration allMoviesConfig;
 
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
     private Realm tRealm;
@@ -55,6 +61,7 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getTheatersBucket();
                     getMoviesBucket();
+                    getAllMovies();
                 }
             });
         }
@@ -114,7 +121,6 @@ public class RealmTaskService extends GcmTaskService {
                             RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
                             RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
-
                         }
                     }, () -> {
                         Log.d(Constants.TAG, "onSuccess: ");
@@ -130,6 +136,44 @@ public class RealmTaskService extends GcmTaskService {
                 Toast.makeText(RealmTaskService.this, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void getAllMovies(){
+        Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        allMoviesConfig = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+            @Override
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                info   = response.body();
+                if (response.isSuccessful() && response != null) {
+                    List<AllMoviesResponse> finalInfo = info;
+                    allMoviesRealm.executeTransaction(realm -> {
+                        for(AllMoviesResponse movie: finalInfo){
+                            Movie newMovie = realm.createObject(Movie.class);
+                            newMovie.setId(Integer.parseInt(movie.getId()));
+                            newMovie.setTitle(movie.getTitle());
+                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
+                            newMovie.setRating(movie.getRating());
+                            newMovie.setSynopsis(movie.getSynopsis());
+                            newMovie.setImageUrl(movie.getImageUrl());
+                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+            }
+        });
+
     }
 
     void getMoviesBucket() {

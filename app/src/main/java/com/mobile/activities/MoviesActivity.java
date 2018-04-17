@@ -394,6 +394,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
 
+
     public void loadMovies() {
         loadMoviesCall = RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude());
         loadMoviesCall.enqueue(new Callback<MoviesResponse>() {
@@ -457,6 +458,11 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         transaction.commit();
         bottomNavigationView.setVisibility(View.GONE);
         hideSnackBar();
+    }
+
+    @Override
+    public void closeFragment() {
+        getFragmentManager().popBackStack();
     }
 
     @Override

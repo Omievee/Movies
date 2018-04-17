@@ -19,26 +19,83 @@
     <!--android:textColor="@color/almost_white"-->
     <!--android:textSize="18sp" />-->
 
-    <com.mancj.materialsearchbar.MaterialSearchBar
-        android:id="@+id/searchBar"
-        style="@style/MaterialSearchBarLight"
+    <!--<com.mancj.materialsearchbar.MaterialSearchBar-->
+        <!--android:id="@+id/searchBar"-->
+        <!--style="@style/MaterialSearchBarLight"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/margin_half"-->
+        <!--android:layout_marginEnd="@dimen/margin_standard"-->
+        <!--android:layout_marginStart="@dimen/margin_standard"-->
+        <!--android:layout_marginTop="@dimen/double_margin_standard"-->
+        <!--app:mt_backIconTint="@color/white"-->
+        <!--app:mt_backIconUseTint="@color/white"-->
+        <!--app:mt_backIconDrawable="@android:color/transparent"-->
+        <!--app:mt_borderlessRippleEnabled="true"-->
+        <!--app:mt_clearIconTint="@color/white"-->
+        <!--app:mt_hint="search a movie"-->
+        <!--app:mt_hintColor="@color/almost_white"-->
+        <!--app:mt_middleTextSelectorTint="@color/white"-->
+        <!--app:mt_searchBarColor="@color/charcoalGrey"-->
+        <!--app:mt_searchIconTint="@color/white"-->
+        <!--app:mt_textColor="@color/white" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/search"
+        android:background="@drawable/movie_search_rounded_background"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:src="@drawable/arrowforward"
+            android:backgroundTint="@color/white"
+            android:id="@+id/backArrow"
+            android:rotation="180"
+            android:padding="@dimen/margin_half"
+            android:tint="@color/almost_white"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:hint="Search a movie"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/searchBar"
+            android:layout_marginStart="@dimen/margin_half"
+            android:textSize="@dimen/text_size_14"
+            android:textColorHint="@color/almost_white"
+            android:textColor="@color/almost_white"
+            android:backgroundTint="@color/charcoalGrey"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:padding="@dimen/margin_half"
+            android:src="@drawable/ic_close_white_24dp"
+            android:backgroundTint="@color/almost_white"
+            android:id="@+id/removeIcon"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content" />
+
+rr
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/FRAME"
+        android:layout_below="@id/search"
         android:layout_marginBottom="@dimen/margin_half"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        app:mt_borderlessRippleEnabled="true"
-        app:mt_hint="search a movie"
-        app:mt_hintColor="@color/almost_white"
-        app:mt_clearIconTint="@color/white"
-        android:animateLayoutChanges="true"
-        app:mt_backIconDrawable="@android:color/transparent"
-        app:mt_searchBarColor="@color/test_black"
-        app:mt_middleTextSelectorTint="@color/white"
-        app:mt_searchIconTint="@color/white"
-
-        app:mt_textColor="@color/white" />
-
+        android:layout_marginTop="@dimen/double_margin_standard" />
 
     <include
         android:id="@+id/progress"
