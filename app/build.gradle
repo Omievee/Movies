@@ -23,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 107
-        versionName "3.0.10"
+        versionCode 111
+        versionName "3.0.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -33,7 +33,7 @@ android {
         release {
             keyAlias 'upload'
             keyPassword 'moviepass'
-            storeFile file('/Users/ivonne/Documents/MoviePass/android/app/upload_key.jks')
+            storeFile file('/Users/o_viscarra/Desktop/UPLOAD/upload_key.jks')
             storePassword 'moviepass'
         }
     }
@@ -56,7 +56,7 @@ android {
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
         }
 
-        debug{
+        debug {
             signingConfig signingConfigs.debug
             debuggable true
             buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'

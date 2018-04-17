@@ -31,6 +31,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
+import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -59,7 +60,6 @@ public interface Api {
     String HEADER_GOWATCHIT = "x-api-key";
 
 
-
     /* LogIn */
     @POST("/rest/v1/session")
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
@@ -76,9 +76,11 @@ public interface Api {
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
-    /** Change Password */
+    /**
+     * Change Password
+     */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -246,5 +248,10 @@ public interface Api {
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+
+
+    //REFER A FRIEND
+    @GET("/rest/v1/sharing/messages")
+    Call<ReferAFriendResponse> referAFriend();
 
 }

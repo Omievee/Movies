@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -71,7 +72,7 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends android.app.Fragment implements MoviePosterClickListener, LocationListener {
+public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
 
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
@@ -155,8 +156,8 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
 
         int resId = R.anim.layout_animation;
         int res2 = R.anim.layout_anim_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
-        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(myActivity, resId);
+        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(myActivity, res2);
 
         /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
@@ -378,7 +379,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                                 newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                                 newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                                 newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
-                               // newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
+                                newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -394,7 +395,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                                 nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                                 nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                                 nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
-                               // nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
+                                nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -410,7 +411,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
-                              //  featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
+                                featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -430,7 +431,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                                 comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                                 comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                                 comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
-                              // comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
+                                comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
                             }
                             for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
@@ -445,7 +446,7 @@ public class MoviesFragment extends android.app.Fragment implements MoviePosterC
                                 topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                                 topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                                 topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-                                //topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
+                                topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
                             }
                         }
                     }, () -> {

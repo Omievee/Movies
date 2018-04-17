@@ -1,11 +1,11 @@
 package com.mobile.activities;
 
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -63,6 +63,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     Movie movie;
     int movieId;
     List<String> urlPath;
+
     String url;
     MoviesResponse moviesResponse;
     private Call<MoviesResponse> loadMoviesCall;
@@ -80,8 +81,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             loadMovies();
         } else {
             Fragment moviesFragment = new MoviesFragment();
-            android.app.FragmentManager support = getFragmentManager();
-            android.app.FragmentTransaction ft = support.beginTransaction();
+            FragmentManager support = getSupportFragmentManager();
+            FragmentTransaction ft = support.beginTransaction();
             ft.replace(R.id.movies_container, moviesFragment);
             ft.commit();
             fadeIn(main);
@@ -346,8 +347,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                         alertScreen.setExitTransition(new Fade());
                         alertScreen.setSharedElementReturnTransition(new HistoryDetails());
 
-                        android.app.FragmentManager fragmentManager = getFragmentManager();
-                        android.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.movies_container, alertScreen);
                         transaction.addToBackStack("");
                         transaction.commit();
