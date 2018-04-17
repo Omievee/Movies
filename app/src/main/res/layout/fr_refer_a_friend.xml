@@ -59,11 +59,13 @@
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Frist Name"
             android:maxLines="1"
+            android:inputType="textPersonName"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
             android:textCursorDrawable="@color/white"
             android:textSize="@dimen/text_size_14"
             app:backgroundTint="@color/white" />
+
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -88,6 +90,8 @@
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
             android:hint="Last Name"
+            android:inputType="textPersonName"
+
             android:maxLines="1"
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
@@ -113,6 +117,8 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/RE"
             android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:animateLayoutChanges="true"
