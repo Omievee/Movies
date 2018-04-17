@@ -2,24 +2,20 @@ package com.mobile.responses;
 
 public class ReferAFriendResponse {
 
-    String email;
+    String emailMessage;
+    String emailSubject;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    String firstName;
-    String lastName;
 
     public ReferAFriendResponse() {
+    }
 
+    public String getEmailMessage() {
+        return emailMessage;
+    }
+
+    public String getEmailSubject() {
+        return emailSubject;
     }
 }

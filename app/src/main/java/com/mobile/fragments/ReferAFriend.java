@@ -2,9 +2,12 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.network.RestClient;
 import com.mobile.responses.ReferAFriendResponse;
 import com.moviepass.R;
@@ -30,6 +34,7 @@ public class ReferAFriend extends android.app.Fragment {
     Button submitReferralButton;
     ImageView twitter, facebok;
     TextInputEditText firstName, lastName, email;
+    String friendEmail;
 
     public ReferAFriend() {
         // Required empty public constructor
@@ -62,7 +67,15 @@ public class ReferAFriend extends android.app.Fragment {
         submitReferralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitReferral();
+
+                if (!email.getText().toString().contains(".com") || firstName.getText().toString().isEmpty() || lastName.getText().toString().isEmpty()) {
+                    Toast.makeText(myActivity, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    friendEmail = email.getText().toString();
+                    submitReferral();
+
+                }
+
             }
         });
     }
@@ -87,7 +100,6 @@ public class ReferAFriend extends android.app.Fragment {
 
 
     void submitReferral() {
-        ReferAFriendResponse referralResponse = new ReferAFriendResponse();
 
         RestClient.getAuthenticated().referAFriend().enqueue(new Callback<ReferAFriendResponse>() {
             @Override
@@ -95,11 +107,19 @@ public class ReferAFriend extends android.app.Fragment {
                 ReferAFriendResponse referral = response.body();
                 if (response.isSuccessful()) {
 
-                    referral.setEmail(email.getText().toString());
-                    referral.setFirstName(firstName.getText().toString());
-                    referral.setLastName(lastName.getText().toString());
-                    Toast.makeText(myActivity, "You have successfully sent your friend a referral! Make sure to keep spreading the word!", Toast.LENGTH_SHORT).show();
+                    Log.d(Constants.TAG, "onResponse: " + friendEmail);
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("message/rfc822");
+                    emailIntent.setType("text/plain");
+                    emailIntent.createChooser(emailIntent, "send mail");
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, friendEmail);
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "/n" + referral.getEmailMessage());
+                    startActivity(emailIntent);
                 }
+
+
             }
 
             @Override
