@@ -16,6 +16,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
 import com.helpshift.support.Log;
+
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +63,11 @@ import com.moviepass.R;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 
 import butterknife.ButterKnife;
@@ -277,10 +284,48 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     progress.setVisibility(View.GONE);
                     moviesAtSelectedTheater.clear();
                     moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
-                    if (theaterSelectedRecyclerView != null) {
-                        theaterSelectedRecyclerView.getRecycledViewPool().clear();
-                        theaterMoviesAdapter.notifyDataSetChanged();
-                    }
+                    int currentShowTimes = 0;
+                    for (int i = 0; i < moviesAtSelectedTheater.size(); i++) {
+                        android.util.Log.d(TAG, "onResponseMovies: " + moviesAtSelectedTheater.get(i).getStartTimes().size());
+                        Screening currentScreening = moviesAtSelectedTheater.get(i);
+                        currentShowTimes = currentScreening.getStartTimes().size();
+                        if (currentScreening.getStartTimes() != null) {
+
+                            for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
+
+                                try {
+                                    Date systemClock = new Date();
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String curTime = sdf.format(systemClock);
+
+                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(i));
+                                    Date myTime = sdf.parse(curTime);
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(theaterTime);
+                                    cal.add(Calendar.MINUTE, 30);
+
+
+                                    if (myTime.after(cal.getTime())) {
+                                        if (cal.getTime().getHours() > 3) {
+                                            currentShowTimes--;
+                                        }
+                                    }
+
+                                    moviesAtSelectedTheater.remove(i);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if(currentShowTimes==0){
+                                moviesAtSelectedTheater.remove(i);
+                            }
+                        }
+                        if (theaterSelectedRecyclerView != null) {
+                            theaterSelectedRecyclerView.getRecycledViewPool().clear();
+                            theaterMoviesAdapter.notifyDataSetChanged();
+                        }
 
 //                    for (int i = 0; i < moviesAtSelectedTheater.size() ; i++) {
 //                        Screening notApproved = moviesAtSelectedTheater.get(i);
@@ -292,19 +337,22 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 //
 //                    }
 
-                    if (moviesAtSelectedTheater.size() == 0) {
-                        noTheaters.setVisibility(View.VISIBLE);
-                        theaterSelectedRecyclerView.setVisibility(View.GONE);
+                        if (moviesAtSelectedTheater.size() == 0) {
+                            noTheaters.setVisibility(View.VISIBLE);
+                            theaterSelectedRecyclerView.setVisibility(View.GONE);
+                        }
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
                     Log.d("else", "else" + response.message());
                 }
+
+
+            }
+            @Override
+            public void onFailure (Call < ScreeningsResponse > call, Throwable t){
             }
 
-            @Override
-            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-            }
         });
     }
 
