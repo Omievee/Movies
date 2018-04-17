@@ -114,6 +114,7 @@ public class RealmTaskService extends GcmTaskService {
                             RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
                             RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
+
                         }
                     }, () -> {
                         Log.d(Constants.TAG, "onSuccess: ");
@@ -160,6 +161,7 @@ public class RealmTaskService extends GcmTaskService {
                             newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                             newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                             newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
+                            newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -175,6 +177,7 @@ public class RealmTaskService extends GcmTaskService {
                             nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                             nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                             nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
+                            nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -190,6 +193,7 @@ public class RealmTaskService extends GcmTaskService {
                             featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                             featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                             featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                            featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -209,6 +213,7 @@ public class RealmTaskService extends GcmTaskService {
                             comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                             comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                             comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
+                            comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -224,6 +229,8 @@ public class RealmTaskService extends GcmTaskService {
                             topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                             topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                             topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
+                            topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
+
                         }
                     }, () -> {
 

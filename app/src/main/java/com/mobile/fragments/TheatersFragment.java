@@ -409,8 +409,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        locationUpdateRealm();
-
+   //     locationUpdateRealm();
     }
 
 

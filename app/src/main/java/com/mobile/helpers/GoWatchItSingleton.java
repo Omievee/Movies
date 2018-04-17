@@ -9,6 +9,7 @@ import com.helpshift.support.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.MoviesActivity;
 import com.mobile.model.Movie;
@@ -33,6 +34,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +56,7 @@ public class GoWatchItSingleton {
     private String ln = "0.0";
     private String IDFA;
     private List<AllMoviesResponse> ALLMOVIES;
+    private RealmResults<Movie> allMovies;
 //    String l = String.valueOf(UserPreferences.getLatitude());
 //    String ln = String.valueOf(UserPreferences.getLongitude());
 
@@ -77,6 +82,14 @@ public class GoWatchItSingleton {
             }
             return instance;
         }
+    }
+
+    public boolean isAllMoviesEmpty(){
+        if(ALLMOVIES==null)
+            return true;
+        if(ALLMOVIES.size()==0)
+            return true;
+        return false;
     }
 
     private String currentTimeStamp(){
@@ -119,9 +132,9 @@ public class GoWatchItSingleton {
 
     public void userOpenedMovie(String movieId, String url) {
 
-
+        if(isAllMoviesEmpty())
+            getMovies();
         String userId = String.valueOf(UserPreferences.getUserId());
-
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
@@ -156,9 +169,10 @@ public class GoWatchItSingleton {
 
     public void userClickedOnShowtime(Theater theater, Screening screening, String showtime, String movieId, String url) {
 
+        if(isAllMoviesEmpty())
+            getMovies();
         String userId = String.valueOf(UserPreferences.getUserId());
         IDFA = UserPreferences.getAAID();
-
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String tht, thd, tn, thc, thr, thz, tha;
@@ -206,9 +220,10 @@ public class GoWatchItSingleton {
 
     public void checkInEvent(Theater theater, Screening screening, String showtime, String engagement, String movieId, String url) {
 
+        if(isAllMoviesEmpty())
+            getMovies();
         String userId = String.valueOf(UserPreferences.getUserId());
         IDFA = UserPreferences.getAAID();
-
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String tht, thd, tn, thc, thr, thz, tha;
@@ -268,7 +283,6 @@ public class GoWatchItSingleton {
 
         String userId = String.valueOf(UserPreferences.getUserId());
         IDFA = UserPreferences.getAAID();
-
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
@@ -298,10 +312,8 @@ public class GoWatchItSingleton {
 
         String userId = String.valueOf(UserPreferences.getUserId());
         IDFA = UserPreferences.getAAID();
-
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
 
@@ -360,9 +372,8 @@ public class GoWatchItSingleton {
     }
 
     public String getMovieTitle(String id){
-        android.util.Log.d("click.moviepass.com", "getMovieTitle: "+ALLMOVIES.size());
-        for (AllMoviesResponse movie: ALLMOVIES) {
-            if(movie.getId().equalsIgnoreCase(id)){
+        for (Movie movie: allMovies) {
+            if(movie.getId()==Integer.parseInt(id)){
                 return movie.getTitle();
             }
         }
@@ -370,20 +381,22 @@ public class GoWatchItSingleton {
     }
 
     public void getMovies(){
-        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
-            @Override
-            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
-                List<AllMoviesResponse> info = new ArrayList<>();
-                     info   = response.body();
-                if (response.isSuccessful() && response != null) {
-                    ALLMOVIES = info;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
-            }
-        });
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("Movies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm moviesRealm = Realm.getInstance(config);
+        allMovies = moviesRealm.where(Movie.class)
+                .equalTo("type", "Top Box Office")
+                .or()
+                .equalTo("type", "New Releases")
+                .or()
+                .equalTo("type", "Coming Soon")
+                .or()
+                .equalTo("type", "Now Playing")
+                .or()
+                .equalTo("type", "Featured")
+                .findAll();
     }
 
 

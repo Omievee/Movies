@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import com.helpshift.support.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -25,10 +24,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
@@ -42,7 +38,6 @@ import com.moviepass.R;
 import org.json.JSONObject;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 import butterknife.BindView;
 import retrofit2.Call;
@@ -218,7 +213,6 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-                    Log.w("RESTRICTIONS => ",new GsonBuilder().setPrettyPrinting().create().toJson(response));
 
 
                     String status = restriction.getSubscriptionStatus();
