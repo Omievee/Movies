@@ -285,8 +285,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     moviesAtSelectedTheater.clear();
                     moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
                     int currentShowTimes = 0;
-                    for (int i = 0; i < moviesAtSelectedTheater.size(); i++) {
-                        android.util.Log.d(TAG, "onResponseMovies: " + moviesAtSelectedTheater.get(i).getStartTimes().size());
+                    int i=0;
+                    while (i < moviesAtSelectedTheater.size()) {
                         Screening currentScreening = moviesAtSelectedTheater.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
                         if (currentScreening.getStartTimes() != null) {
@@ -299,7 +299,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String curTime = sdf.format(systemClock);
 
-                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(i));
+                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(j));
                                     Date myTime = sdf.parse(curTime);
 
                                     Calendar cal = Calendar.getInstance();
@@ -313,13 +313,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                         }
                                     }
 
-                                    moviesAtSelectedTheater.remove(i);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                             }
                             if(currentShowTimes==0){
                                 moviesAtSelectedTheater.remove(i);
+                                i--;
                             }
                         }
                         if (theaterSelectedRecyclerView != null) {
@@ -341,6 +341,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                             noTheaters.setVisibility(View.VISIBLE);
                             theaterSelectedRecyclerView.setVisibility(View.GONE);
                         }
+                        i++;
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
