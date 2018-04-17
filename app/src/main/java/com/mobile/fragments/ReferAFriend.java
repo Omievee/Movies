@@ -112,14 +112,11 @@ public class ReferAFriend extends android.app.Fragment {
                     emailIntent.setData(Uri.parse("mailto:"));
                     emailIntent.setType("message/rfc822");
                     emailIntent.setType("text/plain");
-                    emailIntent.createChooser(emailIntent, "send mail");
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, friendEmail);
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "/n" + referral.getEmailMessage());
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + ", \n \n" + referral.getEmailMessage());
                     startActivity(emailIntent);
                 }
-
-
             }
 
             @Override
