@@ -107,7 +107,8 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         searchBar.requestFocus();
 
 
-        getMovies();
+//        getMovies();
+        getAllMovies();
 
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -183,7 +184,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
                 .equalTo("type", "Featured")
                 .findAll();
 
-        getAllMovies();
+
     }
 
     public void getAllMovies(){
@@ -193,19 +194,20 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
                 .build();
         Realm moviesRealm = Realm.getInstance(config);
         allMovies = moviesRealm.where(Movie.class).findAll();
-
-        HashMap<Integer, Movie> movieHashMap = new HashMap<>();
-        for (Movie movie : movies) {
-            movieHashMap.put(movie.getId(), movie);
-        }
-        for (Movie movie : allMovies) {
-            movieHashMap.put(movie.getId(), movie);
-        }
+//
+//        HashMap<Integer, Movie> movieHashMap = new HashMap<>();
+//        for (Movie movie : movies) {
+//            movieHashMap.put(movie.getId(), movie);
+//        }
         ALLMOVIES.clear();
-        for (Movie movie : movieHashMap.values()) {
+        for (Movie movie : allMovies) {
             ALLMOVIES.add(movie);
         }
-        Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
+
+//        for (Movie movie : movieHashMap.values()) {
+//            ALLMOVIES.add(movie);
+//        }
+//        Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
         customAdapter = new SearchAdapter(this,ALLMOVIES);
         recyclerView.setAdapter(customAdapter);
         progress.setVisibility(View.GONE);
