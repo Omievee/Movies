@@ -286,7 +286,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
                     int currentShowTimes = 0;
                     int i=0;
-                    while (i < moviesAtSelectedTheater.size()) {
+                    int count = moviesAtSelectedTheater.size();
+                    while (i < moviesAtSelectedTheater.size() && count>0) {
                         Screening currentScreening = moviesAtSelectedTheater.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
                         if (currentScreening.getStartTimes() != null) {
@@ -319,37 +320,24 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                             }
                             if(currentShowTimes==0){
                                 moviesAtSelectedTheater.remove(i);
+                                count--;
                                 i--;
+                            } else{
+                                Screening notApproved = moviesAtSelectedTheater.get(i);
+                                if (!notApproved.isApproved()) {
+                                    moviesAtSelectedTheater.remove(i);
+                                    moviesAtSelectedTheater.add(notApproved);
+                                    i--;
+                                }
                             }
+                            count--;
                         }
-                        i++;
-                    }
-                    i=0;
-                    int count = moviesAtSelectedTheater.size();
-                    while (i < moviesAtSelectedTheater.size() && count>0) {
-                        Screening notApproved = moviesAtSelectedTheater.get(i);
-                        if (!notApproved.isApproved()) {
-                            moviesAtSelectedTheater.remove(i);
-                            moviesAtSelectedTheater.addLast(notApproved);
-                            i--;
-                        }
-                        count--;
                         i++;
                     }
                         if (theaterSelectedRecyclerView != null) {
                             theaterSelectedRecyclerView.getRecycledViewPool().clear();
                             theaterMoviesAdapter.notifyDataSetChanged();
                         }
-
-//                    for (int i = 0; i < moviesAtSelectedTheater.size() ; i++) {
-//                        Screening notApproved = moviesAtSelectedTheater.get(i);
-//                        if(!notApproved.isApproved()) {
-//                            moviesAtSelectedTheater.remove(notApproved);
-//                            moviesAtSelectedTheater.addLast(notApproved);
-//                            theaterMoviesAdapter.notifyDataSetChanged();
-//                        }
-//
-//                    }
 
                         if (moviesAtSelectedTheater.size() == 0) {
                             noTheaters.setVisibility(View.VISIBLE);
