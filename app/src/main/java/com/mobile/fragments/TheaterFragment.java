@@ -324,17 +324,18 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                 moviesAtSelectedTheater.remove(i);
                                 count--;
                                 i--;
-                            }
-                            if(currentShowTimes==0){
-                                moviesAtSelectedTheater.remove(i);
-                                count--;
-                                i--;
                             } else{
-                                Screening notApproved = moviesAtSelectedTheater.get(i);
-                                if (!notApproved.isApproved()) {
+                                if(currentShowTimes==0) {
                                     moviesAtSelectedTheater.remove(i);
-                                    moviesAtSelectedTheater.add(notApproved);
+                                    count--;
                                     i--;
+                                }else{
+                                    Screening notApproved = moviesAtSelectedTheater.get(i);
+                                    if (!notApproved.isApproved()) {
+                                        moviesAtSelectedTheater.remove(i);
+                                        moviesAtSelectedTheater.add(notApproved);
+                                        i--;
+                                    }
                                 }
                             }
                             count--;
