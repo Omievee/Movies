@@ -31,6 +31,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
+import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -246,5 +247,10 @@ public interface Api {
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+
+
+    //REFER A FRIEND
+    @GET("/rest/v1/sharing/messages")
+    Call<ReferAFriendResponse> referAFriend();
 
 }

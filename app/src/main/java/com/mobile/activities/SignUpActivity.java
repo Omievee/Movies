@@ -1,8 +1,6 @@
 package com.mobile.activities;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
@@ -11,21 +9,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import com.helpshift.support.Log;
-
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.fragments.ConfirmationSignUpFragment;
 import com.mobile.fragments.SignUpFirstTime;
 import com.mobile.fragments.SignUpStepOneFragment;
@@ -139,15 +133,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         signUpStepOneFragment = new SignUpStepOneFragment();
         signUpFirstTime = new SignUpFirstTime();
 
-        mCoordinator.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = mCoordinator.getRootView().getHeight() - mCoordinator.getHeight();
-                if (heightDiff > 100) { // if more than 200 dp, it's probably a keyboard...
-                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
-                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
-                    android.util.Log.d("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
-                }
+        mCoordinator.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            int heightDiff = mCoordinator.getRootView().getHeight() - mCoordinator.getHeight();
+            if (heightDiff > 100) { // if more than 200 dp, it's probably a keyboard...
+                android.util.Log.d("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
+                android.util.Log.d("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
+                android.util.Log.d("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
             }
         });
 
@@ -237,6 +228,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         f.confirmSubmit.setOnClickListener(v -> {
             if (f.confirmTermsAgreementSwitch.isChecked()) {
                 f.beginRegistration(ccNum, ccExMonth, ccExYear, ccCVV);
+                f.confirmSubmit.setEnabled(false);
             } else {
                 f.makeSnackbar("You must agree to the Terms of Service.");
             }
