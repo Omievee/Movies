@@ -287,7 +287,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     int currentShowTimes = 0;
                     int i=0;
                     int count = moviesAtSelectedTheater.size();
-                    while (i < moviesAtSelectedTheater.size() && count>0) {
+                    Screening noShowTimeScreening = null;
+                    while (i < moviesAtSelectedTheater.size() && count >= 0) {
                         Screening currentScreening = moviesAtSelectedTheater.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
                         if (currentScreening.getStartTimes() != null) {
@@ -318,6 +319,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                     e.printStackTrace();
                                 }
                             }
+                            if(moviesAtSelectedTheater.get(i).getTitle().equals("Check In if Movie Missing")){
+                                noShowTimeScreening = moviesAtSelectedTheater.get(i);
+                                moviesAtSelectedTheater.remove(i);
+                                count--;
+                                i--;
+                            }
                             if(currentShowTimes==0){
                                 moviesAtSelectedTheater.remove(i);
                                 count--;
@@ -334,15 +341,16 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         }
                         i++;
                     }
-                        if (theaterSelectedRecyclerView != null) {
-                            theaterSelectedRecyclerView.getRecycledViewPool().clear();
-                            theaterMoviesAdapter.notifyDataSetChanged();
-                        }
-
-                        if (moviesAtSelectedTheater.size() == 0) {
-                            noTheaters.setVisibility(View.VISIBLE);
-                            theaterSelectedRecyclerView.setVisibility(View.GONE);
-                        }
+                    if(noShowTimeScreening!=null)
+                        moviesAtSelectedTheater.add(noShowTimeScreening);
+                    if (theaterSelectedRecyclerView != null) {
+                        theaterSelectedRecyclerView.getRecycledViewPool().clear();
+                        theaterMoviesAdapter.notifyDataSetChanged();
+                    }
+                    if (moviesAtSelectedTheater.size() == 0) {
+                        noTheaters.setVisibility(View.VISIBLE);
+                        theaterSelectedRecyclerView.setVisibility(View.GONE);
+                    }
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */

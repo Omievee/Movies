@@ -445,7 +445,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     int i=0;
                     int count = sortedScreeningList.size();
                     int currentShowTimes = 0;
-                    while( i< sortedScreeningList.size() && count>0){
+                    while(i < sortedScreeningList.size() && count >= 0){
                         Screening currentScreening = sortedScreeningList.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
                         if (currentScreening.getStartTimes() != null) {
