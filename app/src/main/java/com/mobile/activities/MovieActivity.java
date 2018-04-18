@@ -136,11 +136,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_movie);
-        supportPostponeEnterTransition();
+//        supportPostponeEnterTransition();
 
 
-        supportStartPostponedEnterTransition();
-        supportPostponeEnterTransition();
+//        supportStartPostponedEnterTransition();
+//        supportPostponeEnterTransition();
         final Toolbar mToolbar = findViewById(R.id.SELECTED_TOOLBAR);
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
@@ -208,7 +208,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
 
 
-        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
+//        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
         currentLocationTasks();
 
         /* Showtimes RecyclerView */
@@ -410,7 +410,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
-        Log.d(TAG, "MADE IT-------<<<<<: ");
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId).enqueue(new retrofit2.Callback<ScreeningsResponse>() {
 
             @Override
@@ -434,7 +433,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
                             if (screenID == ID) {
                                 sortedScreeningList.add(selectedScreeningsList.get(j));
-
                             }
                             Screening etix = screeningsResponse.getScreenings().get(j);
                             if (etix.getProvider().ticketTypeIsETicket() || etix.getProvider().ticketTypeIsSelectSeating()) {
@@ -446,20 +444,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                     int i=0;
                     int count = sortedScreeningList.size();
-                    while (i < sortedScreeningList.size() && count>0) {
-                        Screening notApproved = sortedScreeningList.get(i);
-                        if (!notApproved.isApproved()) {
-                            sortedScreeningList.remove(i);
-                            sortedScreeningList.addLast(notApproved);
-                            i--;
-                        }
-                        count--;
-                        i++;
-                    }
-
-                    i=0;
                     int currentShowTimes = 0;
-                    while( i< sortedScreeningList.size()){
+                    while( i< sortedScreeningList.size() && count>0){
                         Screening currentScreening = sortedScreeningList.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
                         if (currentScreening.getStartTimes() != null) {
@@ -492,8 +478,17 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             }
                             if(currentShowTimes==0){
                                 sortedScreeningList.remove(i);
+                                count--;
                                 i--;
+                            } else{
+                                Screening notApproved = sortedScreeningList.get(i);
+                                if (!notApproved.isApproved()) {
+                                    sortedScreeningList.remove(i);
+                                    sortedScreeningList.addLast(notApproved);
+                                    i--;
+                                }
                             }
+                            count--;
                         }
                         i++;
                     }

@@ -254,7 +254,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                     });
                 }
             }
-            Log.d(TAG, "onBindViewHolder: " + holder.showTimesGrid.getChildCount() + " " + screening.getTheaterName());
         }
     }
 
