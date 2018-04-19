@@ -165,29 +165,29 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 HOLDER.showtimeGrid.addView(showtime);
 
 
-//                try {
-//                    Date systemClock = new Date();
-//
-//                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-//                    String curTime = sdf.format(systemClock);
-//
-//                    Date theaterTime = sdf.parse(screening.getStartTimes().get(i));
-//                    Date myTime = sdf.parse(curTime);
-//
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(theaterTime);
-//                    cal.add(Calendar.MINUTE, 30);
-//
-//
-//                    if (myTime.after(cal.getTime())) {
-//                        if (cal.getTime().getHours() > 3) {
-//                            holder.showtimeGrid.removeView(showtime);
-//                        }
-//                    }
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    Date systemClock = new Date();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                    String curTime = sdf.format(systemClock);
+
+                    Date theaterTime = sdf.parse(screening.getStartTimes().get(i));
+                    Date myTime = sdf.parse(curTime);
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(theaterTime);
+                    cal.add(Calendar.MINUTE, 30);
+
+
+                    if (myTime.after(cal.getTime())) {
+                        if (cal.getTime().getHours() > 3) {
+                            holder.showtimeGrid.removeView(showtime);
+                        }
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
 
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));

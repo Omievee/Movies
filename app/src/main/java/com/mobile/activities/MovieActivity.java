@@ -445,9 +445,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     int i=0;
                     int count = sortedScreeningList.size();
                     int currentShowTimes = 0;
+                    android.util.Log.d(TAG, "onResponse: COUNT "+count);
                     while(i < sortedScreeningList.size() && count >= 0){
                         Screening currentScreening = sortedScreeningList.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
+                        android.util.Log.d(TAG, "onResponse: "+i);
+                        android.util.Log.d(TAG, "onResponse: "+currentScreening.getTheaterName());
                         if (currentScreening.getStartTimes() != null) {
 
                             for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
@@ -478,7 +481,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             }
                             if(currentShowTimes==0){
                                 sortedScreeningList.remove(i);
-                                count--;
                                 i--;
                             } else{
                                 Screening notApproved = sortedScreeningList.get(i);
