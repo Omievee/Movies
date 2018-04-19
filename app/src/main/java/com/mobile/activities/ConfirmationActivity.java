@@ -11,10 +11,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
-import com.helpshift.support.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +31,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.application.Application;
@@ -72,8 +71,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.helpshift.util.constants.KeyValueStoreColumns.key;
-
 /**
  * Created by anubis on 6/20/17.
  */
@@ -96,7 +93,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String uploadKey;
 
     private native static String getProductionBucket();
-
     private native static String getStagingBucket();
 
 
@@ -185,10 +181,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 scanTicket.setOnClickListener(v -> {
-                    Log.d(Constants.TAG, "onCreate: ");
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+                            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE...);
                         }
                     } else {
                         scan_Ticket();

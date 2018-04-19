@@ -15,9 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
-import com.helpshift.support.Log;
-
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +27,10 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
