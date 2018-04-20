@@ -20,6 +20,7 @@ import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -30,6 +31,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
+import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -57,6 +59,7 @@ public interface Api {
     String HEADER_UUIDD = "deviceUuid";
     String HEADER_GOWATCHIT = "x-api-key";
 
+
     /* LogIn */
     @POST("/rest/v1/session")
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
@@ -73,9 +76,11 @@ public interface Api {
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
-    /** Change Password */
+    /**
+     * Change Password
+     */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -167,7 +172,7 @@ public interface Api {
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")
-    Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci,
+    Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci, @Query("cd") String cd,
                                          @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                          @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
@@ -177,7 +182,7 @@ public interface Api {
     Call<GoWatchItResponse> clickOnShowtime(@Query("e") String engagement, @Query("et") String et, @Query("tht") String tht,
                                             @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                             @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                            @Query("ct") String ct, @Query("ci") String ci,
+                                            @Query("ct") String ct, @Query("ci") String ci, @Query("cd") String cd,
                                             @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                             @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                             @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
@@ -187,7 +192,7 @@ public interface Api {
     Call<GoWatchItResponse> ticketPurchase(@Query("e") String engagement, @Query("tht") String tht,
                                            @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                            @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
-                                           @Query("ct") String ct, @Query("ci") String ci,
+                                           @Query("ct") String ct, @Query("ci") String ci, @Query("cd") String cd,
                                            @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                            @Query("u") String u, @Query("o") String o, @Query("l") String l,
                                            @Query("ln") String ln, @Query("eid[movie_pass]") String movie_pass, @Query("eid[aaid]") String idfa,
@@ -229,7 +234,7 @@ public interface Api {
 
     /* ALL MOVIES FOR SEARCH */
     @GET("/prod/movies/all.json")
-    Call<LocalStorageMovies> getAllMovies();
+    Call<List<AllMoviesResponse>> getAllMovies();
 
 
     /* ALL THEATERS */
@@ -240,5 +245,13 @@ public interface Api {
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
     Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
+
+    @POST("/rest/v1/movies/{movieId}/rate")
+    Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+
+
+    //REFER A FRIEND
+    @GET("/rest/v1/sharing/messages")
+    Call<ReferAFriendResponse> referAFriend();
 
 }

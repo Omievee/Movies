@@ -63,6 +63,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     Movie movie;
     int movieId;
     List<String> urlPath;
+
     String url;
     MoviesResponse moviesResponse;
     private Call<MoviesResponse> loadMoviesCall;
@@ -332,7 +333,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
                         android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
-
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
                                 restrict.getAlert().getTitle(),
@@ -340,6 +340,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                                 restrict.getAlert().getUrl(),
                                 restrict.getAlert().getUrlTitle(),
                                 restrict.getAlert().isDismissible());
+
 
                         alertScreen.setSharedElementEnterTransition(new HistoryDetails());
                         alertScreen.setEnterTransition(new Fade());
@@ -393,6 +394,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
 
+
     public void loadMovies() {
         loadMoviesCall = RestClient.getAuthenticated().getMovies(UserPreferences.getLatitude(), UserPreferences.getLongitude());
         loadMoviesCall.enqueue(new Callback<MoviesResponse>() {
@@ -416,8 +418,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                                 startMovieActivity();
                             }
                         }
-
-
                     }
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
@@ -458,6 +458,11 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         transaction.commit();
         bottomNavigationView.setVisibility(View.GONE);
         hideSnackBar();
+    }
+
+    @Override
+    public void closeFragment() {
+        getFragmentManager().popBackStack();
     }
 
     @Override

@@ -20,7 +20,8 @@ Java_com_moviepass_fragments_SignUpStepTwoFragment_getSandboxTokenizationKey(JNI
 }
 
 JNIEXPORT jstring JNICALL
-Java_com_moviepass_fragments_SignUpStepTwoFragment_getProductionTokenizationKey(JNIEnv *env, jclass) {
+Java_com_moviepass_fragments_SignUpStepTwoFragment_getProductionTokenizationKey(JNIEnv *env,
+                                                                                jclass) {
     jstring str = env->NewStringUTF("sandbox_snpbh3w8_2fj37y3ndsjstzxv");
     return str;
 }

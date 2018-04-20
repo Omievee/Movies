@@ -485,6 +485,7 @@
                     android:text="Please allow 7-10 business days for shipping"
                     android:textColor="@color/white"
                     android:textSize="15sp"
+                    android:visibility="gone"
                     android:textStyle="italic" />
 
             </LinearLayout>

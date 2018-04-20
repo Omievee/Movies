@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,6 +18,7 @@ import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.helpshift.support.Log;
 import com.mobile.activities.SignUpActivity;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
@@ -108,7 +106,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
 
         price.setText(ProspectUser.plan.getConfirmTotal());
         planDescription.setText(ProspectUser.plan.getConfirmPlanDescription());
-        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+
+        //CHANGING PAYMENT DISCLAIMER
+//        paymentDisclaimer.setText(ProspectUser.plan.getPaymentDisclaimer());
+        paymentDisclaimer.setText(getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_one) + " " + ProspectUser.plan.getConfirmTotal() + " " +
+                getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_two) + " " + getResources().getString(R.string.fragment_sign_up_step_three_bottom_disclaimer_part_three));
 
 
         return rootview;
@@ -166,9 +168,9 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String gender = ProspectUser.gender;
         String selectedPlanId;
 
-        if (ProspectUser.plan == null)
+        if (ProspectUser.plan == null) {
             selectedPlanId = null;
-        else {
+        } else {
             selectedPlanId = ProspectUser.plan.getId();
         }
 

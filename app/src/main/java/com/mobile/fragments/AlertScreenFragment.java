@@ -18,9 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobile.Constants;
-import com.mobile.UserPreferences;
 import com.mobile.activities.MoviesActivity;
-import com.mobile.activities.ProfileActivity;
 import com.moviepass.R;
 
 import jp.wasabeef.blurry.Blurry;
@@ -82,7 +80,6 @@ public class AlertScreenFragment extends Fragment {
 
         ((MoviesActivity) myActivity).CONTAIN = container;
         Blurry.with(myActivity).radius(35).sampling(5).animate().async().onto(((MoviesActivity) myActivity).CONTAIN);
-
 
         Log.d(Constants.TAG, "onCreateView: " + ((MoviesActivity) myActivity).getSupportFragmentManager().getBackStackEntryCount());
 

@@ -20,15 +20,42 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.Util;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
+
+import java.io.File;
 
 import io.realm.RealmList;
 
@@ -57,15 +84,103 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+
         final Movie movie = featuredMovie.get(position);
         holder.moviePoster.setMinimumHeight(9 * holder.itemView.getContext().getResources().getDisplayMetrics().heightPixels / 16);
 
         Uri imgURI = null;
-        Uri videoURI = null;
+
 
         if (movie != null) {
             imgURI = Uri.parse(movie.getLandscapeImageUrl());
-           // videoURI = Uri.parse(movie.getTeaserVideoUrl());
+            if (movie.getTeaserVideoUrl() != null) {
+
+                holder.featuredVideo.setControllerHideOnTouch(false);
+
+                BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+                TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+                TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+                SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+
+
+                player.addListener(new Player.EventListener() {
+                    @Override
+                    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+
+                    }
+
+                    @Override
+                    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+                    }
+
+                    @Override
+                    public void onLoadingChanged(boolean isLoading) {
+
+                    }
+
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if (playbackState == Player.STATE_READY) {
+                            fadeOut(holder.moviePoster);
+                            holder.moviePoster.setVisibility(View.GONE);
+                            fadeIn(holder.videoLayout);
+                            holder.videoLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+
+                    public void onRepeatModeChanged(int repeatMode) {
+
+                    }
+
+                    @Override
+                    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+                    }
+
+                    @Override
+                    public void onPlayerError(ExoPlaybackException error) {
+
+                        fadeOut(holder.videoLayout);
+                        holder.videoLayout.setVisibility(View.GONE);
+                        fadeIn(holder.moviePoster);
+                        holder.moviePoster.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onPositionDiscontinuity(int reason) {
+
+                    }
+
+                    @Override
+                    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+                    }
+
+                    @Override
+                    public void onSeekProcessed() {
+
+                    }
+                });
+
+                MediaSource video = new ExtractorMediaSource(Uri.parse(movie.getTeaserVideoUrl()), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
+
+                if (movie.getTeaserVideoUrl().matches(video.toString())) {
+                    Log.d(Constants.TAG, "matches: ");
+                }
+
+
+                player.prepare(video);
+                player.setPlayWhenReady(true);
+                player.setVolume(Player.DISCONTINUITY_REASON_INTERNAL);
+                player.setRepeatMode(Player.REPEAT_MODE_ONE);
+
+                holder.featuredVideo.setPlayer(player);
+                holder.videoTitle.setText(movie.getTitle());
+            }
+
         }
 
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgURI)
@@ -95,103 +210,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 .build();
 
         holder.moviePoster.setController(controller);
-
-//
-//        holder.featuredVideo.setControllerHideOnTouch(false);
-//
-//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-//        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-//        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-//        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
-//
-//        DefaultBandwidthMeter meter = new DefaultBandwidthMeter();
-//        DataSource.Factory data = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "moviepass"), meter);
-//        MediaSource video = new ExtractorMediaSource.Factory(data).createMediaSource(videoURI);
-//
-//        player.prepare(video);
-//        holder.featuredVideo.setPlayer(player);
-//        player.setRepeatMode(Player.REPEAT_MODE_ONE);
-//
-//        Log.d(Constants.TAG, "Video------>>>>>: " + player.getPlaybackState());
-//
-//
-//        player.addListener(new Player.EventListener() {
-//            @Override
-//            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-//
-//            }
-//
-//            @Override
-//            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadingChanged(boolean isLoading) {
-//                if(isLoading) {
-//                    fadeOut(holder.videoLayout);
-//                    holder.videoLayout.setVisibility(View.GONE);
-//                    fadeIn(holder.moviePoster);
-//                    holder.moviePoster.setVisibility(View.VISIBLE);
-//                }else {
-//                    fadeOut(holder.moviePoster);
-//                    holder.moviePoster.setVisibility(View.GONE);
-//                    fadeIn(holder.videoLayout);
-//                    holder.videoLayout.setVisibility(View.VISIBLE);
-//                }
-//            }
-//
-//            @Override
-//            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-//
-//            }
-//
-//            @Override
-//            public void onRepeatModeChanged(int repeatMode) {
-//
-//            }
-//
-//            @Override
-//            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-//
-//            }
-//
-//            @Override
-//            public void onPlayerError(ExoPlaybackException error) {
-////                fadeOut(holder.videoLayout);
-////                holder.videoLayout.setVisibility(View.GONE);
-////                fadeIn(holder.moviePoster);
-////                holder.moviePoster.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onPositionDiscontinuity(int reason) {
-//
-//            }
-//
-//            @Override
-//            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-//
-//            }
-//
-//            @Override
-//            public void onSeekProcessed() {
-//
-//            }
-//        });
-//
-//        player.setPlayWhenReady(true);
-//        player.setVolume(Player.DISCONTINUITY_REASON_INTERNAL);
-
-
-        holder.videoTitle.setText(movie.getTitle());
-
         holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
 
-
-        ImagePipeline pipeline = Fresco.getImagePipeline();
-        pipeline.clearMemoryCaches();
-        pipeline.clearDiskCaches();
     }
 
     @Override
@@ -217,7 +237,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(200);
+        fadeIn.setDuration(500);
 
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
@@ -228,10 +248,37 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
     public void fadeOut(View view) {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(200);
+        fadeOut.setDuration(500);
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    public class CacheDataSourceFactory implements DataSource.Factory {
+        private final Context context;
+        private final DefaultDataSourceFactory defaultDatasourceFactory;
+        private final long maxFileSize, maxCacheSize;
+
+        CacheDataSourceFactory(Context context, long maxCacheSize, long maxFileSize) {
+            super();
+            this.context = context;
+            this.maxCacheSize = maxCacheSize;
+            this.maxFileSize = maxFileSize;
+            String userAgent = Util.getUserAgent(context, context.getString(R.string.app_name));
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            defaultDatasourceFactory = new DefaultDataSourceFactory(this.context,
+                    bandwidthMeter,
+                    new DefaultHttpDataSourceFactory(userAgent, bandwidthMeter));
+        }
+
+        @Override
+        public DataSource createDataSource() {
+            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(maxCacheSize);
+            SimpleCache simpleCache = new SimpleCache(new File(context.getCacheDir(), "media"), evictor);
+            return new CacheDataSource(simpleCache, defaultDatasourceFactory.createDataSource(),
+                    new FileDataSource(), new CacheDataSink(simpleCache, maxFileSize),
+                    CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR, null);
+        }
     }
 
 }

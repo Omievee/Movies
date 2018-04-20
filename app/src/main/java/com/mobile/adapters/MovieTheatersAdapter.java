@@ -243,14 +243,17 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
-
-                        currentTime = checked;
-                        String selectedShowTime = currentTime.getText().toString();
-                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        if(checked.isChecked()){
+                            currentTime = checked;
+                            String selectedShowTime = currentTime.getText().toString();
+                            showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
+                        }
+//                        currentTime = checked;
+//                        String selectedShowTime = currentTime.getText().toString();
+//                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
                 }
             }
-            Log.d(TAG, "onBindViewHolder: " + holder.showTimesGrid.getChildCount() + " " + screening.getTheaterName());
         }
     }
 

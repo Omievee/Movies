@@ -12,13 +12,15 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.mobile.Constants;
-import com.mobile.fragments.MoviesFragment;
-import com.mobile.fragments.TheatersFragment;
 import com.mobile.model.Movie;
 import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -34,7 +36,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
     Realm moviesRealm;
+    Realm allMoviesRealm;
     RealmConfiguration config;
+    RealmConfiguration allMoviesConfig;
 
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
     private Realm tRealm;
@@ -57,7 +61,7 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getTheatersBucket();
                     getMoviesBucket();
-                    Toast.makeText(RealmTaskService.this, "Task complete", Toast.LENGTH_SHORT).show();
+                    getAllMovies();
                 }
             });
         }
@@ -72,9 +76,9 @@ public class RealmTaskService extends GcmTaskService {
                     //specify target service - must extend GcmTaskService
                     .setService(RealmTaskService.class)
                     //repeat every 60 seconds
-                    .setPeriod(43200)
+                    .setPeriod(7200)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(7200)
+                    .setFlex(10000)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot
@@ -134,6 +138,44 @@ public class RealmTaskService extends GcmTaskService {
         });
     }
 
+    void getAllMovies(){
+        Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        allMoviesConfig = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+            @Override
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                info   = response.body();
+                if (response.isSuccessful() && response != null) {
+                    List<AllMoviesResponse> finalInfo = info;
+                    allMoviesRealm.executeTransaction(realm -> {
+                        for(AllMoviesResponse movie: finalInfo){
+                            Movie newMovie = realm.createObject(Movie.class);
+                            newMovie.setId(Integer.parseInt(movie.getId()));
+                            newMovie.setTitle(movie.getTitle());
+                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
+                            newMovie.setRating(movie.getRating());
+                            newMovie.setSynopsis(movie.getSynopsis());
+                            newMovie.setImageUrl(movie.getImageUrl());
+                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+            }
+        });
+
+    }
+
     void getMoviesBucket() {
         config = new RealmConfiguration.Builder()
                 .name("Movies.Realm")
@@ -163,6 +205,7 @@ public class RealmTaskService extends GcmTaskService {
                             newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                             newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                             newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
+                            newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -178,6 +221,7 @@ public class RealmTaskService extends GcmTaskService {
                             nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                             nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                             nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
+                            nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -193,6 +237,7 @@ public class RealmTaskService extends GcmTaskService {
                             featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                             featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                             featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                            featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -212,6 +257,7 @@ public class RealmTaskService extends GcmTaskService {
                             comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                             comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                             comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
+                            comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
 
                         }
@@ -227,6 +273,8 @@ public class RealmTaskService extends GcmTaskService {
                             topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                             topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                             topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
+                            topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
+
                         }
                     }, () -> {
 

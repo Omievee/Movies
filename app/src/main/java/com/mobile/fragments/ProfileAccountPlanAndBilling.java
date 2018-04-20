@@ -8,12 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +33,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
@@ -57,12 +56,12 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileAccountPlanAndBilling extends Fragment {
+public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
 
     private static int YES = 0, NO = 1;
 
-    private Context context;
+    private Context myContext;
     ProfileCancellationFragment cancelSubscription;
     private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
@@ -84,6 +83,7 @@ public class ProfileAccountPlanAndBilling extends Fragment {
     };
     private boolean firstClick = true;
     String MONTH, YEAR;
+    private Activity myActivity;
 
     public ProfileAccountPlanAndBilling() {
         // Required empty public constructor
@@ -706,18 +706,18 @@ public class ProfileAccountPlanAndBilling extends Fragment {
 
         if(option==YES){
             yesNo.setText("YES");
-            yesNo.setTextColor(ContextCompat.getColor(context,R.color.new_red));
+            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
         } else{
 
             yesNo.setText("NO");
-            yesNo.setTextColor(ContextCompat.getColor(context,R.color.white));
+            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
+        this.myContext = context;
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
@@ -828,4 +828,16 @@ public class ProfileAccountPlanAndBilling extends Fragment {
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        myActivity = activity;
+
+        if (myActivity instanceof ProfileActivityInterface) {
+            mListener = (ProfileActivityInterface) myActivity;
+        } else {
+            throw new RuntimeException(myActivity.toString()
+                    + " must implement ProfileActivityInterface");
+        }
+    }
 }

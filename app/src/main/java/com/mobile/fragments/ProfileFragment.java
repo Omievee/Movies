@@ -1,16 +1,15 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.helpshift.support.Log;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +28,9 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
-import com.mobile.activities.SettingsActivity;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -41,9 +38,6 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,8 +50,9 @@ public class ProfileFragment extends Fragment {
     ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
     PastReservations pastReservations = new PastReservations();
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
+    ReferAFriend refer = new ReferAFriend();
     View root;
-    RelativeLayout details, history, currentRes, howToUse, help;
+    RelativeLayout details, history, currentRes, howToUse, help, referAFriend;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
@@ -88,6 +83,8 @@ public class ProfileFragment extends Fragment {
         TOS = root.findViewById(R.id.TOS);
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
+
+        referAFriend = root.findViewById(R.id.ReferAFriend);
         fadeIn(root);
 
 
@@ -134,7 +131,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
@@ -145,15 +141,28 @@ public class ProfileFragment extends Fragment {
             myActivity.finishAffinity();
         });
         details.setOnClickListener(view1 -> {
-//            listener.openProfileAccountInformationFragment();
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
+            fragmentManager.popBackStack();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-//            bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+        });
+
+        referAFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = myActivity.getFragmentManager();
+                fragmentManager.popBackStack();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                transaction.replace(R.id.profile_container, refer);
+                transaction.addToBackStack("");
+                transaction.commit();
+                ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+            }
         });
 
         TOS.setOnClickListener(view13 -> {
@@ -197,23 +206,23 @@ public class ProfileFragment extends Fragment {
         });
 
         history.setOnClickListener(view2 -> {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = myActivity.getFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             transaction.replace(R.id.profile_container, pendingReservationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity) this.getActivity()).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
 
         });
 
@@ -221,6 +230,8 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(myActivity, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
+
+
 
     }
 

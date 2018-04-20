@@ -42,10 +42,13 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
@@ -53,6 +56,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,6 +85,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public static SwipeRefreshLayout swiper;
     public static Realm moviesRealm;
+    Realm allMoviesRealm;
     private MoviesNewReleasesAdapter newRealeasesAdapter;
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
@@ -117,6 +122,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public RealmConfiguration config;
 
     View progress;
+    private RealmConfiguration allMoviesConfig;
 
 
     public static MoviesFragment newInstance() {
@@ -150,8 +156,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         int resId = R.anim.layout_animation;
         int res2 = R.anim.layout_anim_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
-        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(myActivity, resId);
+        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(myActivity, res2);
 
         /** New Releases RecyclerView */
         LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
@@ -245,15 +251,55 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 realm.deleteAll();
             });
             getMoviesForStorage();
+//            GoWatchItSingleton.getInstance().getMovies();
         });
 
 
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
+            getAllMovies();
         } else {
             setAdaptersWithRealmOBjects();
         }
 
+
+    }
+
+    void getAllMovies(){
+        android.util.Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        allMoviesConfig = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+
+        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+            @Override
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                info   = response.body();
+                if (response.isSuccessful() && response != null) {
+                    List<AllMoviesResponse> finalInfo = info;
+                    allMoviesRealm.executeTransaction(realm -> {
+                        for(AllMoviesResponse movie: finalInfo){
+                            Movie newMovie = realm.createObject(Movie.class);
+                            newMovie.setId(Integer.parseInt(movie.getId()));
+                            newMovie.setTitle(movie.getTitle());
+                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
+                            newMovie.setRating(movie.getRating());
+                            newMovie.setSynopsis(movie.getSynopsis());
+                            newMovie.setImageUrl(movie.getImageUrl());
+                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+            }
+        });
 
     }
 
@@ -333,7 +379,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 newReleaseMovies.setTitle(localStorageMovies.getNewReleases().get(i).getTitle());
                                 newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                                 newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
-                               // newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
+                                newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -349,7 +395,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 nowPlayingMovies.setTitle(localStorageMovies.getNowPlaying().get(i).getTitle());
                                 nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                                 nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
-                               // nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
+                                nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -365,7 +411,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
-                              //  featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
+                                featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
 
 
                             }
@@ -385,7 +431,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 comingSoonMovies.setCreatedAt(localStorageMovies.getComingSoon().get(i).getCreatedAt());
                                 comingSoonMovies.setRating(localStorageMovies.getComingSoon().get(i).getRating());
                                 comingSoonMovies.setReleaseDate(localStorageMovies.getComingSoon().get(i).getReleaseDate());
-                              // comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
+                                comingSoonMovies.setTeaserVideoUrl(localStorageMovies.getComingSoon().get(i).getTeaserVideoUrl());
 
                             }
                             for (int i = 0; i < localStorageMovies.getTopBoxOffice().size(); i++) {
@@ -400,7 +446,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 topBoxOfficeMovies.setTitle(localStorageMovies.getTopBoxOffice().get(i).getTitle());
                                 topBoxOfficeMovies.setTribuneId(localStorageMovies.getTopBoxOffice().get(i).getTribuneId());
                                 topBoxOfficeMovies.setRating(localStorageMovies.getTopBoxOffice().get(i).getRating());
-                                //topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
+                                topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
                             }
                         }
                     }, () -> {
@@ -419,6 +465,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
                 Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
                 swiper.setRefreshing(false);
+                ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
             }
         });
     }
@@ -623,6 +670,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public interface searchMoviesInterface {
         void onSearchMoviesInterface();
+        void closeFragment();
 
         void hideSnackBar();
 

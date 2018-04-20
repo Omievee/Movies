@@ -59,8 +59,12 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 
 import butterknife.BindView;
@@ -132,11 +136,11 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_movie);
-        supportPostponeEnterTransition();
+//        supportPostponeEnterTransition();
 
 
-        supportStartPostponedEnterTransition();
-        supportPostponeEnterTransition();
+//        supportStartPostponedEnterTransition();
+//        supportPostponeEnterTransition();
         final Toolbar mToolbar = findViewById(R.id.SELECTED_TOOLBAR);
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
@@ -204,7 +208,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
 
 
-        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
+//        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
         currentLocationTasks();
 
         /* Showtimes RecyclerView */
@@ -406,7 +410,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
-        Log.d(TAG, "MADE IT-------<<<<<: ");
         RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId).enqueue(new retrofit2.Callback<ScreeningsResponse>() {
 
             @Override
@@ -430,10 +433,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                             int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
                             if (screenID == ID) {
                                 sortedScreeningList.add(selectedScreeningsList.get(j));
-
                             }
-
-
                             Screening etix = screeningsResponse.getScreenings().get(j);
                             if (etix.getProvider().ticketTypeIsETicket() || etix.getProvider().ticketTypeIsSelectSeating()) {
                                 sortedScreeningList.remove(screeningsResponse.getScreenings().get(j));
@@ -442,39 +442,57 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         }
                     }
 
-                    for (int i = 0; i < sortedScreeningList.size(); i++) {
-                        Screening notApproved = sortedScreeningList.get(i);
-                        if (!notApproved.isApproved()) {
-                            sortedScreeningList.remove(notApproved);
-                            sortedScreeningList.addLast(notApproved);
-                            movieTheatersAdapter.notifyDataSetChanged();
+                    int i=0;
+                    int count = sortedScreeningList.size();
+                    int currentShowTimes = 0;
+                    android.util.Log.d(TAG, "onResponse: COUNT "+count);
+                    while(i < sortedScreeningList.size() && count >= 0){
+                        Screening currentScreening = sortedScreeningList.get(i);
+                        currentShowTimes = currentScreening.getStartTimes().size();
+                        android.util.Log.d(TAG, "onResponse: "+i);
+                        android.util.Log.d(TAG, "onResponse: "+currentScreening.getTheaterName());
+                        if (currentScreening.getStartTimes() != null) {
+
+                            for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
+
+                                try {
+                                    Date systemClock = new Date();
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String curTime = sdf.format(systemClock);
+
+                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(j));
+                                    Date myTime = sdf.parse(curTime);
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTime(theaterTime);
+                                    cal.add(Calendar.MINUTE, 30);
+
+
+                                    if (myTime.after(cal.getTime())) {
+                                        if (cal.getTime().getHours() > 3) {
+                                            currentShowTimes--;
+                                        }
+                                    }
+
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if(currentShowTimes==0){
+                                sortedScreeningList.remove(i);
+                                i--;
+                            } else{
+                                Screening notApproved = sortedScreeningList.get(i);
+                                if (!notApproved.isApproved()) {
+                                    sortedScreeningList.remove(i);
+                                    sortedScreeningList.addLast(notApproved);
+                                    i--;
+                                }
+                            }
+                            count--;
                         }
-
-//                        try {
-//                            Date systemClock = new Date();
-//
-//                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-//                            String curTime = sdf.format(systemClock);
-//
-//                            Date theaterTime = sdf.parse(sortedScreeningList.get(i).getStartTimes().get(i));
-//                            Date myTime = sdf.parse(curTime);
-//
-//                            Calendar cal = Calendar.getInstance();
-//                            cal.setTime(theaterTime);
-//                            cal.add(Calendar.MINUTE, 30);
-//                            if (myTime.after(cal.getTime())) {
-//                                if (cal.getTime().getHours() > 3) {
-//                                    sortedScreeningList.get(i).getStartTimes().remove()
-////                            if(holder.showTimesGrid.getChildCount() == 0) {
-////                                holder.theaterCardViewListItem.setVisibility(View.GONE);
-////                            }
-//                                }
-//
-//                            }
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-
+                        i++;
                     }
                 }
 

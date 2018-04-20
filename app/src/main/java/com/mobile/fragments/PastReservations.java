@@ -1,53 +1,30 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
 import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Fade;
 import android.util.DisplayMetrics;
-import com.helpshift.support.Log;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
-import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
 import com.moviepass.R;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,22 +33,33 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment {
+public class PastReservations extends Fragment  {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
 
     View rootview;
-    HistoryAdapter historyAdapter;
-    RecyclerView historyRecycler;
-    ArrayList<Movie> historyList;
-    TextView noMovies;
-    View progress;
-    HistoryResponse historyResponse;
+    static HistoryAdapter historyAdapter;
+    static RecyclerView historyRecycler;
+    static ArrayList<Movie> historyList;
+    static TextView noMovies;
+    static View progress;
+    static HistoryResponse historyResponse;
     Activity myActivity;
     Context myContext;
 
     public PastReservations() {
+    }
+
+
+    public static PastReservations newInstance() {
+
+        Bundle args = new Bundle();
+
+        PastReservations fragment = new PastReservations();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Nullable
@@ -122,7 +110,7 @@ public class PastReservations extends Fragment {
         Log.d(TAG, "onResume: ");
     }
 
-    private void loadHIstory() {
+    public void loadHIstory() {
         historyList.clear();
         RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
             @Override
@@ -145,7 +133,6 @@ public class PastReservations extends Fragment {
                         historyAdapter.notifyDataSetChanged();
                     }
                 }
-
             }
 
             @Override
@@ -154,6 +141,7 @@ public class PastReservations extends Fragment {
                 Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
+
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -174,6 +162,7 @@ public class PastReservations extends Fragment {
         super.onAttach(activity);
         myActivity = activity;
     }
+
 
 
 }
