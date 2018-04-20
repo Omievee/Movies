@@ -2,16 +2,14 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
 import com.mobile.extensions.CustomAutoCompleteDropDown;
@@ -45,7 +42,7 @@ import retrofit2.Response;
 
 public class SignUpFirstTime extends Fragment {
 
-//    MaterialSpinner spinnerGender;
+    //    MaterialSpinner spinnerGender;
     CustomAutoCompleteDropDown spinnerGender;
     View relativeLayout;
     View progress;
@@ -101,8 +98,8 @@ public class SignUpFirstTime extends Fragment {
         DOB.addTextChangedListener(new CustomTextWatcher());
 
 //        spinnerGender.setItems("Gender", "Male", "Female", "Other");
-        String items[] = {"Male","Female","Other"};
-        spinnerGender.setAdapter(new ArrayAdapter<String>(myContext,R.layout.spinner_layout, items));
+        String items[] = {"Male", "Female", "Other"};
+        spinnerGender.setAdapter(new ArrayAdapter<String>(myContext, R.layout.spinner_layout, items));
 
         myCalendar = Calendar.getInstance();
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -153,56 +150,58 @@ public class SignUpFirstTime extends Fragment {
                 email2TextInputLayout.setError(null);
                 passwordTextInputLayout.setError(null);
                 Log.d(Constants.TAG, "onClick: " + DOB.getText().toString());
-                        progress.setVisibility(View.VISIBLE);
-                        final String email1 = signupEmailInput.getText().toString().trim();
-                        final String email2 = signupEmailConfirm.getText().toString().trim();
-                        final String password = signupPasswordInput.getText().toString().trim();
-                        final String gender = spinnerGender.getText().toString().trim();
-                        final String birthday = DOB.getText().toString().trim();
-                        if(isValidEmail(email1, email2) && isValidPassword(password) && isValidBirthday() && isValidGender()) {
-                            final CredentialsRequest request = new CredentialsRequest(email1);
-                            RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
-                                @Override
-                                public void onResponse(Call<Object> call, Response<Object> response) {
-                                    progress.setVisibility(View.GONE);
-                                    if (response != null && response.isSuccessful()) {
-                                        if (response.body().toString().contains("user exists")) {
-                                            Toast.makeText(myContext, "User already exists", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Log.d("------>", "onResponse: "+response.body());
-                                            ProspectUser.email = email1;
-                                            ProspectUser.password = password;
-                                            ProspectUser.gender = gender;
-                                            ProspectUser.dateOfBirth = birthday;
-
-                                            ((SignUpActivity) myActivity).setEmail(email1);
-                                            ((SignUpActivity) myActivity).setPassword(password);
-                                            ((SignUpActivity) myActivity).setGender(gender);
-                                            ((SignUpActivity) myActivity).setDOB(birthday);
-                                            ((SignUpActivity) myActivity).setPage();
-                                            ((SignUpActivity) myActivity).confirmFirstStep();
-
-                                        }
-
-                                    }
-                                    else {
-                                        progress.setVisibility(View.GONE);
-                                        Toast.makeText(myActivity, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<Object> call, Throwable t) {
-                            /* TODO : Handle failure situation */
-                                }
-                            });
-                        }else{
+                progress.setVisibility(View.VISIBLE);
+                final String email1 = signupEmailInput.getText().toString().trim();
+                final String email2 = signupEmailConfirm.getText().toString().trim();
+                final String password = signupPasswordInput.getText().toString().trim();
+                final String gender = spinnerGender.getText().toString().trim();
+                final String birthday = DOB.getText().toString().trim();
+                final String androidID = Settings.Secure.getString(myActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+                if (isValidEmail(email1, email2) && isValidPassword(password) && isValidBirthday() && isValidGender()) {
+                    final CredentialsRequest request = new CredentialsRequest(email1);
+                    RestClient.getsAuthenticatedRegistrationAPI().registerCredentials(request).enqueue(new Callback<Object>() {
+                        @Override
+                        public void onResponse(Call<Object> call, Response<Object> response) {
                             progress.setVisibility(View.GONE);
+                            if (response != null && response.isSuccessful()) {
+                                if (response.body().toString().contains("user exists")) {
+                                    Toast.makeText(myContext, "User already exists", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.d("------>", "onResponse: " + response.body());
+                                    ProspectUser.email = email1;
+                                    ProspectUser.password = password;
+                                    ProspectUser.gender = gender;
+                                    ProspectUser.dateOfBirth = birthday;
+                                    ProspectUser.androidID = androidID;
+
+                                    ((SignUpActivity) myActivity).setEmail(email1);
+                                    ((SignUpActivity) myActivity).setPassword(password);
+                                    ((SignUpActivity) myActivity).setGender(gender);
+                                    ((SignUpActivity) myActivity).setDOB(birthday);
+                                    ((SignUpActivity) myActivity).setAndroidID(androidID);
+                                    ((SignUpActivity) myActivity).setPage();
+                                    ((SignUpActivity) myActivity).confirmFirstStep();
+
+                                }
+
+                            } else {
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(myActivity, "Server Error, Try again later.", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        isValidEmail(email1, email2);
-                        isValidPassword(password);
-                        isValidBirthday();
-                        isValidGender();
+
+                        @Override
+                        public void onFailure(Call<Object> call, Throwable t) {
+                            /* TODO : Handle failure situation */
+                        }
+                    });
+                } else {
+                    progress.setVisibility(View.GONE);
+                }
+                isValidEmail(email1, email2);
+                isValidPassword(password);
+                isValidBirthday();
+                isValidGender();
             }
         });
     }
@@ -218,8 +217,8 @@ public class SignUpFirstTime extends Fragment {
         signupEmailInput.clearFocus();
         signupEmailConfirm.clearFocus();
         boolean valid = true;
-        if(target.toString().trim().isEmpty()) {
-            if(target.toString().trim().isEmpty())
+        if (target.toString().trim().isEmpty()) {
+            if (target.toString().trim().isEmpty())
                 emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_empty));
             valid = false;
         }
@@ -227,19 +226,19 @@ public class SignUpFirstTime extends Fragment {
             emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
             valid = false;
         }
-        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches() && !target.toString().trim().isEmpty()){
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches() && !target.toString().trim().isEmpty()) {
             emailTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_invalid));
             valid = false;
         }
-        if(!target.toString().equalsIgnoreCase(target2.toString()) || target2.toString().trim().isEmpty()){
+        if (!target.toString().equalsIgnoreCase(target2.toString()) || target2.toString().trim().isEmpty()) {
             email2TextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_email_match));
             valid = false;
         }
         return valid;
     }
 
-    public boolean isValidGender(){
-        if(spinnerGender.getText().toString().trim().isEmpty()){
+    public boolean isValidGender() {
+        if (spinnerGender.getText().toString().trim().isEmpty()) {
             genderTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_empty_gender));
             return false;
         }
@@ -263,13 +262,15 @@ public class SignUpFirstTime extends Fragment {
 
     public boolean isValidPassword(CharSequence target) {
         signupPasswordInput.clearFocus();
-        if(target.toString().trim().isEmpty()){
+        if (target.toString().trim().isEmpty()) {
             passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_empty));
             return false;
-        } if(target.toString().trim().length()<6){
+        }
+        if (target.toString().trim().length() < 6) {
             passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_more_than_6_characters));
             return false;
-        } if(target.toString().trim().length()>20){
+        }
+        if (target.toString().trim().length() > 20) {
             passwordTextInputLayout.setError(getResources().getString(R.string.fragment_profile_account_information_password_invalid));
             return false;
         }
@@ -288,7 +289,7 @@ public class SignUpFirstTime extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.myContext=context;
+        this.myContext = context;
 //        if (context instanceof onAlertClickListener) {
 //            mListener = (onAlertClickListener) context;
 //        } else {
@@ -324,15 +325,15 @@ public class SignUpFirstTime extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
 
-            if(signupEmailInput.hasFocus())
+            if (signupEmailInput.hasFocus())
                 emailTextInputLayout.setError(null);
-            if(signupEmailConfirm.hasFocus())
+            if (signupEmailConfirm.hasFocus())
                 email2TextInputLayout.setError(null);
-            if(signupPasswordInput.hasFocus())
+            if (signupPasswordInput.hasFocus())
                 passwordTextInputLayout.setError(null);
-            if(spinnerGender.hasFocus())
+            if (spinnerGender.hasFocus())
                 genderTextInputLayout.setError(null);
-            if(DOB.hasFocus())
+            if (DOB.hasFocus())
                 birthTextInputLayout.setError(null);
 
 

@@ -104,6 +104,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
         microServiceRestrictions();
 
+
+        android.util.Log.d(Constants.TAG, "DEVICE ID!???!?>>>>>>>>>>>>> " + UserPreferences.getDeviceID());
     }
 
     @Override

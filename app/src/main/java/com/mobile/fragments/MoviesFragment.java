@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -42,13 +43,11 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
-import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
-import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
@@ -227,6 +226,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.VISIBLE);
 
+
+        android.util.Log.d(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
         return rootView;
     }
 
@@ -265,7 +266,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     }
 
-    void getAllMovies(){
+    void getAllMovies() {
         android.util.Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
@@ -278,11 +279,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             @Override
             public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
                 List<AllMoviesResponse> info = new ArrayList<>();
-                info   = response.body();
+                info = response.body();
                 if (response.isSuccessful() && response != null) {
                     List<AllMoviesResponse> finalInfo = info;
                     allMoviesRealm.executeTransaction(realm -> {
-                        for(AllMoviesResponse movie: finalInfo){
+                        for (AllMoviesResponse movie : finalInfo) {
                             Movie newMovie = realm.createObject(Movie.class);
                             newMovie.setId(Integer.parseInt(movie.getId()));
                             newMovie.setTitle(movie.getTitle());
@@ -670,6 +671,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public interface searchMoviesInterface {
         void onSearchMoviesInterface();
+
         void closeFragment();
 
         void hideSnackBar();

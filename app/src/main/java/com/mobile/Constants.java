@@ -22,7 +22,7 @@ public class Constants {
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     public static final String SEAT = "seat";
-
+    public static final String DEVICE_ID = "ID";
     //RESTRICTIONS
     public static final String ACTIVE = "ACTIVE";
     public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
