@@ -2,8 +2,6 @@ package com.mobile.network;
 
 import android.content.Context;
 
-import com.helpshift.support.Log;
-
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
@@ -71,7 +69,7 @@ public class RestClient {
     private static Api localStorageAPI;
 
     public static int userId;
-    public static String deviceUuid = "";
+    public static String deviceAndroidID = "";
     public static String authToken = "";
 
     private RestClient() {
@@ -176,7 +174,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -278,7 +276,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + userId)
-                        .addHeader("device_uuid", deviceUuid)
+                        .addHeader("device_androidID", deviceAndroidID)
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -328,7 +326,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -380,7 +378,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -433,7 +431,7 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")

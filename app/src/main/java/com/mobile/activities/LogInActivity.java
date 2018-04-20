@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -171,11 +170,11 @@ public class LogInActivity extends AppCompatActivity {
     private void logIn() {
         String email = mInputEmail.getText().toString().replace(" ", "");
         String password = mInputPassword.getText().toString();
-        String androidID = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
-            LogInRequest request = new LogInRequest(email, password, androidID);
-            String deviceId = DeviceID.getID(this);
-            RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
+            LogInRequest request = new LogInRequest(email, password);
+            String androidID = DeviceID.getID(this);
+            android.util.Log.d(Constants.TAG, "logIn: " + androidID);
+            RestClient.getAuthenticated().login(androidID, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
@@ -342,7 +341,7 @@ public class LogInActivity extends AppCompatActivity {
         if (user != null) {
 
             int us = user.getId();
-            String deviceUuid = user.getDeviceUuid();
+            String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());

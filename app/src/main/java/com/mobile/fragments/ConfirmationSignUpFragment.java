@@ -7,18 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.helpshift.support.Log;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
-import com.mobile.activities.MoviesActivity;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -74,12 +73,12 @@ public class ConfirmationSignUpFragment extends Fragment {
                 User user = response.body();
                 if (user != null) {
                     RestClient.userId = user.getId();
-                    RestClient.deviceUuid = user.getDeviceUuid();
+                    RestClient.deviceAndroidID = user.getAndroidID();
                     RestClient.authToken = user.getAuthToken();
 
 //                    int userID = Integer.parseInt(String.valueOf(RestClient.userId) + String.valueOf("3232323"));
 
-                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceUuid, RestClient.authToken, user.getFirstName(), user.getEmail());
+                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, user.getFirstName(), user.getEmail());
                     Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

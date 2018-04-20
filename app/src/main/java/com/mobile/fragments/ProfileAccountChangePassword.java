@@ -226,7 +226,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         if (user != null) {
 
             int us = user.getId();
-            String deviceUuid = user.getDeviceUuid();
+            String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());

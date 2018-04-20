@@ -56,7 +56,7 @@ public interface Api {
 
     String HEADER_COOKIE = "Cookie";
     String HEADER_UUID = "device_uuid";
-    String HEADER_UUIDD = "deviceUuid";
+    String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
 

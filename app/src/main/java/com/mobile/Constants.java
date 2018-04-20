@@ -43,7 +43,7 @@ public class Constants {
 
     /* TODO REMOVE GENERIC VALUES */
     public static final String USER_ID = "0";
-    public static final String USER_DEVICE_UUID = "UUID";
+    public static final String DEVICE_ANDROID_ID = "androidID";
     public static final String USER_AUTH_TOKEN = "AUTH";
     public static final String FB_TOKEN = "token";
     public static final String AAID = "AAID";

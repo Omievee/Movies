@@ -56,13 +56,13 @@ public interface Api {
 
     String HEADER_COOKIE = "Cookie";
     String HEADER_UUID = "device_uuid";
-    String HEADER_UUIDD = "deviceUuid";
+    String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
 
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
+    Call<User> login(@Header(HEADER_UUIDD) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")

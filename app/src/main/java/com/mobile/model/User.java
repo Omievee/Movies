@@ -9,7 +9,12 @@ public class User {
     String lastName;
     String email;
     String authToken;
-    String deviceUuid;
+
+    public String getAndroidID() {
+        return androidID;
+    }
+
+    String androidID;
     List<String> entitlements;
 
     public User() {
@@ -19,9 +24,6 @@ public class User {
         return id;
     }
 
-    public String getDeviceUuid() {
-        return deviceUuid;
-    }
 
     public String getAuthToken() {
         return authToken;

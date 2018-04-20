@@ -13,9 +13,9 @@ public class DeviceID {
     // return a cached unique ID for each device
     public static String getID(Context context) {
         // if the saved value was incorrect
-        ID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        UserPreferences.saveDeviceId(ID);
-        return ID ;
+        String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        UserPreferences.saveDeviceAndroidID(ID);
+        return androidID;
     }
 
     // generate a unique ID for each device
