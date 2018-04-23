@@ -106,7 +106,7 @@ public class RealmTaskService extends GcmTaskService {
                 LocalStorageTheaters locallyStoredTheaters = response.body();
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
 
-                  tRealm.executeTransactionAsync(R -> {
+                    tRealm.executeTransactionAsync(R -> {
 
                         for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                             Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
@@ -138,7 +138,7 @@ public class RealmTaskService extends GcmTaskService {
         });
     }
 
-    void getAllMovies(){
+    void getAllMovies() {
         Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
@@ -147,15 +147,16 @@ public class RealmTaskService extends GcmTaskService {
 
 
         allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        allMoviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
         RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
             @Override
             public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
                 List<AllMoviesResponse> info = new ArrayList<>();
-                info   = response.body();
+                info = response.body();
                 if (response.isSuccessful() && response != null) {
                     List<AllMoviesResponse> finalInfo = info;
                     allMoviesRealm.executeTransaction(realm -> {
-                        for(AllMoviesResponse movie: finalInfo){
+                        for (AllMoviesResponse movie : finalInfo) {
                             Movie newMovie = realm.createObject(Movie.class);
                             newMovie.setId(Integer.parseInt(movie.getId()));
                             newMovie.setTitle(movie.getTitle());
@@ -192,7 +193,7 @@ public class RealmTaskService extends GcmTaskService {
                 LocalStorageMovies localStorageMovies = response.body();
                 if (localStorageMovies != null && response.isSuccessful()) {
 
-                moviesRealm.executeTransactionAsync(realm -> {
+                    moviesRealm.executeTransactionAsync(realm -> {
                         for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
                             Movie newReleaseMovies = realm.createObject(Movie.class);
                             newReleaseMovies.setType("New Releases");
