@@ -41,6 +41,10 @@ public class RestClient {
 
     private native static String getEndPoint();
 
+    static String buildNumber = String.valueOf(BuildConfig.VERSION_CODE);
+    static  String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
+
+
     static String a1URL = "http://a1.moviepass.com ";
 //    static String baseURL = String.valueOf(getEndPoint());
 //    static String registrationURL = "https://registration.moviepass.com/";
@@ -282,7 +286,7 @@ public class RestClient {
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "MoviePass/Android/20170703");
+                        .addHeader("User-Agent", "moviepass/android/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -332,7 +336,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "MoviePass/Android/20180301");
+                        .addHeader("User-Agent", "moviepass/android/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -384,7 +388,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "MoviePass/Android/20180301");
+                        .addHeader("User-Agent", "moviepass/android/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -437,7 +441,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "20180301");
+                        .addHeader("User-Agent", "moviepass/android/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
