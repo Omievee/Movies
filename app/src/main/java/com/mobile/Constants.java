@@ -40,7 +40,7 @@ public class Constants {
     public static final int REQUEST_TICKET_VERIF = 00;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
-
+    public static final String IS_ANDROID_ID_VERIFIED = "Android";
     /* TODO REMOVE GENERIC VALUES */
     public static final String USER_ID = "0";
     public static final String DEVICE_ANDROID_ID = "androidID";

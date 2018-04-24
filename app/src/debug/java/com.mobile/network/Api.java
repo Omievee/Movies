@@ -21,6 +21,7 @@ import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -62,7 +63,7 @@ public interface Api {
 
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login(@Header(HEADER_UUIDD) String deviceId, @Body LogInRequest request);
+    Call<User> login( @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")
@@ -253,5 +254,8 @@ public interface Api {
     //REFER A FRIEND
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
+
+    @POST(" /api/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID();
 
 }

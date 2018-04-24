@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -170,11 +171,14 @@ public class LogInActivity extends AppCompatActivity {
     private void logIn() {
         String email = mInputEmail.getText().toString().replace(" ", "");
         String password = mInputPassword.getText().toString();
+        String device_ID = DeviceID.getID(this);
+        String device_type = Build.MODEL;
+        String device = "android";
+
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
-            LogInRequest request = new LogInRequest(email, password);
-            String androidID = DeviceID.getID(this);
-            android.util.Log.d(Constants.TAG, "logIn: " + androidID);
-            RestClient.getAuthenticated().login(androidID, request).enqueue(new Callback<User>() {
+            LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
+            android.util.Log.d(Constants.TAG, "logIn: " + device_ID);
+            RestClient.getAuthenticated().login(request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {

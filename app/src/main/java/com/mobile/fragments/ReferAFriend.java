@@ -48,8 +48,6 @@ public class ReferAFriend extends android.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         return inflater.inflate(R.layout.fr_refer_a_friend, container, false);
     }
 

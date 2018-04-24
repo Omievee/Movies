@@ -35,10 +35,20 @@ public class UserPreferences {
 
     public static void hasUserLoggedInBefore(boolean isUserFirstLogin) {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putBoolean(Constants.IS_USER_FIRST_LOGIN, isUserFirstLogin);
         editor.apply();
     }
+
+    public static void verifyAndroidIDFirstRun(boolean isAndroidIDVerified) {
+        SharedPreferences.Editor edit = sPrefs.edit();
+        edit.putBoolean(Constants.IS_ANDROID_ID_VERIFIED, isAndroidIDVerified);
+        edit.apply();
+    }
+
+    public static boolean getHasUserVerifiedAndroidIDBefore() {
+        return sPrefs.getBoolean(Constants.IS_ANDROID_ID_VERIFIED, false);
+    }
+
 
     public static void saveAAID(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();

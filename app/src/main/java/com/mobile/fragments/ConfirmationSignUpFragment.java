@@ -3,6 +3,7 @@ package com.mobile.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,10 +65,13 @@ public class ConfirmationSignUpFragment extends Fragment {
     private void login() {
         String email = ProspectUser.email;
         String password = ProspectUser.password;
-        LogInRequest request = new LogInRequest(email, password);
-        String deviceId = DeviceID.getID(myContext);
 
-        RestClient.getUnauthenticated().login(deviceId, request).enqueue(new Callback<User>() {
+        String deviceId = DeviceID.getID(myContext);
+        String device_type = Build.DEVICE;
+        String device = "android";
+
+        LogInRequest request = new LogInRequest(email, password, deviceId, device_type, device);
+        RestClient.getUnauthenticated().login(request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();

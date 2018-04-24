@@ -29,6 +29,7 @@ import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
@@ -101,17 +102,35 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
-
         microServiceRestrictions();
 
+//        if(!UserPreferences.getHasUserVerifiedAndroidIDBefore()) {
+//            verifyAndroidID();
+//        }
 
-        android.util.Log.d(Constants.TAG, "DEVICE ID!???!?>>>>>>>>>>>>> " + UserPreferences.getDeviceAndroidID());
+    }
+
+    private void verifyAndroidID() {
+        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
+            @Override
+            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+                if (response.isSuccessful()) {
+                    android.util.Log.d(Constants.TAG, "onResponse: ");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         updateNavigationBarState();
+
     }
 
     @Override
@@ -299,6 +318,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restrict.getHasActiveCard();
                     boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
+                    Log.d(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -394,7 +414,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             dialog.show(fm, "fr_ticketverification_banner");
         }
     }
-
 
 
     public void loadMovies() {
