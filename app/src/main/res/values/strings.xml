@@ -15,7 +15,9 @@
     <string name="menu_bottom_navigation_main_theaters">Theaters</string>
     <string name="menu_bottom_navigation_main_settings">Settings</string>
 
-    <!-- Activities -->
+    <!-- Single Device Alert -->
+    <string name="one_device_alert">We\'ve noticed you switched to a different device</string>
+    <string name="one_device_messege">Switching to a new device will permanently lock you out from any other device</string>
 
     <!-- ConfirmationActivity -->
     <string name="activity_confirmation_movie_title">[Title]</string>
@@ -421,7 +423,6 @@
     <string name="xml_settings_preferences_settings_help_version">Version</string>
 
 
-    <string name="Not_Supportd">This screening is not supported.</string>
     <!-- Activate card activity-->
     <string name="Activate_Header">Activate your card</string>
     <string name="Activate_Body">Click the camera below to take a picture of your MoviePass card.</string>
