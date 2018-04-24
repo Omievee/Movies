@@ -75,11 +75,26 @@ public class Application extends MultiDexApplication {
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
+//        try {
+//            Core.install(this,
+//                    "aa91c35dbd8884b5f017e42174c2a3a5",
+//                    "moviepass.helpshift.com",
+//                    "moviepass_platform_20170118151356463-28066a03efe840b",
+//                    installConfig);
+//
+//            String userId = String.valueOf(UserPreferences.getUserId());
+//            String name = UserPreferences.getUserName();
+//            String email = UserPreferences.getUserEmail();
+//
+//            Core.login(userId, name, email);
+//        } catch (InstallException e) {
+//        }
+
         try {
             Core.install(this,
-                    "aa91c35dbd8884b5f017e42174c2a3a5",
+                    "d7307fbf50724282a116acadd54fb053",
                     "moviepass.helpshift.com",
-                    "moviepass_platform_20170118151356463-28066a03efe840b",
+                    "moviepass_platform_20170512180003329-05097f788df2b3a",
                     installConfig);
 
             String userId = String.valueOf(UserPreferences.getUserId());

@@ -291,10 +291,10 @@
                 android:layout_marginTop="@dimen/margin_standard"
                 android:lineSpacingExtra="5dp"
                 android:padding="@dimen/margin_standard"
-                android:text="In order to proceed, we need to verify your ticket purchase. Please take a picture of your ticket."
+                android:text="In order to proceed, you must verify your ticket purchase. Please take a picture of your ticket stub. DO NOT SUBMIT A PICTURE OF YOUR RECEIPT."
                 android:textAlignment="center"
                 android:textColor="@color/almost_white"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_14"
                 android:textStyle="bold" />
 
             <ImageView
@@ -303,8 +303,8 @@
                 android:layout_height="75dp"
                 android:layout_below="@id/VerificationMsg"
                 android:layout_centerInParent="true"
-                android:layout_margin="@dimen/margin_half"
-                android:layout_marginTop="@dimen/double_margin_standard"
+                android:padding="@dimen/margin_half"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:src="@drawable/ticketverificon" />
 
             <ProgressBar
@@ -316,18 +316,37 @@
                 android:theme="@style/CircularProgressWhite"
                 android:visibility="gone" />
 
-
-            <TextView
-                android:id="@+id/ConfirmNotStub"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/TicketScan"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="@dimen/margin_standard"
-                android:text="Don't Have Your Ticket Stub?"
-                android:textAlignment="center"
-                android:textColor="@color/almost_white" />
+                android:gravity="center_vertical">
 
+                <TextView
+                    android:id="@+id/ConfirmNotStub"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="0.5"
+                    android:text="Don't Have Your Ticket Stub?"
+                    android:textAlignment="center"
+                    android:padding="@dimen/margin_standard"
+                    android:textColor="@color/new_red"
+                    android:textSize="@dimen/text_size_12" />
+
+                <TextView
+                    android:id="@+id/FAQs"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="0.5"
+                    android:text="Ticket verification FAQ's"
+                    android:textAlignment="center"
+                    android:padding="@dimen/margin_standard"
+                    android:textColor="@color/new_red"
+                    android:textSize="@dimen/text_size_12" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/Hide"

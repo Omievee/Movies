@@ -93,5 +93,8 @@ public class Constants {
     //ALERT ID
     public static final String ALERT_ID = "id";
 
+    //TICKET VERIFICATION
+    public static final String TICKET_VERIFICATION_FAQ_SECTION = "38";
+
 
 }
