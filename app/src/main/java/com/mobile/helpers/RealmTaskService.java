@@ -16,6 +16,7 @@ import com.mobile.model.Movie;
 import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 
@@ -36,10 +37,12 @@ public class RealmTaskService extends GcmTaskService {
 
 
     private Realm tRealm;
+    Realm historyRealm;
     Realm moviesRealm;
     Realm allMoviesRealm;
     RealmConfiguration config;
     RealmConfiguration allMoviesConfig;
+    RealmConfiguration historyConfig;
 
     public static final String GCM_REPEAT_TAG = "repeat|[7200,10000]";
     private static final String GCM_REPEAT_THEATER_TAG = "repeat|[86400,7200]";
@@ -62,6 +65,7 @@ public class RealmTaskService extends GcmTaskService {
                 public void run() {
                     getMoviesBucket();
                     getAllMovies();
+                    getHistory();
                 }
             });
         }
@@ -259,8 +263,6 @@ public class RealmTaskService extends GcmTaskService {
                             nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                             nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
                             nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
-
-
                         }
                         for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
                             Movie featuredMovie = realm.createObject(Movie.class);
@@ -330,6 +332,55 @@ public class RealmTaskService extends GcmTaskService {
                 Toast.makeText(RealmTaskService.this, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    void getHistory() {
+        historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        historyRealm = Realm.getInstance(historyConfig);
+        historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
+
+        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                if (response.isSuccessful()) {
+                    HistoryResponse historyObjects = response.body();
+                    historyRealm.executeTransactionAsync(realm -> {
+                        if (historyObjects != null) {
+                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
+                                Movie historyList = realm.createObject(Movie.class);
+                                historyList.setId(historyObjects.getReservations().get(i).getId());
+//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
+                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
+                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
+//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
+                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
+                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
+                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
+                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
+                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
+                                historyList.setType(historyObjects.getReservations().get(i).getType());
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }
 

@@ -130,9 +130,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             loadMoviesCall.cancel();
     }
 
-    int getContentViewId() {
-        return R.layout.activity_movies;
-    }
 
     int getNavigationMenuItemId() {
         return R.id.action_movies;

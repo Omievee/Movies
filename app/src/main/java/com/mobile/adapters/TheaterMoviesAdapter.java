@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import com.helpshift.support.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +27,12 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.model.Movie;
 import com.mobile.model.Screening;
 import com.moviepass.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,13 +41,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 /**
  * Created by ryan on 4/26/17.
  */
 
 public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
-
+    Screening screening;
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
     View root;
@@ -64,7 +66,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     String selectedShowTime;
     ViewHolder HOLDER;
 
-    public TheaterMoviesAdapter(Context context,  LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
+    public TheaterMoviesAdapter(Context context, LinkedList<Screening> screeningsArrayList, ShowtimeClickListener showtimeClickListener) {
         this.showtimeClickListener = showtimeClickListener;
         this.screeningsArrayList = screeningsArrayList;
 
@@ -117,7 +119,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final Screening screening = screeningsArrayList.get(position);
+        screening = screeningsArrayList.get(position);
         HOLDER = holder;
         startTimes = screening.getStartTimes();
 
@@ -214,7 +216,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
-                            if(checked.isChecked()){
+                            if (checked.isChecked()) {
                                 HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.charcoalGrey));
                                 currentTime = checked;
                                 selectedShowTime = currentTime.getText().toString();
@@ -228,6 +230,15 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                             Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
                         }
                     });
+                }
+
+                if (queryRealm()) {
+                    currentTime.setClickable(false);
+                    holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText("You've already seen this movie");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.cinemaCardViewListItem.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                    }
                 }
             }
 
@@ -256,7 +267,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             fragobj.setArguments(bundle);
             FragmentManager fm = ((TheaterActivity) context).getSupportFragmentManager();
             fragobj.show(fm, "fr_dialogfragment_synopsis");
-
+    
         });
     }
 
@@ -269,6 +280,26 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public int getItemViewType(int position) {
         return TYPE_ITEM;
+    }
+
+
+    boolean queryRealm() {
+        RealmConfiguration historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm historyRealm = Realm.getInstance(historyConfig);
+        RealmResults<Movie> checkMovieID = historyRealm.where(Movie.class)
+                .equalTo("id", screening.getMoviepassId())
+                .findAll();
+
+        for (int i = 0; i < checkMovieID.size(); i++) {
+            if (checkMovieID.get(i).getId() == screening.getMoviepassId() && screening.isApproved()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

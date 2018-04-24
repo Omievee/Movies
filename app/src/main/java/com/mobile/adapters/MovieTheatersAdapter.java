@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.model.Movie;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
@@ -35,6 +35,9 @@ import java.util.LinkedList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 /**
  * Created by ryan on 4/26/17.
@@ -135,9 +138,6 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
 
         int theaterID = screeningsArrayList.get(position).getTribuneTheaterId();
         String theaterName = screeningsArrayList.get(position).getTheaterName();
-
-
-
 
 
         for (int i = 0; i < theaterArrayList.size(); i++) {
@@ -243,18 +243,25 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         if (currentTime != null) {
                             currentTime.setChecked(false);
                         }
-                        if(checked.isChecked()){
+                        if (checked.isChecked()) {
                             currentTime = checked;
                             String selectedShowTime = currentTime.getText().toString();
                             showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                         }
-//                        currentTime = checked;
-//                        String selectedShowTime = currentTime.getText().toString();
-//                        showtimeClickListener.onShowtimeClick(finalTheater, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                     });
+                }
+                if (queryRealm()) {
+                    currentTime.setClickable(false);
+                    holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText("You've already seen this movie");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                    }
                 }
             }
         }
+
+
     }
 
     @Override
@@ -265,6 +272,27 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    boolean queryRealm() {
+        RealmConfiguration historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm historyRealm = Realm.getInstance(historyConfig);
+        RealmResults<Movie> checkMovieID = historyRealm.where(Movie.class)
+                .equalTo("id", screening.getMoviepassId())
+                .findAll();
+
+        android.util.Log.d(TAG, "queryRealm: " + checkMovieID.size());
+        for (int i = 0; i < checkMovieID.size(); i++) {
+            android.util.Log.d(TAG, "queryRealm:  " + checkMovieID.get(i).getId());
+            if (checkMovieID.get(i).getId() == screening.getMoviepassId() & screening.isApproved()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
