@@ -35,13 +35,14 @@ import retrofit2.Response;
 public class RealmTaskService extends GcmTaskService {
 
 
+    private Realm tRealm;
     Realm moviesRealm;
     Realm allMoviesRealm;
     RealmConfiguration config;
     RealmConfiguration allMoviesConfig;
 
-    public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
-    private Realm tRealm;
+    public static final String GCM_REPEAT_TAG = "repeat|[7200,10000]";
+    private static final String GCM_REPEAT_THEATER_TAG = "repeat|[86400,7200]";
 
     @Override
     public void onInitializeTasks() {
@@ -59,9 +60,17 @@ public class RealmTaskService extends GcmTaskService {
             h.post(new Runnable() {
                 @Override
                 public void run() {
-                    getTheatersBucket();
                     getMoviesBucket();
                     getAllMovies();
+                }
+            });
+        }
+
+        if (taskParams.getTag().equals(GCM_REPEAT_THEATER_TAG)) {
+            h.post(new Runnable() {
+                @Override
+                public void run() {
+                    getTheatersBucket();
                 }
             });
         }
@@ -78,7 +87,7 @@ public class RealmTaskService extends GcmTaskService {
                     //repeat every 60 seconds
                     .setPeriod(7200)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(10000)
+                    .setFlex(60)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot
@@ -95,6 +104,33 @@ public class RealmTaskService extends GcmTaskService {
             e.printStackTrace();
         }
     }
+
+    public static void scheduleRepeatTaskTheaters(Context context) {
+        try {
+            PeriodicTask periodic = new PeriodicTask.Builder()
+                    //specify target service - must extend GcmTaskService
+                    .setService(RealmTaskService.class)
+                    //repeat x seconds
+                    .setPeriod(86400)
+                    //specify how much earlier the task can be executed (in seconds)
+                    .setFlex(3600)
+                    //tag that is q unique to this task (can be used to cancel task)
+                    .setTag(GCM_REPEAT_THEATER_TAG)
+                    //whether the task persists after device reboot
+                    .setPersisted(true)
+                    //set required network state, this line is optional
+                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
+                    .build();
+
+
+            GcmNetworkManager.getInstance(context).schedule(periodic);
+            Log.d(Constants.TAG, "repeating theater task scheduled");
+        } catch (Exception e) {
+            Log.e(Constants.TAG, "scheduling failed");
+            e.printStackTrace();
+        }
+    }
+
 
     void getTheatersBucket() {
 
@@ -147,6 +183,7 @@ public class RealmTaskService extends GcmTaskService {
 
 
         allMoviesRealm = Realm.getInstance(allMoviesConfig);
+
         allMoviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
         RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
             @Override
@@ -185,7 +222,6 @@ public class RealmTaskService extends GcmTaskService {
 
 
         moviesRealm = Realm.getInstance(config);
-
         moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
         RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
             @Override
