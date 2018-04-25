@@ -122,7 +122,7 @@
         android:layout_gravity="center"
         android:textAlignment="center"
         android:textColor="@color/almost_white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone" />
 
