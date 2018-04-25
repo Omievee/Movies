@@ -72,7 +72,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
         LogInRequest request = new LogInRequest(email, password, deviceId, device_type, device);
 
-        String UUID = DeviceID.getUUID(myContext);
+        String UUID = "";
         RestClient.getUnauthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

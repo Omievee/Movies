@@ -379,6 +379,10 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                     }
 
+                    if(restrict.getLogoutInfo().isForceLogOut()) {
+
+                    }
+
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());

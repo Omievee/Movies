@@ -202,7 +202,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         String device = "android";
 
         LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
-        String UUID = DeviceID.getUUID(myActivity);
+        String UUID = "";
         android.util.Log.d(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
         RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override

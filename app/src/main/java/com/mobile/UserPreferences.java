@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
-import com.helpshift.support.Log;
 import com.helpshift.util.HelpshiftContext;
 
 /**
@@ -69,7 +68,7 @@ public class UserPreferences {
         String ss = String.valueOf(us);
         String aa = String.valueOf(id);
         String xx = ss + aa;
-        Log.d(Constants.TAG, "setUserCredentials: " + xx);
+//        Log.d(Constants.TAG, "setUserCredentials: " + xx);
 
         editor.putInt(Constants.USER_ID, userId);
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);
