@@ -5,6 +5,12 @@ public class AndroidIDVerificationResponse {
     String email;
     String password;
     String device_id;
+
+    public String getOne_device_id() {
+        return one_device_id;
+    }
+
+    String one_device_id;
     String device_type;
 
     public AndroidIDVerificationResponse(String email, String password, String device_id, String device_type, String device) {

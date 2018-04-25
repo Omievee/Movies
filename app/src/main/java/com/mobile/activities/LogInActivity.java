@@ -71,6 +71,7 @@ public class LogInActivity extends AppCompatActivity {
     int userId;
     RestrictionsResponse restriction;
     User userResponse;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,7 +188,7 @@ public class LogInActivity extends AppCompatActivity {
                     android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
-                    } else if ( response.code() == 207) {
+                    } else if (response.code() == 207) {
                         android.util.Log.d(Constants.TAG, "onResponse: ");
                         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
                         alert.setView(R.layout.alertdialog_onedevice);
@@ -256,8 +257,14 @@ public class LogInActivity extends AppCompatActivity {
         RestClient.getAuthenticated().verifyAndroidID(request).enqueue(new Callback<AndroidIDVerificationResponse>() {
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.code() == 200) {
+                    String ODID = response.body().getOne_device_id();
+//                    String deviceUuid = user.getAndroidID();
+//                    String authToken = user.getAuthToken();
+//                    String ODID = "";
 
+                    UserPreferences.setUserCredentials(us, deviceUuid, authToken, response.body().getFirstName(), user.getEmail());
+                    checkRestrictions(user);
                 }
             }
 
