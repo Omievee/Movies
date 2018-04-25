@@ -21,6 +21,7 @@ import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -60,10 +61,9 @@ public interface Api {
     String HEADER_GOWATCHIT = "x-api-key";
 
 
-
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
+    Call<User> login(@Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")
@@ -77,9 +77,11 @@ public interface Api {
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
-    /** Change Password */
+    /**
+     * Change Password
+     */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -253,4 +255,7 @@ public interface Api {
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
 
+    //Device ID  Verification
+    @POST(" /api/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID();
 }
