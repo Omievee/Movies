@@ -33,36 +33,34 @@ class SplashActivity : AppCompatActivity() {
 
             var urlPath = data.pathSegments
             var idLength: Int
-            if(urlPath.size>=2) {
+            if (urlPath.size >= 2) {
                 movieOrTheater = urlPath.get(1)
-                if(movieOrTheater.equals("movies")) {
-                    if(urlPath.size>=3) {
+                if (movieOrTheater.equals("movies")) {
+                    if (urlPath.size >= 3) {
                         movieIdEncripted = urlPath.get(2)
                         idLength = movieIdEncripted.length
                         idLength = idLength - 5
                         movieIdEncripted = movieIdEncripted.substring(2, idLength)
                         val movieId = Integer.valueOf(movieIdEncripted)!!
-                        launchActivity(0,movieId)
+                        launchActivity(0, movieId)
                     }
-                    if(urlPath.size>=4){
+                    if (urlPath.size >= 4) {
                         val campaign = urlPath.get(3)
                         GoWatchItSingleton.getInstance().campaign = campaign
                     }
-                    launchActivity(0,-1)
-                } else if(movieOrTheater.equals("theaters")){
-                    launchActivity(1,-1)
-                    if(urlPath.size>=3){
+                    launchActivity(0, -1)
+                } else if (movieOrTheater.equals("theaters")) {
+                    launchActivity(1, -1)
+                    if (urlPath.size >= 3) {
                         val campaign = urlPath.get(2)
                         GoWatchItSingleton.getInstance().campaign = campaign
                     }
-                }
-                else {
+                } else {
                     val campaign = urlPath.get(1)
                     GoWatchItSingleton.getInstance().campaign = campaign
-                    launchActivity(2,-1)
+                    launchActivity(2, -1)
                 }
-            }
-            else {
+            } else {
                 launchActivity(2, -1)
             }
 
@@ -77,17 +75,16 @@ class SplashActivity : AppCompatActivity() {
         }
 
 
-
     }
 
-    fun launchActivity(typeMovie:Int, id:Int){
+    fun launchActivity(typeMovie: Int, id: Int) {
         Handler().postDelayed({
             if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
                 val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
-                if(UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
+                if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)
@@ -105,12 +102,11 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(i)
                         finish()
                     }
-                }else{
+                } else {
                     val i = Intent(this@SplashActivity, LogInActivity::class.java)
                     startActivity(i)
                     finish()
                 }
-
             }
         }, SPLASH_TIME_OUT.toLong())
     }
@@ -120,7 +116,7 @@ class SplashActivity : AppCompatActivity() {
         private val SPLASH_TIME_OUT = 1000
     }
 
-    private  inner class getAAID : AsyncTask<String, String, String>() {
+    private inner class getAAID : AsyncTask<String, String, String>() {
         override fun onPostExecute(result: String) {
             UserPreferences.saveAAID(result)
         }

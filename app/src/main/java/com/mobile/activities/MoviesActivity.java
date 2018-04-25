@@ -102,6 +102,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
+
         microServiceRestrictions();
 
 //        if(!UserPreferences.getHasUserVerifiedAndroidIDBefore()) {
@@ -115,7 +116,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
-                    android.util.Log.d(Constants.TAG, "onResponse: ");
+                    Log.d(Constants.TAG, "onResponse: ");
                 }
             }
 
@@ -379,7 +380,13 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                     }
 
-                    if(restrict.getLogoutInfo().isForceLogOut()) {
+                    if (restrict.getLogoutInfo().isForceLogOut()) {
+                        Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
+                        UserPreferences.clearEverything();
+                        startActivity(logUserOutIntent);
+                        finishAffinity();
+
+                        Toast.makeText(MoviesActivity.this, restrict.getLogoutInfo().getMessage(), Toast.LENGTH_SHORT).show();
 
                     }
 

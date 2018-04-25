@@ -18,6 +18,8 @@
     <!-- One Device alert -->
     <string name="one_device_alert">We\’ve noticed you switched to a different device</string>
     <string name="one_device_messege">Switching to a new device will permanently lock you out from any other device.</string>
+    <string name="one_device_commit">Are you sure? </string>
+    <string name="one_device_commit_message">This action cannot be undone.</string>
 
     <!-- ConfirmationActivity -->
     <string name="activity_confirmation_movie_title">[Title]</string>

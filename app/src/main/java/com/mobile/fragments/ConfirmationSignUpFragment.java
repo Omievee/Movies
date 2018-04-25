@@ -53,12 +53,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
         Log.d("CONFIMATION", "onViewCreated: ");
-        confirmLogIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
+        confirmLogIn.setOnClickListener(v -> login());
     }
 
 
