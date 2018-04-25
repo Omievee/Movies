@@ -63,6 +63,7 @@ public class Application extends MultiDexApplication {
         Fresco.initialize(this);
         RealmTaskService.scheduleRepeatTask(this);
         RealmTaskService.scheduleRepeatTaskTheaters(this);
+        RealmTaskService.scheduleRepeatTaskCheckHistory(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
@@ -76,20 +77,7 @@ public class Application extends MultiDexApplication {
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
-//        try {
-//            Core.install(this,
-//                    "aa91c35dbd8884b5f017e42174c2a3a5",
-//                    "moviepass.helpshift.com",
-//                    "moviepass_platform_20170118151356463-28066a03efe840b",
-//                    installConfig);
-//
-//            String userId = String.valueOf(UserPreferences.getUserId());
-//            String name = UserPreferences.getUserName();
-//            String email = UserPreferences.getUserEmail();
-//
-//            Core.login(userId, name, email);
-//        } catch (InstallException e) {
-//        }
+
 
         try {
             Core.install(this,
