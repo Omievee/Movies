@@ -16,8 +16,6 @@ import android.widget.Toast;
 
 import com.helpshift.support.Log;
 import com.mobile.DeviceID;
-import com.mobile.UserPreferences;
-import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
@@ -53,7 +51,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
         Log.d("CONFIMATION", "onViewCreated: ");
-        confirmLogIn.setOnClickListener(v -> login());
+        //confirmLogIn.setOnClickListener(v -> login());
     }
 
 
@@ -78,12 +76,12 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.authToken = user.getAuthToken();
 
 //                    int userID = Integer.parseInt(String.valueOf(RestClient.userId) + String.valueOf("3232323"));
-
-                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, user.getFirstName(), user.getEmail());
-                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
-                    i.putExtra("launch", true);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+//
+//                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, user.getFirstName(), user.getEmail());
+//                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
+//                    i.putExtra("launch", true);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(i);
                 }
             }
 

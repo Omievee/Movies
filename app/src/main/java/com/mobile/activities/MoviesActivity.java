@@ -29,7 +29,6 @@ import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
-import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
@@ -103,29 +102,33 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             activateMoviePassCardSnackBar();
         }
 
+
+//        if (UserPreferences.getUserCredentials().equals("ODID")) {
+//            verifyAndroidID();
+//        } else {
         microServiceRestrictions();
 
-//        if(!UserPreferences.getHasUserVerifiedAndroidIDBefore()) {
-//            verifyAndroidID();
-//        }
+        //}
 
     }
 
-    private void verifyAndroidID() {
-        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
-            @Override
-            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
-                if (response.isSuccessful()) {
-                    Log.d(Constants.TAG, "onResponse: ");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-            }
-        });
-    }
+//    private void verifyAndroidID() {
+//        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse()
+//
+//        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
+//            @Override
+//            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+//                if (response.isSuccessful()) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+//                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {
