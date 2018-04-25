@@ -56,20 +56,20 @@ import retrofit2.http.Query;
 public interface Api {
 
     String HEADER_COOKIE = "Cookie";
+    String FLAG = "flag";
     String HEADER_UUID = "device_uuid";
     String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
-//
-//    /* LogIn */
-//    @POST("/rest/v1/session")
-//    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
-
-
 
     /* LogIn */
-    @POST("/api/v1/auth/login")
-    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
+    @POST("/rest/v1/session")
+    Call<User> login(@Header(FLAG) String flag, @Body LogInRequest request);
+
+//
+//    /* LogIn */
+//    @POST("/api/v1/auth/login")
+//    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")
@@ -154,7 +154,7 @@ public interface Api {
      * User
      */
     @GET("/rest/v1/session/{userId}")
-    Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
+    Call<RestrictionsResponse> getRestrictions( @Path("userId") int userId);
 
 
     /* user Data */
@@ -251,7 +251,7 @@ public interface Api {
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
-    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
+    Call<MicroServiceRestrictionsResponse> getInterstitialAlert( @Path("userId") int userId);
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);

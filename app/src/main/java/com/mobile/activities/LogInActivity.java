@@ -33,6 +33,7 @@ import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
@@ -69,7 +70,7 @@ public class LogInActivity extends AppCompatActivity {
     int offset = 3232323;
     int userId;
     RestrictionsResponse restriction;
-
+    User userResponse;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,16 +175,20 @@ public class LogInActivity extends AppCompatActivity {
         String device_type = Build.MODEL;
         String device = "android";
 
+
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
             android.util.Log.d(Constants.TAG, "logIn: " + device_ID);
-            String UUID = "";
+            String UUID = "flag";
             RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.body() != null && response.isSuccessful()) {
+                    userResponse = response.body();
+                    android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
+                    if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
-                    } else if (response.body() != null && response.isSuccessful() && !response.body().getAndroidID().equals(device_ID)) {
+                    } else if ( response.code() == 207) {
+                        android.util.Log.d(Constants.TAG, "onResponse: ");
                         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
                         alert.setView(R.layout.alertdialog_onedevice);
                         alert.setCancelable(false);
@@ -195,7 +200,7 @@ public class LogInActivity extends AppCompatActivity {
 
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
-
+                                verifyAndroidID(email, password, device_ID, device_type, device);
 
                             });
 
@@ -243,6 +248,24 @@ public class LogInActivity extends AppCompatActivity {
             progress.setVisibility(View.GONE);
             Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_credentials, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void verifyAndroidID(String email, String password, String device_id, String device_type, String device) {
+        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(email, password, device_id, device_type, device);
+
+        RestClient.getAuthenticated().verifyAndroidID(request).enqueue(new Callback<AndroidIDVerificationResponse>() {
+            @Override
+            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+                if (response.isSuccessful()) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 
 

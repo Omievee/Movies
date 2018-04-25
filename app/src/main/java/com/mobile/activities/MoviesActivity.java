@@ -309,7 +309,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
     public void microServiceRestrictions() {
-
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
             public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
