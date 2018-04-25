@@ -63,7 +63,7 @@ public interface Api {
 
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login( @Body LogInRequest request);
+    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")

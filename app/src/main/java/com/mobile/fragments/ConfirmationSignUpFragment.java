@@ -71,7 +71,9 @@ public class ConfirmationSignUpFragment extends Fragment {
         String device = "android";
 
         LogInRequest request = new LogInRequest(email, password, deviceId, device_type, device);
-        RestClient.getUnauthenticated().login(request).enqueue(new Callback<User>() {
+
+        String UUID = DeviceID.getUUID(myContext);
+        RestClient.getUnauthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();

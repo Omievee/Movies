@@ -177,7 +177,8 @@ public class LogInActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
             android.util.Log.d(Constants.TAG, "logIn: " + device_ID);
-            RestClient.getAuthenticated().login(request).enqueue(new Callback<User>() {
+            String UUID = DeviceID.getUUID(this);
+            RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.body() != null && response.isSuccessful()) {
