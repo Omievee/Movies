@@ -199,10 +199,10 @@ public class LogInActivity extends AppCompatActivity {
                             AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
 
                             areYouSure.setView(R.layout.alertdialog_onedevice_commit);
-
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
+                                UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
                                 verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
                             });
 
@@ -245,8 +245,6 @@ public class LogInActivity extends AppCompatActivity {
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     android.util.Log.d(Constants.TAG, "failure: " + t.getMessage());
                 }
-
-
             });
         } else {
             progress.setVisibility(View.GONE);
@@ -257,7 +255,11 @@ public class LogInActivity extends AppCompatActivity {
     private void verifyAndroidID(String deviceType, String deviceId, String device, boolean updateDevice) {
 
         AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, updateDevice);
-        RestClient.getAuthenticated().verifyAndroidID(request).enqueue(new Callback<AndroidIDVerificationResponse>() {
+        String user_id = String.valueOf(userRESPONSE.getId());
+        String auth_Token = userRESPONSE.getAuthToken();
+
+
+        RestClient.getAuthenticated().verifyAndroidID(user_id, request).enqueue(new Callback<AndroidIDVerificationResponse>() {
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.code() == 200 || response.code() == 201) {
@@ -265,7 +267,7 @@ public class LogInActivity extends AppCompatActivity {
                 } else if (response.code() == 403) {
                     //TODO: ADD MESSAGE
                     progress.setVisibility(View.GONE);
-                    Toast.makeText(LogInActivity.this, "Error logging you in.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogInActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 

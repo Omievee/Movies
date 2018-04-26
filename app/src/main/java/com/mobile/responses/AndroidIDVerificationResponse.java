@@ -28,11 +28,12 @@ public class AndroidIDVerificationResponse {
 
     User user;
 
-    public AndroidIDVerificationResponse(String device, String deviceId, String  deviceType, boolean updateDevice) {
+    public AndroidIDVerificationResponse(String device, String deviceId, String  deviceType, boolean updateDevice){
         this.deviceId = deviceId;
         this.deviceType = deviceType;
         this.device = device;
         this.updateDevice = updateDevice;
+        this.userId = userId;
     }
 
     String device;

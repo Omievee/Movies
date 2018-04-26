@@ -59,6 +59,14 @@ public class UserPreferences {
         return sPrefs.getString(Constants.AAID, "IDFA");
     }
 
+
+    public static void setHeaders(String authToken, int user_id) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.USER_AUTH_TOKEN, authToken);
+        editor.putInt(Constants.USER_ID, user_id);
+        editor.apply();
+    }
+
     public static void setUserCredentials(int userId, String deviceAndroidID, String authToken,
                                           String firstName, String email, String oneDeviceID) {
         SharedPreferences.Editor editor = sPrefs.edit();
@@ -93,7 +101,7 @@ public class UserPreferences {
     }
 
     public static String getAuthToken() {
-        return sPrefs.getString(Constants.USER_AUTH_TOKEN, "auth");
+        return sPrefs.getString(Constants.USER_AUTH_TOKEN, "");
     }
 
     public static String getUserName() {

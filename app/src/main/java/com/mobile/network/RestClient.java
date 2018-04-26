@@ -431,7 +431,7 @@ public class RestClient {
                 Request original = chain.request();
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("user_id", "" + UserPreferences.getUserId())
+                        .addHeader("user_id", String.valueOf(UserPreferences.getUserId()))
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
