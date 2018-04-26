@@ -167,7 +167,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         String birthday = ProspectUser.dateOfBirth;
         String gender = ProspectUser.gender;
         String selectedPlanId;
-
+        String androidID = ProspectUser.androidID;
         if (ProspectUser.plan == null) {
             selectedPlanId = null;
         } else {
@@ -186,7 +186,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             bZip = ProspectUser.zip;
 
             completeRegistration(creditCardNumber, month, year, cvv, sStreet, sStreet2, sCity, sState,
-                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId);
+                    sZip, bStreet, bStreet2, bCity, bState, bZip, email, firstName, lastName, password, birthday, gender, selectedPlanId, androidID);
 
         }
 
@@ -196,7 +196,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
     private void completeRegistration(String creditCardNumber, String month, String year, String cvv, String sStreet,
                                       String sStreet2, String sCity, String sState, String sZip, String bStreet,
                                       String bStreet2, String bCity, String bState, String bZip, String email,
-                                      String firstName, String lastName, String password, String birthday, String gender, String selectedPlanId) {
+                                      String firstName, String lastName, String password, String birthday, String gender, String selectedPlanId, String androidID) {
 
         if (confirmTermsAgreementSwitch.isChecked()) {
 //            progress.setVisibility(View.VISIBLE);
@@ -207,11 +207,11 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             if (selectedPlanId == null) {
                 request = new SignUpRequest(creditCardNumber, month, year, cvv,
                         sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
-                        email, firstName, lastName, password, birthday, gender);
+                        email, firstName, lastName, password, birthday, gender, androidID);
             } else {
                 request = new SignUpRequest(creditCardNumber, month, year, cvv,
                         sStreet, sStreet2, sCity, sState, sZip, bStreet, bStreet2, bCity, bState, bZip,
-                        email, firstName, lastName, password, birthday, gender, Integer.valueOf(selectedPlanId));
+                        email, firstName, lastName, password, birthday, gender, Integer.valueOf(selectedPlanId), androidID);
             }
 
             Log.d(TAG, "NAMES: " + firstName + "  " + lastName);

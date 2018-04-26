@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -227,6 +228,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.VISIBLE);
 
+
+        android.util.Log.d(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
         return rootView;
     }
 

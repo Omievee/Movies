@@ -3,10 +3,8 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.preference.PreferenceManager;
 
 import com.helpshift.support.Log;
-
 import com.helpshift.util.HelpshiftContext;
 
 /**
@@ -23,8 +21,13 @@ public class UserPreferences {
 
     public static void saveDeviceId(String deviceId) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.USER_DEVICE_UUID, deviceId);
+        editor.putString(Constants.DEVICE_ID, deviceId);
         editor.apply();
+    }
+
+    public static String getDeviceID() {
+
+        return sPrefs.getString(Constants.DEVICE_ID, "ID");
     }
 
     public static boolean getHasUserLoggedInBefore() {
