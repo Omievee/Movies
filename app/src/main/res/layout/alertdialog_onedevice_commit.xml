@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/margin_half"
-    app:cardBackgroundColor="@color/charcoalGrey">
+    app:cardBackgroundColor="@color/dark">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_half"
+            android:padding="@dimen/margin_standard"
             android:text="@string/one_device_commit"
             android:textAlignment="center"
             android:textColor="@color/almost_white"

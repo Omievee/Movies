@@ -2,19 +2,19 @@ package com.mobile.model;
 
 public class LogoutInfo {
 
-    public boolean isForceLogOut() {
-        return forceLogOut;
+    public boolean isForceLogout() {
+        return forceLogout;
     }
 
     public String getMessage() {
         return message;
     }
 
-    boolean forceLogOut;
+    boolean forceLogout;
     String message;
 
     public LogoutInfo(boolean forceLogOut, String message) {
-        this.forceLogOut = forceLogOut;
+        this.forceLogout = forceLogOut;
         this.message = message;
     }
 }

@@ -256,7 +256,6 @@ public class LogInActivity extends AppCompatActivity {
 
         AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, updateDevice);
         String user_id = String.valueOf(userRESPONSE.getId());
-        String auth_Token = userRESPONSE.getAuthToken();
 
 
         RestClient.getAuthenticated().verifyAndroidID(user_id, request).enqueue(new Callback<AndroidIDVerificationResponse>() {

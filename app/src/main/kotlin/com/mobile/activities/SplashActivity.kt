@@ -78,6 +78,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
+        android.util.Log.d(Constants.TAG, "onCreate: " + UserPreferences.getUserId())
+        android.util.Log.d(Constants.TAG, "onCreate: " + UserPreferences.getAuthToken())
+
         Handler().postDelayed({
             if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
                 val i = Intent(this@SplashActivity, OnboardingActivity::class.java)

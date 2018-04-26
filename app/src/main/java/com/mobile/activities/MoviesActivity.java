@@ -2,6 +2,7 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.helpshift.support.Log;
 import com.mobile.Constants;
+import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
@@ -29,6 +31,7 @@ import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
@@ -102,28 +105,41 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             activateMoviePassCardSnackBar();
         }
 
-
-        microServiceRestrictions();
+        if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
+            verifyAndroidID();
+        }
 
     }
 
-//    private void verifyAndroidID() {
-//        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse()
-//
-//        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
-//            @Override
-//            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
-//                if (response.isSuccessful()) {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-//                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-//            }
-//        });
-//    }
+    private void verifyAndroidID() {
+        String deviceId = DeviceID.getID(this);
+        String deviceType = Build.MODEL;
+        String device = "ANDROID";
+
+        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, true);
+
+        RestClient.getAuthenticated().verifyAndroidID(String.valueOf(UserPreferences.getUserId()), request).enqueue(new Callback<AndroidIDVerificationResponse>() {
+            @Override
+            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+                if (response.isSuccessful()) {
+                    microServiceRestrictions();
+                }else {
+                 //TODO:
+                    Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
+                    UserPreferences.clearEverything();
+                    startActivity(logUserOutIntent);
+                    finishAffinity();
+                    Toast.makeText(MoviesActivity.this, "Please login again.", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+            }
+        });
+    }
 
     @Override
     protected void onStart() {
@@ -377,13 +393,15 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                     }
 
-                    if (restrict.getLogoutInfo().isForceLogOut()) {
+                    android.util.Log.d(Constants.TAG, "onResponse: " + restrict.getLogoutInfo().isForceLogout());
+                    if (restrict.getLogoutInfo().isForceLogout()) {
+
                         Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
                         UserPreferences.clearEverything();
                         startActivity(logUserOutIntent);
                         finishAffinity();
 
-                        Toast.makeText(MoviesActivity.this, restrict.getLogoutInfo().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MoviesActivity.this, restrict.getLogoutInfo().getMessage(), Toast.LENGTH_LONG).show();
 
                     }
 
