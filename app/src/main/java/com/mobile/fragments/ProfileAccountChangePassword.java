@@ -2,6 +2,7 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -196,10 +197,14 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     private void logIn() {
         String email = UserPreferences.getUserEmail().trim();
         String password = newPassword1.getText().toString().trim();
-        LogInRequest request = new LogInRequest(email, password);
+        String device_ID = DeviceID.getID(myActivity);
+        String device_type = Build.DEVICE;
+        String device = "android";
+
+        LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
+        String UUID = "";
         android.util.Log.d(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
-        String deviceId = DeviceID.getID(myActivity);
-        RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
+        RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.body() != null && response.isSuccessful()) {
@@ -226,10 +231,10 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
         if (user != null) {
 
             int us = user.getId();
-            String deviceUuid = user.getDeviceUuid();
+            String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
 
-            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
+           // UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
         }
     }
 

@@ -2,6 +2,7 @@ package com.mobile.network;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Build;
 
 import com.helpshift.support.Log;
 
@@ -46,7 +47,6 @@ public class RestClient {
     static  String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
 
-
     static String a1URL = "http://a1.moviepass.com ";
 //    static String baseURL = String.valueOf(getEndPoint());
 //    static String registrationURL = "https://registration.moviepass.com/";
@@ -77,7 +77,7 @@ public class RestClient {
     private static Api localStorageAPI;
 
     public static int userId;
-    public static String deviceUuid = "";
+    public static String deviceAndroidID = "";
     public static String authToken = "";
 
     private RestClient() {
@@ -182,11 +182,12 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
+                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "MoviePass/Android/20180301");
+                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -284,11 +285,11 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + userId)
-                        .addHeader("device_uuid", deviceUuid)
+                        .addHeader("device_androidID", deviceAndroidID)
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -334,11 +335,11 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -386,11 +387,11 @@ public class RestClient {
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -438,12 +439,14 @@ public class RestClient {
                 Request original = chain.request();
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("user_id", "" + UserPreferences.getUserId())
-                        .addHeader("device_uuid", UserPreferences.getDeviceUuid())
+                        .addHeader("user_id", String.valueOf(UserPreferences.getUserId()))
+                        .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
+                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("one_device_id", UserPreferences.getUserCredentials())
+                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);

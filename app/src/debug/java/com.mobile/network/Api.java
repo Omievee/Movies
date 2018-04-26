@@ -21,6 +21,7 @@ import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -56,7 +57,7 @@ public interface Api {
 
     String HEADER_COOKIE = "Cookie";
     String HEADER_UUID = "device_uuid";
-    String HEADER_UUIDD = "deviceUuid";
+    String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
 
@@ -253,5 +254,8 @@ public interface Api {
     //REFER A FRIEND
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
+
+    @POST(" /api/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID();
 
 }

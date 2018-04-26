@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
-import com.helpshift.support.Log;
 import com.helpshift.util.HelpshiftContext;
 
 /**
@@ -19,14 +18,13 @@ public class UserPreferences {
         sPrefs = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE);
     }
 
-    public static void saveDeviceId(String deviceId) {
+    public static void saveDeviceAndroidID(String deviceId) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.DEVICE_ID, deviceId);
+        editor.putString(Constants.DEVICE_ANDROID_ID, deviceId);
         editor.apply();
     }
 
-    public static String getDeviceID() {
-
+    public static String getDeviceAndroidID() {
         return sPrefs.getString(Constants.DEVICE_ID, "ID");
     }
 
@@ -36,10 +34,20 @@ public class UserPreferences {
 
     public static void hasUserLoggedInBefore(boolean isUserFirstLogin) {
         SharedPreferences.Editor editor = sPrefs.edit();
-
         editor.putBoolean(Constants.IS_USER_FIRST_LOGIN, isUserFirstLogin);
         editor.apply();
     }
+
+    public static void verifyAndroidIDFirstRun(boolean isAndroidIDVerified) {
+        SharedPreferences.Editor edit = sPrefs.edit();
+        edit.putBoolean(Constants.IS_ANDROID_ID_VERIFIED, isAndroidIDVerified);
+        edit.apply();
+    }
+
+    public static boolean getHasUserVerifiedAndroidIDBefore() {
+        return sPrefs.getBoolean(Constants.IS_ANDROID_ID_VERIFIED, false);
+    }
+
 
     public static void saveAAID(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();
@@ -51,23 +59,37 @@ public class UserPreferences {
         return sPrefs.getString(Constants.AAID, "IDFA");
     }
 
-    public static void setUserCredentials(int userId, String deviceUUID, String authToken,
-                                          String firstName, String email) {
-        SharedPreferences.Editor editor = sPrefs.edit();
 
+    public static void setHeaders(String authToken, int user_id) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.USER_AUTH_TOKEN, authToken);
+        editor.putInt(Constants.USER_ID, user_id);
+        editor.apply();
+    }
+
+    public static void setUserCredentials(int userId, String deviceAndroidID, String authToken,
+                                          String firstName, String email, String oneDeviceID) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+//
         int us = userId;
         int id = 3232323;
         String ss = String.valueOf(us);
         String aa = String.valueOf(id);
         String xx = ss + aa;
-        Log.d(Constants.TAG, "setUserCredentials: " + xx);
+//        Log.d(Constants.TAG, "setUserCredentials: " + xx);
 
         editor.putInt(Constants.USER_ID, userId);
-        editor.putString(Constants.USER_DEVICE_UUID, deviceUUID);
+        editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);
         editor.putString(Constants.USER_AUTH_TOKEN, authToken);
         editor.putString(Constants.USER_FIRST_NAME, firstName);
+        editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
         editor.putString(Constants.USER_EMAIL, email);
         editor.apply();
+    }
+
+
+    public static String getUserCredentials() {
+        return sPrefs.getString(Constants.ONE_DEVICE_ID, "ODID");
     }
 
     public static int getUserId() {
@@ -75,11 +97,11 @@ public class UserPreferences {
     }
 
     public static String getDeviceUuid() {
-        return sPrefs.getString(Constants.USER_DEVICE_UUID, "device");
+        return sPrefs.getString(Constants.DEVICE_ANDROID_ID, "device");
     }
 
     public static String getAuthToken() {
-        return sPrefs.getString(Constants.USER_AUTH_TOKEN, "auth");
+        return sPrefs.getString(Constants.USER_AUTH_TOKEN, "");
     }
 
     public static String getUserName() {
@@ -106,7 +128,6 @@ public class UserPreferences {
         editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, isSubscriptionActivationRequired);
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
-
     }
 
     public static void saveFirebaseHelpshiftToken(String refreshedToken) {
@@ -126,24 +147,24 @@ public class UserPreferences {
         hasUserLoggedInBefore(logIn);
     }
 
-    public static void setLastCheckInAttempt(String date, String time){
+    public static void setLastCheckInAttempt(String date, String time) {
         SharedPreferences.Editor editor = sPrefs.edit();
         String dateKey, timeKey;
-        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
-        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
-        editor.putString(dateKey,date);
-        editor.putString(timeKey,time);
+        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
+        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
+        editor.putString(dateKey, date);
+        editor.putString(timeKey, time);
         editor.apply();
     }
 
-    public static String getLastCheckInAttemptDate(){
-        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE+"_"+getUserId();
-        return sPrefs.getString(dateKey,"0");
+    public static String getLastCheckInAttemptDate() {
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
+        return sPrefs.getString(dateKey, "0");
     }
 
-    public static String getLastCheckInAttemptTime(){
-        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME+"_"+getUserId();
-        return sPrefs.getString(timeKey,"0");
+    public static String getLastCheckInAttemptTime() {
+        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
+        return sPrefs.getString(timeKey, "0");
     }
 
     public static Location getLocation() {

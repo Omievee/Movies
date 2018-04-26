@@ -191,7 +191,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                     planResponse = response.body();
                     selectedPlan = planResponse.getPlans().get(0);
                     ProspectUser.plan = selectedPlan;
-
                 }
                 else{
                     Log.d("GET PLANS", "onResponse: Error getting plans");

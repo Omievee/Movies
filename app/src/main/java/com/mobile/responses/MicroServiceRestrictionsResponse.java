@@ -1,6 +1,7 @@
 package com.mobile.responses;
 
 import com.mobile.model.Alert;
+import com.mobile.model.LogoutInfo;
 import com.mobile.model.PopInfo;
 
 public class MicroServiceRestrictionsResponse {
@@ -19,7 +20,11 @@ public class MicroServiceRestrictionsResponse {
     PopInfo popInfo;
     boolean hasActiveCard;
     Alert alert;
+    LogoutInfo logoutInfo;
 
+    public LogoutInfo getLogoutInfo() {
+        return logoutInfo;
+    }
 
     public boolean isSubscriptionActivationRequired() {
         return subscriptionActivationRequired;
