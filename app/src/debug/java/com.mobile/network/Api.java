@@ -60,6 +60,7 @@ public interface Api {
     String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
+    String USER_ID = "device_id";
 
     /* LogIn */
     @POST("/rest/v1/session")
@@ -255,7 +256,8 @@ public interface Api {
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
 
-    @POST(" /api/v1/device/verification")
-    Call<AndroidIDVerificationResponse> verifyAndroidID();
+    //Device ID  Verification
+    @POST(" /rest/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
 
 }
