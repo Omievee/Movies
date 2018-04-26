@@ -107,6 +107,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
         if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
             verifyAndroidID();
+        } else {
+            microServiceRestrictions();
         }
 
     }
@@ -123,8 +125,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
                     microServiceRestrictions();
-                }else {
-                 //TODO:
+                } else {
+                    //TODO:
                     Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
                     UserPreferences.clearEverything();
                     startActivity(logUserOutIntent);
