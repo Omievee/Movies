@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
+import com.mobile.UserPreferences;
 import com.mobile.activities.MovieActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
@@ -154,6 +155,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoon = new RealmList<>();
         featured = new RealmList<>();
         nowPlaying = new RealmList<>();
+
 
         int resId = R.anim.layout_animation;
         int res2 = R.anim.layout_anim_bottom;

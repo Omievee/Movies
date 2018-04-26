@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_half"
-    app:cardBackgroundColor="@color/dark">
+    app:cardBackgroundColor="@color/charcoalGrey">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:padding="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_half"
             android:text="@string/one_device_alert"

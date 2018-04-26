@@ -100,6 +100,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
+
+
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();

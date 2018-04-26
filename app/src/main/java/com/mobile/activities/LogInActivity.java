@@ -199,14 +199,18 @@ public class LogInActivity extends AppCompatActivity {
                     } else if (response.code() == 207) {
                         android.util.Log.d(Constants.TAG, "onResponse: ");
                         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
-                        alert.setView(R.layout.alertdialog_onedevice);
+                        alert.setTitle("We’ve noticed you switched to a different device");
+                        alert.setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.");
+//                        alert.setView(R.layout.alertdialog_onedevice);
                         alert.setCancelable(false);
                         alert.setPositiveButton("Switch to this device", (dialog, which) -> {
                             dialog.dismiss();
                             progress.setVisibility(View.GONE);
                             AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
 
-                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
+//                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
+                            areYouSure.setTitle("Are you sure?");
+                            areYouSure.setMessage("This cannot be undone.");
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
