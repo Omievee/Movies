@@ -135,7 +135,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
                     if(response!=null)
-                        UserPreferences.setOneDeviceId(request.getOneDeviceId());
+                        UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     microServiceRestrictions();
                 } else {
                     //TODO:
