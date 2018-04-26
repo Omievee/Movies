@@ -2,6 +2,7 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.helpshift.support.Log;
 import com.mobile.Constants;
+import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.AlertScreenFragment;
 import com.mobile.fragments.MoviesFragment;
@@ -29,6 +31,7 @@ import com.mobile.helpers.HistoryDetails;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
@@ -102,14 +105,49 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             activateMoviePassCardSnackBar();
         }
 
-        microServiceRestrictions();
+        if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
+            verifyAndroidID();
+        } else {
+            microServiceRestrictions();
+        }
 
+    }
+
+    private void verifyAndroidID() {
+        String deviceId = DeviceID.getID(this);
+        String deviceType = Build.MODEL;
+        String device = "ANDROID";
+
+        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, true);
+
+        RestClient.getAuthenticated().verifyAndroidID(String.valueOf(UserPreferences.getUserId()), request).enqueue(new Callback<AndroidIDVerificationResponse>() {
+            @Override
+            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+                if (response.isSuccessful()) {
+                    microServiceRestrictions();
+                } else {
+                    //TODO:
+                    Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
+                    UserPreferences.clearEverything();
+                    startActivity(logUserOutIntent);
+                    finishAffinity();
+                    Toast.makeText(MoviesActivity.this, "Please login again.", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         updateNavigationBarState();
+
     }
 
     @Override
@@ -281,7 +319,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
     public void microServiceRestrictions() {
-
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
             public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
@@ -294,6 +331,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restrict.getHasActiveCard();
                     boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
+                    Log.d(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -354,6 +392,18 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                     }
 
+                    android.util.Log.d(Constants.TAG, "onResponse: " + restrict.getLogoutInfo().isForceLogout());
+                    if (restrict.getLogoutInfo().isForceLogout()) {
+
+                        Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
+                        UserPreferences.clearEverything();
+                        startActivity(logUserOutIntent);
+                        finishAffinity();
+
+                        Toast.makeText(MoviesActivity.this, restrict.getLogoutInfo().getMessage(), Toast.LENGTH_LONG).show();
+
+                    }
+
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -389,7 +439,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             dialog.show(fm, "fr_ticketverification_banner");
         }
     }
-
 
 
     public void loadMovies() {

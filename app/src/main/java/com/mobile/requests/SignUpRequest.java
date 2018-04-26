@@ -21,12 +21,13 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, String birthday, String gender) {
+                         String lastName, String password, String birthday, String gender, String androidID) {
 
         this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender, androidID);
+
     }
 
     //CC & No FB && SelectedPlanId
@@ -34,13 +35,14 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, String birthday, String gender, int selectedPlanId) {
+                         String lastName, String password, String birthday, String gender, int selectedPlanId, String androidID) {
 
         this.creditCardInfo = new CreditCardInfo(number, month, year, ccv);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender, androidID);
         this.selectedPlanId = selectedPlanId;
+
     }
 
     //CC & FB
@@ -63,12 +65,12 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, String facebookToken, String birthday, String gender) {
+                         String lastName, String password, String facebookToken, String birthday, String gender, String androidID) {
 
         this.paypal = new Paypal(nonce);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender, androidID);
         this.facebookToken = facebookToken;
     }
 
@@ -77,12 +79,12 @@ public class SignUpRequest {
                          String sStreet, String sStreet2, String sCity, String sState,
                          String sZip, String bStreet, String bStreet2, String bCity,
                          String bState, String bZip, String email, String firstName,
-                         String lastName, String password, String birthday, String gender) {
+                         String lastName, String password, String birthday, String gender, String androidID) {
 
         this.paypal = new Paypal(nonce);
         this.billingAddress = new BillingAddress(bStreet, bStreet2, bCity, bState, bZip);
         this.shippingAddress = new ShippingAddress(sStreet, sStreet2, sCity, sState, sZip);
-        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender);
+        this.personalInfo = new PersonalInfo(email, password, firstName, lastName, birthday, gender, androidID);
     }
 
     class PersonalInfo {
@@ -92,14 +94,16 @@ public class SignUpRequest {
         String lastName;
         String birthday;
         String gender;
+        String androidID;
 
-        PersonalInfo(String email, String password, String firstName, String lastName, String birthday, String gender) {
+        PersonalInfo(String email, String password, String firstName, String lastName, String birthday, String gender, String androidID) {
             this.email = email;
             this.firstName = firstName;
             this.lastName = lastName;
             this.password = password;
             this.birthday = birthday;
             this.gender = gender;
+            this.androidID = androidID;
         }
     }
 

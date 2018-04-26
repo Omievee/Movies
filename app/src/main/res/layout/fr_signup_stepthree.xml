@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/CONFIRM_COORD"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/dark"
     android:fitsSystemWindows="true"
     tools:context="com.mobile.fragments.SignUpStepThreeFragment">
@@ -18,9 +18,9 @@
 
         <!-- LOGO -->
         <LinearLayout
+            android:id="@+id/logo_indicators"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/logo_indicators"
             android:orientation="vertical">
 
             <ImageView
@@ -485,8 +485,8 @@
                     android:text="Please allow 7-10 business days for shipping"
                     android:textColor="@color/white"
                     android:textSize="15sp"
-                    android:visibility="gone"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

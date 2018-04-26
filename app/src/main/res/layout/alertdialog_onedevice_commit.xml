@@ -15,9 +15,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:padding="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/one_device_alert"
+            android:padding="@dimen/margin_standard"
+            android:text="@string/one_device_commit"
             android:textAlignment="center"
             android:textColor="@color/almost_white"
             android:textSize="18sp" />
@@ -29,10 +29,10 @@
             android:layout_marginEnd="@dimen/margin_half"
             android:layout_marginStart="@dimen/margin_half"
             android:layout_marginTop="@dimen/margin_half"
-            android:text="@string/one_device_messege"
+            android:text="@string/one_device_commit_message"
             android:textAlignment="center"
             android:textColor="@color/almost_white"
-            android:textSize="16sp" />
+            android:textSize="17sp" />
 
 
     </LinearLayout>

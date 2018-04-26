@@ -59,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
     String state;
     String addressZip;
     String price;
-
+     String androidID;
     Plans selectedPlan;
 
     SectionsPagerAdapter viewpagerAdapter;
@@ -84,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     int mScrollProgress;
     private PlanResponse planResponse;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,7 +191,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                     planResponse = response.body();
                     selectedPlan = planResponse.getPlans().get(0);
                     ProspectUser.plan = selectedPlan;
-
                 }
                 else{
                     Log.d("GET PLANS", "onResponse: Error getting plans");
@@ -417,6 +417,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         Log.d("FIRST", "setEmail: "+dob);
     }
 
+    public void setAndroidID(String androidID) {
+        this.androidID = androidID;
+     Log.d("FIRST", "setAndroidID: " + androidID);
+    }
+
     /* Fragment One */
 
     public void setZip(String zipcode) {
@@ -507,8 +512,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
             mViewPager.setCurrentItem(3);
         } else if(mViewPager.getCurrentItem() == 3){
             mViewPager.setCurrentItem(4);
-//            logo.setVisibility(View.GONE);
-////            frame.setVisibility(View.GONE);
+
         }
     }
 
