@@ -264,4 +264,5 @@ public interface Api {
     //Device ID  Verification
     @POST(" /rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+
 }

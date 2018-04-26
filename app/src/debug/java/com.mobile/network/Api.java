@@ -53,6 +53,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static com.mobile.Constants.USER_ID;
+
 public interface Api {
 
     String HEADER_COOKIE = "Cookie";
@@ -255,7 +257,8 @@ public interface Api {
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
 
-    @POST(" /api/v1/device/verification")
-    Call<AndroidIDVerificationResponse> verifyAndroidID();
+    //Device ID  Verification
+    @POST(" /rest/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
 
 }

@@ -186,6 +186,8 @@ public class LogInActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     userRESPONSE = response.body();
                     android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
+                    android.util.Log.d(Constants.TAG, "onResponse: ANDROID DEVICE ANDROID ID "+UserPreferences.getDeviceAndroidID());
+                    android.util.Log.d(Constants.TAG, "onResponse: ANDROID DEVICE ID "+UserPreferences.getDeviceUuid());
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
                     } else if (response.code() == 207) {
