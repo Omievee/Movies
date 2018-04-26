@@ -148,7 +148,7 @@ public class ConfirmationSignUpFragment extends Fragment {
                 android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getAuthToken() + "   " + userRESPONSE.getId());
                 android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getOneDeviceId() + "   " + userRESPONSE.getId());
 
-                if (response.isSuccessful()) {
+                if (response!=null && response.isSuccessful()) {
                     RestClient.userId = userRESPONSE.getId();
                     RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
                     RestClient.authToken = userRESPONSE.getAuthToken();
@@ -156,6 +156,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
+                    UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

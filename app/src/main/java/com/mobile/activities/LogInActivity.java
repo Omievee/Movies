@@ -106,6 +106,13 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
+//        mSignUp.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                UserPreferences.setOneDeviceId("");
+//            }
+//        });
+
         mForgotPassword = findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -108,6 +108,9 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
             verifyAndroidID();
         } else {
+            if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
+                verifyAndroidID();
+            }
             microServiceRestrictions();
         }
 
@@ -124,6 +127,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
+                    if(response!=null)
+                        UserPreferences.setOneDeviceId(request.getOneDeviceId());
                     microServiceRestrictions();
                 } else {
                     //TODO:
@@ -132,7 +137,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     startActivity(logUserOutIntent);
                     finishAffinity();
                     Toast.makeText(MoviesActivity.this, "Please login again.", Toast.LENGTH_SHORT).show();
-
                 }
             }
 
