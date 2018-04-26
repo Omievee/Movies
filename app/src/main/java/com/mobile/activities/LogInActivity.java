@@ -71,6 +71,7 @@ public class LogInActivity extends AppCompatActivity {
     int userId;
     RestrictionsResponse restriction;
     User userRESPONSE;
+    private AndroidIDVerificationResponse androidId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,8 +187,6 @@ public class LogInActivity extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     userRESPONSE = response.body();
                     android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
-                    android.util.Log.d(Constants.TAG, "onResponse: ANDROID DEVICE ANDROID ID "+UserPreferences.getDeviceAndroidID());
-                    android.util.Log.d(Constants.TAG, "onResponse: ANDROID DEVICE ID "+UserPreferences.getDeviceUuid());
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
                     } else if (response.code() == 207) {
@@ -264,7 +263,11 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.code() == 200 || response.code() == 201) {
+                    androidId = response.body();
                     moviePassLoginSucceeded(userRESPONSE);
+                    UserPreferences.setOneDeviceId(androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID FROM VERIFICATION "+androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID USER PREFERENCES "+UserPreferences.getUserCredentials());
                 } else if (response.code() == 403) {
                     //TODO: ADD MESSAGE
                     progress.setVisibility(View.GONE);
@@ -350,6 +353,7 @@ public class LogInActivity extends AppCompatActivity {
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
+            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);
