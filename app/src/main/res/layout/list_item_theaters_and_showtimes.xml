@@ -145,7 +145,7 @@
             android:background="@android:color/transparent"
             android:textAlignment="center"
             android:textColor="@color/almost_white"
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone" />
 

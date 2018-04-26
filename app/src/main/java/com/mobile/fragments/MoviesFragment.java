@@ -48,6 +48,7 @@ import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
@@ -76,7 +77,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
-
+    Realm historyRealm;
+    RealmConfiguration historyConfig;
     public static final int LOCATION_PERMISSIONS = 99;
     android.location.LocationManager LocationManager;
     String Provider;
@@ -240,10 +242,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 .name("Movies.Realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
-
+        historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
 
         moviesRealm = Realm.getInstance(config);
         TheatersFragment.tRealm = Realm.getDefaultInstance();
+        historyRealm = Realm.getInstance(historyConfig);
 
         swiper.setOnRefreshListener(() -> {
 
@@ -261,6 +267,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             getAllMovies();
         } else {
             setAdaptersWithRealmOBjects();
+        }
+
+        if (historyRealm.isEmpty()) {
+            getHistoryForStorage();
         }
 
 
@@ -467,6 +477,42 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
                 swiper.setRefreshing(false);
                 ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+            }
+        });
+    }
+
+    void getHistoryForStorage() {
+
+        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                if (response.isSuccessful()) {
+                    HistoryResponse historyObjects = response.body();
+                    historyRealm.executeTransactionAsync(realm -> {
+                        if (historyObjects != null) {
+                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
+                                Movie historyList = realm.createObject(Movie.class);
+                                historyList.setId(historyObjects.getReservations().get(i).getId());
+//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
+                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
+                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
+//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
+                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
+                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
+                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
+                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
+                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
+                                historyList.setType(historyObjects.getReservations().get(i).getType());
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
             }
         });
     }
@@ -680,24 +726,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     }
 
-//    private void makeTempVideoFile(String videoFilefromRealm) {
-//
-//        String filename = "videoURI";
-//
-//
-//        FileOutputStream outputStream;
-//
-//        try {
-//            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-//            outputStream.write(videoFilefromRealm.getBytes());
-//            outputStream.close();
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+
 }
 
 

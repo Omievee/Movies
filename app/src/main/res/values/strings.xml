@@ -425,7 +425,6 @@
     <string name="xml_settings_preferences_settings_help_version">Version</string>
 
 
-    <string name="Not_Supportd">This screening is not supported.</string>
     <!-- Activate card activity-->
     <string name="Activate_Header">Activate your card</string>
     <string name="Activate_Body">Click the camera below to take a picture of your MoviePass card.</string>
