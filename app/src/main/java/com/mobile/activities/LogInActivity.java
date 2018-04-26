@@ -174,7 +174,7 @@ public class LogInActivity extends AppCompatActivity {
         String password = mInputPassword.getText().toString();
         String deviceId = DeviceID.getID(this);
         String deviceType = Build.MODEL;
-        String device = "android";
+        String device = "ANDROID";
 
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
@@ -203,8 +203,7 @@ public class LogInActivity extends AppCompatActivity {
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
-
-                                verifyAndroidID(userRESPONSE.getId(), Build.TYPE, userSwitchDeviceID, device);
+                                verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
                             });
 
                             areYouSure.setNegativeButton(android.R.string.cancel, (d, wi) -> {
@@ -212,7 +211,6 @@ public class LogInActivity extends AppCompatActivity {
                                 d.cancel();
                                 progress.setVisibility(View.GONE);
                             });
-
                             areYouSure.show();
                         });
 
@@ -236,7 +234,7 @@ public class LogInActivity extends AppCompatActivity {
                             progress.setVisibility(View.GONE);
 
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            android.util.Log.d(Constants.TAG, "onResponse: " + e.getMessage());
+                            Log.d(Constants.TAG, "onResponse: " + e.getMessage());
                         }
                     }
                 }
@@ -256,9 +254,9 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    private void verifyAndroidID(int userID, String device_type, String device_id, String device) {
+    private void verifyAndroidID(String deviceType, String deviceId, String device, boolean updateDevice) {
 
-        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device_type, device_id, userID, device);
+        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, updateDevice);
         RestClient.getAuthenticated().verifyAndroidID(request).enqueue(new Callback<AndroidIDVerificationResponse>() {
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
@@ -350,7 +348,7 @@ public class LogInActivity extends AppCompatActivity {
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
 
-            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
+            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);
         }
     }

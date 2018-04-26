@@ -103,33 +103,27 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         }
 
 
-/*
-        if (UserPreferences.getUserCredentials().equals("")) {
-            verifyAndroidID();
-        } else {
-            microServiceRestrictions();
-        }
-*/
+        microServiceRestrictions();
 
     }
 
-/*    private void verifyAndroidID() {
-        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse()
-
-        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
-            @Override
-            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
-                if (response.isSuccessful()) {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-            }
-        });
-    }*/
+//    private void verifyAndroidID() {
+//        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse()
+//
+//        RestClient.getAuthenticated().verifyAndroidID().enqueue(new Callback<AndroidIDVerificationResponse>() {
+//            @Override
+//            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+//                if (response.isSuccessful()) {
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+//                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+//            }
+//        });
+//    }
 
     @Override
     protected void onStart() {

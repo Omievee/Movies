@@ -60,9 +60,9 @@ public class UserPreferences {
     }
 
     public static void setUserCredentials(int userId, String deviceAndroidID, String authToken,
-                                          String firstName, String email) {
+                                          String firstName, String email, String oneDeviceID) {
         SharedPreferences.Editor editor = sPrefs.edit();
-//, String oneDeviceID
+//
         int us = userId;
         int id = 3232323;
         String ss = String.valueOf(us);
@@ -74,7 +74,7 @@ public class UserPreferences {
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);
         editor.putString(Constants.USER_AUTH_TOKEN, authToken);
         editor.putString(Constants.USER_FIRST_NAME, firstName);
-//        editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
+        editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
         editor.putString(Constants.USER_EMAIL, email);
         editor.apply();
     }

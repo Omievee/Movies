@@ -175,6 +175,7 @@ public class RestClient {
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
+                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
@@ -432,9 +433,11 @@ public class RestClient {
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", "" + UserPreferences.getUserId())
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
+                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
+                        .addHeader("one_device_id", UserPreferences.getUserCredentials())
                         .addHeader("User-Agent", "20180301");
                 Request request = requestBuilder.build();
 

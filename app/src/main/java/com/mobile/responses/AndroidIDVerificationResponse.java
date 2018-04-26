@@ -10,11 +10,16 @@ public class AndroidIDVerificationResponse {
     String authToken;
     int userId;
 
-    public String getOne_device_id() {
-        return one_device_id;
+    public boolean isUpdateDevice() {
+        return updateDevice;
     }
 
-    String one_device_id;
+    boolean updateDevice;
+    public String getOneDeviceId() {
+        return oneDeviceId;
+    }
+
+    String oneDeviceId;
     String deviceType;
 
     public User getUser() {
@@ -23,11 +28,11 @@ public class AndroidIDVerificationResponse {
 
     User user;
 
-    public AndroidIDVerificationResponse( String deviceType, String deviceId, int userID, String device) {
+    public AndroidIDVerificationResponse(String device, String deviceId, String  deviceType, boolean updateDevice) {
         this.deviceId = deviceId;
-        this.userId = userID;
         this.deviceType = deviceType;
         this.device = device;
+        this.updateDevice = updateDevice;
     }
 
     String device;

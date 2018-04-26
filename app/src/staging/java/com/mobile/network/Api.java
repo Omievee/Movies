@@ -154,7 +154,7 @@ public interface Api {
      * User
      */
     @GET("/rest/v1/session/{userId}")
-    Call<RestrictionsResponse> getRestrictions( @Path("userId") int userId);
+    Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
 
 
     /* user Data */
@@ -251,7 +251,7 @@ public interface Api {
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
-    Call<MicroServiceRestrictionsResponse> getInterstitialAlert( @Path("userId") int userId);
+    Call<MicroServiceRestrictionsResponse>getInterstitialAlert(@Path("userId") int userId);
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
