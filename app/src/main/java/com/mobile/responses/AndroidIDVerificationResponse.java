@@ -1,23 +1,32 @@
 package com.mobile.responses;
 
+import com.mobile.model.User;
+
 public class AndroidIDVerificationResponse {
 
     String email;
     String password;
-    String device_id;
+    String deviceId;
+    String authToken;
+    int userId;
 
     public String getOne_device_id() {
         return one_device_id;
     }
 
     String one_device_id;
-    String device_type;
+    String deviceType;
 
-    public AndroidIDVerificationResponse(String email, String password, String device_id, String device_type, String device) {
-        this.email = email;
-        this.password = password;
-        this.device_id = device_id;
-        this.device_type = device_type;
+    public User getUser() {
+        return user;
+    }
+
+    User user;
+
+    public AndroidIDVerificationResponse( String deviceType, String deviceId, int userID, String device) {
+        this.deviceId = deviceId;
+        this.userId = userID;
+        this.deviceType = deviceType;
         this.device = device;
     }
 
@@ -39,20 +48,20 @@ public class AndroidIDVerificationResponse {
         this.password = password;
     }
 
-    public String getDevice_id() {
-        return device_id;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setDevice_id(String device_id) {
-        this.device_id = device_id;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public String getDevice_type() {
-        return device_type;
+    public String getDeviceType() {
+        return deviceType;
     }
 
-    public void setDevice_type(String device_type) {
-        this.device_type = device_type;
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     public String getDevice() {
@@ -64,10 +73,10 @@ public class AndroidIDVerificationResponse {
     }
 
     public String getAndroidID() {
-        return device_id;
+        return deviceId;
     }
 
     public void setAndroidID(String device_id) {
-        this.device_id = device_id;
+        this.deviceId = device_id;
     }
 }

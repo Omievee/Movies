@@ -8,11 +8,17 @@ public class User {
     String email;
     String authToken;
 
-    public String getOne_device_id() {
-        return one_device_id;
+    public String getPassword() {
+        return password;
     }
 
-    String one_device_id;
+    String password;
+
+    public String getOneDeviceId() {
+        return oneDeviceId;
+    }
+
+    String oneDeviceId;
 
     public String getAndroidID() {
         return androidID;

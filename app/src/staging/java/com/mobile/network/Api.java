@@ -262,6 +262,6 @@ public interface Api {
     Call<ReferAFriendResponse> referAFriend();
 
     //Device ID  Verification
-    @POST(" /api/v1/device/verification")
+    @POST(" /rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Body AndroidIDVerificationResponse request);
 }
