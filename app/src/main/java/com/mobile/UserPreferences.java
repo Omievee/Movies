@@ -128,7 +128,6 @@ public class UserPreferences {
         editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, isSubscriptionActivationRequired);
         editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
-
     }
 
     public static void saveFirebaseHelpshiftToken(String refreshedToken) {
