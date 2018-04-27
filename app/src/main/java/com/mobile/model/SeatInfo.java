@@ -16,7 +16,12 @@ public class SeatInfo implements Comparable {
         SeatTypeCanReserveRight,
         SeatTypeWheelchair,
         SeatTypeCompanion,
-        SeatTypeNotASeat
+        SeatTypeNotASeat,
+        SeatTypeSofaLeft,
+        SeatTypeSofaMiddle,
+        SeatTypeSofaRight
+
+
     }
 
     boolean available;
@@ -86,6 +91,12 @@ public class SeatInfo implements Comparable {
             seatType = SeatType.SeatTypeCompanion;
         } else if (type.toLowerCase().matches("notaseat")) {
             seatType = SeatType.SeatTypeNotASeat;
+        }else if(type.toLowerCase().matches("sofaleft")){
+            seatType = SeatType.SeatTypeSofaLeft;
+        }else if(type.toLowerCase().matches("sofaright")){
+            seatType = SeatType.SeatTypeSofaRight;
+        }else if(type.toLowerCase().matches("sofamiddle")){
+            seatType = SeatType.SeatTypeSofaMiddle;
         }
 
         return seatType;

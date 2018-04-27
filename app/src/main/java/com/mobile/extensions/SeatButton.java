@@ -55,6 +55,12 @@ public class SeatButton extends AppCompatImageButton {
                 else
                     this.setImageResource(R.drawable.icon_seat_unavailable);
                 break;
+            case SeatTypeSofaLeft:
+                this.setImageResource(R.drawable.sofaleft);
+            case SeatTypeSofaRight:
+                this.setImageResource(R.drawable.sofaright);
+            case SeatTypeSofaMiddle:
+                this.setImageResource(R.drawable.sofamiddle);
         }
 
         this.setEnabled(mSeatInfo.isAvailable() && (mSeatInfo.getSeatType() != SeatInfo.SeatType.SeatTypeCompanion));
@@ -72,6 +78,12 @@ public class SeatButton extends AppCompatImageButton {
                 case SeatTypeWheelchair:
                     this.setImageResource(R.drawable.icon_seat_wheelchair_selected);
                     break;
+                case SeatTypeSofaMiddle:
+                    this.setImageResource(R.drawable.sofamiddleselected);
+                case SeatTypeSofaRight:
+                    this.setImageResource(R.drawable.sofarightselected);
+                case SeatTypeSofaLeft:
+                    this.setImageResource(R.drawable.sofaleftselected);
             }
         } else {
             switch (mSeatInfo.getSeatType()) {
@@ -90,6 +102,12 @@ public class SeatButton extends AppCompatImageButton {
                     else
                         this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
                     break;
+                case SeatTypeSofaLeft:
+                    this.setImageResource(R.drawable.sofaleftunavailable);
+                case SeatTypeSofaRight:
+                    this.setImageResource(R.drawable.sofarightunavailable);
+                case SeatTypeSofaMiddle:
+                    this.setImageResource(R.drawable.sofamiddleunavailable);
             }
         }
     }
