@@ -121,7 +121,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         screening = screeningsArrayList.get(position);
-        Log.d(TAG, "onBindViewHolder: MOVIEEEES "+screening.getTitle());
         HOLDER = holder;
         startTimes = screening.getStartTimes();
 
@@ -159,8 +158,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         HOLDER.movieRating.setText("Rated: " + screening.getRating());
         HOLDER.showtimeGrid.removeAllViews();
-
-        Log.d(TAG, "onBindViewHolder: MOVIEEEES 2"+screening.getTitle());
+        
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -203,8 +201,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
-                Log.d(TAG, "onBindViewHolder: MOVIEEEES 3"+screening.getTitle());
-                Log.d(TAG, "onBindViewHolder: MOVIEEEES 3"+screening.isApproved());
                 if (!screening.isApproved()) {
 
                     currentTime.setClickable(false);
@@ -216,9 +212,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 } else {
                     HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
                         RadioButton checked = group.findViewById(checkedId);
-                        Log.d(TAG, "onBindViewHolder: MOVIEEEES 4"+screening.getTitle());
-                        Log.d(TAG, "onBindViewHolder: MOVIEEEES 4"+screening.isApproved());
-//                        if (screening.isApproved()) {
+                        if (screeningsArrayList.get(holder.getAdapterPosition()).isApproved()) {
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
@@ -228,13 +222,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                                 selectedShowTime = currentTime.getText().toString();
                                 showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                             }
-//                            HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.charcoalGrey));
-//                            currentTime = checked;
-//                            selectedShowTime = currentTime.getText().toString();
-//                            showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
-//                        } else {
-//                            Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
-//                        }
+                        } else {
+                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
+                    }
                     });
                 }
 
@@ -263,10 +253,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 });
             }
         }
-        Log.d(TAG, "onBindViewHolder: MOVIEEEES 5"+screening.getTitle());
         holder.synopsis.setOnClickListener(view -> {
-            String synopsis = screening.getSynopsis();
-            String title = screening.getTitle();
+            String synopsis = screeningsArrayList.get(holder.getAdapterPosition()).getSynopsis();
+            String title = screeningsArrayList.get(holder.getAdapterPosition()).getTitle();
             Bundle bundle = new Bundle();
             bundle.putString(MOVIE, synopsis);
             bundle.putString(TITLE, title);
