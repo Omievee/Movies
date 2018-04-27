@@ -107,14 +107,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             activateMoviePassCardSnackBar();
         }
 
-//        if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
-//            verifyAndroidID();
-//        } else {
-//            if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
-//                verifyAndroidID();
-//            }
-//            microServiceRestrictions();
-//        }
 
         if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
             verifyAndroidID();

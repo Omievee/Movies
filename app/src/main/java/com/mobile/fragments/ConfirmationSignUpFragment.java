@@ -22,7 +22,6 @@ import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.LogInRequest;
-import com.mobile.responses.AndroidIDVerificationResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -89,46 +88,11 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.authToken = userRESPONSE.getAuthToken();
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
-//                    UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
 
-//                    } else if (response.code() == 207) {
-//                        android.util.Log.d(Constants.TAG, "onResponse: ");
-//                        AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
-//                        alert.setView(R.layout.alertdialog_onedevice);
-//                        alert.setCancelable(false);
-//                        alert.setPositiveButton("Switch to this device", (dialog, which) -> {
-//                            dialog.dismiss();
-//                            progress.setVisibility(View.GONE);
-//                            AlertDialog.Builder areYouSure = new AlertDialog.Builder(myContext, R.style.CUSTOM_ALERT);
-//
-//                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
-//                            areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
-//                                d.dismiss();
-//                                String userSwitchDeviceID = DeviceID.getID(myContext);
-//                                UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
-//                                verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
-//                            });
-//
-//                            areYouSure.setNegativeButton(android.R.string.cancel, (d, wi) -> {
-//                                d.dismiss();
-//                                d.cancel();
-//                                progress.setVisibility(View.GONE);
-//                            });
-//                            areYouSure.show();
-//                        });
-//
-//
-//                        alert.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-//                            dialog.cancel();
-//                            progress.setVisibility(View.GONE);
-//
-//                        });
-//
-//                        alert.show();
 
                 } else if (response.errorBody() != null) {
                     progress.setVisibility(View.GONE);
@@ -153,41 +117,7 @@ public class ConfirmationSignUpFragment extends Fragment {
         });
     }
 
-    private void verifyAndroidID(String deviceType, String deviceId, String device, boolean updateDevice) {
 
-        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, updateDevice);
-        String user_id = String.valueOf(userRESPONSE.getId());
-
-
-        RestClient.getAuthenticated().verifyAndroidID(user_id, request).enqueue(new Callback<AndroidIDVerificationResponse>() {
-            @Override
-            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
-                android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getAuthToken() + "   " + userRESPONSE.getId());
-                android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getOneDeviceId() + "   " + userRESPONSE.getId());
-
-                if (response!=null && response.isSuccessful()) {
-                    RestClient.userId = userRESPONSE.getId();
-                    RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
-                    RestClient.authToken = userRESPONSE.getAuthToken();
-
-
-
-                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
-                    UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
-                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
-                    i.putExtra("launch", true);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
-            }
-        });
-    }
 
 
     @Override

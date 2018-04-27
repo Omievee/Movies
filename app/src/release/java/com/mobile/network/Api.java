@@ -21,6 +21,7 @@ import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ChangePasswordResponse;
@@ -52,18 +53,19 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static com.mobile.Constants.USER_ID;
+
 public interface Api {
 
     String HEADER_COOKIE = "Cookie";
     String HEADER_UUID = "device_uuid";
-    String HEADER_ANDROID_ID = "deviceAndroidID";
+    String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
-
 
 
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login(@Header(HEADER_ANDROID_ID) String deviceId, @Body LogInRequest request);
+    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")
@@ -77,9 +79,11 @@ public interface Api {
     @GET("/rest/v1/cards")
     Call<List<MoviePassCard>> getMoviePassCards();
 
-    /** Change Password */
+    /**
+     * Change Password
+     */
     @POST("rest/v1/passwordChange")
-    Call<ChangePasswordResponse>  changePassword(@Body ChangePasswordRequest request);
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -245,11 +249,16 @@ public interface Api {
     @GET("auth/v1/session/{userId}")
     Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
+    @POST("/rest/v1/movies/{movieId}/rate")
+    Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+
 
     //REFER A FRIEND
     @GET("/rest/v1/sharing/messages")
     Call<ReferAFriendResponse> referAFriend();
 
-    @POST("/rest/v1/movies/{movieId}/rate")
-    Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+    //Device ID  Verification
+    @POST(" /rest/v1/device/verification")
+    Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+
 }
