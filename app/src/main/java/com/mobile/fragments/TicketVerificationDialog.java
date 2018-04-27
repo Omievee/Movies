@@ -33,6 +33,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -79,7 +80,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     int PERMISSION_ALL = 1;
     Bitmap photo;
     ProgressBar progress;
-    TextView noStub;
+    TextView noStub, FAQs;
     ObjectMetadata objectMetadata;
     String key;
     Activity myActivity;
@@ -127,6 +128,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         ticketScan = root.findViewById(R.id.TicketScan);
         progress = root.findViewById(R.id.progress);
         noStub = root.findViewById(R.id.NoStub);
+        FAQs = root.findViewById(R.id.FAQs);
         transferUtility = TransferUtility.builder()
                 .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
@@ -155,6 +157,13 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
             } else {
                 scanTicket();
+            }
+        });
+
+        FAQs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Support.showFAQSection(getActivity(),Constants.TICKET_VERIFICATION_FAQ_SECTION);
             }
         });
 
@@ -281,7 +290,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                         public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
                             if (response != null && response.isSuccessful()) {
                                 progress.setVisibility(View.GONE);
-                                Toast.makeText(myActivity, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(myActivity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                 dismiss();
                             } else {
                                 JSONObject jObjError = null;
@@ -289,7 +298,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                                     jObjError = new JSONObject(response.errorBody().string());
                                     if (jObjError.getString("message").equals("Verification status is different from PENDING_SUBMISSION")) {
                                         progress.setVisibility(View.GONE);
-                                        Toast.makeText(myActivity, "You ticket stub has been submitted", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(myActivity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                         dismiss();
                                     }
                                 } catch (JSONException e) {

@@ -22,7 +22,8 @@ public class Constants {
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
     public static final String SEAT = "seat";
-
+    public static final String DEVICE_ID = "ID";
+    public static final String ONE_DEVICE_ID = "ODID";
     //RESTRICTIONS
     public static final String ACTIVE = "ACTIVE";
     public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
@@ -40,10 +41,10 @@ public class Constants {
     public static final int REQUEST_TICKET_VERIF = 00;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
-
+    public static final String IS_ANDROID_ID_VERIFIED = "Android";
     /* TODO REMOVE GENERIC VALUES */
     public static final String USER_ID = "0";
-    public static final String USER_DEVICE_UUID = "UUID";
+    public static final String DEVICE_ANDROID_ID = "androidID";
     public static final String USER_AUTH_TOKEN = "AUTH";
     public static final String FB_TOKEN = "token";
     public static final String AAID = "AAID";
@@ -92,6 +93,9 @@ public class Constants {
 
     //ALERT ID
     public static final String ALERT_ID = "id";
+
+    //TICKET VERIFICATION
+    public static final String TICKET_VERIFICATION_FAQ_SECTION = "38";
 
 
 }

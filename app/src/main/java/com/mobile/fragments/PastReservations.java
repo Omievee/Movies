@@ -33,7 +33,7 @@ import retrofit2.Response;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment  {
+public class PastReservations extends Fragment {
 
     public static final String TAG = PastReservations.class.getSimpleName();
 
@@ -90,25 +90,6 @@ public class PastReservations extends Fragment  {
         Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: ");
-    }
-
-    @Override
-    public void onStop() {
-
-
-        super.onStop();
-        Log.d(TAG, "onStop: ");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: ");
-    }
 
     public void loadHIstory() {
         historyList.clear();
@@ -118,8 +99,6 @@ public class PastReservations extends Fragment  {
                 historyResponse = response.body();
                 if (response != null && response.isSuccessful()) {
                     progress.setVisibility(View.GONE);
-                    Log.d(Constants.TAG, "onResponse: " + historyResponse.getReservations());
-
                     if (historyResponse.getReservations().size() == 0) {
                         historyRecycler.setVisibility(View.GONE);
                         noMovies.setVisibility(View.VISIBLE);
@@ -162,7 +141,6 @@ public class PastReservations extends Fragment  {
         super.onAttach(activity);
         myActivity = activity;
     }
-
 
 
 }

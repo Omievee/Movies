@@ -1,20 +1,11 @@
 package com.mobile.helpers;
 
 import android.content.Context;
-import android.os.AsyncTask;
-
-import com.google.gson.GsonBuilder;
-import com.helpshift.support.Log;
-
-import android.view.View;
 import android.widget.Toast;
 
-import com.mobile.Constants;
+import com.helpshift.support.Log;
 import com.mobile.UserPreferences;
-import com.mobile.activities.MoviesActivity;
 import com.mobile.model.Movie;
-import com.mobile.model.MoviesResponse;
-import com.mobile.model.ProspectUser;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
@@ -22,26 +13,19 @@ import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.GoWatchItResponse;
-import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.BuildConfig;
 
-import java.security.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.taplytics.genet.getActivity;
 
 /**
  * Created by ivonneortega on 3/11/18.

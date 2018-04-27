@@ -60,6 +60,7 @@
                 android:id="@+id/Explore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/margin_half"
                 android:layout_marginTop="@dimen/doubledouble_margin_standard"
                 android:layout_margin="@dimen/margin_half">
 
@@ -92,6 +93,12 @@
 
 
     </FrameLayout>
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
 </android.support.design.widget.CoordinatorLayout>

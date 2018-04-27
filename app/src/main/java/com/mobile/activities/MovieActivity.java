@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import butterknife.BindView;
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -85,7 +86,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public static final String TOKEN = "token";
     private static final String TAG = "TAG";
 
-
+    Realm historyRealm;
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
     private Location mMyLocation;
@@ -222,8 +223,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             url = url + "/" + campaign;
         GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()), url);
 
-        Log.d(TAG, "onCreate: ");
 
+        android.util.Log.d(TAG, "Selected movie id: " + movie.getId());
     }
 
 
@@ -244,6 +245,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         currentLocationTasks();
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -442,15 +445,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         }
                     }
 
-                    int i=0;
+                    int i = 0;
                     int count = sortedScreeningList.size();
                     int currentShowTimes = 0;
-                    android.util.Log.d(TAG, "onResponse: COUNT "+count);
-                    while(i < sortedScreeningList.size() && count >= 0){
+                    while (i < sortedScreeningList.size() && count >= 0) {
                         Screening currentScreening = sortedScreeningList.get(i);
                         currentShowTimes = currentScreening.getStartTimes().size();
-                        android.util.Log.d(TAG, "onResponse: "+i);
-                        android.util.Log.d(TAG, "onResponse: "+currentScreening.getTheaterName());
                         if (currentScreening.getStartTimes() != null) {
 
                             for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
@@ -479,10 +479,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                                     e.printStackTrace();
                                 }
                             }
-                            if(currentShowTimes==0){
+                            if (currentShowTimes == 0) {
                                 sortedScreeningList.remove(i);
                                 i--;
-                            } else{
+                            } else {
                                 Screening notApproved = sortedScreeningList.get(i);
                                 if (!notApproved.isApproved()) {
                                     sortedScreeningList.remove(i);
@@ -495,8 +495,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                         i++;
                     }
                 }
-
-
 
 
                 if (sortedScreeningList.size() == 0) {

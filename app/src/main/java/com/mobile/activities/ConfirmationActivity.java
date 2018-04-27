@@ -32,6 +32,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.helpshift.support.Log;
+import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.application.Application;
@@ -86,7 +87,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String ZIP;
     TransferUtility transferUtility;
     Bitmap photo;
-    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText, noStub;
+    TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText, noStub, FAQs;
     Button cancelButton;
     RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
     GestureDetector gestureScanner;
@@ -144,6 +145,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         downArrow = findViewById(R.id.Hide);
         verifyMsgExpanded = findViewById(R.id.VerifyTicketMSG);
         verifyText = findViewById(R.id.smallTextFlag);
+        FAQs = findViewById(R.id.FAQs);
 
         gestureScanner = new GestureDetector(this);
 
@@ -195,6 +197,13 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                     Intent noStubIntent = new Intent(ConfirmationActivity.this, TicketVerification_NoStub.class);
                     noStubIntent.putExtra(Constants.SCREENING, res);
                     startActivity(noStubIntent);
+                });
+
+                FAQs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Support.showFAQSection(ConfirmationActivity.this,Constants.TICKET_VERIFICATION_FAQ_SECTION);
+                    }
                 });
             }
         }
@@ -465,7 +474,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                         public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
                             if (response != null && response.isSuccessful()) {
                                 whiteProgress.setVisibility(View.GONE);
-                                Toast.makeText(ConfirmationActivity.this, "You ticketIconFinal stub has been submitted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ConfirmationActivity.this, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                 finish();
                             } else {
                                 JSONObject jObjError = null;
@@ -473,7 +482,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                                     jObjError = new JSONObject(response.errorBody().string());
                                     if (jObjError.getString("message").equals("Verification status is different from PENDING_SUBMISSION")) {
                                         progress.setVisibility(View.GONE);
-                                        Toast.makeText(ConfirmationActivity.this, "You ticketIconFinal stub has been submitted", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ConfirmationActivity.this, "Your stub has been submitted", Toast.LENGTH_LONG).show();
                                         finish();
                                     }
                                 } catch (JSONException e) {

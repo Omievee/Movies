@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -36,19 +37,19 @@ import android.widget.Toast;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
+import com.mobile.UserPreferences;
 import com.mobile.activities.MovieActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
-import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
-import com.mobile.responses.GoWatchItResponse;
+import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
@@ -77,7 +78,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
     public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
-
+    Realm historyRealm;
+    RealmConfiguration historyConfig;
     public static final int LOCATION_PERMISSIONS = 99;
     android.location.LocationManager LocationManager;
     String Provider;
@@ -154,6 +156,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         featured = new RealmList<>();
         nowPlaying = new RealmList<>();
 
+
         int resId = R.anim.layout_animation;
         int res2 = R.anim.layout_anim_bottom;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(myActivity, resId);
@@ -227,6 +230,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         progress.setVisibility(View.VISIBLE);
 
+
+        android.util.Log.d(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
         return rootView;
     }
 
@@ -239,10 +244,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 .name("Movies.Realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
-
+        historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
 
         moviesRealm = Realm.getInstance(config);
         TheatersFragment.tRealm = Realm.getDefaultInstance();
+        historyRealm = Realm.getInstance(historyConfig);
 
         swiper.setOnRefreshListener(() -> {
 
@@ -262,10 +271,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             setAdaptersWithRealmOBjects();
         }
 
+        if (historyRealm.isEmpty()) {
+            getHistoryForStorage();
+        }
+
 
     }
 
-    void getAllMovies(){
+    void getAllMovies() {
         android.util.Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
@@ -278,11 +291,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             @Override
             public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
                 List<AllMoviesResponse> info = new ArrayList<>();
-                info   = response.body();
+                info = response.body();
                 if (response.isSuccessful() && response != null) {
                     List<AllMoviesResponse> finalInfo = info;
                     allMoviesRealm.executeTransaction(realm -> {
-                        for(AllMoviesResponse movie: finalInfo){
+                        for (AllMoviesResponse movie : finalInfo) {
                             Movie newMovie = realm.createObject(Movie.class);
                             newMovie.setId(Integer.parseInt(movie.getId()));
                             newMovie.setTitle(movie.getTitle());
@@ -466,6 +479,42 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
                 swiper.setRefreshing(false);
                 ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+            }
+        });
+    }
+
+    void getHistoryForStorage() {
+
+        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+            @Override
+            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                if (response.isSuccessful()) {
+                    HistoryResponse historyObjects = response.body();
+                    historyRealm.executeTransactionAsync(realm -> {
+                        if (historyObjects != null) {
+                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
+                                Movie historyList = realm.createObject(Movie.class);
+                                historyList.setId(historyObjects.getReservations().get(i).getId());
+//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
+                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
+                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
+//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
+                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
+                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
+                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
+                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
+                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
+                                historyList.setType(historyObjects.getReservations().get(i).getType());
+
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HistoryResponse> call, Throwable t) {
             }
         });
     }
@@ -670,6 +719,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     public interface searchMoviesInterface {
         void onSearchMoviesInterface();
+
         void closeFragment();
 
         void hideSnackBar();
@@ -678,24 +728,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     }
 
-//    private void makeTempVideoFile(String videoFilefromRealm) {
-//
-//        String filename = "videoURI";
-//
-//
-//        FileOutputStream outputStream;
-//
-//        try {
-//            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-//            outputStream.write(videoFilefromRealm.getBytes());
-//            outputStream.close();
-//
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+
 }
 
 

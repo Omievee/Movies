@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
+import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
@@ -67,7 +69,9 @@ public class LogInActivity extends AppCompatActivity {
     LoginButton facebookLogInButton;
     int offset = 3232323;
     int userId;
-    public RestrictionsResponse restriction;
+    RestrictionsResponse restriction;
+    User userRESPONSE;
+    private AndroidIDVerificationResponse androidId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,13 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
+//        mSignUp.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                UserPreferences.setOneDeviceId("");
+//            }
+//        });
+
         mForgotPassword = findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +128,6 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
-//        facebookLogInButton.setReadPermissions("public_profile", "email", "user_birthday");
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -170,24 +180,73 @@ public class LogInActivity extends AppCompatActivity {
     private void logIn() {
         String email = mInputEmail.getText().toString().replace(" ", "");
         String password = mInputPassword.getText().toString();
+        String deviceId = DeviceID.getID(this);
+        String deviceType = Build.MODEL;
+        String device = "ANDROID";
+
+
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
-            LogInRequest request = new LogInRequest(email, password);
-            String deviceId = DeviceID.getID(this);
-            RestClient.getAuthenticated().login(deviceId, request).enqueue(new Callback<User>() {
+            LogInRequest request = new LogInRequest(email, password, deviceId, deviceType, device);
+            android.util.Log.d(Constants.TAG, "logIn: " + deviceId);
+            String UUID = "flag";
+            RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.body() != null && response.isSuccessful()) {
+                    userRESPONSE = response.body();
+                    android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
+                    if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
+                    } else if (response.code() == 207) {
+                        android.util.Log.d(Constants.TAG, "onResponse: ");
+                        AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
+                        alert.setTitle("We’ve noticed you switched to a different device");
+                        alert.setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.");
+//                        alert.setView(R.layout.alertdialog_onedevice);
+                        alert.setCancelable(false);
+                        alert.setPositiveButton("Switch to this device", (dialog, which) -> {
+                            dialog.dismiss();
+                            progress.setVisibility(View.GONE);
+                            AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
+
+//                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
+                            areYouSure.setTitle("Are you sure?");
+                            areYouSure.setMessage("This cannot be undone.");
+                            areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
+                                d.dismiss();
+                                String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
+                                UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
+                                verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
+                            });
+
+                            areYouSure.setNegativeButton(android.R.string.cancel, (d, wi) -> {
+                                d.dismiss();
+                                d.cancel();
+                                progress.setVisibility(View.GONE);
+                            });
+                            areYouSure.show();
+                        });
+
+
+                        alert.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            dialog.cancel();
+                            progress.setVisibility(View.GONE);
+
+                        });
+
+                        alert.show();
+
                     } else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                            android.util.Log.d(Constants.TAG, "onResponse: " + jObjError.getString("message"));
                             progress.setVisibility(View.GONE);
 
                         } catch (Exception e) {
                             progress.setVisibility(View.GONE);
 
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d(Constants.TAG, "onResponse: " + e.getMessage());
                         }
                     }
                 }
@@ -196,9 +255,8 @@ public class LogInActivity extends AppCompatActivity {
                 public void onFailure(Call<User> call, Throwable t) {
                     progress.setVisibility(View.GONE);
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    android.util.Log.d(Constants.TAG, "failure: " + t.getMessage());
                 }
-
-
             });
         } else {
             progress.setVisibility(View.GONE);
@@ -206,74 +264,35 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    public void checkRestrictions(User user) {
-        RestClient.getAuthenticated().getRestrictions(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
+    private void verifyAndroidID(String deviceType, String deviceId, String device, boolean updateDevice) {
+
+        AndroidIDVerificationResponse request = new AndroidIDVerificationResponse(device, deviceId, deviceType, updateDevice);
+        String user_id = String.valueOf(userRESPONSE.getId());
+
+
+        RestClient.getAuthenticated().verifyAndroidID(user_id, request).enqueue(new Callback<AndroidIDVerificationResponse>() {
             @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    restriction = response.body();
-
-
-
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-
-                    //Setting User Preferences When User Logs In
-                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
-
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-                    }
-
-                    //Checking restriction
-                    //If Missing - Account is cancelled, User can't log in
-                    if(restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING)||restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED)||
-                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)){
-                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
-                        UserPreferences.clearUserId();
-                        progress.setVisibility(View.GONE);
-                    } else {
-//                        moviePassLoginSucceeded(user);
-                        if (!UserPreferences.getHasUserLoggedInBefore()) {
-                            UserPreferences.hasUserLoggedInBefore(true);
-                            Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
-                            startActivity(i);
-                        } else {
-                             Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
-                            i.putExtra("launch", true);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(i);
-                        }
-//                        progress.setVisibility(View.GONE);
-//                        finish();
-                    }
-                } else {
-                    try {
-                        progress.setVisibility(View.GONE);
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: "+jObjError);
-                    } catch (Exception e) {
-
-                    }
+            public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
+                if (response.code() == 200 || response.code() == 201) {
+                    androidId = response.body();
+                    moviePassLoginSucceeded(userRESPONSE);
+                    UserPreferences.setOneDeviceId(androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID FROM VERIFICATION "+androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID USER PREFERENCES "+UserPreferences.getUserCredentials());
+                } else if (response.code() == 403) {
+                    //TODO: ADD MESSAGE
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(LogInActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
-
+            public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }
+
 
     private void forgotPassword() {
         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this);
@@ -340,13 +359,86 @@ public class LogInActivity extends AppCompatActivity {
     private void moviePassLoginSucceeded(User user) {
         if (user != null) {
 
+            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ");
             int us = user.getId();
-            String deviceUuid = user.getDeviceUuid();
+            String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
+            String ODID = user.getOneDeviceId();
+            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
-            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
+            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);
         }
+    }
+
+
+    public void checkRestrictions(User user) {
+
+        RestClient.getAuthenticated().getRestrictions(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
+            @Override
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+                if (response.body() != null && response.isSuccessful()) {
+                    restriction = response.body();
+
+
+                    String status = restriction.getSubscriptionStatus();
+                    boolean fbPresent = restriction.getFacebookPresent();
+                    boolean threeDEnabled = restriction.get3dEnabled();
+                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
+                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
+                    boolean hasActiveCard = restriction.getHasActiveCard();
+                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
+
+                    //Setting User Preferences When User Logs In
+                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
+                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
+                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
+                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
+                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
+                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
+                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
+
+                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
+                    }
+
+                    //Checking restriction
+                    //If Missing - Account is cancelled, User can't log in
+                    if (restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED) ||
+                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)) {
+                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+                        UserPreferences.clearUserId();
+                        progress.setVisibility(View.GONE);
+                    } else {
+//                        moviePassLoginSucceeded(user);
+                        if (!UserPreferences.getHasUserLoggedInBefore()) {
+                            UserPreferences.hasUserLoggedInBefore(true);
+                            Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+                            startActivity(i);
+                        } else {
+                            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                            i.putExtra("launch", true);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(i);
+                        }
+//                        progress.setVisibility(View.GONE);
+//                        finish();
+                    }
+                } else {
+                    try {
+                        progress.setVisibility(View.GONE);
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

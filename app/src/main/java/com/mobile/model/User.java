@@ -1,7 +1,5 @@
 package com.mobile.model;
 
-import java.util.List;
-
 public class User {
 
     int id;
@@ -9,8 +7,25 @@ public class User {
     String lastName;
     String email;
     String authToken;
-    String deviceUuid;
-    List<String> entitlements;
+
+    public String getPassword() {
+        return password;
+    }
+
+    String password;
+
+    public String getOneDeviceId() {
+        return oneDeviceId;
+    }
+
+    String oneDeviceId;
+
+    public String getAndroidID() {
+        return androidID;
+    }
+
+    String androidID;
+//    List<String> entitlements;
 
     public User() {
     }
@@ -19,9 +34,6 @@ public class User {
         return id;
     }
 
-    public String getDeviceUuid() {
-        return deviceUuid;
-    }
 
     public String getAuthToken() {
         return authToken;
