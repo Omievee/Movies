@@ -253,8 +253,7 @@ public class RestClient {
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-
-
+        
         sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(Api.class);
     }
 

@@ -38,6 +38,7 @@ public class ConfirmationSignUpFragment extends Fragment {
     View rootView;
     TextView confirmLogIn;
     User userRESPONSE;
+    View progress;
 
     public ConfirmationSignUpFragment() {
         // Required empty public constructor
@@ -55,12 +56,14 @@ public class ConfirmationSignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
+        progress = view.findViewById(R.id.progress);
         Log.d("CONFIMATION", "onViewCreated: ");
         confirmLogIn.setOnClickListener(v -> logIn());
     }
 
 
     private void logIn() {
+        progress.setVisibility(View.VISIBLE);
         String email = ProspectUser.email;
         String password = ProspectUser.password;
         String deviceId = ProspectUser.androidID;
@@ -77,8 +80,20 @@ public class ConfirmationSignUpFragment extends Fragment {
                 userRESPONSE = response.body();
                 android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
                 if (response.code() == 200) {
+                    progress.setVisibility(View.GONE);
                     UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
-                    verifyAndroidID(deviceType, deviceId, device, true);
+//                    verifyAndroidID(deviceType, deviceId, device, true);
+
+                    RestClient.userId = userRESPONSE.getId();
+                    RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
+                    RestClient.authToken = userRESPONSE.getAuthToken();
+
+                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
+//                    UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
+                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
+                    i.putExtra("launch", true);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
 
 //                    } else if (response.code() == 207) {
 //                        android.util.Log.d(Constants.TAG, "onResponse: ");
@@ -116,6 +131,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 //                        alert.show();
 
                 } else if (response.errorBody() != null) {
+                    progress.setVisibility(View.GONE);
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(myContext, jObjError.getString("message"), Toast.LENGTH_LONG).show();
@@ -130,6 +146,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                progress.setVisibility(View.GONE);
                 Toast.makeText(myContext, t.getMessage(), Toast.LENGTH_LONG).show();
                 android.util.Log.d(Constants.TAG, "failure: " + t.getMessage());
             }
@@ -148,7 +165,7 @@ public class ConfirmationSignUpFragment extends Fragment {
                 android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getAuthToken() + "   " + userRESPONSE.getId());
                 android.util.Log.d(Constants.TAG, "onResponse: " + userRESPONSE.getOneDeviceId() + "   " + userRESPONSE.getId());
 
-                if (response.isSuccessful()) {
+                if (response!=null && response.isSuccessful()) {
                     RestClient.userId = userRESPONSE.getId();
                     RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
                     RestClient.authToken = userRESPONSE.getAuthToken();
@@ -156,6 +173,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
 
                     UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
+                    UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

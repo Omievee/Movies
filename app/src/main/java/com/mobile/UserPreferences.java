@@ -82,7 +82,8 @@ public class UserPreferences {
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);
         editor.putString(Constants.USER_AUTH_TOKEN, authToken);
         editor.putString(Constants.USER_FIRST_NAME, firstName);
-        editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
+        if(!oneDeviceID.isEmpty())
+            editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
         editor.putString(Constants.USER_EMAIL, email);
         editor.apply();
     }
@@ -90,6 +91,12 @@ public class UserPreferences {
 
     public static String getUserCredentials() {
         return sPrefs.getString(Constants.ONE_DEVICE_ID, "ODID");
+    }
+
+    public static void setOneDeviceId(String id){
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.ONE_DEVICE_ID, id);
+        editor.apply();
     }
 
     public static int getUserId() {

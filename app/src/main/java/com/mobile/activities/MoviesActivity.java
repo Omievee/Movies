@@ -100,17 +100,27 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
+
+
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
 
-        if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
+//        if (UserPreferences.getAuthToken().equals("auth") || UserPreferences.getUserId() == 0) {
+//            verifyAndroidID();
+//        } else {
+//            if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
+//                verifyAndroidID();
+//            }
+//            microServiceRestrictions();
+//        }
+
+        if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
             verifyAndroidID();
-        } else {
+        }else{
             microServiceRestrictions();
         }
-
     }
 
     private void verifyAndroidID() {
@@ -124,6 +134,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
+                    if(response!=null)
+                        UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     microServiceRestrictions();
                 } else {
                     //TODO:
@@ -132,7 +144,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     startActivity(logUserOutIntent);
                     finishAffinity();
                     Toast.makeText(MoviesActivity.this, "Please login again.", Toast.LENGTH_SHORT).show();
-
                 }
             }
 

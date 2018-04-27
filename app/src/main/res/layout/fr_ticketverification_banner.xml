@@ -42,7 +42,7 @@
             android:layout_centerHorizontal="true"
             android:layout_weight="0.5"
             android:padding="@dimen/margin_standard"
-            android:text="Don't Have Your Ticket Stub?"
+            android:text="Don't have your ticket stub?"
             android:textAlignment="center"
             android:textColor="@color/new_red"
             android:textSize="@dimen/text_size_12" />
@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_weight="0.5"
             android:padding="@dimen/margin_standard"
-            android:text="Ticket verification FAQ's"
+            android:text="Ticket verification FAQs"
             android:textAlignment="center"
             android:textColor="@color/new_red"
             android:textSize="@dimen/text_size_12" />

@@ -71,6 +71,7 @@ public class LogInActivity extends AppCompatActivity {
     int userId;
     RestrictionsResponse restriction;
     User userRESPONSE;
+    private AndroidIDVerificationResponse androidId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,13 @@ public class LogInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+//        mSignUp.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                UserPreferences.setOneDeviceId("");
+//            }
+//        });
 
         mForgotPassword = findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -191,14 +199,18 @@ public class LogInActivity extends AppCompatActivity {
                     } else if (response.code() == 207) {
                         android.util.Log.d(Constants.TAG, "onResponse: ");
                         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
-                        alert.setView(R.layout.alertdialog_onedevice);
+                        alert.setTitle("We’ve noticed you switched to a different device");
+                        alert.setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.");
+//                        alert.setView(R.layout.alertdialog_onedevice);
                         alert.setCancelable(false);
                         alert.setPositiveButton("Switch to this device", (dialog, which) -> {
                             dialog.dismiss();
                             progress.setVisibility(View.GONE);
                             AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
 
-                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
+//                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
+                            areYouSure.setTitle("Are you sure?");
+                            areYouSure.setMessage("This cannot be undone.");
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
@@ -262,7 +274,11 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.code() == 200 || response.code() == 201) {
+                    androidId = response.body();
                     moviePassLoginSucceeded(userRESPONSE);
+                    UserPreferences.setOneDeviceId(androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID FROM VERIFICATION "+androidId.getOneDeviceId());
+                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID USER PREFERENCES "+UserPreferences.getUserCredentials());
                 } else if (response.code() == 403) {
                     //TODO: ADD MESSAGE
                     progress.setVisibility(View.GONE);
@@ -348,6 +364,7 @@ public class LogInActivity extends AppCompatActivity {
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
+            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);

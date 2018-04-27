@@ -53,6 +53,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static com.mobile.Constants.USER_ID;
+
 public interface Api {
 
     String HEADER_COOKIE = "Cookie";
