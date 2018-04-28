@@ -377,7 +377,7 @@ public class LogInActivity extends AppCompatActivity {
 
     public void checkRestrictions(User user) {
 
-        RestClient.getAuthenticated().getInterstitialAlert(user.getId()).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
+        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(user.getId()).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
             public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
