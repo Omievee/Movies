@@ -37,6 +37,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CreditCardChangeRequest;
@@ -386,7 +387,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
                     plan.setText(userInfoResponse.getPlan());
 
-                    Log.d(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
+                    LogUtils.newLog(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
 
                     progress.setVisibility(View.GONE);
 
@@ -396,7 +397,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
                 mListener.closeFragment();
                 progress.setVisibility(View.GONE);
             }
@@ -469,7 +470,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         }
 
         String type = "billingAddress";
-        android.util.Log.d("Billing address", "onResponse: Address: "+addres1+" State "+ shippingState+" City "+shippingCity+" Zip "+shippingZip);
+        LogUtils.newLog("Billing address", "onResponse: Address: "+addres1+" State "+ shippingState+" City "+shippingCity+" Zip "+shippingZip);
 
                 AddressChangeRequest request = new AddressChangeRequest(addres1,"", shippingCity, shippingState, shippingZip, type);
         String finalShippingState = shippingState;
@@ -608,7 +609,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             }else {
                 address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 address1.clearFocus();
-                Log.d("ADDRESS", "isValidAddress: ");
+                LogUtils.newLog("ADDRESS", "isValidAddress: ");
             }
 
             //Validating City

@@ -44,6 +44,7 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -231,7 +232,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         progress.setVisibility(View.VISIBLE);
 
 
-        android.util.Log.d(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
+        LogUtils.newLog(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
         return rootView;
     }
 
@@ -279,7 +280,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     }
 
     void getAllMovies() {
-        android.util.Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        LogUtils.newLog(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -463,10 +464,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                             }
                         }
                     }, () -> {
-                        Log.d(Constants.TAG, "onSuccess: ");
+                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         setAdaptersWithRealmOBjects();
                     }, error -> {
-                        Log.d(Constants.TAG, "onResponse: " + error.getMessage());
+                        LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
                     });
 
                     swiper.setRefreshing(false);
@@ -550,7 +551,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 .equalTo("type", "Featured")
                 .findAll();
 
-        Log.d(Constants.TAG, "setAdaptersWithRealmOBjects: " + allMovies.size());
+        LogUtils.newLog(Constants.TAG, "setAdaptersWithRealmOBjects: " + allMovies.size());
         for (int i = 0; i < allMovies.size(); i++) {
 
             if (allMovies.get(i).getType().matches("New Releases")) {

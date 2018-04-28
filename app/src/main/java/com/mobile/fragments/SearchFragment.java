@@ -207,7 +207,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
 //        for (Movie movie : movieHashMap.values()) {
 //            ALLMOVIES.add(movie);
 //        }
-//        Log.d(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
+//        LogUtils.newLog(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
         customAdapter = new SearchAdapter(this,ALLMOVIES);
         recyclerView.setAdapter(customAdapter);
         progress.setVisibility(View.GONE);

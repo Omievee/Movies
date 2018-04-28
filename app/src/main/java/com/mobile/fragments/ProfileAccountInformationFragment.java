@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
+import com.mobile.helpers.LogUtils;
 import com.moviepass.R;
 
 /*
@@ -95,7 +96,7 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-        Log.d(Constants.TAG, "onAttach cntx: ");
+        LogUtils.newLog(Constants.TAG, "onAttach cntx: ");
 
         if (context instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) context;
@@ -108,7 +109,7 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.myActivity = activity;
-        Log.d(Constants.TAG, "onAttach ACT: ");
+        LogUtils.newLog(Constants.TAG, "onAttach ACT: ");
 
         if (activity instanceof ProfileActivityInterface) {
             mListener = (ProfileActivityInterface) activity;

@@ -111,9 +111,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            Log.d(Constants.TAG, "repeating task scheduled");
+            LogUtils.newLog(Constants.TAG, "repeating task scheduled");
         } catch (Exception e) {
-            Log.e(Constants.TAG, "scheduling failed");
+            LogUtils.newLog(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -137,9 +137,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            Log.d(Constants.TAG, "repeating theater task scheduled");
+            LogUtils.newLog(Constants.TAG, "repeating theater task scheduled");
         } catch (Exception e) {
-            Log.e(Constants.TAG, "scheduling failed");
+            LogUtils.newLog(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -163,9 +163,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            Log.d(Constants.TAG, "repeating theater task scheduled");
+            LogUtils.newLog(Constants.TAG, "repeating theater task scheduled");
         } catch (Exception e) {
-            Log.e(Constants.TAG, "scheduling failed");
+            LogUtils.newLog(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -198,10 +198,10 @@ public class RealmTaskService extends GcmTaskService {
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
                         }
                     }, () -> {
-                        Log.d(Constants.TAG, "onSuccess: ");
+                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
                     }, error -> {
                         // Transaction failed and was automatically canceled.
-                        Log.d(Constants.TAG, "Realm onError: " + error.getMessage());
+                        LogUtils.newLog(Constants.TAG, "Realm onError: " + error.getMessage());
                     });
                 }
             }
@@ -214,7 +214,7 @@ public class RealmTaskService extends GcmTaskService {
     }
 
     void getAllMovies() {
-        Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        LogUtils.newLog(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -352,10 +352,10 @@ public class RealmTaskService extends GcmTaskService {
                         }
                     }, () -> {
 
-                        Log.d(Constants.TAG, "onSuccess: ");
+                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
 
                     }, error -> {
-                        Log.d(Constants.TAG, "onResponse: " + error.getMessage());
+                        LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
                     });
 
                 }

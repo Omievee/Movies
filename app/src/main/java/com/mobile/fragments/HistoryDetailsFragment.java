@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.activities.ProfileActivity;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
@@ -94,7 +95,7 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
         Blurry.with(myActivity).radius(35).sampling(5).animate().onto(((ProfileActivity) myActivity).CONTAINER);
 
 
-        Log.d(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
+        LogUtils.newLog(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
 
         return root;
     }
@@ -207,7 +208,7 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
             @Override
             public void onFailure(Call<HistoryResponse> call, Throwable t) {
                 Toast.makeText(myActivity, t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
 

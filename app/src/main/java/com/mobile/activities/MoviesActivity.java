@@ -28,6 +28,7 @@ import com.mobile.fragments.SearchFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
@@ -141,7 +142,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -281,7 +282,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             alert = builder.create();
             alert.show();
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            android.util.Log.d(Constants.TAG, "onBackPressed: ");
+            LogUtils.newLog(Constants.TAG, "onBackPressed: ");
             if (restrict.getAlert() != null && !restrict.getAlert().isDismissible()) {
                 Toast.makeText(this, "Cannot perform this action", Toast.LENGTH_SHORT).show();
             } else if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
@@ -370,7 +371,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     //Alert data to create Alert Activity on launch...
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
-                        android.util.Log.d(Constants.TAG, "-----------HIT------------: ");
+                        LogUtils.newLog(Constants.TAG, "-----------HIT------------: ");
                         AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
                                 restrict.getAlert().getId(),
                                 restrict.getAlert().getTitle(),
@@ -395,7 +396,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                     }
 
-                    android.util.Log.d(Constants.TAG, "onResponse: " + restrict.getLogoutInfo().isForceLogout());
+                    LogUtils.newLog(Constants.TAG, "onResponse: " + restrict.getLogoutInfo().isForceLogout());
                     if (restrict.getLogoutInfo().isForceLogout()) {
 
                         Intent logUserOutIntent = new Intent(MoviesActivity.this, LogInActivity.class);
@@ -491,7 +492,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     @Override
     public void onAlertClickListener(String alertId) {
         UserPreferences.setAlertDisplayedId(alertId);
-        android.util.Log.d(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
+        LogUtils.newLog(Constants.TAG, "onAlertClickListener: " + getSupportFragmentManager().getBackStackEntryCount());
         getSupportFragmentManager().popBackStack();
         bottomNavigationView.setVisibility(View.VISIBLE);
     }

@@ -39,6 +39,7 @@ import com.mobile.adapters.MovieTheatersAdapter;
 import com.mobile.fragments.SynopsisFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
@@ -224,7 +225,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()), url);
 
 
-        android.util.Log.d(TAG, "Selected movie id: " + movie.getId());
+        LogUtils.newLog(TAG, "Selected movie id: " + movie.getId());
     }
 
 
@@ -257,7 +258,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
 
 
-        Log.d(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());
+        LogUtils.newLog(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), url);
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
@@ -379,12 +380,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(MovieActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        Log.d(TAG, ":---------------------<<<<<<<<<<<<<<<>>>>>>>>>>>>>> " + jObjError.getString("messege").toString());
+                        LogUtils.newLog(TAG, ":---------------------<<<<<<<<<<<<<<<>>>>>>>>>>>>>> " + jObjError.getString("messege").toString());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
                     } catch (Exception e) {
-                        Log.d(TAG, "onResponse: " + e.getMessage());
+                        LogUtils.newLog(TAG, "onResponse: " + e.getMessage());
                         ProgressBar.setVisibility(View.GONE);
                         buttonCheckIn.setVisibility(View.VISIBLE);
                         buttonCheckIn.setEnabled(true);
@@ -662,7 +663,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
     public void currentLocationTasks() {
-        Log.d(TAG, "currentLocationTasks: ");
+        LogUtils.newLog(TAG, "currentLocationTasks: ");
         registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
         UserLocationManagerFused.getLocationInstance(MovieActivity.this).startLocationUpdates();
         mLocationAcquired = false;
@@ -682,10 +683,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             arrow.setVisibility(View.GONE);
 
             Location location = UserLocationManagerFused.getLocationInstance(MovieActivity.this).mCurrentLocation;
-            Log.d(TAG, "currentLocationTasks: " + location);
+            LogUtils.newLog(TAG, "currentLocationTasks: " + location);
             onLocationChanged(location);
             if (location != null) {
-                Log.d(TAG, "location not null: ");
+                LogUtils.newLog(TAG, "location not null: ");
                 UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), MovieActivity.this);
             }
         }

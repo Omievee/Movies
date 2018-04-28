@@ -18,6 +18,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -56,7 +57,7 @@ public class ConfirmationSignUpFragment extends Fragment {
 
         confirmLogIn = view.findViewById(R.id.CONFIRM_GOTOLOGIN);
         progress = view.findViewById(R.id.progress);
-        Log.d("CONFIMATION", "onViewCreated: ");
+        LogUtils.newLog("CONFIMATION", "onViewCreated: ");
         confirmLogIn.setOnClickListener(v -> logIn());
     }
 
@@ -71,13 +72,13 @@ public class ConfirmationSignUpFragment extends Fragment {
 
 
         LogInRequest request = new LogInRequest(email, password, deviceId, deviceType, device);
-        android.util.Log.d(Constants.TAG, "logIn: " + deviceId);
+        LogUtils.newLog(Constants.TAG, "logIn: " + deviceId);
         String UUID = "flag";
         RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 userRESPONSE = response.body();
-                android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
+                LogUtils.newLog(Constants.TAG, "RESPONSE CODE??? : " + response.code());
                 if (response.code() == 200) {
                     progress.setVisibility(View.GONE);
                     UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
@@ -99,11 +100,11 @@ public class ConfirmationSignUpFragment extends Fragment {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(myContext, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        android.util.Log.d(Constants.TAG, "onResponse: " + jObjError.getString("message"));
+                        LogUtils.newLog(Constants.TAG, "onResponse: " + jObjError.getString("message"));
 
                     } catch (Exception e) {
                         Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d(Constants.TAG, "onResponse: " + e.getMessage());
+                        LogUtils.newLog(Constants.TAG, "onResponse: " + e.getMessage());
                     }
                 }
             }
@@ -112,7 +113,7 @@ public class ConfirmationSignUpFragment extends Fragment {
             public void onFailure(Call<User> call, Throwable t) {
                 progress.setVisibility(View.GONE);
                 Toast.makeText(myContext, t.getMessage(), Toast.LENGTH_LONG).show();
-                android.util.Log.d(Constants.TAG, "failure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "failure: " + t.getMessage());
             }
         });
     }

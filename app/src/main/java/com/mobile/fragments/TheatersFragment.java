@@ -66,6 +66,7 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.activities.TheaterActivity;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
@@ -223,7 +224,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
         buildLocationSettingsRequest();
-        Log.d(TAG, "onViewCreated: " + slideup.getPanelState());
+        LogUtils.newLog(TAG, "onViewCreated: " + slideup.getPanelState());
 
 
         slideup.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -379,7 +380,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             if (mRequestingLocationUpdates) {
                 if (loc != null) {
                     mMap.setMyLocationEnabled(true);
-                    Log.d(TAG, "*******HIT******: ");
+                    LogUtils.newLog(TAG, "*******HIT******: ");
                     lat = loc.getLatitude();
                     lon = loc.getLongitude();
 
@@ -432,7 +433,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
         mMap.animateCamera(cameraUpdate);
         queryRealmLoadTheaters(lat, lon);
-        Log.d(TAG, "getMyLocation:  " + lat + "  " + lon);
+        LogUtils.newLog(TAG, "getMyLocation:  " + lat + "  " + lon);
         theatersRECY.getRecycledViewPool().clear();
         theaterAdapter.notifyDataSetChanged();
         if (searchThisArea.getVisibility() == View.VISIBLE) {
@@ -539,7 +540,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
         RealmResults<Theater> allTheaters = tRealm.where(Theater.class).findAll();
 
-        Log.d(TAG, "THEATERS SIZE???!?!?!?!?: " + allTheaters.size());
+        LogUtils.newLog(TAG, "THEATERS SIZE???!?!?!?!?: " + allTheaters.size());
         for (int K = 0; K < allTheaters.size(); K++) {
             Location pointB = new Location(LocationManager.GPS_PROVIDER);
 
@@ -643,7 +644,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         }
         mClusterManager.cluster();
 
-        Log.d(TAG, "displayTheatersFromRealm: " + theatersList.size());
+        LogUtils.newLog(TAG, "displayTheatersFromRealm: " + theatersList.size());
 
 
         Handler han = new Handler();
@@ -674,7 +675,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
                 mMap.animateCamera(cameraUpdate);
-                Log.d(TAG, "address: " + address);
+                LogUtils.newLog(TAG, "address: " + address);
             } else {
                 RealmResults<Theater> searchArea = tRealm.where(Theater.class)
                         .contains("city", searchString)
@@ -685,8 +686,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     LAT = searchArea.get(i).getLat();
                     LON = searchArea.get(i).getLon();
 
-                    Log.d(TAG, "searchMap: " + LAT);
-                    Log.d(TAG, "searchMap: " + LON);
+                    LogUtils.newLog(TAG, "searchMap: " + LAT);
+                    LogUtils.newLog(TAG, "searchMap: " + LON);
                 }
                 if (LAT != 0.0 && LON != 0.0) {
                     queryRealmLoadTheaters(LAT, LON);
@@ -767,11 +768,11 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
                         }
                     }, () -> {
-                        Log.d(Constants.TAG, "onSuccess: ");
+                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         locationUpdateRealm();
                     }, error -> {
                         // Transaction failed and was automatically canceled.
-                        Log.d(Constants.TAG, "Realm onError: " + error.getMessage());
+                        LogUtils.newLog(Constants.TAG, "Realm onError: " + error.getMessage());
                     });
                 }
             }

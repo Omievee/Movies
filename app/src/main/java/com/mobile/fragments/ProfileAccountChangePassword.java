@@ -23,6 +23,7 @@ import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.ChangePasswordRequest;
@@ -188,7 +189,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
             @Override
             public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
                 progress.setVisibility(View.GONE);
             }
         });
@@ -203,7 +204,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
 
         LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
         String UUID = "";
-        android.util.Log.d(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
+        LogUtils.newLog(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
         RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -215,7 +216,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
                     listener.closeFragment();
                 } else {
                     progress.setVisibility(View.GONE);
-                    android.util.Log.d(TAG, "onResponse: FAILURE LOG IN " + response.toString());
+                    LogUtils.newLog(TAG, "onResponse: FAILURE LOG IN " + response.toString());
                 }
             }
 
