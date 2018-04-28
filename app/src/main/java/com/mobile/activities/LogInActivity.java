@@ -34,6 +34,7 @@ import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
@@ -69,7 +70,7 @@ public class LogInActivity extends AppCompatActivity {
     LoginButton facebookLogInButton;
     int offset = 3232323;
     int userId;
-    RestrictionsResponse restriction;
+    MicroServiceRestrictionsResponse restriction;
     User userRESPONSE;
     private AndroidIDVerificationResponse androidId;
 
@@ -376,9 +377,9 @@ public class LogInActivity extends AppCompatActivity {
 
     public void checkRestrictions(User user) {
 
-        RestClient.getAuthenticated().getRestrictions(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
+        RestClient.getAuthenticated().getInterstitialAlert(user.getId()).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+            public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
@@ -437,7 +438,7 @@ public class LogInActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+            public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
 
             }
         });
