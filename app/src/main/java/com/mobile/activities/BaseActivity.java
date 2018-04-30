@@ -32,6 +32,7 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.fragments.TicketVerificationDialog;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -85,7 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
             attributes.put("email", UserPreferences.getUserEmail());
             attributes.put("name", UserPreferences.getUserName());
             attributes.put("user_id", String.valueOf(UserPreferences.getUserId()));
-            Log.d("taplytics put", UserPreferences.getUserEmail());
+            LogUtils.newLog("taplytics put", UserPreferences.getUserEmail());
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 

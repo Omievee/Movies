@@ -1,5 +1,8 @@
 package com.mobile;
 
+
+import com.moviepass.BuildConfig;
+
 import java.util.HashMap;
 
 /**
@@ -9,7 +12,7 @@ import java.util.HashMap;
 public class Constants {
 
     public static final String TAG = "Found";
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = BuildConfig.DEBUG;
     public static final String TERMS = "https://moviepass.com/content/terms";
     public static final String REDEMPTION_ROUTE = "/coupons/form/redeem";
 

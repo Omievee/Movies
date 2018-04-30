@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.helpshift.Core;
-import com.helpshift.support.Log;
+import com.mobile.helpers.LogUtils;
 import com.taplytics.sdk.TLGcmBroadcastReceiver;
 import com.taplytics.sdk.Taplytics;
 
@@ -35,8 +35,8 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
                 try {
                     // json.put(key, bundle.get(key)); see edit below
                     json.put(key, JSONObject.wrap(bundle.get(key)));
-                    Log.d("jsonthings", json.put(key, JSONObject.wrap(bundle.get(key))).toString());
-                    Log.d("custom_keys", bundle.get("custom_keys").toString());
+                    LogUtils.newLog("jsonthings",json.put(key, JSONObject.wrap(bundle.get(key))).toString());
+                    LogUtils.newLog("custom_keys",bundle.get("custom_keys").toString());
                     Object newBundle = bundle.get(Constants.CUSTOM_DATA);
 
 
@@ -70,18 +70,18 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
 
 
 //        if (intent.getDataString() != null) {
-//            Log.d("intent", intent.getDataString());
+//            LogUtils.newLog("intent", intent.getDataString());
 //        }
 //
 //        if (intent.getStringExtra("external_url") != null) {
-//            Log.d("intentURL", intent.getStringExtra("external_url"));
+//            LogUtils.newLog("intentURL", intent.getStringExtra("external_url"));
 //        }
 //
 //        JSONObject customKeys = new JSONObject();
 //        Taplytics.trackPushOpen("tl_id", customKeys);
 //        try {
 //            String externalURL = customKeys.getString("external_url");
-//            Log.d("externalUrl", externalURL);
+//            LogUtils.newLog("externalUrl", externalURL);
 //        } catch (Exception e) {
 //
 //        }

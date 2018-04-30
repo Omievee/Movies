@@ -11,6 +11,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.helpers.GoWatchItSingleton
+import com.mobile.helpers.LogUtils
 import com.moviepass.R
 import java.io.IOException
 
@@ -78,8 +79,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
-        android.util.Log.d(Constants.TAG, "onCreate: " + UserPreferences.getUserId())
-        android.util.Log.d(Constants.TAG, "onCreate: " + UserPreferences.getAuthToken())
+        LogUtils.newLog(Constants.TAG, "onCreate: " + UserPreferences.getUserId())
+        LogUtils.newLog(Constants.TAG, "onCreate: " + UserPreferences.getAuthToken())
 
         Handler().postDelayed({
             if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {

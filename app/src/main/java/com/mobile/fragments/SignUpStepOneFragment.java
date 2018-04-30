@@ -28,6 +28,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.moviepass.R;
 
@@ -154,7 +155,7 @@ public class SignUpStepOneFragment extends Fragment {
                 } else {
                     for (int i = 0; i < localList.size(); i++) {
                         signUpAddress1.setText(localList.get(0));
-                        Log.d(TAG, "onActivityResult: " + localList.get(i));
+                        LogUtils.newLog(TAG, "onActivityResult: " + localList.get(i));
                         signup1City.setText(localList.get(1).trim());
                         String State = localList.get(2).substring(0, 3).trim();
                         String zip = localList.get(2).substring(4, 9).trim();
@@ -164,11 +165,11 @@ public class SignUpStepOneFragment extends Fragment {
                     }
 
 
-                    Log.i(Constants.TAG, "Place:" + place.toString());
+                    LogUtils.newLog(Constants.TAG, "Place:" + place.toString());
                 }
             }else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(myActivity, data);
-                    Log.i(Constants.TAG, status.getStatusMessage());
+                LogUtils.newLog(Constants.TAG, status.getStatusMessage());
                 } else if (resultCode == RESULT_CANCELED) {
 
                 }
@@ -265,7 +266,7 @@ public class SignUpStepOneFragment extends Fragment {
                 } else {
                     address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                     signUpAddress1.clearFocus();
-                    Log.d("ADDRESS", "isValidAddress: ");
+                    LogUtils.newLog("ADDRESS", "isValidAddress: ");
                 }
 
                 //Validating City
@@ -351,7 +352,7 @@ public class SignUpStepOneFragment extends Fragment {
             ProspectUser.zip = signup1Zip.getText().toString();
 
 
-            Log.d(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
+            LogUtils.newLog(TAG, "processSignUpInfo: " + ProspectUser.firstName + " " + ProspectUser.lastName);
 
 
 //        PersonalInfoRequest request = new PersonalInfoRequest(ProspectUser.email, ProspectUser.password,
@@ -371,7 +372,7 @@ public class SignUpStepOneFragment extends Fragment {
 //                            String price = (registrationPlanResponse.getPrice());
 //
 //                            ((SignUpActivity) getActivity()).setPage();
-//                            Log.d("SUSOFprice", price);
+//                            LogUtils.newLog("SUSOFprice", price);
 //                        } else if (response.errorBody() != null) {
 //                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
 //                        }

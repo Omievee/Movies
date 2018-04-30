@@ -26,6 +26,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
 import com.mobile.extensions.CustomAutoCompleteDropDown;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CredentialsRequest;
@@ -149,7 +150,7 @@ public class SignUpFirstTime extends Fragment {
                 emailTextInputLayout.setError(null);
                 email2TextInputLayout.setError(null);
                 passwordTextInputLayout.setError(null);
-                Log.d(Constants.TAG, "onClick: " + DOB.getText().toString());
+                LogUtils.newLog(Constants.TAG, "onClick: " + DOB.getText().toString());
                 progress.setVisibility(View.VISIBLE);
                 final String email1 = signupEmailInput.getText().toString().trim();
                 final String email2 = signupEmailConfirm.getText().toString().trim();
@@ -167,7 +168,7 @@ public class SignUpFirstTime extends Fragment {
                                 if (response.body().toString().contains("user exists")) {
                                     Toast.makeText(myContext, "User already exists", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Log.d("------>", "onResponse: " + response.body());
+                                    LogUtils.newLog("------>", "onResponse: " + response.body());
                                     ProspectUser.email = email1;
                                     ProspectUser.password = password;
                                     ProspectUser.gender = gender;

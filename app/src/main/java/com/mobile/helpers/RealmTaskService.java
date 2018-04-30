@@ -61,13 +61,10 @@ public class RealmTaskService extends GcmTaskService {
         Handler h = new Handler(getMainLooper());
 
         if (taskParams.getTag().equals(GCM_REPEAT_TAG)) {
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    getMoviesBucket();
-                    getAllMovies();
-                    Log.d(Constants.TAG, "movies: " );
-                }
+            h.post(() -> {
+                getMoviesBucket();
+                getAllMovies();
+
             });
         }
 
@@ -76,7 +73,6 @@ public class RealmTaskService extends GcmTaskService {
                 @Override
                 public void run() {
                     getTheatersBucket();
-                    Log.d(Constants.TAG, "Theaters: ");
                 }
             });
         }
@@ -86,7 +82,6 @@ public class RealmTaskService extends GcmTaskService {
                 @Override
                 public void run() {
                     getHistory();
-                    Log.d(Constants.TAG, "HISTORY RUN: ");
                 }
             });
         }

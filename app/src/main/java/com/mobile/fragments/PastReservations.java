@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
@@ -71,7 +72,7 @@ public class PastReservations extends Fragment {
         historyList = new ArrayList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
         progress = rootview.findViewById(R.id.progress);
-        Log.d(TAG, "onCreateView: ");
+        LogUtils.newLog(TAG, "onCreateView: ");
         return rootview;
     }
 
@@ -87,7 +88,7 @@ public class PastReservations extends Fragment {
 
         progress.setVisibility(View.VISIBLE);
         loadHIstory();
-        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
+        LogUtils.newLog(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
     }
 
 
@@ -117,7 +118,7 @@ public class PastReservations extends Fragment {
             @Override
             public void onFailure(Call<HistoryResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
 

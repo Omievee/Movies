@@ -20,6 +20,7 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.helpshift.support.Log;
 import com.mobile.activities.SignUpActivity;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.requests.SignUpRequest;
@@ -81,8 +82,8 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
         if (ProspectUser.ccNum != null)
             confirmCCNum.setText(" - " + ProspectUser.ccNum.substring(12, 16));
 
-        Log.d(TAG, "vc: " + confirmCCNum.getId());
-        Log.d(TAG, "1: " + num);
+        LogUtils.newLog(TAG, "vc: " + confirmCCNum.getId());
+        LogUtils.newLog(TAG, "1: " + num);
 
         //ToS & Privacy Links
         confirmTermsText.setOnClickListener(view -> {
@@ -214,16 +215,16 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                         email, firstName, lastName, password, birthday, gender, Integer.valueOf(selectedPlanId), androidID);
             }
 
-            Log.d(TAG, "NAMES: " + firstName + "  " + lastName);
+            LogUtils.newLog(TAG, "NAMES: " + firstName + "  " + lastName);
 
-            Log.d(TAG, "completeRegistration: " + ProspectUser.session);
-            Log.d(TAG, "completeRegistration: " + request);
+            LogUtils.newLog(TAG, "completeRegistration: " + ProspectUser.session);
+            LogUtils.newLog(TAG, "completeRegistration: " + request);
 
 
             RestClient.getsAuthenticatedRegistrationAPI().signUp(ProspectUser.session, request).enqueue(new Callback<SignUpResponse>() {
                 @Override
                 public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                    Log.d("isSuccessful", String.valueOf(response.isSuccessful()));
+                    LogUtils.newLog("isSuccessful", String.valueOf(response.isSuccessful()));
 
                     if (response.isSuccessful()) {
                         //transition to final viewpager pag & show confirmation
@@ -249,7 +250,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
                     progress.setVisibility(View.GONE);
                     confirmSubmit.setEnabled(true);
                     makeSnackbar(t.getMessage());
-                    Log.d(TAG, "failed: " + t.getMessage());
+                    LogUtils.newLog(TAG, "failed: " + t.getMessage());
 
                 }
             });

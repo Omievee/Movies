@@ -44,6 +44,7 @@ import com.mobile.activities.TicketType;
 import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -230,7 +231,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final String time = showtime;
         final Screening screening1 = screening;
 
-        Log.d(TAG, "onShowtimeClick: ");
+        LogUtils.newLog(TAG, "onShowtimeClick: ");
         
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
@@ -245,7 +246,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         buttonCheckIn.setEnabled(true);
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
-            Log.d(TAG, "onClick: " + screening.getProvider().ticketType);
+            LogUtils.newLog(TAG, "onClick: " + screening.getProvider().ticketType);
             if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
@@ -355,7 +356,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                 } else {
                     /* TODO : FIX IF RESPONSE IS NULL */
-                    Log.d("else", "else" + response.message());
+                    LogUtils.newLog("else", "else" + response.message());
                 }
 
 
@@ -474,7 +475,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
                     Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
                 } else if(restError!=null){
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+                    LogUtils.newLog("resResponse:", "else onfail:" + "onRespnse fail");
                     Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
                 clearSuccessCount(); */
@@ -590,21 +591,21 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     ticketType,
                     showtimeId);
 
-            Log.d(TAG, "----------------------------------------------: ");
-            Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
-            Log.d(TAG, "normal: " + normalizedMovieId);
-            Log.d(TAG, "external: " + externalMovieId);
-            Log.d(TAG, "format: " + format);
-            Log.d(TAG, "tribune: " + tribuneTheaterId);
-            Log.d(TAG, "sku ID: " + sku);
-            Log.d(TAG, "price: " + price);
-            Log.d(TAG, "date: " + dateTime);
-            Log.d(TAG, "aud: " + auditorium);
-            Log.d(TAG, "perform: " + performanceId);
-            Log.d(TAG, "session: " + sessionId);
-            Log.d(TAG, "cinema: " + cinemaChainId);
-            Log.d(TAG, "show id: " + showtimeId);
-            Log.d(TAG, "tick type: " + ticketType);
+            LogUtils.newLog(TAG, "----------------------------------------------: ");
+            LogUtils.newLog(TAG, "provider: " + screen.getProvider().getProviderName());
+            LogUtils.newLog(TAG, "normal: " + normalizedMovieId);
+            LogUtils.newLog(TAG, "external: " + externalMovieId);
+            LogUtils.newLog(TAG, "format: " + format);
+            LogUtils.newLog(TAG, "tribune: " + tribuneTheaterId);
+            LogUtils.newLog(TAG, "sku ID: " + sku);
+            LogUtils.newLog(TAG, "price: " + price);
+            LogUtils.newLog(TAG, "date: " + dateTime);
+            LogUtils.newLog(TAG, "aud: " + auditorium);
+            LogUtils.newLog(TAG, "perform: " + performanceId);
+            LogUtils.newLog(TAG, "session: " + sessionId);
+            LogUtils.newLog(TAG, "cinema: " + cinemaChainId);
+            LogUtils.newLog(TAG, "show id: " + showtimeId);
+            LogUtils.newLog(TAG, "tick type: " + ticketType);
 
             return mPerformReq;
 
@@ -636,21 +637,21 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     performanceId,
                     sessionId);
 
-            Log.d(TAG, "----------------------------------------------: ");
-            Log.d(TAG, "time?: " + time);
+            LogUtils.newLog(TAG, "----------------------------------------------: ");
+            LogUtils.newLog(TAG, "time?: " + time);
 
-            Log.d(TAG, "provider: " + screen.getProvider().getProviderName());
-            Log.d(TAG, "normal: " + normalizedMovieId);
-            Log.d(TAG, "external: " + externalMovieId);
-            Log.d(TAG, "format: " + format);
-            Log.d(TAG, "tribune: " + tribuneTheaterId);
-            Log.d(TAG, "sku ID: " + sku);
-            Log.d(TAG, "price: " + price);
-            Log.d(TAG, "date: " + dateTime);
-            Log.d(TAG, "aud: " + auditorium);
-            Log.d(TAG, "perform: " + performanceId);
-            Log.d(TAG, "session: " + sessionId);
-            Log.d(TAG, "----------------------------------------------: ");
+            LogUtils.newLog(TAG, "provider: " + screen.getProvider().getProviderName());
+            LogUtils.newLog(TAG, "normal: " + normalizedMovieId);
+            LogUtils.newLog(TAG, "external: " + externalMovieId);
+            LogUtils.newLog(TAG, "format: " + format);
+            LogUtils.newLog(TAG, "tribune: " + tribuneTheaterId);
+            LogUtils.newLog(TAG, "sku ID: " + sku);
+            LogUtils.newLog(TAG, "price: " + price);
+            LogUtils.newLog(TAG, "date: " + dateTime);
+            LogUtils.newLog(TAG, "aud: " + auditorium);
+            LogUtils.newLog(TAG, "perform: " + performanceId);
+            LogUtils.newLog(TAG, "session: " + sessionId);
+            LogUtils.newLog(TAG, "----------------------------------------------: ");
 
             return mPerformReq;
         }

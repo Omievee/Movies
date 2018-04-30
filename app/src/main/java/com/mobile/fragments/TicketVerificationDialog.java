@@ -41,6 +41,7 @@ import com.mobile.activities.MovieActivity;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
@@ -227,7 +228,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
-                Log.d(Constants.TAG, "Error creating media file, test storage permissions");
+                LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
                 return;
             }
 
@@ -236,10 +237,10 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 fos.write(bitmapdata);
                 fos.close();
             } catch (FileNotFoundException e) {
-                Log.d(Constants.TAG, "File not found: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "File not found: " + e.getMessage());
             } catch (IOException e) {
 
-                Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "Error accessing file: " + e.getMessage());
 
             }
             //Turn into file
@@ -247,7 +248,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             if (getPictureFile == null) {
                 return;
             }
-            Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
+            LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
             uploadToAWS(getPictureFile);
         }, 4000);
 
@@ -325,7 +326,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
             @Override
             public void onError(int id, Exception ex) {
-                Log.d(Constants.TAG, "onError: ");
+                LogUtils.newLog(Constants.TAG, "onError: ");
             }
         });
     }
@@ -352,7 +353,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("MoviePass", "failed to create directory");
+                LogUtils.newLog("MoviePass", "failed to create directory");
                 return null;
             }
         }
