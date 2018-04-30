@@ -93,6 +93,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         if (movie != null) {
             imgURI = Uri.parse(movie.getLandscapeImageUrl());
+            Log.d(Constants.TAG, "Image URL >>>>>>>>>>>>>>>>> " + imgURI);
             if (movie.getTeaserVideoUrl() != null) {
 
                 holder.featuredVideo.setControllerHideOnTouch(false);
