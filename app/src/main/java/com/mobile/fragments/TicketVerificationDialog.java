@@ -110,12 +110,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
         TicketVerificationDialog fragment = new TicketVerificationDialog();
         Bundle args = new Bundle();
-        args.putInt("reservationId", resID);
-        args.putString("mSelectedMovieTitle", movieTitle);
-        args.putString("tribuneMovieId", tribuneMovieId);
-        args.putString("mTheaterSelected", theaterName);
-        args.putString("tribuneTheaterId", tribuneTheaterId);
-        args.putString("showtime", showtime);
+//        args.putInt("reservationId", resID);
+//        args.putString("mSelectedMovieTitle", movieTitle);
+//        args.putString("tribuneMovieId", tribuneMovieId);
+//        args.putString("mTheaterSelected", theaterName);
+//        args.putString("tribuneTheaterId", tribuneTheaterId);
+//        args.putString("showtime", showtime);
         fragment.setArguments(args);
         return fragment;
     }

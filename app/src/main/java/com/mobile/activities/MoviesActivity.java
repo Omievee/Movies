@@ -347,22 +347,22 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
                         UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
                     }
-                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
-                    if (UserPreferences.getProofOfPurchaseRequired() && restrict.getPopInfo() != null) {
-                        int reservationId = restrict.getPopInfo().getReservationId();
-                        String movieTitle = restrict.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restrict.getPopInfo().getTribuneMovieId();
-                        String theaterName = restrict.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restrict.getPopInfo().getTribuneTheaterId();
-                        String showtime = restrict.getPopInfo().getShowtime();
+                    //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity UserPreferences.getProofOfPurchaseRequired() &&
+                    if (restrict.getPopInfo() == null) {
+//                        int reservationId = restrict.getPopInfo().getReservationId();
+//                        String movieTitle = restrict.getPopInfo().getMovieTitle();
+//                        String tribuneMovieId = restrict.getPopInfo().getTribuneMovieId();
+//                        String theaterName = restrict.getPopInfo().getTheaterName();
+//                        String tribuneTheaterId = restrict.getPopInfo().getTribuneTheaterId();
+//                        String showtime = restrict.getPopInfo().getShowtime();
 
                         bundle = new Bundle();
-                        bundle.putInt("reservationId", reservationId);
-                        bundle.putString("mSelectedMovieTitle", movieTitle);
-                        bundle.putString("tribuneMovieId", tribuneMovieId);
-                        bundle.putString("mTheaterSelected", theaterName);
-                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-                        bundle.putString("showtime", showtime);
+//                        bundle.putInt("reservationId", reservationId);
+//                        bundle.putString("mSelectedMovieTitle", movieTitle);
+//                        bundle.putString("tribuneMovieId", tribuneMovieId);
+//                        bundle.putString("mTheaterSelected", theaterName);
+//                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
+//                        bundle.putString("showtime", showtime);
 
                         TicketVerificationDialog dialog = new TicketVerificationDialog();
                         FragmentManager fm = getSupportFragmentManager();
