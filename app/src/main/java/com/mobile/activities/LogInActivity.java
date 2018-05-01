@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -29,6 +32,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.WebViewFragment;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -103,8 +107,17 @@ public class LogInActivity extends AppCompatActivity {
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LogInActivity.this, OnboardingActivity.class);
-                startActivity(intent);
+                //Changing - Removing Sign Up
+//                Intent intent = new Intent(LogInActivity.this, OnboardingActivity.class);
+//                startActivity(intent);
+
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                WebViewFragment web = new WebViewFragment();
+                transaction.replace(R.id.fragmentContainer, web);
+                transaction.addToBackStack("");
+                transaction.commit();
             }
         });
 
@@ -165,6 +178,19 @@ public class LogInActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        LogUtils.newLog("COUNT: "+fragmentManager.getBackStackEntryCount());
+//        WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+//        if (keyCode == KeyEvent.KEYCODE_BACK && fragmentManager.getBackStackEntryCount()>=1 && fragment.canGoBack()) {
+//            fragment.goBack();
+//            return true;
+//        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -446,24 +472,34 @@ public class LogInActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // do nothing. We want to force user to stay in this activity and not drop out.
-        android.support.v7.app.AlertDialog alert;
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
-        builder.setMessage("Do you want to quit MoviePass?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                finishAffinity(); // finish activity
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        LogUtils.newLog("COUNT: "+fragmentManager.getBackStackEntryCount());
+        WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentManager.getBackStackEntryCount()>=1) {
+            if(fragment.canGoBack())
+                fragment.goBack();
+            else
+                fragmentManager.popBackStack();
+        } else {
+            android.support.v7.app.AlertDialog alert;
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+            builder.setMessage("Do you want to quit MoviePass?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finishAffinity(); // finish activity
 
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        alert = builder.create();
-        alert.show();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert = builder.create();
+            alert.show();
+        }
     }
 }
