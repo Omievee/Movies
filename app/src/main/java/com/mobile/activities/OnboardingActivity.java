@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class OnboardingActivity extends AppCompatActivity {
     ImageView ticketIconFinal;
     int page = 0;
 
-    CoordinatorLayout mCoordinator;
+    RelativeLayout mCoordinator;
     private PlanResponse planResponse;
 
     @Override
@@ -75,7 +76,7 @@ public class OnboardingActivity extends AppCompatActivity {
         mCoordinator = findViewById(R.id.main_content);
         onboardingSignIn = findViewById(R.id.ONBOARDING_SIGN_IN);
         onboardingJoinNow = findViewById(R.id.ONBOARDING_JOIN_NOW);
-        nearMe = findViewById(R.id.NearMe);
+
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
@@ -88,52 +89,48 @@ public class OnboardingActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
 
-        nearMe.setOnClickListener(v -> {
-            NearMe fragobj = new NearMe();
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_nearme");
-        });
 
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-
-                page = position;
-                updateIndicators(page);
-
-                switch (position) {
-                    case 0:
-                        findTheaters.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        findTheaters.setVisibility(View.VISIBLE);
-
-                        break;
-                    case 2:
-
-                        findTheaters.setVisibility(View.INVISIBLE);
-
-                        break;
-                    case 3:
-
-                        findTheaters.setVisibility(View.INVISIBLE);
-                        break;
-
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-
-
-        });
+//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//
+//                page = position;
+//                updateIndicators(page);
+//
+//                switch (position) {
+//                    case 0:
+//                        findTheaters.setVisibility(View.VISIBLE);
+//                        break;
+//                    case 1:
+//                        findTheaters.setVisibility(View.VISIBLE);
+//
+//                        break;
+//                    case 2:
+//
+//                        findTheaters.setVisibility(View.INVISIBLE);
+//
+//                        break;
+//                    case 3:
+//
+//                        findTheaters.setVisibility(View.INVISIBLE);
+//                        break;
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//
+//
+//        });
 
         onboardingSignIn.setOnClickListener(view -> {
             Intent intent = new Intent(OnboardingActivity.this, LogInActivity.class);
@@ -182,6 +179,7 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         SimpleDraweeView img;
+        TextView nearMe;
 
 
         int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1,
@@ -214,6 +212,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
 
             img = rootView.findViewById(R.id.section_img);
+            nearMe = rootView.findViewById(R.id.NearMe);
+            if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 >1) {
+                
+            }
             if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0) {
                 textView.setVisibility(View.VISIBLE);
                 moviepassLogo.setVisibility(View.GONE);
@@ -251,6 +253,12 @@ public class OnboardingActivity extends AppCompatActivity {
                 pipeline.clearMemoryCaches();
                 pipeline.clearDiskCaches();
             }
+
+            nearMe.setOnClickListener(v -> {
+            NearMe fragobj = new NearMe();
+            FragmentManager fm = getChildFragmentManager();
+            fragobj.show(fm, "fr_nearme");
+        });
 
             return rootView;
         }

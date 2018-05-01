@@ -68,14 +68,11 @@
     <string name="activity_onboarding_header_1"></string>
     <string name="activity_onboarding_header_2">Over 4000 Theaters!</string>
     <string name="activity_onboarding_header_3">Any Movie</string>
-    <!--<string name="activity_onboarding_header_4">Check In, Swipe Card, Get Ticket</string>-->
-    <string name="activity_onboarding_header_4">Get Your Card</string>
-
-    <!--<string name="activity_onboarding_header_5">Grab A Seat, Enjoy!</string>-->
+    <string name="activity_onboarding_header_4">Become a Member</string>
     <string name="activity_onboarding_header_5">How It Works</string>
     <string name="activity_onboarding_header_final">Have a MoviePass Supported E-ticketing Theater Near You?</string>
 
-    <string name="activity_onboarding_body_1">Join America\'s #1 Movie Subscription Service! </string>
+    <string name="activity_onboarding_body_1">Join America\'s #1 Movie Subscription Service </string>
     <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
     <!--<string name="activity_onboarding_body_3">Use the MoviePass apptestheck in to the movie and showtime you want to see.</string>-->
     <string name="activity_onboarding_body_3">You can see any 2D movie from its first day of release.</string>

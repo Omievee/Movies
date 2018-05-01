@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -9,141 +9,108 @@
     android:fitsSystemWindows="true"
     tools:context="com.mobile.activities.OnboardingActivity">
 
+
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-    <FrameLayout
-        android:id="@+id/frame_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin">
+        android:layout_marginBottom="@dimen/margin_half">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_half">
-
-
-            <Button
-                android:id="@+id/ONBOARDING_JOIN_NOW"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/dots"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/mpbutton1"
-                android:text="Sign Up Now"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <RelativeLayout
-                android:id="@+id/buttons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/ONBOARDING_JOIN_NOW"
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/NearMe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="@dimen/double_margin_standard"
-                    android:text="Find theaters near me"
-                    android:textAlignment="center"
-                    android:textColor="@color/almost_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="25dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/NearMe"
-                    android:src="@drawable/arrowforward"
-                    android:textAlignment="center"
-                    android:tint="@color/new_red" />
-
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/dots"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_standard"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/intro_indicator_0"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected_no_stroke" />
-
-                <ImageView
-                    android:id="@+id/intro_indicator_1"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_half"
-                    android:layout_marginRight="@dimen/margin_standard"
-                    android:background="@drawable/indicator_unselected_no_stroke" />
-
-                <ImageView
-                    android:id="@+id/intro_indicator_2"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected_no_stroke" />
-
-                <ImageView
-                    android:id="@+id/intro_indicator_3"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginEnd="@dimen/margin_half"
-                    android:background="@drawable/indicator_unselected_no_stroke" />
-
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/MAIN_MP_HEADER"
-            android:layout_width="200dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/moviepass_logo_red"
-            android:tint="@color/new_red"
-            android:visibility="gone" />
 
         <Button
-            android:id="@+id/ONBOARDING_SIGN_IN"
+            android:id="@+id/ONBOARDING_JOIN_NOW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/margin_half"
-            android:background="@android:color/transparent"
-            android:text="Sign In"
+            android:layout_above="@id/signUp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_half"
+            android:background="@drawable/mpbutton1"
+            android:text="Log In"
             android:textAllCaps="false"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp" />
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/dots"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/margin_standard"
+            android:text="Not a member? Join today!"
+            android:textSize="@dimen/text_size_14" />
+
+        <LinearLayout
+            android:id="@+id/dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_half"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/intro_indicator_0"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:background="@drawable/indicator_unselected_no_stroke" />
+
+            <ImageView
+                android:id="@+id/intro_indicator_1"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:background="@drawable/indicator_unselected_no_stroke" />
+
+            <ImageView
+                android:id="@+id/intro_indicator_2"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginEnd="@dimen/margin_half"
+                android:background="@drawable/indicator_unselected_no_stroke" />
+
+            <ImageView
+                android:id="@+id/intro_indicator_3"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:background="@drawable/indicator_unselected_no_stroke" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/MAIN_MP_HEADER"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/moviepass_logo_red"
+        android:tint="@color/new_red"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/ONBOARDING_SIGN_IN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/margin_half"
+        android:background="@android:color/transparent"
+        android:text="Sign In"
+        android:textAllCaps="false"
+        android:textColor="@color/almost_white"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
 
     <WebView
@@ -153,4 +120,4 @@
         android:visibility="gone" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
