@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/test_black"
     android:fitsSystemWindows="true"
+    android:resizeableActivity="true"
     tools:context="com.mobile.activities.OnboardingActivity">
 
     <android.support.v4.view.ViewPager

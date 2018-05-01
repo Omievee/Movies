@@ -53,6 +53,10 @@ public class WebViewFragment extends Fragment {
         webView.loadUrl("http://www.moviepass.com");
     }
 
+    public boolean canGoBack(){
+        return webView.canGoBack();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

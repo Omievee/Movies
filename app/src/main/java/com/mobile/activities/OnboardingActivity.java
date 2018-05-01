@@ -79,7 +79,9 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
 
-        getPlans();
+
+
+//        getPlans();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mCoordinator = findViewById(R.id.main_content);
@@ -153,8 +155,11 @@ public class OnboardingActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        LogUtils.newLog("COUNT: "+fragmentManager.getBackStackEntryCount());
+        WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (keyCode == KeyEvent.KEYCODE_BACK && fragmentManager.getBackStackEntryCount()>=1 && fragment.canGoBack()) {
             fragment.goBack();
             return true;
         }
