@@ -61,12 +61,10 @@ public class RealmTaskService extends GcmTaskService {
         Handler h = new Handler(getMainLooper());
 
         if (taskParams.getTag().equals(GCM_REPEAT_TAG)) {
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    getMoviesBucket();
-                    getAllMovies();
-                }
+            h.post(() -> {
+                getMoviesBucket();
+                getAllMovies();
+
             });
         }
 
@@ -100,7 +98,7 @@ public class RealmTaskService extends GcmTaskService {
                     //repeat every 60 seconds
                     .setPeriod(7200)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(0)
+                    .setFlex(3600)
                     //tag that is unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_TAG)
                     //whether the task persists after device reboot
@@ -111,9 +109,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            LogUtils.newLog(Constants.TAG, "repeating task scheduled");
+            Log.d(Constants.TAG, "repeating movie task scheduled");
         } catch (Exception e) {
-            LogUtils.newLog(Constants.TAG, "scheduling failed");
+            Log.e(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -126,7 +124,7 @@ public class RealmTaskService extends GcmTaskService {
                     //repeat x seconds
                     .setPeriod(86400)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(0)
+                    .setFlex(3600)
                     //tag that is q unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_THEATER_TAG)
                     //whether the task persists after device reboot
@@ -137,9 +135,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            LogUtils.newLog(Constants.TAG, "repeating theater task scheduled");
+            Log.d(Constants.TAG, "repeating theater task scheduled");
         } catch (Exception e) {
-            LogUtils.newLog(Constants.TAG, "scheduling failed");
+            Log.e(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -152,7 +150,7 @@ public class RealmTaskService extends GcmTaskService {
                     //repeat x seconds
                     .setPeriod(14400)
                     //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(0)
+                    .setFlex(3600)
                     //tag that is q unique to this task (can be used to cancel task)
                     .setTag(GCM_REPEAT_HISTORY_TAG)
                     //whether the task persists after device reboot
@@ -163,9 +161,9 @@ public class RealmTaskService extends GcmTaskService {
 
 
             GcmNetworkManager.getInstance(context).schedule(periodic);
-            LogUtils.newLog(Constants.TAG, "repeating theater task scheduled");
+            Log.d(Constants.TAG, "repeating history task scheduled");
         } catch (Exception e) {
-            LogUtils.newLog(Constants.TAG, "scheduling failed");
+            Log.e(Constants.TAG, "scheduling failed");
             e.printStackTrace();
         }
     }
@@ -198,10 +196,10 @@ public class RealmTaskService extends GcmTaskService {
                             RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
                         }
                     }, () -> {
-                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
+                        Log.d(Constants.TAG, "onSuccess: ");
                     }, error -> {
                         // Transaction failed and was automatically canceled.
-                        LogUtils.newLog(Constants.TAG, "Realm onError: " + error.getMessage());
+                        Log.d(Constants.TAG, "Realm onError: " + error.getMessage());
                     });
                 }
             }
@@ -214,7 +212,7 @@ public class RealmTaskService extends GcmTaskService {
     }
 
     void getAllMovies() {
-        LogUtils.newLog(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
+        Log.d(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
         allMoviesConfig = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -352,10 +350,10 @@ public class RealmTaskService extends GcmTaskService {
                         }
                     }, () -> {
 
-                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
+                        Log.d(Constants.TAG, "onSuccess: ");
 
                     }, error -> {
-                        LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
+                        Log.d(Constants.TAG, "onResponse: " + error.getMessage());
                     });
 
                 }
@@ -395,6 +393,8 @@ public class RealmTaskService extends GcmTaskService {
                                 historyList.setRating(historyObjects.getReservations().get(i).getRating());
                                 historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
                                 historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+
+
                                 historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
                                 historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
                                 historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
