@@ -24,30 +24,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/section_body" />
 
-
-    <ImageView
-        android:id="@+id/moviepasslogo"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/titleSection"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/logomediumred"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="16dp">
 
-    <TextView
-        android:id="@+id/section_label"
-        style="@style/TextAppearance.AppCompat.Headline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/almost_white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        tools:text="Page One" />
+
+        <ImageView
+            android:id="@+id/moviepasslogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logomediumred"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:id="@+id/section_label"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/almost_white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="Page One" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/section_body"
@@ -62,10 +70,10 @@
         android:text="Join Americas #1 Movie Subscription Service!"
         android:textColor="@color/almost_white"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/moviepasslogo" />
+        app:layout_constraintTop_toBottomOf="@+id/titleSection" />
 
     <RelativeLayout
-        android:id="@+id/buttons"
+        android:id="@+id/findTheaters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ONBOARDING_JOIN_NOW"

@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.mobile.activities.OnboardingActivity">
 
-
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -112,12 +111,9 @@
         android:textSize="14sp"
         android:visibility="gone" />
 
-
-    <WebView
-        android:id="@+id/Web"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
-
+        android:id="@+id/fragmentContainer"/>
 
 </RelativeLayout>
