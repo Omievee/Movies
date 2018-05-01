@@ -22,7 +22,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 23
         versionCode 114
         versionName "3.0.15"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
