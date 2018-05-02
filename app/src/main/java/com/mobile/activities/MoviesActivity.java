@@ -101,17 +101,15 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
-
-
         Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
 
 
-        if(UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")){
+        if (UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")) {
             verifyAndroidID();
-        }else{
+        } else {
             microServiceRestrictions();
         }
     }
@@ -127,7 +125,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             @Override
             public void onResponse(Call<AndroidIDVerificationResponse> call, Response<AndroidIDVerificationResponse> response) {
                 if (response.isSuccessful()) {
-                    if(response!=null)
+                    if (response != null)
                         UserPreferences.setOneDeviceId(response.body().getOneDeviceId());
                     microServiceRestrictions();
                 } else {
