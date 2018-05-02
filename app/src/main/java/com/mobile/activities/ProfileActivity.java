@@ -31,6 +31,7 @@ import com.mobile.fragments.ProfileCancellationFragment;
 import com.mobile.fragments.ProfileFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -64,7 +65,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
-        Log.d(TAG, "onCreate: " + CONTAINER);
+        LogUtils.newLog(TAG, "onCreate: " + CONTAINER);
     }
 
     @Override
@@ -243,7 +244,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         transaction.addToBackStack("");
         transaction.commit();
 
-        Log.d(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
+        LogUtils.newLog(TAG, "onPosterClicked: " + getSupportFragmentManager().getBackStackEntryCount());
     }
 
     @Override

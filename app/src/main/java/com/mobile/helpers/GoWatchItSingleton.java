@@ -101,7 +101,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT APP OPEN", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT APP OPEN", "onResponse: " + responseBody.getMessage());
                 }
 
 
@@ -124,7 +124,7 @@ public class GoWatchItSingleton {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
         IDFA = UserPreferences.getAAID();
-        android.util.Log.d("WATCH", "userOpenedMovie: "+movieId);
+        LogUtils.newLog("WATCH", "userOpenedMovie: "+movieId);
         String movieTitle = getMovieTitle(movieId);
 
         RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Movie",
@@ -137,7 +137,7 @@ public class GoWatchItSingleton {
 
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT MOVIE", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT MOVIE", "onResponse: " + responseBody.getMessage());
                 }
 
 
@@ -188,7 +188,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT SHOWTIME", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT SHOWTIME", "onResponse: " + responseBody.getMessage());
                 }
 
 
@@ -249,7 +249,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT CHECK IN", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT CHECK IN", "onResponse: " + responseBody.getMessage());
                 }
 
 
@@ -280,7 +280,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT SEARCH", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT SEARCH", "onResponse: " + responseBody.getMessage());
                 }
             }
 
@@ -309,7 +309,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT THEATER", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT THEATER", "onResponse: " + responseBody.getMessage());
                 }
 
 
@@ -340,7 +340,7 @@ public class GoWatchItSingleton {
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     GoWatchItResponse responseBody = response.body();
-                    Log.d("GO WATCH IT THEATER MAP", "onResponse: " + responseBody.getMessage());
+                    LogUtils.newLog("GO WATCH IT THEATER MAP", "onResponse: " + responseBody.getMessage());
                 }
 
 

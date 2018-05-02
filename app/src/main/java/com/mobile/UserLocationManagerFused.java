@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.mobile.application.Application;
 import com.mobile.events.UIRefreshEvent;
+import com.mobile.helpers.LogUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -103,7 +104,7 @@ public class UserLocationManagerFused implements LocationListener, GoogleApiClie
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         startLocationUpdates();
 
-        Log.d(Constants.TAG, "onConnected: " + mCurrentLocation);
+        LogUtils.newLog(Constants.TAG, "onConnected: " + mCurrentLocation);
         if (mCurrentLocation != null) {
             updateLocation(mCurrentLocation);
         }

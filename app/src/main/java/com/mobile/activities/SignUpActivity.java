@@ -25,6 +25,7 @@ import com.mobile.fragments.SignUpFirstTime;
 import com.mobile.fragments.SignUpStepOneFragment;
 import com.mobile.fragments.SignUpStepThreeFragment;
 import com.mobile.fragments.SignUpStepTwoFragment;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Plan;
 import com.mobile.model.Plans;
 import com.mobile.model.ProspectUser;
@@ -137,9 +138,9 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
         mCoordinator.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             int heightDiff = mCoordinator.getRootView().getHeight() - mCoordinator.getHeight();
             if (heightDiff > 100) { // if more than 200 dp, it's probably a keyboard...
-                android.util.Log.d("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
-                android.util.Log.d("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
-                android.util.Log.d("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
+                LogUtils.newLog("KEYBOARD", "mCOORDINATIOR ROOT VIEW HEIGHT "+mCoordinator.getRootView().getHeight());
+                LogUtils.newLog("KEYBOARD", "mCOORDINATIOR  HEIGHT "+mCoordinator.getHeight());
+                LogUtils.newLog("KEYBOARD", "mCOORDINATIOR  DIFFERENCE "+heightDiff);
             }
         });
 

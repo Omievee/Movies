@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +17,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.content.ContextCompat;
-import com.helpshift.support.Log;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,16 +32,14 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ConfirmationActivity;
-import com.mobile.activities.MovieActivity;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
 import com.mobile.helpers.ContextSingleton;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
@@ -72,7 +71,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class TicketVerificationDialog extends BottomSheetDialogFragment {
-
+    public final String APP_TAG = "TicketVerification";
     String mCurrentPhotoPath;
     private Uri imageUri;
     ImageView ticketScan;
@@ -85,6 +84,10 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     String key;
     Activity myActivity;
     Context myContext;
+    String filePath;
+    Uri mImageUri;
+    File photoFile;
+    String photoFileName = "TicketVerification.jpg";
 
     private native static String getProductionBucket();
 
@@ -109,12 +112,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
         TicketVerificationDialog fragment = new TicketVerificationDialog();
         Bundle args = new Bundle();
-        args.putInt("reservationId", resID);
-        args.putString("mSelectedMovieTitle", movieTitle);
-        args.putString("tribuneMovieId", tribuneMovieId);
-        args.putString("mTheaterSelected", theaterName);
-        args.putString("tribuneTheaterId", tribuneTheaterId);
-        args.putString("showtime", showtime);
+//        args.putInt("reservationId", resID);
+//        args.putString("mSelectedMovieTitle", movieTitle);
+//        args.putString("tribuneMovieId", tribuneMovieId);
+//        args.putString("mTheaterSelected", theaterName);
+//        args.putString("tribuneTheaterId", tribuneTheaterId);
+//        args.putString("showtime", showtime);
         fragment.setArguments(args);
         return fragment;
     }
@@ -163,7 +166,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         FAQs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Support.showFAQSection(getActivity(),Constants.TICKET_VERIFICATION_FAQ_SECTION);
+                Support.showFAQSection(getActivity(), Constants.TICKET_VERIFICATION_FAQ_SECTION);
             }
         });
 
@@ -173,26 +176,59 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             intent.putExtra(Constants.SCREENING, res);
             startActivity(intent);
         });
+
+
     }
 
 
     public void scanTicket() {
-        Intent ticketVerif = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(ticketVerif, Constants.REQUEST_TICKET_VERIF);
+
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = getPhotoFileUri(photoFileName);
+        Uri fileProvider = FileProvider.getUriForFile(myContext, "com.moviepass.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(myContext.getPackageManager()) != null) {
+            Log.d(Constants.TAG, "scanTicket: ");
+            startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
+
+        }
+    }
+
+    private File getPhotoFileUri(String photoFileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d(APP_TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+
+        return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-            if (data.getExtras() != null) {
-                photo = (Bitmap) data.getExtras().get("data");
+
+                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+                Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
+
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
+
                 } else {
-                    createImageFile();
+                    createFileForUpload();
                 }
-            }
+
         }
     }
 
@@ -207,39 +243,39 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             Toast.makeText(myActivity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
         }
         if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            createImageFile();
+            createFileForUpload();
         } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
             Toast.makeText(myActivity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
 
         }
     }
 
-    public void createImageFile() {
+    public void createFileForUpload() {
         Handler handler = new Handler();
         progress.setVisibility(View.VISIBLE);
         ticketScan.setVisibility(View.INVISIBLE);
+
         handler.postDelayed(() -> {
-
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            photo.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+            LogUtils.newLog("tag", "photo size 1 ? " + photo.getWidth() + " * " + photo.getHeight());
+
             final byte[] bitmapdata = bos.toByteArray();
 
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
-                Log.d(Constants.TAG, "Error creating media file, test storage permissions");
+                LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
                 return;
             }
-
             try {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(bitmapdata);
                 fos.close();
             } catch (FileNotFoundException e) {
-                Log.d(Constants.TAG, "File not found: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "File not found: " + e.getMessage());
             } catch (IOException e) {
 
-                Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "Error accessing file: " + e.getMessage());
 
             }
             //Turn into file
@@ -247,8 +283,9 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             if (getPictureFile == null) {
                 return;
             }
-            Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
-            uploadToAWS(getPictureFile);
+
+            LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
+           uploadToAWS(getPictureFile);
         }, 4000);
 
     }
@@ -325,7 +362,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
             @Override
             public void onError(int id, Exception ex) {
-                Log.d(Constants.TAG, "onError: ");
+                LogUtils.newLog(Constants.TAG, "onError: ");
             }
         });
     }
@@ -352,7 +389,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("MoviePass", "failed to create directory");
+                LogUtils.newLog("MoviePass", "failed to create directory");
                 return null;
             }
         }

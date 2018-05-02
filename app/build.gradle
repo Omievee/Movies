@@ -22,9 +22,9 @@ android {
         vectorDrawables.useSupportLibrary = true
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 112
-        versionName "3.0.13"
+        targetSdkVersion 23
+        versionCode 115
+        versionName "3.0.16"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -182,8 +182,8 @@ dependencies {
     // Facebook
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     // Fresco
-    implementation 'com.facebook.fresco:fresco:1.5.0'
-    implementation 'com.facebook.fresco:animated-gif:1.5.0'
+    implementation 'com.facebook.fresco:fresco:1.9.0'
+    implementation 'com.facebook.fresco:animated-gif:1.9.0'
 
     // Helpshift
     implementation 'com.helpshift:android-helpshift-aar:6.4.1'

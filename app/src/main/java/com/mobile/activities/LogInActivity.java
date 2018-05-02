@@ -29,11 +29,13 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
@@ -69,7 +71,7 @@ public class LogInActivity extends AppCompatActivity {
     LoginButton facebookLogInButton;
     int offset = 3232323;
     int userId;
-    RestrictionsResponse restriction;
+    MicroServiceRestrictionsResponse restriction;
     User userRESPONSE;
     private AndroidIDVerificationResponse androidId;
 
@@ -184,31 +186,26 @@ public class LogInActivity extends AppCompatActivity {
         String deviceType = Build.MODEL;
         String device = "ANDROID";
 
-
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password, deviceId, deviceType, device);
-            android.util.Log.d(Constants.TAG, "logIn: " + deviceId);
+            LogUtils.newLog(Constants.TAG, "logIn: " + deviceId);
             String UUID = "flag";
             RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     userRESPONSE = response.body();
-                    android.util.Log.d(Constants.TAG, "RESPONSE CODE??? : " + response.code());
                     if (response.code() == 200) {
                         moviePassLoginSucceeded(response.body());
                     } else if (response.code() == 207) {
-                        android.util.Log.d(Constants.TAG, "onResponse: ");
                         AlertDialog.Builder alert = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
                         alert.setTitle("We’ve noticed you switched to a different device");
                         alert.setMessage("Switching to a new device will permanently lock you out from any other device for 30 days.");
-//                        alert.setView(R.layout.alertdialog_onedevice);
                         alert.setCancelable(false);
                         alert.setPositiveButton("Switch to this device", (dialog, which) -> {
                             dialog.dismiss();
                             progress.setVisibility(View.GONE);
                             AlertDialog.Builder areYouSure = new AlertDialog.Builder(LogInActivity.this, R.style.CUSTOM_ALERT);
 
-//                            areYouSure.setView(R.layout.alertdialog_onedevice_commit);
                             areYouSure.setTitle("Are you sure?");
                             areYouSure.setMessage("This cannot be undone.");
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
@@ -239,7 +236,7 @@ public class LogInActivity extends AppCompatActivity {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            android.util.Log.d(Constants.TAG, "onResponse: " + jObjError.getString("message"));
+                            LogUtils.newLog(Constants.TAG, "onResponse: " + jObjError.getString("message"));
                             progress.setVisibility(View.GONE);
 
                         } catch (Exception e) {
@@ -255,7 +252,7 @@ public class LogInActivity extends AppCompatActivity {
                 public void onFailure(Call<User> call, Throwable t) {
                     progress.setVisibility(View.GONE);
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    android.util.Log.d(Constants.TAG, "failure: " + t.getMessage());
+                    LogUtils.newLog(Constants.TAG, "failure: " + t.getMessage());
                 }
             });
         } else {
@@ -277,8 +274,7 @@ public class LogInActivity extends AppCompatActivity {
                     androidId = response.body();
                     moviePassLoginSucceeded(userRESPONSE);
                     UserPreferences.setOneDeviceId(androidId.getOneDeviceId());
-                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID FROM VERIFICATION "+androidId.getOneDeviceId());
-                    android.util.Log.d(Constants.TAG, "onResponse: ONE DEVICE ID USER PREFERENCES "+UserPreferences.getUserCredentials());
+
                 } else if (response.code() == 403) {
                     //TODO: ADD MESSAGE
                     progress.setVisibility(View.GONE);
@@ -288,7 +284,7 @@ public class LogInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
-                android.util.Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -359,12 +355,12 @@ public class LogInActivity extends AppCompatActivity {
     private void moviePassLoginSucceeded(User user) {
         if (user != null) {
 
-            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ");
+            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ");
             int us = user.getId();
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
-            android.util.Log.d(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
+            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
             UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);
@@ -374,9 +370,9 @@ public class LogInActivity extends AppCompatActivity {
 
     public void checkRestrictions(User user) {
 
-        RestClient.getAuthenticated().getRestrictions(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
+        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(user.getId()).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
-            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
+            public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
@@ -435,7 +431,7 @@ public class LogInActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
+            public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
 
             }
         });

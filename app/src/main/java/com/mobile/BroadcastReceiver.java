@@ -1,32 +1,18 @@
 package com.mobile;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import com.helpshift.support.Log;
-import android.widget.Toast;
 
-import com.braintreepayments.api.Json;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.helpshift.Core;
-import com.mobile.activities.MoviesActivity;
+import com.mobile.helpers.LogUtils;
 import com.taplytics.sdk.TLGcmBroadcastReceiver;
-import com.taplytics.sdk.TLGcmIntentService;
 import com.taplytics.sdk.Taplytics;
-import com.taplytics.sdk.TaplyticsPushTokenListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,8 +35,8 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
                 try {
                     // json.put(key, bundle.get(key)); see edit below
                     json.put(key, JSONObject.wrap(bundle.get(key)));
-                    Log.d("jsonthings", json.put(key, JSONObject.wrap(bundle.get(key))).toString());
-                    Log.d("custom_keys", bundle.get("custom_keys").toString());
+                    LogUtils.newLog("jsonthings",json.put(key, JSONObject.wrap(bundle.get(key))).toString());
+                    LogUtils.newLog("custom_keys",bundle.get("custom_keys").toString());
                     Object newBundle = bundle.get(Constants.CUSTOM_DATA);
 
 
@@ -84,18 +70,18 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
 
 
 //        if (intent.getDataString() != null) {
-//            Log.d("intent", intent.getDataString());
+//            LogUtils.newLog("intent", intent.getDataString());
 //        }
 //
 //        if (intent.getStringExtra("external_url") != null) {
-//            Log.d("intentURL", intent.getStringExtra("external_url"));
+//            LogUtils.newLog("intentURL", intent.getStringExtra("external_url"));
 //        }
 //
 //        JSONObject customKeys = new JSONObject();
 //        Taplytics.trackPushOpen("tl_id", customKeys);
 //        try {
 //            String externalURL = customKeys.getString("external_url");
-//            Log.d("externalUrl", externalURL);
+//            LogUtils.newLog("externalUrl", externalURL);
 //        } catch (Exception e) {
 //
 //        }
@@ -109,9 +95,9 @@ public class BroadcastReceiver extends TLGcmBroadcastReceiver {
             if(origin!=null && origin.equalsIgnoreCase("helpshift")){
                 Core.handlePush(context,intent);
             }
-            ComponentName comp = new ComponentName(context.getPackageName(), TLGcmIntentService.class.getName());
-            startWakefulService(context,intent.setComponent(comp));
-            setResultCode(Activity.RESULT_OK);
+//            ComponentName comp = new ComponentName(context.getPackageName(), TLGcmIntentService.class.getName());
+//            startWakefulService(context,intent.setComponent(comp));
+//            setResultCode(Activity.RESULT_OK);
         }
     }
 

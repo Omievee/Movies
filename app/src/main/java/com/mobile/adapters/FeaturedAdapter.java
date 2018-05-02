@@ -52,6 +52,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -93,6 +94,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
 
         if (movie != null) {
             imgURI = Uri.parse(movie.getLandscapeImageUrl());
+            Log.d(Constants.TAG, "Image URL >>>>>>>>>>>>>>>>> " + imgURI);
             if (movie.getTeaserVideoUrl() != null) {
 
                 holder.featuredVideo.setControllerHideOnTouch(false);
@@ -168,7 +170,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 MediaSource video = new ExtractorMediaSource(Uri.parse(movie.getTeaserVideoUrl()), new CacheDataSourceFactory(context, 100 * 1024 * 1024, 5 * 1024 * 1024), new DefaultExtractorsFactory(), null, null);
 
                 if (movie.getTeaserVideoUrl().matches(video.toString())) {
-                    Log.d(Constants.TAG, "matches: ");
+                    LogUtils.newLog(Constants.TAG, "matches: ");
                 }
 
 
@@ -198,13 +200,13 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                         if (finalImgURI.toString().contains("default")) {
 
                         }
-                        Log.d(Constants.TAG, "onFinalImageSet: ");
+                        LogUtils.newLog(Constants.TAG, "onFinalImageSet: ");
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         holder.moviePoster.setImageResource(R.drawable.filmreel1);
-                        Log.d(Constants.TAG, "onFailure: ");
+                        LogUtils.newLog(Constants.TAG, "onFailure: ");
                     }
                 })
                 .build();

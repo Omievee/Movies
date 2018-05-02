@@ -31,6 +31,7 @@ import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
+import com.mobile.helpers.LogUtils;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -108,7 +109,7 @@ public class ProfileFragment extends Fragment {
             pushSwitch.setChecked(false);
         }
 
-        Log.d(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
+        LogUtils.newLog(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
 
         pushSwitch.setOnClickListener(v -> {
             if (pushSwitch.isChecked()) {

@@ -13,6 +13,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
@@ -81,7 +82,7 @@ public class ProfileAccountInformation extends android.app.Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 mListener.closeFragment();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }

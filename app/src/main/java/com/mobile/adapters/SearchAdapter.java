@@ -224,7 +224,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
 //                    }
 //                }
 //                results.values = suggestions;
-//                Log.d(Constants.TAG, "performFiltering: "+results.values);
+//                LogUtils.newLog(Constants.TAG, "performFiltering: "+results.values);
 //
 //                return results;
 //            }

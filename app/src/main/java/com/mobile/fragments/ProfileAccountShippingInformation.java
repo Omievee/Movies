@@ -26,6 +26,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.responses.UserInfoResponse;
@@ -220,7 +221,7 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
             }else {
                 address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 address1.clearFocus();
-                Log.d("ADDRESS", "isValidAddress: ");
+                LogUtils.newLog("ADDRESS", "isValidAddress: ");
             }
 
             //Validating City
@@ -343,7 +344,7 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(context, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 mListener.closeFragment();
-                Log.d(Constants.TAG, "onFailure: " + t.getMessage());
+                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }

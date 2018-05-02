@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.helpshift.support.Log;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -127,7 +128,7 @@ public class PendingReservationFragment extends android.app.Fragment {
                 } else {
                     noCurrentRes.setVisibility(View.VISIBLE);
 
-                    Log.d(TAG, "else: ");
+                    LogUtils.newLog(TAG, "else: ");
                     progress.setVisibility(View.GONE);
 
                 }
@@ -152,7 +153,7 @@ public class PendingReservationFragment extends android.app.Fragment {
                 if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+                        LogUtils.newLog("jObjError", "jObjError: " + jObjError.getString("message"));
                         Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
 
                     } catch (Exception e) {
@@ -165,7 +166,7 @@ public class PendingReservationFragment extends android.app.Fragment {
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("jObjError", "jObjError: " + jObjError.getString("message"));
+                        LogUtils.newLog("jObjError", "jObjError: " + jObjError.getString("message"));
                         Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         myActivity.finish();
                     } catch (Exception e) {

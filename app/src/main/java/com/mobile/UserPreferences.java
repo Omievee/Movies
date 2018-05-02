@@ -76,7 +76,7 @@ public class UserPreferences {
         String ss = String.valueOf(us);
         String aa = String.valueOf(id);
         String xx = ss + aa;
-//        Log.d(Constants.TAG, "setUserCredentials: " + xx);
+//        LogUtils.newLog(Constants.TAG, "setUserCredentials: " + xx);
 
         editor.putInt(Constants.USER_ID, userId);
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);

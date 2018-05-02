@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
         HOLDER.movieRating.setText("Rated: " + screening.getRating());
         HOLDER.showtimeGrid.removeAllViews();
-
+        
         final Screening selectedScreening = screening;
         if (screening.getStartTimes() != null) {
             for (int i = 0; i < screening.getStartTimes().size(); i++) {
@@ -200,7 +201,6 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
-
                 if (!screening.isApproved()) {
 
                     currentTime.setClickable(false);
@@ -212,7 +212,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 } else {
                     HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
                         RadioButton checked = group.findViewById(checkedId);
-                        if (screening.isApproved()) {
+                        if (screeningsArrayList.get(holder.getAdapterPosition()).isApproved()) {
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }
@@ -222,13 +222,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                                 selectedShowTime = currentTime.getText().toString();
                                 showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                             }
-//                            HOLDER.cinemaCardViewListItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.charcoalGrey));
-//                            currentTime = checked;
-//                            selectedShowTime = currentTime.getText().toString();
-//                            showtimeClickListener.onShowtimeClick(null, holder.getAdapterPosition(), selectedScreening, selectedShowTime);
                         } else {
-                            Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(holder.itemView.getContext(), "This screening is not supported", Toast.LENGTH_SHORT).show();
+                    }
                     });
                 }
 
@@ -258,8 +254,8 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
             }
         }
         holder.synopsis.setOnClickListener(view -> {
-            String synopsis = screening.getSynopsis();
-            String title = screening.getTitle();
+            String synopsis = screeningsArrayList.get(holder.getAdapterPosition()).getSynopsis();
+            String title = screeningsArrayList.get(holder.getAdapterPosition()).getTitle();
             Bundle bundle = new Bundle();
             bundle.putString(MOVIE, synopsis);
             bundle.putString(TITLE, title);

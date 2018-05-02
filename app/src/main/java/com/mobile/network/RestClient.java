@@ -47,12 +47,8 @@ public class RestClient {
     static  String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
 
-    static String a1URL = "http://a1.moviepass.com ";
-//    static String baseURL = String.valueOf(getEndPoint());
-//    static String registrationURL = "https://registration.moviepass.com/";
-////    static String registrationURL = "https://registration-stg.herokuapp.com";
-////    static String microServiceURL = "https://authorization-service-stg.herokuapp.com/";
-//    static String microServiceURL = "https://auth.moviepass.com/";
+    static String a1URL = "https://a1.moviepass.com ";
+
 
     private static Api sAuthenticatedAPI;
     private static Api sAuthenticatedAPIGoWatchIt;

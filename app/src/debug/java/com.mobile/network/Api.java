@@ -62,6 +62,7 @@ public interface Api {
     String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
 
+    String USER_ID = "device_id";
 
     /* LogIn */
     @POST("/rest/v1/session")

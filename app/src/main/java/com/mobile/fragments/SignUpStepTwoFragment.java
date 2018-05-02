@@ -35,6 +35,7 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.mobile.Constants;
 import com.mobile.activities.SignUpActivity;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.moviepass.R;
 
@@ -474,7 +475,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
             }else {
                 address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 signup2Address.clearFocus();
-                Log.d("ADDRESS", "isValidAddress: ");
+                LogUtils.newLog("ADDRESS", "isValidAddress: ");
             }
 
             //Validating City
@@ -533,7 +534,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 //                || signup2Address2.getText().toString().equals("")) {
 //            return true;
 //        } else {
-//            Log.d("mAddress2", signup2Address2.getText().toString());
+//            LogUtils.newLog("mAddress2", signup2Address2.getText().toString());
 //            return false;
 //        }
         return true;
@@ -677,7 +678,7 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 //        } catch (InvalidArgumentException e) {
 //            // There was an issue with your authorization string.
 //            buttonPaypal.setEnabled(true);
-//            Log.d("error", "error: " + e.getMessage());
+//            LogUtils.newLog("error", "error: " + e.getMessage());
 //        }
 //    }
 
