@@ -213,13 +213,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
 
-                // photo = (Bitmap) data.getExtras().get("data");
                 photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
 
                 LogUtils.newLog(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
