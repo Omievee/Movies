@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,6 +83,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public static final int REQUEST_CAMERA_CODE = 0;
     Reservation reservation;
     Screening screening;
+    public final String APP_TAG = "TicketVerification";
+
     ScreeningToken screeningToken;
     View progress;
     ProgressBar whiteProgress;
@@ -92,6 +97,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
     GestureDetector gestureScanner;
     String uploadKey;
+    File photoFile;
+    String photoFileName = "TicketVerification.jpg";
 
     private native static String getProductionBucket();
     private native static String getStagingBucket();
@@ -271,7 +278,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
             if (data.getExtras() != null) {
-                photo = (Bitmap) data.getExtras().get("data");
+                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
@@ -284,6 +291,23 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         }
 
+    }
+
+    private File getPhotoFileUri(String photoFileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            android.util.Log.d(APP_TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        android.util.Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+
+        return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
 
     /* Bottom Navigation View */
@@ -392,8 +416,16 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
 
     public void scan_Ticket() {
-        Intent ticketVerif = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(ticketVerif, Constants.REQUEST_TICKET_VERIF);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        photoFile = getPhotoFileUri(photoFileName);
+        Uri fileProvider = FileProvider.getUriForFile(this, "com.moviepass.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            android.util.Log.d(Constants.TAG, "scanTicket: ");
+            startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
+
+        }
     }
 
     public void createImageFile() {
