@@ -40,6 +40,7 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.application.Application;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -441,7 +442,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
-                Log.d(Constants.TAG, "Error creating media file, test storage permissions");
+                LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
                 return;
             }
 
@@ -450,10 +451,10 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 fos.write(bitmapdata);
                 fos.close();
             } catch (FileNotFoundException e) {
-                Log.d(Constants.TAG, "File not found: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "File not found: " + e.getMessage());
             } catch (IOException e) {
 
-                Log.d(Constants.TAG, "Error accessing file: " + e.getMessage());
+                LogUtils.newLog(Constants.TAG, "Error accessing file: " + e.getMessage());
 
             }
             //Turn into file
@@ -461,7 +462,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             if (getPictureFile == null) {
                 return;
             }
-            Log.d(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
+            LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
             uploadToAWS(getPictureFile);
         }, 4000);
 
@@ -471,7 +472,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     private void uploadToAWS(File ticketPhoto) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
-        Log.d(Constants.TAG, "uploadToAWS:  " + screeningToken);
+        LogUtils.newLog(Constants.TAG, "uploadToAWS:  " + screeningToken);
         if (screeningToken != null) {
             uploadKey = String.valueOf(screeningToken.getReservation().getId());
 
@@ -497,7 +498,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
-                Log.d(Constants.TAG, "STATUS???: " + state);
+                LogUtils.newLog(Constants.TAG, "STATUS???: " + state);
                 if (state == TransferState.COMPLETED) {
                     int reservationId = screeningToken.getReservation().getId();
                     VerificationRequest ticketVerificationRequest = new VerificationRequest();
@@ -543,7 +544,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
             @Override
             public void onError(int id, Exception ex) {
-                Log.d(Constants.TAG, "onError: ");
+                LogUtils.newLog(Constants.TAG, "onError: ");
             }
         });
     }
@@ -569,7 +570,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MoviePass");
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("MoviePass", "failed to create directory");
+                LogUtils.newLog("MoviePass", "failed to create directory");
                 return null;
             }
         }

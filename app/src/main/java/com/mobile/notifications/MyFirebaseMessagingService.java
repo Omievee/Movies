@@ -15,6 +15,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.helpshift.Core;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 import com.moviepass.R;
 
 import java.util.Map;
@@ -31,7 +32,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
 
-        Log.d("NOTIFICATION", "onMessageReceived: GETTING NOTIFICATION "+remoteMessage.getData().toString());
+        LogUtils.newLog("NOTIFICATION", "onMessageReceived: GETTING NOTIFICATION "+remoteMessage.getData().toString());
 
         Map<String, String> data = remoteMessage.getData();
         String origin = data.get("origin");

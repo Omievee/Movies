@@ -24,6 +24,7 @@ import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.extensions.SeatButton;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -147,7 +148,7 @@ public class SelectSeatActivity extends BaseActivity {
 
         //PerformanceInfo
 
-        Log.d(TAG, "onCreate: " + screeningObject.getProvider().getProviderName());
+        LogUtils.newLog(TAG, "onCreate: " + screeningObject.getProvider().getProviderName());
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
 
@@ -341,9 +342,9 @@ public class SelectSeatActivity extends BaseActivity {
                 selectSeat(button.getSeatName());
                 reserveSeatButton.setOnClickListener(view -> {
 
-                    Log.d(TAG, "button name:" + button.getSeatName());
-                    Log.d(TAG, "button row: " + button.getSeatInfo().getRow());
-                    Log.d(TAG, "button col: " + button.getSeatInfo().getColumn());
+                    LogUtils.newLog(TAG, "button name:" + button.getSeatName());
+                    LogUtils.newLog(TAG, "button row: " + button.getSeatInfo().getRow());
+                    LogUtils.newLog(TAG, "button col: " + button.getSeatInfo().getColumn());
 
 
                     SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());

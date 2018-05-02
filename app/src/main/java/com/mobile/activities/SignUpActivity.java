@@ -194,13 +194,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
                     ProspectUser.plan = selectedPlan;
                 }
                 else{
-                    Log.d("GET PLANS", "onResponse: Error getting plans");
+                    LogUtils.newLog("GET PLANS", "onResponse: Error getting plans");
                 }
             }
 
             @Override
             public void onFailure(Call<PlanResponse> call, Throwable t) {
-                Log.d("GET PLANS", "onResponse: Error getting plans");
+                LogUtils.newLog("GET PLANS", "onResponse: Error getting plans");
             }
 
         });
@@ -403,24 +403,24 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
     public void setEmail(String email){
         this.email = email;
-        Log.d("FIRST", "setEmail: "+email);
+        LogUtils.newLog("FIRST", "setEmail: "+email);
     }
     public void setPassword(String password){
         this.password = password;
-        Log.d("FIRST", "setEmail: "+password);
+        LogUtils.newLog("FIRST", "setEmail: "+password);
     }
     public void setGender(String gender){
         this.gender = gender;
-        Log.d("FIRST", "setEmail: "+gender);
+        LogUtils.newLog("FIRST", "setEmail: "+gender);
     }
     public void setDOB(String dob){
         this.dob = dob;
-        Log.d("FIRST", "setEmail: "+dob);
+        LogUtils.newLog("FIRST", "setEmail: "+dob);
     }
 
     public void setAndroidID(String androidID) {
         this.androidID = androidID;
-     Log.d("FIRST", "setAndroidID: " + androidID);
+     LogUtils.newLog("FIRST", "setAndroidID: " + androidID);
     }
 
     /* Fragment One */

@@ -12,14 +12,20 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +37,11 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.NearMe;
+import com.mobile.fragments.ProfileAccountInformation;
+import com.mobile.fragments.WebViewFragment;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Plans;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
@@ -60,8 +70,8 @@ public class OnboardingActivity extends AppCompatActivity {
     Plans planOne, planTwo;
     ImageView ticketIconFinal;
     int page = 0;
-
-    CoordinatorLayout mCoordinator;
+    private TextView signUp;
+    RelativeLayout mCoordinator;
     private PlanResponse planResponse;
 
     @Override
@@ -69,70 +79,43 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
 
-        getPlans();
+
+
+//        getPlans();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mCoordinator = findViewById(R.id.main_content);
         onboardingSignIn = findViewById(R.id.ONBOARDING_SIGN_IN);
         onboardingJoinNow = findViewById(R.id.ONBOARDING_JOIN_NOW);
-        nearMe = findViewById(R.id.NearMe);
+
         zero = findViewById(R.id.intro_indicator_0);
         one = findViewById(R.id.intro_indicator_1);
         two = findViewById(R.id.intro_indicator_2);
         three = findViewById(R.id.intro_indicator_3);
-        findTheaters = findViewById(R.id.buttons);
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         indicators = new ImageView[]{zero, one, two, three};
 
+        signUp = findViewById(R.id.signUp);
+
         mViewPager.setCurrentItem(page);
         updateIndicators(page);
-
-        nearMe.setOnClickListener(v -> {
-            NearMe fragobj = new NearMe();
-            FragmentManager fm = getSupportFragmentManager();
-            fragobj.show(fm, "fr_nearme");
-        });
-
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
-                page = position;
-                updateIndicators(page);
-
-                switch (position) {
-                    case 0:
-                        findTheaters.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        findTheaters.setVisibility(View.VISIBLE);
-
-                        break;
-                    case 2:
-
-                        findTheaters.setVisibility(View.INVISIBLE);
-
-                        break;
-                    case 3:
-
-                        findTheaters.setVisibility(View.INVISIBLE);
-                        break;
-
-                }
+                updateIndicators(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
             }
-
-
         });
 
         onboardingSignIn.setOnClickListener(view -> {
@@ -141,16 +124,51 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         onboardingJoinNow.setOnClickListener(view -> {
-            if (planTwo != null) {
-                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(OnboardingActivity.this, SignUpActivity.class);
-                intent.putExtra(SignUpFirstOpenActivity.SELECTED_PLAN, Parcels.wrap(planOne));
-                ProspectUser.plan = planOne;
-                startActivity(intent);
+            Intent intent = new Intent(OnboardingActivity.this, LogInActivity.class);
+            startActivity(intent);
+
+            //REMOVED SIGN UP
+//            if (planTwo != null) {
+//                Intent intent = new Intent(OnboardingActivity.this, SignUpFirstOpenActivity.class);
+//                startActivity(intent);
+//            } else {
+//                Intent intent = new Intent(OnboardingActivity.this, SignUpActivity.class);
+//                intent.putExtra(SignUpFirstOpenActivity.SELECTED_PLAN, Parcels.wrap(planOne));
+//                ProspectUser.plan = planOne;
+//                startActivity(intent);
+//            }
+        });
+
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+                WebViewFragment web = new WebViewFragment();
+                transaction.replace(R.id.fragmentContainer, web);
+                transaction.addToBackStack("");
+                transaction.commit();
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        LogUtils.newLog("COUNT: "+fragmentManager.getBackStackEntryCount());
+        WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (keyCode == KeyEvent.KEYCODE_BACK && fragmentManager.getBackStackEntryCount()>=1 && fragment.canGoBack()) {
+            fragment.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public void getPlans() {
@@ -182,6 +200,7 @@ public class OnboardingActivity extends AppCompatActivity {
         }
 
         SimpleDraweeView img;
+        View findTheaters;
 
 
         int[] bgs = new int[]{R.drawable.image_onboarind_0, R.drawable.image_onboarding_1,
@@ -214,6 +233,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
 
             img = rootView.findViewById(R.id.section_img);
+            findTheaters = rootView.findViewById(R.id.findTheaters);
+            if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 >1) {
+                findTheaters.setVisibility(View.GONE);
+            }
             if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 != 0) {
                 textView.setVisibility(View.VISIBLE);
                 moviepassLogo.setVisibility(View.GONE);
@@ -251,6 +274,12 @@ public class OnboardingActivity extends AppCompatActivity {
                 pipeline.clearMemoryCaches();
                 pipeline.clearDiskCaches();
             }
+
+            findTheaters.setOnClickListener(v -> {
+            NearMe fragobj = new NearMe();
+            FragmentManager fm = getChildFragmentManager();
+            fragobj.show(fm, "fr_nearme");
+        });
 
             return rootView;
         }

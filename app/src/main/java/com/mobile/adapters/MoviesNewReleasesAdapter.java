@@ -23,6 +23,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.MoviePosterClickListener;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -82,7 +83,7 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         holder.mNewReleasePosterDV.setImageURI(imgUrl);
         holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
-        Log.d(TAG, "URL???: " + imgUrl.toString());
+        LogUtils.newLog(TAG, "URL???: " + imgUrl.toString());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)

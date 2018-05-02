@@ -296,7 +296,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             mClusterManager.setOnClusterClickListener(this);
             mClusterManager.cluster();
         } catch (Resources.NotFoundException e) {
-            Log.e("MapsActivityRaw", "Can't find style.", e);
+            LogUtils.newLog("MapsActivityRaw", "Can't find style.");
         }
 
         tRealm = Realm.getDefaultInstance();

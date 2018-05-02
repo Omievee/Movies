@@ -20,6 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -240,7 +241,7 @@ public class EticketConfirmation extends BaseActivity {
                     performanceId,
                     sessionId);
             ticketRequest = new TicketInfoRequest(request, selectedSeat);
-            Log.d(Constants.TAG, "performinfo:2 " + selectedSeat);
+            LogUtils.newLog(Constants.TAG, "performinfo:2 " + selectedSeat);
 
         }
 
@@ -267,7 +268,7 @@ public class EticketConfirmation extends BaseActivity {
 
 
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
-                    Log.d(Constants.TAG, "onResponse: " + seat.getSeatName());
+                    LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
                     finish();
@@ -300,7 +301,7 @@ public class EticketConfirmation extends BaseActivity {
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
                     Toast.makeText(EticketConfirmation.this, R.string.pending_reservation, Toast.LENGTH_LONG).show();
                 } else if (restError != null) {
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+                    LogUtils.newLog("resResponse:", "else onfail:" + "onRespnse fail");
                     //TODO Check why null sometimes?
 //                    Toast.makeText(getActivity(), restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
@@ -443,7 +444,7 @@ public class EticketConfirmation extends BaseActivity {
                 if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
                     Toast.makeText(EticketConfirmation.this, R.string.pending_reservation, Toast.LENGTH_LONG).show();
                 } else if (restError != null) {
-                    Log.d("resResponse:", "else onfail:" + "onRespnse fail");
+                    LogUtils.newLog("resResponse:", "else onfail:" + "onRespnse fail");
                     Toast.makeText(EticketConfirmation.this, restError.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }

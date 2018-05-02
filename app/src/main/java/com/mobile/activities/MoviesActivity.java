@@ -101,7 +101,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         movieSearchTOPBOXOFFICE = new ArrayList<>();
 
 
-        Log.d(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
+        LogUtils.newLog(Constants.TAG, "onCreate: " + UserPreferences.getRestrictionSubscriptionStatus());
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
@@ -333,7 +333,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restrict.getHasActiveCard();
                     boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
-                    Log.d(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
+                    LogUtils.newLog(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||

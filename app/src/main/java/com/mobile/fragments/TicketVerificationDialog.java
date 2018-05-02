@@ -190,7 +190,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(myContext.getPackageManager()) != null) {
-            Log.d(Constants.TAG, "scanTicket: ");
+            LogUtils.newLog(Constants.TAG, "scanTicket: ");
             startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
 
         }
@@ -204,11 +204,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(APP_TAG, "failed to create directory");
+            LogUtils.newLog(APP_TAG, "failed to create directory");
         }
 
         // Return the file target for the photo based on filename
-        Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+        LogUtils.newLog(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -220,7 +220,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
                 photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
 
-                Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
+                LogUtils.newLog(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
 
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);

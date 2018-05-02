@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.responses.ReferAFriendResponse;
 import com.moviepass.R;
@@ -105,7 +106,7 @@ public class ReferAFriend extends android.app.Fragment {
                 ReferAFriendResponse referral = response.body();
                 if (response.isSuccessful()) {
 
-                    Log.d(Constants.TAG, "onResponse: " + friendEmail);
+                    LogUtils.newLog(Constants.TAG, "onResponse: " + friendEmail);
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setData(Uri.parse("mailto:"));
                     emailIntent.setType("message/rfc822");
