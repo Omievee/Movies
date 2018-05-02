@@ -269,7 +269,7 @@ public class LogInActivity extends AppCompatActivity {
                             progress.setVisibility(View.GONE);
 
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.d(Constants.TAG, "onResponse: " + e.getMessage());
+                            LogUtils.newLog(Constants.TAG, "onResponse: " + e.getMessage());
                         }
                     }
                 }
@@ -449,7 +449,7 @@ public class LogInActivity extends AppCompatActivity {
                     try {
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Log.d("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
+                        LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
                     } catch (Exception e) {
 
                     }

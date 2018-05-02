@@ -8,6 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.helpshift.Core;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.helpers.LogUtils;
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseIIDService";
@@ -15,7 +16,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     @Override public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-         Log.d(TAG, "Refreshed token: " + refreshedToken);
+         LogUtils.newLog(TAG, "Refreshed token: " + refreshedToken);
 
         UserPreferences.saveFirebaseHelpshiftToken(refreshedToken);
 

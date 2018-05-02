@@ -278,7 +278,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                Log.i(Constants.TAG, status.getStatusMessage());
+                LogUtils.newLog(Constants.TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
 
             }

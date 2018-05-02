@@ -31,9 +31,9 @@ public class BottomNavigationViewHelper {
                 item.setChecked(item.getItemData().isChecked());
             }
         } catch (NoSuchFieldException e) {
-            Log.e("BNVHelper", "Unable to get shift mode field", e);
+            LogUtils.newLog("BNVHelper", "Unable to get shift mode field");
         } catch (IllegalAccessException e) {
-            Log.e("BNVHelper", "Unable to change value of shift mode", e);
+            LogUtils.newLog("BNVHelper", "Unable to change value of shift mode");
         }
     }
 }

@@ -256,7 +256,7 @@ public class SignUpStepThreeFragment extends Fragment implements PaymentMethodNo
             });
         } else {
             makeSnackbar(getString(R.string.fragment_sign_up_step_two_must_agree_to_terms));
-            Log.d(TAG, "completeRegistration: NAMES");
+            LogUtils.newLog(TAG, "completeRegistration: NAMES");
             progress.setVisibility(View.GONE);
             confirmSubmit.setEnabled(true);
         }

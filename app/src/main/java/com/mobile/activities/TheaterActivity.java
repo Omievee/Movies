@@ -19,6 +19,7 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.fragments.TheaterFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpers.LogUtils;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
@@ -101,7 +102,7 @@ public class TheaterActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.d("onBackPressed", "onBackPressed");
+        LogUtils.newLog("onBackPressed", "onBackPressed");
 
     }
 
