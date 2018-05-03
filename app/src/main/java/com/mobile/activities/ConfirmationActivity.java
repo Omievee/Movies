@@ -277,8 +277,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-            if (data.getExtras() != null) {
                 photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
                 if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
@@ -287,7 +287,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                     createImageFile();
                 }
 
-            }
 
         }
 
