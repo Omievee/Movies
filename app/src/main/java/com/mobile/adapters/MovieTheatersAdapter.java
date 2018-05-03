@@ -277,6 +277,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
     }
 
     boolean queryRealm() {
+
         RealmConfiguration historyConfig = new RealmConfiguration.Builder()
                 .name("History.Realm")
                 .deleteRealmIfMigrationNeeded()

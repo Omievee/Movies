@@ -173,7 +173,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-     //   bottomNavigationView.postDelayed(() -> {
+        bottomNavigationView.postDelayed(() -> {
             int itemId = item.getItemId();
             if (android.R.id.home == itemId) {
                 AlertDialog alert;
@@ -208,7 +208,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     startActivity(new Intent(MoviesActivity.this, SettingsActivity.class));
                 }
             }
-       // }, 0);
+        }, 0);
         return true;
     }
 
