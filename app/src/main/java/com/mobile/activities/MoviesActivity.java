@@ -59,7 +59,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     public ViewGroup CONTAIN;
     //Retrofit calls
     Call<RestrictionsResponse> restrictionsResponseCall;
-
+    FragmentManager fm, fragmentManager;
     public static final String MOVIES = "movies";
     View parentLayout;
     boolean firstBoot;
@@ -105,7 +105,8 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
-
+        fm = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
     }
 
@@ -172,7 +173,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(() -> {
+     //   bottomNavigationView.postDelayed(() -> {
             int itemId = item.getItemId();
             if (android.R.id.home == itemId) {
                 AlertDialog alert;
@@ -207,7 +208,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     startActivity(new Intent(MoviesActivity.this, SettingsActivity.class));
                 }
             }
-        }, 0);
+       // }, 0);
         return true;
     }
 
@@ -376,7 +377,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                             bundle.putString("showtime", showtime);
 
                             TicketVerificationDialog dialog = new TicketVerificationDialog();
-                            FragmentManager fm = getSupportFragmentManager();
+
                             addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
                         } catch (IllegalStateException e) {
                             e.printStackTrace();
@@ -402,11 +403,11 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                             alertScreen.setExitTransition(new Fade());
                             alertScreen.setSharedElementReturnTransition(new HistoryDetails());
 
-                            FragmentManager fragmentManager = getSupportFragmentManager();
                             FragmentTransaction transaction = fragmentManager.beginTransaction();
                             transaction.replace(R.id.movies_container, alertScreen);
                             transaction.addToBackStack("");
                             transaction.commit();
+                            fragmentManager.executePendingTransactions();
                         } catch (IllegalStateException e) {
                             e.printStackTrace();
                         }
@@ -461,6 +462,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             FragmentManager fm = getSupportFragmentManager();
             dialog.setCancelable(false);
             dialog.show(fm, "fr_ticketverification_banner");
+
         }
     }
 

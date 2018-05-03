@@ -16,8 +16,7 @@ import com.moviepass.R
 import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
-
-
+    lateinit var ID: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -138,11 +137,13 @@ class SplashActivity : AppCompatActivity() {
             } catch (e: GooglePlayServicesRepairableException) {
                 e.printStackTrace()
             }
+            if (adInfo!!.id != null) {
+                ID = adInfo.id
+            }
 
-            val id = adInfo!!.id
             val isLAT = adInfo.isLimitAdTrackingEnabled
 
-            return id
+            return ID
         }
     }
 
