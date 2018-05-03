@@ -58,7 +58,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.helpshift.support.Log;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Constants;
@@ -410,7 +409,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-   //     locationUpdateRealm();
+        //     locationUpdateRealm();
     }
 
 
@@ -560,7 +559,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(mtrMLE);
+            nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
             tRealm.commitTransaction();
         }
         //Sort through shorter list..
@@ -586,8 +585,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             mMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
-                cameraLocal.setLatitude(mMap.getCameraPosition().target.latitude);
-                cameraLocal.setLongitude(mMap.getCameraPosition().target.longitude);
+                cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
+                cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
 
 
                 double distance = userCurrentLocation.distanceTo(cameraLocal);
@@ -598,8 +597,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     fadeIn(searchThisArea);
                     searchThisArea.setVisibility(View.VISIBLE);
                     searchThisArea.setOnClickListener(v -> {
-                        double searchLat = mMap.getCameraPosition().target.latitude ;
-                        double searchLon =mMap.getCameraPosition().target.longitude;
+                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
+                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
                         mProgress.setVisibility(View.VISIBLE);
                         queryRealmLoadTheaters(searchLat, searchLon);
                         searchThisArea.setVisibility(View.GONE);
@@ -652,16 +651,10 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void run() {
                 if (theatersList.size() == 0) {
-                    try {
-                        slideup.setEnabled(false);
-                        listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-                        upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-                        Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
-                    }catch (IllegalStateException e) {
-                        e.printStackTrace();
-                    }
-
-
+                    slideup.setEnabled(false);
+                    listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                    upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                    Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
                 }
             }
         }, 3000);
