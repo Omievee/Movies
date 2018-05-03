@@ -1,6 +1,7 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +48,7 @@ import com.moviepass.R;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
@@ -96,6 +98,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -204,7 +207,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                             .build();
 
                     try {
-                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(myActivity);
                         startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
                     } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
                         // TODO: Handle the error.
@@ -255,14 +258,14 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 updateBillingAddress = true;
-                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                Place place = PlaceAutocomplete.getPlace(myActivity, data);
 
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
 
                 for (int i = 0; i < localList.size(); i++) {
                     if (localList.get(2).trim().length() < 8) {
-                        Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myActivity, "Invalid Address", Toast.LENGTH_SHORT).show();
                         firstClick=true;
                     } else {
                         address1.setText(localList.get(0));
@@ -277,8 +280,8 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                LogUtils.newLog(Constants.TAG, status.getStatusMessage());
+                Status status = PlaceAutocomplete.getStatus(myActivity, data);
+                Log.i(Constants.TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
 
             }
@@ -396,7 +399,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
                 mListener.closeFragment();
                 progress.setVisibility(View.GONE);
@@ -405,7 +408,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     }
 
     public void creditCardClick() {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
             }
@@ -417,7 +420,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
 
     public void scan_card() {
-        Intent scanIntent = new Intent(getActivity(), CardIOActivity.class);
+        Intent scanIntent = new Intent(myActivity, CardIOActivity.class);
         // customize these values to suit your needs.
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true); // default: false
@@ -432,8 +435,10 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         save.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
             removeAllErrors();
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            InputMethodManager imm = (InputMethodManager)myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(Objects.requireNonNull(getView()).getWindowToken(), 0);
+            }
             if(updateBillingCard) {
                 updateCCData();
             }
@@ -479,10 +484,10 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response != null && response.isSuccessful()) {
                             loadUserInfo();
-                            Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myContext, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                             mListener.closeFragment();
                         } else {
-                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
+                            Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
                         }
                         progress.setVisibility(View.GONE);
                     }
@@ -490,7 +495,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
                         mListener.closeFragment();
                     }
                 });
@@ -571,20 +576,20 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     newBillingCC.clearComposingText();
                     newBillingCVV.clearComposingText();
                     newBillingExp.clearComposingText();
-                    Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myContext, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                     mListener.closeFragment();
                 }
                 else {
                     loadUserInfo();
-                    Toast.makeText(getActivity(), "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myContext, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                 }
                 progress.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                if (getActivity() != null) {
-                    Toast.makeText(getActivity(), "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                if (myContext != null) {
+                    Toast.makeText(myContext, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
                     mListener.closeFragment();
                 }
@@ -681,10 +686,10 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response != null && response.isSuccessful()) {
                             loadUserInfo();
-                            Toast.makeText(getActivity(), "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                             mListener.closeFragment();
                         } else {
-                            Toast.makeText(getActivity(), "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
                         }
                         progress.setVisibility(View.GONE);
                     }
@@ -692,7 +697,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     @Override
                     public void onFailure(Call<Object> call, Throwable t) {
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(getActivity(), "Server Response Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
                         mListener.closeFragment();
                     }
                 });

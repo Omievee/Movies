@@ -560,7 +560,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
+            nearbyTheaters.get(j).setDistance(mtrMLE);
             tRealm.commitTransaction();
         }
         //Sort through shorter list..
@@ -586,8 +586,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             mMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
-                cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
-                cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
+                cameraLocal.setLatitude(mMap.getCameraPosition().target.latitude);
+                cameraLocal.setLongitude(mMap.getCameraPosition().target.longitude);
 
 
                 double distance = userCurrentLocation.distanceTo(cameraLocal);
@@ -598,8 +598,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     fadeIn(searchThisArea);
                     searchThisArea.setVisibility(View.VISIBLE);
                     searchThisArea.setOnClickListener(v -> {
-                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
-                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+                        double searchLat = mMap.getCameraPosition().target.latitude ;
+                        double searchLon =mMap.getCameraPosition().target.longitude;
                         mProgress.setVisibility(View.VISIBLE);
                         queryRealmLoadTheaters(searchLat, searchLon);
                         searchThisArea.setVisibility(View.GONE);
@@ -652,10 +652,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void run() {
                 if (theatersList.size() == 0) {
-                    slideup.setEnabled(false);
-                    listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-                    upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-                    Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                    try {
+                        slideup.setEnabled(false);
+                        listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                        upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                        Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                    }catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         }, 3000);

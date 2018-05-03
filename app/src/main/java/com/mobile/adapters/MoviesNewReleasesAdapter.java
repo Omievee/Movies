@@ -6,9 +6,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
-
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +19,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.helpshift.support.Log;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.moviepass.R;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,49 +76,55 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = moviesArrayList.get(position);
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        holder.mNewReleasePosterDV.setImageURI(imgUrl);
-        holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
-        LogUtils.newLog(TAG, "URL???: " + imgUrl.toString());
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-                .setProgressiveRenderingEnabled(true)
-                .setSource(imgUrl)
-                .build();
+        try {
+            holder.mNewReleasePosterDV.setImageURI(imgUrl);
+            holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request)
-                .setOldController(holder.mNewReleasePosterDV.getController())
-                .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                    @Override
-                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                        super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imgUrl.toString().contains("default")) {
-                            holder.title.setText(movie.getTitle());
+            Log.d(TAG, "URL???: " + imgUrl.toString());
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                    .setProgressiveRenderingEnabled(true)
+                    .setSource(imgUrl)
+                    .build();
+
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .setOldController(holder.mNewReleasePosterDV.getController())
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                        @Override
+                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                            super.onFinalImageSet(id, imageInfo, animatable);
+                            if (imgUrl.toString().contains("default")) {
+                                holder.title.setText(movie.getTitle());
+                            }
+
                         }
 
-                    }
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+                            holder.mNewReleasePosterDV.setImageURI(imgUrl + "/original.jpg");
 
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-                        holder.mNewReleasePosterDV.setImageURI(imgUrl + "/original.jpg");
+                        }
+                    })
+                    .build();
 
-                    }
-                })
-                .build();
-
-        if (imgUrl.toString().contains("default")) {
-            holder.mNewReleasePosterDV.refreshDrawableState();
-        }
-        holder.mNewReleasePosterDV.setController(controller);
-
-
-        ViewCompat.setTransitionName(holder.mNewReleasePosterDV, movie.getImageUrl());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
+            if (imgUrl.toString().contains("default")) {
+                holder.mNewReleasePosterDV.refreshDrawableState();
             }
-        });
+            holder.mNewReleasePosterDV.setController(controller);
+
+
+            ViewCompat.setTransitionName(holder.mNewReleasePosterDV, movie.getImageUrl());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
+                }
+            });
+
+        }catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
 //
 //        ImagePipeline pipeline = Fresco.getImagePipeline();

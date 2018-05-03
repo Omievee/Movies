@@ -102,6 +102,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String photoFileName = "TicketVerification.jpg";
 
     private native static String getProductionBucket();
+
     private native static String getStagingBucket();
 
 
@@ -210,7 +211,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 FAQs.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Support.showFAQSection(ConfirmationActivity.this,Constants.TICKET_VERIFICATION_FAQ_SECTION);
+                        Support.showFAQSection(ConfirmationActivity.this, Constants.TICKET_VERIFICATION_FAQ_SECTION);
                     }
                 });
             }
@@ -278,17 +279,15 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-            if (data.getExtras() != null) {
-                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
-                    }
-                } else {
-                    createImageFile();
+                    requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
                 }
-
+            } else {
+                createImageFile();
             }
+
 
         }
 
@@ -306,7 +305,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         }
 
         // Return the file target for the photo based on filename
-        android.util.Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+        android.util.Log.d(Constants.TAG, "getPhotoFileUri: " + new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -425,7 +424,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         if (intent.resolveActivity(getPackageManager()) != null) {
             android.util.Log.d(Constants.TAG, "scanTicket: ");
             startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
-
         }
     }
 
@@ -525,7 +523,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                                 }
                             }
                         }
-
                         @Override
                         public void onFailure(Call<VerificationResponse> call, Throwable t) {
                             whiteProgress.setVisibility(View.GONE);
