@@ -3,7 +3,6 @@ package com.mobile.helpers;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.UserPreferences;
 import com.mobile.model.Movie;
 import com.mobile.model.Screening;
@@ -365,22 +364,28 @@ public class GoWatchItSingleton {
     }
 
     public void getMovies(){
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("Movies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm moviesRealm = Realm.getInstance(config);
-        allMovies = moviesRealm.where(Movie.class)
-                .equalTo("type", "Top Box Office")
-                .or()
-                .equalTo("type", "New Releases")
-                .or()
-                .equalTo("type", "Coming Soon")
-                .or()
-                .equalTo("type", "Now Playing")
-                .or()
-                .equalTo("type", "Featured")
-                .findAll();
+        try {
+            RealmConfiguration config = new RealmConfiguration.Builder()
+                    .name("Movies.Realm")
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
+            Realm moviesRealm = Realm.getInstance(config);
+            allMovies = moviesRealm.where(Movie.class)
+                    .equalTo("type", "Top Box Office")
+                    .or()
+                    .equalTo("type", "New Releases")
+                    .or()
+                    .equalTo("type", "Coming Soon")
+                    .or()
+                    .equalTo("type", "Now Playing")
+                    .or()
+                    .equalTo("type", "Featured")
+                    .findAll();
+        }catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 

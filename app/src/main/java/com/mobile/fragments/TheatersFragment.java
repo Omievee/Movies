@@ -652,10 +652,16 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             @Override
             public void run() {
                 if (theatersList.size() == 0) {
-                    slideup.setEnabled(false);
-                    listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-                    upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-                    Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                    try {
+                        slideup.setEnabled(false);
+                        listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+                        upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+                        Toast.makeText(myActivity, "No Theaters found", Toast.LENGTH_SHORT).show();
+                    }catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         }, 3000);
