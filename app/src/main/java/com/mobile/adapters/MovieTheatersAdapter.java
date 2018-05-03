@@ -251,16 +251,16 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                         }
                     });
                 }
-
-            }
-            if (queryRealm()) {
-                currentTime.setClickable(false);
-                holder.notSupported.setVisibility(View.VISIBLE);
-                holder.notSupported.setText("You've already seen this movie");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                if (queryRealm()) {
+                    currentTime.setClickable(false);
+                    holder.notSupported.setVisibility(View.VISIBLE);
+                    holder.notSupported.setText("You've already seen this movie");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.ONE.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                    }
                 }
             }
+
         }
 
 
