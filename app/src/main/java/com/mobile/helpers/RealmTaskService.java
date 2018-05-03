@@ -397,24 +397,27 @@ public class RealmTaskService extends GcmTaskService {
                     HistoryResponse historyObjects = response.body();
                     historyRealm.executeTransactionAsync(realm -> {
                         if (historyObjects != null) {
-                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
-                                Movie historyList = realm.createObject(Movie.class);
-                                historyList.setId(historyObjects.getReservations().get(i).getId());
+                            try {
+                                for (int i = 0; i < historyObjects.getReservations().size(); i++) {
+                                    Movie historyList = realm.createObject(Movie.class);
+                                    historyList.setId(historyObjects.getReservations().get(i).getId());
 //                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
-                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
-                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
+                                    historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
+                                    historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
 //                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
-                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
-                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
-                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+                                    historyList.setRating(historyObjects.getReservations().get(i).getRating());
+                                    historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
+                                    historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
+                                    historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
+                                    historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
+                                    historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
+                                    historyList.setType(historyObjects.getReservations().get(i).getType());
 
-
-                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
-                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
-                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
-                                historyList.setType(historyObjects.getReservations().get(i).getType());
-
+                                }
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
                             }
+
                         }
                     });
                 }
