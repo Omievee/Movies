@@ -208,7 +208,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         }
 
         // Return the file target for the photo based on filename
-        Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+        Log.d(Constants.TAG, "getPhotoFileUri: " + new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -218,16 +218,17 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
 
-                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
 
-                Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
+            Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
-
-                } else {
-                    createFileForUpload();
                 }
+            } else {
+                createFileForUpload();
+            }
 
         }
     }
@@ -285,7 +286,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             }
 
             LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
-           uploadToAWS(getPictureFile);
+            uploadToAWS(getPictureFile);
         }, 4000);
 
     }
