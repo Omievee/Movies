@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/dark2"
     android:clickable="true"
+    android:background="@color/dark"
     tools:context="com.mobile.fragments.ReferAFriend">
 
     <!-- TODO: Update blank fragment layout -->

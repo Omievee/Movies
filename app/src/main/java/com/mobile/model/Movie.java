@@ -219,18 +219,23 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
 
     @Override
     public void writeToParcel(android.os.Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(tribuneId);
-        parcel.writeString(title);
-        parcel.writeInt(runningTime);
-        parcel.writeString(releaseDate);
-        parcel.writeString(rating);
-        parcel.writeString(synopsis);
-        parcel.writeByte((byte) (viewed ? 1 : 0));
-        parcel.writeLong(createdAt);
-        parcel.writeString(imageUrl);
-        parcel.writeString(landscapeImageUrl);
-        parcel.writeString(theaterName);
+        try {
+            parcel.writeInt(id);
+            parcel.writeString(tribuneId);
+            parcel.writeString(title);
+            parcel.writeInt(runningTime);
+            parcel.writeString(releaseDate);
+            parcel.writeString(rating);
+            parcel.writeString(synopsis);
+            parcel.writeByte((byte) (viewed ? 1 : 0));
+            parcel.writeLong(createdAt);
+            parcel.writeString(imageUrl);
+            parcel.writeString(landscapeImageUrl);
+            parcel.writeString(theaterName);
+        }catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
 //        parcel.writeTypedList(reservations);
     }
 

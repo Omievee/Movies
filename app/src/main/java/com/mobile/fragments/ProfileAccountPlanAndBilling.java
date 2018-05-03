@@ -484,7 +484,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response != null && response.isSuccessful()) {
                             loadUserInfo();
-                            Toast.makeText(myContext, "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                             mListener.closeFragment();
                         } else {
                             Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
@@ -576,20 +576,20 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     newBillingCC.clearComposingText();
                     newBillingCVV.clearComposingText();
                     newBillingExp.clearComposingText();
-                    Toast.makeText(myContext, "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                     mListener.closeFragment();
                 }
                 else {
                     loadUserInfo();
-                    Toast.makeText(myContext, "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                 }
                 progress.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                if (myContext != null) {
-                    Toast.makeText(myContext, "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                if (myActivity != null) {
+                    Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
                     mListener.closeFragment();
                 }

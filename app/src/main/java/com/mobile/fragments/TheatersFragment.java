@@ -245,7 +245,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     fadeOut(upArrow);
                     upArrow.setVisibility(View.INVISIBLE);
                     String url = "https://www.moviepass.com/go/list";
-                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url,"list_view_click");
+                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
 
 //                    String url = "http://moviepass.com/go/list";
 //                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
@@ -585,8 +585,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
 
             mMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
-                cameraLocal.setLatitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude)));
-                cameraLocal.setLongitude(Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude)));
+                cameraLocal.setLatitude(mMap.getCameraPosition().target.latitude);
+                cameraLocal.setLongitude(mMap.getCameraPosition().target.longitude);
 
 
                 double distance = userCurrentLocation.distanceTo(cameraLocal);
@@ -597,8 +597,8 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                     fadeIn(searchThisArea);
                     searchThisArea.setVisibility(View.VISIBLE);
                     searchThisArea.setOnClickListener(v -> {
-                        double searchLat = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.latitude));
-                        double searchLon = Double.parseDouble(String.format("%.2f", mMap.getCameraPosition().target.longitude));
+                        double searchLat = mMap.getCameraPosition().target.latitude;
+                        double searchLon = mMap.getCameraPosition().target.longitude;
                         mProgress.setVisibility(View.VISIBLE);
                         queryRealmLoadTheaters(searchLat, searchLon);
                         searchThisArea.setVisibility(View.GONE);
