@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.model.Movie;
 import com.mobile.model.Screening;
@@ -276,8 +275,8 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
         return position;
     }
 
-    boolean queryRealm() {
 
+    boolean queryRealm() {
         RealmConfiguration historyConfig = new RealmConfiguration.Builder()
                 .name("History.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -288,9 +287,7 @@ public class MovieTheatersAdapter extends RecyclerView.Adapter<MovieTheatersAdap
                 .equalTo("id", screening.getMoviepassId())
                 .findAll();
 
-        LogUtils.newLog(TAG, "queryRealm: " + checkMovieID.size());
         for (int i = 0; i < checkMovieID.size(); i++) {
-            LogUtils.newLog(TAG, "queryRealm:  " + checkMovieID.get(i).getId());
             if (checkMovieID.get(i).getId() == screening.getMoviepassId() & screening.isApproved()) {
                 return true;
             }

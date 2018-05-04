@@ -19,9 +19,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.helpshift.support.Log;
 import com.mobile.MoviePosterClickListener;
-import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -34,7 +32,6 @@ import io.realm.RealmList;
  */
 
 public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewReleasesAdapter.ViewHolder> {
-    public static final String TAG = "found it...";
     private final MoviePosterClickListener moviePosterClickListener;
     private RealmList<Movie> moviesArrayList;
 
@@ -81,7 +78,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
             holder.mNewReleasePosterDV.setImageURI(imgUrl);
             holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
 
-            Log.d(TAG, "URL???: " + imgUrl.toString());
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                     .setProgressiveRenderingEnabled(true)
                     .setSource(imgUrl)
@@ -122,14 +118,10 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                 }
             });
 
-        }catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
+        }catch (IllegalStateException onBind) {
+            onBind.printStackTrace();
 
-//
-//        ImagePipeline pipeline = Fresco.getImagePipeline();
-//        pipeline.clearMemoryCaches();
-//        pipeline.clearDiskCaches();
+        }
     }
 
     @Override

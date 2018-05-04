@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * Created by anubis on 5/31/17.
  */
@@ -60,6 +62,8 @@ public class ProfileFragment extends Fragment {
     Activity myActivity;
     Context myContext;
     ProfileActivityInterface listener;
+    Realm historyRealm;
+
     public ProfileFragment() {
     }
 
@@ -89,7 +93,12 @@ public class ProfileFragment extends Fragment {
         fadeIn(root);
 
 
+        RealmConfiguration historyConfig = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
 
+        historyRealm = Realm.getInstance(historyConfig);
         return root;
     }
 
@@ -135,6 +144,7 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
+            historyRealm.deleteAll();
 //            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myActivity, LogInActivity.class);
@@ -149,7 +159,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, profileAccountInformationFragment);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         referAFriend.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +172,7 @@ public class ProfileFragment extends Fragment {
                 transaction.replace(R.id.profile_container, refer);
                 transaction.addToBackStack("");
                 transaction.commit();
-                ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+                ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
             }
         });
 
@@ -183,14 +193,14 @@ public class ProfileFragment extends Fragment {
             customIssueFileds.put("version name", new String[]{"sl", versionName});
             String date = UserPreferences.getLastCheckInAttemptDate();
             String time = UserPreferences.getLastCheckInAttemptTime();
-            customIssueFileds.put("lastCheckInAttemptDate",new String[]{"sl",date});
-            customIssueFileds.put("lastCheckInAttemptTime",new String[]{"sl",time});
+            customIssueFileds.put("lastCheckInAttemptDate", new String[]{"sl", date});
+            customIssueFileds.put("lastCheckInAttemptTime", new String[]{"sl", time});
 
             String[] tags = new String[]{versionName};
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("version", versionName);
-            userData.put("lastCheckInAttemptDate",date);
-            userData.put("lastCheckInAttemptTime",time);
+            userData.put("lastCheckInAttemptDate", date);
+            userData.put("lastCheckInAttemptTime", time);
             Metadata meta = new Metadata(userData, tags);
 
             ApiConfig apiConfig = new ApiConfig.Builder()
@@ -213,7 +223,7 @@ public class ProfileFragment extends Fragment {
             transaction.replace(R.id.profile_container, pastReservations);
             transaction.addToBackStack("");
             transaction.commit();
-            ((ProfileActivity)myActivity).bottomNavigationView.setVisibility(View.GONE);
+            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
         });
 
         currentRes.setOnClickListener(view1 -> {
@@ -233,7 +243,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
     }
 
     public void fadeIn(View view) {
@@ -250,7 +259,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof ProfileActivityInterface){
+        if (context instanceof ProfileActivityInterface) {
             listener = (ProfileActivityInterface) context;
         }
         myContext = context;

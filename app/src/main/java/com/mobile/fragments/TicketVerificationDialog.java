@@ -208,7 +208,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         }
 
         // Return the file target for the photo based on filename
-        LogUtils.newLog(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+        LogUtils.newLog(Constants.TAG, "getPhotoFileUri: " + new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -216,9 +216,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
 
-            photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            if (photoFile != null) {
+                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+            }
 
             Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

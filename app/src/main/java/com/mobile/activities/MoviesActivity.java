@@ -107,6 +107,12 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         fm = getSupportFragmentManager();
         fragmentManager = getSupportFragmentManager();
 
+        if (UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")) {
+            verifyAndroidID();
+        } else {
+            LogUtils.newLog("State Check", "onPostResume");
+            microServiceRestrictions();
+        }
     }
 
     private void verifyAndroidID() {
@@ -315,22 +321,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         }
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        LogUtils.newLog("State Check", "onPostResume");
-        if (UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")) {
-            verifyAndroidID();
-        } else {
-            microServiceRestrictions();
-        }
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-        LogUtils.newLog("State Check", "onResumeFragments");
-    }
 
     public void microServiceRestrictions() {
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
@@ -345,7 +335,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restrict.getHasActiveCard();
                     boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
-                    LogUtils.newLog(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -378,8 +367,10 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                             TicketVerificationDialog dialog = new TicketVerificationDialog();
 
                             addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
-                        } catch (IllegalStateException e) {
-                            e.printStackTrace();
+                        } catch (IllegalStateException popException) {
+                            popException.printStackTrace();
+                            recreate();
+
                         }
 
                     }
@@ -407,8 +398,9 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                             transaction.addToBackStack("");
                             transaction.commit();
                             fragmentManager.executePendingTransactions();
-                        } catch (IllegalStateException e) {
-                            e.printStackTrace();
+                        } catch (IllegalStateException alertException) {
+                            alertException.printStackTrace();
+                            recreate();
                         }
 
 
@@ -451,17 +443,16 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
 
-    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog dialog, String tag) {
         // Make sure the current transaction finishes first
         fragmentManager.executePendingTransactions();
         // If there is no fragment yet with this tag...
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            TicketVerificationDialog dialog = new TicketVerificationDialog();
+            dialog = new TicketVerificationDialog();
             dialog.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             dialog.setCancelable(false);
             dialog.show(fm, "fr_ticketverification_banner");
-
         }
     }
 
