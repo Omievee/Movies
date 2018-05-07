@@ -144,7 +144,12 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
-            historyRealm.deleteAll();
+            historyRealm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.deleteAll();
+                }
+            });
 //            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myActivity, LogInActivity.class);

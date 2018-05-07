@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -376,13 +375,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         String time = showtime;
 
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
-        if(mCurrentLocation!= null) {
-            //TODO
-            Log.d(TAG, "reserve: " + mCurrentLocation);
+
+        if(mCurrentLocation != null ) {
+            UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
         }else {
-            Log.d(TAG, "reserve: " );
+            Toast.makeText(myContext, "NULL", Toast.LENGTH_SHORT).show();
         }
-        UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
 
         buttonCheckIn.setEnabled(false);
         /* Standard Check In */

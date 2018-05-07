@@ -164,8 +164,9 @@ public class UserLocationManagerFused implements LocationListener, GoogleApiClie
 
             }
 
-        } catch (IOException | IllegalStateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
         }
 
         UserPreferences.setLocation(formatCityAndState(cityName, stateNameAbrev), zipCode, loc.getLatitude(), loc.getLongitude(), isLocationUserDefined, isSubscripttionActivatedRequired);

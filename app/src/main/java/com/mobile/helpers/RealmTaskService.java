@@ -3,7 +3,6 @@ package com.mobile.helpers;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -170,17 +169,17 @@ public class RealmTaskService extends GcmTaskService {
 
 
     void getTheatersBucket() {
+        try {
+            tRealm = Realm.getDefaultInstance();
 
-        tRealm = Realm.getDefaultInstance();
+            RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+                @Override
+                public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
+                    LocalStorageTheaters locallyStoredTheaters = response.body();
+                    if (locallyStoredTheaters != null && response.isSuccessful()) {
 
-        RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
-            @Override
-            public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
-                LocalStorageTheaters locallyStoredTheaters = response.body();
-                if (locallyStoredTheaters != null && response.isSuccessful()) {
+                        tRealm.executeTransactionAsync(R -> {
 
-                    tRealm.executeTransactionAsync(R -> {
-                        try {
                             for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                                 Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
                                 RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
@@ -195,46 +194,47 @@ public class RealmTaskService extends GcmTaskService {
                                 RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
                                 RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
                             }
-                        } catch (IllegalStateException e) {
-                            e.printStackTrace();
-                        }
 
-                    }, () -> {
-                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
-                    }, error -> {
-                        // Transaction failed and was automatically canceled.
-                        LogUtils.newLog(Constants.TAG, "Realm onError: " + error.getMessage());
-                    });
+
+                        }, () -> {
+                            LogUtils.newLog(Constants.TAG, "onSuccess: ");
+                        }, error -> {
+                            // Transaction failed and was automatically canceled.
+                            LogUtils.newLog(Constants.TAG, "Realm onError: " + error.getMessage());
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
-                Toast.makeText(RealmTaskService.this, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
+                    Toast.makeText(RealmTaskService.this, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     void getAllMovies() {
-        LogUtils.newLog(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
-        allMoviesConfig = new RealmConfiguration.Builder()
-                .name("AllMovies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
+        try {
+            allMoviesConfig = new RealmConfiguration.Builder()
+                    .name("AllMovies.Realm")
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
 
 
-        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+            allMoviesRealm = Realm.getInstance(allMoviesConfig);
 
-        allMoviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
-        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
-            @Override
-            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
-                List<AllMoviesResponse> info = new ArrayList<>();
-                info = response.body();
-                if (response.isSuccessful() && response != null) {
-                    List<AllMoviesResponse> finalInfo = info;
-                    allMoviesRealm.executeTransaction(realm -> {
-                        try {
+            allMoviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
+            RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+                @Override
+                public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                    List<AllMoviesResponse> info = new ArrayList<>();
+                    info = response.body();
+                    if (response.isSuccessful() && response != null) {
+                        List<AllMoviesResponse> finalInfo = info;
+                        allMoviesRealm.executeTransaction(realm -> {
+
                             for (AllMoviesResponse movie : finalInfo) {
                                 Movie newMovie = realm.createObject(Movie.class);
                                 newMovie.setId(Integer.parseInt(movie.getId()));
@@ -245,38 +245,39 @@ public class RealmTaskService extends GcmTaskService {
                                 newMovie.setImageUrl(movie.getImageUrl());
                                 newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
                             }
-                        } catch (IllegalStateException e) {
-                            e.printStackTrace();
-                        }
 
-                    });
+
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
-            }
-        });
-
+                @Override
+                public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     void getMoviesBucket() {
-        config = new RealmConfiguration.Builder()
-                .name("Movies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
+        try {
+
+            config = new RealmConfiguration.Builder()
+                    .name("Movies.Realm")
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
 
 
-        moviesRealm = Realm.getInstance(config);
-        moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
-        RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
-            @Override
-            public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
-                LocalStorageMovies localStorageMovies = response.body();
-                if (localStorageMovies != null && response.isSuccessful()) {
+            moviesRealm = Realm.getInstance(config);
+            moviesRealm.executeTransactionAsync(realm -> realm.deleteAll());
+            RestClient.getLocalStorageAPI().getAllCurrentMovies().enqueue(new Callback<LocalStorageMovies>() {
+                @Override
+                public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
+                    LocalStorageMovies localStorageMovies = response.body();
+                    if (localStorageMovies != null && response.isSuccessful()) {
 
-                    moviesRealm.executeTransactionAsync(realm -> {
-                        try {
+                        moviesRealm.executeTransactionAsync(realm -> {
                             for (int i = 0; i < localStorageMovies.getNewReleases().size(); i++) {
                                 Movie newReleaseMovies = realm.createObject(Movie.class);
                                 newReleaseMovies.setType("New Releases");
@@ -358,46 +359,48 @@ public class RealmTaskService extends GcmTaskService {
                                 topBoxOfficeMovies.setTeaserVideoUrl(localStorageMovies.getTopBoxOffice().get(i).getTeaserVideoUrl());
 
                             }
-                        } catch (IllegalStateException e) {
 
-                        }
 
-                    }, () -> {
+                        }, () -> {
 
-                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
+                            LogUtils.newLog(Constants.TAG, "onSuccess: ");
 
-                    }, error -> {
-                        LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
-                    });
+                        }, error -> {
+                            LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
+                        });
 
+                    }
                 }
-            }
 
 
-            @Override
-            public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
-                Toast.makeText(RealmTaskService.this, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
+                    Toast.makeText(RealmTaskService.this, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (IllegalStateException e) {
+
+        }
     }
 
     void getHistory() {
-        historyConfig = new RealmConfiguration.Builder()
-                .name("History.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
+        try {
+            historyConfig = new RealmConfiguration.Builder()
+                    .name("History.Realm")
+                    .deleteRealmIfMigrationNeeded()
+                    .build();
 
-        historyRealm = Realm.getInstance(historyConfig);
-        historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
+            historyRealm = Realm.getInstance(historyConfig);
+            historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
 
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-            @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                if (response.isSuccessful()) {
-                    HistoryResponse historyObjects = response.body();
-                    historyRealm.executeTransactionAsync(realm -> {
-                        if (historyObjects != null) {
-                            try {
+            RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+                @Override
+                public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+                    if (response.isSuccessful()) {
+                        HistoryResponse historyObjects = response.body();
+                        historyRealm.executeTransactionAsync(realm -> {
+                            if (historyObjects != null) {
+
                                 for (int i = 0; i < historyObjects.getReservations().size(); i++) {
                                     Movie historyList = realm.createObject(Movie.class);
                                     historyList.setId(historyObjects.getReservations().get(i).getId());
@@ -414,20 +417,21 @@ public class RealmTaskService extends GcmTaskService {
                                     historyList.setType(historyObjects.getReservations().get(i).getType());
 
                                 }
-                            } catch (IllegalStateException e) {
-                                e.printStackTrace();
+
+
                             }
-
-                        }
-                    });
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<HistoryResponse> call, Throwable t) {
 
-            }
-        });
+                }
+            });
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

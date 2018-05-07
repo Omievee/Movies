@@ -223,11 +223,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
             }
 
-            Log.d(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
+                }else {
+                    createFileForUpload();
                 }
             } else {
                 createFileForUpload();
