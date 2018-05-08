@@ -24,13 +24,11 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
-import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
-import com.mobile.helpers.LogUtils;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -118,7 +116,6 @@ public class ProfileFragment extends Fragment {
             pushSwitch.setChecked(false);
         }
 
-        LogUtils.newLog(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
 
         pushSwitch.setOnClickListener(v -> {
             if (pushSwitch.isChecked()) {
@@ -144,18 +141,15 @@ public class ProfileFragment extends Fragment {
         signout.setOnClickListener(view16 -> {
             UserPreferences.clearUserId();
             UserPreferences.clearFbToken();
-            historyRealm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.deleteAll();
-                }
-            });
+            historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
 //            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myActivity, LogInActivity.class);
             startActivity(intent);
             myActivity.finishAffinity();
         });
+
+
         details.setOnClickListener(view1 -> {
             FragmentManager fragmentManager = myActivity.getFragmentManager();
             fragmentManager.popBackStack();

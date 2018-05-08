@@ -100,9 +100,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String uploadKey;
     File photoFile;
     String photoFileName = "TicketVerification.jpg";
+    BitmapFactory.Options bmOptions;
 
     private native static String getProductionBucket();
-
     private native static String getStagingBucket();
 
 
@@ -195,6 +195,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+                        } else {
+                            scan_Ticket();
                         }
                     } else {
                         scan_Ticket();
@@ -231,7 +233,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
 
-                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                         }
                     } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
@@ -279,16 +281,41 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-            photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+            if (photoFile != null) {
+                bmOptions = new BitmapFactory.Options();
+
+                android.util.Log.d(Constants.TAG, "onActivityResult: " + bmOptions);
+                BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                int photoW = bmOptions.outWidth;
+                int photoH = bmOptions.outHeight;
+
+                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                if (scaleFactor != 1) {
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inSampleSize = scaleFactor;
+
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+
+                } else {
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+                }
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
+                } else {
+                    createImageFile();
                 }
             } else {
                 createImageFile();
             }
-
-
         }
 
     }
@@ -433,11 +460,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         scanTicket.setVisibility(View.INVISIBLE);
         handler.postDelayed(() -> {
 
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             final byte[] bitmapdata = bos.toByteArray();
-
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
                 LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
@@ -516,13 +540,12 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                                         Toast.makeText(ConfirmationActivity.this, "Your stub has been submitted", Toast.LENGTH_LONG).show();
                                         finish();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
                         }
+
                         @Override
                         public void onFailure(Call<VerificationResponse> call, Throwable t) {
                             whiteProgress.setVisibility(View.GONE);
