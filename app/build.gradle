@@ -41,6 +41,9 @@ android {
             storeFile file('/Users/o_viscarra/Desktop/UPLOAD/upload_key.jks')
             storePassword 'moviepass'
         }
+        debug {
+            storeFile file('../app_listing/keys/debug.keystore')
+        }
     }
 
     flavorDimensions 'env'
