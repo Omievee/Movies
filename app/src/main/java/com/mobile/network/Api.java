@@ -53,23 +53,19 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+import static com.mobile.Constants.USER_ID;
+
 public interface Api {
 
     String HEADER_COOKIE = "Cookie";
-    String FLAG = "flag";
     String HEADER_UUID = "device_uuid";
     String HEADER_UUIDD = "deviceAndroidID";
     String HEADER_GOWATCHIT = "x-api-key";
-    String USER_ID = "device_id";
+
 
     /* LogIn */
     @POST("/rest/v1/session")
-    Call<User> login(@Header(FLAG) String flag, @Body LogInRequest request);
-
-//
-//    /* LogIn */
-//    @POST("/api/v1/auth/login")
-//    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
+    Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
     @GET("/rest/v1/password_reset/{emailAddress}")
@@ -235,12 +231,12 @@ public interface Api {
 
 
     /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/staging/movies/current.json")
+    @GET("/#env#/movies/current.json")
     Call<LocalStorageMovies> getAllCurrentMovies();
 
 
     /* ALL MOVIES FOR SEARCH */
-    @GET("/staging/movies/all.json")
+    @GET("/#env#/movies/all.json")
     Call<List<AllMoviesResponse>> getAllMovies();
 
 
@@ -251,9 +247,9 @@ public interface Api {
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
-    Call<MicroServiceRestrictionsResponse>getInterstitialAlert(@Path("userId") int userId);
+    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
-    @POST("/rest/v1/movies/{movieId}/rate")
+    @POST("/#rest#/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
 
 
@@ -262,7 +258,7 @@ public interface Api {
     Call<ReferAFriendResponse> referAFriend();
 
     //Device ID  Verification
-    @POST(" /rest/v1/device/verification")
+    @POST("/rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
 
 }

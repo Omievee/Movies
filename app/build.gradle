@@ -27,6 +27,11 @@ android {
         versionName "3.0.18"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        buildConfigField "String", "baseUrl", '"http://staging.moviepass.com"'
+        buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
+        buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
+        buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
     }
 
     signingConfigs {
@@ -38,53 +43,54 @@ android {
         }
     }
 
-    buildTypes {
+    flavorDimensions 'env'
+
+    productFlavors {
+
         staging {
-            signingConfig signingConfigs.debug
-            debuggable true
-            buildConfigField "String", "baseUrl", '"http://staging.moviepass.com"'
-            buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
-            buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
+            dimension 'env'
+            applicationIdSuffix '.staging'
+            buildConfigField "String", "ENVIRONMENT", '"staging"'
+            buildConfigField "String", "BUCKET", '"mpcore.staging.tickets"'
+            buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
+            resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.debug.fileprovider\""
+            resValue 'string', 'authority_file_provider_path', "\"Android/data/${defaultConfig.applicationId}.debug/files/Pictures\""
         }
+
+        prod {
+            dimension 'env'
+            resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.fileprovider\""
+            resValue 'string', 'authority_file_provider_path', '"Android/data/${defaultConfig.applicationId}/files/Pictures"'
+            buildConfigField "String", "ENVIRONMENT", '"prod"'
+            buildConfigField "String", "BUCKET", '"mpcore.production.tickets"'
+            buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
+            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
+            buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
+            buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
+        }
+    }
+
+    buildTypes {
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
-            buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
-            buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
-        }
-
-        debug {
-            signingConfig signingConfigs.debug
-            debuggable true
-            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
-            buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
-            buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
         }
     }
 
     dataBinding {
         enabled = true
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-        staging { java.srcDirs = ['src/staging/java', 'src/staging/java/staging'] }
-    }
 
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
     realm {
         syncEnabled = true;
     }
 
-    externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
-        }
-    }
 //    /** THIS FIXES LOLLIPOP DEVICES DO NOT DELETE */
     dexOptions {
         preDexLibraries false
@@ -116,7 +122,7 @@ ext {
     dagger_version = '2.5'
     play_services_version = '11.0.0'
     retrofit_version = '2.3.0'
-    support_lib_version = '26.0.0-beta2'
+    support_lib_version = '27.0.2'
 }
 
 dependencies {
@@ -143,7 +149,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation "com.android.support:support-v13:27.0.2"
     implementation 'com.android.support:multidex:1.0.2'
-    //compile 'com.android.support:support-core-utils:26.2.1'
+    //implementation 'com.android.support:support-core-utils:26.2.1'
 
     // Google Maps Utilities
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
@@ -217,8 +223,8 @@ dependencies {
         transitive = true;
     }
 
-    implementation "com.android.support:appcompat-v7:27.0.2"
-    implementation "com.android.support:design:27.0.2"
+    implementation "com.android.support:appcompat-v7:$support_lib_version"
+    implementation "com.android.support:design:$support_lib_version"
 
     //Spinner
     implementation 'com.jaredrummler:material-spinner:1.2.4'
@@ -237,11 +243,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 
-
 }
-
-
-
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'

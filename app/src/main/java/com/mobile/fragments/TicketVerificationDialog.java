@@ -44,6 +44,7 @@ import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONException;
@@ -84,10 +85,6 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     Context myContext;
     File photoFile;
     String photoFileName = "TicketVerification.jpg";
-
-    private native static String getProductionBucket();
-
-    private native static String getStagingBucket();
 
     private TransferUtility transferUtility;
 
@@ -321,7 +318,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         }
 
 
-        TransferObserver observer = transferUtility.upload(getProductionBucket(), key, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(BuildConfig.BUCKET, key, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
