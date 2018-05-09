@@ -264,8 +264,8 @@
                     android:layout_marginTop="16dp"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical"
+                    android:paddingEnd="@dimen/margin_standard"
                     android:paddingStart="@dimen/margin_standard">
-
 
                     <GridLayout
                         android:id="@+id/gridSeatsA"
