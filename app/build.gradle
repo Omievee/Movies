@@ -34,6 +34,12 @@ android {
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
     }
 
+    splits {
+        density {
+            exclude "ldpi"
+        }
+    }
+
     signingConfigs {
         release {
             keyAlias 'upload'
