@@ -34,18 +34,8 @@ public class SeatButton extends AppCompatImageButton {
         mSelected = false;
 
         switch (mSeatInfo.getSeatType()) {
-            case SeatTypeCompanion:
-                this.setImageResource(R.drawable.icon_seat_unavailable);
-                break;
             case SeatTypeNotASeat:
                 break;
-            case SeatTypeWheelchair:
-                if (mSeatInfo.isAvailable())
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_available);
-                else
-                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
-                break;
-
             case SeatTypeCanReserve:
             case SeatTypeCanReserveLeft:
             case SeatTypeCanReserveRight:
@@ -61,6 +51,21 @@ public class SeatButton extends AppCompatImageButton {
                 this.setImageResource(R.drawable.sofaright);
             case SeatTypeSofaMiddle:
                 this.setImageResource(R.drawable.sofamiddle);
+            case SeatTypeWheelchair:
+                setBackground(null);
+                if (mSeatInfo.isAvailable())
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_available);
+                else
+                    this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
+                break;
+            case SeatTypeCompanion:
+                setBackground(null);
+                if(seat.isAvailable()) {
+                    this.setImageResource(R.drawable.icon_seat_companion_available);
+                } else {
+                    this.setImageResource(R.drawable.icon_seat_companion_unavailable);
+                }
+                break;
         }
 
         this.setEnabled(mSeatInfo.isAvailable() && (mSeatInfo.getSeatType() != SeatInfo.SeatType.SeatTypeCompanion));
@@ -69,7 +74,6 @@ public class SeatButton extends AppCompatImageButton {
     public void setSeatSelected(Boolean selected) {
         if (selected) {
             switch (mSeatInfo.getSeatType()) {
-                case SeatTypeCompanion:
                 case SeatTypeCanReserve:
                 case SeatTypeCanReserveLeft:
                 case SeatTypeCanReserveRight:
@@ -77,6 +81,9 @@ public class SeatButton extends AppCompatImageButton {
                     break;
                 case SeatTypeWheelchair:
                     this.setImageResource(R.drawable.icon_seat_wheelchair_selected);
+                    break;
+                case SeatTypeCompanion:
+                    this.setImageResource(R.drawable.icon_seat_companion_selected);
                     break;
                 case SeatTypeSofaMiddle:
                     this.setImageResource(R.drawable.sofamiddleselected);
@@ -96,18 +103,24 @@ public class SeatButton extends AppCompatImageButton {
                     else
                         this.setImageResource(R.drawable.icon_seat_unavailable);
                     break;
-                case SeatTypeWheelchair:
-                    if (mSeatInfo.isAvailable())
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_available);
-                    else
-                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
-                    break;
                 case SeatTypeSofaLeft:
                     this.setImageResource(R.drawable.sofaleftunavailable);
                 case SeatTypeSofaRight:
                     this.setImageResource(R.drawable.sofarightunavailable);
                 case SeatTypeSofaMiddle:
                     this.setImageResource(R.drawable.sofamiddleunavailable);
+                case SeatTypeWheelchair:
+                    if (mSeatInfo.isAvailable())
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_available);
+                    else
+                        this.setImageResource(R.drawable.icon_seat_wheelchair_unavailable);
+                    break;
+                case SeatTypeCompanion:
+                    if(mSeatInfo.isAvailable()) {
+                        this.setImageResource(R.drawable.icon_seat_companion_available);
+                    } else {
+                        this.setImageResource(R.drawable.icon_seat_companion_unavailable);
+                    }
             }
         }
     }

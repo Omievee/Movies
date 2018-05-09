@@ -38,4 +38,7 @@
 
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>
+
+    <!-- Seat Selection -->
+    <dimen name="seat_padding">3dp</dimen>
 </resources>
