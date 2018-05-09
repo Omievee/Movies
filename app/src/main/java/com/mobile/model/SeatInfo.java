@@ -6,6 +6,8 @@ package com.mobile.model;
 
 import org.parceler.Parcel;
 
+import java.util.Random;
+
 @Parcel
 public class SeatInfo implements Comparable {
 
@@ -91,15 +93,19 @@ public class SeatInfo implements Comparable {
             seatType = SeatType.SeatTypeCompanion;
         } else if (type.toLowerCase().matches("notaseat")) {
             seatType = SeatType.SeatTypeNotASeat;
-        }else if(type.toLowerCase().matches("sofaleft")){
+        } else if (type.toLowerCase().matches("sofaleft")) {
             seatType = SeatType.SeatTypeSofaLeft;
-        }else if(type.toLowerCase().matches("sofaright")){
+        } else if (type.toLowerCase().matches("sofaright")) {
             seatType = SeatType.SeatTypeSofaRight;
-        }else if(type.toLowerCase().matches("sofamiddle")){
+        } else if (type.toLowerCase().matches("sofamiddle")) {
             seatType = SeatType.SeatTypeSofaMiddle;
         }
-
         return seatType;
+    }
+
+    public boolean isWheelChairOrCompanion() {
+        SeatType type = getSeatType();
+        return type == SeatType.SeatTypeWheelchair || type == SeatType.SeatTypeCompanion;
     }
 
     @Override
@@ -110,5 +116,39 @@ public class SeatInfo implements Comparable {
             return this.column - ss.column;
         else
             return this.row - ss.row;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SeatInfo seatInfo = (SeatInfo) o;
+
+        if (row != seatInfo.row) return false;
+        if (column != seatInfo.column) return false;
+        if (seatName != null ? !seatName.equals(seatInfo.seatName) : seatInfo.seatName != null)
+            return false;
+        return type != null ? type.equals(seatInfo.type) : seatInfo.type == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = row;
+        result = 31 * result + column;
+        result = 31 * result + (seatName != null ? seatName.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SeatInfo{" +
+                "available=" + available +
+                ", row=" + row +
+                ", column=" + column +
+                ", seatName='" + seatName + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
