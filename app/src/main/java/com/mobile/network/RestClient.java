@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -37,11 +38,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RestClient {
 
-    static {
-        System.loadLibrary("native-lib");
+    private static String getEndPoint() {
+        return BuildConfig.baseUrl;
     }
-
-    private native static String getEndPoint();
 
     static String buildNumber = String.valueOf(BuildConfig.VERSION_CODE);
     static  String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
@@ -184,6 +183,7 @@ public class RestClient {
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
                         .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                HttpUrl url = original.url();
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -335,8 +335,9 @@ public class RestClient {
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
                         .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                HttpUrl url = original.url();
+                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
                 Request request = requestBuilder.build();
-
                 return chain.proceed(request);
             }
         });
@@ -345,12 +346,16 @@ public class RestClient {
                 .setLenient()
                 .create();
 
+
         localStorageInstance = new Retrofit.Builder()
                 .baseUrl(a1URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
 //                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
+        //Request request = requestBuilder.build();
+        //                HttpUrl url = request.url();
+        //                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
         localStorageAPI = localStorageInstance.create(Api.class);
     }
 

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.helpshift.support.Log;
-
-
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -20,6 +17,7 @@ import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.RealmTaskService;
 import com.mobile.network.RestClient;
+import com.moviepass.BuildConfig;
 import com.taplytics.sdk.Taplytics;
 
 import io.fabric.sdk.android.Fabric;
@@ -29,16 +27,14 @@ import io.realm.RealmConfiguration;
 
 public class Application extends MultiDexApplication {
 
-    static {
-        System.loadLibrary("native-lib");
-    }
-
     private static Application mApplication;
     public static final String TAG = "TAG";
     private AmazonS3 s3;
     private static CognitoCachingCredentialsProvider sCredProvider;
 
-    private native static String getCognitoKey();
+    private static String getCognitoKey() {
+        return BuildConfig.COGNITO_KEY;
+    }
 
     static String cognitoPoolId = String.valueOf(getCognitoKey());
 
