@@ -15,7 +15,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import com.helpshift.support.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -282,53 +282,60 @@ public class SelectSeatActivity extends BaseActivity {
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
             if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
                     (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
-
+                GridLayout gridLayout = null;
                 if (seat.getSeatName().contains("A")) {
-                    mGridSeatsA.addView(seatButton);
+                    gridLayout = mGridSeatsA;
                 }
                 if (seat.getSeatName().contains("B")) {
-                    mGridSeatsB.addView(seatButton);
+                    gridLayout = mGridSeatsB;
                 }
                 if (seat.getSeatName().contains("C")) {
-                    mGridSeatsC.addView(seatButton);
+                    gridLayout = mGridSeatsC;
                 }
                 if (seat.getSeatName().contains("D")) {
-                    mGridSeatsD.addView(seatButton);
+                    gridLayout = mGridSeatsD;
                 }
                 if (seat.getSeatName().contains("E")) {
-                    mGridSeatsE.addView(seatButton);
+                    gridLayout = mGridSeatsE;
                 }
                 if (seat.getSeatName().contains("F")) {
-                    mGridSeatsF.addView(seatButton);
+                    gridLayout = mGridSeatsF;
                 }
                 if (seat.getSeatName().contains("G")) {
-                    mGridSeatsG.addView(seatButton);
+                    gridLayout = mGridSeatsG;
                 }
                 if (seat.getSeatName().contains("H")) {
-                    mGridSeatsH.addView(seatButton);
+                    gridLayout = mGridSeatsH;
                 }
                 if (seat.getSeatName().contains("I")) {
-                    mGridSeatsI.addView(seatButton);
+                    gridLayout = mGridSeatsI;
                 }
                 if (seat.getSeatName().contains("J")) {
-                    mGridSeatsJ.addView(seatButton);
+                    gridLayout = mGridSeatsJ;
                 }
                 if (seat.getSeatName().contains("K")) {
-                    mGridSeatsK.addView(seatButton);
+                    gridLayout = mGridSeatsK;
                 }
                 if (seat.getSeatName().contains("L")) {
-                    mGridSeatsL.addView(seatButton);
+                    gridLayout = mGridSeatsL;
                 }
 
                 if (seat.getSeatName().contains("M")) {
-                    mGridSeatsM.addView(seatButton);
+                    gridLayout = mGridSeatsM;
+                }
+                if(gridLayout != null) {
+                    GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                    lp.setGravity(Gravity.CENTER_HORIZONTAL);
+                    gridLayout.addView(seatButton, lp);
                 }
                 seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
                 mSeatButtons.add(seatButton);
 
             } else {
                 seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
-                mGridSeatsA.addView(seatButton);
+                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                lp.setGravity(Gravity.CENTER_HORIZONTAL);
+                mGridSeatsA.addView(seatButton, lp);
                 mSeatButtons.add(seatButton);
             }
 
