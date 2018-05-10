@@ -224,6 +224,7 @@
             android:src="@drawable/image_screen" />
 
         <ScrollView
+            android:id="@+id/VerticalScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/TipText"
@@ -233,18 +234,17 @@
                 android:id="@+id/HorizScroll"
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/HorizScrollChild"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_gravity="center_horizontal"
+                    android:paddingTop="@dimen/margin_standard_and_half"
+                    android:paddingLeft="@dimen/margin_standard_and_half"
+                    android:paddingRight="@dimen/margin_standard_and_half"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical"
-                    android:paddingEnd="@dimen/margin_standard"
-                    android:paddingStart="@dimen/margin_standard">
+                    android:orientation="vertical">
 
                     <GridLayout
                         android:id="@+id/gridSeatsA"
