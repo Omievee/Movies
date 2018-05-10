@@ -7,7 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.util.Log;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,8 @@ public class ReferAFriend extends android.app.Fragment {
                     emailIntent.setType("text/plain");
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + ", \n \n" + referral.getEmailMessage());
+                    Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
                     startActivity(emailIntent);
                 }
             }
