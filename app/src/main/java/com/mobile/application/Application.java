@@ -15,6 +15,7 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
+import com.mobile.di.DaggerAppComponent;
 import com.mobile.helpers.RealmTaskService;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.network.RestClient;
@@ -74,7 +75,11 @@ public class Application extends MultiDexApplication {
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
-
+        DaggerAppComponent
+                .builder()
+                .application(this)
+                .build()
+                .inject(this);
 
         try {
             Core.install(this,
