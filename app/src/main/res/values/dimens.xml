@@ -34,8 +34,12 @@
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_10">10sp</dimen>
     <dimen name="text_size_18">18sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
 
 
     <!-- Focus Circle -->
     <dimen name="focus_overlay_w_h">50dp</dimen>
+
+    <!-- Seat Selection -->
+    <dimen name="seat_padding">3dp</dimen>
 </resources>

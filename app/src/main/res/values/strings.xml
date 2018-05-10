@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MoviePass</string>
     <string name="transition">transit</string>
+    <string name="cancel">CANCEL</string>
 
     <!-- Facebook -->
     <string name="facebook_app_id">610492482426045</string>
@@ -121,6 +122,11 @@
     <string name="activity_select_seat_selected">Selected</string>
     <string name="activity_select_seat_reserve">Continue</string>
     <string name="activity_select_seat_select_first">Please select a seat before checking in</string>
+    <string name="dialog_select_seat_wheelchair_message">You have selected an access space designated for disabled individuals.\n\n\nTap OK to select or CANCEL to select another seat.</string>
+    <string name="dialog_select_seat_wheelchair_title">This is a Wheelchair Spot.</string>
+    <string name="dialog_select_seat_companion_message">You have selected a seat designated for companions of disabled individuals, who require accessible seating because of a mobility disability.\n\n\nTap OK to select or CANCEL to select another seat.</string>
+    <string name="dialog_select_seat_companion_title">This is a Companion Seat.</string>
+
     <string name="data_connection">Check Your Connection And Try Again</string>
     <string name="pending_reservation">You have a pending reservation</string>
     <string name="error">Error: Contact Customer Support</string>
