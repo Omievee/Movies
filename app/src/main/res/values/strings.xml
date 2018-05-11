@@ -146,6 +146,11 @@
     <string name="activity_sign_in_enter_valid_credentials">Please check your credentials and try again</string>
     <string name="activity_sign_in_useFingerprint">Scan your finger to sign in.</string>
 
+
+    <!-- Refer A Friend -->
+    <string name="fragment_refer_a_friend_title">Invite your friends to join MoviePass</string>
+    <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!s</string>
+
     <!-- Credit Card Errors-->
     <string name="invalid_credit_card_number">Invalid credit card number</string>
     <string name="invalid_exp">Invalid expiration</string>
