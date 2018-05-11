@@ -17,10 +17,9 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="33dp"
-        android:padding="@dimen/margin_half"
         android:text="Referrals"
         android:textColor="@color/almost_white"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_size_16"
         android:textStyle="bold" />
 
 
@@ -34,7 +33,7 @@
         android:text="@string/fragment_refer_a_friend_title"
         android:textAlignment="center"
         android:textColor="@color/almost_white"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_size_14"
         android:textStyle="bold" />
 
     <TextView
@@ -42,15 +41,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ReferTitle"
+        android:lineSpacingExtra="5dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:layout_marginTop="@dimen/margin_half"
         android:text="@string/fragment_refer_a_friend_sub_titlte"
         android:textAlignment="center"
         android:textColor="@color/almost_white"
-        android:textSize="15sp"
+        android:textSize="@dimen/text_size_12"
         />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/ReferName"
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/double_margin_standard"
         android:layout_height="wrap_content"
         android:textColorHint="@color/white_80_opacity"
         android:theme="@style/EditTextStyle"

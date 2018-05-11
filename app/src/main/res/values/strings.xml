@@ -149,7 +149,7 @@
 
     <!-- Refer A Friend -->
     <string name="fragment_refer_a_friend_title">Invite your friends to join MoviePass</string>
-    <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!s</string>
+    <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!</string>
 
     <!-- Credit Card Errors-->
     <string name="invalid_credit_card_number">Invalid credit card number</string>

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -431,7 +432,7 @@ public class LogInActivity extends AppCompatActivity {
                         UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
                     } else {
-//                        moviePassLoginSucceeded(user);
+                        Crashlytics.setUserEmail(String.valueOf(UserPreferences.getUserId()));
                         if (!UserPreferences.getHasUserLoggedInBefore()) {
                             UserPreferences.hasUserLoggedInBefore(true);
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);

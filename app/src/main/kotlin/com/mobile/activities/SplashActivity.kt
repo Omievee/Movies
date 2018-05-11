@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -85,6 +86,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
+                    Crashlytics.setUserEmail(UserPreferences.getUserId().toString())
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)
