@@ -51,10 +51,7 @@ public class WebViewFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        if(BuildConfig.BUILD_TYPE.equalsIgnoreCase("staging"))
-            webView.loadUrl("https://stg.moviepass.com");
-        else
-            webView.loadUrl("http://www.moviepass.com");
+        webView.loadUrl(BuildConfig.REGISTRATION_URL);
     }
 
     public boolean canGoBack(){

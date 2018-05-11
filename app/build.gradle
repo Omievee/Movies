@@ -32,6 +32,7 @@ android {
         buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
         buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
+        buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
     }
 
     sourceSets {
@@ -80,6 +81,7 @@ android {
             buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
             buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
+            buildConfigField "String", "REGISTRATION_URL", '"https://www.moviepass.com"'
         }
     }
 
