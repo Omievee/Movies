@@ -25,6 +25,60 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
     protected boolean viewed;
     protected long createdAt;
 
+    protected Movie(android.os.Parcel in) {
+        id = in.readInt();
+        tribuneId = in.readString();
+        title = in.readString();
+        runningTime = in.readInt();
+        releaseDate = in.readString();
+        rating = in.readString();
+        synopsis = in.readString();
+        viewed = in.readByte() != 0;
+        createdAt = in.readLong();
+        userRating = in.readString();
+        teaserVideoUrl = in.readString();
+        type = in.readString();
+        imageUrl = in.readString();
+        landscapeImageUrl = in.readString();
+        theaterName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(tribuneId);
+        dest.writeString(title);
+        dest.writeInt(runningTime);
+        dest.writeString(releaseDate);
+        dest.writeString(rating);
+        dest.writeString(synopsis);
+        dest.writeByte((byte) (viewed ? 1 : 0));
+        dest.writeLong(createdAt);
+        dest.writeString(userRating);
+        dest.writeString(teaserVideoUrl);
+        dest.writeString(type);
+        dest.writeString(imageUrl);
+        dest.writeString(landscapeImageUrl);
+        dest.writeString(theaterName);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(android.os.Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
     public String getUserRating() {
         return userRating;
     }
@@ -66,35 +120,7 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
     //    protected List<Review> reviews;
     protected String theaterName;
 
-    protected Movie(android.os.Parcel in) {
-        id = in.readInt();
-        tribuneId = in.readString();
-        title = in.readString();
-        runningTime = in.readInt();
-        releaseDate = in.readString();
-        rating = in.readString();
-        synopsis = in.readString();
-        viewed = in.readByte() != 0;
-        createdAt = in.readLong();
-        imageUrl = in.readString();
-        landscapeImageUrl = in.readString();
-        theaterName = in.readString();
-//        reservations = in.createTypedArrayList(Movie.CREATOR);
-    }
-
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-        @Override
-        public Movie createFromParcel(android.os.Parcel in) {
-            return new Movie(in);
-        }
-
-        @Override
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-    };
-
-//    public ArrayList<Movie> getReservations() {
+    //    public ArrayList<Movie> getReservations() {
 //        return reservations;
 //    }
 
@@ -210,34 +236,6 @@ public class Movie extends RealmObject implements ISearchable, Parcelable {
 //    public void setReviews(List<Review> reviews) {
 //        this.reviews = reviews;
 //    }
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(android.os.Parcel parcel, int i) {
-        try {
-            parcel.writeInt(id);
-            parcel.writeString(tribuneId);
-            parcel.writeString(title);
-            parcel.writeInt(runningTime);
-            parcel.writeString(releaseDate);
-            parcel.writeString(rating);
-            parcel.writeString(synopsis);
-            parcel.writeByte((byte) (viewed ? 1 : 0));
-            parcel.writeLong(createdAt);
-            parcel.writeString(imageUrl);
-            parcel.writeString(landscapeImageUrl);
-            parcel.writeString(theaterName);
-        }catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-
-//        parcel.writeTypedList(reservations);
-    }
 
 
 }
