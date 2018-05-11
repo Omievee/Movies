@@ -86,7 +86,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
-                    Crashlytics.setUserEmail(UserPreferences.getUserId().toString())
+                    Crashlytics.setUserIdentifier(UserPreferences.getUserId().toString())
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)

@@ -432,7 +432,7 @@ public class LogInActivity extends AppCompatActivity {
                         UserPreferences.clearUserId();
                         progress.setVisibility(View.GONE);
                     } else {
-                        Crashlytics.setUserEmail(String.valueOf(UserPreferences.getUserId()));
+                        Crashlytics.setUserIdentifier(String.valueOf(UserPreferences.getUserId()));
                         if (!UserPreferences.getHasUserLoggedInBefore()) {
                             UserPreferences.hasUserLoggedInBefore(true);
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
