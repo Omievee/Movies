@@ -173,7 +173,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public void scanTicket() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(myContext, "com.moviepass.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(myContext, getResources().getString(R.string.authority_file_provider), photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(myContext.getPackageManager()) != null) {
