@@ -82,7 +82,7 @@ public class SeatButton extends AppCompatImageButton {
                 break;
         }
 
-        this.setEnabled(mSeatInfo.isAvailable() && (mSeatInfo.getSeatType() != SeatInfo.SeatType.SeatTypeCompanion));
+        this.setEnabled(mSeatInfo.isAvailable());
     }
 
     public void setSeatSelected(Boolean selected) {

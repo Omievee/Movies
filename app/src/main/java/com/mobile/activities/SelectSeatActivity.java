@@ -1,6 +1,5 @@
 package com.mobile.activities;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.Menu;
@@ -25,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.extensions.SeatButton;
@@ -277,6 +274,7 @@ public class SelectSeatActivity extends BaseActivity {
         mSeatButtons = new ArrayList<>();
         int seatPadding = (int) getResources().getDimension(R.dimen.seat_padding);
         Collections.sort(seats);
+
         for (SeatInfo seat : seats) {
             SeatButton seatButton = new SeatButton(this, seat);
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
@@ -338,14 +336,13 @@ public class SelectSeatActivity extends BaseActivity {
                 mGridSeatsA.addView(seatButton, lp);
                 mSeatButtons.add(seatButton);
             }
-
             seatButton.setOnClickListener(sender -> {
                 final SeatButton seatBtn = (SeatButton) sender;
                 final SeatInfo seatInfo = seatBtn.getSeatInfo();
                 if (seatInfo.isWheelChairOrCompanion()) {
                     final @StringRes int message;
                     final @StringRes int title;
-                    if(seatInfo.getSeatType()== SeatInfo.SeatType.SeatTypeWheelchair) {
+                    if(seatInfo.getSeatType() == SeatInfo.SeatType.SeatTypeWheelchair) {
                         title = R.string.dialog_select_seat_wheelchair_title;
                         message = R.string.dialog_select_seat_wheelchair_message;
                     } else {
