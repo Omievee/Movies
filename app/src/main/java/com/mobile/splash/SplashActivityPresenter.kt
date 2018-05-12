@@ -1,4 +1,4 @@
-package com.mobile.activities
+package com.mobile.splash
 
 class SplashActivityPresenter {
     fun doWork() {

@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.gowatchit.GoWatchItApi;
 import com.mobile.model.ParcelableDate;
 import com.mobile.rx.RxJava2CallAdapterFactory;
 import com.moviepass.BuildConfig;
@@ -40,10 +41,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RestClient {
 
-    private static String getEndPoint() {
-        return BuildConfig.baseUrl;
-    }
-
     static String buildNumber = String.valueOf(BuildConfig.VERSION_CODE);
     static String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
@@ -52,10 +49,8 @@ public class RestClient {
 
 
     private static Api sAuthenticatedAPI;
-    private static Api sAuthenticatedAPIGoWatchIt;
-    private static Api sUnauthenticatedAPI;
+    private static GoWatchItApi sAuthenticatedAPIGoWatchIt;
     private static Api sAuthenticatedRegistrationAPI;
-    private static Api sAuthenticatedStagingRegistrationAPI;
 
     public static Api getsAuthenticatedMicroServiceAPI() {
         return sAuthenticatedMicroServiceAPI;
@@ -65,10 +60,8 @@ public class RestClient {
 
     private static Retrofit sAuthenticatedInstance;
     private static Retrofit sAuthenticatedInstanceGoWatchIt;
-    private static Retrofit sUnauthenticatedInstance;
     private static Retrofit localStorageInstance;
     private static Retrofit sAuthenticatedRegistrationInstance;
-    private static Retrofit sAuthenticatedStagingRegistrationInstance;
     private static Retrofit sAuthenticatedMicroServiceInstance;
 
     private static Api localStorageAPI;
@@ -89,66 +82,13 @@ public class RestClient {
         return sAuthenticatedRegistrationAPI;
     }
 
-    public static Api getAuthenticatedAPIGoWatchIt() {
+    public static GoWatchItApi getAuthenticatedAPIGoWatchIt() {
         return sAuthenticatedAPIGoWatchIt;
 
     }
 
-    public static Api getUnauthenticated() {
-        return sUnauthenticatedAPI;
-    }
-
     public static Api getLocalStorageAPI() {
         return localStorageAPI;
-    }
-
-    public static Api getsAuthenticatedStagingRegistrationAPI() {
-        return sAuthenticatedStagingRegistrationAPI;
-    }
-
-    public static void setupAuthenticatedStagingRegistrationClient(Context context) {
-
-        sAuthenticatedStagingRegistrationAPI = null;
-//
-//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-//
-//        if (Constants.DEBUG) {
-//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        } else {
-//            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-//        }
-//
-//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-//        httpClient.connectTimeout(20, TimeUnit.SECONDS);
-//        httpClient.readTimeout(20, TimeUnit.SECONDS);
-//        httpClient.addInterceptor(logging);
-//
-//        CookieJar cookieJar =
-//                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-//
-//        httpClient.cookieJar(cookieJar);
-//        httpClient.addInterceptor(new Interceptor() {
-//            @Override
-//            public Response intercept(Interceptor.Chain chain) throws IOException {
-//                Request original = chain.request();
-//                // Request customization: add request headers
-//                Request.Builder requestBuilder = original.newBuilder();
-//                Request request = requestBuilder.build();
-//
-//                return chain.proceed(request);
-//            }
-//        });
-//
-//        Gson gson = new GsonBuilder()
-//                .setLenient()
-//                .create();
-//
-//        sAuthenticatedStagingRegistrationInstance = new Retrofit.Builder()
-//                .baseUrl()
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .client(httpClient.build())
-//                .build();
-//        sAuthenticatedStagingRegistrationAPI = sAuthenticatedStagingRegistrationInstance.create(Api.class);
     }
 
     public static void setupAuthenticatedWebClient(Context context) {
@@ -222,7 +162,7 @@ public class RestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(40, TimeUnit.SECONDS);
         httpClient.readTimeout(40, TimeUnit.SECONDS);
-        //httpClient.addInterceptor(logging);
+        httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
@@ -252,61 +192,9 @@ public class RestClient {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-
-        sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(Api.class);
+        
+        sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(GoWatchItApi.class);
     }
-
-    public static void setupUnauthenticatedWebClient(Context context) {
-        sUnauthenticatedInstance = null;
-        sUnauthenticatedAPI = null;
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        if (Constants.DEBUG) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(20, TimeUnit.SECONDS);
-        httpClient.readTimeout(20, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
-
-        CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
-        httpClient.cookieJar(cookieJar);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
-
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("user_id", "" + userId)
-                        .addHeader("device_androidID", deviceAndroidID)
-                        .addHeader("auth_token", authToken)
-                        .addHeader("Content-type", "application/json")
-                        .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
-                }.getType(), new DateAdapter())
-                .create();
-        sUnauthenticatedInstance = new Retrofit.Builder()
-                .baseUrl(BuildConfig.baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(httpClient.build())
-                .build();
-        sUnauthenticatedAPI = sUnauthenticatedInstance.create(Api.class);
-    }
-
 
     public static void setUpLocalStorage(Context context) {
 
@@ -451,7 +339,6 @@ public class RestClient {
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", String.valueOf(UserPreferences.getUserId()))
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
-                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")

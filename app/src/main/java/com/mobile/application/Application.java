@@ -1,5 +1,6 @@
 package com.mobile.application;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
@@ -22,12 +23,19 @@ import com.mobile.network.RestClient;
 import com.moviepass.BuildConfig;
 import com.taplytics.sdk.Taplytics;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+public class Application extends MultiDexApplication implements HasActivityInjector {
 
-public class Application extends MultiDexApplication {
+    @Inject
+    DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
     private static Application mApplication;
     public static final String TAG = "TAG";
@@ -54,7 +62,6 @@ public class Application extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
         s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
@@ -68,13 +75,12 @@ public class Application extends MultiDexApplication {
         UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
-        RestClient.setupUnauthenticatedWebClient(getApplicationContext());
         RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
-        RestClient.setupAuthenticatedStagingRegistrationClient(getApplicationContext());
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
+
         DaggerAppComponent
                 .builder()
                 .application(this)
@@ -117,6 +123,11 @@ public class Application extends MultiDexApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return activityDispatchingAndroidInjector;
     }
 }
 
