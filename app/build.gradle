@@ -74,7 +74,7 @@ android {
         prod {
             dimension 'env'
             resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.fileprovider\""
-            resValue 'string', 'authority_file_provider_path', '"Android/data/${defaultConfig.applicationId}/files/Pictures"'
+            resValue 'string', 'authority_file_provider_path', "\"Android/data/${defaultConfig.applicationId}/files/Pictures\""
             buildConfigField "String", "ENVIRONMENT", '"prod"'
             buildConfigField "String", "BUCKET", '"mpcore.production.tickets"'
             buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
