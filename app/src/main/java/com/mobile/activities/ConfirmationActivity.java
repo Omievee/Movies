@@ -445,7 +445,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public void scan_Ticket() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.moviepass.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(this, getString(R.string.authority_file_provider), photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
