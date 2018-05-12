@@ -32,12 +32,9 @@ android {
         buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
         buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
+        buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
         buildConfigField "String", "DEFAULT_LOCATION", 'null'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
     }
 
     splits {
@@ -98,10 +95,6 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
-    }
-
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
@@ -138,7 +131,7 @@ repositories {
 }
 
 ext {
-    dagger_version = '2.15'
+    dagger_version = '2.16'
     play_services_version = '11.0.0'
     retrofit_version = '2.3.0'
     support_lib_version = '27.1.0'
@@ -185,7 +178,8 @@ dependencies {
     // Dagger
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:2.14.1"
+    kapt           "com.google.dagger:dagger-compiler:$dagger_version"
+    kapt           "com.google.dagger:dagger-android-processor:$dagger_version"
     implementation "com.google.dagger:dagger:$dagger_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
@@ -202,7 +196,7 @@ dependencies {
     }
     // Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     // CardIO
     implementation 'io.card:android-sdk:5.5.1'
     // Custom Shape Image View
