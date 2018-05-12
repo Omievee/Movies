@@ -4,13 +4,19 @@ import com.mobile.application.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
+import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(
+@Component(modules = [
         AndroidInjectionModule::class,
-        AppModule::class))
-interface AppComponent {
+        AppBindingModule::class,
+        AndroidSupportInjectionModule::class,
+        AppModule::class])
+interface AppComponent : AndroidInjector<@kotlin.jvm.JvmSuppressWildcards DaggerApplication> {
+
     @Component.Builder
     interface Builder {
         @BindsInstance

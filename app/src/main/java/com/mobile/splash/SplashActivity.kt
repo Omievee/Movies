@@ -1,4 +1,4 @@
-package com.mobile.activities
+package com.mobile.splash
 
 import android.content.Intent
 import android.os.AsyncTask
@@ -11,6 +11,10 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.Constants
 import com.mobile.UserPreferences
+import com.mobile.activities.LogInActivity
+import com.mobile.activities.MoviesActivity
+import com.mobile.activities.OnboardingActivity
+import com.mobile.activities.TheatersActivity
 import com.mobile.helpers.GoWatchItSingleton
 import com.moviepass.R
 import dagger.android.AndroidInjection
@@ -20,7 +24,7 @@ import javax.inject.Inject
 class SplashActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var presenter:SplashActivityPresenter
+    lateinit var presenter: SplashActivityPresenter
 
     lateinit var ID: String
     override fun onCreate(savedInstanceState: Bundle?) {

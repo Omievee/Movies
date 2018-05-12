@@ -1,8 +1,7 @@
-package com.mobile.activities;
+package com.mobile.splash;
 
 import com.mobile.di.ActivityScope;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
