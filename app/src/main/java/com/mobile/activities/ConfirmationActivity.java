@@ -53,6 +53,7 @@ import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONException;
@@ -101,10 +102,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     File photoFile;
     String photoFileName = "TicketVerification.jpg";
     BitmapFactory.Options bmOptions;
-
-    private native static String getProductionBucket();
-    private native static String getStagingBucket();
-
 
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
@@ -516,7 +513,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         }
 
 
-        TransferObserver observer = transferUtility.upload(getProductionBucket(), uploadKey, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(BuildConfig.BUCKET, uploadKey, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
