@@ -187,6 +187,7 @@ public interface Api {
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> openAppEvent(@Query("ct") String ct, @Query("ci") String ci, @Query("cd") String cd,
                                          @Query("e") String e, @Query("c") String campaign, @Query("m") String m, @Query("mc") String mc,
                                          @Query("u") String u, @Query("o") String o, @Query("l") String l,
@@ -194,6 +195,7 @@ public interface Api {
                                          @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> clickOnShowtime(@Query("e") String engagement, @Query("et") String et, @Query("tht") String tht,
                                             @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                             @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
@@ -204,6 +206,7 @@ public interface Api {
                                             @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> ticketPurchase(@Query("e") String engagement, @Query("tht") String tht,
                                            @Query("thd") String thd, @Query("tn") String th, @Query("thc") String thc,
                                            @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
@@ -214,6 +217,7 @@ public interface Api {
                                            @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> searchTheatersMovies(@Query("e") String engagement,
                                                  @Query("ct") String ct, @Query("ci") String ci,
                                                  @Query("tr") String tr,
@@ -223,6 +227,7 @@ public interface Api {
                                                  @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> openTheaterEvent(@Query("e") String engagement,
                                              @Query("tn") String th, @Query("thc") String thc,
                                              @Query("thr") String thr, @Query("thz") String thz, @Query("tha") String tha,
@@ -233,6 +238,7 @@ public interface Api {
                                              @Query("ab") String ab, @Query("av") String av, @Query("lts") String lts);
 
     @GET("/prod/ingest")
+    @Deprecated
     Call<GoWatchItResponse> openMapEvent(@Query("e") String engagement,
                                          @Query("ct") String ct, @Query("ci") String ci,
                                          @Query("et") String et,
