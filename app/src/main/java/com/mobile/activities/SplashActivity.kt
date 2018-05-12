@@ -13,11 +13,18 @@ import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.helpers.GoWatchItSingleton
 import com.moviepass.R
+import dagger.android.AndroidInjection
 import java.io.IOException
+import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var presenter:SplashActivityPresenter
+
     lateinit var ID: String
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
@@ -46,18 +53,18 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (urlPath.size >= 4) {
                         val campaign = urlPath.get(3)
-                        GoWatchItSingleton.getInstance().campaign = campaign
+                        GoWatchItSingleton.getInstance().setCampaign(campaign)
                     }
                     launchActivity(0, -1)
                 } else if (movieOrTheater.equals("theaters")) {
                     launchActivity(1, -1)
                     if (urlPath.size >= 3) {
                         val campaign = urlPath.get(2)
-                        GoWatchItSingleton.getInstance().campaign = campaign
+                        GoWatchItSingleton.getInstance().setCampaign(campaign)
                     }
                 } else {
                     val campaign = urlPath.get(1)
-                    GoWatchItSingleton.getInstance().campaign = campaign
+                    GoWatchItSingleton.getInstance().setCampaign(campaign)
                     launchActivity(2, -1)
                 }
             } else {
