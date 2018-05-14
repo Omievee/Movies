@@ -361,7 +361,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
-
+                    UserPreferences.saveReservation(reservation);
                     GoWatchItSingleton.getInstance().checkInEvent(theater, screening, showtime, "ticket_purchase", String.valueOf(movie.getId()), url);
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();

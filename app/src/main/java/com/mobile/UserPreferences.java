@@ -4,8 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+import com.google.gson.GsonBuilder;
 import com.helpshift.HelpshiftUser;
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
+import com.mobile.model.Movie;
+import com.mobile.model.Reservation;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.Calendar;
 
@@ -155,29 +163,25 @@ public class UserPreferences {
     public static void clearEverything() {
         boolean logIn = getHasUserLoggedInBefore();
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.clear().commit();
+        editor.clear().apply();
 
         hasUserLoggedInBefore(logIn);
     }
 
-    public static void setLastCheckInAttempt(String date, String time) {
+    public static void setLastCheckInAttemptDate() {
         SharedPreferences.Editor editor = sPrefs.edit();
-        String dateKey, timeKey;
-        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
-        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
-        editor.putString(dateKey, date);
-        editor.putString(timeKey, time);
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + getUserId();
+        editor.putLong(dateKey, System.currentTimeMillis());
         editor.apply();
     }
 
-    public static String getLastCheckInAttemptDate() {
-        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
-        return sPrefs.getString(dateKey, "0");
-    }
-
-    public static String getLastCheckInAttemptTime() {
-        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
-        return sPrefs.getString(timeKey, "0");
+    public static @Nullable Long getLastCheckInAttemptDate() {
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + getUserId();
+        long val = sPrefs.getLong(dateKey, -1);
+        if(val==-1) {
+            return null;
+        }
+        return val;
     }
 
     public static Location getLocation() {
@@ -284,15 +288,26 @@ public class UserPreferences {
         return sPrefs.getString(Constants.FB_TOKEN, "token");
     }
 
-    public static void helpshift() {
-        HelpshiftUser user = new HelpshiftUser.Builder(
-                valueOf(getUserId()),
-                getUserEmail())
-                .setName(getUserName())
-                .build();
-        HelpshiftContext.getCoreApi().login(user);
+    public static void saveReservation(Reservation reservation) {
+        if(reservation!=null) {
+            String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
+            String gson  = new GsonBuilder().create().toJson(reservation);
+            sPrefs.edit().putString(key, gson).apply();
+        }
     }
 
+    public static Reservation getLastReservation() {
+        String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
+        String reservation = sPrefs.getString(key,null);
+        if(reservation!=null) {
+            try {
+                return new GsonBuilder().create().fromJson(reservation, Reservation.class);
+            } catch (Exception ignored) {
+
+            }
+        }
+        return null;
+    }
     public static void saveTheatersLoadedDate() {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
@@ -303,5 +318,32 @@ public class UserPreferences {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
         return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS,-1)==dayOfYear;
+    }
+
+    public static void setTotalMoviesSeen(int totalMoviesSeen) {
+        sPrefs
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN + "_" +getUserId(), totalMoviesSeen).apply();
+    }
+
+    public static void setTotalMoviesSeenLastMonth(int totalMoviesSeenLastMonth) {
+        sPrefs
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_MONTH + "_" +getUserId(), totalMoviesSeenLastMonth).apply();
+    }
+
+    public static void setLastMovieSeen(Movie movie) {
+        sPrefs
+                .edit().putString(Constants.LAST_MOVIE_SEEN + "_" +getUserId(), movie.getTitle()).apply();
+    }
+
+    public static int getTotalMovieSeen() {
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN + "_" +getUserId(),-1);
+    }
+
+    public static int getTotalMovieSeenLastMonth() {
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_MONTH + "_" +getUserId(),-1);
+    }
+
+    public static String getLastMovieSeen() {
+        return sPrefs.getString(Constants.LAST_MOVIE_SEEN + "_" +getUserId(),null);
     }
 }

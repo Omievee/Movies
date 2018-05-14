@@ -36,6 +36,7 @@ import com.mobile.UserPreferences;
 import com.mobile.fragments.NoInternetFragment;
 import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.LogUtils;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.network.RestClient;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -101,12 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
 
         try {
-            HelpshiftUser user = new HelpshiftUser.Builder(
-                    valueOf(getUserId()),
-                    getUserEmail())
-                    .setName(getUserName())
-                    .build();
-            HelpshiftContext.getCoreApi().login(user);
+            HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
         } catch (Exception e) {
 
         }

@@ -22,6 +22,7 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.LegalFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -135,12 +136,7 @@ public class SettingsActivity extends BaseActivity {
                     JSONObject attributes = new JSONObject();
                     attributes.put("pushPermission", pushValue);
                     Taplytics.setUserAttributes(attributes);
-                    HelpshiftUser user = new HelpshiftUser.Builder(
-                            valueOf(getUserId()),
-                            getUserEmail())
-                            .setName(getUserName())
-                            .build();
-                    HelpshiftContext.getCoreApi().login(user);
+                    HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
                 } catch (JSONException e) {
 
                 }
