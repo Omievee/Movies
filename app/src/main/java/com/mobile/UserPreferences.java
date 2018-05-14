@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+import com.helpshift.HelpshiftUser;
 import com.helpshift.util.HelpshiftContext;
 
 import java.util.Calendar;
 
 import javax.annotation.Nullable;
+
+import static java.lang.String.valueOf;
 
 /**
  * Created by ryan on 4/26/17.
@@ -282,7 +285,12 @@ public class UserPreferences {
     }
 
     public static void helpshift() {
-        HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+        HelpshiftUser user = new HelpshiftUser.Builder(
+                valueOf(getUserId()),
+                getUserEmail())
+                .setName(getUserName())
+                .build();
+        HelpshiftContext.getCoreApi().login(user);
     }
 
     public static void saveTheatersLoadedDate() {

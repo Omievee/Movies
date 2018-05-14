@@ -10,7 +10,10 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.helpshift.HelpshiftUser;
 import com.helpshift.support.Log;
+
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -49,6 +52,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
+
 //import com.taplytics.sdk.Taplytics;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -83,17 +91,22 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
         try {
             JSONObject attributes = new JSONObject();
-            attributes.put("email", UserPreferences.getUserEmail());
-            attributes.put("name", UserPreferences.getUserName());
-            attributes.put("user_id", String.valueOf(UserPreferences.getUserId()));
-            LogUtils.newLog("taplytics put", UserPreferences.getUserEmail());
+            attributes.put("email", getUserEmail());
+            attributes.put("name", getUserName());
+            attributes.put("user_id", valueOf(getUserId()));
+            LogUtils.newLog("taplytics put", getUserEmail());
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 
         }
 
         try {
-            HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+            HelpshiftUser user = new HelpshiftUser.Builder(
+                    valueOf(getUserId()),
+                    getUserEmail())
+                    .setName(getUserName())
+                    .build();
+            HelpshiftContext.getCoreApi().login(user);
         } catch (Exception e) {
 
         }
@@ -116,8 +129,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         checkInternetConnection();
     }
 
-    public void checkInternetConnection(){
-        if(!isOnline()){
+    public void checkInternetConnection() {
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         }
     }

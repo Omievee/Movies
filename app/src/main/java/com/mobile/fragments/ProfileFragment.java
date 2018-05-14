@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.helpshift.HelpshiftUser;
 import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
@@ -42,6 +43,11 @@ import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
 
 /**
  * Created by anubis on 5/31/17.
@@ -132,7 +138,12 @@ public class ProfileFragment extends Fragment {
                 JSONObject attributes = new JSONObject();
                 attributes.put("pushPermission", pushValue);
                 Taplytics.setUserAttributes(attributes);
-                HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+                HelpshiftUser user = new HelpshiftUser.Builder(
+                        valueOf(getUserId()),
+                        getUserEmail())
+                        .setName(getUserName())
+                        .build();
+                HelpshiftContext.getCoreApi().login(user);
             } catch (JSONException e) {
 
             }

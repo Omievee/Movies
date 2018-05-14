@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.helpshift.HelpshiftUser;
 import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
@@ -30,6 +31,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
 
 /**
  * Created by anubis on 6/9/17.
@@ -129,7 +135,12 @@ public class SettingsActivity extends BaseActivity {
                     JSONObject attributes = new JSONObject();
                     attributes.put("pushPermission", pushValue);
                     Taplytics.setUserAttributes(attributes);
-                    HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+                    HelpshiftUser user = new HelpshiftUser.Builder(
+                            valueOf(getUserId()),
+                            getUserEmail())
+                            .setName(getUserName())
+                            .build();
+                    HelpshiftContext.getCoreApi().login(user);
                 } catch (JSONException e) {
 
                 }
