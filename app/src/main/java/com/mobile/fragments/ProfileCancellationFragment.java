@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;

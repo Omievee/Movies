@@ -11,15 +11,12 @@
     <RelativeLayout
         android:id="@+id/HEADER"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp">
+        android:layout_height="wrap_content">
 
         <TextView
+            style="@style/TitleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_standard"
-            android:layout_marginTop="@dimen/margin_half"
             android:text="Account"
             android:textColor="@color/almost_white"
             android:textSize="16sp"
@@ -177,7 +174,6 @@
             </RelativeLayout>
 
 
-
             <RelativeLayout
                 android:id="@+id/ReferAFriend"
                 android:layout_width="match_parent"
@@ -217,7 +213,44 @@
                     android:background="@color/gray_icon" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/LoyaltyPrograms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_half">
 
+                <TextView
+                    android:id="@+id/LoyaltyProgramsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="@dimen/margin_half"
+                    android:text="Loyalty Programs"
+                    android:textAllCaps="false"
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/arrowforward"
+                    android:tint="@color/white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="6dp"
+                    android:alpha=".5"
+                    android:background="@color/gray_icon" />
+            </RelativeLayout>
 
 
             <TextView

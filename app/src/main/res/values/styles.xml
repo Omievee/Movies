@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
@@ -27,6 +27,20 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="MoviepassButton">
+        <item name="android:background">@drawable/mpbutton</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="RedMoviepassButton" parent="MoviepassButton">
+        <item name="android:background">@drawable/mpbutton1</item>
     </style>
 
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
@@ -107,6 +121,10 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="LoyaltyEditText">
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
     <style name="normal_text_in_layout_Style">
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textSize">14sp</item>
@@ -124,4 +142,46 @@
         <item name="colorPrimary">@color/test_black</item>
     </style>
 
+    <style name="MaterialSpinner" parent="LoyaltySpinnerItemSet">
+        <item name="ms_arrow_tint">@color/almost_white</item>
+        <item name="ms_background_color">@color/charcoalGrey</item>
+        <item name="ms_hint_color">@color/almost_white</item>
+        <item name="ms_text_color">@color/almost_white</item>
+    </style>
+
+    <style name="TitleView">
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lines">1</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">9sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="android:layout_height">?android:actionBarSize</item>
+        <item name="android:background">@color/dark</item>
+        <item name="android:padding">@dimen/margin_half</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LoyaltySpinnerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingStart">@dimen/margin_half</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="android:fontWeight" tools:targetApi="o">300</item>
+        <item name="fontWeight" tools:targetApi="o">300</item>
+    </style>
+
+    <style name="LoyaltySpinnerItemSet" parent="LoyaltySpinnerItem">
+        <item name="android:textSize">16sp</item>
+        <item name="fontWeight" tools:targetApi="26">700</item>
+        <item name="android:fontWeight" tools:targetApi="26">500</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">0dp</item>
+    </style>
 </resources>

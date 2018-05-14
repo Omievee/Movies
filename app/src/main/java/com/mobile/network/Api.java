@@ -1,5 +1,6 @@
 package com.mobile.network;
 
+import com.mobile.loyaltyprogram.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
 import com.mobile.model.TheatersResponse;
@@ -43,7 +44,10 @@ import com.mobile.responses.VerificationLostResponse;
 import com.mobile.responses.VerificationResponse;
 
 import java.util.List;
+import java.util.Map;
 
+import io.reactivex.Single;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -260,5 +264,11 @@ public interface Api {
     //Device ID  Verification
     @POST("/rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+
+    @GET("/rest/v1/loyalty/list")
+    Single<List<TheaterChain>> theaterChains();
+
+    @POST("/rest/v1/loyalty/{chain}/signIn")
+    Single<Map<String,Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String,String> chainData);
 
 }

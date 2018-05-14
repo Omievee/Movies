@@ -45,6 +45,7 @@ import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.helpers.LogUtils;
+import com.mobile.loyaltyprogram.TheaterChain;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -52,6 +53,7 @@ import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
+import com.mobile.rx.Schedulers;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
@@ -275,8 +277,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (historyRealm.isEmpty()) {
             getHistoryForStorage();
         }
-
-
     }
 
     void getAllMovies() {
