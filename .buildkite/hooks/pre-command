@@ -1,0 +1,5 @@
+set -eu
+echo "--- :checkered_flag: Running pre-command"
+export ANDROID_HOME=~buildkite-agent/android-sdk
+echo "Set ENV.ANDROID_HOME=$ANDROID_HOME"
+echo "About to run command: $BUILDKITE_COMMAND"

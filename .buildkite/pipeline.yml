@@ -1,0 +1,3 @@
+steps:
+  - label: ':compile'
+    command: './gradlew --no-daemon :app:clean app:compileStagingDebugKotlin'
