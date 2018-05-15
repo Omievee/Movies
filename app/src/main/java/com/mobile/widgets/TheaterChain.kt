@@ -1,4 +1,4 @@
-package com.mobile.loyaltyprogram
+package com.mobile.widgets
 
 import com.google.gson.annotations.SerializedName
 import com.mobile.utils.text.*

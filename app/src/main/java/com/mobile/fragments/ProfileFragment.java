@@ -29,7 +29,7 @@ import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
-import com.mobile.loyaltyprogram.LoyaltyProgramFragment;
+import com.mobile.widgets.LoyaltyProgramFragment;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;

@@ -1,4 +1,4 @@
-package com.mobile.loyaltyprogram
+package com.mobile.widgets
 
 interface LoyaltyProgramView {
     fun showTheaters(theaterChains: List<TheaterChain>)

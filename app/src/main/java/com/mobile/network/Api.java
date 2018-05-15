@@ -1,6 +1,6 @@
 package com.mobile.network;
 
-import com.mobile.loyaltyprogram.TheaterChain;
+import com.mobile.widgets.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
 import com.mobile.model.TheatersResponse;
@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

@@ -1,6 +1,5 @@
-package com.mobile.loyaltyprogram
+package com.mobile.widgets
 
-import android.text.Editable
 import com.mobile.network.RestClient
 import com.mobile.rx.Schedulers
 import io.reactivex.disposables.Disposable

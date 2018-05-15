@@ -1,4 +1,4 @@
-package com.mobile.loyaltyprogram
+package com.mobile.widgets
 
 import android.app.Fragment
 import android.content.Context
@@ -16,7 +16,6 @@ import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
 import com.mobile.utils.text.toSentenceCase
 import com.moviepass.R
-import kotlinx.android.synthetic.main.ac_signup_first_open.*
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
 class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
@@ -47,9 +46,9 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                 }
 
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                    val view = LoyaltySpinnerView(activity)
+                    val view = MaterialSpinnerSpinnerView(activity)
                     view.minimumHeight = resources.getDimension(R.dimen.action_bar_size).toInt()
-                    view.bind(get(position))
+                    view.bind(getItemText(position))
                     return view
                 }
             }

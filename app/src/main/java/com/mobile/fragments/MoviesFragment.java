@@ -34,10 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
-import com.mobile.UserPreferences;
 import com.mobile.activities.MovieActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
@@ -45,7 +43,6 @@ import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.helpers.LogUtils;
-import com.mobile.loyaltyprogram.TheaterChain;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -53,7 +50,6 @@ import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
-import com.mobile.rx.Schedulers;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
