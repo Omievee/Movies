@@ -107,6 +107,14 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     }
 
+    override fun showAddAMovieTheaterLoyaltyMessage() {
+        addLoyaltyProgramDescriptionTV.visibility = View.VISIBLE
+    }
+
+    override fun hideAddAMovieTheaterLoyaltyMessage() {
+        addLoyaltyProgramDescriptionTV.visibility = View.GONE
+    }
+
     override fun showSpinnerText(text: String?) {
         addLoyaltySpinner.text = text
     }

@@ -11,4 +11,6 @@ interface LoyaltyProgramView {
     fun showRegisteredTheaters(theaters: List<TheaterChain>)
     fun hideRegisteredTheaters()
     fun hideLoyaltySignIn()
+    fun hideAddAMovieTheaterLoyaltyMessage()
+    fun showAddAMovieTheaterLoyaltyMessage()
 }

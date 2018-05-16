@@ -54,10 +54,12 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
             registeredTheaterChainSize > 0 -> {
                 state.registeredTheaterChains?.let {
                     view.showRegisteredTheaters(it)
+                    view.hideAddAMovieTheaterLoyaltyMessage()
                 }
             }
             else -> {
-                view.hideRegisteredTheaters();
+                view.hideRegisteredTheaters()
+                view.showAddAMovieTheaterLoyaltyMessage()
             }
         }
     }

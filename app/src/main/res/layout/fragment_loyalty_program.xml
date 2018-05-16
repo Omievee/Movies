@@ -34,6 +34,7 @@
         app:layout_constraintTop_toBottomOf="@id/addLoyaltySpinner"
         tools:visibility="visible" />
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/registeredLoyaltyRV"
         android:layout_width="0dp"
@@ -43,6 +44,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/myLoyaltyPrograms" />
+
+    <TextView
+        android:id="@+id/addLoyaltyProgramDescriptionTV"
+        style="@style/LoyaltyAddProgramDescription"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:text="@string/loyalty_add_a_movie_theater_loyalty_program"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent=".82" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/loyaltySignInCL"

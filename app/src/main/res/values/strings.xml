@@ -462,5 +462,6 @@
     <string name="loyalty_program_sign_in">Sign In</string>
     <string name="loyalty_program_add_description">Sign into this loyalty program with your membership card number.</string>
     <string name="loyalty_my_loyalty_programs">My loyalty programs</string>
+    <string name="loyalty_add_a_movie_theater_loyalty_program">Add a movie theater loyalty program to your MoviePass account by selecting a program from the list above.</string>
 
 </resources>

@@ -202,6 +202,14 @@
         <item name="android:textColor">@color/almost_white</item>
     </style>
 
+    <style name="LoyaltyAddProgramDescription">
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/tex_gyre_adventor</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
     <style name="TextInputLayout">
         <item name="colorControlActivated">@color/almost_white</item>
         <item name="colorControlHighlight">@color/almost_white</item>
