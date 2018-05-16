@@ -454,4 +454,13 @@
     <string name="Policy_two">We begin seating approximately 30 minutes prior to showtime in order to provide food and beverage service before the feature begins. We do not seat late arrivals after the feature begins, so you will not be able to see the show if you are not on time. </string>
     <string name="title_activity_near_me">Map</string>
 
+    <!-- Loyalty -->
+    <string name="loyalty_program_add_loyalty_program">Add loyalty program</string>
+    <string name="loyalty_program_new_title">Add %1$s loyalty program</string>
+    <string name="loyalty_programs_title">Loyalty Programs</string>
+    <string name="loyalty_program_generic_error_title">Error adding the %1$s loyalty program</string>
+    <string name="loyalty_program_sign_in">Sign In</string>
+    <string name="loyalty_program_add_description">Sign into this loyalty program with your membership card number.</string>
+    <string name="loyalty_my_loyalty_programs">My loyalty programs</string>
+
 </resources>

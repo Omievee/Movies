@@ -29,6 +29,7 @@ import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
+import com.mobile.widgets.LoyaltyProgramFragment;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -53,7 +54,7 @@ public class ProfileFragment extends Fragment {
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     ReferAFriend refer = new ReferAFriend();
     View root;
-    RelativeLayout details, history, currentRes, howToUse, help, referAFriend;
+    RelativeLayout details, history, currentRes, howToUse, help, referAFriend, loyaltyPrograms;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment {
         TOS = root.findViewById(R.id.TOS);
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
+        loyaltyPrograms = root.findViewById(R.id.LoyaltyPrograms);
 
         referAFriend = root.findViewById(R.id.ReferAFriend);
         fadeIn(root);
@@ -241,6 +243,12 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        loyaltyPrograms.setOnClickListener(view1-> {
+            FragmentTransaction transaction = myActivity.getFragmentManager().beginTransaction();
+            transaction.replace(R.id.profile_container, LoyaltyProgramFragment.Companion.newInstance());
+            transaction.addToBackStack("");
+            transaction.commit();
+        });
 
     }
 

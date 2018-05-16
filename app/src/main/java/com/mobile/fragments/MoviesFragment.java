@@ -34,10 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
-import com.mobile.UserPreferences;
 import com.mobile.activities.MovieActivity;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
@@ -275,8 +273,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (historyRealm.isEmpty()) {
             getHistoryForStorage();
         }
-
-
     }
 
     void getAllMovies() {

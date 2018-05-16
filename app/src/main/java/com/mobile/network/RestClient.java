@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.moviepass.BuildConfig;
@@ -155,7 +156,7 @@ public class RestClient {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
-        if (Constants.DEBUG) {
+        if (BuildConfig.DEBUG) {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         } else {
             logging.setLevel(HttpLoggingInterceptor.Level.NONE);
@@ -197,7 +198,7 @@ public class RestClient {
         sAuthenticatedInstance = new Retrofit.Builder()
                 .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI = sAuthenticatedInstance.create(Api.class);

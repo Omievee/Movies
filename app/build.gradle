@@ -28,7 +28,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
-        buildConfigField "String", "baseUrl", '"http://staging.moviepass.com"'
+        buildConfigField "String", "baseUrl", '"https://staging.moviepass.com"'
         buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
         buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
@@ -161,7 +161,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-gcm:$play_services_version")
 
     //Support Libraries
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation "com.android.support:support-v13:27.0.2"
     implementation 'com.android.support:multidex:1.0.2'
     //implementation 'com.android.support:support-core-utils:26.2.1'
@@ -224,7 +224,7 @@ dependencies {
     // RxJava2 adapter
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     // Rx
-    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.0'
     // SearchView
     implementation 'com.lapism:searchview:4.0'
