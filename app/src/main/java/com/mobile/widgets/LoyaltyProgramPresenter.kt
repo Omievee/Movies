@@ -16,10 +16,12 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         if (state.theaterChains != null) {
             return
         }
+        view.showProgress()
         state
                 .theaterChainSubscription = RestClient.getAuthenticated()
                 .theaterChains()
                 .compose(Schedulers.singleDefault())
+                .doAfterTerminate { view.hideProgress() }
                 .subscribe({ v ->
                     state.theaterChains = v
                     state.error = null

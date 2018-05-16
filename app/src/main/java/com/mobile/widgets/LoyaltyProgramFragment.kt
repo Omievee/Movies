@@ -1,11 +1,12 @@
 package com.mobile.widgets
 
+import android.app.Activity
 import android.app.Fragment
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
-import android.support.v4.widget.TextViewCompat.*
 import android.support.v7.app.AlertDialog
 import android.text.InputFilter
 import android.text.InputType
@@ -33,6 +34,14 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
         presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
     }
 
+    //TODO REMOVE WHEN SWITCHING TO SUPPORT FRAGMENTS
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity)
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M) {
+            presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         presenter?.onResume()
@@ -40,6 +49,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     override fun showTheaters(theaterChains: List<TheaterChain>) {
         activity?.let {
+            addLoyaltySpinner.visibility = View.VISIBLE
             adapter = object : MaterialSpinnerAdapter<TheaterChain>(it, theaterChains) {
                 override fun getItemText(position: Int): String {
                     return getItem(position).chainName ?: ""
@@ -64,8 +74,8 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
     override fun showLoyaltyScreenFields(theaterChain: TheaterChain, triple: Map<String, String>?) {
         activity?.let { activity ->
             val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, TextInputEditText>>()
-            theaterChain.requiredFields?.forEach { name, type ->
-                val inputEditText = TextInputEditText(ContextThemeWrapper(activity, R.style.EditTextStyle)).apply {
+            theaterChain.requiredFields?.forEach { (name, type) ->
+                val inputEditText = TextInputEditText(ContextThemeWrapper(activity,R.style.TextInputEditText)).apply {
                     hint = name.toSentenceCase().toLowerCase()
                     inputType = when (type) {
                         RequiredField.FI_INT -> InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -74,18 +84,13 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     setText(triple?.get(name))
                     filters = arrayOf(InputFilter.LengthFilter(100))
                 }
-                setTextAppearance(inputEditText, R.style.LoyaltyEditText)
                 fieldNameToValue.put(name, Pair(type, inputEditText))
-                val textInputLayout = TextInputLayout(activity).apply {
-                    setErrorTextAppearance(R.style.error_appearance)
-                    setHintTextAppearance(R.style.text_in_layout_hint_Style)
+                val textInputLayout = TextInputLayout(ContextThemeWrapper(activity,R.style.TextInputLayout)).apply {
                     addView(inputEditText)
                 }
-                val padding = resources.getDimension(R.dimen.margin_standard).toInt()
                 loyaltyProgramFieldsLL.apply {
                     removeAllViews()
                     addView(textInputLayout)
-                    setPadding(padding, padding, padding, padding)
                 }
                 loyaltySignInCL.visibility = View.VISIBLE
             }

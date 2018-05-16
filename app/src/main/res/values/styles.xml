@@ -31,12 +31,14 @@
 
     <style name="MoviepassButton">
         <item name="android:background">@drawable/mpbutton</item>
-        <item name="android:minWidth">70dp</item>
+        <item name="android:minWidth">100dp</item>
+        <item name="android:elevation">1dp</item>
         <item name="android:padding">@dimen/margin_standard</item>
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
         <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
     </style>
 
@@ -118,13 +120,11 @@
         <item name="android:colorControlActivated">@color/white_80_opacity</item>
     </style>
 
-    <style name="text_in_layout_hint_Style">
+    <style name="text_in_layout_hint_Style" parent="TextAppearance.Design.Hint">
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="LoyaltyEditText">
-        <item name="android:textColor">@color/almost_white</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
     </style>
 
     <style name="normal_text_in_layout_Style">
@@ -132,11 +132,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="error_appearance" parent="@android:style/TextAppearance">
+    <style name="error_appearance" parent="TextAppearance.Design.Error">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/new_red</item>
-
-
     </style>
 
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
@@ -188,5 +186,38 @@
         <item name="android:fontWeight" tools:targetApi="26">500</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginStart">0dp</item>
+    </style>
+
+    <style name="LoyaltyProgramDescription">
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="TextInputLayout">
+        <item name="colorControlActivated">@color/almost_white</item>
+        <item name="colorControlHighlight">@color/almost_white</item>
+        <item name="colorControlNormal">@color/white_40_opacity</item>
+        <item name="hintTextAppearance">@style/text_in_layout_hint_Style</item>
+        <item name="errorTextAppearance">@style/error_appearance</item>
+        <item name="passwordToggleTint">@color/almost_white</item>
+    </style>
+
+    <style name="TextInputEditText">
+        <item name="android:textColorHint">@color/white_80_opacity</item>
+        <item name="colorControlActivated">@color/white_80_opacity</item>
+        <item name="android:colorControlActivated">@color/white_80_opacity</item>
+        <item name="android:textAppearance">@style/normal_text_in_layout_Style</item>
+        <item name="android:textSize">14sp</item>
+        <item name="colorControlNormal">@color/white_40_opacity</item>
+        <item name="android:colorControlNormal">@color/white_40_opacity</item>
+        <item name="colorControlHighlight">@color/white_80_opacity</item>
+        <item name="android:colorControlHighlight">@color/white_80_opacity</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textColorHighlight">@color/white_80_opacity</item>
+        <item name="android:textColorLink">@android:color/transparent</item>
+        <item name="android:backgroundTint">@color/white_40_opacity</item>
+        <item name="backgroundTint">@color/white_40_opacity</item>
     </style>
 </resources>
