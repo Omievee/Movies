@@ -461,5 +461,6 @@
     <string name="loyalty_program_generic_error_title">Error adding the %1$s loyalty program</string>
     <string name="loyalty_program_sign_in">Sign In</string>
     <string name="loyalty_program_add_description">Sign into this loyalty program with your membership card number.</string>
+    <string name="loyalty_my_loyalty_programs">My loyalty programs</string>
 
 </resources>

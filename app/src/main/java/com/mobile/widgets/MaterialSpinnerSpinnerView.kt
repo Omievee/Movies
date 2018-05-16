@@ -7,7 +7,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_list_item_loyalty_spinner.view.*
 
-class MaterialSpinnerSpinnerView(context: Context) : ConstraintLayout(context) {
+open class MaterialSpinnerSpinnerView(context: Context) : ConstraintLayout(context) {
 
     init {
         View.inflate(context, R.layout.layout_list_item_loyalty_spinner, this)

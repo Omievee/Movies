@@ -21,7 +21,9 @@ import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
 class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
-    var adapter: MaterialSpinnerAdapter<TheaterChain>? = null
+    var addLoyaltyAdapter: MaterialSpinnerAdapter<TheaterChain>? = null
+
+    var registerLoyaltyAdapter: RegisteredLoyaltyAdapter? = null
 
     var presenter: LoyaltyProgramPresenter? = null
 
@@ -47,10 +49,10 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
         presenter?.onResume()
     }
 
-    override fun showTheaters(theaterChains: List<TheaterChain>) {
+    override fun showAddTheaters(theaterChains: List<TheaterChain>) {
         activity?.let {
             addLoyaltySpinner.visibility = View.VISIBLE
-            adapter = object : MaterialSpinnerAdapter<TheaterChain>(it, theaterChains) {
+            addLoyaltyAdapter = object : MaterialSpinnerAdapter<TheaterChain>(it, theaterChains) {
                 override fun getItemText(position: Int): String {
                     return getItem(position).chainName ?: ""
                 }
@@ -62,7 +64,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     return view
                 }
             }
-            addLoyaltySpinner.setAdapter(adapter)
+            addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
             addLoyaltySpinner.setOnItemSelectedListener { view, position, id, item ->
                 presenter?.onLoyaltyProgramSelected(position)
                 addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
@@ -101,19 +103,6 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                 presenter?.onSignInButtonClicked(theaterChain, data)
             }
             loyaltyProgramNameTV.text = theaterChain.chainName
-//            AlertDialog.Builder(activity)
-//                    .setView(linearLayout)
-//                    .setTitle(getString(R.string.loyalty_program_new_title, theaterChain.chainName))
-//                    .setPositiveButton(android.R.string.ok, { _, _ ->
-//                        val data = fieldNameToValue.map {
-//                            Triple(it.key, it.value.first, it.value.second.text.toString())
-//                        }
-//                        presenter?.onSignInButtonClicked(theaterChain, data)
-//                    })
-//                    .setNegativeButton(android.R.string.cancel, { _, _ ->
-//
-//                    })
-//                    .show()
         }
 
     }
@@ -141,9 +130,31 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     }
 
-    override fun showLoyaltyMembership() {
-
+    override fun showRegisteredTheaters(theaters: List<TheaterChain>) {
+        registeredLoyaltyRV.visibility = View.VISIBLE
+        myLoyaltyPrograms.visibility = View.VISIBLE
+        if(registerLoyaltyAdapter==null) {
+            registerLoyaltyAdapter = RegisteredLoyaltyAdapter()
+            registeredLoyaltyRV.adapter = registerLoyaltyAdapter
+        }
+        registerLoyaltyAdapter?.let {
+            it.data = RegisteredLoyaltyAdapter.create(it.data, theaters)
+        }
     }
+
+    override fun hideAddTheaters() {
+        addLoyaltySpinner.visibility = View.GONE
+    }
+
+    override fun hideRegisteredTheaters() {
+        registeredLoyaltyRV.visibility = View.GONE
+        myLoyaltyPrograms.visibility = View.GONE
+    }
+
+    override fun hideLoyaltySignIn() {
+        loyaltySignInCL.visibility = View.GONE
+    }
+
 
     companion object {
         fun newInstance(): LoyaltyProgramFragment {

@@ -26,11 +26,29 @@
         app:ms_hint="@string/loyalty_program_add_loyalty_program"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/myLoyaltyPrograms"
+        style="@style/LoyaltyMyProgramsHeader"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/addLoyaltySpinner"
+        tools:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/registeredLoyaltyRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myLoyaltyPrograms" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/loyaltySignInCL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/charcoalGrey"
+        android:background="@color/dark2"
         android:visibility="invisible">
 
         <TextView
@@ -58,9 +76,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias=".35"
             app:layout_constraintWidth_percent=".82" />
@@ -68,16 +86,12 @@
         <TextView
             android:id="@+id/loyaltySignInTV"
             style="@style/RedMoviepassButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:paddingBottom="@dimen/margin_standard"
             android:text="@string/loyalty_program_sign_in"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
             app:layout_constraintVertical_bias=".85" />
 
     </android.support.constraint.ConstraintLayout>

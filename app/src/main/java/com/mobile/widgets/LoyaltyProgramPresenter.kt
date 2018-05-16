@@ -13,7 +13,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
     }
 
     private fun fetchTheaterChainsIfNecessary() {
-        if (state.theaterChains != null) {
+        if (state.registeredTheaterChains != null) {
             return
         }
         view.showProgress()
@@ -22,21 +22,48 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .theaterChains()
                 .compose(Schedulers.singleDefault())
                 .doAfterTerminate { view.hideProgress() }
+                .map {
+                    state.allTheaterChains = it
+                    state.registeredTheaterChains = it.filter { it.isUserRegistered }
+                    state.unregisteredTheaterChains = it.filter { !it.isUserRegistered }
+                    it
+                }
                 .subscribe({ v ->
-                    state.theaterChains = v
                     state.error = null
-                    state.theaterChains?.let {
-                        view.showTheaters(it.toList())
-                    }
-
+                    showTheaters()
                 }, { error ->
                     state.error = error
                 })
 
     }
 
+    private fun showTheaters() {
+        val unregisteredTheaterChainSize = state.unregisteredTheaterChains?.size ?: 0
+        when {
+            unregisteredTheaterChainSize > 0 -> {
+                state.unregisteredTheaterChains?.let {
+                    view.showAddTheaters(it)
+                }
+            }
+            else -> {
+                view.hideAddTheaters()
+            }
+        }
+        val registeredTheaterChainSize = state.registeredTheaterChains?.size ?: 0
+        when {
+            registeredTheaterChainSize > 0 -> {
+                state.registeredTheaterChains?.let {
+                    view.showRegisteredTheaters(it)
+                }
+            }
+            else -> {
+                view.hideRegisteredTheaters();
+            }
+        }
+    }
+
     fun onLoyaltyProgramSelected(position: Int) {
-        val theaterChain = state.theaterChains?.get(position)
+        val theaterChain = state.allTheaterChains?.get(position)
         theaterChain?.let {
             view.showLoyaltyScreenFields(it)
         }
@@ -62,10 +89,18 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .doAfterTerminate {
                     view.hideProgress()
                 }
+                .map {
+                    theaterChain.isUserRegistered = true
+                    state.registeredTheaterChains = state.allTheaterChains?.filter {
+                        it.isUserRegistered
+                    }
+                    state.unregisteredTheaterChains = state.allTheaterChains?.filter {
+                        !it.isUserRegistered
+                    }
+                }
                 .subscribe({ result ->
-                    view.showLoyaltyMembership()
-                    println("${result}")
-
+                    view.hideLoyaltySignIn()
+                    showTheaters()
                 }, { _ ->
                     state.lastTheaterChain?.let { theaterChain ->
                         view.showAddLoyaltyError(theaterChain)
@@ -84,7 +119,9 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
 
 class State {
     var theaterChainSubscription: Disposable? = null
-    var theaterChains: MutableList<TheaterChain>? = null
+    var allTheaterChains: List<TheaterChain>? = null
+    var registeredTheaterChains: List<TheaterChain>? = null
+    var unregisteredTheaterChains: List<TheaterChain>? = null
     var error: Throwable? = null
     var lastTheaterChain: TheaterChain? = null
     var lastData: Map<String, String>? = null
