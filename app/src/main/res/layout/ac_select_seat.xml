@@ -84,11 +84,11 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/margin_standard"
                 android:layout_weight="1"
-                tools:text="[ Seat Number ] "
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:text="[ Seat Number ] " />
         </LinearLayout>
 
         <LinearLayout
@@ -119,10 +119,10 @@
                 android:layout_below="@+id/LAYOUT2"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                tools:text="A# "
                 android:textColor="@color/new_red"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="A# " />
 
         </LinearLayout>
 
@@ -159,16 +159,16 @@
             <ImageView
                 android:id="@+id/available_seat_example"
                 android:layout_width="0dp"
-                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight=".2"
                 android:src="@drawable/icon_seat_available" />
 
             <TextView
                 android:id="@+id/available_seat_example_text"
                 android:layout_width="0dp"
-                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight=".3"
                 android:gravity="center_vertical"
                 android:text="@string/activity_select_seat_available"
@@ -178,8 +178,8 @@
             <ImageView
                 android:id="@+id/unavailable_seat_example"
                 android:layout_width="0dp"
-                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight=".2"
                 android:src="@drawable/icon_seat_unavailable" />
 
@@ -228,162 +228,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/TipText"
-            android:layout_below="@+id/image_screen">
+            android:layout_below="@+id/image_screen"
+            android:scrollbars="none">
 
             <HorizontalScrollView
                 android:id="@+id/HorizScroll"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content">
+                android:scrollbars="none">
 
-                <LinearLayout
-                    android:id="@+id/HorizScrollChild"
+
+                <GridLayout
+                    android:id="@+id/gridSeatsA"
+                    android:layout_marginTop="@dimen/margin_standard_and_half"
+                    android:layout_marginStart="@dimen/margin_standard_and_half"
+                    android:layout_marginEnd="@dimen/margin_standard_and_half"
+                    android:paddingBottom="@dimen/margin_standard_and_half"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/margin_standard_and_half"
-                    android:paddingLeft="@dimen/margin_standard_and_half"
-                    android:paddingRight="@dimen/margin_standard_and_half"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical">
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsA"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true" />
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsB"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsC"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsD"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsE"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsF"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsG"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsH"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30"
-                        android:padding="0dp" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsI"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsJ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsK"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                    <GridLayout
-                        android:id="@+id/gridSeatsM"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="0dp"
-                        android:animateLayoutChanges="true"
-                        android:columnCount="30" />
-
-
-                </LinearLayout>
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="0dp"
+                    android:animateLayoutChanges="true" />
 
             </HorizontalScrollView>
 
@@ -410,11 +276,11 @@
             android:layout_margin="@dimen/margin_standard"
             android:animateLayoutChanges="true"
             android:background="@drawable/mpbutton1"
+            android:gravity="center"
             android:padding="@dimen/margin_standard"
             android:text="Continue"
-            android:textSize="15sp"
-            android:gravity="center"
             android:textColor="@color/almost_white"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <include
