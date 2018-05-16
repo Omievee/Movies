@@ -1,4 +1,4 @@
-package com.mobile.widgets
+package com.mobile.loyalty
 
 import com.google.gson.annotations.SerializedName
 import com.mobile.adapters.ItemSame
@@ -13,7 +13,7 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
         this.chainNameKey.toSentenceCase()
     }
 
-    val requiredFields: Map<String,RequiredField>? by lazy {
+    val requiredFields: Map<String, RequiredField>? by lazy {
         this._requiredFields?.mapKeys {
             it.key.replace("value","").trim()
         }
