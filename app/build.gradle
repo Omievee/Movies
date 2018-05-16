@@ -49,7 +49,7 @@ android {
         release {
             keyAlias 'upload'
             keyPassword 'moviepass'
-            storeFile file('/Users/o_viscarra/Desktop/UPLOAD/upload_key.jks')
+            storeFile file("${System.getProperty("user.home")}/.moviepass/upload_key.jks")
             storePassword 'moviepass'
         }
         debug {
