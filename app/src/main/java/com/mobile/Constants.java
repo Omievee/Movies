@@ -27,6 +27,7 @@ public class Constants {
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";
+    public static final String LAST_DOWNLOADED_THEATERS = "last_dl_theaters";
     //RESTRICTIONS
     public static final String ACTIVE = "ACTIVE";
     public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
