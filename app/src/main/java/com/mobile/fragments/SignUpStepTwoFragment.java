@@ -89,10 +89,6 @@ public class SignUpStepTwoFragment extends Fragment implements PaymentMethodNonc
 
     TextView signup2NextButton;
 
-    static {
-        System.loadLibrary("native-lib");
-    }
-
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };

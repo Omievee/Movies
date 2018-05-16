@@ -31,7 +31,6 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
@@ -246,7 +245,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         currentLocationTasks();
 
     }
-
 
 
     @Override
@@ -601,38 +599,48 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
     private void loadMoviePosterData() {
-        final Uri imgUrl = Uri.parse(movie.getLandscapeImageUrl());
-        selectedMoviePoster.setImageURI(imgUrl);
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                    @Override
-                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                        super.onFinalImageSet(id, imageInfo, animatable);
+        android.util.Log.d(TAG, "loadMoviePosterData: " + movie.getLandscapeImageUrl());
 
-                        if (imgUrl.toString().contains("updateMovieThumb")) {
+        try {
+            final Uri imgUrl = Uri.parse(movie.getLandscapeImageUrl());
+            selectedMoviePoster.setImageURI(imgUrl);
+            DraweeController controller = Fresco
+                    .newDraweeControllerBuilder()
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                        @Override
+                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                            super.onFinalImageSet(id, imageInfo, animatable);
+
+                            if (imgUrl.toString().contains("updateMovieThumb")) {
+                                supportStartPostponedEnterTransition();
+                                selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
+                                selectedMoviePoster.animate();
+                                selectedMovieTitle.setText(movie.getTitle());
+                            } else {
+                                supportStartPostponedEnterTransition();
+                                selectedMoviePoster.animate();
+                                selectedMoviePoster.setImageURI(imgUrl);
+                                selectedMovieTitle.setText(movie.getTitle());
+                                selectedMoviePoster.getHierarchy().setFadeDuration(200);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
                             supportStartPostponedEnterTransition();
                             selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
-                            selectedMoviePoster.animate();
                             selectedMovieTitle.setText(movie.getTitle());
-                        } else {
-                            supportStartPostponedEnterTransition();
-                            selectedMoviePoster.animate();
-                            selectedMoviePoster.setImageURI(imgUrl);
-                            selectedMovieTitle.setText(movie.getTitle());
-                            selectedMoviePoster.getHierarchy().setFadeDuration(200);
                         }
-                    }
+                    })
+                    .setUri(imgUrl)
+                    .build();
+            selectedMoviePoster.setController(controller);
 
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-                        supportStartPostponedEnterTransition();
-                        selectedMoviePoster.setImageResource(R.drawable.film_reel_icon);
-                        selectedMovieTitle.setText(movie.getTitle());
-                    }
-                })
-                .setUri(imgUrl)
-                .build();
-        selectedMoviePoster.setController(controller);
+
+        } catch (RuntimeException poster) {
+            poster.printStackTrace();
+        }
+
     }
 
 

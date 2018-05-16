@@ -5,19 +5,18 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.helpers.GoWatchItSingleton
-import com.mobile.helpers.LogUtils
 import com.moviepass.R
 import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
-
-
+    lateinit var ID: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -79,8 +78,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
-        LogUtils.newLog(Constants.TAG, "onCreate: " + UserPreferences.getUserId())
-        LogUtils.newLog(Constants.TAG, "onCreate: " + UserPreferences.getAuthToken())
 
         Handler().postDelayed({
             if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
@@ -89,6 +86,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION)) {
+                    Crashlytics.setUserIdentifier(UserPreferences.getUserId().toString())
                     if (typeMovie == 0) {
                         val i = Intent(this@SplashActivity, MoviesActivity::class.java)
                         i.putExtra(MoviesActivity.MOVIES, id)
@@ -112,6 +110,7 @@ class SplashActivity : AppCompatActivity() {
                     finish()
                 }
             }
+
         }, SPLASH_TIME_OUT.toLong())
     }
 
@@ -138,11 +137,13 @@ class SplashActivity : AppCompatActivity() {
             } catch (e: GooglePlayServicesRepairableException) {
                 e.printStackTrace()
             }
+            if (adInfo!!.id != null) {
+                ID = adInfo.id
+            }
 
-            val id = adInfo!!.id
             val isLAT = adInfo.isLimitAdTrackingEnabled
 
-            return id
+            return ID
         }
     }
 

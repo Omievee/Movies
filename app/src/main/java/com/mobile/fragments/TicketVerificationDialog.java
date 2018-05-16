@@ -44,6 +44,7 @@ import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONException;
@@ -72,30 +73,20 @@ import static android.app.Activity.RESULT_OK;
 
 public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public final String APP_TAG = "TicketVerification";
-    String mCurrentPhotoPath;
-    private Uri imageUri;
     ImageView ticketScan;
     View root;
-    int PERMISSION_ALL = 1;
-    Bitmap photo;
+    BitmapFactory.Options bmOptions;
+
     ProgressBar progress;
     TextView noStub, FAQs;
     ObjectMetadata objectMetadata;
     String key;
     Activity myActivity;
     Context myContext;
-    String filePath;
-    Uri mImageUri;
     File photoFile;
     String photoFileName = "TicketVerification.jpg";
 
-    private native static String getProductionBucket();
-
-    private native static String getStagingBucket();
-
     private TransferUtility transferUtility;
-
-    public static final int REQUEST_CAMERA_CODE = 0;
 
 
     private static String CAMERA_PERMISSIONS[] = new String[]{
@@ -112,12 +103,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
         TicketVerificationDialog fragment = new TicketVerificationDialog();
         Bundle args = new Bundle();
-//        args.putInt("reservationId", resID);
-//        args.putString("mSelectedMovieTitle", movieTitle);
-//        args.putString("tribuneMovieId", tribuneMovieId);
-//        args.putString("mTheaterSelected", theaterName);
-//        args.putString("tribuneTheaterId", tribuneTheaterId);
-//        args.putString("showtime", showtime);
+        args.putInt("reservationId", resID);
+        args.putString("mSelectedMovieTitle", movieTitle);
+        args.putString("tribuneMovieId", tribuneMovieId);
+        args.putString("mTheaterSelected", theaterName);
+        args.putString("tribuneTheaterId", tribuneTheaterId);
+        args.putString("showtime", showtime);
         fragment.setArguments(args);
         return fragment;
     }
@@ -152,8 +143,6 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ContextSingleton.getInstance(myActivity).getGlobalContext();
-
 
         ticketScan.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -182,11 +171,9 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
 
     public void scanTicket() {
-
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(myContext, "com.moviepass.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(myContext, getResources().getString(R.string.authority_file_provider), photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(myContext.getPackageManager()) != null) {
@@ -202,13 +189,9 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(myContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
-        // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             LogUtils.newLog(APP_TAG, "failed to create directory");
         }
-
-        // Return the file target for the photo based on filename
-        LogUtils.newLog(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -216,18 +199,43 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
 
-                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            if (photoFile != null) {
+                bmOptions = new BitmapFactory.Options();
 
-                LogUtils.newLog(Constants.TAG, "onActivityResult: " + photo.getHeight() + "  " + photo.getWidth());
+                Log.d(Constants.TAG, "onActivityResult: " + bmOptions);
+                BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                int photoW = bmOptions.outWidth;
+                int photoH = bmOptions.outHeight;
 
+                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                if (scaleFactor != 1) {
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inSampleSize = scaleFactor;
+
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+
+                } else {
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
-
                 } else {
                     createFileForUpload();
                 }
+            } else {
+                Log.d(Constants.TAG, "onActivityResult: " + bmOptions);
+                createFileForUpload();
+            }
 
         }
     }
@@ -256,15 +264,13 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         ticketScan.setVisibility(View.INVISIBLE);
 
         handler.postDelayed(() -> {
+
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-            LogUtils.newLog("tag", "photo size 1 ? " + photo.getWidth() + " * " + photo.getHeight());
 
             final byte[] bitmapdata = bos.toByteArray();
 
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
-                LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
                 return;
             }
             try {
@@ -281,13 +287,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             //Turn into file
             final File getPictureFile = getOutputMediaFile();
             if (getPictureFile == null) {
+                Toast.makeText(myActivity, "Failed to create File", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
-           uploadToAWS(getPictureFile);
+            uploadToAWS(getPictureFile);
         }, 4000);
-
     }
 
     private void uploadToAWS(File ticketPhoto) {
@@ -309,13 +313,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
 
             //Setting MetaData
-
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
 
-        TransferObserver observer = transferUtility.upload(getProductionBucket(), key, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(BuildConfig.BUCKET, key, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
@@ -338,9 +341,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                                         Toast.makeText(myActivity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show();
                                         dismiss();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -393,13 +394,10 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 return null;
             }
         }
-
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
-
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + timeStamp + ".jpg");
-
         return mediaFile;
     }
 

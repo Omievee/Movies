@@ -6,6 +6,8 @@ import android.location.Location;
 
 import com.helpshift.util.HelpshiftContext;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by ryan on 4/26/17.
  */
@@ -68,12 +70,11 @@ public class UserPreferences {
     }
 
     public static void setUserCredentials(int userId, String deviceAndroidID, String authToken,
-                                          String firstName, String email, String oneDeviceID) {
+                                          String firstName, String email, @Nullable String oneDeviceID) {
         SharedPreferences.Editor editor = sPrefs.edit();
 //
-        int us = userId;
         int id = 3232323;
-        String ss = String.valueOf(us);
+        String ss = String.valueOf(userId);
         String aa = String.valueOf(id);
         String xx = ss + aa;
 //        LogUtils.newLog(Constants.TAG, "setUserCredentials: " + xx);
@@ -82,7 +83,7 @@ public class UserPreferences {
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID);
         editor.putString(Constants.USER_AUTH_TOKEN, authToken);
         editor.putString(Constants.USER_FIRST_NAME, firstName);
-        if(!oneDeviceID.isEmpty())
+        if (oneDeviceID != null && !oneDeviceID.isEmpty())
             editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID);
         editor.putString(Constants.USER_EMAIL, email);
         editor.apply();

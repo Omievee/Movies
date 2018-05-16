@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mCoordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -14,7 +16,6 @@
             android:id="@+id/LAYOUT1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -30,13 +31,12 @@
                 android:id="@+id/SEATCHART_HEADER"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/double_margin_standard"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="@dimen/margin_half"
                 android:text="Choose Seats"
                 android:textColor="@color/almost_white"
-                android:textSize="23sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -73,7 +73,7 @@
                 android:layout_marginTop="@dimen/margin_half"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="Seat "
+                android:text="Seat"
                 android:textColor="@color/almost_white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -84,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/margin_standard"
                 android:layout_weight="1"
-                android:text="[ Seat Number ] "
+                tools:text="[ Seat Number ] "
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -119,7 +119,7 @@
                 android:layout_below="@+id/LAYOUT2"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="A# "
+                tools:text="A# "
                 android:textColor="@color/new_red"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
@@ -148,35 +148,29 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/image_screen"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/double_margin_standard"
-            android:layout_below="@id/LAYOUT4"
-            android:layout_marginTop="@dimen/margin_half"
-            android:scaleType="fitXY"
-            android:src="@drawable/image_screen" />
-
         <LinearLayout
             android:id="@+id/Seating_Rubric"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/double_margin_standard"
-            android:layout_below="@id/image_screen"
+            android:layout_height="@dimen/margin_standard_and_half"
+            android:layout_below="@id/LAYOUT4"
             android:layout_marginTop="@dimen/margin_half"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/available_seat_example"
                 android:layout_width="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".2"
                 android:src="@drawable/icon_seat_available" />
 
             <TextView
                 android:id="@+id/available_seat_example_text"
                 android:layout_width="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
+                android:gravity="center_vertical"
                 android:text="@string/activity_select_seat_available"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
@@ -184,8 +178,9 @@
             <ImageView
                 android:id="@+id/unavailable_seat_example"
                 android:layout_width="0dp"
+                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_weight=".2"
                 android:src="@drawable/icon_seat_unavailable" />
 
             <TextView
@@ -193,6 +188,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
+                android:gravity="center_vertical"
                 android:text="@string/activity_select_seat_unavailable"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
@@ -201,7 +197,8 @@
                 android:id="@+id/selected_seat_example"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".3"
+                android:layout_gravity="center_vertical"
+                android:layout_weight=".2"
                 android:src="@drawable/icon_seat_selected" />
 
             <TextView
@@ -209,6 +206,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".3"
+                android:gravity="center_vertical"
                 android:text="@string/activity_select_seat_selected"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
@@ -216,56 +214,37 @@
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/TipText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/SEATCHART_RESERVE"
-            android:layout_centerHorizontal="true"
-            android:text="*Scroll Sideways If Seating Chart Cuts Off"
-            android:textColor="@color/almost_white"
-            android:textSize="13sp"
-            android:textStyle="italic" />
-
-
-        <Button
-            android:id="@+id/SEATCHART_RESERVE"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/SEATCHART_NAV"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/margin_standard"
-            android:animateLayoutChanges="true"
-            android:background="@drawable/mpbutton1"
-            android:padding="@dimen/margin_standard"
-            android:text="Continue"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:textColor="@color/almost_white"
-            android:textStyle="bold" />
-
+        <ImageView
+            android:id="@+id/image_screen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/double_margin_standard"
+            android:layout_below="@id/Seating_Rubric"
+            android:layout_marginTop="@dimen/margin_half"
+            android:scaleType="fitXY"
+            android:src="@drawable/image_screen" />
 
         <ScrollView
+            android:id="@+id/VerticalScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/Seating_Rubric">
+            android:layout_above="@+id/TipText"
+            android:layout_below="@+id/image_screen">
 
             <HorizontalScrollView
                 android:id="@+id/HorizScroll"
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/HorizScrollChild"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:paddingTop="@dimen/margin_standard_and_half"
+                    android:paddingLeft="@dimen/margin_standard_and_half"
+                    android:paddingRight="@dimen/margin_standard_and_half"
                     android:animateLayoutChanges="true"
-                    android:orientation="vertical"
-                    android:paddingStart="@dimen/margin_standard">
-
+                    android:orientation="vertical">
 
                     <GridLayout
                         android:id="@+id/gridSeatsA"
@@ -409,6 +388,34 @@
             </HorizontalScrollView>
 
         </ScrollView>
+
+        <TextView
+            android:id="@+id/TipText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/SEATCHART_RESERVE"
+            android:layout_centerHorizontal="true"
+            android:text="*Scroll Sideways If Seating Chart Cuts Off"
+            android:textColor="@color/almost_white"
+            android:textSize="13sp"
+            android:textStyle="italic" />
+
+
+        <Button
+            android:id="@+id/SEATCHART_RESERVE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/SEATCHART_NAV"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/mpbutton1"
+            android:padding="@dimen/margin_standard"
+            android:text="Continue"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:textColor="@color/almost_white"
+            android:textStyle="bold" />
 
         <include
             android:id="@+id/SEATCHART_NAV"

@@ -8,9 +8,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +26,9 @@ import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,78 +87,71 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
         final Movie movie = moviesArrayList.get(position);
         holder.title.setText("");
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
-        holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
-        holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
-        final String dateComingSoon = movie.getReleaseDate().substring(0, 10);
-        final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
 
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-                .setProgressiveRenderingEnabled(true)
-                .build();
+        try {
+            holder.mComingSoonMoviePosterDV.setImageURI(imgUrl);
+            holder.mComingSoonMoviePosterDV.getHierarchy().setFadeDuration(500);
+            final String dateComingSoon = movie.getReleaseDate().substring(0, 10);
+            final SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+
+            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                    .setProgressiveRenderingEnabled(true)
+                    .build();
 
 
 
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setImageRequest(request)
-                .setTapToRetryEnabled(true)
-                .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-                        super.onFinalImageSet(id, imageInfo, animatable);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setImageRequest(request)
+                    .setTapToRetryEnabled(true)
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                            super.onFinalImageSet(id, imageInfo, animatable);
 
-                        //Makes foreground of image dark
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            //Makes foreground of image dark
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+                            }
+                            if (imgUrl.toString().contains("default")) {
+                                holder.title.setText(movie.getTitle());
+                            }
+
+                            try {
+                                Date date = fm.parse(dateComingSoon);
+
+                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+                                holder.comingSoon.setText(out.format(date));
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+//                        holder.title.setText(movie.getTitle());
+                            try {
+                                Date date = fm.parse(dateComingSoon);
+                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+                                holder.comingSoon.setText(out.format(date));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            holder.mComingSoonMoviePosterDV.setImageURI(imgUrl + "/original.jpg");
                             holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
                         }
-                        if (imgUrl.toString().contains("default")) {
-                            holder.title.setText(movie.getTitle());
-                        }
+                    })
+                    .build();
+            holder.mComingSoonMoviePosterDV.setController(controller);
 
-                        try {
-                            Date date = fm.parse(dateComingSoon);
-
-                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-                            holder.comingSoon.setText(out.format(date));
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-//                        holder.title.setText(movie.getTitle());
-                        try {
-                            Date date = fm.parse(dateComingSoon);
-                            SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-                            holder.comingSoon.setText(out.format(date));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        holder.mComingSoonMoviePosterDV.setImageURI(imgUrl + "/original.jpg");
-                        holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-                    }
-                })
-                .build();
-        holder.mComingSoonMoviePosterDV.setController(controller);
-
-//
-//        ImagePipeline pipeline = Fresco.getImagePipeline();
-//        pipeline.clearMemoryCaches();
-//        pipeline.clearDiskCaches();
-
-        android.support.v4.view.ViewCompat.setTransitionName(holder.mComingSoonMoviePosterDV, movie.getImageUrl());
+        }catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
 
 
-        //DISABLED COMING SOON THEATER CLICK
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
-//            }
-//        });
+
     }
 
     @Override

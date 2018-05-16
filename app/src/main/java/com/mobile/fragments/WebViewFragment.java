@@ -13,6 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 public class WebViewFragment extends Fragment {
@@ -50,7 +51,7 @@ public class WebViewFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webView.loadUrl("http://www.moviepass.com");
+        webView.loadUrl(BuildConfig.REGISTRATION_URL);
     }
 
     public boolean canGoBack(){

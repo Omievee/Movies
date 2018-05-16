@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.util.Log;
+import android.support.design.widget.TextInputLayout;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,7 +37,8 @@ public class ReferAFriend extends android.app.Fragment {
     Context myContext;
     Button submitReferralButton;
     ImageView twitter, facebok;
-    TextInputEditText firstName, lastName, email;
+    EditText firstName, lastName, email;
+    TextInputLayout fistNameTextInputLayout, lastNameTextInputLayout, emailTextInputLayout;
     String friendEmail;
 
     public ReferAFriend() {
@@ -61,22 +65,43 @@ public class ReferAFriend extends android.app.Fragment {
         lastName = view.findViewById(R.id.RL);
         email = view.findViewById(R.id.RE);
         submitReferralButton = view.findViewById(R.id.ReferSubmit);
+        fistNameTextInputLayout = view.findViewById(R.id.ReferName);
+        lastNameTextInputLayout = view.findViewById(R.id.ReferLast);
+        emailTextInputLayout = view.findViewById(R.id.ReferEmail);
 
 
         submitReferralButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!email.getText().toString().contains(".com") || firstName.getText().toString().isEmpty() || lastName.getText().toString().isEmpty()) {
-                    Toast.makeText(myActivity, "Please fill out all fields", Toast.LENGTH_SHORT).show();
-                } else {
+                if (allFieldsAreValid()) {
                     friendEmail = email.getText().toString();
                     submitReferral();
-
                 }
 
             }
         });
+    }
+
+    public boolean allFieldsAreValid(){
+        boolean valid = true;
+        fistNameTextInputLayout.setError("");
+        lastNameTextInputLayout.setError("");
+        emailTextInputLayout.setError("");
+        if(firstName.getText().toString().trim().isEmpty()) {
+            fistNameTextInputLayout.setError("Required");
+            valid = false;
+        }
+        if(lastName.getText().toString().trim().isEmpty()){
+            lastNameTextInputLayout.setError("Required");
+            valid = false;
+        }
+        if(!email.getText().toString().contains("com") || email.getText().toString().isEmpty()){
+            valid = false;
+            emailTextInputLayout.setError("A valid email address is required");
+        }
+        return valid;
+
     }
 
     @Override
@@ -108,12 +133,14 @@ public class ReferAFriend extends android.app.Fragment {
 
                     LogUtils.newLog(Constants.TAG, "onResponse: " + friendEmail);
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    emailIntent.setType("application/octet-stream");
                     emailIntent.setData(Uri.parse("mailto:"));
                     emailIntent.setType("message/rfc822");
                     emailIntent.setType("text/plain");
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
                     emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + ", \n \n" + referral.getEmailMessage());
+                    Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
                     startActivity(emailIntent);
                 }
             }

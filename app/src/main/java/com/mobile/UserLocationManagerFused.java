@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+
 import com.helpshift.support.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -145,24 +146,27 @@ public class UserLocationManagerFused implements LocationListener, GoogleApiClie
         boolean isSubscripttionActivatedRequired = false;
 
         try {
-            addresses = gcd.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+            if (loc != null) {
+                addresses = gcd.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
 
-            if (addresses.size() > 0) {
+                if (addresses.size() > 0) {
 
-                Address address = addresses.get(0);
-                cityName = address.getLocality();
-                if (cityName == null) {
-                    cityName = address.getSubLocality();
+                    Address address = addresses.get(0);
+                    cityName = address.getLocality();
+                    if (cityName == null) {
+                        cityName = address.getSubLocality();
+                    }
+
+                    stateName = address.getAdminArea() == null ? "" : address.getAdminArea().toLowerCase();
+                    stateNameAbrev = Constants.STATES_AND_STATES_ABREV.get(stateName);
+                    zipCode = address.getPostalCode();
                 }
-
-                stateName = address.getAdminArea() == null ? "" : address.getAdminArea().toLowerCase();
-                stateNameAbrev = Constants.STATES_AND_STATES_ABREV.get(stateName);
-                zipCode = address.getPostalCode();
 
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
         }
 
         UserPreferences.setLocation(formatCityAndState(cityName, stateNameAbrev), zipCode, loc.getLatitude(), loc.getLongitude(), isLocationUserDefined, isSubscripttionActivatedRequired);

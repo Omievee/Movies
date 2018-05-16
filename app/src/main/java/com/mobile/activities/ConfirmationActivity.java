@@ -53,6 +53,7 @@ import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONException;
@@ -100,10 +101,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String uploadKey;
     File photoFile;
     String photoFileName = "TicketVerification.jpg";
-
-    private native static String getProductionBucket();
-    private native static String getStagingBucket();
-
+    BitmapFactory.Options bmOptions;
 
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
@@ -194,6 +192,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+                        } else {
+                            scan_Ticket();
                         }
                     } else {
                         scan_Ticket();
@@ -210,7 +210,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 FAQs.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Support.showFAQSection(ConfirmationActivity.this,Constants.TICKET_VERIFICATION_FAQ_SECTION);
+                        Support.showFAQSection(ConfirmationActivity.this, Constants.TICKET_VERIFICATION_FAQ_SECTION);
                     }
                 });
             }
@@ -230,7 +230,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
 
-                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG);
+                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                         }
                     } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
@@ -278,18 +278,41 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-            if (data.getExtras() != null) {
-                photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                if (ContextCompat.checkSelfPermission(ConfirmationActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
-                    }
+
+            if (photoFile != null) {
+                bmOptions = new BitmapFactory.Options();
+
+                android.util.Log.d(Constants.TAG, "onActivityResult: " + bmOptions);
+                BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                int photoW = bmOptions.outWidth;
+                int photoH = bmOptions.outHeight;
+
+                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                if (scaleFactor != 1) {
+                    bmOptions.inJustDecodeBounds = false;
+                    bmOptions.inSampleSize = scaleFactor;
+
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+
+                } else {
+                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                    image.recycle();
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
                 } else {
                     createImageFile();
                 }
-
+            } else {
+                createImageFile();
             }
-
         }
 
     }
@@ -306,7 +329,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         }
 
         // Return the file target for the photo based on filename
-        android.util.Log.d(Constants.TAG, "getPhotoFileUri: " +  new File(mediaStorageDir.getPath() + File.separator + photoFileName));
+        android.util.Log.d(Constants.TAG, "getPhotoFileUri: " + new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
     }
@@ -419,13 +442,12 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     public void scan_Ticket() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = getPhotoFileUri(photoFileName);
-        Uri fileProvider = FileProvider.getUriForFile(this, "com.moviepass.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(this, getString(R.string.authority_file_provider), photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             android.util.Log.d(Constants.TAG, "scanTicket: ");
             startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
-
         }
     }
 
@@ -435,11 +457,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         scanTicket.setVisibility(View.INVISIBLE);
         handler.postDelayed(() -> {
 
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             final byte[] bitmapdata = bos.toByteArray();
-
             File pictureFile = getOutputMediaFile();
             if (pictureFile == null) {
                 LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
@@ -494,7 +513,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         }
 
 
-        TransferObserver observer = transferUtility.upload(getProductionBucket(), uploadKey, ticketPhoto, objectMetadata);
+        TransferObserver observer = transferUtility.upload(BuildConfig.BUCKET, uploadKey, ticketPhoto, objectMetadata);
         observer.setTransferListener(new TransferListener() {
             @Override
             public void onStateChanged(int id, TransferState state) {
@@ -518,9 +537,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                                         Toast.makeText(ConfirmationActivity.this, "Your stub has been submitted", Toast.LENGTH_LONG).show();
                                         finish();
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }

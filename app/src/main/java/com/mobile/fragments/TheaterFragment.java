@@ -15,9 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
-import com.helpshift.support.Log;
-
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +27,9 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -148,7 +143,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             try {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
                 mapIntent.setPackage("com.google.android.apps.maps");
-               myActivity.startActivity(mapIntent);
+                myActivity.startActivity(mapIntent);
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(myActivity, "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
             } catch (Exception x) {
@@ -232,7 +227,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         final Screening screening1 = screening;
 
         LogUtils.newLog(TAG, "onShowtimeClick: ");
-        
+
         if (buttonCheckIn.getVisibility() == View.GONE) {
             fadeIn(buttonCheckIn);
             buttonCheckIn.setVisibility(View.VISIBLE);
@@ -287,7 +282,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     moviesAtSelectedTheater.clear();
                     moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
                     int currentShowTimes = 0;
-                    int i=0;
+                    int i = 0;
                     int count = moviesAtSelectedTheater.size();
                     Screening noShowTimeScreening = null;
                     while (i < moviesAtSelectedTheater.size() && count >= 0) {
@@ -321,7 +316,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                                     e.printStackTrace();
                                 }
                             }
-                            if(moviesAtSelectedTheater.get(i).getTitle().equals("Check In if Movie Missing")){
+                            if (moviesAtSelectedTheater.get(i).getTitle().equals("Check In if Movie Missing")) {
                                 noShowTimeScreening = moviesAtSelectedTheater.get(i);
                                 moviesAtSelectedTheater.remove(i);
                                 count--;
@@ -343,7 +338,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                         }
                         i++;
                     }
-                    if(noShowTimeScreening!=null)
+                    if (noShowTimeScreening != null)
                         moviesAtSelectedTheater.add(noShowTimeScreening);
                     if (theaterSelectedRecyclerView != null) {
                         theaterSelectedRecyclerView.getRecycledViewPool().clear();
@@ -361,8 +356,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
             }
+
             @Override
-            public void onFailure (Call < ScreeningsResponse > call, Throwable t){
+            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
             }
 
         });
@@ -377,8 +373,14 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void reserve(Screening screening, String showtime) {
         Screening screen = screening;
         String time = showtime;
+
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
-        UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
+
+        if(mCurrentLocation != null ) {
+            UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
+        }else {
+            Toast.makeText(myContext, "NULL", Toast.LENGTH_SHORT).show();
+        }
 
         buttonCheckIn.setEnabled(false);
         /* Standard Check In */
@@ -662,7 +664,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         Intent confirmationIntent = new Intent(myActivity, ConfirmationActivity.class);
         confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
         startActivity(confirmationIntent);
-       myActivity.finish();
+        myActivity.finish();
     }
 
     private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
@@ -686,8 +688,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         view.setAnimation(animation);
 
     }
-
-
 
 
 }

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
@@ -59,7 +58,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     public ViewGroup CONTAIN;
     //Retrofit calls
     Call<RestrictionsResponse> restrictionsResponseCall;
-
+    FragmentManager fm, fragmentManager;
     public static final String MOVIES = "movies";
     View parentLayout;
     boolean firstBoot;
@@ -105,11 +104,13 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
             activateMoviePassCardSnackBar();
         }
-
+        fm = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         if (UserPreferences.getUserCredentials().equalsIgnoreCase("ODID")) {
             verifyAndroidID();
         } else {
+            LogUtils.newLog("State Check", "onPostResume");
             microServiceRestrictions();
         }
     }
@@ -320,6 +321,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         }
     }
 
+
     public void microServiceRestrictions() {
         RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(UserPreferences.getUserId() + offset).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
             @Override
@@ -333,7 +335,6 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     boolean proofOfPurchaseRequired = restrict.getProofOfPurchaseRequired();
                     boolean hasActiveCard = restrict.getHasActiveCard();
                     boolean subscriptionActivationRequired = restrict.isSubscriptionActivationRequired();
-                    LogUtils.newLog(Constants.TAG, "HAS USER VERIFIED?? " + UserPreferences.getHasUserVerifiedAndroidIDBefore());
 
                     if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
                             UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
@@ -347,48 +348,61 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
                     }
                     //IF popInfo NOT NULL THEN INFLATE TicketVerificationActivity
                     if (UserPreferences.getProofOfPurchaseRequired() && restrict.getPopInfo() != null) {
-                        int reservationId = restrict.getPopInfo().getReservationId();
-                        String movieTitle = restrict.getPopInfo().getMovieTitle();
-                        String tribuneMovieId = restrict.getPopInfo().getTribuneMovieId();
-                        String theaterName = restrict.getPopInfo().getTheaterName();
-                        String tribuneTheaterId = restrict.getPopInfo().getTribuneTheaterId();
-                        String showtime = restrict.getPopInfo().getShowtime();
+                        try {
+                            int reservationId = restrict.getPopInfo().getReservationId();
+                            String movieTitle = restrict.getPopInfo().getMovieTitle();
+                            String tribuneMovieId = restrict.getPopInfo().getTribuneMovieId();
+                            String theaterName = restrict.getPopInfo().getTheaterName();
+                            String tribuneTheaterId = restrict.getPopInfo().getTribuneTheaterId();
+                            String showtime = restrict.getPopInfo().getShowtime();
 
-                        bundle = new Bundle();
-                        bundle.putInt("reservationId", reservationId);
-                        bundle.putString("mSelectedMovieTitle", movieTitle);
-                        bundle.putString("tribuneMovieId", tribuneMovieId);
-                        bundle.putString("mTheaterSelected", theaterName);
-                        bundle.putString("tribuneTheaterId", tribuneTheaterId);
-                        bundle.putString("showtime", showtime);
+                            bundle = new Bundle();
+                            bundle.putInt("reservationId", reservationId);
+                            bundle.putString("mSelectedMovieTitle", movieTitle);
+                            bundle.putString("tribuneMovieId", tribuneMovieId);
+                            bundle.putString("mTheaterSelected", theaterName);
+                            bundle.putString("tribuneTheaterId", tribuneTheaterId);
+                            bundle.putString("showtime", showtime);
 
-                        TicketVerificationDialog dialog = new TicketVerificationDialog();
-                        FragmentManager fm = getSupportFragmentManager();
-                        addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                            TicketVerificationDialog dialog = new TicketVerificationDialog();
+
+                            addFragmentOnlyOnce(fm, dialog, "fr_ticketverification_banner");
+                        } catch (IllegalStateException popException) {
+                            popException.printStackTrace();
+                            recreate();
+
+                        }
+
                     }
                     //Alert data to create Alert Activity on launch...
                     if (restrict.getAlert() != null && !UserPreferences.getAlertDisplayedId().equals(restrict.getAlert().getId())) {
 
                         LogUtils.newLog(Constants.TAG, "-----------HIT------------: ");
-                        AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
-                                restrict.getAlert().getId(),
-                                restrict.getAlert().getTitle(),
-                                restrict.getAlert().getBody(),
-                                restrict.getAlert().getUrl(),
-                                restrict.getAlert().getUrlTitle(),
-                                restrict.getAlert().isDismissible());
+                        try {
+                            AlertScreenFragment alertScreen = AlertScreenFragment.newInstance(
+                                    restrict.getAlert().getId(),
+                                    restrict.getAlert().getTitle(),
+                                    restrict.getAlert().getBody(),
+                                    restrict.getAlert().getUrl(),
+                                    restrict.getAlert().getUrlTitle(),
+                                    restrict.getAlert().isDismissible());
 
 
-                        alertScreen.setSharedElementEnterTransition(new HistoryDetails());
-                        alertScreen.setEnterTransition(new Fade());
-                        alertScreen.setExitTransition(new Fade());
-                        alertScreen.setSharedElementReturnTransition(new HistoryDetails());
+                            alertScreen.setSharedElementEnterTransition(new HistoryDetails());
+                            alertScreen.setEnterTransition(new Fade());
+                            alertScreen.setExitTransition(new Fade());
+                            alertScreen.setSharedElementReturnTransition(new HistoryDetails());
 
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.movies_container, alertScreen);
-                        transaction.addToBackStack("");
-                        transaction.commit();
+                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                            transaction.replace(R.id.movies_container, alertScreen);
+                            transaction.addToBackStack("");
+                            transaction.commit();
+                            fragmentManager.executePendingTransactions();
+                        } catch (IllegalStateException alertException) {
+                            alertException.printStackTrace();
+                            recreate();
+                        }
+
 
                         bottomNavigationView.setVisibility(View.GONE);
 
@@ -429,12 +443,12 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
 
-    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog fragment, String tag) {
+    public void addFragmentOnlyOnce(FragmentManager fragmentManager, TicketVerificationDialog dialog, String tag) {
         // Make sure the current transaction finishes first
         fragmentManager.executePendingTransactions();
         // If there is no fragment yet with this tag...
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            TicketVerificationDialog dialog = new TicketVerificationDialog();
+            dialog = new TicketVerificationDialog();
             dialog.setArguments(bundle);
             FragmentManager fm = getSupportFragmentManager();
             dialog.setCancelable(false);

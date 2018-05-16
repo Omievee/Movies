@@ -2,15 +2,18 @@ package com.mobile.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import com.helpshift.support.Log;
+import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -269,108 +272,143 @@ public class SelectSeatActivity extends BaseActivity {
         mGridSeatsA.setColumnCount(columns);
         mGridSeatsA.setRowCount(rows);
         mSeatButtons = new ArrayList<>();
-
+        int seatPadding = (int) getResources().getDimension(R.dimen.seat_padding);
         Collections.sort(seats);
+
         for (SeatInfo seat : seats) {
             SeatButton seatButton = new SeatButton(this, seat);
             //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
             if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
                     (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
-
+                GridLayout gridLayout = null;
                 if (seat.getSeatName().contains("A")) {
-                    mGridSeatsA.addView(seatButton);
+                    gridLayout = mGridSeatsA;
                 }
                 if (seat.getSeatName().contains("B")) {
-                    mGridSeatsB.addView(seatButton);
+                    gridLayout = mGridSeatsB;
                 }
                 if (seat.getSeatName().contains("C")) {
-                    mGridSeatsC.addView(seatButton);
+                    gridLayout = mGridSeatsC;
                 }
                 if (seat.getSeatName().contains("D")) {
-                    mGridSeatsD.addView(seatButton);
+                    gridLayout = mGridSeatsD;
                 }
                 if (seat.getSeatName().contains("E")) {
-                    mGridSeatsE.addView(seatButton);
+                    gridLayout = mGridSeatsE;
                 }
                 if (seat.getSeatName().contains("F")) {
-                    mGridSeatsF.addView(seatButton);
+                    gridLayout = mGridSeatsF;
                 }
                 if (seat.getSeatName().contains("G")) {
-                    mGridSeatsG.addView(seatButton);
+                    gridLayout = mGridSeatsG;
                 }
                 if (seat.getSeatName().contains("H")) {
-                    mGridSeatsH.addView(seatButton);
+                    gridLayout = mGridSeatsH;
                 }
                 if (seat.getSeatName().contains("I")) {
-                    mGridSeatsI.addView(seatButton);
+                    gridLayout = mGridSeatsI;
                 }
                 if (seat.getSeatName().contains("J")) {
-                    mGridSeatsJ.addView(seatButton);
+                    gridLayout = mGridSeatsJ;
                 }
                 if (seat.getSeatName().contains("K")) {
-                    mGridSeatsK.addView(seatButton);
+                    gridLayout = mGridSeatsK;
                 }
                 if (seat.getSeatName().contains("L")) {
-                    mGridSeatsL.addView(seatButton);
+                    gridLayout = mGridSeatsL;
                 }
 
                 if (seat.getSeatName().contains("M")) {
-                    mGridSeatsM.addView(seatButton);
+                    gridLayout = mGridSeatsM;
                 }
-                seatButton.setPadding(3, 3, 3, 3);
+                if(gridLayout != null) {
+                    GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                    lp.setGravity(Gravity.CENTER_HORIZONTAL);
+                    gridLayout.addView(seatButton, lp);
+                }
+                seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
                 mSeatButtons.add(seatButton);
 
             } else {
-                seatButton.setPadding(3, 3, 3, 3);
-                mGridSeatsA.addView(seatButton);
+                seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
+                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+                lp.setGravity(Gravity.CENTER_HORIZONTAL);
+                mGridSeatsA.addView(seatButton, lp);
                 mSeatButtons.add(seatButton);
             }
-
-            final int seatRow = seat.getRow();
-            final int seatCol = seat.getColumn();
-            final String finalSeatName = seat.getSeatName();
-
             seatButton.setOnClickListener(sender -> {
-                if (finalSeatName != null) {
-                    mSelectedSeat.setText(finalSeatName);
+                final SeatButton seatBtn = (SeatButton) sender;
+                final SeatInfo seatInfo = seatBtn.getSeatInfo();
+                if (seatInfo.isWheelChairOrCompanion()) {
+                    final @StringRes int message;
+                    final @StringRes int title;
+                    if(seatInfo.getSeatType() == SeatInfo.SeatType.SeatTypeWheelchair) {
+                        title = R.string.dialog_select_seat_wheelchair_title;
+                        message = R.string.dialog_select_seat_wheelchair_message;
+                    } else {
+                        title = R.string.dialog_select_seat_companion_title;
+                        message = R.string.dialog_select_seat_companion_message;
+                    }
+                    new AlertDialog.Builder(SelectSeatActivity.this)
+                            .setTitle(title)
+                            .setMessage(message)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    onSeatClicked(seatBtn, seatInfo);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .create()
+                            .show();
                 } else {
-                    String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
-                    mSelectedSeat.setText(formattedSeatName);
+                    onSeatClicked(seatBtn, seatInfo);
                 }
+            });
 
-                final SeatButton button = (SeatButton) sender;
-                selectSeat(button.getSeatName());
-                reserveSeatButton.setOnClickListener(view -> {
+        }
+    }
+
+    private void onSeatClicked(SeatButton button, SeatInfo seat) {
+        final int seatRow = seat.getRow();
+        final int seatCol = seat.getColumn();
+        final String finalSeatName = seat.getSeatName();
+        if (finalSeatName != null) {
+            mSelectedSeat.setText(finalSeatName);
+        } else {
+            String formattedSeatName = "Row: " + seatCol + " Seat: " + seatRow;
+            mSelectedSeat.setText(formattedSeatName);
+        }
+
+        selectSeat(button.getSeatInfo());
+        reserveSeatButton.setOnClickListener(view -> {
 
                     LogUtils.newLog(TAG, "button name:" + button.getSeatName());
                     LogUtils.newLog(TAG, "button row: " + button.getSeatInfo().getRow());
                     LogUtils.newLog(TAG, "button col: " + button.getSeatInfo().getColumn());
 
 
-                    SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
+            SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
 
-                    Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
+            Intent intent = new Intent(SelectSeatActivity.this, EticketConfirmation.class);
 
-                    intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
-                    intent.putExtra(SHOWTIME, selectedShowTime);
-                    intent.putExtra(SEAT, Parcels.wrap(seatSelected));
+            intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
+            intent.putExtra(SHOWTIME, selectedShowTime);
+            intent.putExtra(SEAT, Parcels.wrap(seatSelected));
 
-                    startActivity(intent);
+            startActivity(intent);
 
 
 //TODO: come back to this..
 //                            SeatSelected seatObject = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
 //                            reserveWithSeat(screeningObject, selectedShowTime, seatObject);
 //                    mProgressWheel.setVisibility(View.VISIBLE);
-                });
-            });
-
-        }
+        });
     }
 
-    private void selectSeat(String seatName) {
+    private void selectSeat(SeatInfo seatInfo) {
         for (SeatButton button : mSeatButtons) {
-            button.setSeatSelected(button.getSeatName().matches(seatName));
+            button.setSeatSelected(button.getSeatInfo().equals(seatInfo));
             reserveSeatButton.setText(R.string.activity_select_seat_reserve);
             isSeatSelected = true;
         }
