@@ -3,7 +3,6 @@ package com.mobile.network;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
-import com.mobile.model.TheatersResponse;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
@@ -139,11 +138,6 @@ public interface Api {
     /* lost Ticket */
     @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
-
-    /* Theaters */
-    @GET("/rest/v1/theaters/near")
-    Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
-
 
     /* Theater screenings (details) */
     @GET("/rest/v1/theaters/{id}/screenings")
