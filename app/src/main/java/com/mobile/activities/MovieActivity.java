@@ -208,8 +208,26 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
 
         if(movie.getReleaseDate()==null){
-            comingSoonTitle.setText(movie.getReleaseDate());
+            allScreenings.setVisibility(View.GONE);
+            comingSoon.setVisibility(View.VISIBLE);
+
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+            try {
+                Date date = format1.parse(movie.getReleaseDate());
+                SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
+                String result = format2.format(date);
+                comingSoonTitle.setText(result);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+            synopsisContent.setText(movie.getSynopsis());
         }else{
+            allScreenings.setVisibility(View.VISIBLE);
+            comingSoon.setVisibility(View.GONE);
             selectedScreeningsList = new LinkedList<>();
             theatersList = new LinkedList<>();
             sortedScreeningList = new LinkedList<>();

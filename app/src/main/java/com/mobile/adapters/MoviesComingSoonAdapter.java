@@ -146,6 +146,13 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     .build();
             holder.mComingSoonMoviePosterDV.setController(controller);
 
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
+                }
+            });
+
         }catch (IllegalStateException e) {
             e.printStackTrace();
         }
