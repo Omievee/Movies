@@ -19,6 +19,12 @@ public class UserInfoResponse {
     String plan;
     String moviePassCardNumber;
 
+    public String getRemainingCap() {
+        return remainingCap;
+    }
+
+    String remainingCap;
+
     public String getMoviePassCardNumber() {
         return moviePassCardNumber;
     }
