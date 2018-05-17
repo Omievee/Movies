@@ -11,6 +11,7 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.model.Movie;
 import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
@@ -20,6 +21,7 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -178,25 +180,12 @@ public class RealmTaskService extends GcmTaskService {
                     LocalStorageTheaters locallyStoredTheaters = response.body();
                     if (locallyStoredTheaters != null && response.isSuccessful()) {
 
-                        tRealm.executeTransactionAsync(R -> {
+                        tRealm.executeTransactionAsync(realm -> {
 
-                            for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
-                                Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
-                                RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
-                                RLMTH.setTribuneTheaterId(locallyStoredTheaters.getTheaters().get(j).getTribuneTheaterId());
-                                RLMTH.setName(locallyStoredTheaters.getTheaters().get(j).getName());
-                                RLMTH.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
-                                RLMTH.setCity(locallyStoredTheaters.getTheaters().get(j).getCity());
-                                RLMTH.setState(locallyStoredTheaters.getTheaters().get(j).getState());
-                                RLMTH.setZip(locallyStoredTheaters.getTheaters().get(j).getZip());
-                                RLMTH.setDistance(locallyStoredTheaters.getTheaters().get(j).getDistance());
-                                RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
-                                RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
-                                RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
-                            }
-
+                            realm.copyToRealmOrUpdate(locallyStoredTheaters.getTheaters());
 
                         }, () -> {
+                            UserPreferences.saveTheatersLoadedDate();
                             LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         }, error -> {
                             // Transaction failed and was automatically canceled.

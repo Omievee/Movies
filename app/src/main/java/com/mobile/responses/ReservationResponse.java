@@ -16,7 +16,7 @@ public class ReservationResponse {
     String zip;
     String showtime;
     Reservation reservation;
-    eTicketConfirmation e_ticket_confirmation;
+    ETicketConfirmation e_ticket_confirmation;
 
     public Reservation getReservation() { return reservation; }
 
@@ -32,10 +32,10 @@ public class ReservationResponse {
         return zip;
     }
 
-    public eTicketConfirmation getE_ticket_confirmation() {return this.e_ticket_confirmation;}
+    public ETicketConfirmation getE_ticket_confirmation() {return this.e_ticket_confirmation;}
 
     @Parcel
-    public static class eTicketConfirmation {
+    public static class ETicketConfirmation {
         private String barCodeUrl;
         private String confirmationCode;
 

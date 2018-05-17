@@ -251,4 +251,14 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:text">@string/loyalty_my_loyalty_programs</item>
     </style>
+
+    <style name="BackButton">
+        <item name="android:layout_width">@dimen/action_bar_size</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:tint">@color/white_ish</item>
+        <item name="android:contentDescription">@string/cd_back_button</item>
+        <item name="android:src">@drawable/iconback</item>
+    </style>
 </resources>

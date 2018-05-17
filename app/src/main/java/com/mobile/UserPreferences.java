@@ -6,6 +6,8 @@ import android.location.Location;
 
 import com.helpshift.util.HelpshiftContext;
 
+import java.util.Calendar;
+
 import javax.annotation.Nullable;
 
 /**
@@ -283,4 +285,15 @@ public class UserPreferences {
         HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
     }
 
+    public static void saveTheatersLoadedDate() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS,dayOfYear).apply();
+    }
+
+    public static boolean isTheatersLoadedToday() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS,-1)==dayOfYear;
+    }
 }

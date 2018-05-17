@@ -1,6 +1,7 @@
 package com.mobile.network;
 
 import android.content.Context;
+import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Build;
 
@@ -16,9 +17,11 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.moviepass.BuildConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -319,7 +322,11 @@ public class RestClient {
         httpClient.connectTimeout(20, TimeUnit.SECONDS);
         httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
+        File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+        
+        Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
 
+        httpClient.cache(cache);
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 
