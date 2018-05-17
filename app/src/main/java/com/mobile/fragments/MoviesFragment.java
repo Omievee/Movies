@@ -54,6 +54,7 @@ import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -717,6 +718,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    @Override
+    public void onMoviePosterLongClick(int pos, @NotNull Movie movie, @NotNull ImageView sharedImageView) {
+        Toast.makeText(getContext(), "LONG PRESS", Toast.LENGTH_SHORT).show();
     }
 
 

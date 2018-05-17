@@ -11,4 +11,5 @@ import com.mobile.model.Movie
 interface MoviePosterClickListener {
 
     fun onMoviePosterClick(pos: Int, movie: Movie, sharedImageView: ImageView)
+    fun onMoviePosterLongClick(pos: Int, movie: Movie, sharedImageView: ImageView)
 }

@@ -208,6 +208,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         }
 
         if(movie.getReleaseDate()!=null){
+            selectedSynopsis.setVisibility(View.GONE);
+            selectedMoviePoster.setClickable(false);
             allScreenings.setVisibility(View.GONE);
             comingSoon.setVisibility(View.VISIBLE);
 
