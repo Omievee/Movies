@@ -76,6 +76,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -551,6 +552,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
                 nearbyTheaters.add(allTheaters.get(K));
             }
         }
+        DecimalFormat df = new DecimalFormat("#.#");
         for (int j = 0; j < nearbyTheaters.size(); j++) {
             localPoints = new Location(LocationManager.GPS_PROVIDER);
             localPoints.setLatitude(nearbyTheaters.get(j).getLat());
@@ -559,7 +561,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(Double.parseDouble(String.format("%.2f", mtrMLE)));
+            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE)));
             tRealm.commitTransaction();
         }
         //Sort through shorter list..
