@@ -384,7 +384,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         billingDate.setText("Unknown");
                     } else {
                         billingDate.setText(userInfoResponse.getNextBillingDate());
-
                     }
 
                     plan.setText(userInfoResponse.getPlan());
@@ -398,9 +397,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         }
 
                     }
-
-                    LogUtils.newLog(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
-
                     progress.setVisibility(View.GONE);
 
                 }
