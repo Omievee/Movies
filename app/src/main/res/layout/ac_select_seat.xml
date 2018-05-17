@@ -29,15 +29,13 @@
 
             <TextView
                 android:id="@+id/SEATCHART_HEADER"
+                style="@style/TitleView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:padding="@dimen/margin_half"
-                android:text="Choose Seats"
-                android:textColor="@color/almost_white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="Choose Seats" />
         </LinearLayout>
 
         <LinearLayout
@@ -268,28 +266,14 @@
 
 
         <Button
+            style="@style/RedMoviepassButton"
             android:id="@+id/SEATCHART_RESERVE"
+            android:layout_margin="@dimen/margin_standard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/SEATCHART_NAV"
             android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/margin_standard"
-            android:animateLayoutChanges="true"
-            android:background="@drawable/mpbutton1"
-            android:gravity="center"
-            android:padding="@dimen/margin_standard"
-            android:text="Continue"
-            android:textColor="@color/almost_white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <include
-            android:id="@+id/SEATCHART_NAV"
-            layout="@layout/element_bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom" />
+            android:text="Continue" />
 
         <include
             android:id="@+id/progress"
