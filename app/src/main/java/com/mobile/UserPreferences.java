@@ -287,13 +287,13 @@ public class UserPreferences {
 
     public static void saveTheatersLoadedDate() {
         Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.DAY_OF_YEAR);
-        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS,year).apply();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS,dayOfYear).apply();
     }
 
     public static boolean isTheatersLoadedToday() {
         Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.DAY_OF_YEAR);
-        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS,-1)==year;
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS,-1)==dayOfYear;
     }
 }
