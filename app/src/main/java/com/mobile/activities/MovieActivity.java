@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +102,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     MovieTheatersAdapter movieTheatersAdapter;
 
     ScreeningsResponse screeningsResponse;
+    NestedScrollView allScreenings;
+    ScrollView comingSoon;
 
 
     TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg;
@@ -131,6 +135,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     View ProgressBar;
 
     TextView filmRating;
+    private TextView comingSoonTitle, synopsisTitle, synopsisContent;
 
 
     @Override
@@ -164,6 +169,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         buttonCheckIn = findViewById(R.id.button_check_in);
         ProgressBar = findViewById(R.id.progress);
 
+        allScreenings = findViewById(R.id.NESTED_SCROLL);
+        comingSoon = findViewById(R.id.comingSoon);
+
         filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
         ProgressBar.setVisibility(View.VISIBLE);
@@ -171,12 +179,16 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
 
+        comingSoonTitle = findViewById(R.id.comingSoonTitle);
+        synopsisTitle = findViewById(R.id.synopsisTitle);
+        synopsisContent = findViewById(R.id.synopsisContent);
+
+
         int res2 = R.anim.layout_anim_bottom;
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(this, res2);
 
 
-        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-        mLocationBroadCast = new LocationUpdateBroadCast();
+
         // registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         loadMoviePosterData();
@@ -195,25 +207,32 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedRuntime.setText(translatedRunTime);
         }
 
-        selectedScreeningsList = new LinkedList<>();
-        theatersList = new LinkedList<>();
-        sortedScreeningList = new LinkedList<>();
+        if(movie.getReleaseDate()==null){
+            comingSoonTitle.setText(movie.getReleaseDate());
+        }else{
+            selectedScreeningsList = new LinkedList<>();
+            theatersList = new LinkedList<>();
+            sortedScreeningList = new LinkedList<>();
+
+            UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+            mLocationBroadCast = new LocationUpdateBroadCast();
+            /* Theaters RecyclerView */
+            LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
+            selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
 
 
-        /* Theaters RecyclerView */
-        LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
-        selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-
-
-        movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
+            movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
 
 
 //        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
-        currentLocationTasks();
+            currentLocationTasks();
 
-        /* Showtimes RecyclerView */
-        selectedShowtimesList = new ArrayList<>();
+            /* Showtimes RecyclerView */
+            selectedShowtimesList = new ArrayList<>();
+        }
+
+
 
         filmRating.setText("Rated: " + movie.getRating());
 
