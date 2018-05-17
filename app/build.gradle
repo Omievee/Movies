@@ -238,8 +238,8 @@ dependencies {
         transitive = true;
     }
 
-    implementation "com.android.support:appcompat-v7:$support_lib_version"
-    implementation "com.android.support:design:$support_lib_version"
+    api "com.android.support:appcompat-v7:$support_lib_version"
+    api "com.android.support:design:$support_lib_version"
 
     //Spinner
     implementation 'com.jaredrummler:material-spinner:1.2.4'
