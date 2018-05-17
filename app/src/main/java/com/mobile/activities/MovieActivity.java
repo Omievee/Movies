@@ -102,8 +102,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     MovieTheatersAdapter movieTheatersAdapter;
 
     ScreeningsResponse screeningsResponse;
-    NestedScrollView allScreenings;
-    ScrollView comingSoon;
+    View allScreenings;
+    View comingSoon;
 
 
     TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg;
@@ -169,12 +169,12 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         buttonCheckIn = findViewById(R.id.button_check_in);
         ProgressBar = findViewById(R.id.progress);
 
-        allScreenings = findViewById(R.id.NESTED_SCROLL);
+        allScreenings = findViewById(R.id.scrennings);
         comingSoon = findViewById(R.id.comingSoon);
 
         filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
-        ProgressBar.setVisibility(View.VISIBLE);
+
 
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
@@ -207,7 +207,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedRuntime.setText(translatedRunTime);
         }
 
-        if(movie.getReleaseDate()==null){
+        if(movie.getReleaseDate()!=null){
             allScreenings.setVisibility(View.GONE);
             comingSoon.setVisibility(View.VISIBLE);
 
@@ -222,10 +222,9 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 e.printStackTrace();
             }
 
-
-
             synopsisContent.setText(movie.getSynopsis());
         }else{
+            ProgressBar.setVisibility(View.VISIBLE);
             allScreenings.setVisibility(View.VISIBLE);
             comingSoon.setVisibility(View.GONE);
             selectedScreeningsList = new LinkedList<>();
@@ -279,7 +278,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onResume() {
         super.onResume();
-        currentLocationTasks();
+        if(movie.getReleaseDate()==null)
+            currentLocationTasks();
 
     }
 

@@ -425,7 +425,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                                featuredMovie.setReleaseDate(localStorageMovies.getFeatured().get(i).getReleaseDate());
                                 featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
+                                featuredMovie.setCreatedAt(localStorageMovies.getFeatured().get(i).getCreatedAt());
 
 
                             }

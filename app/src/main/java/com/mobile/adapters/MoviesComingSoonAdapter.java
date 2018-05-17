@@ -110,22 +110,22 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                             super.onFinalImageSet(id, imageInfo, animatable);
 
                             //Makes foreground of image dark
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-                            }
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+//                            }
                             if (imgUrl.toString().contains("default")) {
                                 holder.title.setText(movie.getTitle());
                             }
 
-                            try {
-                                Date date = fm.parse(dateComingSoon);
-
-                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-                                holder.comingSoon.setText(out.format(date));
-
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                Date date = fm.parse(dateComingSoon);
+//
+//                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+//                                holder.comingSoon.setText(out.format(date));
+//
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
 
                         }
 
