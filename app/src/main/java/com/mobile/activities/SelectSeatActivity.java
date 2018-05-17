@@ -242,8 +242,9 @@ public class SelectSeatActivity extends AppCompatActivity {
                 param.rowSpec = GridLayout.spec(row, GridLayout.CENTER);
                 param.columnSpec = GridLayout.spec(column, GridLayout.CENTER);
                 if (seat == null) {
-                    Space space = new Space(this);
-                    mGridSeatsA.addView(space, param);
+                    ImageView empty = new ImageView(this);
+                    empty.setImageResource(R.drawable.empty_seat);
+                    mGridSeatsA.addView(empty, param);
                 } else {
                     SeatButton seatButton = new SeatButton(this, seat);
                     mSeatButtons.add(seatButton);
