@@ -225,11 +225,7 @@ public class ProfileFragment extends Fragment {
             Reservation reservation = UserPreferences.getLastReservation();
             final boolean checkedIn;
             if(reservation!=null) {
-                if(reservation.getExpiration() < System.currentTimeMillis()) {
-                    checkedIn = true;
-                } else {
-                    checkedIn = false;
-                }
+                checkedIn = reservation.getExpiration() < System.currentTimeMillis();
             } else {
                 checkedIn = false;
             }
