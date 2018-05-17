@@ -31,12 +31,13 @@
 
     <style name="MoviepassButton">
         <item name="android:background">@drawable/mpbutton</item>
-        <item name="layout_constraintWidth_min">100dp</item>
         <item name="android:elevation">1dp</item>
-        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
         <item name="fontFamily">@font/tex_gyre_adventor</item>
         <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
