@@ -1,4 +1,4 @@
-package com.mobile.widgets
+package com.mobile.loyalty
 
 import com.mobile.network.RestClient
 import com.mobile.rx.Schedulers
@@ -54,10 +54,12 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
             registeredTheaterChainSize > 0 -> {
                 state.registeredTheaterChains?.let {
                     view.showRegisteredTheaters(it)
+                    view.hideAddAMovieTheaterLoyaltyMessage()
                 }
             }
             else -> {
-                view.hideRegisteredTheaters();
+                view.hideRegisteredTheaters()
+                view.showAddAMovieTheaterLoyaltyMessage()
             }
         }
     }
@@ -79,8 +81,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 })
         state.lastData = loyaltyDataMap
         view.showProgress()
-        RestClient
-                .getAuthenticated()
+        RestClient.getAuthenticated()
                 .theaterChainSignIn(
                         theaterChain.chainNameKey,
                         loyaltyDataMap

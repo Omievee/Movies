@@ -1,6 +1,6 @@
 package com.mobile.network;
 
-import com.mobile.widgets.TheaterChain;
+import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
 import com.mobile.model.TheatersResponse;

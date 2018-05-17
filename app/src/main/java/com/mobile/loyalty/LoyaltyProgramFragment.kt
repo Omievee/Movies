@@ -1,4 +1,4 @@
-package com.mobile.widgets
+package com.mobile.loyalty
 
 import android.app.Activity
 import android.app.Fragment
@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
 import com.mobile.utils.text.toSentenceCase
+import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
@@ -105,6 +106,14 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
             loyaltyProgramNameTV.text = theaterChain.chainName
         }
 
+    }
+
+    override fun showAddAMovieTheaterLoyaltyMessage() {
+        addLoyaltyProgramDescriptionTV.visibility = View.VISIBLE
+    }
+
+    override fun hideAddAMovieTheaterLoyaltyMessage() {
+        addLoyaltyProgramDescriptionTV.visibility = View.GONE
     }
 
     override fun showSpinnerText(text: String?) {

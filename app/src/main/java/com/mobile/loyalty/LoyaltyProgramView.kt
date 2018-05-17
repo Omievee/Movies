@@ -1,4 +1,4 @@
-package com.mobile.widgets
+package com.mobile.loyalty
 
 interface LoyaltyProgramView {
     fun showAddTheaters(theaterChains: List<TheaterChain>)
@@ -11,4 +11,6 @@ interface LoyaltyProgramView {
     fun showRegisteredTheaters(theaters: List<TheaterChain>)
     fun hideRegisteredTheaters()
     fun hideLoyaltySignIn()
+    fun hideAddAMovieTheaterLoyaltyMessage()
+    fun showAddAMovieTheaterLoyaltyMessage()
 }

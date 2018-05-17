@@ -1,4 +1,4 @@
-package com.mobile.widgets
+package com.mobile.loyalty
 
 import android.content.Context
 import android.support.v7.util.DiffUtil
@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
-import com.mobile.model.Theater
+import com.mobile.widgets.MaterialSpinnerSpinnerView
 
 class RegisteredLoyaltyAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
