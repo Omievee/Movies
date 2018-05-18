@@ -21,6 +21,7 @@ import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.HistoryDetailsFragment;
+import com.mobile.fragments.ProfileAccountChangeEmail;
 import com.mobile.fragments.ProfileAccountChangePassword;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountInformationFragment;
@@ -280,5 +281,16 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         UserPreferences.clearUserId();
         startActivity(intent);
+    }
+
+    @Override
+    public void openChangeEmail() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountChangeEmail changeEmail = new ProfileAccountChangeEmail();
+        transaction.replace(R.id.profile_container, changeEmail);
+        transaction.addToBackStack("");
+        transaction.commit();
     }
 }

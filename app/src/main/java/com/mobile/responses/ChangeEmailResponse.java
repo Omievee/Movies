@@ -1,15 +1,15 @@
 package com.mobile.responses;
 
-public class ChangePasswordResponse {
+public class ChangeEmailResponse {
 
-    String response;
+    String message;
     String error;
 
     public String getError() {
         return error;
     }
 
-    public String getResponse() {
-        return response;
+    public String getMessage() {
+        return message;
     }
 }

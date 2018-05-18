@@ -18,6 +18,8 @@ import com.mobile.network.RestClient;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
+import org.w3c.dom.Text;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +31,7 @@ public class ProfileAccountInformation extends android.app.Fragment {
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
     private UserInfoResponse userInfoResponse;
+    private TextView changeEmail;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -50,7 +53,14 @@ public class ProfileAccountInformation extends android.app.Fragment {
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
+        changeEmail = rootView.findViewById(R.id.changeEmailTextView);
         loadUserInfo();
+
+        changeEmail.setClickable(true);
+        changeEmail.setOnClickListener(v -> {
+            mListener.openChangeEmail();
+        });
+
 
         return rootView;
     }

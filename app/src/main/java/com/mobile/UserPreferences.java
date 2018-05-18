@@ -57,6 +57,12 @@ public class UserPreferences {
         editor.apply();
     }
 
+    public static void updateEmail(String email) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.USER_EMAIL, email);
+        editor.apply();
+    }
+
     public static String getAAID() {
         return sPrefs.getString(Constants.AAID, "IDFA");
     }
