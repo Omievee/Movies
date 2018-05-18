@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
+import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Reservation;
@@ -252,7 +253,7 @@ public class EticketConfirmation extends BaseActivity {
 
 
     private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, SeatSelected seatSelected) {
-
+        UserPreferences.setLastCheckInAttemptDate();
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -262,7 +263,7 @@ public class EticketConfirmation extends BaseActivity {
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
-
+                    UserPreferences.saveReservation(reservation);
                     String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
                     String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 

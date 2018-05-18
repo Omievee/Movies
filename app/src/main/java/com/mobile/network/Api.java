@@ -143,13 +143,6 @@ public interface Api {
     @GET("/rest/v1/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
 
-    /**
-     * User
-     */
-    @GET("/rest/v1/session/{userId}")
-    Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
-
-
     /* user Data */
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);

@@ -9,7 +9,7 @@ import org.parceler.Parcel;
 import java.util.Random;
 
 @Parcel
-public class SeatInfo implements Comparable {
+public class SeatInfo implements Comparable<SeatInfo> {
 
     public enum SeatType {
         SeatTypeUnknown,
@@ -109,7 +109,7 @@ public class SeatInfo implements Comparable {
     }
 
     @Override
-    public int compareTo(Object another) {
+    public int compareTo(SeatInfo another) {
         SeatInfo ss = (SeatInfo) another;
 
         if (row == ss.row)
