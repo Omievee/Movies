@@ -1,5 +1,7 @@
 set -eu
 echo "--- :checkered_flag: Running pre-command"
+echo "--- :pencil: Copying fabric.properties to $PWD"
+cp ~/.moviepass/fabric.properties $PWD/app
 export ANDROID_HOME=~buildkite-agent/android-sdk
-echo "Set ENV.ANDROID_HOME=$ANDROID_HOME"
-echo "About to run command: $BUILDKITE_COMMAND"
+echo ":pencil2: Set ENV.ANDROID_HOME=$ANDROID_HOME"
+echo ":bash: About to run command: $BUILDKITE_COMMAND"
