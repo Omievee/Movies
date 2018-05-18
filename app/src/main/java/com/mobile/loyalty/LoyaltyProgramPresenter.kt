@@ -28,7 +28,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                     state.unregisteredTheaterChains = it.filter { !it.isUserRegistered }
                     it
                 }
-                .subscribe({ v ->
+                .subscribe({ _ ->
                     state.error = null
                     showTheaters()
                 }, { error ->
@@ -99,7 +99,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                         !it.isUserRegistered
                     }
                 }
-                .subscribe({ result ->
+                .subscribe({ _ ->
                     view.hideLoyaltySignIn()
                     showTheaters()
                 }, { _ ->

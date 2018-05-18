@@ -66,7 +66,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                 }
             }
             addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
-            addLoyaltySpinner.setOnItemSelectedListener { view, position, id, item ->
+            addLoyaltySpinner.setOnItemSelectedListener { _, position, _, _ ->
                 presenter?.onLoyaltyProgramSelected(position)
                 addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
                 addLoyaltySpinner.hint = getString(R.string.loyalty_program_add_loyalty_program)
