@@ -6,13 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Animatable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +37,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
@@ -44,6 +54,8 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.extensions.CustomLinearLayoutManager;
+import com.mobile.extensions.LockableScrollView;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
@@ -104,6 +116,12 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     RealmList<Movie> NEWRelease;
     RealmList<Movie> featured;
     RealmList<Movie> nowPlaying;
+    View preview;
+    LockableScrollView lockableScrollView;
+    TextView previewMovieTitle, previewSynopsis;
+    SimpleDraweeView previewMovieImage;
+    TextView previewRating, previewRunningTime;
+
 
 
     private searchMoviesInterface searchMoviesInterface;
@@ -127,6 +145,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     View progress;
     private RealmConfiguration allMoviesConfig;
+    private CustomLinearLayoutManager newReleasesLayoutManager;
+    private CustomLinearLayoutManager topBoxOfficeLayoutManager;
+    private CustomLinearLayoutManager comingSoonLayoutManager;
+    private CustomLinearLayoutManager featuredManager;
+    private CustomLinearLayoutManager nowplayingManager;
 
 
     public static MoviesFragment newInstance() {
@@ -151,6 +174,13 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         searchicon = rootView.findViewById(R.id.search_inactive);
         searchicon.setVisibility(View.GONE);
         movieLogo = rootView.findViewById(R.id.MoviePass_HEADER);
+        preview = rootView.findViewById(R.id.preview);
+        lockableScrollView = rootView.findViewById(R.id.MOVIES_MAINCONTENT);
+        previewMovieImage = rootView.findViewById(R.id.previewImage);
+        previewMovieTitle = rootView.findViewById(R.id.previewMovieTitle);
+        previewSynopsis = rootView.findViewById(R.id.previewSynopsis);
+        previewRunningTime = rootView.findViewById(R.id.previewRunningTime);
+        previewRating = rootView.findViewById(R.id.previewRating);
         Api api;
         NEWRelease = new RealmList<>();
         TopBoxOffice = new RealmList<>();
@@ -165,7 +195,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(myActivity, res2);
 
         /** New Releases RecyclerView */
-        LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        newReleasesLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+
 
         newReleasesRecycler = rootView.findViewById(R.id.new_releases);
         newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
@@ -175,7 +206,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, NEWRelease, this);
 
         /** Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        topBoxOfficeLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
 
         topBoxOfficeRecycler = rootView.findViewById(R.id.top_box_office);
         topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
@@ -186,7 +217,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(myActivity, TopBoxOffice, this);
 
         /** Coming Soon RecyclerView */
-        LinearLayoutManager comingSoonLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        comingSoonLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         comingSoonRecycler = rootView.findViewById(R.id.coming_soon);
         comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
         comingSoonRecycler.setItemAnimator(null);
@@ -196,7 +227,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonAdapter = new MoviesComingSoonAdapter(myActivity, comingSoon, this);
 
         /** NOW PLAYING */
-        LinearLayoutManager nowplayingManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        nowplayingManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
         nowPlayingRecycler.setLayoutManager(nowplayingManager);
         fadeIn(nowPlayingRecycler);
@@ -205,7 +236,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingAdapter = new NowPlayingMoviesAdapter(myActivity, nowPlaying, this);
 
         /** FEATURED */
-        LinearLayoutManager featuredManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+         featuredManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
@@ -722,7 +753,75 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     @Override
     public void onMoviePosterLongClick(int pos, @NotNull Movie movie, @NotNull ImageView sharedImageView) {
-        Toast.makeText(getContext(), "LONG PRESS", Toast.LENGTH_SHORT).show();
+        preview.setVisibility(View.VISIBLE);
+        comingSoonLayoutManager.setScrollEnabled(false);
+        newReleasesLayoutManager.setScrollEnabled(false);
+        topBoxOfficeLayoutManager.setScrollEnabled(false);
+        nowplayingManager.setScrollEnabled(false);
+        lockableScrollView.setScrollingEnabled(false);
+        swiper.setEnabled(false);
+
+
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .setSource(imgUrl)
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(previewMovieImage.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        previewMovieImage.setImageURI(imgUrl + "/original.jpg");
+
+                    }
+                })
+                .build();
+
+        if (imgUrl.toString().contains("default")) {
+            previewMovieImage.refreshDrawableState();
+        }
+        previewMovieImage.setController(controller);
+
+        previewMovieTitle.setText(movie.getTitle());
+        previewSynopsis.setText(movie.getSynopsis());
+
+
+        int t = movie.getRunningTime();
+        int hours = t / 60;
+        int minutes = t % 60;
+
+        if (t == 0) {
+            previewRunningTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            previewRunningTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            previewRunningTime.setText(translatedRunTime);
+        }
+
+
+        previewRating.setText("Rated: " + movie.getRating());
+    }
+
+    @Override
+    public void releaseLongPress() {
+        preview.setVisibility(View.GONE);
+        comingSoonLayoutManager.setScrollEnabled(true);
+        newReleasesLayoutManager.setScrollEnabled(true);
+        topBoxOfficeLayoutManager.setScrollEnabled(true);
+        nowplayingManager.setScrollEnabled(true);
+        lockableScrollView.setScrollingEnabled(true);
+        swiper.setEnabled(true);
     }
 
 

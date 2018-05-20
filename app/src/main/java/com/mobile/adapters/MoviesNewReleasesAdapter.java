@@ -5,8 +5,12 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -35,9 +39,11 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
     private final MoviePosterClickListener moviePosterClickListener;
     private RealmList<Movie> moviesArrayList;
 
+
     private final int TYPE_ITEM = 0;
     private LayoutInflater inflater;
     private Context context;
+    private GestureDetectorCompat mDetector;
 
     public MoviesNewReleasesAdapter(Context context, RealmList<Movie> moviesArrayList, MoviePosterClickListener moviePosterClickListener) {
         this.moviePosterClickListener = moviePosterClickListener;
@@ -67,7 +73,6 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
         return new ViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -117,6 +122,29 @@ public class MoviesNewReleasesAdapter extends RecyclerView.Adapter<MoviesNewRele
                     moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), movie, holder.mNewReleasePosterDV);
+                    return true;
+                }
+            });
+
+            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    } else if (event.getAction() == MotionEvent.ACTION_UP){
+                        moviePosterClickListener.releaseLongPress();
+                    }
+                    return false;
+                }
+
+
+            });
+
 
         }catch (IllegalStateException onBind) {
             onBind.printStackTrace();
