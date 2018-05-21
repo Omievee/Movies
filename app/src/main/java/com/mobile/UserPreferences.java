@@ -336,10 +336,17 @@ public class UserPreferences {
         sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS, dayOfYear).apply();
     }
 
-    public static boolean isTheatersLoadedToday() {
+    public static void saveHistoryLoadedDate() {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
-        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS, -1) == dayOfYear;
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_HISTORY, dayOfYear).apply();
+    }
+
+
+    public static boolean isHistoryLoadedToday() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        return sPrefs.getInt(Constants.LAST_DOWNLOADED_HISTORY, -1) == dayOfYear;
     }
 
     public static void setTotalMoviesSeen(int totalMoviesSeen) {
