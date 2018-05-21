@@ -25,7 +25,11 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .map {
                     state.allTheaterChains = it
                     state.registeredTheaterChains = it.filter { it.isUserRegistered }
-                    state.unregisteredTheaterChains = it.filter { !it.isUserRegistered }
+                    val unregistered = state.allTheaterChains?.filter {
+                        !it.isUserRegistered
+                    }?.toMutableList()
+                    unregistered?.add(0, TheaterChain(loyaltyPresentationModel.addLoyaltyProgram))
+                    state.unregisteredTheaterChains = unregistered
                     it
                 }
                 .subscribe({ _ ->
@@ -40,7 +44,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
     private fun showTheaters() {
         val unregisteredTheaterChainSize = state.unregisteredTheaterChains?.size ?: 0
         when {
-            unregisteredTheaterChainSize > 0 -> {
+            unregisteredTheaterChainSize > 1 -> {
                 state.unregisteredTheaterChains?.let {
                     view.showAddTheaters(it)
                 }
@@ -64,8 +68,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         }
     }
 
-    fun onLoyaltyProgramSelected(position: Int) {
-        val theaterChain = state.allTheaterChains?.get(position)
+    fun onLoyaltyProgramSelected(theaterChain: TheaterChain?) {
         theaterChain?.let {
             view.showLoyaltyScreenFields(it)
         }
@@ -95,9 +98,11 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                     state.registeredTheaterChains = state.allTheaterChains?.filter {
                         it.isUserRegistered
                     }
-                    state.unregisteredTheaterChains = state.allTheaterChains?.filter {
+                    val unregistered = state.allTheaterChains?.filter {
                         !it.isUserRegistered
-                    }
+                    }?.toMutableList()
+                    unregistered?.add(0, TheaterChain(loyaltyPresentationModel.addLoyaltyProgram))
+                    state.unregisteredTheaterChains = unregistered
                 }
                 .subscribe({ _ ->
                     view.hideLoyaltySignIn()

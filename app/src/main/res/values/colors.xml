@@ -45,7 +45,7 @@
     <color name="white_ish">@color/almost_white</color>
     <color name="pinkish_gray">#d1d1d1</color>
 
-    <color name="gray_icon">@color/almost_white</color>
+    <color name="gray_icon">#7F7F7F</color>
     <color name="gray_dark">#555555</color>
 
     <color name="facebook_blue">#3b5998</color>

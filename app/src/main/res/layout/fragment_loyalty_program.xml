@@ -99,7 +99,7 @@
             app:layout_constraintVertical_bias=".35"
             app:layout_constraintWidth_percent=".82" />
 
-        <TextView
+        <Button
             android:id="@+id/loyaltySignInTV"
             style="@style/RedMoviepassButton"
             android:layout_alignParentBottom="true"

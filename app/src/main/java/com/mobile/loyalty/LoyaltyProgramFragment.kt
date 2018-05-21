@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
+import com.mobile.model.Theater
 import com.mobile.utils.text.toSentenceCase
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
@@ -64,13 +65,21 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     view.bind(getItemText(position))
                     return view
                 }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                    return getView(position, convertView, parent)
+                }
+            }
+            addLoyaltySpinner.setOnItemSelectedListener { _, _, _, item ->
+                val chain:TheaterChain? = item as? TheaterChain
+                chain?.let {
+                    presenter?.onLoyaltyProgramSelected(chain)
+                    addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
+                    addLoyaltySpinner.hint = getString(R.string.loyalty_program_add_loyalty_program)
+                }
+
             }
             addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
-            addLoyaltySpinner.setOnItemSelectedListener { _, position, _, _ ->
-                presenter?.onLoyaltyProgramSelected(position)
-                addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
-                addLoyaltySpinner.hint = getString(R.string.loyalty_program_add_loyalty_program)
-            }
         }
     }
 
@@ -118,6 +127,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     override fun showSpinnerText(text: String?) {
         addLoyaltySpinner.text = text
+        addLoyaltySpinner.hint = text
     }
 
     override fun showProgress() {
