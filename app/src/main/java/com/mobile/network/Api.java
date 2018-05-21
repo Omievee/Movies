@@ -1,5 +1,6 @@
 package com.mobile.network;
 
+import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
 import com.mobile.model.MoviePassCard;
@@ -142,6 +143,9 @@ public interface Api {
     /* History  */
     @GET("/rest/v1/reservations/history")
     Call<HistoryResponse> getReservations();
+
+    @GET("/rest/v1/reservations/history")
+    Single<ReservationHistoryResponse> getReservationHistory();
 
     /* Get Seats */
     @POST("/rest/v1/seats")
