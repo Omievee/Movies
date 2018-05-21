@@ -28,7 +28,7 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
     }
 
     override fun toString(): String {
-        return "TheaterChain(chainName=$chainName, isUserRegistered=$isUserRegistered)"
+        return chainName?:""
     }
 }
 
