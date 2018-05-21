@@ -219,8 +219,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                 Date date = format1.parse(movie.getReleaseDate());
                 SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
                 String result = format2.format(date);
-                Log.d(TAG, "onCreate: TODAY "+today.toString());
-                Log.d(TAG, "onCreate: SYNOPSIS "+date.toString());
                 if(date.before(today)){
                    setShowings();
                 } else{
@@ -228,7 +226,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     selectedMoviePoster.setClickable(false);
                     allScreenings.setVisibility(View.GONE);
                     comingSoon.setVisibility(View.VISIBLE);
-                    comingSoonTitle.setText(result);
+                    comingSoonTitle.setText("In Theaters "+result);
                     synopsisContent.setText(movie.getSynopsis());
                 }
             } catch (ParseException e) {
