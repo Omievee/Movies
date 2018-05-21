@@ -1,5 +1,7 @@
 package com.mobile.model;
 
+import com.mobile.responses.ReservationResponse;
+
 import org.parceler.Parcel;
 
 /**
@@ -9,7 +11,7 @@ import org.parceler.Parcel;
 @Parcel
 public class ScreeningToken {
 
-    String confirmationCode;
+    ReservationResponse.ETicketConfirmation confirmationCode;
     String qrUrl;
     Reservation reservation;
     Screening screening;
@@ -28,15 +30,15 @@ public class ScreeningToken {
         this.reservation = res;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation eTicketConfirmation) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
-        this.confirmationCode = confirmationCode;
+        this.confirmationCode = eTicketConfirmation;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode, SeatSelected seatSelected) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation confirmationCode, SeatSelected seatSelected) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
@@ -86,12 +88,12 @@ public class ScreeningToken {
         return zipCodeTicket;
     }
 
-    public void setConfirmationCode(String confirmationCode) {
-        this.confirmationCode = confirmationCode;
+    public ReservationResponse.ETicketConfirmation getConfirmationCode() {
+        return confirmationCode;
     }
 
-    public String getConfirmationCode() {
-        return confirmationCode;
+    public void setConfirmationCode(ReservationResponse.ETicketConfirmation confirmationCode) {
+        this.confirmationCode = confirmationCode;
     }
 
     public void setQrUrl(String qrUrl) {

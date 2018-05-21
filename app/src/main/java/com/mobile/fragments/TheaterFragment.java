@@ -422,10 +422,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     progress.setVisibility(View.GONE);
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {
-                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
-                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
 
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation());
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
 

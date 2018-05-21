@@ -264,11 +264,9 @@ public class EticketConfirmation extends BaseActivity {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(reservation);
-                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat);
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
@@ -407,10 +405,9 @@ public class EticketConfirmation extends BaseActivity {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
 
-                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+                    ReservationResponse.ETicketConfirmation confirmationCode = reservationResponse.getE_ticket_confirmation();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode);
 
                     showConfirmation(token);
                     finish();

@@ -163,7 +163,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         if (screeningToken.getConfirmationCode() != null) {
             ETicket.setVisibility(View.VISIBLE);
-            String code = screeningToken.getConfirmationCode();
+            String code = screeningToken.getConfirmationCode().getConfirmationCode();
             confirmCode.setText(code);
             if (screeningToken.getSeatName() != null) {
                 pendingSeat.setVisibility(View.VISIBLE);
