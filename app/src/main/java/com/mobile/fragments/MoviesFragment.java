@@ -317,7 +317,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (historyRealm.isEmpty()) {
             getHistoryForStorage();
         }
-
+        comingSoonLayoutManager.setScrollEnabled(true);
+        newReleasesLayoutManager.setScrollEnabled(true);
+        topBoxOfficeLayoutManager.setScrollEnabled(true);
+        nowplayingManager.setScrollEnabled(true);
+        lockableScrollView.setScrollingEnabled(true);
 
     }
 
