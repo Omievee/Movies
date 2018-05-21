@@ -6,6 +6,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobile.application.Application
+import com.mobile.session.SessionManager
 import com.moviepass.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -37,6 +38,12 @@ class ApiModule {
         httpClient.addInterceptor(authenticatedRequestInterceptor)
         httpClient.cache(cache)
         return httpClient.build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticatedRequestInterceptor(sessionManager:SessionManager):AuthenticatedRequestInterceptor {
+        return AuthenticatedRequestInterceptor(sessionManager)
     }
 
     @Provides
