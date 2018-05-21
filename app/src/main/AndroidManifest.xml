@@ -26,7 +26,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-feature
         android:name="android.hardware.WIFI"
         android:required="false" />
@@ -224,15 +223,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
-        <!--<activity-->
-            <!--android:name="com.mobile.activities.ReservationsActivity"-->
-            <!--android:parentActivityName="com.mobile.activities.MoviesActivity"-->
-            <!--android:theme="@style/AppTheme">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:screenOrientation="portrait"-->
-                <!--android:value="com.mobile.activities.MoviesActivity" />-->
-        <!--</activity>-->
+        <!-- <activity -->
+        <!-- android:name="com.mobile.activities.ReservationsActivity" -->
+        <!-- android:parentActivityName="com.mobile.activities.MoviesActivity" -->
+        <!-- android:theme="@style/AppTheme"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:value="com.mobile.activities.MoviesActivity" /> -->
+        <!-- </activity> -->
         <activity
             android:name="com.mobile.activities.SelectSeatActivity"
             android:screenOrientation="portrait"
@@ -260,7 +259,7 @@
             android:name="com.mobile.activities.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.mobile.activities.TheaterActivity"
             android:parentActivityName="com.mobile.activities.TheatersActivity"
@@ -296,7 +295,7 @@
         <activity
             android:name="com.mobile.fragments.NearMe"
             android:label="@string/title_activity_near_me" />
-        <!--<activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />-->
+        <!-- <activity android:name="com.mobile.activities.MoviePassCardAutoActivate" /> -->
         <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
 
         <service
@@ -308,7 +307,6 @@
             </intent-filter>
         </service>
 
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/authority_file_provider"
@@ -318,7 +316,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
-
 
     </application>
 
