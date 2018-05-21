@@ -16,6 +16,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -207,48 +208,35 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedRuntime.setText(translatedRunTime);
         }
 
-        if(movie.getReleaseDate()!=null){
-            selectedSynopsis.setVisibility(View.GONE);
-            selectedMoviePoster.setClickable(false);
-            allScreenings.setVisibility(View.GONE);
-            comingSoon.setVisibility(View.VISIBLE);
 
+        Date today = Calendar.getInstance().getTime();
+
+
+
+        if(movie.getReleaseDate()!=null){
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
             try {
                 Date date = format1.parse(movie.getReleaseDate());
                 SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
                 String result = format2.format(date);
-                comingSoonTitle.setText(result);
-
+                Log.d(TAG, "onCreate: TODAY "+today.toString());
+                Log.d(TAG, "onCreate: SYNOPSIS "+date.toString());
+                if(date.before(today)){
+                   setShowings();
+                } else{
+                    selectedSynopsis.setVisibility(View.GONE);
+                    selectedMoviePoster.setClickable(false);
+                    allScreenings.setVisibility(View.GONE);
+                    comingSoon.setVisibility(View.VISIBLE);
+                    comingSoonTitle.setText(result);
+                    synopsisContent.setText(movie.getSynopsis());
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            synopsisContent.setText(movie.getSynopsis());
         }else{
-            ProgressBar.setVisibility(View.VISIBLE);
-            allScreenings.setVisibility(View.VISIBLE);
-            comingSoon.setVisibility(View.GONE);
-            selectedScreeningsList = new LinkedList<>();
-            theatersList = new LinkedList<>();
-            sortedScreeningList = new LinkedList<>();
-
-            UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-            mLocationBroadCast = new LocationUpdateBroadCast();
-            /* Theaters RecyclerView */
-            LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-            selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
-            selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-
-
-            movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
-
-
-//        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
-            currentLocationTasks();
-
-            /* Showtimes RecyclerView */
-            selectedShowtimesList = new ArrayList<>();
+            setShowings();
         }
 
 
@@ -263,6 +251,32 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
 
         LogUtils.newLog(TAG, "Selected movie id: " + movie.getId());
+    }
+
+    public void setShowings(){
+        ProgressBar.setVisibility(View.VISIBLE);
+        allScreenings.setVisibility(View.VISIBLE);
+        comingSoon.setVisibility(View.GONE);
+        selectedScreeningsList = new LinkedList<>();
+        theatersList = new LinkedList<>();
+        sortedScreeningList = new LinkedList<>();
+
+        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+        mLocationBroadCast = new LocationUpdateBroadCast();
+        /* Theaters RecyclerView */
+        LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
+        selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
+
+
+        movieTheatersAdapter = new MovieTheatersAdapter(theatersList, sortedScreeningList, this);
+
+
+//        selectedTheatersRecyclerView.setLayoutAnimation(animation2);
+        currentLocationTasks();
+
+        /* Showtimes RecyclerView */
+        selectedShowtimesList = new ArrayList<>();
     }
 
 
