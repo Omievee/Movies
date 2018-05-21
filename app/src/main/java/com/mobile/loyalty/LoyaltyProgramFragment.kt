@@ -64,13 +64,17 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     view.bind(getItemText(position))
                     return view
                 }
+
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                    return getView(position, convertView, parent)
+                }
             }
-            addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
             addLoyaltySpinner.setOnItemSelectedListener { _, position, _, _ ->
                 presenter?.onLoyaltyProgramSelected(position)
                 addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
                 addLoyaltySpinner.hint = getString(R.string.loyalty_program_add_loyalty_program)
             }
+            addLoyaltySpinner.setAdapter(addLoyaltyAdapter)
         }
     }
 
@@ -118,6 +122,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     override fun showSpinnerText(text: String?) {
         addLoyaltySpinner.text = text
+        addLoyaltySpinner.hint = text
     }
 
     override fun showProgress() {
