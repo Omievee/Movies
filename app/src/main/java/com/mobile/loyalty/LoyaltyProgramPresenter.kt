@@ -68,8 +68,7 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         }
     }
 
-    fun onLoyaltyProgramSelected(position: Int) {
-        val theaterChain = state.allTheaterChains?.get(position)
+    fun onLoyaltyProgramSelected(theaterChain: TheaterChain?) {
         theaterChain?.let {
             view.showLoyaltyScreenFields(it)
         }
