@@ -33,6 +33,7 @@ import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SelectedSeat;
 import com.mobile.requests.TicketInfoRequest;
+import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ReservationResponse;
 import com.moviepass.R;
 
@@ -265,8 +266,7 @@ public class EticketConfirmation extends BaseActivity {
                     Reservation reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(reservation);
 
-
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, null);
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
@@ -309,9 +309,7 @@ public class EticketConfirmation extends BaseActivity {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(EticketConfirmation.this, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
+        startActivity(ReservationActivity.Companion.newInstance(this, token));
     }
 
 
@@ -407,7 +405,7 @@ public class EticketConfirmation extends BaseActivity {
 
                     ReservationResponse.ETicketConfirmation confirmationCode = reservationResponse.getE_ticket_confirmation();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, null);
 
                     showConfirmation(token);
                     finish();

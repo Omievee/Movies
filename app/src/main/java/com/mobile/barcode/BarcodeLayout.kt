@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
+import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
 import com.google.zxing.BarcodeFormat
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
-import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.google.zxing.MultiFormatWriter
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_barcode.view.*
@@ -20,10 +20,10 @@ import java.util.*
 class BarcodeLayout(context: Context, attributeSet: AttributeSet? = null) : ConstraintLayout(context, attributeSet) {
 
     var barcode: String? = null
-    private set
+        private set
 
     var type: BarcodeFormat? = null
-    private set
+        private set
 
     var disposable: Disposable? = null
 
@@ -43,17 +43,6 @@ class BarcodeLayout(context: Context, attributeSet: AttributeSet? = null) : Cons
             this.barcode = barcode
             this.type = type
             recalculate(measuredWidth, measuredHeight)
-            val dimension:String = when (type) {
-                BarcodeFormat.QR_CODE -> "1:1"
-                else -> "3:1"
-            }
-            set.setDimensionRatio(barcode_iv.id, dimension)
-            set.applyTo(this)
-            val lp:ConstraintLayout.LayoutParams? = layoutParams as? ConstraintLayout.LayoutParams
-            lp?.let {
-                lp.dimensionRatio = dimension
-                layoutParams = lp
-            }
         }
     }
 
@@ -70,16 +59,29 @@ class BarcodeLayout(context: Context, attributeSet: AttributeSet? = null) : Cons
             return
         }
         disposable?.dispose()
-        barcode?.let { barcode->
+        barcode?.let { barcode ->
             disposable = Single.create<Bitmap> {
                 val hints = EnumMap<EncodeHintType, Any>(EncodeHintType::class.java)
                 hints.put(EncodeHintType.CHARACTER_SET, "UTF-8")
                 hints.put(EncodeHintType.MARGIN, 0)
                 val multiFormatWriter = MultiFormatWriter()
-                val bitMatrix = multiFormatWriter.encode(barcode, type, w, h, hints)
+                val newW:Int
+                val newH:Int
+                when(type==BarcodeFormat.QR_CODE) {
+                    true-> {
+                        newW = Math.min(w, h)
+                        newH = newW
+                        barcode_iv.setBackgroundResource(R.drawable.round_white)
+                    } else -> {
+                        newW = w
+                        newH = h
+                        barcode_iv.background = null
+                    }
+                }
+                val bitMatrix = multiFormatWriter.encode(barcode, type, newW, newH, hints)
                 val barcodeEncoder = BarcodeEncoder()
-                val bitmap = barcodeEncoder.createBitmap(bitMatrix)
-                if(it.isDisposed) {
+                val bitmap = barcodeEncoder.createBitmap(bitMatrix, ResourcesCompat.getColor(resources, R.color.red, null))
+                if (it.isDisposed) {
                     return@create
                 }
                 it.onSuccess(bitmap)

@@ -52,6 +52,7 @@ import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
+import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -423,12 +424,12 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {
 
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation());
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), theaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
 
                     } else {
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, theaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
                     }
@@ -660,9 +661,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(myActivity, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
+        startActivity(ReservationActivity.Companion.newInstance(myActivity, token));
         myActivity.finish();
     }
 

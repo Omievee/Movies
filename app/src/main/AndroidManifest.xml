@@ -169,6 +169,10 @@
             android:name="com.mobile.activities.ConfirmationActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:name="com.mobile.reservation.ReservationActivity"
+            android:theme="@style/TicketReservationTheme" />
+
+        <activity
             android:name="com.mobile.activities.LogInActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
             android:screenOrientation="portrait"

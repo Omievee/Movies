@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
@@ -27,11 +29,15 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
+import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.model.Reservation;
 import com.mobile.loyalty.LoyaltyProgramFragment;
+import com.mobile.network.RestClient;
+import com.mobile.reservation.ReservationActivity;
+import com.mobile.rx.Schedulers;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -61,7 +67,6 @@ public class ProfileFragment extends Fragment {
 
     ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
     PastReservations pastReservations = new PastReservations();
-    PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     ReferAFriend refer = new ReferAFriend();
     View root;
     RelativeLayout details, history, currentRes, howToUse, help, referAFriend, loyaltyPrograms;
@@ -264,13 +269,18 @@ public class ProfileFragment extends Fragment {
         });
 
         currentRes.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = myActivity.getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.profile_container, pendingReservationFragment);
-            transaction.addToBackStack("");
-            transaction.commit();
-            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
+            RestClient
+                    .getAuthenticated()
+                    .lastReservation()
+                    .compose(Schedulers.Companion.singleDefault())
+                    .subscribe(v-> {
+                        startActivity(
+                                ReservationActivity.Companion.newInstance(myContext,v)
+                        );
+                    }, e-> {
+                        Toast.makeText(myContext, e.getMessage(),Toast.LENGTH_SHORT).show();
+                        //Snackbar.make(t)
+                    });
 
         });
 

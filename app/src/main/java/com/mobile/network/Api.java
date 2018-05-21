@@ -1,5 +1,6 @@
 package com.mobile.network;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.Result;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
@@ -20,6 +21,7 @@ import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
+import com.mobile.reservation.CurrentReservationV2;
 import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
@@ -125,6 +127,9 @@ public interface Api {
     /* GET PENDING RESERVATION */
     @GET("rest/v1/reservations/last")
     Call<ActiveReservationResponse> last();
+
+    @GET("rest/v1/reservations/last")
+    Single<CurrentReservationV2> lastReservation();
 
     /* Cancel Reservation  */
     @PUT("/rest/v1/reservations")

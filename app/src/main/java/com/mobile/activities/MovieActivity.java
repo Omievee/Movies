@@ -415,11 +415,10 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
                     UserPreferences.saveReservation(reservation);
                     GoWatchItSingleton.getInstance().checkInEvent(theater, screening, showtime, "ticket_purchase", String.valueOf(movie.getId()), url);
                     if (reservationResponse.getE_ticket_confirmation() != null) {
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation());
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), theater);
                         showConfirmation(token);
                     } else {
-
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, theater);
                         showConfirmation(token);
                     }
                 } else {

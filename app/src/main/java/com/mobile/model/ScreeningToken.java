@@ -20,31 +20,35 @@ public class ScreeningToken {
     String time;
     String zipCodeTicket;
     SeatSelected seatSelected;
+    Theater theater;
 
     public ScreeningToken() {
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res) {
+    public ScreeningToken(Screening screening, String time, Reservation res, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
+        this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation eTicketConfirmation) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation eTicketConfirmation, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
         this.confirmationCode = eTicketConfirmation;
+        this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation confirmationCode, SeatSelected seatSelected) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation confirmationCode, SeatSelected seatSelected, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
         this.confirmationCode = confirmationCode;
         this.seatSelected = seatSelected;
+        this.theater = theater;
     }
 
     public Screening getScreening() {
@@ -94,6 +98,10 @@ public class ScreeningToken {
 
     public void setConfirmationCode(ReservationResponse.ETicketConfirmation confirmationCode) {
         this.confirmationCode = confirmationCode;
+    }
+
+    public Theater getTheater() {
+        return theater;
     }
 
     public void setQrUrl(String qrUrl) {

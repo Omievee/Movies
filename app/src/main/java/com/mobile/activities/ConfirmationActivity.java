@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -96,7 +97,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     Bitmap photo;
     TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText, noStub, FAQs;
     Button cancelButton;
-    RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
+    RelativeLayout pendingData, StandardTicket, verifyTicketFlag, verifyMsgExpanded;
+
+    ConstraintLayout ETicket;
     GestureDetector gestureScanner;
     String uploadKey;
     File photoFile;
@@ -369,7 +372,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
-
     }
 
     void selectBottomNavigationBarItem(int itemId) {

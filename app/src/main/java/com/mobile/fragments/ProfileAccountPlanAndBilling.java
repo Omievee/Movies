@@ -322,6 +322,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
                 userInfoResponse = response.body();
                 if (userInfoResponse != null) {
+                    UserPreferences.saveBilling(userInfoResponse);
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
                     String shippingCity = "", shippingState = "", shippingZip = "";
@@ -330,7 +331,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         shippingCity = addressList.get(0);
                         shippingState = addressList.get(1);
                         shippingZip = addressList.get(2);
-
                     }
 
 
