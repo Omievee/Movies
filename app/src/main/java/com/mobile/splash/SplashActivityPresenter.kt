@@ -1,6 +1,8 @@
 package com.mobile.splash
 
-class SplashActivityPresenter {
+import com.mobile.history.HistoryManager
+
+class SplashActivityPresenter(val historyManager: HistoryManager) {
     fun doWork() {
 
     }

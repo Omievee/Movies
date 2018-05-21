@@ -1,6 +1,7 @@
 package com.mobile.splash;
 
 import com.mobile.di.ActivityScope;
+import com.mobile.history.HistoryManager;
 
 import dagger.Module;
 import dagger.Provides;
@@ -10,8 +11,8 @@ public abstract class SplashActivityModule {
 
     @Provides
     @ActivityScope
-    static SplashActivityPresenter provideLoginPresenter() {
-        return new SplashActivityPresenter();
+    static SplashActivityPresenter provideLoginPresenter(HistoryManager historyManager) {
+        return new SplashActivityPresenter(historyManager);
     }
 
 }
