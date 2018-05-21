@@ -14,8 +14,6 @@ import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
-import static java.lang.String.valueOf;
-
 /**
  * Created by ryan on 4/26/17.
  */
@@ -108,7 +106,7 @@ public class UserPreferences {
         return sPrefs.getString(Constants.ONE_DEVICE_ID, "ODID");
     }
 
-    public static void setOneDeviceId(String id){
+    public static void setOneDeviceId(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.ONE_DEVICE_ID, id);
         editor.apply();
@@ -176,10 +174,11 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static @Nullable Long getLastCheckInAttemptDate() {
+    public static @Nullable
+    Long getLastCheckInAttemptDate() {
         String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + getUserId();
         long val = sPrefs.getLong(dateKey, -1);
-        if(val==-1) {
+        if (val == -1) {
             return null;
         }
         return val;
@@ -334,18 +333,18 @@ public class UserPreferences {
     public static void saveTheatersLoadedDate() {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
-        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS,dayOfYear).apply();
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS, dayOfYear).apply();
     }
 
     public static boolean isTheatersLoadedToday() {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
-        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS,-1)==dayOfYear;
+        return sPrefs.getInt(Constants.LAST_DOWNLOADED_THEATERS, -1) == dayOfYear;
     }
 
     public static void setTotalMoviesSeen(int totalMoviesSeen) {
         sPrefs
-                .edit().putInt(Constants.TOTAL_MOVIES_SEEN + "_" +getUserId(), totalMoviesSeen).apply();
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN + "_" + getUserId(), totalMoviesSeen).apply();
     }
 
     public static void setTotalMoviesSeenLast30Days(int totalMoviesSeenLast30Days) {
@@ -355,11 +354,11 @@ public class UserPreferences {
 
     public static void setLastMovieSeen(Movie movie) {
         sPrefs
-                .edit().putString(Constants.LAST_MOVIE_SEEN + "_" +getUserId(), movie.getTitle()).apply();
+                .edit().putString(Constants.LAST_MOVIE_SEEN + "_" + getUserId(), movie.getTitle()).apply();
     }
 
     public static int getTotalMovieSeen() {
-        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN + "_" +getUserId(),-1);
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN + "_" + getUserId(), -1);
     }
 
     public static int getTotalMovieSeenLastMonth() {
@@ -367,6 +366,6 @@ public class UserPreferences {
     }
 
     public static String getLastMovieSeen() {
-        return sPrefs.getString(Constants.LAST_MOVIE_SEEN + "_" +getUserId(),null);
+        return sPrefs.getString(Constants.LAST_MOVIE_SEEN + "_" + getUserId(), null);
     }
 }
