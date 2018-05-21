@@ -1,0 +1,13 @@
+steps:
+  - label: ':kotlin: compile'
+    command: './gradlew --no-daemon :app:clean app:compileStagingDebugKotlin'
+
+  - block: ':helicopter: staging'
+
+  - label: ':helicopter: staging'
+    command: './gradlew --no-daemon :app:clean app:assembleStagingDebug app:crashlyticsUploadDistributionStagingDebug'
+
+  - block: ':rocket: production'
+
+  - label: ':rocket: production'
+    command: './gradlew --no-daemon :app:clean app:assembleProdRelease app:crashlyticsUploadDistributionProdRelease'

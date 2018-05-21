@@ -69,7 +69,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
     private Button save, cancel;
-    private TextView billingDate, plan, planPrice, planCancel, billingCard, billingChange, yesNo;
+    private TextView billingDate, plan, planPrice, planCancel, billingCard, billingChange, yesNo, moviesCountDown, moviesCountDownText;
     private EditText address1, address2, city, state, zip;
     private EditText newBillingCC, newBillingCVV, newBillingExp;
     private ImageButton scanCard;
@@ -100,10 +100,11 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView =  inflater.inflate(R.layout.fragment_profile_account_plan_and_billing, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile_account_plan_and_billing, container, false);
+
+
         save = rootView.findViewById(R.id.saveChanges);
         cancel = rootView.findViewById(R.id.cancelChanges);
         billingDate = rootView.findViewById(R.id.BillingDate);
@@ -120,6 +121,9 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
         yesNo = rootView.findViewById(R.id.YesNo);
         billingSwitch = rootView.findViewById(R.id.SWITCH);
+
+        moviesCountDownText = rootView.findViewById(R.id.MoviesLeft);
+        moviesCountDown = rootView.findViewById(R.id.MovieCount);
 
         oldBilling = rootView.findViewById(R.id.old_billing);
         newBillingData = rootView.findViewById(R.id.profile_newBilling);
@@ -154,8 +158,8 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 yesNo.setText("YES");
                 collapse(billingAddressRoot);
                 billingSwithChangeState(YES);
-                yesNo.setTextColor(ContextCompat.getColor(v.getContext(),R.color.new_red));
-                billingAddressSameAsShipping=true;
+                yesNo.setTextColor(ContextCompat.getColor(v.getContext(), R.color.new_red));
+                billingAddressSameAsShipping = true;
                 saveChanges();
             }
         });
@@ -163,7 +167,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         planCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               mListener.openCancellationFragment();
+                mListener.openCancellationFragment();
             }
         });
 
@@ -200,7 +204,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         address1.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(firstClick){
+                if (firstClick) {
                     firstClick = false;
                     AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                             .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
@@ -213,8 +217,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         // TODO: Handle the error.
                     }
                     return true;
-                }
-                else{
+                } else {
                     return false;
                 }
             }
@@ -266,7 +269,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 for (int i = 0; i < localList.size(); i++) {
                     if (localList.get(2).trim().length() < 8) {
                         Toast.makeText(myActivity, "Invalid Address", Toast.LENGTH_SHORT).show();
-                        firstClick=true;
+                        firstClick = true;
                     } else {
                         address1.setText(localList.get(0));
                         city.setText(localList.get(1));
@@ -285,8 +288,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             } else if (resultCode == RESULT_CANCELED) {
 
             }
-        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE)
-        {
+        } else if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 final CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                 updateBillingCard = true;
@@ -322,7 +324,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 if (userInfoResponse != null) {
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
-                    String shippingCity = "", shippingState = "", shippingZip ="";
+                    String shippingCity = "", shippingState = "", shippingZip = "";
 
                     for (int i = 0; i < addressList.size(); i++) {
                         shippingCity = addressList.get(0);
@@ -330,7 +332,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         shippingZip = addressList.get(2);
 
                     }
-
 
 
                     String billingAddress = userInfoResponse.getBillingAddressLine2();
@@ -352,9 +353,9 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     shippingState = shippingState.trim();
                     shippingZip = shippingZip.trim();
 
-                    if(userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())){
-                        if(!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
-                                !shippingZip.equalsIgnoreCase(billingZip)){
+                    if (userInfoResponse.getBillingAddressLine1().equalsIgnoreCase(userInfoResponse.getShippingAddressLine1())) {
+                        if (!shippingCity.equalsIgnoreCase(billingCity) || !shippingState.equalsIgnoreCase(billingState) ||
+                                !shippingZip.equalsIgnoreCase(billingZip)) {
 
                             billingSwitch.setChecked(false);
                             billingSwithChangeState(NO);
@@ -365,9 +366,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                             state.setText(billingState);
                             zip.setText(billingZip);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         billingSwitch.setChecked(false);
                         billingSwithChangeState(NO);
                         billingAddressRoot.setVisibility(View.VISIBLE);
@@ -385,13 +384,19 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         billingDate.setText("Unknown");
                     } else {
                         billingDate.setText(userInfoResponse.getNextBillingDate());
-
                     }
 
                     plan.setText(userInfoResponse.getPlan());
+                    if (userInfoResponse.getRemainingCap() != null) {
+                        moviesCountDownText.setVisibility(View.VISIBLE);
+                        if (userInfoResponse.getRemainingCap().equals("1")) {
+                            String amount = userInfoResponse.getRemainingCap() + " Movie";
+                            moviesCountDown.setText(amount);
+                        }else {
+                            moviesCountDown.setText(userInfoResponse.getRemainingCap() + " Movies");
+                        }
 
-                    LogUtils.newLog(Constants.TAG, "onResponse: " + userInfoResponse.getPlan());
-
+                    }
                     progress.setVisibility(View.GONE);
 
                 }
@@ -435,17 +440,17 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         save.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
             removeAllErrors();
-            InputMethodManager imm = (InputMethodManager)myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 imm.hideSoftInputFromWindow(Objects.requireNonNull(getView()).getWindowToken(), 0);
             }
-            if(updateBillingCard) {
+            if (updateBillingCard) {
                 updateCCData();
             }
-            if(updateBillingAddress){
+            if (updateBillingAddress) {
                 updateBillingAddress();
             }
-            if(billingAddressSameAsShipping){
+            if (billingAddressSameAsShipping) {
                 updateBillingAddressToShippingAddress();
             }
         });
@@ -465,7 +470,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
         String address = userInfoResponse.getShippingAddressLine2();
         List<String> addressList = Arrays.asList(address.split(",", -1));
-        String shippingCity = "", shippingState = "", shippingZip ="";
+        String shippingCity = "", shippingState = "", shippingZip = "";
         String addres1 = userInfoResponse.getShippingAddressLine1().trim();
 
         for (int i = 0; i < addressList.size(); i++) {
@@ -475,33 +480,34 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         }
 
         String type = "billingAddress";
-        LogUtils.newLog("Billing address", "onResponse: Address: "+addres1+" State "+ shippingState+" City "+shippingCity+" Zip "+shippingZip);
+        LogUtils.newLog("Billing address", "onResponse: Address: " + addres1 + " State " + shippingState + " City " + shippingCity + " Zip " + shippingZip);
 
-                AddressChangeRequest request = new AddressChangeRequest(addres1,"", shippingCity, shippingState, shippingZip, type);
+        AddressChangeRequest request = new AddressChangeRequest(addres1, "", shippingCity, shippingState, shippingZip, type);
         String finalShippingState = shippingState;
         RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        if (response != null && response.isSuccessful()) {
-                            loadUserInfo();
-                            Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
-                            mListener.closeFragment();
-                        } else {
-                            Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();;
-                        }
-                        progress.setVisibility(View.GONE);
-                    }
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response != null && response.isSuccessful()) {
+                    loadUserInfo();
+                    Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                    mListener.closeFragment();
+                } else {
+                    Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
+                    ;
+                }
+                progress.setVisibility(View.GONE);
+            }
 
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        progress.setVisibility(View.GONE);
-                        Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
-                        mListener.closeFragment();
-                    }
-                });
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                progress.setVisibility(View.GONE);
+                Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
+                mListener.closeFragment();
+            }
+        });
     }
 
-    public void removeAllErrors(){
+    public void removeAllErrors() {
         ccNumTextInputLayout.setError(null);
         cvvTextInputLayout.setError(null);
         expTextInputLayout.setError(null);
@@ -512,7 +518,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     }
 
     public void updateCCData() {
-        if(!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
+        if (!newBillingCC.getText().toString().trim().isEmpty() && !newBillingExp.getText().toString().trim().isEmpty() && !newBillingCVV.getText().toString().trim().isEmpty()) {
             if (newBillingCC.getText().toString().length() >= 15) {
                 ccNumTextInputLayout.setError(null);
                 if (newBillingCVV.getText().toString().length() >= 3) {
@@ -553,11 +559,11 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             }
         } else {
             progress.setVisibility(View.GONE);
-            if(newBillingCVV.getText().toString().trim().isEmpty())
+            if (newBillingCVV.getText().toString().trim().isEmpty())
                 cvvTextInputLayout.setError(getResources().getString(R.string.invalid_cvv));
-            if(newBillingExp.getText().toString().trim().isEmpty())
+            if (newBillingExp.getText().toString().trim().isEmpty())
                 expTextInputLayout.setError(getResources().getString(R.string.invalid_exp));
-            if(newBillingCC.getText().toString().trim().isEmpty())
+            if (newBillingCC.getText().toString().trim().isEmpty())
                 ccNumTextInputLayout.setError(getResources().getString(R.string.credit_card_invalid_number));
         }
     }
@@ -578,8 +584,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     newBillingExp.clearComposingText();
                     Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                     mListener.closeFragment();
-                }
-                else {
+                } else {
                     loadUserInfo();
                     Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                 }
@@ -611,7 +616,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             String[] address1Array = address1.getText().toString().split("\\W+");
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
-            }else {
+            } else {
                 address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 address1.clearFocus();
                 LogUtils.newLog("ADDRESS", "isValidAddress: ");
@@ -619,7 +624,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
             //Validating City
             String[] cityArray = city.getText().toString().split("\\W+");
-            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+","");
+            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+", "");
             //If city has less than 3 words
             if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
                 i++;
@@ -637,7 +642,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             }
 
             //Validating Zip Code
-            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length()>=5) {
+            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length() >= 5) {
                 i++;
             } else {
                 zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
@@ -663,7 +668,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 city.clearFocus();
             }
         }
-        if(i==4)
+        if (i == 4)
             return true;
         return false;
     }
@@ -708,12 +713,12 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
     }
 
-    public void billingSwithChangeState(int option){
+    public void billingSwithChangeState(int option) {
 
-        if(option==YES){
+        if (option == YES) {
             yesNo.setText("YES");
             yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
-        } else{
+        } else {
 
             yesNo.setText("NO");
             yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
@@ -793,7 +798,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         mListener = null;
     }
 
-    public class CustomTextWatcher implements TextWatcher{
+    public class CustomTextWatcher implements TextWatcher {
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -812,23 +817,23 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 updateBillingAddress = true;
                 saveChanges();
             }
-            if(newBillingCC.isFocused() || newBillingCVV.isFocused() || newBillingExp.isFocused()){
+            if (newBillingCC.isFocused() || newBillingCVV.isFocused() || newBillingExp.isFocused()) {
                 updateBillingCard = true;
                 saveChanges();
             }
-            if(address1.hasFocus())
+            if (address1.hasFocus())
                 address1TextInputLayout.setError(null);
-            if(state.hasFocus())
+            if (state.hasFocus())
                 stateTextInputLayout.setError(null);
-            if(city.hasFocus())
+            if (city.hasFocus())
                 cityTextInputLayout.setError(null);
-            if(zip.hasFocus())
+            if (zip.hasFocus())
                 zip.setError(null);
-            if(newBillingCC.hasFocus())
+            if (newBillingCC.hasFocus())
                 ccNumTextInputLayout.setError(null);
-            if(newBillingCVV.hasFocus())
+            if (newBillingCVV.hasFocus())
                 cvvTextInputLayout.setError(null);
-            if(newBillingExp.hasFocus())
+            if (newBillingExp.hasFocus())
                 expTextInputLayout.setError(null);
 
         }

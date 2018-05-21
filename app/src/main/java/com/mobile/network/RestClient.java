@@ -1,6 +1,7 @@
 package com.mobile.network;
 
 import android.content.Context;
+import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Build;
 
@@ -11,13 +12,16 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.moviepass.BuildConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -155,7 +159,7 @@ public class RestClient {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
-        if (Constants.DEBUG) {
+        if (BuildConfig.DEBUG) {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         } else {
             logging.setLevel(HttpLoggingInterceptor.Level.NONE);
@@ -197,7 +201,7 @@ public class RestClient {
         sAuthenticatedInstance = new Retrofit.Builder()
                 .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sAuthenticatedAPI = sAuthenticatedInstance.create(Api.class);
@@ -318,7 +322,11 @@ public class RestClient {
         httpClient.connectTimeout(20, TimeUnit.SECONDS);
         httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
+        File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+        
+        Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
 
+        httpClient.cache(cache);
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 

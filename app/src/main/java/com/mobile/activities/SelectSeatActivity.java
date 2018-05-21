@@ -4,52 +4,38 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Space;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.extensions.SeatButton;
-import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
-import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
-import com.mobile.model.ScreeningToken;
 import com.mobile.model.SeatInfo;
 import com.mobile.model.SeatSelected;
 import com.mobile.model.Theater;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
-import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
-import com.mobile.requests.TicketInfoRequest;
-import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.moviepass.R;
 
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,7 +46,7 @@ import retrofit2.Response;
  * Created by anubis on 6/27/17.
  */
 
-public class SelectSeatActivity extends BaseActivity {
+public class SelectSeatActivity extends AppCompatActivity {
 
     public static final String TAG = "FOUND IT";
 
@@ -73,41 +59,28 @@ public class SelectSeatActivity extends BaseActivity {
 
     LocationUpdateBroadCast mLocationBroadCast;
     boolean mLocationAcquired;
-    private Location mMyLocation;
 
     View coordinatorLayout;
-    GridLayout mGridSeatsA, mGridSeatsB, mGridSeatsC, mGridSeatsD,
-            mGridSeatsE, mGridSeatsF, mGridSeatsG, mGridSeatsH, mGridSeatsI,
-            mGridSeatsJ, mGridSeatsK, mGridSeatsL, mGridSeatsM;
-    ImageView mMoviePoster;
+    GridLayout mGridSeatsA;
     ImageView onBackButton;
     Screening screeningObject;
-    Theater theaterObject;
     TextView mSelectedMovieTitle;
-    TextView mMovieRunTime;
     TextView mTheaterSelected;
     TextView mScreeningShowtime;
     TextView mSelectedSeat;
     Button reserveSeatButton;
     View mProgressWheel;
     String selectedShowTime;
-    String mProviderName;
-    TicketInfoRequest mTicketRequest;
-    CheckInRequest mCheckinRequest;
     PerformanceInfoRequest mPerformReq;
     Movie movieObject;
     boolean isSeatSelected = false;
+    private Location mMyLocation;
     private ArrayList<SeatButton> mSeatButtons;
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_select_seat);
-
-        bottomNavigationView = findViewById(R.id.SEATCHART_NAV);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
 
         Intent intent = getIntent();
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
@@ -122,18 +95,6 @@ public class SelectSeatActivity extends BaseActivity {
         mSelectedSeat = findViewById(R.id.SEATCHART_SEAT);
         onBackButton = findViewById(R.id.SEATCHART_ONBACK);
         mGridSeatsA = findViewById(R.id.gridSeatsA);
-        mGridSeatsB = findViewById(R.id.gridSeatsB);
-        mGridSeatsC = findViewById(R.id.gridSeatsC);
-        mGridSeatsD = findViewById(R.id.gridSeatsD);
-        mGridSeatsE = findViewById(R.id.gridSeatsE);
-        mGridSeatsF = findViewById(R.id.gridSeatsF);
-        mGridSeatsG = findViewById(R.id.gridSeatsG);
-        mGridSeatsH = findViewById(R.id.gridSeatsH);
-        mGridSeatsI = findViewById(R.id.gridSeatsI);
-        mGridSeatsJ = findViewById(R.id.gridSeatsJ);
-        mGridSeatsK = findViewById(R.id.gridSeatsK);
-        mGridSeatsL = findViewById(R.id.gridSeatsL);
-        mGridSeatsM = findViewById(R.id.gridSeatsM);
 
         reserveSeatButton = findViewById(R.id.SEATCHART_RESERVE);
         mProgressWheel = findViewById(R.id.progress);
@@ -146,11 +107,6 @@ public class SelectSeatActivity extends BaseActivity {
 
         mScreeningShowtime.setText(selectedShowTime);
 
-
-//        reserveSeatButton.setText(R.string.activity_select_seat_activity_title);
-
-        //PerformanceInfo
-
         LogUtils.newLog(TAG, "onCreate: " + screeningObject.getProvider().getProviderName());
         checkProviderDoPerformanceInfoRequest();
         //If seat hasn't been selected return error
@@ -158,7 +114,7 @@ public class SelectSeatActivity extends BaseActivity {
         reserveSeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isSeatSelected)
+                if (!isSeatSelected)
                     makeSnackbar(getString(R.string.activity_select_seat_select_first));
             }
         });
@@ -268,104 +224,63 @@ public class SelectSeatActivity extends BaseActivity {
     }
 
     private void showSeats(List<SeatInfo> seats, int rows, int columns) {
+        SeatInfo[][] seatGrid = new SeatInfo[rows][columns];
+        for (SeatInfo seat : seats) {
+            seatGrid[seat.getRow() - 1][seat.getColumn() - 1] = seat;
+        }
         mGridSeatsA.setBackgroundColor(Color.TRANSPARENT);
         mGridSeatsA.setColumnCount(columns);
         mGridSeatsA.setRowCount(rows);
+        mGridSeatsA.setAlignmentMode(GridLayout.HORIZONTAL);
         mSeatButtons = new ArrayList<>();
         int seatPadding = (int) getResources().getDimension(R.dimen.seat_padding);
-        Collections.sort(seats);
-
-        for (SeatInfo seat : seats) {
-            SeatButton seatButton = new SeatButton(this, seat);
-            //Check if Moviexchange or Radian to populat proper seating.. if not. business as usual.
-            if ((screeningObject.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) ||
-                    (screeningObject.getProvider().getProviderName().equalsIgnoreCase("RADIANT"))) {
-                GridLayout gridLayout = null;
-                if (seat.getSeatName().contains("A")) {
-                    gridLayout = mGridSeatsA;
-                }
-                if (seat.getSeatName().contains("B")) {
-                    gridLayout = mGridSeatsB;
-                }
-                if (seat.getSeatName().contains("C")) {
-                    gridLayout = mGridSeatsC;
-                }
-                if (seat.getSeatName().contains("D")) {
-                    gridLayout = mGridSeatsD;
-                }
-                if (seat.getSeatName().contains("E")) {
-                    gridLayout = mGridSeatsE;
-                }
-                if (seat.getSeatName().contains("F")) {
-                    gridLayout = mGridSeatsF;
-                }
-                if (seat.getSeatName().contains("G")) {
-                    gridLayout = mGridSeatsG;
-                }
-                if (seat.getSeatName().contains("H")) {
-                    gridLayout = mGridSeatsH;
-                }
-                if (seat.getSeatName().contains("I")) {
-                    gridLayout = mGridSeatsI;
-                }
-                if (seat.getSeatName().contains("J")) {
-                    gridLayout = mGridSeatsJ;
-                }
-                if (seat.getSeatName().contains("K")) {
-                    gridLayout = mGridSeatsK;
-                }
-                if (seat.getSeatName().contains("L")) {
-                    gridLayout = mGridSeatsL;
-                }
-
-                if (seat.getSeatName().contains("M")) {
-                    gridLayout = mGridSeatsM;
-                }
-                if(gridLayout != null) {
-                    GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                    lp.setGravity(Gravity.CENTER_HORIZONTAL);
-                    gridLayout.addView(seatButton, lp);
-                }
-                seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
-                mSeatButtons.add(seatButton);
-
-            } else {
-                seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
-                GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
-                lp.setGravity(Gravity.CENTER_HORIZONTAL);
-                mGridSeatsA.addView(seatButton, lp);
-                mSeatButtons.add(seatButton);
-            }
-            seatButton.setOnClickListener(sender -> {
-                final SeatButton seatBtn = (SeatButton) sender;
-                final SeatInfo seatInfo = seatBtn.getSeatInfo();
-                if (seatInfo.isWheelChairOrCompanion()) {
-                    final @StringRes int message;
-                    final @StringRes int title;
-                    if(seatInfo.getSeatType() == SeatInfo.SeatType.SeatTypeWheelchair) {
-                        title = R.string.dialog_select_seat_wheelchair_title;
-                        message = R.string.dialog_select_seat_wheelchair_message;
-                    } else {
-                        title = R.string.dialog_select_seat_companion_title;
-                        message = R.string.dialog_select_seat_companion_message;
-                    }
-                    new AlertDialog.Builder(SelectSeatActivity.this)
-                            .setTitle(title)
-                            .setMessage(message)
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    onSeatClicked(seatBtn, seatInfo);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .create()
-                            .show();
+        for (int row = 0; row < seatGrid.length; row++) {
+            for (int column = 0; column < seatGrid[row].length; column++) {
+                SeatInfo seat = seatGrid[row][column];
+                GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+                param.setGravity(Gravity.CENTER);
+                param.rowSpec = GridLayout.spec(row, GridLayout.CENTER);
+                param.columnSpec = GridLayout.spec(column, GridLayout.CENTER);
+                if (seat == null) {
+                    ImageView empty = new ImageView(this);
+                    empty.setImageResource(R.drawable.empty_seat);
+                    mGridSeatsA.addView(empty, param);
                 } else {
-                    onSeatClicked(seatBtn, seatInfo);
+                    SeatButton seatButton = new SeatButton(this, seat);
+                    mSeatButtons.add(seatButton);
+                    mGridSeatsA.addView(seatButton, param);
+                    seatButton.setPadding(seatPadding, seatPadding, seatPadding, seatPadding);
+                    seatButton.setOnClickListener(sender -> {
+                        final SeatButton seatBtn = (SeatButton) sender;
+                        final SeatInfo seatInfo = seatBtn.getSeatInfo();
+                        if (seatInfo.isWheelChairOrCompanion()) {
+                            final @StringRes int message;
+                            final @StringRes int title;
+                            if (seatInfo.getSeatType() == SeatInfo.SeatType.SeatTypeWheelchair) {
+                                title = R.string.dialog_select_seat_wheelchair_title;
+                                message = R.string.dialog_select_seat_wheelchair_message;
+                            } else {
+                                title = R.string.dialog_select_seat_companion_title;
+                                message = R.string.dialog_select_seat_companion_message;
+                            }
+                            new AlertDialog.Builder(SelectSeatActivity.this)
+                                    .setTitle(title)
+                                    .setMessage(message)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            onSeatClicked(seatBtn, seatInfo);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .create()
+                                    .show();
+                        } else {
+                            onSeatClicked(seatBtn, seatInfo);
+                        }
+                    });
                 }
-            });
-
+            }
         }
     }
 
@@ -383,9 +298,9 @@ public class SelectSeatActivity extends BaseActivity {
         selectSeat(button.getSeatInfo());
         reserveSeatButton.setOnClickListener(view -> {
 
-                    LogUtils.newLog(TAG, "button name:" + button.getSeatName());
-                    LogUtils.newLog(TAG, "button row: " + button.getSeatInfo().getRow());
-                    LogUtils.newLog(TAG, "button col: " + button.getSeatInfo().getColumn());
+            LogUtils.newLog(TAG, "button name:" + button.getSeatName());
+            LogUtils.newLog(TAG, "button row: " + button.getSeatInfo().getRow());
+            LogUtils.newLog(TAG, "button col: " + button.getSeatInfo().getColumn());
 
 
             SeatSelected seatSelected = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
@@ -398,11 +313,6 @@ public class SelectSeatActivity extends BaseActivity {
 
             startActivity(intent);
 
-
-//TODO: come back to this..
-//                            SeatSelected seatObject = new SeatSelected(button.getSeatInfo().getRow(), button.getSeatInfo().getColumn(), button.getSeatName());
-//                            reserveWithSeat(screeningObject, selectedShowTime, seatObject);
-//                    mProgressWheel.setVisibility(View.VISIBLE);
         });
     }
 
@@ -412,84 +322,6 @@ public class SelectSeatActivity extends BaseActivity {
             reserveSeatButton.setText(R.string.activity_select_seat_reserve);
             isSeatSelected = true;
         }
-    }
-//
-//    private void reserve(Screening screening, String showtime, SeatSelected selectedSeat) {
-//
-//        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
-//        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
-//        SelectedSeat selectedSeatRequest = new SelectedSeat(selectedSeat.getSelectedSeatRow(), selectedSeat.getSelectedSeatColumn());
-//
-//
-//        mProviderName = screening.getProvider().providerName;
-//        mTicketRequest = new TicketInfoRequest(checkProviderDoPerformanceInfoRequest(), selectedSeatRequest);
-//        mCheckinRequest = new CheckInRequest(mTicketRequest, mProviderName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-//        reservationRequest(screening, mCheckinRequest, showtime, selectedSeat);
-//
-//    }
-
-
-    //TODO:
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, final SeatSelected seatSelected) {
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
-
-                if (reservationResponse != null && reservationResponse.isOk()) {
-                    reserveSeatButton.setEnabled(true);
-                    mProgressWheel.setVisibility(View.GONE);
-                    Reservation reservation = reservationResponse.getReservation();
-                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
-
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seatSelected);
-
-                    showConfirmation(token);
-
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                        Toast.makeText(SelectSeatActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        mProgressWheel.setVisibility(View.GONE);
-                        reserveSeatButton.setEnabled(true);
-                    } catch (Exception e) {
-                        Toast.makeText(SelectSeatActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        mProgressWheel.setVisibility(View.GONE);
-                        reserveSeatButton.setEnabled(true);
-                    }
-                }
-
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                mProgressWheel.setVisibility(View.GONE);
-                reserveSeatButton.setEnabled(true);
-
-                String hostname = "Unable to resolve host: No address associated with hostname";
-
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
-                    Toast.makeText(getApplicationContext(), R.string.error, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
-                    Toast.makeText(getApplicationContext(), R.string.data_connection, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
-                    Toast.makeText(getApplicationContext(), R.string.pending_reservation, Toast.LENGTH_LONG).show();
-                } else if (restError != null) {
-                    Toast.makeText(getApplicationContext(), restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(SelectSeatActivity.this, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
-        finish();
     }
 
     class LocationUpdateBroadCast extends BroadcastReceiver {
@@ -519,31 +351,11 @@ public class SelectSeatActivity extends BaseActivity {
         }
     }
 
-    public void currentLocationTasks() {
-        registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
-        UserLocationManagerFused.getLocationInstance(SelectSeatActivity.this).startLocationUpdates();
-        mLocationAcquired = false;
-
-        boolean enabled = UserLocationManagerFused.getLocationInstance(SelectSeatActivity.this).isLocationEnabled();
-        if (!enabled) {
-//            showDialogGPS();
-        } else {
-            Location location = UserLocationManagerFused.getLocationInstance(SelectSeatActivity.this).mCurrentLocation;
-            onLocationChanged(location);
-
-            if (location != null) {
-                UserLocationManagerFused.getLocationInstance(this).requestLocationForCoords(location.getLatitude(), location.getLongitude(), SelectSeatActivity.this);
-            }
-        }
-    }
-
     public void makeSnackbar(String message) {
         final Snackbar snackbar = Snackbar.make(findViewById(R.id.mCoordinator), message, Snackbar.LENGTH_SHORT);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) snackbar.getView().getLayoutParams();
         snackbar.getView().setLayoutParams(params);
         snackbar.show();
-
-
     }
 
     @Override
@@ -562,54 +374,6 @@ public class SelectSeatActivity extends BaseActivity {
             finish();
         } else {
             finish();
-
         }
     }
-
-    /* Bottom Navigation Things */
-    int getContentViewId() {
-        return R.layout.activity_browse;
-    }
-
-    int getNavigationMenuItemId() {
-        return R.id.action_movies;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                } else if (itemId == R.id.action_theaters) {
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState() {
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
-    }
-
-
 }

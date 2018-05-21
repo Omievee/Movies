@@ -27,6 +27,7 @@ public class Constants {
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";
+    public static final String LAST_DOWNLOADED_THEATERS = "last_dl_theaters";
     //RESTRICTIONS
     public static final String ACTIVE = "ACTIVE";
     public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
@@ -88,8 +89,14 @@ public class Constants {
     public static final String CUSTOM_DATA = "custom_keys";
 
     //Check In Attempt
-    public static final String LAST_CHECK_IN_ATTEMPT_DATE = "lastCheckInAttemptDate";
-    public static final String LAST_CHECK_IN_ATTEMPT_TIME = "lastCheckInAttemptTime";
+    public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
+    public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInReservation";
+
+    //Movie History Data
+    public static final String TOTAL_MOVIES_SEEN = "totalMoviesSeen";
+    public static final String TOTAL_MOVIES_SEEN_LAST_MONTH = "totalMoviesSeenLastMonth";
+    public static final String LAST_MOVIE_SEEN = "lastMovieSeen";
+
 
     //FIREBASE
     public static final String FIREBASE_TOKEN = "firebase_token";
@@ -99,6 +106,4 @@ public class Constants {
 
     //TICKET VERIFICATION
     public static final String TICKET_VERIFICATION_FAQ_SECTION = "38";
-
-
 }

@@ -14,7 +14,6 @@ import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.moviepass.BuildConfig;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -220,13 +219,7 @@ public class GoWatchItSingleton {
         String movieTitle = getMovieTitle(movieId);
 
         if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            String dateString = dateFormat.format(date);
-            //Get current time
-            SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-            String timeString = sdf.format(new Date());
-            UserPreferences.setLastCheckInAttempt(dateString,timeString);
+            UserPreferences.setLastCheckInAttemptDate();
         }
 
         String result = "";
