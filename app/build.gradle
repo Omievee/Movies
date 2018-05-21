@@ -230,6 +230,9 @@ dependencies {
     implementation 'com.lapism:searchview:4.0'
     // Taplytics
     implementation 'com.taplytics.sdk:taplytics:+@aar'
+    // zxing
+    implementation 'com.google.zxing:core:3.3.0'
+    implementation 'com.journeyapps:zxing-android-embedded:3.3.0@aar'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
