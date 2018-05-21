@@ -2,8 +2,11 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
@@ -28,6 +32,7 @@ import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
 import com.mobile.helpers.LogUtils;
+import com.mobile.helpers.RSBlurProcessor;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
@@ -65,6 +70,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     public ArrayList<Movie> ALLMOVIES;
     Movie movie;
     int movieId;
+    ImageView background;
     List<String> urlPath;
 
     String url;
@@ -93,6 +99,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
         bottomNavigationView = findViewById(R.id.navigation);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        parentLayout = findViewById(R.id.COORDPARENT);
 
 
         movieSearchNEWRELEASE = new ArrayList<>();
@@ -302,7 +309,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
 
     public void activateMoviePassCardSnackBar() {
         if (UserPreferences.getIsSubscriptionActivationRequired()) {
-            parentLayout = findViewById(R.id.COORDPARENT);
+
             snack = Snackbar.make(parentLayout, "Activate your MoviePass card", Snackbar.LENGTH_INDEFINITE);
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snack.getView().getLayoutParams();
             params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.bottom_navigation_height));
@@ -533,6 +540,7 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
             snack.dismiss();
         }
     }
+
 
     @Override
     public void showSnackbar() {

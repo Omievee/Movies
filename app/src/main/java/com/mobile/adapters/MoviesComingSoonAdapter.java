@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -157,9 +158,22 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                 @Override
                 public boolean onLongClick(View v) {
                     moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
-
                     return true;
                 }
+            });
+
+            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    } else if (event.getAction() == MotionEvent.ACTION_UP){
+                        moviePosterClickListener.releaseLongPress();
+                    }
+                    return false;
+                }
+
+
             });
 
         }catch (IllegalStateException e) {

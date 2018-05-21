@@ -1,20 +1,25 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Animatable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.renderscript.RenderScript;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -57,6 +62,7 @@ import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.extensions.CustomLinearLayoutManager;
 import com.mobile.extensions.LockableScrollView;
 import com.mobile.helpers.LogUtils;
+import com.mobile.helpers.RSBlurProcessor;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -121,6 +127,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     TextView previewMovieTitle, previewSynopsis;
     SimpleDraweeView previewMovieImage;
     TextView previewRating, previewRunningTime;
+    View parent;
+    ImageView background;
 
 
 
@@ -181,6 +189,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         previewSynopsis = rootView.findViewById(R.id.previewSynopsis);
         previewRunningTime = rootView.findViewById(R.id.previewRunningTime);
         previewRating = rootView.findViewById(R.id.previewRating);
+        parent = rootView.findViewById(R.id.parent);
+        background = rootView.findViewById(R.id.background);
         Api api;
         NEWRelease = new RealmList<>();
         TopBoxOffice = new RealmList<>();
@@ -753,12 +763,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     @Override
     public void onMoviePosterLongClick(int pos, @NotNull Movie movie, @NotNull ImageView sharedImageView) {
+        Bitmap bitmap = getBitmapFromView(parent);
         preview.setVisibility(View.VISIBLE);
         comingSoonLayoutManager.setScrollEnabled(false);
         newReleasesLayoutManager.setScrollEnabled(false);
         topBoxOfficeLayoutManager.setScrollEnabled(false);
         nowplayingManager.setScrollEnabled(false);
         lockableScrollView.setScrollingEnabled(false);
+        lockableScrollView.setVisibility(View.GONE);
         swiper.setEnabled(false);
 
 
@@ -811,6 +823,25 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
 
         previewRating.setText("Rated: " + movie.getRating());
+
+
+
+        RenderScript rs = RenderScript.create(parent.getContext());
+        RSBlurProcessor rsBlurProcessor = new RSBlurProcessor(rs);
+        Bitmap finalBitmap = rsBlurProcessor.blur(bitmap,200f,4);
+
+        background.setImageBitmap(finalBitmap);
+        background.setVisibility(View.VISIBLE);
+
+    }
+
+
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        view.draw(c);
+        return bitmap;
     }
 
     @Override
@@ -821,7 +852,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeLayoutManager.setScrollEnabled(true);
         nowplayingManager.setScrollEnabled(true);
         lockableScrollView.setScrollingEnabled(true);
+        lockableScrollView.setVisibility(View.VISIBLE);
         swiper.setEnabled(true);
+        background.setVisibility(View.GONE);
     }
 
 
