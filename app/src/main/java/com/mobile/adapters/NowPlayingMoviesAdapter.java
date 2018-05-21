@@ -93,27 +93,27 @@ public class NowPlayingMoviesAdapter extends RecyclerView.Adapter<NowPlayingMovi
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), nowPlaying, holder.moviePoster);
             }
         });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), nowPlaying, holder.moviePoster);
-                return true;
-            }
-        });
-
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                } else if (event.getAction() == MotionEvent.ACTION_UP){
-                    moviePosterClickListener.releaseLongPress();
-                }
-                return false;
-            }
-
-
-        });
+//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), nowPlaying, holder.moviePoster);
+//                return true;
+//            }
+//        });
+//
+//        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//                } else if (event.getAction() == MotionEvent.ACTION_UP){
+//                    moviePosterClickListener.releaseLongPress();
+//                }
+//                return false;
+//            }
+//
+//
+//        });
 
     }
 
