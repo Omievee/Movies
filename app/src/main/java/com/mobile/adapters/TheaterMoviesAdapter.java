@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +166,9 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                 showtime = new RadioButton(root.getContext());
                 showtime.setText(screening.getStartTimes().get(i));
                 showtime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                HOLDER.showtimeGrid.addView(showtime);
+                RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+                lp.gravity = Gravity.CENTER_VERTICAL;
+                HOLDER.showtimeGrid.addView(showtime, lp);
 
 
                 try {
@@ -194,10 +197,12 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
 
 
                 showtime.setBackground(root.getResources().getDrawable(R.drawable.showtime_background));
-                showtime.setPadding(30, 20, 30, 20);
+                int padding = (int) context.getResources().getDimension(R.dimen.margin_standard);
+                int paddingVert = (int) (padding* .8);
+                showtime.setPadding(padding, paddingVert, padding, paddingVert);
                 showtime.setButtonDrawable(null);
                 RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 0, 50, 30);
+                params.setMargins(0, 0, padding, 0);
                 showtime.setLayoutParams(params);
                 final Screening select = screening;
                 currentTime = showtime;
