@@ -48,8 +48,8 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 TicketFormat.QRCODE -> {
                     BarcodeFormat.QR_CODE
                 }
-                TicketFormat.PDF417 -> {
-                    BarcodeFormat.PDF_417
+                TicketFormat.BARCODE -> {
+                    BarcodeFormat.CODE_128
                 }
                 else -> {
                     null

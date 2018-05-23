@@ -40,7 +40,7 @@ data class ETicket(
 
     @Parcelize
     data class Reservation2(
-            var checkinId: String? = null,
+            var checkinId: Int = 0,
             var createdAt: Long? = null,
             var id: Int? = null,
             var kind: String? = null,
@@ -64,5 +64,5 @@ data class ETicket(
     enum class TicketFormat {
         UNKNOWN,
         QRCODE,
-        PDF417
+        BARCODE
     }

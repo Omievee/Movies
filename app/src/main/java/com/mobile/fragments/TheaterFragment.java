@@ -362,6 +362,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
             @Override
             public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+
             }
 
         });

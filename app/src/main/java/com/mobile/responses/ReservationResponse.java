@@ -35,6 +35,10 @@ public class ReservationResponse {
         return zip;
     }
 
+    public String getShowtime() {
+        return showtime;
+    }
+
     public ETicketConfirmation getE_ticket_confirmation() {return this.e_ticket_confirmation;}
 
     @Parcel

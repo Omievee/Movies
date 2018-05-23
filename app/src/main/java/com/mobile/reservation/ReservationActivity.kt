@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import com.mobile.model.ScreeningToken
 import com.moviepass.R
 import kotlinx.android.synthetic.main.activity_reservation.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ReservationActivity : AppCompatActivity() {
 
@@ -40,11 +42,25 @@ class ReservationActivity : AppCompatActivity() {
 
         fun newInstance(context: Context, reservation: ScreeningToken): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
+                val rs = reservation.reservation
+                val re2:Reservation2? = rs?.let {
+                    Reservation2(
+                            checkinId = rs.id,
+                            createdAt = rs.expiration,
+                            id = rs.id,
+                            _showtime = reservation.time?.let {
+                                SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
+                            }?:0
+                    )
+                }
                 val reservationV2 = CurrentReservationV2(
                         ticket = ETicket(
                                 confirmationCodeFormat = reservation.confirmationCode.confirmationCodeFormat,
-                                redemptionCode = reservation.confirmationCode.confirmationCode
+                                redemptionCode = reservation.confirmationCode.confirmationCode,
+                                seat = rs?.seat
                         ),
+
+                        reservation = re2,
                         landscapeUrl = reservation.screening.landscapeImageUrl,
                         latitude = reservation.theater?.lat,
                         longitude = reservation.theater?.lon,
