@@ -26,6 +26,7 @@ import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.SeatSelected;
+import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -57,6 +58,7 @@ public class EticketConfirmation extends BaseActivity {
     String providerName;
     TicketInfoRequest ticketRequest;
     CheckInRequest checkinRequest;
+    Theater theater;
     PerformanceInfoRequest mPerformReq;
     public static final String SEAT = "seat";
     public static final String TAG = "FOUND IT";
@@ -91,6 +93,7 @@ public class EticketConfirmation extends BaseActivity {
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
         seatObject = Parcels.unwrap(getIntent().getParcelableExtra(SEAT));
+        theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
         etixTitle.setText(screeningObject.getTitle());
         etixShowtime.setText(selectedShowTime);
@@ -405,7 +408,7 @@ public class EticketConfirmation extends BaseActivity {
 
                     ReservationResponse.ETicketConfirmation confirmationCode = reservationResponse.getE_ticket_confirmation();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, null);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, theater);
 
                     showConfirmation(token);
                     finish();
