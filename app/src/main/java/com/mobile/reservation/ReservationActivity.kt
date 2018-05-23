@@ -43,6 +43,7 @@ class ReservationActivity : AppCompatActivity() {
         fun newInstance(context: Context, reservation: ScreeningToken): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
+                val seatToUse:String = reservation.seatSelected?.seatName ?: rs.seat
                 val re2:Reservation2? = rs?.let {
                     Reservation2(
                             checkinId = rs.id,
@@ -59,7 +60,7 @@ class ReservationActivity : AppCompatActivity() {
                         ticket = ETicket(
                                 confirmationCodeFormat = reservation.confirmationCode.confirmationCodeFormat,
                                 redemptionCode = reservation.confirmationCode.confirmationCode,
-                                seat = reservation.seatSelected?.seatName
+                                seat = seatToUse
                         ),
 
                         reservation = re2,
