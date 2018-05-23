@@ -49,7 +49,9 @@ class ReservationActivity : AppCompatActivity() {
                             createdAt = rs.expiration,
                             id = rs.id,
                             _showtime = reservation.time?.let {
-                                SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
+                                try {
+                                    SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
+                                } catch (e:Error) {0L}
                             }?:0
                     )
                 }
