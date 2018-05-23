@@ -27,10 +27,17 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         }
         seats.text = reservation.ticket?.seat?.let {
             SpannableStringBuilder().apply {
-                append(resources.getQuantityText(R.plurals.seat, 1))
-                append(' ')
-                append(it)
+                if(it.isNotEmpty()) {
+                    append(resources.getQuantityText(R.plurals.seat, 1))
+                    append(' ')
+                    append(it)
+                }
             }
+        }
+        if(seats.text.isEmpty()) {
+            seats.visibility = View.GONE
+        } else {
+            seats.visibility = View.VISIBLE
         }
         moviePoster.setImageURI(reservation.landscapeUrl)
         arrayOf(theaterName, theaterPin).forEach {
