@@ -208,22 +208,32 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 int photoW = bmOptions.outWidth;
                 int photoH = bmOptions.outHeight;
 
-                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                int scaleFactor = Math.min(photoW / 1024, photoH / 1024);
                 if (scaleFactor != 1) {
-                    bmOptions.inJustDecodeBounds = false;
                     bmOptions.inSampleSize = scaleFactor;
+                }
+                bmOptions.inJustDecodeBounds = false;
+                Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(photoFile);
+                    LogUtils.newLog("compressing file " + photoFile.getAbsolutePath());
+                    image.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+                } catch (Exception ignored) {
 
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-                    image.recycle();
-
-                } else {
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     image.recycle();
                 }
+
+
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -381,6 +391,9 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         meta.put("device_name", AppUtils.getDeviceName());//Device Name
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
         meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
+        meta.put("version_code", String.valueOf(BuildConfig.VERSION_CODE));
+        meta.put("version_name", BuildConfig.VERSION_NAME);
+        meta.put("os", "android");
 
         return meta;
     }
