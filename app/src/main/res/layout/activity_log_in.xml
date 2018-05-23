@@ -37,27 +37,18 @@
             android:id="@+id/input_emailInputTextLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColorHint="@color/white_80_opacity"
-            android:theme="@style/EditTextStyle"
-            android:layout_marginTop="@dimen/quadruple_margin_standard"
-            app:errorTextAppearance="@style/error_appearance"
-            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+            style="@style/TextInputLayout"
+            android:layout_marginTop="@dimen/quadruple_margin_standard">
 
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_in_email"
                 android:inputType="textEmailAddress"
-                android:backgroundTint="@color/white_40_opacity"
-                android:textColor="@color/white"
-                android:textColorHighlight="@color/white_80_opacity"
-                android:textColorLink="@android:color/transparent"
-                android:textCursorDrawable="@color/white"
-                android:textAppearance="@style/normal_text_in_layout_Style"
-                android:textSize="14sp"
-                app:backgroundTint="@color/white_40_opacity"/>
+                app:theme="@style/TextInputEditText"
+                />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -65,34 +56,22 @@
             android:id="@+id/input_passwordInputTextLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColorHint="@color/white_80_opacity"
-            android:theme="@style/EditTextStyle"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/almost_white"
-            app:errorTextAppearance="@style/error_appearance"
-            app:hintTextAppearance="@style/text_in_layout_hint_Style">
+            style="@style/TextInputLayout">
 
             <android.support.design.widget.TextInputEditText
+                app:theme="@style/TextInputEditText"
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/activity_sign_in_password"
-                android:inputType="textPassword"
-                android:backgroundTint="@color/white_40_opacity"
-                android:textColor="@color/white"
-                android:textColorHighlight="@color/white_80_opacity"
-                android:textColorLink="@android:color/transparent"
-                android:textCursorDrawable="@color/white"
-                android:textAppearance="@style/normal_text_in_layout_Style"
-                android:textSize="14sp"
-                app:backgroundTint="@color/white_40_opacity"/>
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/button_log_in"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/button_height"
-            android:layout_below="@+id/input_password"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/double_margin_standard"
             android:background="@drawable/mpbutton1"

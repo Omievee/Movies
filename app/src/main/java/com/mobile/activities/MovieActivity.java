@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +103,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     MovieTheatersAdapter movieTheatersAdapter;
 
     ScreeningsResponse screeningsResponse;
+    View allScreenings;
+    View comingSoon;
 
 
     TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg;
@@ -131,6 +136,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     View ProgressBar;
 
     TextView filmRating;
+    private TextView comingSoonTitle, synopsisTitle, synopsisContent;
 
 
     @Override
@@ -164,19 +170,26 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
         buttonCheckIn = findViewById(R.id.button_check_in);
         ProgressBar = findViewById(R.id.progress);
 
+        allScreenings = findViewById(R.id.scrennings);
+        comingSoon = findViewById(R.id.comingSoon);
+
         filmRating = findViewById(R.id.SELECTED_FILM_RATING);
 
-        ProgressBar.setVisibility(View.VISIBLE);
+
 
         selectedSynopsis = findViewById(R.id.SELECTED_SYNOPSIS);
         mShowtimesList = new ArrayList<>();
+
+        comingSoonTitle = findViewById(R.id.comingSoonTitle);
+        synopsisTitle = findViewById(R.id.synopsisTitle);
+        synopsisContent = findViewById(R.id.synopsisContent);
+
 
         int res2 = R.anim.layout_anim_bottom;
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(this, res2);
 
 
-        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
-        mLocationBroadCast = new LocationUpdateBroadCast();
+
         // registerReceiver(mLocationBroadCast, new IntentFilter(Constants.LOCATION_UPDATE_INTENT_FILTER));
 
         loadMoviePosterData();
@@ -195,11 +208,59 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
             selectedRuntime.setText(translatedRunTime);
         }
 
+
+        Date today = Calendar.getInstance().getTime();
+
+
+
+        if(movie.getReleaseDate()!=null){
+            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+            try {
+                Date date = format1.parse(movie.getReleaseDate());
+                SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
+                String result = format2.format(date);
+                if(date.before(today)){
+                   setShowings();
+                } else{
+                    selectedSynopsis.setVisibility(View.GONE);
+                    selectedMoviePoster.setClickable(false);
+                    allScreenings.setVisibility(View.GONE);
+                    comingSoon.setVisibility(View.VISIBLE);
+                    comingSoonTitle.setText("In Theaters "+result);
+                    synopsisContent.setText(movie.getSynopsis());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            setShowings();
+        }
+
+
+
+        filmRating.setText("Rated: " + movie.getRating());
+
+        if (url == null || url.isEmpty())
+            url = "https://moviepass.com/go/movies/" + movie.getId();
+        if (campaign != null && !campaign.isEmpty() && !campaign.equalsIgnoreCase("no_campaign"))
+            url = url + "/" + campaign;
+        GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()), url);
+
+
+        LogUtils.newLog(TAG, "Selected movie id: " + movie.getId());
+    }
+
+    public void setShowings(){
+        ProgressBar.setVisibility(View.VISIBLE);
+        allScreenings.setVisibility(View.VISIBLE);
+        comingSoon.setVisibility(View.GONE);
         selectedScreeningsList = new LinkedList<>();
         theatersList = new LinkedList<>();
         sortedScreeningList = new LinkedList<>();
 
-
+        UserLocationManagerFused.getLocationInstance(this).startLocationUpdates();
+        mLocationBroadCast = new LocationUpdateBroadCast();
         /* Theaters RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         selectedTheatersRecyclerView = findViewById(R.id.SELECTED_THEATERS);
@@ -214,17 +275,6 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
         /* Showtimes RecyclerView */
         selectedShowtimesList = new ArrayList<>();
-
-        filmRating.setText("Rated: " + movie.getRating());
-
-        if (url == null || url.isEmpty())
-            url = "https://moviepass.com/go/movies/" + movie.getId();
-        if (campaign != null && !campaign.isEmpty() && !campaign.equalsIgnoreCase("no_campaign"))
-            url = url + "/" + campaign;
-        GoWatchItSingleton.getInstance().userOpenedMovie(String.valueOf(movie.getId()), url);
-
-
-        LogUtils.newLog(TAG, "Selected movie id: " + movie.getId());
     }
 
 
@@ -242,7 +292,8 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     @Override
     public void onResume() {
         super.onResume();
-        currentLocationTasks();
+        if(movie.getReleaseDate()==null)
+            currentLocationTasks();
 
     }
 
@@ -361,7 +412,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
 
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     reservation = reservationResponse.getReservation();
-
+                    UserPreferences.saveReservation(reservation);
                     GoWatchItSingleton.getInstance().checkInEvent(theater, screening, showtime, "ticket_purchase", String.valueOf(movie.getId()), url);
                     if (reservationResponse.getE_ticket_confirmation() != null) {
                         String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();

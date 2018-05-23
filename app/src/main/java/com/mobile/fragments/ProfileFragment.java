@@ -29,6 +29,9 @@ import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.activities.ProfileActivity;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
+import com.mobile.model.Reservation;
+import com.mobile.loyalty.LoyaltyProgramFragment;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -36,11 +39,19 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
 
 /**
  * Created by anubis on 5/31/17.
@@ -53,7 +64,7 @@ public class ProfileFragment extends Fragment {
     PendingReservationFragment pendingReservationFragment = new PendingReservationFragment();
     ReferAFriend refer = new ReferAFriend();
     View root;
-    RelativeLayout details, history, currentRes, howToUse, help, referAFriend;
+    RelativeLayout details, history, currentRes, howToUse, help, referAFriend, loyaltyPrograms;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
@@ -86,6 +97,7 @@ public class ProfileFragment extends Fragment {
         TOS = root.findViewById(R.id.TOS);
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
+        loyaltyPrograms = root.findViewById(R.id.LoyaltyPrograms);
 
         referAFriend = root.findViewById(R.id.ReferAFriend);
         fadeIn(root);
@@ -130,7 +142,7 @@ public class ProfileFragment extends Fragment {
                 JSONObject attributes = new JSONObject();
                 attributes.put("pushPermission", pushValue);
                 Taplytics.setUserAttributes(attributes);
-                HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+                HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
             } catch (JSONException e) {
 
             }
@@ -189,17 +201,43 @@ public class ProfileFragment extends Fragment {
 
         help.setOnClickListener(view12 -> {
             Map<String, String[]> customIssueFileds = new HashMap<>();
-            customIssueFileds.put("version name", new String[]{"sl", versionName});
-            String date = UserPreferences.getLastCheckInAttemptDate();
-            String time = UserPreferences.getLastCheckInAttemptTime();
-            customIssueFileds.put("lastCheckInAttemptDate", new String[]{"sl", date});
-            customIssueFileds.put("lastCheckInAttemptTime", new String[]{"sl", time});
-
-            String[] tags = new String[]{versionName};
             HashMap<String, Object> userData = new HashMap<>();
+            customIssueFileds.put("version name", new String[]{"sl", versionName});
+            Long dateMillis = UserPreferences.getLastCheckInAttemptDate();
+            if(dateMillis!=null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(dateMillis);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm", Locale.US);
+                long diff = System.currentTimeMillis()-dateMillis;
+                long diffHours = diff / (60 * 60 * 1000);
+                long diffMinutes = diff / (60 * 1000);
+
+
+                customIssueFileds.put("last_check_in_attempt_date", new String[]{"sl", dateFormat.format(cal.getTime())});
+                customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
+                customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
+                customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
+                userData.put("last_check_in_attempt_date", dateFormat.format(cal.getTime()));
+                userData.put("last_check_in_attempt_time", timeFormat.format(cal.getTime()));
+            }
+
+            Reservation reservation = UserPreferences.getLastReservation();
+            final boolean checkedIn;
+            if(reservation!=null) {
+                checkedIn = reservation.getExpiration() < System.currentTimeMillis();
+            } else {
+                checkedIn = false;
+            }
+            customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
+            customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
+            userData.put("total_movies_seen", UserPreferences.getTotalMovieSeen());
+            userData.put("total_movies_seen_last_month", UserPreferences.getTotalMovieSeenLastMonth());
+            userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
+            String[] tags = new String[]{versionName};
+
             userData.put("version", versionName);
-            userData.put("lastCheckInAttemptDate", date);
-            userData.put("lastCheckInAttemptTime", time);
+
             Metadata meta = new Metadata(userData, tags);
 
             ApiConfig apiConfig = new ApiConfig.Builder()
@@ -241,6 +279,12 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        loyaltyPrograms.setOnClickListener(view1-> {
+            FragmentTransaction transaction = myActivity.getFragmentManager().beginTransaction();
+            transaction.replace(R.id.profile_container, LoyaltyProgramFragment.Companion.newInstance());
+            transaction.addToBackStack("");
+            transaction.commit();
+        });
 
     }
 

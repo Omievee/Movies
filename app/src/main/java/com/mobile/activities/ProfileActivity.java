@@ -1,5 +1,6 @@
 package com.mobile.activities;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.HistoryDetailsFragment;
+import com.mobile.fragments.ProfileAccountChangeEmail;
 import com.mobile.fragments.ProfileAccountChangePassword;
 import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.ProfileAccountInformationFragment;
@@ -53,7 +55,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -280,5 +282,16 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         UserPreferences.clearUserId();
         startActivity(intent);
+    }
+
+    @Override
+    public void openChangeEmail() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        ProfileAccountChangeEmail changeEmail = new ProfileAccountChangeEmail();
+        transaction.replace(R.id.profile_container, changeEmail);
+        transaction.addToBackStack("");
+        transaction.commit();
     }
 }

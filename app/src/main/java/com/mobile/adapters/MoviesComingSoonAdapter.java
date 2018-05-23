@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -110,22 +111,22 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                             super.onFinalImageSet(id, imageInfo, animatable);
 
                             //Makes foreground of image dark
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
-                            }
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                holder.frame.setForeground(Resources.getSystem().getDrawable(android.R.drawable.screen_background_dark_transparent));
+//                            }
                             if (imgUrl.toString().contains("default")) {
                                 holder.title.setText(movie.getTitle());
                             }
 
-                            try {
-                                Date date = fm.parse(dateComingSoon);
-
-                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
-                                holder.comingSoon.setText(out.format(date));
-
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                Date date = fm.parse(dateComingSoon);
+//
+//                                SimpleDateFormat out = new SimpleDateFormat("MM/dd/yyyy");
+//                                holder.comingSoon.setText(out.format(date));
+//
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            }
 
                         }
 
@@ -145,6 +146,35 @@ public class MoviesComingSoonAdapter extends RecyclerView.Adapter<MoviesComingSo
                     })
                     .build();
             holder.mComingSoonMoviePosterDV.setController(controller);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
+                }
+            });
+
+//            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), movie, holder.mComingSoonMoviePosterDV);
+//                    return true;
+//                }
+//            });
+//
+//            holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//                    } else if (event.getAction() == MotionEvent.ACTION_UP){
+//                        moviePosterClickListener.releaseLongPress();
+//                    }
+//                    return false;
+//                }
+//
+//
+//            });
 
         }catch (IllegalStateException e) {
             e.printStackTrace();

@@ -1,0 +1,11 @@
+set -eu
+echo "--- :checkered_flag: Running pre-command"
+echo "--- :pencil: Copying fabric.properties to $PWD"
+cp ~/.moviepass/fabric.properties $PWD/app
+export ANDROID_HOME=~buildkite-agent/android-sdk
+echo "#BRANCH: $BUILDKITE_BRANCH" > "app/GENERATED_CHANGELOG"
+echo "#CHANGELOG" >> "app/GENERATED_CHANGELOG"
+git log origin/android..origin/$BUILDKITE_BRANCH --no-merges --pretty=format:"%h %s" >> "app/GENERATED_CHANGELOG"
+echo "ext.betaDistributionReleaseNotesFilePath=$PWD/app/GENERATED_CHANGELOG" >> app/fabric.properties
+echo "--- :pencil2: Set ENV.ANDROID_HOME=$ANDROID_HOME"
+echo "--- :bash: About to run command: $BUILDKITE_COMMAND"

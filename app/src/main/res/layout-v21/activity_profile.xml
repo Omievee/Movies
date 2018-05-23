@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <!--<android.support.v7.widget.Toolbar-->
@@ -21,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
-        android:layout_marginTop="@dimen/margin_half"
         android:windowSoftInputMode="adjustPan">
 
     </FrameLayout>

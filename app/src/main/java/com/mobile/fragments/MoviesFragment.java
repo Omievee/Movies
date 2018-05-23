@@ -1,18 +1,26 @@
 package com.mobile.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Animatable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.renderscript.RenderScript;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -34,6 +42,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
@@ -44,7 +59,10 @@ import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.extensions.CustomLinearLayoutManager;
+import com.mobile.extensions.LockableScrollView;
 import com.mobile.helpers.LogUtils;
+import com.mobile.helpers.RSBlurProcessor;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.Api;
@@ -54,11 +72,15 @@ import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.moviepass.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,6 +125,14 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     RealmList<Movie> NEWRelease;
     RealmList<Movie> featured;
     RealmList<Movie> nowPlaying;
+    View preview;
+    LockableScrollView lockableScrollView;
+    TextView previewMovieTitle, previewSynopsis;
+    SimpleDraweeView previewMovieImage;
+    TextView previewRating, previewRunningTime;
+    View parent;
+    ImageView background;
+
 
 
     private searchMoviesInterface searchMoviesInterface;
@@ -126,6 +156,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     View progress;
     private RealmConfiguration allMoviesConfig;
+    private CustomLinearLayoutManager newReleasesLayoutManager;
+    private CustomLinearLayoutManager topBoxOfficeLayoutManager;
+    private CustomLinearLayoutManager comingSoonLayoutManager;
+    private CustomLinearLayoutManager featuredManager;
+    private CustomLinearLayoutManager nowplayingManager;
 
 
     public static MoviesFragment newInstance() {
@@ -150,6 +185,15 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         searchicon = rootView.findViewById(R.id.search_inactive);
         searchicon.setVisibility(View.GONE);
         movieLogo = rootView.findViewById(R.id.MoviePass_HEADER);
+        preview = rootView.findViewById(R.id.preview);
+        lockableScrollView = rootView.findViewById(R.id.MOVIES_MAINCONTENT);
+        previewMovieImage = rootView.findViewById(R.id.previewImage);
+        previewMovieTitle = rootView.findViewById(R.id.previewMovieTitle);
+        previewSynopsis = rootView.findViewById(R.id.previewSynopsis);
+        previewRunningTime = rootView.findViewById(R.id.previewRunningTime);
+        previewRating = rootView.findViewById(R.id.previewRating);
+        parent = rootView.findViewById(R.id.parent);
+        background = rootView.findViewById(R.id.background);
         Api api;
         NEWRelease = new RealmList<>();
         TopBoxOffice = new RealmList<>();
@@ -164,7 +208,8 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(myActivity, res2);
 
         /** New Releases RecyclerView */
-        LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        newReleasesLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+
 
         newReleasesRecycler = rootView.findViewById(R.id.new_releases);
         newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
@@ -174,7 +219,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, NEWRelease, this);
 
         /** Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        topBoxOfficeLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
 
         topBoxOfficeRecycler = rootView.findViewById(R.id.top_box_office);
         topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
@@ -185,7 +230,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(myActivity, TopBoxOffice, this);
 
         /** Coming Soon RecyclerView */
-        LinearLayoutManager comingSoonLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        comingSoonLayoutManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         comingSoonRecycler = rootView.findViewById(R.id.coming_soon);
         comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
         comingSoonRecycler.setItemAnimator(null);
@@ -195,7 +240,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         comingSoonAdapter = new MoviesComingSoonAdapter(myActivity, comingSoon, this);
 
         /** NOW PLAYING */
-        LinearLayoutManager nowplayingManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        nowplayingManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
         nowPlayingRecycler.setLayoutManager(nowplayingManager);
         fadeIn(nowPlayingRecycler);
@@ -204,7 +249,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingAdapter = new NowPlayingMoviesAdapter(myActivity, nowPlaying, this);
 
         /** FEATURED */
-        LinearLayoutManager featuredManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+         featuredManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
@@ -275,7 +320,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         if (historyRealm.isEmpty()) {
             getHistoryForStorage();
         }
-
+        comingSoonLayoutManager.setScrollEnabled(true);
+        newReleasesLayoutManager.setScrollEnabled(true);
+        topBoxOfficeLayoutManager.setScrollEnabled(true);
+        nowplayingManager.setScrollEnabled(true);
+        lockableScrollView.setScrollingEnabled(true);
 
     }
 
@@ -425,7 +474,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTitle(localStorageMovies.getFeatured().get(i).getTitle());
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
+                                featuredMovie.setReleaseDate(localStorageMovies.getFeatured().get(i).getReleaseDate());
                                 featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
+                                featuredMovie.setCreatedAt(localStorageMovies.getFeatured().get(i).getCreatedAt());
 
 
                             }
@@ -493,21 +544,40 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     HistoryResponse historyObjects = response.body();
                     historyRealm.executeTransactionAsync(realm -> {
                         if (historyObjects != null) {
+                            Calendar lastMonthYear = Calendar.getInstance();
+                            lastMonthYear.add(Calendar.MONTH,-1);
+                            int year = lastMonthYear.get(Calendar.YEAR);
+                            int lastMonth = lastMonthYear.get(Calendar.MONTH)+1;
+                            int lastMonthCount = 0;
+                            Movie newest = historyObjects.getReservations().size()>0?historyObjects.getReservations().get(0):null;
                             for (int i = 0; i < historyObjects.getReservations().size(); i++) {
+                                Movie movieReservation = historyObjects.getReservations().get(i);
                                 Movie historyList = realm.createObject(Movie.class);
-                                historyList.setId(historyObjects.getReservations().get(i).getId());
-//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
-                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
-                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
-//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
-                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
-                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
-                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
-                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
-                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
-                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
-                                historyList.setType(historyObjects.getReservations().get(i).getType());
-
+                                historyList.setId(movieReservation.getId());
+                                historyList.setCreatedAt(movieReservation.getCreatedAt());
+                                historyList.setImageUrl(movieReservation.getImageUrl());
+                                historyList.setRating(movieReservation.getRating());
+                                historyList.setReleaseDate(movieReservation.getReleaseDate());
+                                historyList.setRunningTime(movieReservation.getRunningTime());
+                                historyList.setTheaterName(movieReservation.getTheaterName());
+                                historyList.setTitle(movieReservation.getTitle());
+                                historyList.setTribuneId(movieReservation.getTribuneId());
+                                historyList.setType(movieReservation.getType());
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTimeInMillis(movieReservation.getCreatedAt());
+                                int movieSeenYear = cal.get(Calendar.YEAR);
+                                int movieSeenMonth = cal.get(Calendar.MONTH);
+                                if(movieSeenMonth==lastMonth && movieSeenYear==year) {
+                                    lastMonthCount++;
+                                }
+                                if(movieReservation.getCreatedAt()>newest.getCreatedAt()) {
+                                    newest = movieReservation;
+                                }
+                            }
+                            UserPreferences.setTotalMoviesSeenLastMonth(lastMonthCount);
+                            UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
+                            if(newest!=null) {
+                                UserPreferences.setLastMovieSeen(newest);
                             }
                         }
                     });
@@ -715,6 +785,102 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeOut);
         view.setAnimation(animation);
+    }
+
+    @Override
+    public void onMoviePosterLongClick(int pos, @NotNull Movie movie, @NotNull ImageView sharedImageView) {
+        Bitmap bitmap = getBitmapFromView(parent);
+        preview.setVisibility(View.VISIBLE);
+        comingSoonLayoutManager.setScrollEnabled(false);
+        newReleasesLayoutManager.setScrollEnabled(false);
+        topBoxOfficeLayoutManager.setScrollEnabled(false);
+        nowplayingManager.setScrollEnabled(false);
+        lockableScrollView.setScrollingEnabled(false);
+        lockableScrollView.setVisibility(View.GONE);
+        swiper.setEnabled(false);
+
+
+        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
+                .setProgressiveRenderingEnabled(true)
+                .setSource(imgUrl)
+                .build();
+
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(previewMovieImage.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+                        previewMovieImage.setImageURI(imgUrl + "/original.jpg");
+
+                    }
+                })
+                .build();
+
+        if (imgUrl.toString().contains("default")) {
+            previewMovieImage.refreshDrawableState();
+        }
+        previewMovieImage.setController(controller);
+
+        previewMovieTitle.setText(movie.getTitle());
+        previewSynopsis.setText(movie.getSynopsis());
+
+
+        int t = movie.getRunningTime();
+        int hours = t / 60;
+        int minutes = t % 60;
+
+        if (t == 0) {
+            previewRunningTime.setVisibility(View.GONE);
+        } else if (hours > 1) {
+            String translatedRunTime = hours + " hours " + minutes + " minutes";
+            previewRunningTime.setText(translatedRunTime);
+        } else {
+            String translatedRunTime = hours + " hour " + minutes + " minutes";
+            previewRunningTime.setText(translatedRunTime);
+        }
+
+
+        previewRating.setText("Rated: " + movie.getRating());
+
+
+
+        RenderScript rs = RenderScript.create(parent.getContext());
+        RSBlurProcessor rsBlurProcessor = new RSBlurProcessor(rs);
+        Bitmap finalBitmap = rsBlurProcessor.blur(bitmap,200f,4);
+
+        background.setImageBitmap(finalBitmap);
+        background.setVisibility(View.VISIBLE);
+
+    }
+
+
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+        view.draw(c);
+        return bitmap;
+    }
+
+    @Override
+    public void releaseLongPress() {
+        preview.setVisibility(View.GONE);
+        comingSoonLayoutManager.setScrollEnabled(true);
+        newReleasesLayoutManager.setScrollEnabled(true);
+        topBoxOfficeLayoutManager.setScrollEnabled(true);
+        nowplayingManager.setScrollEnabled(true);
+        lockableScrollView.setScrollingEnabled(true);
+        lockableScrollView.setVisibility(View.VISIBLE);
+        swiper.setEnabled(true);
+        background.setVisibility(View.GONE);
     }
 
 

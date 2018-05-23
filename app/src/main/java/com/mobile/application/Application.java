@@ -16,6 +16,7 @@ import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.RealmTaskService;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.network.RestClient;
 import com.moviepass.BuildConfig;
 import com.taplytics.sdk.Taplytics;
@@ -82,11 +83,7 @@ public class Application extends MultiDexApplication {
                     "moviepass_platform_20170512180003329-05097f788df2b3a",
                     installConfig);
 
-            String userId = String.valueOf(UserPreferences.getUserId());
-            String name = UserPreferences.getUserName();
-            String email = UserPreferences.getUserEmail();
-
-            Core.login(userId, name, email);
+            Core.login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
         } catch (InstallException e) {
         }
 

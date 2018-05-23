@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -180,8 +181,9 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 player.setRepeatMode(Player.REPEAT_MODE_ONE);
 
                 holder.featuredVideo.setPlayer(player);
-                holder.videoTitle.setText(movie.getTitle());
             }
+            holder.videoTitle.setText(movie.getTitle());
+            Log.d(Constants.TAG, "onBindViewHolder: "+movie.getReleaseDate());
 
         }
 
@@ -212,7 +214,8 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 .build();
 
         holder.moviePoster.setController(controller);
-        holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
+        if(movie.getSynopsis()!=null)
+            holder.itemView.setOnClickListener(v -> moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.moviePoster));
 
     }
 

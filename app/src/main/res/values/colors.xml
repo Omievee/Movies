@@ -42,7 +42,7 @@
     <color name="TRUEBLACK">#000000</color>
 
 
-    <color name="white_ish">#f7f7f7</color>
+    <color name="white_ish">@color/almost_white</color>
     <color name="pinkish_gray">#d1d1d1</color>
 
     <color name="gray_icon">#7F7F7F</color>

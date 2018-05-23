@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.helpshift.HelpshiftUser;
 import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
@@ -21,6 +22,7 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.LegalFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -30,6 +32,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
 
 /**
  * Created by anubis on 6/9/17.
@@ -129,7 +136,7 @@ public class SettingsActivity extends BaseActivity {
                     JSONObject attributes = new JSONObject();
                     attributes.put("pushPermission", pushValue);
                     Taplytics.setUserAttributes(attributes);
-                    HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+                    HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
                 } catch (JSONException e) {
 
                 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.helpshift.support.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -114,6 +115,27 @@ public class MoviesTopBoxOfficeAdapter extends RecyclerView.Adapter<MoviesTopBox
                 moviePosterClickListener.onMoviePosterClick(holder.getAdapterPosition(), movie, holder.mTopBoxMovieDV);
             }
         });
+//        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                moviePosterClickListener.onMoviePosterLongClick(holder.getAdapterPosition(), movie, holder.mTopBoxMovieDV);
+//                return true;
+//            }
+//        });
+//
+//        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//                } else if (event.getAction() == MotionEvent.ACTION_UP){
+//                    moviePosterClickListener.releaseLongPress();
+//                }
+//                return false;
+//            }
+//
+//
+//        });
 
 
 //        ImagePipeline pipeline = Fresco.getImagePipeline();

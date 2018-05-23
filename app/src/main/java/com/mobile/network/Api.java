@@ -1,12 +1,13 @@
 package com.mobile.network;
 
+import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
-import com.mobile.model.TheatersResponse;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.requests.CardActivationRequest;
+import com.mobile.requests.ChangeEmailRequest;
 import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CheckInRequest;
@@ -24,6 +25,7 @@ import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.CardActivationResponse;
+import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
@@ -43,7 +45,9 @@ import com.mobile.responses.VerificationLostResponse;
 import com.mobile.responses.VerificationResponse;
 
 import java.util.List;
+import java.util.Map;
 
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -84,6 +88,11 @@ public interface Api {
      */
     @POST("rest/v1/passwordChange")
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
+
+    /**
+     * Change Email */
+    @POST("rest/v1/emailChange")
+    Call<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
 
     /* Activate MP Card */
     @POST("/rest/v1/cards/activate")
@@ -137,21 +146,9 @@ public interface Api {
     @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
-    /* Theaters */
-    @GET("/rest/v1/theaters/near")
-    Call<TheatersResponse> getTheaters(@Query("lat") double latitude, @Query("lon") double longitude);
-
-
     /* Theater screenings (details) */
     @GET("/rest/v1/theaters/{id}/screenings")
     Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
-
-    /**
-     * User
-     */
-    @GET("/rest/v1/session/{userId}")
-    Call<RestrictionsResponse> getRestrictions(@Path("userId") int userId);
-
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")
@@ -260,5 +257,11 @@ public interface Api {
     //Device ID  Verification
     @POST("/rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+
+    @GET("/rest/v1/loyalty/list")
+    Single<List<TheaterChain>> theaterChains();
+
+    @POST("/rest/v1/loyalty/{chain}/signIn")
+    Single<Map<String,Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String,String> chainData);
 
 }
