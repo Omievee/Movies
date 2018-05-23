@@ -269,7 +269,7 @@ public class EticketConfirmation extends BaseActivity {
                     Reservation reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(reservation);
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, null);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, theater);
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);

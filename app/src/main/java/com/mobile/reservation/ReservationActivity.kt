@@ -46,8 +46,8 @@ class ReservationActivity : AppCompatActivity() {
                                 redemptionCode = reservation.confirmationCode.confirmationCode
                         ),
                         landscapeUrl = reservation.screening.landscapeImageUrl,
-                        latitude = reservation.theater.lat,
-                        longitude = reservation.theater.lon,
+                        latitude = reservation.theater?.lat,
+                        longitude = reservation.theater?.lon,
                         title = reservation.screening.title,
                         theater = reservation.screening.theaterName
                 )

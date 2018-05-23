@@ -4,6 +4,8 @@ import com.mobile.responses.ReservationResponse;
 
 import org.parceler.Parcel;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by anubis on 7/17/17.
  */
@@ -100,7 +102,7 @@ public class ScreeningToken {
         this.confirmationCode = confirmationCode;
     }
 
-    public Theater getTheater() {
+    @Nullable public Theater getTheater() {
         return theater;
     }
 
