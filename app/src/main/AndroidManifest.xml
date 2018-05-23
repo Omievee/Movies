@@ -170,6 +170,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.reservation.ReservationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme" />
 
         <activity
