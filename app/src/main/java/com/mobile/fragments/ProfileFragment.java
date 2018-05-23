@@ -283,7 +283,7 @@ public class ProfileFragment extends Fragment {
                     .subscribe(v -> {
                         final Intent intent;
                         ETicket ticket = v.getTicket();
-                        if (ticket != null && !isEmpty(ticket.getSeat())) {
+                        if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
                             intent =
                                     ReservationActivity.Companion.newInstance(myContext, v);
                         } else {
