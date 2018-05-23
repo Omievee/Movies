@@ -106,6 +106,10 @@ public class Screening {
         this.tribuneTheaterId = tribuneTheaterId;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getTheaterName() {
         return theaterName;
     }
@@ -167,4 +171,7 @@ public class Screening {
     }
 
 
+    public void setMoviepassId(int moviepassId) {
+        this.moviepassId = moviepassId;
+    }
 }

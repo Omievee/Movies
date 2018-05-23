@@ -76,6 +76,7 @@ public class SelectSeatActivity extends AppCompatActivity {
     boolean isSeatSelected = false;
     private Location mMyLocation;
     private ArrayList<SeatButton> mSeatButtons;
+    private Theater theater;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class SelectSeatActivity extends AppCompatActivity {
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
         movieObject = Parcels.unwrap(intent.getParcelableExtra(MOVIE));
+        theater = Parcels.unwrap(intent.getParcelableExtra(THEATER));
 //        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
 
         coordinatorLayout = findViewById(R.id.mCoordinator);
@@ -310,6 +312,7 @@ public class SelectSeatActivity extends AppCompatActivity {
             intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
             intent.putExtra(SHOWTIME, selectedShowTime);
             intent.putExtra(SEAT, Parcels.wrap(seatSelected));
+            intent.putExtra(THEATER, Parcels.wrap(theater));
 
             startActivity(intent);
 

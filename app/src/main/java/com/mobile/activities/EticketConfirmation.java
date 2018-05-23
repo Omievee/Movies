@@ -26,6 +26,7 @@ import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.SeatSelected;
+import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -33,6 +34,7 @@ import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SelectedSeat;
 import com.mobile.requests.TicketInfoRequest;
+import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ReservationResponse;
 import com.moviepass.R;
 
@@ -56,6 +58,7 @@ public class EticketConfirmation extends BaseActivity {
     String providerName;
     TicketInfoRequest ticketRequest;
     CheckInRequest checkinRequest;
+    Theater theater;
     PerformanceInfoRequest mPerformReq;
     public static final String SEAT = "seat";
     public static final String TAG = "FOUND IT";
@@ -90,6 +93,7 @@ public class EticketConfirmation extends BaseActivity {
         screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
         seatObject = Parcels.unwrap(getIntent().getParcelableExtra(SEAT));
+        theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
 
         etixTitle.setText(screeningObject.getTitle());
         etixShowtime.setText(selectedShowTime);
@@ -264,11 +268,8 @@ public class EticketConfirmation extends BaseActivity {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(reservation);
-                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
 
-
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode, seat);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, theater);
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
@@ -311,9 +312,7 @@ public class EticketConfirmation extends BaseActivity {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(EticketConfirmation.this, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
+        startActivity(ReservationActivity.Companion.newInstance(this, token));
     }
 
 
@@ -407,10 +406,9 @@ public class EticketConfirmation extends BaseActivity {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
 
-                    String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
-                    String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
+                    ReservationResponse.ETicketConfirmation confirmationCode = reservationResponse.getE_ticket_confirmation();
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, theater);
 
                     showConfirmation(token);
                     finish();

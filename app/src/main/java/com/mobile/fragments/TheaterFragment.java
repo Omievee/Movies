@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -52,6 +54,7 @@ import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
+import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
@@ -359,6 +362,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
             @Override
             public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
+
             }
 
         });
@@ -422,15 +426,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
                     progress.setVisibility(View.GONE);
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {
-                        String qrUrl = reservationResponse.getE_ticket_confirmation().getBarCodeUrl();
-                        String confirmationCode = reservationResponse.getE_ticket_confirmation().getConfirmationCode();
 
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, qrUrl, confirmationCode);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), theaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
 
                     } else {
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, theaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
                     }
@@ -662,9 +664,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        Intent confirmationIntent = new Intent(myActivity, ConfirmationActivity.class);
-        confirmationIntent.putExtra(TOKEN, Parcels.wrap(token));
-        startActivity(confirmationIntent);
+        if(token.getConfirmationCode()!=null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
+            startActivity(ReservationActivity.Companion.newInstance(myActivity, token));
+        } else {
+            startActivity(new Intent(myActivity, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
+        }
         myActivity.finish();
     }
 

@@ -10,6 +10,7 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
+import com.mobile.responses.UserInfoResponse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -302,6 +303,27 @@ public class UserPreferences {
         }
     }
 
+    public static void saveBilling(UserInfoResponse userPreferences) {
+        if(userPreferences!=null) {
+            String key = Constants.BILLING + "_" + getUserId();
+            String gson = new GsonBuilder().create().toJson(userPreferences);
+            sPrefs.edit().putString(key, gson).apply();
+        }
+    }
+
+    public static UserInfoResponse getBilling() {
+        String key = Constants.BILLING + "_" + getUserId();
+        String billing = sPrefs.getString(key,null);
+        if(billing!=null) {
+            try {
+                return new GsonBuilder().create().fromJson(billing, UserInfoResponse.class);
+            } catch (Exception ignored) {
+
+            }
+        }
+        return null;
+    }
+
     public static Reservation getLastReservation() {
         String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
         String reservation = sPrefs.getString(key,null);
@@ -314,6 +336,7 @@ public class UserPreferences {
         }
         return null;
     }
+
     public static void saveTheatersLoadedDate() {
         Calendar cal = Calendar.getInstance();
         int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);

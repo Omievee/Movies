@@ -3,7 +3,10 @@ package com.mobile.responses;
 import com.mobile.Constants;
 import com.mobile.model.Reservation;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcel;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by anubis on 6/20/17.
@@ -32,12 +35,20 @@ public class ReservationResponse {
         return zip;
     }
 
+    public String getShowtime() {
+        return showtime;
+    }
+
     public ETicketConfirmation getE_ticket_confirmation() {return this.e_ticket_confirmation;}
 
     @Parcel
     public static class ETicketConfirmation {
         private String barCodeUrl;
+        @Nullable
         private String confirmationCode;
+
+        @Nullable
+        private String confirmationCodeFormat;
 
         public String getConfirmationCode() {
             return confirmationCode;
@@ -54,6 +65,14 @@ public class ReservationResponse {
         public void setBarCodeUrl(String barCodeUrl) {
             this.barCodeUrl = barCodeUrl;
 
+        }
+
+        public String getConfirmationCodeFormat() {
+            return confirmationCodeFormat;
+        }
+
+        public void setConfirmationCodeFormat(String confirmationCodeFormat) {
+            this.confirmationCodeFormat = confirmationCodeFormat;
         }
     }
 }

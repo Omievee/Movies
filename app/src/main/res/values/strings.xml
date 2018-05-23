@@ -464,4 +464,16 @@
     <string name="loyalty_my_loyalty_programs">My loyalty programs</string>
     <string name="loyalty_add_a_movie_theater_loyalty_program">Add a movie theater loyalty program to your MoviePass account by selecting a program from the list above.</string>
 
+    <!-- Reservation -->
+    <string name="current_reservation">Current Reservation</string>
+    <string name="reservation_code_description">Use the code below to redeem your tickets</string>
+    <string name="reservation_current">This code can also be found in your account under “Current Reservation”</string>
+    <string name="reservation_cancel">Cancel Reservation</string>
+    <string name="reservation_use_card_description">You can now use your MoviePass card to purchase your ticket!</string>
+
+    <plurals name="seat" >
+        <item quantity="one">Seat</item>
+        <item quantity="other">Seats</item>
+        <item quantity="many">Seats</item>
+    </plurals>
 </resources>

@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -77,6 +78,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by anubis on 6/20/17.
  */
@@ -96,7 +99,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     Bitmap photo;
     TextView noCurrentRes, pendingTitle, pendingLocal, pendingTime, pendingSeat, confirmCode, zip, verifyText, noStub, FAQs;
     Button cancelButton;
-    RelativeLayout pendingData, StandardTicket, ETicket, verifyTicketFlag, verifyMsgExpanded;
+    RelativeLayout pendingData, StandardTicket, verifyTicketFlag, verifyMsgExpanded;
+
+    ConstraintLayout ETicket;
     GestureDetector gestureScanner;
     String uploadKey;
     File photoFile;
@@ -155,15 +160,14 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         gestureScanner = new GestureDetector(this);
 
-
         pendingTitle.setText(screeningToken.getScreening().getTitle());
         pendingLocal.setText(screeningToken.getScreening().getTheaterName());
         pendingTime.setText(screeningTime);
         userData();
 
-        if (screeningToken.getConfirmationCode() != null) {
+        if (screeningToken!=null && screeningToken.getConfirmationCode()!=null && !isEmpty(screeningToken.getConfirmationCode().getConfirmationCode())) {
             ETicket.setVisibility(View.VISIBLE);
-            String code = screeningToken.getConfirmationCode();
+            String code = screeningToken.getConfirmationCode().getConfirmationCode();
             confirmCode.setText(code);
             if (screeningToken.getSeatName() != null) {
                 pendingSeat.setVisibility(View.VISIBLE);
@@ -287,20 +291,28 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 int photoW = bmOptions.outWidth;
                 int photoH = bmOptions.outHeight;
 
-                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                int scaleFactor = Math.min(photoW / 1024, photoH / 1024);
                 if (scaleFactor != 1) {
-                    bmOptions.inJustDecodeBounds = false;
                     bmOptions.inSampleSize = scaleFactor;
+                }
+                bmOptions.inJustDecodeBounds = false;
+                Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(photoFile);
+                    LogUtils.newLog("compressing file " + photoFile.getAbsolutePath());
+                    image.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+                } catch (Exception ignored) {
 
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-                    image.recycle();
-
-                } else {
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     image.recycle();
                 }
             }
@@ -369,7 +381,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     private void updateNavigationBarState() {
         int actionId = getNavigationMenuItemId();
         selectBottomNavigationBarItem(actionId);
-
     }
 
     void selectBottomNavigationBarItem(int itemId) {
@@ -456,26 +467,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         whiteProgress.setVisibility(View.VISIBLE);
         scanTicket.setVisibility(View.INVISIBLE);
         handler.postDelayed(() -> {
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            final byte[] bitmapdata = bos.toByteArray();
-            File pictureFile = getOutputMediaFile();
-            if (pictureFile == null) {
-                LogUtils.newLog(Constants.TAG, "Error creating media file, test storage permissions");
-                return;
-            }
-
-            try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
-                fos.write(bitmapdata);
-                fos.close();
-            } catch (FileNotFoundException e) {
-                LogUtils.newLog(Constants.TAG, "File not found: " + e.getMessage());
-            } catch (IOException e) {
-
-                LogUtils.newLog(Constants.TAG, "Error accessing file: " + e.getMessage());
-
-            }
             //Turn into file
             final File getPictureFile = getOutputMediaFile();
             if (getPictureFile == null) {
@@ -579,7 +570,9 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         meta.put("device_name", AppUtils.getDeviceName());//Device Name
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
         meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
-
+        meta.put("version_code", String.valueOf(BuildConfig.VERSION_CODE));
+        meta.put("version_name", BuildConfig.VERSION_NAME);
+        meta.put("os", "android");
         return meta;
     }
 
