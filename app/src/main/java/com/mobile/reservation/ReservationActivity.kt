@@ -57,7 +57,7 @@ class ReservationActivity : AppCompatActivity() {
                         ticket = ETicket(
                                 confirmationCodeFormat = reservation.confirmationCode.confirmationCodeFormat,
                                 redemptionCode = reservation.confirmationCode.confirmationCode,
-                                seat = rs?.seat
+                                seat = reservation.seatSelected?.seatName
                         ),
 
                         reservation = re2,
