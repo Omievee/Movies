@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +19,13 @@ import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
-import com.mobile.network.RestClient;
 import com.mobile.responses.HistoryResponse;
 import com.moviepass.R;
 
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by omievee on 1/27/18.
@@ -42,12 +39,14 @@ public class PastReservations extends Fragment {
     View rootview;
     static HistoryAdapter historyAdapter;
     static RecyclerView historyRecycler;
-    static ArrayList<Movie> historyList;
+    static RealmList<Movie> historyList;
     static TextView noMovies;
     static View progress;
     static HistoryResponse historyResponse;
     Activity myActivity;
     Context myContext;
+    Realm historyRealm;
+    RealmConfiguration config;
 
     public PastReservations() {
     }
@@ -69,7 +68,7 @@ public class PastReservations extends Fragment {
 
         rootview = inflater.inflate(R.layout.fr_history, container, false);
         historyRecycler = rootview.findViewById(R.id.historyReycler);
-        historyList = new ArrayList<>();
+        historyList = new RealmList<>();
         noMovies = rootview.findViewById(R.id.NoMoives);
         progress = rootview.findViewById(R.id.progress);
         LogUtils.newLog(TAG, "onCreateView: ");
@@ -81,48 +80,51 @@ public class PastReservations extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         int numOfColumns = calculateNoOfColumns(myActivity);
 
+
+
         GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
         historyAdapter = new HistoryAdapter(myActivity, historyList, (historyPosterClickListener) this.getActivity());
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
-        loadHIstory();
+        queryRealmForObjects();
+
         LogUtils.newLog(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
     }
 
 
-    public void loadHIstory() {
-        historyList.clear();
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-            @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                historyResponse = response.body();
-                if (response != null && response.isSuccessful()) {
-                    progress.setVisibility(View.GONE);
-                    if (historyResponse.getReservations().size() == 0) {
-                        historyRecycler.setVisibility(View.GONE);
-                        noMovies.setVisibility(View.VISIBLE);
-                    } else {
-                        historyList.addAll(historyResponse.getReservations());
-                        historyRecycler.setVisibility(View.VISIBLE);
-                        noMovies.setVisibility(View.GONE);
-                    }
-                    if (historyAdapter != null) {
-                        historyRecycler.getRecycledViewPool().clear();
-                        historyAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-                progress.setVisibility(View.GONE);
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
-            }
-        });
-
-    }
+//    public void loadHIstory() {
+//        historyList.clear();
+//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+//            @Override
+//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
+//                historyResponse = response.body();
+//                if (response != null && response.isSuccessful()) {
+//                    progress.setVisibility(View.GONE);
+//                    if (historyResponse.getReservations().size() == 0) {
+//                        historyRecycler.setVisibility(View.GONE);
+//                        noMovies.setVisibility(View.VISIBLE);
+//                    } else {
+//                        historyList.addAll(historyResponse.getReservations());
+//                        historyRecycler.setVisibility(View.VISIBLE);
+//                        noMovies.setVisibility(View.GONE);
+//                    }
+//                    if (historyAdapter != null) {
+//                        historyRecycler.getRecycledViewPool().clear();
+//                        historyAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+//                progress.setVisibility(View.GONE);
+//                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
+//            }
+//        });
+//
+//    }
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -144,4 +146,34 @@ public class PastReservations extends Fragment {
     }
 
 
+    public void queryRealmForObjects() {
+        progress.setVisibility(View.GONE);
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm historyRealm = Realm.getInstance(config);
+
+        RealmResults<Movie> allHIstory = historyRealm.where(Movie.class)
+                .findAll();
+
+        historyList.addAll(allHIstory);
+
+        if (historyList.size() == 0) {
+            historyRecycler.setVisibility(View.GONE);
+            noMovies.setVisibility(View.VISIBLE);
+        } else {
+            historyRecycler.setVisibility(View.VISIBLE);
+            noMovies.setVisibility(View.GONE);
+        }
+        if (historyAdapter != null) {
+            historyRecycler.getRecycledViewPool().clear();
+            historyAdapter.notifyDataSetChanged();
+        }
+    }
 }
+
+
+

@@ -21,10 +21,7 @@ import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by anubis on 7/31/17.
@@ -32,14 +29,14 @@ import butterknife.ButterKnife;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private ArrayList<Movie> historyArrayList;
+    private RealmList<Movie> historyArrayList;
 
     private final int TYPE_ITEM = 0;
     private Context context;
     ViewHolder HOLDER;
     private final historyPosterClickListener historyListener;
 
-    public HistoryAdapter(Context context, ArrayList<Movie> historyArrayList, historyPosterClickListener historyListener) {
+    public HistoryAdapter(Context context, RealmList<Movie> historyArrayList, historyPosterClickListener historyListener) {
         this.historyArrayList = historyArrayList;
         this.context = context;
         this.historyListener = historyListener;
@@ -47,13 +44,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.historyPoster)
         SimpleDraweeView posterImageView;
 
 
         public ViewHolder(View v) {
             super(v);
-            ButterKnife.bind(this, v);
             posterImageView = v.findViewById(R.id.historyPoster);
         }
     }
@@ -67,7 +62,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final Movie movie = historyArrayList.get(position);
-        final Uri imgUrl = Uri.parse(movie.getImageUrl());
+        Uri imgUrl = null;
+        if (movie != null) {
+            imgUrl = Uri.parse(movie.getImageUrl());
+        }
         holder.posterImageView.setImageURI(imgUrl);
         holder.posterImageView.getHierarchy().setFadeDuration(500);
         HOLDER = holder;
@@ -76,6 +74,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 .setSource(imgUrl)
                 .build();
 
+        Uri finalImgUrl = imgUrl;
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(imgUrl)
                 .setImageRequest(request)
@@ -84,14 +83,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imgUrl.toString().contains("default")) {
+                        if (finalImgUrl.toString().contains("default")) {
                             // holder.title.setText(movie.getTitle());
                         }
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-                        holder.posterImageView.setImageURI(imgUrl + "/original.jpg");
+                        holder.posterImageView.setImageURI(finalImgUrl + "/original.jpg");
                     }
                 })
                 .build();
@@ -104,9 +103,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         ViewCompat.setTransitionName(holder.posterImageView, movie.getTitle());
 
         holder.itemView.setOnClickListener(v -> {
-
             historyListener.onPosterClicked(position, movie, holder.posterImageView);
-
         });
 
 

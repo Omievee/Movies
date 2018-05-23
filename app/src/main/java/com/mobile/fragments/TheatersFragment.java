@@ -561,7 +561,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE)));
+            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE).replaceAll(",", ".")));
             tRealm.commitTransaction();
         }
         //Sort through shorter list..

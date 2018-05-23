@@ -1,7 +1,6 @@
 package com.mobile.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -49,7 +47,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
@@ -79,8 +76,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,7 +127,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     TextView previewRating, previewRunningTime;
     View parent;
     ImageView background;
-
 
 
     private searchMoviesInterface searchMoviesInterface;
@@ -249,7 +243,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlayingAdapter = new NowPlayingMoviesAdapter(myActivity, nowPlaying, this);
 
         /** FEATURED */
-         featuredManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        featuredManager = new CustomLinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
@@ -545,11 +539,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     historyRealm.executeTransactionAsync(realm -> {
                         if (historyObjects != null) {
                             Calendar lastMonthYear = Calendar.getInstance();
-                            lastMonthYear.add(Calendar.MONTH,-1);
+                            lastMonthYear.add(Calendar.MONTH, -1);
                             int year = lastMonthYear.get(Calendar.YEAR);
-                            int lastMonth = lastMonthYear.get(Calendar.MONTH)+1;
+                            int lastMonth = lastMonthYear.get(Calendar.MONTH) + 1;
                             int lastMonthCount = 0;
-                            Movie newest = historyObjects.getReservations().size()>0?historyObjects.getReservations().get(0):null;
+                            Movie newest = historyObjects.getReservations().size() > 0 ? historyObjects.getReservations().get(0) : null;
                             for (int i = 0; i < historyObjects.getReservations().size(); i++) {
                                 Movie movieReservation = historyObjects.getReservations().get(i);
                                 Movie historyList = realm.createObject(Movie.class);
@@ -563,20 +557,22 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 historyList.setTitle(movieReservation.getTitle());
                                 historyList.setTribuneId(movieReservation.getTribuneId());
                                 historyList.setType(movieReservation.getType());
+                                historyList.setUserRating(movieReservation.getUserRating());
+
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTimeInMillis(movieReservation.getCreatedAt());
                                 int movieSeenYear = cal.get(Calendar.YEAR);
                                 int movieSeenMonth = cal.get(Calendar.MONTH);
-                                if(movieSeenMonth==lastMonth && movieSeenYear==year) {
+                                if (movieSeenMonth == lastMonth && movieSeenYear == year) {
                                     lastMonthCount++;
                                 }
-                                if(movieReservation.getCreatedAt()>newest.getCreatedAt()) {
+                                if (movieReservation.getCreatedAt() > newest.getCreatedAt()) {
                                     newest = movieReservation;
                                 }
                             }
                             UserPreferences.setTotalMoviesSeenLastMonth(lastMonthCount);
                             UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
-                            if(newest!=null) {
+                            if (newest != null) {
                                 UserPreferences.setLastMovieSeen(newest);
                             }
                         }
@@ -851,10 +847,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         previewRating.setText("Rated: " + movie.getRating());
 
 
-
         RenderScript rs = RenderScript.create(parent.getContext());
         RSBlurProcessor rsBlurProcessor = new RSBlurProcessor(rs);
-        Bitmap finalBitmap = rsBlurProcessor.blur(bitmap,200f,4);
+        Bitmap finalBitmap = rsBlurProcessor.blur(bitmap, 200f, 4);
 
         background.setImageBitmap(finalBitmap);
         background.setVisibility(View.VISIBLE);
