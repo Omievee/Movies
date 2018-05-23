@@ -26,6 +26,7 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
@@ -35,8 +36,12 @@ import com.mobile.activities.ProfileActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.model.Reservation;
 import com.mobile.loyalty.LoyaltyProgramFragment;
+import com.mobile.model.Screening;
+import com.mobile.model.ScreeningToken;
 import com.mobile.network.RestClient;
+import com.mobile.reservation.ETicket;
 import com.mobile.reservation.ReservationActivity;
+import com.mobile.responses.ReservationResponse;
 import com.mobile.rx.Schedulers;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
@@ -44,6 +49,7 @@ import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,6 +60,7 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import static android.text.TextUtils.isEmpty;
 import static com.mobile.UserPreferences.getUserEmail;
 import static com.mobile.UserPreferences.getUserId;
 import static com.mobile.UserPreferences.getUserName;
@@ -209,12 +216,12 @@ public class ProfileFragment extends Fragment {
             HashMap<String, Object> userData = new HashMap<>();
             customIssueFileds.put("version name", new String[]{"sl", versionName});
             Long dateMillis = UserPreferences.getLastCheckInAttemptDate();
-            if(dateMillis!=null) {
+            if (dateMillis != null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(dateMillis);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm", Locale.US);
-                long diff = System.currentTimeMillis()-dateMillis;
+                long diff = System.currentTimeMillis() - dateMillis;
                 long diffHours = diff / (60 * 60 * 1000);
                 long diffMinutes = diff / (60 * 1000);
 
@@ -229,7 +236,7 @@ public class ProfileFragment extends Fragment {
 
             Reservation reservation = UserPreferences.getLastReservation();
             final boolean checkedIn;
-            if(reservation!=null) {
+            if (reservation != null) {
                 checkedIn = reservation.getExpiration() < System.currentTimeMillis();
             } else {
                 checkedIn = false;
@@ -273,12 +280,41 @@ public class ProfileFragment extends Fragment {
                     .getAuthenticated()
                     .lastReservation()
                     .compose(Schedulers.Companion.singleDefault())
-                    .subscribe(v-> {
-                        startActivity(
-                                ReservationActivity.Companion.newInstance(myContext,v)
-                        );
-                    }, e-> {
-                        Toast.makeText(myContext, e.getMessage(),Toast.LENGTH_SHORT).show();
+                    .subscribe(v -> {
+                        final Intent intent;
+                        ETicket ticket = v.getTicket();
+                        if (ticket != null && !isEmpty(ticket.getSeat())) {
+                            intent =
+                                    ReservationActivity.Companion.newInstance(myContext, v);
+                        } else {
+                            Screening screening = new Screening();
+                            screening.setTheaterName(v.getTheater());
+                            screening.setTitle(v.getTitle());
+                            screening.setMoviepassId(v.getReservation().getMoviepassId());
+                            screening.setTribuneTheaterId(v.getReservation().getTribuneTheaterId());
+                            ReservationResponse.ETicketConfirmation confirmation = null;
+                            if(v.getTicket() != null) {
+                                confirmation = new ReservationResponse.ETicketConfirmation();
+                                confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
+                                confirmation.setBarCodeUrl("");
+                            }
+                            Reservation reservation = null;
+                            if(v.getReservation()!=null) {
+                                reservation = new Reservation();
+                                reservation.setId(v.getReservation().getId());
+                            }
+                            ScreeningToken token = new ScreeningToken(
+                                screening,
+                                    new SimpleDateFormat("h:mm a").format(v.getReservation().getShowtime()),
+                                    reservation,
+                                    confirmation,
+                                    null
+                            );
+                            intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
+                        }
+                        startActivity(intent);
+                    }, e -> {
+                        Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                         //Snackbar.make(t)
                     });
 
@@ -289,7 +325,7 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        loyaltyPrograms.setOnClickListener(view1-> {
+        loyaltyPrograms.setOnClickListener(view1 -> {
             FragmentTransaction transaction = myActivity.getFragmentManager().beginTransaction();
             transaction.replace(R.id.profile_container, LoyaltyProgramFragment.Companion.newInstance());
             transaction.addToBackStack("");

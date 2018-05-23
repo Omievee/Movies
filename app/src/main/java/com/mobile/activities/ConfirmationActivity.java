@@ -78,6 +78,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by anubis on 6/20/17.
  */
@@ -158,13 +160,12 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         gestureScanner = new GestureDetector(this);
 
-
         pendingTitle.setText(screeningToken.getScreening().getTitle());
         pendingLocal.setText(screeningToken.getScreening().getTheaterName());
         pendingTime.setText(screeningTime);
         userData();
 
-        if (screeningToken.getConfirmationCode() != null) {
+        if (screeningToken!=null && !isEmpty(screeningToken.getConfirmationCode().getConfirmationCode())) {
             ETicket.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode().getConfirmationCode();
             confirmCode.setText(code);

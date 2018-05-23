@@ -45,10 +45,10 @@ data class ETicket(
             var id: Int? = null,
             var kind: String? = null,
             var mappingId: String? = null,
-            var moviepassId: Int? = null,
+            var moviepassId: Int = 0,
             @SerializedName("showtime") var _showtime: Long? = null,
             var subscriptionId: String? = null,
-            var tribuneTheaterId: String? = null,
+            var tribuneTheaterId: Int = 0,
             var userId: Int? = null
     ) : Parcelable {
         @IgnoredOnParcel
