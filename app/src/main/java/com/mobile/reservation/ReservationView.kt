@@ -19,7 +19,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         inflate(context, R.layout.layout_current_reservation, this)
     }
 
-    fun bind(reservation: CurrentReservationV2) {
+    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = true) {
         movieName.text = reservation.title
         theaterName.text = reservation.theater
         movieShowtime.text = reservation.showtime?.let {
@@ -27,14 +27,14 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         }
         seats.text = reservation.ticket?.seat?.let {
             SpannableStringBuilder().apply {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     append(resources.getQuantityText(R.plurals.seat, 1))
                     append(' ')
                     append(it)
                 }
             }
         }
-        if(seats.text.isEmpty()) {
+        if (seats.text.isEmpty()) {
             seats.visibility = View.GONE
         } else {
             seats.visibility = View.VISIBLE
@@ -80,6 +80,11 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
             reservationDescriptionTV.setText(R.string.reservation_use_card_description)
             creditCardIV.visibility = View.VISIBLE
             reservationCode.background = null
+        }
+
+        currentReservationTV.visibility = when(showCurrentReservationText) {
+            true -> View.VISIBLE
+            else -> View.GONE
         }
     }
 

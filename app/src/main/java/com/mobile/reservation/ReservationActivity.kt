@@ -19,8 +19,9 @@ class ReservationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reservation)
         val reservation: CurrentReservationV2? = intent.getParcelableExtra(KEY_RESERVATION)
+        val showcurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         reservation?.let {
-            reservationV.bind(it)
+            reservationV.bind(it, showcurrentReservationText)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun onClose() {
@@ -33,10 +34,12 @@ class ReservationActivity : AppCompatActivity() {
     companion object {
 
         const val KEY_RESERVATION = "reservation"
+        const val KEY_SHOW_CURRENT_RESERVATION_TEXT = "show_as_current_reservation"
 
         fun newInstance(context: Context, reservation: CurrentReservationV2): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 putExtra(KEY_RESERVATION, reservation)
+                putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
             }
         }
 
@@ -70,6 +73,7 @@ class ReservationActivity : AppCompatActivity() {
                         theater = reservation.screening.theaterName
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
+                putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)
             }
         }
     }
