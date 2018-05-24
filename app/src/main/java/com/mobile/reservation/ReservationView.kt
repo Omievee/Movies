@@ -22,7 +22,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
     fun bind(reservation: CurrentReservationV2) {
         movieName.text = reservation.title
         theaterName.text = reservation.theater
-        movieShowtime.text = reservation.reservation?.showtime?.let {
+        movieShowtime.text = reservation.showtime?.let {
             SimpleDateFormat("h:mm a", Locale.getDefault()).format(it)
         }
         seats.text = reservation.ticket?.seat?.let {

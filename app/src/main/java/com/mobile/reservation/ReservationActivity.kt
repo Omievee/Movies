@@ -62,7 +62,6 @@ class ReservationActivity : AppCompatActivity() {
                                 redemptionCode = reservation.confirmationCode.confirmationCode,
                                 seat = seatToUse
                         ),
-
                         reservation = re2,
                         landscapeUrl = reservation.screening.landscapeImageUrl,
                         latitude = reservation.theater?.lat,

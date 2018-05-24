@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 import com.mobile.activities.TicketType
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Parcelize
@@ -15,10 +16,28 @@ data class CurrentReservationV2(
         var latitude: Double? = null,
         var longitude: Double? = null,
         var reservation: Reservation2? = null,
+        @SerializedName("showtime") private var _showtime:String? = null,
         var theater: String? = null,
         var title: String? = null,
         var zip: String? = null
-) : Parcelable
+) : Parcelable {
+    @IgnoredOnParcel
+    @Transient
+    var showtime: Date? = null
+        get() {
+            return _showtime?.let {
+                val str = it.indexOf('T')
+                val str2 = it.lastIndexOf(':')
+                try {
+                    val newstring = it.substring(str+1, str2)
+                    val sdf = SimpleDateFormat("hh:mm", Locale.US)
+                    sdf.parse(newstring)
+                } catch (e:Error){
+                    reservation?.showtime
+                }
+            } ?: reservation?.showtime
+        }
+}
 
 @Parcelize
 data class ETicket(
@@ -46,7 +65,7 @@ data class ETicket(
             var kind: String? = null,
             var mappingId: String? = null,
             var moviepassId: Int = 0,
-            @SerializedName("showtime") var _showtime: Long? = null,
+            @SerializedName("showtime") private var _showtime: Long? = null,
             var subscriptionId: String? = null,
             var tribuneTheaterId: Int = 0,
             var userId: Int? = null
