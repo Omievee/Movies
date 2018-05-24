@@ -76,10 +76,11 @@ public class ProfileAccountInformation extends android.app.Fragment {
 
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
-                    String email = userInfoResponse.getEmail();
+                    String email = userInfoResponse.getUser().getEmail();
 
                     userName.setText(firstName + " " + lastName);
                     userEmail.setText(email);
+                    android.util.Log.d(Constants.TAG, "onResponse: EMAIL "+email);
 
                     moviePassCard.setText(userInfoResponse.getMoviePassCardNumber());
 

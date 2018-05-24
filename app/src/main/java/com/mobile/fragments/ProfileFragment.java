@@ -276,16 +276,20 @@ public class ProfileFragment extends Fragment {
         });
 
         currentRes.setOnClickListener(view1 -> {
+            Activity activity = getActivity();
             RestClient
                     .getAuthenticated()
                     .lastReservation()
                     .compose(Schedulers.Companion.singleDefault())
                     .subscribe(v -> {
+                        if (activity == null) {
+                            return;
+                        }
                         final Intent intent;
                         ETicket ticket = v.getTicket();
                         if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
                             intent =
-                                    ReservationActivity.Companion.newInstance(myContext, v);
+                                    ReservationActivity.Companion.newInstance(getActivity(), v);
                         } else {
                             Screening screening = new Screening();
                             screening.setTheaterName(v.getTheater());
@@ -293,28 +297,28 @@ public class ProfileFragment extends Fragment {
                             screening.setMoviepassId(v.getReservation().getMoviepassId());
                             screening.setTribuneTheaterId(v.getReservation().getTribuneTheaterId());
                             ReservationResponse.ETicketConfirmation confirmation = null;
-                            if(v.getTicket() != null) {
+                            if (v.getTicket() != null) {
                                 confirmation = new ReservationResponse.ETicketConfirmation();
                                 confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
                                 confirmation.setBarCodeUrl("");
                             }
                             Reservation reservation = null;
-                            if(v.getReservation()!=null) {
+                            if (v.getReservation() != null) {
                                 reservation = new Reservation();
                                 reservation.setId(v.getReservation().getId());
                             }
                             ScreeningToken token = new ScreeningToken(
-                                screening,
-                                    new SimpleDateFormat("h:mm a").format(v.getReservation().getShowtime()),
+                                    screening,
+                                    new SimpleDateFormat("h:mm a").format(v.getShowtime()),
                                     reservation,
                                     confirmation,
                                     null
                             );
-                            intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
+                            intent = new Intent(activity, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
                         }
                         startActivity(intent);
                     }, e -> {
-                        Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "No current reservation at this time", Toast.LENGTH_SHORT).show();
                         //Snackbar.make(t)
                     });
 
