@@ -5,10 +5,10 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.mobile.application.Application
 import com.mobile.network.ApiModule
 import com.mobile.helpers.GoWatchItSingleton
+import com.mobile.rx.RxJava2CallAdapterFactory
 import com.moviepass.BuildConfig
 import dagger.Module
 import dagger.Provides

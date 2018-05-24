@@ -68,24 +68,6 @@ public final class RxJava2CallAdapterFactory extends CallAdapter.Factory {
     return new RxJava2CallAdapterFactory(null, false);
   }
 
-  /**
-   * Returns an instance which creates asynchronous observables. Applying
-   * {@link Observable#subscribeOn} has no effect on stream types created by this factory.
-   */
-  public static RxJava2CallAdapterFactory createAsync() {
-    return new RxJava2CallAdapterFactory(null, true);
-  }
-
-  /**
-   * Returns an instance which creates synchronous observables that
-   * {@linkplain Observable#subscribeOn(Scheduler) subscribe on} {@code scheduler} by default.
-   */
-  @SuppressWarnings("ConstantConditions") // Guarding public API nullability.
-  public static RxJava2CallAdapterFactory createWithScheduler(Scheduler scheduler) {
-    if (scheduler == null) throw new NullPointerException("scheduler == null");
-    return new RxJava2CallAdapterFactory(scheduler, false);
-  }
-
   private final @Nullable Scheduler scheduler;
   private final boolean isAsync;
   private final Gson gson = new GsonBuilder().create();

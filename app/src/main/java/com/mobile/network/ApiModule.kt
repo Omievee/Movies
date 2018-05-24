@@ -5,7 +5,10 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.mobile.application.Application
+import com.mobile.model.ParcelableDate
+import com.mobile.rx.RxJava2CallAdapterFactory
 import com.mobile.session.SessionManager
 import com.moviepass.BuildConfig
 import dagger.Module
@@ -42,7 +45,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticatedRequestInterceptor(sessionManager:SessionManager):AuthenticatedRequestInterceptor {
+    fun provideAuthenticatedRequestInterceptor(sessionManager: SessionManager): AuthenticatedRequestInterceptor {
         return AuthenticatedRequestInterceptor(sessionManager)
     }
 
@@ -63,7 +66,8 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return GsonBuilder().setLenient().create()
+        return GsonBuilder().setLenient().registerTypeAdapter(object : TypeToken<ParcelableDate>() {
+        }.type, DateAdapter()).create()
     }
 
     @Provides
@@ -78,6 +82,7 @@ class ApiModule {
         return Retrofit.Builder()
                 .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
                 .build()
                 .create(Api::class.java)
