@@ -305,7 +305,7 @@ public class ProfileFragment extends Fragment {
                             }
                             ScreeningToken token = new ScreeningToken(
                                 screening,
-                                    new SimpleDateFormat("h:mm a").format(v.getReservation().getShowtime()),
+                                    new SimpleDateFormat("h:mm a").format(v.getShowtime()),
                                     reservation,
                                     confirmation,
                                     null
