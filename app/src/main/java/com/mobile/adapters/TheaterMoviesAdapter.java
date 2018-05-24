@@ -218,6 +218,7 @@ public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdap
                     HOLDER.showtimeGrid.setOnCheckedChangeListener((group, checkedId) -> {
                         RadioButton checked = group.findViewById(checkedId);
                         if (screeningsArrayList.get(holder.getAdapterPosition()).isApproved()) {
+                            Log.d(TAG, "SHOW TIME CLICK: " + currentTime);
                             if (currentTime != null) {
                                 currentTime.setChecked(false);
                             }

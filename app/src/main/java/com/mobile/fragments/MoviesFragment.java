@@ -26,6 +26,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -557,7 +558,10 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 historyList.setTitle(movieReservation.getTitle());
                                 historyList.setTribuneId(movieReservation.getTribuneId());
                                 historyList.setType(movieReservation.getType());
-                                historyList.setUserRating(movieReservation.getUserRating());
+                                if (movieReservation.getUserRating() != null) {
+                                    Log.d(Constants.TAG, "GET USER RATING: " + movieReservation.getUserRating());
+                                    historyList.setUserRating(movieReservation.getUserRating());
+                                }
 
                                 Calendar cal = Calendar.getInstance();
                                 cal.setTimeInMillis(movieReservation.getCreatedAt());

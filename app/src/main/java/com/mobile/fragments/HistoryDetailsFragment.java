@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,6 +124,8 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
 
         Movie historyItem = getArguments().getParcelable(HISTORY_POSTER);
         String transition = getArguments().getString(EXTRA_TRANSITION_NAME);
+
+        Log.d(Constants.TAG, "onViewCreated: " + historyItem.getUserRating());
 
         if (historyItem.getUserRating() != null) {
             likeittext.setVisibility(View.GONE);

@@ -147,6 +147,7 @@ public class PastReservations extends Fragment {
 
 
     public void queryRealmForObjects() {
+        historyList.clear();
         progress.setVisibility(View.GONE);
 
         RealmConfiguration config = new RealmConfiguration.Builder()
@@ -160,7 +161,6 @@ public class PastReservations extends Fragment {
                 .findAll();
 
         historyList.addAll(allHIstory);
-
         if (historyList.size() == 0) {
             historyRecycler.setVisibility(View.GONE);
             noMovies.setVisibility(View.VISIBLE);
