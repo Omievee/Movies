@@ -318,7 +318,7 @@ public class ProfileFragment extends Fragment {
                         }
                         startActivity(intent);
                     }, e -> {
-                        Toast.makeText(activity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "No current reservation at this time", Toast.LENGTH_SHORT).show();
                         //Snackbar.make(t)
                     });
 
