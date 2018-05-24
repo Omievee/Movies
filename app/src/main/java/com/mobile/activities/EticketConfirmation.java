@@ -5,8 +5,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+
+import com.helpshift.activities.MainActivity;
 import com.helpshift.support.Log;
+
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +40,7 @@ import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SelectedSeat;
 import com.mobile.requests.TicketInfoRequest;
+import com.mobile.reservation.CurrentReservationV2;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ReservationResponse;
 import com.moviepass.R;
@@ -273,7 +280,6 @@ public class EticketConfirmation extends BaseActivity {
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
 
                     showConfirmation(token);
-                    finish();
 
                 } else {
                     try {
@@ -312,7 +318,12 @@ public class EticketConfirmation extends BaseActivity {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        startActivity(ReservationActivity.Companion.newInstance(this, token));
+        startActivity(ReservationActivity.Companion.newInstance(this, token).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(EticketConfirmation.this);
+        stackBuilder.addParentStack(MoviesActivity.class);
+        stackBuilder.addNextIntent(new Intent(getApplicationContext(), MoviesActivity.class));
+        stackBuilder.addNextIntentWithParentStack(ReservationActivity.Companion.newInstance(EticketConfirmation.this, token));
+        stackBuilder.startActivities();
     }
 
 
@@ -411,7 +422,6 @@ public class EticketConfirmation extends BaseActivity {
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, theater);
 
                     showConfirmation(token);
-                    finish();
 
                 } else {
                     try {
