@@ -10,6 +10,7 @@ open class ReservationHistory(
         var title: String? = null,
         var titleNormalized: String? = null,
         var landscapeImageUrl: String? = null,
+        var userRating:String? = null,
         var theaterName: String? = null,
         var createdAt: Date? = null,
         var updatedAt: Date = Date()

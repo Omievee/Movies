@@ -32,6 +32,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        this?.finish()
+
         val intent = intent
         val data = intent.data
 
