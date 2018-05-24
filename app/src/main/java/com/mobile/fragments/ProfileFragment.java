@@ -285,7 +285,7 @@ public class ProfileFragment extends Fragment {
                         ETicket ticket = v.getTicket();
                         if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
                             intent =
-                                    ReservationActivity.Companion.newInstance(myContext, v);
+                                    ReservationActivity.Companion.newInstance(getActivity(), v);
                         } else {
                             Screening screening = new Screening();
                             screening.setTheaterName(v.getTheater());
