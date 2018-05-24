@@ -88,6 +88,9 @@ public class Constants {
     //Taplytics Notifs
     public static final String CUSTOM_DATA = "custom_keys";
 
+    //Billing
+    public static final String BILLING = "billing";
+
     //Check In Attempt
     public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
     public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInReservation";

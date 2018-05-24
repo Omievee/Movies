@@ -1,6 +1,10 @@
 package com.mobile.model;
 
+import com.mobile.responses.ReservationResponse;
+
 import org.parceler.Parcel;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by anubis on 7/17/17.
@@ -9,7 +13,7 @@ import org.parceler.Parcel;
 @Parcel
 public class ScreeningToken {
 
-    String confirmationCode;
+    ReservationResponse.ETicketConfirmation confirmationCode;
     String qrUrl;
     Reservation reservation;
     Screening screening;
@@ -18,31 +22,35 @@ public class ScreeningToken {
     String time;
     String zipCodeTicket;
     SeatSelected seatSelected;
+    Theater theater;
 
     public ScreeningToken() {
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res) {
+    public ScreeningToken(Screening screening, String time, Reservation res, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
+        this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation eTicketConfirmation, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
-        this.confirmationCode = confirmationCode;
+        this.confirmationCode = eTicketConfirmation;
+        this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, String qrUrl, String confirmationCode, SeatSelected seatSelected) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation confirmationCode, SeatSelected seatSelected, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
         this.qrUrl = qrUrl;
         this.confirmationCode = confirmationCode;
         this.seatSelected = seatSelected;
+        this.theater = theater;
     }
 
     public Screening getScreening() {
@@ -86,12 +94,16 @@ public class ScreeningToken {
         return zipCodeTicket;
     }
 
-    public void setConfirmationCode(String confirmationCode) {
+    public ReservationResponse.ETicketConfirmation getConfirmationCode() {
+        return confirmationCode;
+    }
+
+    public void setConfirmationCode(ReservationResponse.ETicketConfirmation confirmationCode) {
         this.confirmationCode = confirmationCode;
     }
 
-    public String getConfirmationCode() {
-        return confirmationCode;
+    @Nullable public Theater getTheater() {
+        return theater;
     }
 
     public void setQrUrl(String qrUrl) {

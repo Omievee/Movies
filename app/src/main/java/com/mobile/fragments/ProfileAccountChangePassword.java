@@ -36,9 +36,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mobile.fragments.PendingReservationFragment.TAG;
-
-
 public class ProfileAccountChangePassword extends android.app.Fragment {
 
 
@@ -51,6 +48,8 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     private UserInfoResponse userInfoResponse;
     private boolean firstTime = true;
     private Activity myActivity;
+
+    private static final String TAG = "ProfileAccountChangePassword";
 
     public ProfileAccountChangePassword() {
         // Required empty public constructor
