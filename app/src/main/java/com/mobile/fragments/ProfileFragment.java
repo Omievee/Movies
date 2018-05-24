@@ -310,7 +310,7 @@ public class ProfileFragment extends Fragment {
                                     confirmation,
                                     null
                             );
-                            intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
+                            intent = new Intent(getActivity(), ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
                         }
                         startActivity(intent);
                     }, e -> {
