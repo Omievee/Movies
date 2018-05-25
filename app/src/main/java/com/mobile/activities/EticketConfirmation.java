@@ -274,7 +274,7 @@ public class EticketConfirmation extends BaseActivity {
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
-                    UserPreferences.saveReservation(reservation);
+                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation,theater));
 
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, theater);
                     LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());

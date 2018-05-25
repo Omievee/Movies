@@ -74,9 +74,9 @@ import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -539,10 +539,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     HistoryResponse historyObjects = response.body();
                     historyRealm.executeTransactionAsync(realm -> {
                         if (historyObjects != null) {
-                            Calendar lastMonthYear = Calendar.getInstance();
-                            lastMonthYear.add(Calendar.MONTH, -1);
-                            int year = lastMonthYear.get(Calendar.YEAR);
-                            int lastMonth = lastMonthYear.get(Calendar.MONTH) + 1;
                             int lastMonthCount = 0;
                             Movie newest = historyObjects.getReservations().size() > 0 ? historyObjects.getReservations().get(0) : null;
                             for (int i = 0; i < historyObjects.getReservations().size(); i++) {
@@ -563,18 +559,15 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                     historyList.setUserRating(movieReservation.getUserRating());
                                 }
 
-                                Calendar cal = Calendar.getInstance();
-                                cal.setTimeInMillis(movieReservation.getCreatedAt());
-                                int movieSeenYear = cal.get(Calendar.YEAR);
-                                int movieSeenMonth = cal.get(Calendar.MONTH);
-                                if (movieSeenMonth == lastMonth && movieSeenYear == year) {
+                                long diff = System.currentTimeMillis() - movieReservation.getCreatedAt();
+                                if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) < 30) {
                                     lastMonthCount++;
                                 }
                                 if (movieReservation.getCreatedAt() > newest.getCreatedAt()) {
                                     newest = movieReservation;
                                 }
                             }
-                            UserPreferences.setTotalMoviesSeenLastMonth(lastMonthCount);
+                            UserPreferences.setTotalMoviesSeenLast30Days(lastMonthCount);
                             UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
                             if (newest != null) {
                                 UserPreferences.setLastMovieSeen(newest);

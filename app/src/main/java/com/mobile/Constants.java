@@ -93,11 +93,11 @@ public class Constants {
 
     //Check In Attempt
     public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
-    public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInReservation";
+    public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInScreening";
 
     //Movie History Data
     public static final String TOTAL_MOVIES_SEEN = "totalMoviesSeen";
-    public static final String TOTAL_MOVIES_SEEN_LAST_MONTH = "totalMoviesSeenLastMonth";
+    public static final String TOTAL_MOVIES_SEEN_LAST_DAYS = "totalMoviesSeenLast30Days";
     public static final String LAST_MOVIE_SEEN = "lastMovieSeen";
 
 

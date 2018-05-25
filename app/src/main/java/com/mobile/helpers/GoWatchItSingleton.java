@@ -217,10 +217,7 @@ public class GoWatchItSingleton {
         tha = theater.getAddress();
         String lts = currentTimeStamp();
         String movieTitle = getMovieTitle(movieId);
-
-        if(engagement.equalsIgnoreCase("ticket_purchase_attempt")){
-            UserPreferences.setLastCheckInAttemptDate();
-        }
+        UserPreferences.setLastCheckInAttemptDate();
 
         String result = "";
         thd = "";
