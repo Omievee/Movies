@@ -1,16 +1,14 @@
 package com.mobile.activities;
 
-import android.Manifest;
+import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -35,7 +33,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.helpshift.support.Log;
 import com.helpshift.support.Support;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
@@ -61,9 +58,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -78,6 +73,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.text.TextUtils.isEmpty;
 
 /**
@@ -108,13 +106,11 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     String photoFileName = "TicketVerification.jpg";
     BitmapFactory.Options bmOptions;
 
-    private static String CAMERA_PERMISSIONS[] = new String[]{
-            Manifest.permission.CAMERA
+    private static String PERMISSIONS[] = new String[]{
+            CAMERA,
+            WRITE_EXTERNAL_STORAGE
     };
 
-    private static String STORAGE_PERMISSIONS[] = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
     protected BottomNavigationView bottomNavigationView;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -165,7 +161,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         pendingTime.setText(screeningTime);
         userData();
 
-        if (screeningToken!=null && screeningToken.getConfirmationCode()!=null && !isEmpty(screeningToken.getConfirmationCode().getConfirmationCode())) {
+        if (screeningToken != null && screeningToken.getConfirmationCode() != null && !isEmpty(screeningToken.getConfirmationCode().getConfirmationCode())) {
             ETicket.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode().getConfirmationCode();
             confirmCode.setText(code);
@@ -193,9 +189,10 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 });
 
                 scanTicket.setOnClickListener(v -> {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this, CAMERA) != PERMISSION_GRANTED
+                            && ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(CAMERA_PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
+                            requestPermissions(PERMISSIONS, Constants.REQUEST_CAMERA_CODE);
                         } else {
                             scan_Ticket();
                         }
@@ -265,16 +262,10 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == Constants.REQUEST_CAMERA_CODE && ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, CAMERA) == PERMISSION_GRANTED) {
             scan_Ticket();
-        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+        } else {
             Toast.makeText(this, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
-        }
-        if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            createImageFile();
-        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(this, "You must grant permissions to continue", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -282,7 +273,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CAMERA_CODE && resultCode == RESULT_OK) {
-
             if (photoFile != null) {
                 bmOptions = new BitmapFactory.Options();
 
@@ -297,14 +287,13 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                 }
                 bmOptions.inJustDecodeBounds = false;
                 Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 FileOutputStream fos = null;
                 try {
                     fos = new FileOutputStream(photoFile);
                     LogUtils.newLog("compressing file " + photoFile.getAbsolutePath());
                     image.compress(Bitmap.CompressFormat.JPEG, 75, fos);
                 } catch (Exception ignored) {
-
+                    ignored.printStackTrace();
                 } finally {
                     if (fos != null) {
                         try {
@@ -316,15 +305,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
                     image.recycle();
                 }
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(STORAGE_PERMISSIONS, Constants.REQUEST_STORAGE_CODE);
-                } else {
-                    createImageFile();
-                }
-            } else {
-                createImageFile();
-            }
+            uploadToAWS(photoFile);
         }
 
     }
@@ -455,29 +436,11 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         photoFile = getPhotoFileUri(photoFileName);
         Uri fileProvider = FileProvider.getUriForFile(this, getString(R.string.authority_file_provider), photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
         if (intent.resolveActivity(getPackageManager()) != null) {
             android.util.Log.d(Constants.TAG, "scanTicket: ");
             startActivityForResult(intent, Constants.REQUEST_CAMERA_CODE);
         }
     }
-
-    public void createImageFile() {
-        Handler handler = new Handler();
-        whiteProgress.setVisibility(View.VISIBLE);
-        scanTicket.setVisibility(View.INVISIBLE);
-        handler.postDelayed(() -> {
-            //Turn into file
-            final File getPictureFile = getOutputMediaFile();
-            if (getPictureFile == null) {
-                return;
-            }
-            LogUtils.newLog(Constants.TAG, "onActivityResult: " + getPictureFile.getAbsolutePath());
-            uploadToAWS(getPictureFile);
-        }, 4000);
-
-    }
-
 
     private void uploadToAWS(File ticketPhoto) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
