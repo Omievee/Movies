@@ -13,7 +13,6 @@ import com.google.android.gms.gcm.TaskParams;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.model.Movie;
-import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.HistoryResponse;
@@ -23,6 +22,7 @@ import com.mobile.responses.LocalStorageTheaters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -389,10 +389,6 @@ public class RealmTaskService extends GcmTaskService {
                         HistoryResponse historyObjects = response.body();
                         historyRealm.executeTransactionAsync(realm -> {
                             if (historyObjects != null) {
-                                Calendar lastMonthYear = Calendar.getInstance();
-                                lastMonthYear.add(Calendar.MONTH,-1);
-                                int year = lastMonthYear.get(Calendar.YEAR);
-                                int lastMonth = lastMonthYear.get(Calendar.MONTH)+1;
                                 int lastMonthCount = 0;
                                 Movie newest = historyObjects.getReservations().size()>0?historyObjects.getReservations().get(0):null;
                                 for (int i = 0; i < historyObjects.getReservations().size(); i++) {
@@ -408,18 +404,15 @@ public class RealmTaskService extends GcmTaskService {
                                     historyList.setTitle(movieReservation.getTitle());
                                     historyList.setTribuneId(movieReservation.getTribuneId());
                                     historyList.setType(movieReservation.getType());
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTimeInMillis(movieReservation.getCreatedAt());
-                                    int movieSeenYear = cal.get(Calendar.YEAR);
-                                    int movieSeenMonth = cal.get(Calendar.MONTH);
-                                    if(movieSeenMonth==lastMonth && movieSeenYear==year) {
+                                    long diff = System.currentTimeMillis() - movieReservation.getCreatedAt();
+                                    if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) < 30) {
                                         lastMonthCount++;
                                     }
                                     if(movieReservation.getCreatedAt()>newest.getCreatedAt()) {
                                         newest = movieReservation;
                                     }
                                 }
-                                UserPreferences.setTotalMoviesSeenLastMonth(lastMonthCount);
+                                UserPreferences.setTotalMoviesSeenLast30Days(lastMonthCount);
                                 UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
                                 if(newest!=null) {
                                     UserPreferences.setLastMovieSeen(newest);

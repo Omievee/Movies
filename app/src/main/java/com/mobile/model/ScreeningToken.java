@@ -4,6 +4,10 @@ import com.mobile.responses.ReservationResponse;
 
 import org.parceler.Parcel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import javax.annotation.Nullable;
 
 /**
@@ -63,6 +67,15 @@ public class ScreeningToken {
 
     public Reservation getReservation() {
         return reservation;
+    }
+
+    @Nullable public  Date getTimeAsDate() {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(time);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void setReservation(Reservation mReservation) {

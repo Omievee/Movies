@@ -422,7 +422,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
                 if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
-                    UserPreferences.saveReservation(reservation);
+                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
                     progress.setVisibility(View.GONE);
 
                     if (reservationResponse.getE_ticket_confirmation() != null) {

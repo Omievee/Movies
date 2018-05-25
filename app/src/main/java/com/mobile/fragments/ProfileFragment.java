@@ -53,9 +53,11 @@ import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -220,7 +222,7 @@ public class ProfileFragment extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(dateMillis);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HHmm", Locale.US);
+                SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
                 long diff = System.currentTimeMillis() - dateMillis;
                 long diffHours = diff / (60 * 60 * 1000);
                 long diffMinutes = diff / (60 * 1000);
@@ -230,21 +232,33 @@ public class ProfileFragment extends Fragment {
                 customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
                 customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
                 customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
+
                 userData.put("last_check_in_attempt_date", dateFormat.format(cal.getTime()));
                 userData.put("last_check_in_attempt_time", timeFormat.format(cal.getTime()));
             }
 
-            Reservation reservation = UserPreferences.getLastReservation();
+            ScreeningToken token = UserPreferences.getLastReservation();
             final boolean checkedIn;
-            if (reservation != null) {
-                checkedIn = reservation.getExpiration() < System.currentTimeMillis();
+
+            if (token != null) {
+                Reservation rs = token.getReservation();
+                checkedIn = rs != null && rs.getExpiration() > System.currentTimeMillis();
+                Date starttime = token.getTimeAsDate();
+                if (starttime != null) {
+                    long diff = starttime.getTime() - System.currentTimeMillis();
+                    int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
+                    if(checkedIn && minutes>=-30) {
+                        customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
+                    }
+                }
             } else {
                 checkedIn = false;
             }
+
             customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
             customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
             userData.put("total_movies_seen", UserPreferences.getTotalMovieSeen());
-            userData.put("total_movies_seen_last_month", UserPreferences.getTotalMovieSeenLastMonth());
+            userData.put("total_movies_seen_last_30_days", UserPreferences.getTotalMovieSeenLastMonth());
             userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
             String[] tags = new String[]{versionName};
 
@@ -254,12 +268,8 @@ public class ProfileFragment extends Fragment {
 
             ApiConfig apiConfig = new ApiConfig.Builder()
                     .setEnableContactUs(Support.EnableContactUs.ALWAYS)
-                    .setGotoConversationAfterContactUs(true)
-                    .setRequireEmail(false)
                     .setCustomIssueFields(customIssueFileds)
                     .setCustomMetadata(meta)
-                    .setEnableTypingIndicator(true)
-                    .setShowConversationResolutionQuestion(false)
                     .build();
 
             Support.showFAQs(myActivity, apiConfig);

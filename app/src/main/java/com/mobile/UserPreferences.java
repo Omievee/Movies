@@ -5,16 +5,10 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.google.gson.GsonBuilder;
-import com.helpshift.HelpshiftUser;
-import com.helpshift.util.HelpshiftContext;
-import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
+import com.mobile.model.ScreeningToken;
 import com.mobile.responses.UserInfoResponse;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import java.util.Calendar;
 
@@ -295,7 +289,7 @@ public class UserPreferences {
         return sPrefs.getString(Constants.FB_TOKEN, "token");
     }
 
-    public static void saveReservation(Reservation reservation) {
+    public static void saveReservation(ScreeningToken reservation) {
         if(reservation!=null) {
             String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
             String gson  = new GsonBuilder().create().toJson(reservation);
@@ -324,12 +318,12 @@ public class UserPreferences {
         return null;
     }
 
-    public static Reservation getLastReservation() {
+    public static ScreeningToken getLastReservation() {
         String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
         String reservation = sPrefs.getString(key,null);
         if(reservation!=null) {
             try {
-                return new GsonBuilder().create().fromJson(reservation, Reservation.class);
+                return new GsonBuilder().create().fromJson(reservation, ScreeningToken.class);
             } catch (Exception ignored) {
 
             }
@@ -354,9 +348,9 @@ public class UserPreferences {
                 .edit().putInt(Constants.TOTAL_MOVIES_SEEN + "_" +getUserId(), totalMoviesSeen).apply();
     }
 
-    public static void setTotalMoviesSeenLastMonth(int totalMoviesSeenLastMonth) {
+    public static void setTotalMoviesSeenLast30Days(int totalMoviesSeenLast30Days) {
         sPrefs
-                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_MONTH + "_" +getUserId(), totalMoviesSeenLastMonth).apply();
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" +getUserId(), totalMoviesSeenLast30Days).apply();
     }
 
     public static void setLastMovieSeen(Movie movie) {
@@ -369,7 +363,7 @@ public class UserPreferences {
     }
 
     public static int getTotalMovieSeenLastMonth() {
-        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_MONTH + "_" +getUserId(),-1);
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" +getUserId(),-1);
     }
 
     public static String getLastMovieSeen() {
