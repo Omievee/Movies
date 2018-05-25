@@ -443,6 +443,8 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     }
 
     private void uploadToAWS(File ticketPhoto) {
+        whiteProgress.setVisibility(View.VISIBLE);
+        scanTicket.setVisibility(View.INVISIBLE);
         ObjectMetadata objectMetadata = new ObjectMetadata();
 
         LogUtils.newLog(Constants.TAG, "uploadToAWS:  " + screeningToken);
