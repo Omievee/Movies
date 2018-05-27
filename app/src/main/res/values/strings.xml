@@ -476,4 +476,11 @@
         <item quantity="other">Seats</item>
         <item quantity="many">Seats</item>
     </plurals>
+
+    <!-- Screenings -->
+    <string name="reservation_zip_code_description">If asked, provide this zip code:</string>
+    <string name="screening_already_seen">You\'ve already seen this movie.</string>
+    <string name="screening_rating">Rated</string>
+    <string name="screenings_no_more_screenings">There are no more screenings at this theater today</string>
+    <string name="screening_unlisted_showtime">Unlisted Showtime</string>
 </resources>

@@ -278,7 +278,32 @@
         <item name="android:src">@drawable/close_white</item>
     </style>
 
-    <style name="ReservationText">
+    <style name="ReservationText" parent="@style/RatedText">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RatedText" parent="RatingText">
+        <item name="android:textColor">@color/white_ish_transparent</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RatingText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="MovieTitleText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="MovieNotSupportedText">
         <item name="android:textColor">@color/white_ish</item>
         <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
         <item name="fontFamily">@font/tex_gyre_adventor</item>
@@ -314,9 +339,10 @@
         <item name="android:minHeight">70dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/white_ish</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+
         <item name="android:background">@drawable/button_red_outline</item>
         <item name="android:textAlignment">center</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
         <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_18</item>
@@ -343,5 +369,29 @@
         <item name="android:background">@color/test_black</item>
     </style>
 
-    <string name="reservation_zip_code_description">If asked, provide this zip code:</string>
+    <style name="ShowtimeButton">
+        <item name="android:background">@drawable/showtime_background</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:textColor">@color/showtime_csl</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="NoMoreScreenings" parent="TitleView">
+        <item name="android:maxLines">1</item>
+        <item name="android:padding">@dimen/margin_standard_and_half</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">400dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/screenings_no_more_screenings</item>
+    </style>
+
+
 </resources>

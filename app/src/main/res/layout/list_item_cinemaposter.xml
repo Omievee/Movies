@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/CardShowtime"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cinemaPoster"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_standard"
@@ -9,29 +10,31 @@
     android:layout_marginStart="@dimen/margin_half"
     android:layout_marginTop="@dimen/margin_half"
     android:animateLayoutChanges="true"
+    android:duplicateParentState="true"
     android:elevation="5dp"
-    android:paddingBottom="5dp"
-    fresco:cardCornerRadius="5dp">
+    android:paddingBottom="5dp">
 
-    <RelativeLayout
-        android:id="@+id/list_item_cinemaposterCARDVIEW"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/charcoalGrey">
+        android:background="@color/charcoalGrey"
+        android:duplicateParentState="true">
 
 
         <FrameLayout
-            android:id="@+id/FRAME"
+            android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/CINEMAPOSTER"
+                android:id="@+id/posterSPV"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:foreground="@drawable/poster_gradient_2"
-                fresco:failureImage="@drawable/filmreel1" />
+                fresco:cardCornerRadius="5dp"
+                fresco:failureImage="@drawable/filmreel1"
+                fresco:placeholderImage="@drawable/filmreel1" />
 
 
             <RelativeLayout
@@ -41,89 +44,98 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/cinema_movieTitle"
+                    android:id="@+id/movieTitle"
+                    style="@style/MovieTitleText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_standard"
-                    android:text="[ MOVIE TITLE ] "
-                    android:textColor="@color/almost_white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/cinema_movieRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/cinema_movieTitle"
-                    android:layout_marginBottom="@dimen/margin_half"
-                    android:layout_marginStart="@dimen/margin_standard"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:text="Runtime "
-                    android:textColor="@color/almost_white"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/cinema_movieTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/cinema_movieTitle"
-                    android:layout_marginBottom="@dimen/margin_half"
-                    android:layout_marginStart="@dimen/margin_standard"
-                    android:layout_marginTop="@dimen/margin_half"
-                    android:layout_toEndOf="@id/cinema_movieRating"
-                    android:text="Rating "
-                    android:textColor="@color/almost_white"
-                    android:textSize="15sp" />
-
+                    tools:text="[ MOVIE TITLE ] " />
 
                 <ImageButton
-                    android:id="@+id/cinema_Synopsis"
+                    android:id="@+id/synopsis"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_above="@id/cinema_movieTime"
+                    android:layout_alignTop="@id/movieTitle"
                     android:layout_marginStart="@dimen/margin_standard"
-                    android:layout_toRightOf="@id/cinema_movieTitle"
+                    android:layout_toEndOf="@id/movieTitle"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
                     android:src="@drawable/infoicon2"
                     android:tint="@color/almost_white" />
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/movieTitle"
+                    android:layout_marginBottom="@dimen/margin_half"
+                    android:layout_marginStart="@dimen/margin_standard"
+                    android:layout_marginTop="@dimen/margin_quarter">
 
+                    <TextView
+                        style="@style/RatedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLACEHOLDER"
+                        android:visibility="invisible"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/movieRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Runtime " />
+
+                    <Space
+                        android:id="@+id/spacer"
+                        android:layout_width="@dimen/margin_standard"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/movieRating"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/movieTime"
+                        style="@style/RatedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/spacer"
+                        tools:text="Rating " />
+
+                </RelativeLayout>
             </RelativeLayout>
         </FrameLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/HORIZVIEW"
+        <View
+            android:id="@+id/cinemaApprovedV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/enabled_bg"
+            fresco:layout_constraintBottom_toBottomOf="@id/frame"
+            fresco:layout_constraintEnd_toEndOf="parent"
+            fresco:layout_constraintStart_toStartOf="@id/frame"
+            fresco:layout_constraintTop_toTopOf="@id/frame" />
+
+        <TextView
+            android:id="@+id/notSupported"
+            style="@style/MovieNotSupportedText"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:padding="@dimen/margin_standard"
+            android:textStyle="bold"
+            android:visibility="gone"
+            fresco:layout_constraintBottom_toBottomOf="@id/frame"
+            fresco:layout_constraintEnd_toEndOf="@id/frame"
+            fresco:layout_constraintStart_toStartOf="@id/frame"
+            fresco:layout_constraintTop_toTopOf="@id/frame" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/FRAME"
-            android:layout_gravity="center"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="false"
+            fresco:layout_constraintTop_toBottomOf="@id/frame" />
 
-            <RadioGroup
-                android:id="@+id/SHOWTIMEGRID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/margin_half"
-                android:orientation="horizontal">
-
-            </RadioGroup>
-
-
-        </HorizontalScrollView>
-
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/Not_Supported"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:textColor="@color/almost_white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

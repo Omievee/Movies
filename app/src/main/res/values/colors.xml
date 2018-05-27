@@ -33,6 +33,7 @@
     <!--TODO: DARKER COLORS?-->
     <color name="test_blue">#14171b</color>
     <color name="test_black">#202b36</color>
+    <color name="test_black_transparent">#55202b36</color>
     <!--<color name="test_black">#0e1013</color>-->
 
 
@@ -43,6 +44,7 @@
 
 
     <color name="white_ish">@color/almost_white</color>
+    <color name="white_ish_transparent">#eef7f7f7</color>
     <color name="pinkish_gray">#d1d1d1</color>
 
     <color name="gray_icon">#7F7F7F</color>

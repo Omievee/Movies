@@ -58,6 +58,7 @@ import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
 import com.moviepass.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 import org.parceler.Parcels;
@@ -304,7 +305,7 @@ public class MovieActivity extends BaseActivity implements ShowtimeClickListener
     }
 
 
-    public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
+    public void onShowtimeClick(@Nullable Theater theater, int pos, @NotNull final Screening screening, @NotNull final String showtime) {
 
 
         LogUtils.newLog(TAG, "onShowtimeClick: " + UserPreferences.getRestrictionHasActiveCard());

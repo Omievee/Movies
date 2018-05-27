@@ -7,20 +7,16 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import com.helpshift.support.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
-import com.mobile.adapters.TheaterMoviesAdapter;
 import com.mobile.fragments.TheaterFragment;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
-import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
@@ -40,7 +36,6 @@ public class TheaterActivity extends BaseActivity {
     public static final String SHOWTIME = "showtime";
     public static final String TOKEN = "token";
 
-    TheaterMoviesAdapter theaterMoviesAdapter;
     boolean mIsStateAlreadySaved = false;
     boolean mPendingShowDialog = false;
 
