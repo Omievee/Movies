@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +97,7 @@ public class ReferAFriend extends android.app.Fragment {
             lastNameTextInputLayout.setError("Required");
             valid = false;
         }
-        if(!email.getText().toString().contains("com") || email.getText().toString().isEmpty()){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
             valid = false;
             emailTextInputLayout.setError("A valid email address is required");
         }
