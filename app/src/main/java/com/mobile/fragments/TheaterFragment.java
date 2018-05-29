@@ -39,14 +39,13 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
-import com.mobile.activities.SelectSeatActivity;
-import com.mobile.activities.TicketType;
 import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -55,31 +54,28 @@ import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.CardActivationRequest;
-import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ReservationResponse;
-import com.mobile.responses.ScreeningsResponse;
+import com.mobile.responses.ScreeningsResponseV2;
+import com.mobile.rx.Schedulers;
+import com.mobile.seats.BringAFriendActivity;
 import com.moviepass.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 
 import javax.annotation.Nullable;
 
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -90,7 +86,7 @@ import retrofit2.Response;
 public class TheaterFragment extends Fragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
     Theater theaterObject;
-    ScreeningsResponse screeningsResponse;
+    ScreeningsResponseV2 screeningsResponse;
     RecyclerView theaterSelectedRecyclerView;
     ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
     TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters;
@@ -98,7 +94,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
     TheaterScreeningsAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
     Button buttonCheckIn;
-    Screening screening = new Screening();
     LinkedList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
     View progress;
@@ -109,6 +104,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
     String url;
     @Nullable
     Pair<Screening, String> selected;
+
+    @Nullable
+    Disposable disposable;
 
     public static final String POLICY = "policy";
     public static final String TOKEN = "token";
@@ -166,7 +164,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
         /* Start Location Tasks */
         UserLocationManagerFused.getLocationInstance(getContext()).startLocationUpdates();
 
-        //Recycler / Adapter / LLM
+        //Recycler / BringAFriendPagerAdapter / LLM
         int resId = R.anim.layout_anim_bottom;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
@@ -237,7 +235,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
 
     @Override
-    public void onShowtimeClick(@org.jetbrains.annotations.Nullable Theater theater, int pos, @NotNull final Screening screening, @NotNull final String showtime) {
+    public void onShowtimeClick(@org.jetbrains.annotations.Nullable Theater theater, @NotNull final Screening screening, @NotNull final String showtime) {
         if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
             selected = null;
         } else {
@@ -248,8 +246,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
             fadeOut(buttonCheckIn);
             return;
         }
-        final String time = showtime;
-        final Screening screening1 = screening;
 
         LogUtils.newLog(TAG, "onShowtimeClick: ");
 
@@ -257,7 +253,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
             fadeIn(buttonCheckIn);
         }
 
-        if (screening.getProvider().ticketTypeIsSelectSeating() || screening.getProvider().ticketTypeIsETicket()) {
+        Availability availability = screening.getAvailability(showtime);
+        if (availability == null) {
+            return;
+        }
+        if (availability.isETicket()) {
             buttonCheckIn.setText("Continue to E-Ticketing");
         } else {
             buttonCheckIn.setText("Check In");
@@ -265,17 +265,16 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
         buttonCheckIn.setEnabled(true);
         GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
-            LogUtils.newLog(TAG, "onClick: " + screening.getProvider().ticketType);
-            if (isPendingSubscription() && screening.getProvider().ticketType.matches("E_TICKET")) {
+            if (isPendingSubscription() && availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("STANDARD")) {
+            } else if (isPendingSubscription() && availability.getTicketType() == com.mobile.model.TicketType.STANDARD) {
                 showActivateCardDialog(screening, showtime);
-            } else if (isPendingSubscription() && screening.getProvider().ticketType.matches("SELECT_SEATING")) {
+            } else if (isPendingSubscription() && availability.getTicketType() == com.mobile.model.TicketType.SELECT_SEATING) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (screening.getProvider().ticketType.matches("STANDARD")) {
-                if (UserPreferences.getProofOfPurchaseRequired() || screening.isPopRequired()) {
+            } else if (availability.getTicketType() == com.mobile.model.TicketType.STANDARD) {
+                if (UserPreferences.getProofOfPurchaseRequired() || screening.getPopRequired()) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(myContext, R.style.CUSTOM_ALERT);
                     alert.setView(R.layout.alertdialog_ticketverif);
                     alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
@@ -297,26 +296,29 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
     private void loadMovies() {
         int theaterId = theaterObject.getTribuneTheaterId();
-        RestClient.getAuthenticated().getScreeningsForTheater(theaterId).enqueue(new Callback<ScreeningsResponse>() {
-            @Override
-            public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
-                screeningsResponse = response.body();
-                theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        disposable = RestClient.getAuthenticated().getScreeningsForTheaterV2(theaterId)
+                .subscribe(response -> {
+                    screeningsResponse = response;
+                    theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+                    progress.setVisibility(View.GONE);
+                    noTheaters.setVisibility(View.GONE);
 
-                progress.setVisibility(View.GONE);
-                noTheaters.setVisibility(View.GONE);
+                    theaterSelectedRecyclerView.setVisibility(View.VISIBLE);
+                }, error -> {
+                    error.printStackTrace();
+                    progress.setVisibility(View.GONE);
+                });
+    }
 
-                theaterSelectedRecyclerView.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-                t.printStackTrace();
-                progress.setVisibility(View.GONE);
-            }
-
-        });
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -338,33 +340,30 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
         buttonCheckIn.setEnabled(false);
         /* Standard Check In */
-        String providerName = screening.getProvider().providerName;
-        //PerformanceInfo
-        checkProviderDoPerformanceInfoRequest(screening, showtime);
 
-        if (screening.getProvider().ticketType.matches("STANDARD")) {
+        Availability availability = screening.getAvailability(showtime);
+        if (availability == null) {
+            return;
+        }
+        if (availability.getTicketType() == com.mobile.model.TicketType.STANDARD) {
             if (isPendingSubscription()) {
                 showActivateCardDialog(screening, showtime);
             }
-            TicketInfoRequest ticketInfo = new TicketInfoRequest(mPerformReq);
-            CheckInRequest checkInRequest = new CheckInRequest(ticketInfo, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            TicketInfoRequest checkInRequest = new TicketInfoRequest(availability.getProviderInfo(), null, null, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             reservationRequest(screen, checkInRequest, time);
 
-        } else if (screening.getProvider().ticketType.matches("E_TICKET")) {
+        } else if (availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
             progress.setVisibility(View.GONE);
             showEticketConfirmation(screen, time);
 
         } else {
             progress.setVisibility(View.GONE);
-            Intent intent = new Intent(myActivity, SelectSeatActivity.class);
-            intent.putExtra(SCREENING, Parcels.wrap(screen));
-            intent.putExtra(SHOWTIME, time);
-            intent.putExtra(THEATER, Parcels.wrap(theaterObject));
+            Intent intent = BringAFriendActivity.Companion.newIntent(myActivity, theaterObject, screening, time);
             startActivity(intent);
         }
     }
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
+    private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
         RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
@@ -375,9 +374,9 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
                     UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
                     progress.setVisibility(View.GONE);
 
-                    if (reservationResponse.getE_ticket_confirmation() != null) {
+                    if (reservationResponse.getETicketConfirmation() != null) {
 
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), theaterObject);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), theaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
 
@@ -506,113 +505,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
         alert.show();
     }
 
-
-    protected PerformanceInfoRequest checkProviderDoPerformanceInfoRequest(Screening screen, String time) {
-
-
-        if (screen.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-            int normalizedMovieId = screen.getMoviepassId();
-            String externalMovieId = screen.getProvider().getPerformanceInfo(time).getExternalMovieId();
-            String format = screen.getFormat();
-            int tribuneTheaterId = screen.getTribuneTheaterId();
-            int screeningId = screen.getProvider().getPerformanceInfo(time).getScreeningId();
-            int performanceNumber = screen.getProvider().getPerformanceInfo(time).getPerformanceNumber();
-            String sku = screen.getProvider().getPerformanceInfo(time).getSku();
-            Double price = screen.getProvider().getPerformanceInfo(time).getPrice();
-            String dateTime = screen.getProvider().getPerformanceInfo(time).getDateTime();
-            String auditorium = screen.getProvider().getPerformanceInfo(time).getAuditorium();
-            String performanceId = screen.getProvider().getPerformanceInfo(time).getPerformanceId();
-            String sessionId = screen.getProvider().getPerformanceInfo(time).getSessionId();
-            int theater = screen.getProvider().getTheater();
-            String cinemaChainId = screen.getProvider().getPerformanceInfo(time).getCinemaChainId();
-            String showtimeId = screen.getProvider().getPerformanceInfo(time).getShowtimeId();
-            TicketType ticketType = screen.getProvider().getPerformanceInfo(time).getTicketType();
-
-
-            mPerformReq = new PerformanceInfoRequest(
-                    normalizedMovieId,
-                    externalMovieId,
-                    format,
-                    tribuneTheaterId,
-                    screeningId,
-                    dateTime,
-                    performanceNumber,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId,
-                    cinemaChainId,
-                    ticketType,
-                    showtimeId);
-
-            LogUtils.newLog(TAG, "----------------------------------------------: ");
-            LogUtils.newLog(TAG, "provider: " + screen.getProvider().getProviderName());
-            LogUtils.newLog(TAG, "normal: " + normalizedMovieId);
-            LogUtils.newLog(TAG, "external: " + externalMovieId);
-            LogUtils.newLog(TAG, "format: " + format);
-            LogUtils.newLog(TAG, "tribune: " + tribuneTheaterId);
-            LogUtils.newLog(TAG, "sku ID: " + sku);
-            LogUtils.newLog(TAG, "price: " + price);
-            LogUtils.newLog(TAG, "date: " + dateTime);
-            LogUtils.newLog(TAG, "aud: " + auditorium);
-            LogUtils.newLog(TAG, "perform: " + performanceId);
-            LogUtils.newLog(TAG, "session: " + sessionId);
-            LogUtils.newLog(TAG, "cinema: " + cinemaChainId);
-            LogUtils.newLog(TAG, "show id: " + showtimeId);
-            LogUtils.newLog(TAG, "tick type: " + ticketType);
-
-            return mPerformReq;
-
-
-        } else {
-            //IF not movieXchange then it will simply request these parameters:
-            int normalizedMovieId = screen.getMoviepassId();
-            String externalMovieId = screen.getProvider().getPerformanceInfo(time).getExternalMovieId();
-            String format = screen.getFormat();
-            int tribuneTheaterId = screen.getTribuneTheaterId();
-            int performanceNumber = screen.getProvider().getPerformanceInfo(time).getPerformanceNumber();
-            String sku = screen.getProvider().getPerformanceInfo(time).getSku();
-            Double price = screen.getProvider().getPerformanceInfo(time).getPrice();
-            String dateTime = screen.getProvider().getPerformanceInfo(time).getDateTime();
-            String auditorium = screen.getProvider().getPerformanceInfo(time).getAuditorium();
-            String performanceId = screen.getProvider().getPerformanceInfo(time).getPerformanceId();
-            String sessionId = screen.getProvider().getPerformanceInfo(time).getSessionId();
-
-            mPerformReq = new PerformanceInfoRequest(
-                    dateTime,
-                    externalMovieId,
-                    performanceNumber,
-                    tribuneTheaterId,
-                    format,
-                    normalizedMovieId,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId);
-
-            LogUtils.newLog(TAG, "----------------------------------------------: ");
-            LogUtils.newLog(TAG, "time?: " + time);
-
-            LogUtils.newLog(TAG, "provider: " + screen.getProvider().getProviderName());
-            LogUtils.newLog(TAG, "normal: " + normalizedMovieId);
-            LogUtils.newLog(TAG, "external: " + externalMovieId);
-            LogUtils.newLog(TAG, "format: " + format);
-            LogUtils.newLog(TAG, "tribune: " + tribuneTheaterId);
-            LogUtils.newLog(TAG, "sku ID: " + sku);
-            LogUtils.newLog(TAG, "price: " + price);
-            LogUtils.newLog(TAG, "date: " + dateTime);
-            LogUtils.newLog(TAG, "aud: " + auditorium);
-            LogUtils.newLog(TAG, "perform: " + performanceId);
-            LogUtils.newLog(TAG, "session: " + sessionId);
-            LogUtils.newLog(TAG, "----------------------------------------------: ");
-
-            return mPerformReq;
-        }
-
-    }
-
     private void showConfirmation(ScreeningToken token) {
         if (token.getConfirmationCode() != null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
             startActivity(ReservationActivity.Companion.newInstance(myActivity, token));
@@ -626,16 +518,15 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
         Intent intent = new Intent(myActivity, EticketConfirmation.class);
 
-        intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
+        intent.putExtra(SCREENING, screeningObject);
         intent.putExtra(SHOWTIME, selectedShowTime);
 
         startActivity(intent);
-
     }
 
     public void fadeIn(View view) {
         Animation old = view.getAnimation();
-        if(old!=null) {
+        if (old != null) {
             old.setAnimationListener(null);
             old.cancel();
         }
@@ -704,7 +595,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
-        onShowtimeClick(null, 0, screening, showTime);
+        onShowtimeClick(null, screening, showTime);
         theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
     }
 }

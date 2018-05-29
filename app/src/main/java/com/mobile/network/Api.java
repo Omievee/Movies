@@ -1,9 +1,11 @@
 package com.mobile.network;
 
-import com.jakewharton.retrofit2.adapter.rxjava2.Result;
 import com.mobile.loyalty.TheaterChain;
+import com.mobile.model.Emails;
 import com.mobile.model.MoviePassCard;
 import com.mobile.model.MoviesResponse;
+import com.mobile.model.PerformanceInfo;
+import com.mobile.model.PerformanceInfoV2;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
@@ -11,7 +13,6 @@ import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.ChangeEmailRequest;
 import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
-import com.mobile.requests.CheckInRequest;
 import com.mobile.requests.CredentialsRequest;
 import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookLinkRequest;
@@ -19,6 +20,7 @@ import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SignUpRequest;
+import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
@@ -38,8 +40,8 @@ import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.ScreeningsResponse;
+import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.responses.SeatingsInfoResponse;
 import com.mobile.responses.SignUpResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -105,8 +107,8 @@ public interface Api {
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
     /* Screenings for Movies (details) */
-    @GET("/rest/v1/screenings")
-    Call<ScreeningsResponse> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+    @GET("/rest/v2/screenings")
+    Call<ScreeningsResponseV2> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
     @POST("mobile/check/email")
@@ -121,14 +123,16 @@ public interface Api {
 
     /* Check In */
     @POST("/rest/v1/reservations")
-    Call<ReservationResponse> checkIn(@Body CheckInRequest request);
+    Call<ReservationResponse> checkIn(@Body TicketInfoRequest request);
 
+    @POST("/rest/v2/reservations")
+    Single<ReservationResponse> reserve(@Body TicketInfoRequest request);
 
     /* GET PENDING RESERVATION */
     @GET("rest/v1/reservations/last")
     Call<ActiveReservationResponse> last();
 
-    @GET("rest/v1/reservations/last")
+    @GET("rest/v2/reservations/last")
     Single<CurrentReservationV2> lastReservation();
 
     /* Cancel Reservation  */
@@ -143,6 +147,9 @@ public interface Api {
     @POST("/rest/v1/seats")
     Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Body PerformanceInfoRequest request);
 
+    @GET("/rest/v2/seats")
+    Single<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Query("performanceId") String performanceId);
+
     /* Verify Ticket Photo */
     @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
@@ -152,12 +159,15 @@ public interface Api {
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
     /* Theater screenings (details) */
-    @GET("/rest/v1/theaters/{id}/screenings")
-    Call<ScreeningsResponse> getScreeningsForTheater(@Path("id") int id);
+    @GET("/rest/v2/theater/{id}/screenings")
+    Single<ScreeningsResponseV2> getScreeningsForTheaterV2(@Path("id") int id);
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
+
+    @POST("/rest/v1/users/exists")
+    Single<Emails> usersExist(@Body Emails emails);
 
     /* User Address */
     @PUT("/rest/v1/users/{userId}")

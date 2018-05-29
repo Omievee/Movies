@@ -42,9 +42,12 @@
     <dimen name="focus_overlay_w_h">50dp</dimen>
 
     <!-- Seat Selection -->
-    <dimen name="seat_padding">3dp</dimen>
+    <dimen name="seat_padding">4dp</dimen>
 
     <!-- Action Bar -->
     <dimen name="action_bar_size">56dp</dimen>
     <dimen name="status_bar_height">25dp</dimen>
+    <dimen name="seat_height">28dp</dimen>
+    <dimen name="seat_guide_height">20dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
 </resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:background="@color/charcoalGrey">
+
+        <TextView
+            android:id="@+id/movieName"
+            style="@style/ScreeningHeaderText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_half"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Avengers" />
+
+        <TextView
+            android:id="@+id/seatsHeader"
+            style="@style/ScreeningHeaderText"
+            android:layout_marginTop="@dimen/margin_half"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Seats" />
+
+        <TextView
+            android:id="@+id/theaterName"
+            style="@style/ScreeningSubHeaderText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".5"
+            tools:text="Cinema Awesome" />
+
+        <TextView
+            android:id="@+id/showtime"
+            style="@style/ScreeningSubHeaderText"
+            android:paddingBottom="@dimen/margin_half"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="12:45 PM" />
+
+        <TextView
+            android:id="@+id/seats"
+            style="@style/ScreeningSeats"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="A1" />
+
+        <TextView
+            android:id="@+id/selectSeats"
+            style="@style/ScreeningSelectSeats"
+            android:paddingBottom="@dimen/margin_half"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="need 4 seats" />
+    </android.support.constraint.ConstraintLayout>
+</merge>

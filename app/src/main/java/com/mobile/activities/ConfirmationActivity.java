@@ -1,6 +1,5 @@
 package com.mobile.activities;
 
-import android.Manifest.permission;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -165,13 +164,13 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             ETicket.setVisibility(View.VISIBLE);
             String code = screeningToken.getConfirmationCode().getConfirmationCode();
             confirmCode.setText(code);
-            if (screeningToken.getSeatName() != null) {
+            if (screeningToken.getSeatSelected() != null && screeningToken.getSeatSelected().size()>0) {
                 pendingSeat.setVisibility(View.VISIBLE);
-                pendingSeat.setText("Seat: " + screeningToken.getSeatName());
+                pendingSeat.setText("Seats: " + screeningToken.getSeatSelected().get(0).getSeatName());
             }
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
-            if (UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().isPopRequired()) {
+            if (UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().getPopRequired()) {
                 verifyTicketFlag.setVisibility(View.VISIBLE);
                 expand(verifyMsgExpanded);
                 bottomNavigationView.setVisibility(View.GONE);

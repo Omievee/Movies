@@ -109,4 +109,7 @@ public class Constants {
 
     //TICKET VERIFICATION
     public static final String TICKET_VERIFICATION_FAQ_SECTION = "38";
+
+    public static final double CONVENIENCE_FEE = 1.50;
+    public static final int CONVENIENCE_FEE_CENTS = (int) (CONVENIENCE_FEE * 100);
 }

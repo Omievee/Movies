@@ -1,5 +1,7 @@
 package com.mobile.utils.text
 
+import java.text.DecimalFormat
+
 fun String?.toSentenceCase(): String {
     if (this == null) {
         return ""
@@ -17,4 +19,8 @@ fun String?.toSentenceCase(): String {
             } else
                 c.toString()
     }.joinToString("")
+}
+
+fun Double?.toCurrency(): String {
+    return DecimalFormat.getCurrencyInstance().format(this)
 }

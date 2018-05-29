@@ -28,7 +28,7 @@ public class SeatButton extends AppCompatImageButton {
         super(context, attrs, defStyle);
     }
 
-    private void initSeat(SeatInfo seat) {
+    public void initSeat(SeatInfo seat) {
         setBackground(null);
         mSeatInfo = seat;
 

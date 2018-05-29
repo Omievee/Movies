@@ -4,8 +4,6 @@ import com.mobile.adapters.ItemSame
 import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.utils.isValidShowtime
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class ScreeningPresentation(
         val screening: Screening? = null,
@@ -15,13 +13,13 @@ data class ScreeningPresentation(
 ) : ItemSame<ScreeningPresentation> {
 
     val enabled: Boolean by lazy {
-        movie == null && screening?.isApproved ?: false
+        movie == null && screening?.approved ?: false
     }
 
     val hasShowtimes: Boolean by lazy {
-        val count = screening?.startTimes
+        val count = screening?.availabilities
                 ?.filter {
-                    isValidShowtime(it)
+                    it.available && isValidShowtime(it.startTime)
                 }?.size ?: 0
         count > 0
     }

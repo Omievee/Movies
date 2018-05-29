@@ -92,7 +92,7 @@ class TheaterScreeningsAdapter(
                         it.type == TYPE_MISSING
                     },
                     {
-                        !(it.screening?.isApproved ?: false)
+                        !(it.screening?.approved ?: false)
                     },
                     {
                         it.movie != null

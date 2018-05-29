@@ -70,6 +70,7 @@ import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
 import com.mobile.responses.LocalStorageTheaters;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -217,7 +218,9 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(this);
-
+        if(BuildConfig.DEFAULT_LOCATION!=null) {
+            searchGP.setText(BuildConfig.DEFAULT_LOCATION);
+        }
         myloc.setOnClickListener(v -> {
             mRequestingLocationUpdates = true;
             getMyLocation();

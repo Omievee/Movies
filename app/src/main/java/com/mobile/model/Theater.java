@@ -1,6 +1,8 @@
 package com.mobile.model;
 
 
+import android.support.annotation.Nullable;
+
 import org.parceler.Parcel;
 
 import java.io.Serializable;
@@ -94,11 +96,8 @@ public class Theater extends RealmObject implements Serializable {
     public Theater() {
     }
 
-    public String getName() {
-        if (name != null) {
-            return name;
-        }
-        return "Theater";
+    @Nullable public String getName() {
+        return name;
     }
 
     public boolean ticketTypeIsStandard() {

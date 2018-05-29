@@ -13,7 +13,7 @@
         android:fitsSystemWindows="true" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/moviePoster"
+        android:id="@+id/moviePosterHeader"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@string/cd_movie_poster"
@@ -36,6 +36,7 @@
     <ImageView
         android:id="@+id/closeIV"
         style="@style/CloseButton"
+        android:layout_marginTop="@dimen/status_bar_height"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 

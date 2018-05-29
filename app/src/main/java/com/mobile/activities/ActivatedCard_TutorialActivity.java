@@ -70,7 +70,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         done.setOnClickListener(v -> {
             if (screeningObject != null && selectedShowTime != null) {
                 MovieActivity reserAct = new MovieActivity();
-                reserAct.reserve(null,screeningObject, selectedShowTime);
+                reserAct.reserve(screeningObject, selectedShowTime);
             } else {
                 Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);
                 doneIntent.putExtra("launch", true);

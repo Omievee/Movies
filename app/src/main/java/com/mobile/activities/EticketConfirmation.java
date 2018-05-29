@@ -5,13 +5,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import com.helpshift.activities.MainActivity;
-import com.helpshift.support.Log;
-
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,11 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
+import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
@@ -36,11 +32,8 @@ import com.mobile.model.Theater;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
-import com.mobile.requests.CheckInRequest;
-import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SelectedSeat;
 import com.mobile.requests.TicketInfoRequest;
-import com.mobile.reservation.CurrentReservationV2;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ReservationResponse;
 import com.moviepass.R;
@@ -53,7 +46,7 @@ import retrofit2.Response;
 
 public class EticketConfirmation extends BaseActivity {
 
-    TextView etixTitle, etixTheater, etixShowtime, etixSeat, seatTExt;
+    TextView etixTitle, etixTheater, etixShowtime, etixSeat;
     SimpleDraweeView etixPoster;
     ImageView etixOnBack;
     Screening screeningObject;
@@ -62,11 +55,8 @@ public class EticketConfirmation extends BaseActivity {
     String selectedShowTime;
     View progressWheel;
     RelativeLayout relSeat;
-    String providerName;
     TicketInfoRequest ticketRequest;
-    CheckInRequest checkinRequest;
     Theater theater;
-    PerformanceInfoRequest mPerformReq;
     public static final String SEAT = "seat";
     public static final String TAG = "FOUND IT";
 
@@ -97,7 +87,7 @@ public class EticketConfirmation extends BaseActivity {
         //set details for confirmation page..
 
         Intent intent = getIntent();
-        screeningObject = Parcels.unwrap(intent.getParcelableExtra(SCREENING));
+        screeningObject = intent.getParcelableExtra(SCREENING);
         selectedShowTime = getIntent().getStringExtra(SHOWTIME);
         seatObject = Parcels.unwrap(getIntent().getParcelableExtra(SEAT));
         theater = Parcels.unwrap(getIntent().getParcelableExtra(THEATER));
@@ -125,10 +115,10 @@ public class EticketConfirmation extends BaseActivity {
             alert.setPositiveButton(android.R.string.ok, ((dialog, which) -> {
                 if (seatObject != null) {
                     progressWheel.setVisibility(View.VISIBLE);
-                    reserveWithSeat(screeningObject, selectedShowTime, seatObject);
+                    reserve(screeningObject, selectedShowTime, seatObject);
                 } else {
                     progressWheel.setVisibility(View.VISIBLE);
-                    reserveNoSeat(screeningObject, selectedShowTime);
+                    reserve(screeningObject, selectedShowTime, null);
                 }
             }));
             alert.show();
@@ -179,105 +169,38 @@ public class EticketConfirmation extends BaseActivity {
     }
 
 
-    public void reserveWithSeat(Screening screening, String showtime, SeatSelected seatSelected) {
+    public void reserve(Screening screening, String showtime, @Nullable SeatSelected seatSelected) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
-        SelectedSeat selectedSeat = new SelectedSeat(seatSelected.getSelectedSeatRow(), seatSelected.getSelectedSeatColumn());
-
-
-        if (screening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-            int normalizedMovieId = screening.getMoviepassId();
-            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-            String format = screening.getFormat();
-            int tribuneTheaterId = screening.getTribuneTheaterId();
-            int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
-            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
-            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-            int theater = screening.getProvider().getTheater();
-            String cinemaChainId = screening.getProvider().getPerformanceInfo(showtime).getCinemaChainId();
-            String showtimeId = screening.getProvider().getPerformanceInfo(showtime).getShowtimeId();
-            TicketType ticketType = screening.getProvider().getPerformanceInfo(showtime).getTicketType();
-
-
-            PerformanceInfoRequest perform = new PerformanceInfoRequest(
-                    normalizedMovieId,
-                    externalMovieId,
-                    format,
-                    tribuneTheaterId,
-                    screeningId,
-                    dateTime,
-                    performanceNumber,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId,
-                    cinemaChainId,
-                    ticketType,
-                    showtimeId);
-
-            ticketRequest = new TicketInfoRequest(perform, selectedSeat);
-
-
+        @Nullable final SelectedSeat selectedSeat;
+        if(seatSelected==null) {
+            selectedSeat = null;
         } else {
-            //IF not movieXchange then it will simply request these parameters:
-            int normalizedMovieId = screening.getMoviepassId();
-            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-            String format = screening.getFormat();
-            int tribuneTheaterId = screening.getTribuneTheaterId();
-            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
-            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-//            int theater = screeningObject.getProvider().getTheater();
-
-            PerformanceInfoRequest request = new PerformanceInfoRequest(
-                    dateTime,
-                    externalMovieId,
-                    performanceNumber,
-                    tribuneTheaterId,
-                    format,
-                    normalizedMovieId,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId);
-            ticketRequest = new TicketInfoRequest(request, selectedSeat);
-            LogUtils.newLog(Constants.TAG, "performinfo:2 " + selectedSeat);
-
+             selectedSeat= new SelectedSeat(seatSelected.getSelectedSeatRow(), seatSelected.getSelectedSeatColumn());
         }
 
-        providerName = screening.getProvider().providerName;
-        checkinRequest = new CheckInRequest(ticketRequest, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        reservationRequest(screening, checkinRequest, showtime, seatSelected);
+        Availability availability = screening.getAvailability(showtime);
+        TicketInfoRequest ticketInfoRequest = new TicketInfoRequest(availability
+        .getProviderInfo(),selectedSeat,null,mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+
+        reservationRequest(screening, ticketInfoRequest, showtime);
     }
 
 
-    private void reservationRequest(final Screening screening, CheckInRequest checkInRequest, final String showtime, SeatSelected seatSelected) {
+    private void reservationRequest(final Screening screening, TicketInfoRequest request, final String showtime) {
         UserPreferences.setLastCheckInAttemptDate();
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
+        RestClient.getAuthenticated().checkIn(request).enqueue(new RestCallback<ReservationResponse>() {
             @Override
             public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
                 ReservationResponse reservationResponse = response.body();
 
-                SeatSelected seat = seatSelected;
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation,theater));
 
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getE_ticket_confirmation(), seat, theater);
-                    LogUtils.newLog(Constants.TAG, "onResponse: " + seat.getSeatName());
+                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), null, theater);
 
                     showConfirmation(token);
 
@@ -325,139 +248,4 @@ public class EticketConfirmation extends BaseActivity {
         stackBuilder.addNextIntentWithParentStack(ReservationActivity.Companion.newInstance(EticketConfirmation.this, token));
         stackBuilder.startActivities();
     }
-
-
-    public void reserveNoSeat(Screening screening, String showtime) {
-        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
-        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
-
-
-        if (screening.getProvider().getProviderName().equalsIgnoreCase("MOVIEXCHANGE")) {
-            int normalizedMovieId = screening.getMoviepassId();
-            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-            String format = screening.getFormat();
-            int tribuneTheaterId = screening.getTribuneTheaterId();
-            int screeningId = screening.getProvider().getPerformanceInfo(showtime).getScreeningId();
-            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
-            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-            int theater = screening.getProvider().getTheater();
-            String cinemaChainId = screening.getProvider().getPerformanceInfo(showtime).getCinemaChainId();
-            String showtimeId = screening.getProvider().getPerformanceInfo(showtime).getShowtimeId();
-            TicketType ticketType = screening.getProvider().getPerformanceInfo(showtime).getTicketType();
-
-
-            PerformanceInfoRequest perform = new PerformanceInfoRequest(
-                    normalizedMovieId,
-                    externalMovieId,
-                    format,
-                    tribuneTheaterId,
-                    screeningId,
-                    dateTime,
-                    performanceNumber,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId,
-                    cinemaChainId,
-                    ticketType,
-                    showtimeId);
-
-            ticketRequest = new TicketInfoRequest(perform);
-
-
-        } else {
-            //IF not movieXchange then it will simply request these parameters:
-            int normalizedMovieId = screening.getMoviepassId();
-            String externalMovieId = screening.getProvider().getPerformanceInfo(showtime).getExternalMovieId();
-            String format = screening.getFormat();
-            int tribuneTheaterId = screening.getTribuneTheaterId();
-            int performanceNumber = screening.getProvider().getPerformanceInfo(showtime).getPerformanceNumber();
-            String sku = screening.getProvider().getPerformanceInfo(showtime).getSku();
-            Double price = screening.getProvider().getPerformanceInfo(showtime).getPrice();
-            String dateTime = screening.getProvider().getPerformanceInfo(showtime).getDateTime();
-            String auditorium = screening.getProvider().getPerformanceInfo(showtime).getAuditorium();
-            String performanceId = screening.getProvider().getPerformanceInfo(showtime).getPerformanceId();
-            String sessionId = screening.getProvider().getPerformanceInfo(showtime).getSessionId();
-
-            PerformanceInfoRequest request = new PerformanceInfoRequest(
-                    dateTime,
-                    externalMovieId,
-                    performanceNumber,
-                    tribuneTheaterId,
-                    format,
-                    normalizedMovieId,
-                    sku,
-                    price,
-                    auditorium,
-                    performanceId,
-                    sessionId);
-            ticketRequest = new TicketInfoRequest(request);
-
-
-        }
-
-        providerName = screening.getProvider().providerName;
-        checkinRequest = new CheckInRequest(ticketRequest, providerName, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        reservationRequestNoSeat(screening, checkinRequest, showtime);
-    }
-
-    private void reservationRequestNoSeat(final Screening screening, CheckInRequest checkInRequest, final String showtime) {
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
-
-                if (reservationResponse != null && reservationResponse.isOk()) {
-                    progressWheel.setVisibility(View.GONE);
-                    Reservation reservation = reservationResponse.getReservation();
-
-                    ReservationResponse.ETicketConfirmation confirmationCode = reservationResponse.getE_ticket_confirmation();
-
-                    ScreeningToken token = new ScreeningToken(screening, showtime, reservation, confirmationCode, theater);
-
-                    showConfirmation(token);
-
-                } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Toast.makeText(EticketConfirmation.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        finish();
-                        progressWheel.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        Toast.makeText(EticketConfirmation.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
-                        progressWheel.setVisibility(View.GONE);
-                    }
-                }
-
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                progressWheel.setVisibility(View.GONE);
-
-                String hostname = "Unable to resolve host: No address associated with hostname";
-
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
-                    Toast.makeText(EticketConfirmation.this, R.string.error, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
-                    Toast.makeText(EticketConfirmation.this, R.string.data_connection, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
-                    Toast.makeText(EticketConfirmation.this, R.string.pending_reservation, Toast.LENGTH_LONG).show();
-                } else if (restError != null) {
-                    LogUtils.newLog("resResponse:", "else onfail:" + "onRespnse fail");
-                    Toast.makeText(EticketConfirmation.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
 }

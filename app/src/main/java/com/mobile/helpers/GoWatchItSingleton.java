@@ -169,13 +169,11 @@ public class GoWatchItSingleton {
 
         String result = "";
         thd = "";
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
         try {
-            Date date = format1.parse(screening.getDate());
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            result = format2.format(date);
+            result = format2.format(screening.getDate());
             thd = result;
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -221,13 +219,11 @@ public class GoWatchItSingleton {
 
         String result = "";
         thd = "";
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
         try {
-            Date date = format1.parse(screening.getDate());
             SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            result = format2.format(date);
+            result = format2.format(screening.getDate());
             thd = result;
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

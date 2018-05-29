@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/DialogFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/DialogFragmentTitleView"
+        android:layout_marginTop="@dimen/action_bar_size"
+        android:background="@null"
+        android:text="@string/e_ticket_cancellation_policy" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton" />
+
+    <TextView
+        android:id="@+id/error"
+        android:background="@null"
+        style="@style/DialogFragmentErrorView"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_goneMarginTop="0dp" />
+
+    <TextView
+        android:id="@+id/description"
+        android:background="@null"
+        style="@style/ETicketCancellationPolicyDescription"
+        app:layout_constraintTop_toBottomOf="@id/error" />
+
+</android.support.constraint.ConstraintLayout>

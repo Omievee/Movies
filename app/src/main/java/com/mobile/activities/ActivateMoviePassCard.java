@@ -71,7 +71,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
+            screeningObject = intent.getParcelableExtra(MovieActivity.SCREENING);
             selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
         }
 

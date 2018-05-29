@@ -21,10 +21,10 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="TicketReservationTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="TicketReservationTheme" parent="AppTheme">
 
     </style>
-    
+
     <style name="MoviePassThemeTransparentStatusBar" parent="AppTheme">
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -43,8 +43,8 @@
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
     </style>
 
 
@@ -55,6 +55,19 @@
         <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
         <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
         <item name="android:lines">1</item>
+    </style>
+
+    <style name="ProgressMPButtonText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/almost_white</item>
+
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
     </style>
 
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
@@ -133,8 +146,8 @@
     <style name="text_in_layout_hint_Style" parent="TextAppearance.Design.Hint">
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textSize">12sp</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
     </style>
 
     <style name="normal_text_in_layout_Style">
@@ -169,7 +182,7 @@
         <item name="autoSizeMaxTextSize">20sp</item>
         <item name="fontWeight" tools:targetApi="26">500</item>
         <item name="android:fontWeight" tools:targetApi="26">500</item>
-        <item name="android:fontFamily" tools:targetApi="26">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
         <item name="android:layout_height">?android:actionBarSize</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/dark</item>
@@ -186,8 +199,8 @@
         <item name="android:paddingStart">@dimen/margin_half</item>
         <item name="android:layout_marginStart">@dimen/margin_standard</item>
         <item name="android:textColor">@color/almost_white</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
         <item name="android:fontWeight" tools:targetApi="o">300</item>
         <item name="fontWeight" tools:targetApi="o">300</item>
     </style>
@@ -201,18 +214,18 @@
     </style>
 
     <style name="LoyaltyProgramDescription">
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:fontFamily" tools:targetApi="26">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
         <item name="android:textColor">@color/almost_white</item>
     </style>
 
     <style name="LoyaltyAddProgramDescription">
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:fontFamily" tools:targetApi="26">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
         <item name="android:textColor">@color/almost_white</item>
     </style>
 
@@ -232,9 +245,9 @@
         <item name="android:textAppearance">@style/normal_text_in_layout_Style</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:letterSpacing">.15</item>
-        <item name="android:fontFamily" target="26">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" target="26">@font/roboto_font</item>
         <item name="colorControlNormal">@color/white_40_opacity</item>
         <item name="android:colorControlNormal">@color/white_40_opacity</item>
         <item name="colorControlHighlight">@color/white_80_opacity</item>
@@ -289,24 +302,24 @@
 
     <style name="RatingText">
         <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="MovieTitleText">
         <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">22sp</item>
     </style>
 
     <style name="MovieNotSupportedText">
         <item name="android:textColor">@color/white_ish</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textSize">20sp</item>
     </style>
 
@@ -326,7 +339,6 @@
     <style name="ReservationDescription" parent="ReservationText">
         <item name="android:textSize">16sp</item>
         <item name="android:layout_marginTop">@dimen/margin_half</item>
-        <item name="android:text">@string/reservation_code_description</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -342,8 +354,8 @@
 
         <item name="android:background">@drawable/button_red_outline</item>
         <item name="android:textAlignment">center</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_18</item>
         <item name="android:gravity">center</item>
@@ -377,11 +389,65 @@
         <item name="android:layout_marginStart">15dp</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="fontFamily">@font/tex_gyre_adventor</item>
+        <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textColor">@color/showtime_csl</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/tex_gyre_adventor</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="MPText">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textColor">@color/white_ish</item>
+    </style>
+
+    <style name="MPText_Bold" parent="MPText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MPText_Italic" parent="MPText">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ContinueButton" parent="RedMoviepassButton">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+        <item name="android:text">@string/continue_button</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="NextButton" parent="ContinueButton">
+        <item name="android:text">@string/next</item>
+    </style>
+
+    <style name="DialogFragment">
+        <item name="android:background">@drawable/dialog_fragment_graient</item>
+    </style>
+
+    <style name="DialogFragmentTitleView" parent="TitleView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white_ish</item>
+    </style>
+
+    <style name="DialogFragmentErrorView" parent="TitleView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="trackTint">@color/track_solid</item>
+        <item name="thumbTint">@color/white</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:background">@color/white_ish</item>
+        <item name="android:alpha">.2</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
     </style>
 
     <style name="NoMoreScreenings" parent="TitleView">
@@ -393,5 +459,191 @@
         <item name="android:text">@string/screenings_no_more_screenings</item>
     </style>
 
+    <style name="AddGuestsDescription">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:text">@string/add_guests_descriptions</item>
+        <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingTop">@dimen/margin_half</item>
+        <item name="android:paddingBottom">@dimen/margin_half</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/charcoalGrey</item>
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+    </style>
+
+    <style name="AddGuestEmailDescription" parent="AddGuestsDescription">
+        <item name="android:text">@string/add_guest_emails_description</item>
+    </style>
+
+    <style name="TicketCounterBold" parent="MPText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TicketCounterButton" parent="MPText">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:backgroundTint">@color/red</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:padding">@dimen/more_spacing</item>
+        <item name="android:tint">@color/button_csl</item>
+    </style>
+
+    <style name="TicketCounterSubtract" parent="TicketCounterButton">
+        <item name="android:src">@drawable/icon_subtract</item>
+    </style>
+
+    <style name="TicketCounterAdd" parent="TicketCounterButton">
+        <item name="android:src">@drawable/icon_add</item>
+    </style>
+
+    <style name="TicketConvenienceFee" parent="MPText">
+        <item name="android:text">@string/convenience_fee</item>
+        <item name="android:layout_marginEnd">@dimen/margin_half</item>
+    </style>
+
+    <style name="TicketLegal" parent="MPText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/bring_a_friend_legal</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="InfoIcon">
+        <item name="android:layout_width">23dp</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_height">23dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_half</item>
+        <item name="android:src">@drawable/infoicon2</item>
+        <item name="android:tint">@color/red</item>
+    </style>
+
+    <style name="ETicketCancellationPolicy" parent="MPText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/e_ticket_cancellation_policy</item>
+    </style>
+
+    <style name="TicketTotal" parent="MPText">
+        <item name="android:layout_marginEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:text">@string/total_empty</item>
+    </style>
+
+    <style name="ETicketCancellationPolicyDescription" parent="MPText">
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_standard_and_half</item>
+        <item name="android:text">@string/e_ticket_cancellation_policy_description</item>
+    </style>
+
+    <style name="FreeGuestPolicy" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+    <style name="SeeDetails" parent="ETicketCancellationPolicy">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/see_details</item>
+        <item name="android:background">@color/charcoalGrey</item>
+    </style>
+
+    <style name="AddUpToXGuests" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard_and_half</item>
+    </style>
+
+    <style name="SofaIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:src">@drawable/icon_seat_red</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard_and_half</item>
+    </style>
+
+    <style name="ScreeningHeaderText" parent="MPText">
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="ScreeningSubHeaderText" parent="ScreeningHeaderText">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ScreeningSeats" parent="ScreeningHeaderText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="ScreeningSelectSeats" parent="ScreeningHeaderText">
+        <item name="android:alpha">.7</item>
+        <item name="android:gravity">end|top</item>
+    </style>
+
+    <style name="ProvideEmails" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="mp_text">@string/provide_emails</item>
+    </style>
+
+    <style name="SeatKeyText" parent="MPText">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ConfirmMovieTitleText" parent="ConfirmDetailsText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ConfirmDetailsText" parent="MPText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TheaterPin">
+        <item name="android:layout_width">26dp</item>
+        <item name="android:layout_height">26dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_half</item>
+        <item name="android:tint">@color/red</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+        <item name="android:src">@drawable/icon_location_pin</item>
+    </style>
+
+    <style name="GuestTicketTotal" parent="MPText_Bold">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="GuestTicketsKey" parent="MPText_Bold">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/guest_tickets</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
 </resources>
