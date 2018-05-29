@@ -24,15 +24,15 @@ class MissingCheckinView(context: Context) : FrameLayout(context) {
             }
         }
         posterSPV.setImageResource(R.drawable.film_reel_wrapper)
-        posterSPV.setBackgroundResource(R.drawable.missing_showtime_bg);
+        posterSPV.setBackgroundResource(R.drawable.missing_showtime_bg)
         movieTitle.setText(R.string.screening_unlisted_showtime)
+        movieTime.setText(R.string.screening_unlisted_showtime_desc)
     }
 
     fun bind(presenter: ScreeningPresentation, misssingCheckInListener: MissingCheckinListener?) {
         this.screening = presenter.screening
         this.missingCheckInListener = misssingCheckInListener
         posterSPV.isSelected = presenter.selected != null
-        movieTime.text = presenter.screening?.synopsis
     }
 
 }
