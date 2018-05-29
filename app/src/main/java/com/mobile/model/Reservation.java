@@ -2,6 +2,8 @@ package com.mobile.model;
 
 import org.parceler.Parcel;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by anubis on 6/20/17.
  */
@@ -12,6 +14,7 @@ public class Reservation {
     int id;
     long expiration;
     String qrUrl;
+    @Nullable
     String seat;
     String confirmationCode;
 
@@ -39,6 +42,7 @@ public class Reservation {
         this.qrUrl = qrUrl;
     }
 
+    @Nullable
     public String getSeat() {
         return seat;
     }

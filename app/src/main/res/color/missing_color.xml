@@ -3,6 +3,6 @@
     <item android:color="@color/new_red" android:state_selected="true" />
     <item android:color="@color/new_red" android:state_checked="true" />
     <item android:color="@color/transparentRed" android:state_pressed="true"/>
-    <item android:color="@color/test_black_transparent" android:state_pressed="true"/>
-    <item android:color="@color/test_black" />
+    <item android:color="@color/transparentBlack" android:state_enabled="false"/>
+    <item android:color="@android:color/transparent" />
 </selector>

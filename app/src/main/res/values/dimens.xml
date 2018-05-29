@@ -3,6 +3,7 @@
     <dimen name="parallax_toolbar_size">48dp</dimen>
     <dimen name="less_spacing">5dp</dimen>
     <dimen name="more_spacing">10dp</dimen>
+    <dimen name="card_button_margin_start">15dp</dimen>
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
     <dimen name="button_height">48dp</dimen>

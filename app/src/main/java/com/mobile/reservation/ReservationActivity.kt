@@ -46,7 +46,7 @@ class ReservationActivity : AppCompatActivity() {
         fun newInstance(context: Context, reservation: ScreeningToken): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
-                val seatToUse:String = reservation.seatSelected?.seatName ?: rs.seat
+                val seatToUse:String? = reservation.seatSelected?.seatName ?: rs.seat
                 val re2:Reservation2? = rs?.let {
                     Reservation2(
                             checkinId = rs.id,

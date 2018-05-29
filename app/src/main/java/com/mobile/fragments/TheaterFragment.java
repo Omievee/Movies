@@ -11,11 +11,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +41,8 @@ import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
 import com.mobile.activities.SelectSeatActivity;
 import com.mobile.activities.TicketType;
-import com.mobile.adapters.TheaterMoviesAdapter;
+import com.mobile.adapters.MissingCheckinListener;
+import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
@@ -60,6 +64,7 @@ import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponse;
 import com.moviepass.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -69,6 +74,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+
+import javax.annotation.Nullable;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -80,7 +87,7 @@ import retrofit2.Response;
  * Created by anubis on 6/8/17.
  */
 
-public class TheaterFragment extends Fragment implements ShowtimeClickListener {
+public class TheaterFragment extends Fragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
     Theater theaterObject;
     ScreeningsResponse screeningsResponse;
@@ -88,7 +95,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
     TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters;
     LinearLayoutManager theaterSelectedMovieManager;
-    TheaterMoviesAdapter theaterMoviesAdapter;
+    TheaterScreeningsAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
     Button buttonCheckIn;
     Screening screening = new Screening();
@@ -100,6 +107,8 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     Reservation reservation;
     PerformanceInfoRequest mPerformReq;
     String url;
+    @Nullable
+    Pair<Screening, String> selected;
 
     public static final String POLICY = "policy";
     public static final String TOKEN = "token";
@@ -162,10 +171,13 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
         theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        theaterMoviesAdapter = new TheaterMoviesAdapter(getContext(), moviesAtSelectedTheater, this);
+        theaterMoviesAdapter = new TheaterScreeningsAdapter(this, this);
         theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
         theaterSelectedRecyclerView.setLayoutAnimation(animation);
+        SimpleItemAnimator animator = new DefaultItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+        theaterSelectedRecyclerView.setItemAnimator(animator);
         theaterSelectedRecyclerView.setNestedScrollingEnabled(false);
 
         loadMovies();
@@ -225,15 +237,24 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
 
 
     @Override
-    public void onShowtimeClick(Theater theater, int pos, final Screening screening, final String showtime) {
+    public void onShowtimeClick(@org.jetbrains.annotations.Nullable Theater theater, int pos, @NotNull final Screening screening, @NotNull final String showtime) {
+        if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
+            selected = null;
+        } else {
+            selected = new Pair(screening, showtime);
+        }
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        if (selected == null) {
+            fadeOut(buttonCheckIn);
+            return;
+        }
         final String time = showtime;
         final Screening screening1 = screening;
 
         LogUtils.newLog(TAG, "onShowtimeClick: ");
 
-        if (buttonCheckIn.getVisibility() == View.GONE) {
+        if (selected != null) {
             fadeIn(buttonCheckIn);
-            buttonCheckIn.setVisibility(View.VISIBLE);
         }
 
         if (screening.getProvider().ticketTypeIsSelectSeating() || screening.getProvider().ticketTypeIsETicket()) {
@@ -280,89 +301,19 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
             @Override
             public void onResponse(Call<ScreeningsResponse> call, Response<ScreeningsResponse> response) {
                 screeningsResponse = response.body();
-                if (screeningsResponse != null) {
-                    progress.setVisibility(View.GONE);
-                    moviesAtSelectedTheater.clear();
-                    moviesAtSelectedTheater.addAll(screeningsResponse.getScreenings());
-                    int currentShowTimes = 0;
-                    int i = 0;
-                    int count = moviesAtSelectedTheater.size();
-                    Screening noShowTimeScreening = null;
-                    while (i < moviesAtSelectedTheater.size() && count >= 0) {
-                        Screening currentScreening = moviesAtSelectedTheater.get(i);
-                        currentShowTimes = currentScreening.getStartTimes().size();
-                        if (currentScreening.getStartTimes() != null) {
+                theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
 
-                            for (int j = 0; j < currentScreening.getStartTimes().size(); j++) {
+                progress.setVisibility(View.GONE);
+                noTheaters.setVisibility(View.GONE);
 
-                                try {
-                                    Date systemClock = new Date();
-
-                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-                                    String curTime = sdf.format(systemClock);
-
-                                    Date theaterTime = sdf.parse(currentScreening.getStartTimes().get(j));
-                                    Date myTime = sdf.parse(curTime);
-
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(theaterTime);
-                                    cal.add(Calendar.MINUTE, 30);
-
-
-                                    if (myTime.after(cal.getTime())) {
-                                        if (cal.getTime().getHours() > 3) {
-                                            currentShowTimes--;
-                                        }
-                                    }
-
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            if (moviesAtSelectedTheater.get(i).getTitle().equals("Check In if Movie Missing")) {
-                                noShowTimeScreening = moviesAtSelectedTheater.get(i);
-                                moviesAtSelectedTheater.remove(i);
-                                count--;
-                                i--;
-                            } else {
-                                if (currentShowTimes == 0) {
-                                    moviesAtSelectedTheater.remove(i);
-                                    i--;
-                                } else {
-                                    Screening notApproved = moviesAtSelectedTheater.get(i);
-                                    if (!notApproved.isApproved()) {
-                                        moviesAtSelectedTheater.remove(i);
-                                        moviesAtSelectedTheater.add(notApproved);
-                                        i--;
-                                    }
-                                }
-                            }
-                            count--;
-                        }
-                        i++;
-                    }
-                    if (noShowTimeScreening != null)
-                        moviesAtSelectedTheater.add(noShowTimeScreening);
-                    if (theaterSelectedRecyclerView != null) {
-                        theaterSelectedRecyclerView.getRecycledViewPool().clear();
-                        theaterMoviesAdapter.notifyDataSetChanged();
-                    }
-                    if (moviesAtSelectedTheater.size() == 0) {
-                        noTheaters.setVisibility(View.VISIBLE);
-                        theaterSelectedRecyclerView.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    /* TODO : FIX IF RESPONSE IS NULL */
-                    LogUtils.newLog("else", "else" + response.message());
-                }
-
+                theaterSelectedRecyclerView.setVisibility(View.VISIBLE);
 
             }
 
             @Override
             public void onFailure(Call<ScreeningsResponse> call, Throwable t) {
-
+                t.printStackTrace();
+                progress.setVisibility(View.GONE);
             }
 
         });
@@ -377,12 +328,11 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     public void reserve(Screening screening, String showtime) {
         Screening screen = screening;
         String time = showtime;
-
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
 
-        if(mCurrentLocation != null ) {
+        if (mCurrentLocation != null) {
             UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
-        }else {
+        } else {
             Toast.makeText(myContext, "NULL", Toast.LENGTH_SHORT).show();
         }
 
@@ -664,7 +614,7 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     private void showConfirmation(ScreeningToken token) {
-        if(token.getConfirmationCode()!=null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
+        if (token.getConfirmationCode() != null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
             startActivity(ReservationActivity.Companion.newInstance(myActivity, token));
         } else {
             startActivity(new Intent(myActivity, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
@@ -684,15 +634,77 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener {
     }
 
     public void fadeIn(View view) {
+        Animation old = view.getAnimation();
+        if(old!=null) {
+            old.setAnimationListener(null);
+            old.cancel();
+        }
+        if (view.getVisibility() == View.VISIBLE) {
+            return;
+        }
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
         fadeIn.setDuration(500);
 
         AnimationSet animation = new AnimationSet(false); //change to false
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
 
     }
 
+    public void fadeOut(View view) {
+        Animation old = view.getAnimation();
+        if (old != null) {
+            old.setAnimationListener(null);
+            old.cancel();
+        }
+        if (view.getVisibility() != View.VISIBLE) {
+            return;
+        }
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
+        fadeOut.setDuration(500);
+        AnimationSet animation = new AnimationSet(false); //change to false
+        animation.addAnimation(fadeOut);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
 
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.setAnimation(animation);
+    }
+
+
+    @Override
+    public void onClick(@NotNull Screening screening, @NotNull String showTime) {
+        onShowtimeClick(null, 0, screening, showTime);
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+    }
 }
