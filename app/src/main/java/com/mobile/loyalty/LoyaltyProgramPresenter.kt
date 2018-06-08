@@ -20,7 +20,6 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         state
                 .theaterChainSubscription = RestClient.getAuthenticated()
                 .theaterChains()
-                .compose(Schedulers.singleDefault())
                 .doAfterTerminate { view.hideProgress() }
                 .map {
                     state.allTheaterChains = it
@@ -89,7 +88,6 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                         theaterChain.chainNameKey,
                         loyaltyDataMap
                 )
-                .compose(Schedulers.singleDefault())
                 .doAfterTerminate {
                     view.hideProgress()
                 }

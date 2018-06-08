@@ -8,7 +8,7 @@ class MapUtil {
 
         fun mapIntent(lat:Number, lng:Number): Intent {
             return Intent(Intent.ACTION_VIEW, Uri.parse("geo:${lat},${lng}?z=15")).apply {
-                setPackage("com.google.anroid.apps.maps")
+                `package` = "com.google.android.apps.maps"
             }
         }
 

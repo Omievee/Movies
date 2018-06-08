@@ -9,6 +9,6 @@ import com.mobile.model.Theater
 
 interface ShowtimeClickListener {
 
-    fun onShowtimeClick(theater: Theater?, pos: Int, screening: Screening, showtime: String)
+    fun onShowtimeClick(theater: Theater?, screening: Screening, showtime: String)
 
 }

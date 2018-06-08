@@ -29,7 +29,7 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
                         time?.let { time ->
                             screening?.screening?.let {
                                 isSelected = true
-                                showtimeClickListener?.onShowtimeClick(null, 0, it, time)
+                                showtimeClickListener?.onShowtimeClick(null, it, time)
                             }
 
                         }
@@ -49,7 +49,7 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         val showTime = data?.data?.get(position)
         (view as? ShowtimeView)?.let { v ->
             screening?.let {
-                v.bind(showTime?.showtime, it)
+                v.bind(showTime?.availability?.startTime, it)
             }
 
         }
@@ -59,10 +59,10 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
         fun createData(data: ShowtimeData?, screening: ScreeningPresentation): ShowtimeData {
             val old = data?.data ?: emptyList()
-            val newb = screening?.screening?.startTimes?.map {
+            val newb = screening?.screening?.availabilities?.map {
                 ShowtimePresentation(screening?.screening, it)
             }?.filter {
-                isValidShowtime(it.showtime)
+                isValidShowtime(it.availability?.startTime)
             }
             return ShowtimeData(
                     newb, DiffUtil.calculateDiff(BasicDiffCallback<ShowtimePresentation>(old, newb))

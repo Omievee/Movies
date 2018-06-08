@@ -1,40 +1,38 @@
 package com.moviepass.debug
 
-import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.mobile.activities.TheaterActivity
-import com.mobile.activities.TheatersActivity
-import com.mobile.reservation.*
+import com.mobile.model.GuestTicket
+import com.mobile.model.GuestTicketType
+import com.mobile.model.SeatInfo
+import com.mobile.reservation.CurrentReservationV2
+import com.mobile.reservation.ETicket
+import com.mobile.reservation.Reservation2
+import com.mobile.reservation.TicketFormat
+import com.mobile.seats.*
 import com.moviepass.R
-import java.util.*
+import kotlinx.android.synthetic.debug.activity_debug.*
+import java.text.SimpleDateFormat
 
-class DebugActivity : AppCompatActivity() {
+class DebugActivity : AppCompatActivity(), SeatPreviewListener {
+    override fun onClose() {
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_debug)
 
-        val reservation = CurrentReservationV2(
-                ticket = ETicket(TicketFormat.QRCODE.name,
-                        "5382xs2", "A9"),
-                reservation = Reservation2(
-                  id=1234,
-                    _showtime = System.currentTimeMillis()
-                ),
-                theater = "FOO GOOD RICH LONG THEATHER",
-                title = "A WRINKLE IN TIME",
-                landscapeUrl = "http://a1.moviepass.com/posters/landscape/AVENGERSINFINITYWAR.jpg"
-        )
-        val reservationV = findViewById<ReservationView>(R.id.reservationV)
-        reservationV.bind(reservation)
-//        startActivity(
-//                ReservationActivity.newInstance(context = this, reservation = reservation)
-//        )
-        startActivity(Intent(this, TheatersActivity::class.java))
-        finish()
-//        val barcodeLayout = findViewById<BarcodeLayout>(R.id.barcode_bl)
-//        barcodeLayout.visibility = View.VISIBLE
-//        barcodeLayout.bind("0F34", BarcodeFormat.QR_CODE)
+        reservationView
+                .bind(showCurrentReservationText = true,
+                        reservation = CurrentReservationV2(
+                                reservation = Reservation2(_showtime = SimpleDateFormat("hh:mm a").parse("9:00 PM").time
+                                ),
+                                ticket = ETicket(TicketFormat.QRCODE.name, "MGU6RW", seats=listOf("D1","D2")),
+                                landscapeUrl = "https://a1.moviepass.com/posters/landscape/DEADPOOL2.jpg",
+                                theater = "Studio Movie Grill Arlington",
+                                title = "Deadpool 2"
+                        )
+                )
     }
 }

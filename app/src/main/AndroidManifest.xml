@@ -165,6 +165,13 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.mobile.seats.BringAFriendActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TicketReservationTheme"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="com.mobile.activities.ConfirmationActivity"
             android:screenOrientation="portrait"
@@ -229,19 +236,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mobile.activities.MoviesActivity" />
         </activity>
-        <!-- <activity -->
-        <!-- android:name="com.mobile.activities.ReservationsActivity" -->
-        <!-- android:parentActivityName="com.mobile.activities.MoviesActivity" -->
-        <!-- android:theme="@style/AppTheme"> -->
-        <!-- <meta-data -->
-        <!-- android:name="android.support.PARENT_ACTIVITY" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:value="com.mobile.activities.MoviesActivity" /> -->
-        <!-- </activity> -->
-        <activity
-            android:name="com.mobile.activities.SelectSeatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.SettingsActivity"
             android:parentActivityName="com.mobile.activities.MoviesActivity"
@@ -298,10 +292,6 @@
         <activity
             android:name="com.mobile.activities.ActivatedCard_TutorialActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.mobile.fragments.NearMe"
-            android:label="@string/title_activity_near_me" />
-        <!-- <activity android:name="com.mobile.activities.MoviePassCardAutoActivate" /> -->
         <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
 
         <service

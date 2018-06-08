@@ -1,20 +1,18 @@
 package com.mobile.network;
 
 import android.content.Context;
-import android.net.http.HttpResponseCache;
 import android.os.Build;
-import android.os.Build;
-
-import com.helpshift.support.Log;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.google.gson.reflect.TypeToken;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
+import com.mobile.model.ParcelableDate;
+import com.mobile.rx.RxJava2CallAdapterFactory;
 import com.moviepass.BuildConfig;
 
 import java.io.File;
@@ -47,7 +45,7 @@ public class RestClient {
     }
 
     static String buildNumber = String.valueOf(BuildConfig.VERSION_CODE);
-    static  String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
+    static String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
 
     static String a1URL = "https://a1.moviepass.com ";
@@ -186,7 +184,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 HttpUrl url = original.url();
                 Request request = requestBuilder.build();
 
@@ -196,6 +194,8 @@ public class RestClient {
 
         Gson gson = new GsonBuilder()
                 .setLenient()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .create();
 
         sAuthenticatedInstance = new Retrofit.Builder()
@@ -222,11 +222,10 @@ public class RestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(40, TimeUnit.SECONDS);
         httpClient.readTimeout(40, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
+        //httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
         httpClient.cookieJar(cookieJar);
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -250,10 +249,10 @@ public class RestClient {
         sAuthenticatedInstanceGoWatchIt = new Retrofit.Builder()
                 .baseUrl("https://click.moviepass.com/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
-        
+
         sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(Api.class);
     }
 
@@ -288,7 +287,7 @@ public class RestClient {
                         .addHeader("auth_token", authToken)
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -296,10 +295,13 @@ public class RestClient {
 
         Gson gson = new GsonBuilder()
                 .setLenient()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .create();
         sUnauthenticatedInstance = new Retrofit.Builder()
                 .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         sUnauthenticatedAPI = sUnauthenticatedInstance.create(Api.class);
@@ -323,7 +325,7 @@ public class RestClient {
         httpClient.readTimeout(20, TimeUnit.SECONDS);
         httpClient.addInterceptor(logging);
         File httpCacheDirectory = new File(context.getCacheDir(), "responses");
-        
+
         Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
 
         httpClient.cache(cache);
@@ -342,7 +344,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 HttpUrl url = original.url();
                 requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
                 Request request = requestBuilder.build();
@@ -358,7 +360,7 @@ public class RestClient {
         localStorageInstance = new Retrofit.Builder()
                 .baseUrl(a1URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClient.build())
                 .build();
         //Request request = requestBuilder.build();
@@ -399,7 +401,7 @@ public class RestClient {
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);
@@ -454,7 +456,7 @@ public class RestClient {
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
                         .addHeader("one_device_id", UserPreferences.getUserCredentials())
-                        .addHeader("User-Agent", "moviepass/android/" +androidOS+ "/v3/"+versionNumber+"/"+buildNumber);
+                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 Request request = requestBuilder.build();
 
                 return chain.proceed(request);

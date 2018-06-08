@@ -51,7 +51,7 @@
 // * Created by ryan on 4/26/17.
 // */
 //
-//public class TheaterMoviesAdapter extends RecyclerView.Adapter<TheaterMoviesAdapter.ViewHolder> {
+//public class TheaterMoviesAdapter extends RecyclerView.BringAFriendPagerAdapter<TheaterMoviesAdapter.ViewHolder> {
 //    Screening screening;
 //    public static final String MOVIE = "movie";
 //    public static final String TITLE = "title";

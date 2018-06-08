@@ -41,6 +41,7 @@ import com.mobile.model.ScreeningToken;
 import com.mobile.network.RestClient;
 import com.mobile.reservation.ETicket;
 import com.mobile.reservation.ReservationActivity;
+import com.mobile.responses.ETicketConfirmation;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.rx.Schedulers;
 import com.moviepass.BuildConfig;
@@ -63,9 +64,6 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import static android.text.TextUtils.isEmpty;
-import static com.mobile.UserPreferences.getUserEmail;
-import static com.mobile.UserPreferences.getUserId;
-import static com.mobile.UserPreferences.getUserName;
 import static java.lang.String.valueOf;
 
 /**
@@ -232,9 +230,6 @@ public class ProfileFragment extends Fragment {
                 customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
                 customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
                 customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
-
-                userData.put("last_check_in_attempt_date", dateFormat.format(cal.getTime()));
-                userData.put("last_check_in_attempt_time", timeFormat.format(cal.getTime()));
             }
 
             ScreeningToken token = UserPreferences.getLastReservation();
@@ -257,8 +252,8 @@ public class ProfileFragment extends Fragment {
 
             customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
             customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
-            userData.put("total_movies_seen", UserPreferences.getTotalMovieSeen());
-            userData.put("total_movies_seen_last_30_days", UserPreferences.getTotalMovieSeenLastMonth());
+            customIssueFileds.put("total_movies_seen", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeen())});
+            customIssueFileds.put("total_movies_seen_last_thirty_days", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeenLastMonth())});
             userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
             String[] tags = new String[]{versionName};
 
@@ -290,7 +285,6 @@ public class ProfileFragment extends Fragment {
             RestClient
                     .getAuthenticated()
                     .lastReservation()
-                    .compose(Schedulers.Companion.singleDefault())
                     .subscribe(v -> {
                         if (activity == null) {
                             return;
@@ -301,14 +295,10 @@ public class ProfileFragment extends Fragment {
                             intent =
                                     ReservationActivity.Companion.newInstance(getActivity(), v);
                         } else {
-                            Screening screening = new Screening();
-                            screening.setTheaterName(v.getTheater());
-                            screening.setTitle(v.getTitle());
-                            screening.setMoviepassId(v.getReservation().getMoviepassId());
-                            screening.setTribuneTheaterId(v.getReservation().getTribuneTheaterId());
-                            ReservationResponse.ETicketConfirmation confirmation = null;
+                            Screening screening = Screening.Companion.from(v);
+                            ETicketConfirmation confirmation = null;
                             if (v.getTicket() != null) {
-                                confirmation = new ReservationResponse.ETicketConfirmation();
+                                confirmation = new ETicketConfirmation();
                                 confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
                                 confirmation.setBarCodeUrl("");
                             }

@@ -5,14 +5,31 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 
 class SpaceDecorator(
-        val lastEnd: Int? = null
+        val top: Int? = null,
+        val start: Int? = null,
+        val bottom: Int? = null,
+        val end: Int? = null,
+        val lastEnd: Int? = null,
+        val colEnd:Int? = null
 ) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val position = parent.getChildAdapterPosition(view)
+        end?.let {
+            outRect.right += it
+        }
+        start?.let {
+            outRect.left += it
+        }
+        top?.let {
+            outRect.top += it
+        }
+        bottom?.let {
+            outRect.bottom += it
+        }
         lastEnd?.let {
-            val position = parent.getChildAdapterPosition(view)
             if (state.itemCount - 1 == position) {
-                outRect.right = it
+                outRect.right += it
             }
         }
     }

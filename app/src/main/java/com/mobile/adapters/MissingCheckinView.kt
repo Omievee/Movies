@@ -20,7 +20,8 @@ class MissingCheckinView(context: Context) : FrameLayout(context) {
         synopsis.visibility = View.GONE
         setOnClickListener {
             screening?.let {
-                missingCheckInListener?.onClick(it, screening?.startTimes?.get(0) ?: "")
+                missingCheckInListener?.onClick(it, screening?.availabilities?.get(0)?.startTime
+                        ?: "")
             }
         }
         posterSPV.setImageResource(R.drawable.film_reel_wrapper)

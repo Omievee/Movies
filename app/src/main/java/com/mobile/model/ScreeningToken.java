@@ -1,11 +1,12 @@
 package com.mobile.model;
 
-import com.mobile.responses.ReservationResponse;
+import com.mobile.responses.ETicketConfirmation;
 
 import org.parceler.Parcel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nullable;
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
 @Parcel
 public class ScreeningToken {
 
-    ReservationResponse.ETicketConfirmation confirmationCode;
+    ETicketConfirmation confirmationCode;
     String qrUrl;
     Reservation reservation;
     Screening screening;
@@ -25,7 +26,7 @@ public class ScreeningToken {
     int seatRow;
     String time;
     String zipCodeTicket;
-    SeatSelected seatSelected;
+    List<SeatSelected> seatSelected;
     Theater theater;
 
     public ScreeningToken() {
@@ -38,16 +39,15 @@ public class ScreeningToken {
         this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation eTicketConfirmation, Theater theater) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ETicketConfirmation eTicketConfirmation, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
-        this.qrUrl = qrUrl;
         this.confirmationCode = eTicketConfirmation;
         this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ReservationResponse.ETicketConfirmation confirmationCode, SeatSelected seatSelected, Theater theater) {
+    public ScreeningToken(Screening screening, String time, Reservation res, ETicketConfirmation confirmationCode, List<SeatSelected> seatSelected, Theater theater) {
         this.screening = screening;
         this.time = time;
         this.reservation = res;
@@ -69,7 +69,8 @@ public class ScreeningToken {
         return reservation;
     }
 
-    @Nullable public  Date getTimeAsDate() {
+    @Nullable
+    public Date getTimeAsDate() {
         try {
             return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(time);
         } catch (Exception e) {
@@ -83,47 +84,17 @@ public class ScreeningToken {
     }
 
 
-    public void setSeatSelected(SeatSelected seatSelected) {
-        this.seatSelected = seatSelected;
-    }
-
-    public SeatSelected getSeatSelected() {
+    @Nullable public List<SeatSelected> getSeatSelected() {
         return seatSelected;
     }
 
-
-    public String getSeatName() {
-        if (seatSelected != null) {
-            return seatSelected.getSeatName();
-        }
-        return "";
-    }
-
-    public void setZipCodeTicket(String zipCodeTicket) {
-        this.zipCodeTicket = zipCodeTicket;
-    }
-
-    public String getZipCodeTicket() {
-        return zipCodeTicket;
-    }
-
-    public ReservationResponse.ETicketConfirmation getConfirmationCode() {
+    public ETicketConfirmation getConfirmationCode() {
         return confirmationCode;
     }
 
-    public void setConfirmationCode(ReservationResponse.ETicketConfirmation confirmationCode) {
-        this.confirmationCode = confirmationCode;
-    }
-
-    @Nullable public Theater getTheater() {
+    @Nullable
+    public Theater getTheater() {
         return theater;
     }
 
-    public void setQrUrl(String qrUrl) {
-        this.qrUrl = qrUrl;
-    }
-
-    public String getQrUrl() {
-        return qrUrl;
-    }
 }
