@@ -455,6 +455,7 @@ public class LogInActivity extends AppCompatActivity {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
+                        UserPreferences.clearUserId();
                     } catch (Exception e) {
 
                     }
