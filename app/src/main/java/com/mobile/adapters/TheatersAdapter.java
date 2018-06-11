@@ -46,12 +46,14 @@ import butterknife.ButterKnife;
 public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
 
     private LinkedList<Theater> theatersArrayList;
+    private final TheatersClickListener listener;
     public static final String THEATER = "cinema";
 
     public static final int TYPE_HEADeR = 0;
     public static final int TYPE_ITEM = 1;
 
-    public TheatersAdapter(LinkedList<Theater> theatersArrayList) {
+    public TheatersAdapter(LinkedList<Theater> theatersArrayList, TheatersClickListener listener) {
+        this.listener = listener;
         this.theatersArrayList = theatersArrayList;
     }
 
@@ -153,9 +155,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
 
         holder.listItemTheater.setTag(position);
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), TheaterActivity.class);
-            intent.putExtra(THEATER, Parcels.wrap(Theater.class, theater));
-            holder.itemView.getContext().startActivity(intent);
+            listener.onTheaterClick(0, theater, 0, 0);
         });
     }
 
