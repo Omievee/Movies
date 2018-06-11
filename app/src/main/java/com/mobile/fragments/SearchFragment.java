@@ -205,20 +205,8 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
         MoviesFragment moviesFragment = (MoviesFragment) getParentFragment();
         MovieFragment movieFragment = MovieFragment.newInstance(movie,"");
-        moviesFragment.showFragment(movieFragment);
+        moviesFragment.replaceFragment(movieFragment);
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     public void showSfotKeyboard(){
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
