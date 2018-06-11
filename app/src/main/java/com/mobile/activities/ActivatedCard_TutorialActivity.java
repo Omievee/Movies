@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
@@ -72,7 +73,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                 MovieFragment reserAct = new MovieFragment();
                 reserAct.reserve(screeningObject, selectedShowTime);
             } else {
-                Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);
+                Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, HomeActivity.class);
                 doneIntent.putExtra("launch", true);
                 doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(doneIntent);
@@ -123,11 +124,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                     i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
             );
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
     }
 
     public class tutorialAdapter extends FragmentPagerAdapter {

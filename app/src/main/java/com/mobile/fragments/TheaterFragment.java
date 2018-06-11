@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,11 +21,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,13 +55,11 @@ import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponseV2;
-import com.mobile.rx.Schedulers;
 import com.mobile.seats.BringAFriendActivity;
 import com.moviepass.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
-import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -76,7 +69,6 @@ import javax.annotation.Nullable;
 
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
-import kotlinx.android.parcel.Parcelize;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -91,7 +83,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     ScreeningsResponseV2 screeningsResponse;
     RecyclerView theaterSelectedRecyclerView;
     ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
-    TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters;
+    TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters, theaterName;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterScreeningsAdapter theaterMoviesAdapter;
     boolean qualifiersApproved;
@@ -131,10 +123,12 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
         //Object & Lists
         theaterObject = Parcels.unwrap(getArguments().getParcelable(THEATER));
+
         moviesAtSelectedTheater = new LinkedList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
-
+        theaterName = rootView.findViewById(R.id.CINEMA_TITLE);
+        theaterName.setText(theaterObject.getName());
         buttonCheckIn = rootView.findViewById(R.id.button_check_in);
         progress = rootView.findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);

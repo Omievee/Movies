@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
@@ -71,7 +72,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
 
         activateXOut.setOnClickListener(v -> {
-            Intent closeIntent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
+            Intent closeIntent = new Intent(ActivateMoviePassCard.this, HomeActivity.class);
             startActivity(closeIntent);
         });
 
@@ -176,7 +177,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                             public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                                 CardActivationResponse cardActivationResponse = response.body();
                                 if (cardActivationResponse != null && response.isSuccessful()) {
-                                    Intent intent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
+                                    Intent intent = new Intent(ActivateMoviePassCard.this, HomeActivity.class);
                                     startActivity(intent);
                                 } else {
                                     Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);

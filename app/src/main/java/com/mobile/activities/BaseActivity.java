@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 
 import android.view.View;
@@ -36,8 +35,8 @@ import static com.mobile.UserPreferences.getUserName;
 import static java.lang.String.valueOf;
 
 
-public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    int offset = 3232323;
+public abstract class BaseActivity extends AppCompatActivity {
+
     Bundle bundle;
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -54,7 +53,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     };
 
     UserInfoResponse userInfoResponse;
-    public BottomNavigationView bottomNavigationView;
 
     public String myZip;
 

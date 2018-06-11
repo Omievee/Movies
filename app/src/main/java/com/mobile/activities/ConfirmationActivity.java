@@ -110,17 +110,10 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             WRITE_EXTERNAL_STORAGE
     };
 
-    protected BottomNavigationView bottomNavigationView;
-
     @SuppressLint("ClickableViewAccessibility")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_confirmation);
-
-
-        bottomNavigationView = findViewById(R.id.CONFIRMED_BOTTOMNAV);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         transferUtility = TransferUtility.builder()
                 .context(getApplicationContext())
@@ -173,7 +166,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             if (UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().getPopRequired()) {
                 verifyTicketFlag.setVisibility(View.VISIBLE);
                 expand(verifyMsgExpanded);
-                bottomNavigationView.setVisibility(View.GONE);
                 verifyTicketFlag.setOnTouchListener((v, event) -> {
                     if (verifyText.getVisibility() == View.INVISIBLE) {
                         collapse(verifyMsgExpanded);
@@ -324,55 +316,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         android.util.Log.d(Constants.TAG, "getPhotoFileUri: " + new File(mediaStorageDir.getPath() + File.separator + photoFileName));
 
         return new File(mediaStorageDir.getPath() + File.separator + photoFileName);
-    }
-
-    /* Bottom Navigation View */
-
-    int getContentViewId() {
-        return R.layout.activity_movies;
-    }
-
-    int getNavigationMenuItemId() {
-        return R.id.action_movies;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(ConfirmationActivity.this, ProfileActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                } else if (itemId == R.id.action_theaters) {
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(ConfirmationActivity.this, SettingsActivity.class));
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-
-//        else if (itemId == R.id.action_reservations) {
-//            startActivity(new Intent(ConfirmationActivity.this, ReservationsActivity.class));
-    }
-
-    private void updateNavigationBarState() {
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
     }
 
     public void userData() {

@@ -37,6 +37,7 @@ import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.helpers.LogUtils;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
@@ -441,7 +442,7 @@ public class LogInActivity extends AppCompatActivity {
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
                             startActivity(i);
                         } else {
-                            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                            Intent i = new Intent(LogInActivity.this, HomeActivity.class);
                             i.putExtra("launch", true);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(i);

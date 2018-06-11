@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/test_black"
     android:fitsSystemWindows="true">
 
@@ -39,13 +40,28 @@
                     app:layout_collapseMode="parallax">
 
                     <TextView
+                        android:id="@+id/CINEMA_TITLE"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:layout_centerHorizontal="true"
+                        tools:text="[CINEMA NAME]"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_collapseMode="pin" />
+
+
+                    <TextView
                         android:id="@+id/CINEMA_ADDRESS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
+                        android:layout_below="@id/CINEMA_TITLE"
                         android:layout_centerInParent="true"
                         android:lines="1"
-                        android:text="[ CINEMA ADDRESS 1]"
+                        tools:text="[ CINEMA ADDRESS 1]"
                         android:textColor="@color/almost_white"
                         app:layout_collapseMode="parallax" />
 
@@ -68,7 +84,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginStart="@dimen/margin_standard"
                         android:lines="1"
-                        android:text="[ CINEMA ADDRESS 2]"
+                        tools:text="[ CINEMA ADDRESS 2]"
                         android:textColor="@color/almost_white"
                         app:layout_collapseMode="parallax" />
 

@@ -1,5 +1,7 @@
 package com.mobile.home
 
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
@@ -23,6 +25,14 @@ import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 
 class HomeActivity : FragmentActivity() {
+
+    companion object {
+        const val POSITION:String = "position"
+
+        fun newIntent(context: Context, position: Int):Intent {
+            return Intent(context, HomeActivity::class.java).putExtra(POSITION, position)
+        }
+    }
 
     var adapter: HomeViewPager? = null
 

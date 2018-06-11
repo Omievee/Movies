@@ -375,16 +375,6 @@
 
     </RelativeLayout>
 
-
-    <include
-        android:id="@+id/CONFIRMED_BOTTOMNAV"
-        layout="@layout/element_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="visible" />
-
-
     <include
         android:id="@+id/confirm_progress"
         layout="@layout/view_loading"

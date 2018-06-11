@@ -30,7 +30,6 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
-import com.mobile.activities.ProfileActivity;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
@@ -258,6 +257,5 @@ public class HistoryDetailsFragment extends MPFragment {
 
         view.startAnimation(expandAndShrink);
     }
-
 
 }

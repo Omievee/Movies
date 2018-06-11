@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.home.HomeActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.responses.VerificationLostResponse;
@@ -87,7 +88,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
         alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
         alert.setMessage(R.string.activity_verification_lost_ticket_message_post);
         alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            Intent intent = new Intent(TicketVerification_NoStub.this, MoviesActivity.class);
+            Intent intent = new Intent(TicketVerification_NoStub.this, HomeActivity.class);
             startActivity(intent);
         });
         alert.show();

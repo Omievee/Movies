@@ -168,15 +168,6 @@
         android:textStyle="bold" />
 
     <include
-        android:id="@+id/ETIX_NAV"
-        layout="@layout/element_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom" />
-
-
-    <include
         android:id="@+id/etixprogress"
         layout="@layout/view_loading"
         android:layout_width="match_parent"

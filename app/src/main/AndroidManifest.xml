@@ -218,26 +218,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.mobile.activities.ProfileActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
-        <activity
-            android:name="com.mobile.activities.SettingsActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:screenOrientation="portrait"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
-        <activity
             android:name="com.mobile.activities.SignUpFirstOpenActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
             android:screenOrientation="portrait"
@@ -251,26 +231,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name="com.mobile.activities.TheaterActivity"
-            android:parentActivityName="com.mobile.activities.TheatersActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.TheatersActivity" />
-        </activity>
-        <activity
-            android:name="com.mobile.activities.TheatersActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:screenOrientation="portrait"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"
