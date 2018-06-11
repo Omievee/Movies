@@ -23,6 +23,7 @@ import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -80,10 +81,6 @@ public class EticketConfirmation extends BaseActivity {
         etixOnBack = findViewById(R.id.Etix_ONBACK);
         relSeat = findViewById(R.id.relSeat);
 
-        bottomNavigationView = findViewById(R.id.ETIX_NAV);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
         //set details for confirmation page..
 
         Intent intent = getIntent();
@@ -127,62 +124,20 @@ public class EticketConfirmation extends BaseActivity {
         });
     }
 
-
-    int getNavigationMenuItemId() {
-        return R.id.action_movies;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        bottomNavigationView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int itemId = item.getItemId();
-                if (itemId == R.id.action_profile) {
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                } else if (itemId == R.id.action_movies) {
-                } else if (itemId == R.id.action_theaters) {
-                } else if (itemId == R.id.action_settings) {
-                    startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                }
-                finish();
-            }
-        }, 300);
-        return true;
-    }
-
-    private void updateNavigationBarState() {
-        int actionId = getNavigationMenuItemId();
-        selectBottomNavigationBarItem(actionId);
-    }
-
-    void selectBottomNavigationBarItem(int itemId) {
-        Menu menu = bottomNavigationView.getMenu();
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            boolean shouldBeChecked = item.getItemId() == itemId;
-            if (shouldBeChecked) {
-                item.setChecked(true);
-                break;
-            }
-        }
-    }
-
-
     public void reserve(Screening screening, String showtime, @Nullable SeatSelected seatSelected) {
         Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
         UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
         @Nullable final SelectedSeat selectedSeat;
-        if(seatSelected==null) {
+        if (seatSelected == null) {
             selectedSeat = null;
         } else {
-             selectedSeat= new SelectedSeat(seatSelected.getSelectedSeatRow(), seatSelected.getSelectedSeatColumn());
+            selectedSeat = new SelectedSeat(seatSelected.getSelectedSeatRow(), seatSelected.getSelectedSeatColumn());
         }
 
         Availability availability = screening.getAvailability(showtime);
         TicketInfoRequest ticketInfoRequest = new TicketInfoRequest(availability
-        .getProviderInfo(),selectedSeat,null,mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+                .getProviderInfo(), selectedSeat, null, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
         reservationRequest(screening, ticketInfoRequest, showtime);
     }
@@ -198,7 +153,7 @@ public class EticketConfirmation extends BaseActivity {
                 if (reservationResponse != null && reservationResponse.isOk()) {
                     progressWheel.setVisibility(View.GONE);
                     Reservation reservation = reservationResponse.getReservation();
-                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation,theater));
+                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theater));
 
                     ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), null, theater);
 
@@ -243,8 +198,8 @@ public class EticketConfirmation extends BaseActivity {
     private void showConfirmation(ScreeningToken token) {
         startActivity(ReservationActivity.Companion.newInstance(this, token).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(EticketConfirmation.this);
-        stackBuilder.addParentStack(MoviesActivity.class);
-        stackBuilder.addNextIntent(new Intent(getApplicationContext(), MoviesActivity.class));
+        stackBuilder.addParentStack(HomeActivity.class);
+        stackBuilder.addNextIntent(new Intent(getApplicationContext(), HomeActivity.class));
         stackBuilder.addNextIntentWithParentStack(ReservationActivity.Companion.newInstance(EticketConfirmation.this, token));
         stackBuilder.startActivities();
     }

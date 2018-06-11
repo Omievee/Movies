@@ -12,10 +12,9 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
-import com.mobile.activities.MoviesActivity
 import com.mobile.activities.OnboardingActivity
-import com.mobile.activities.TheatersActivity
 import com.mobile.helpers.GoWatchItSingleton
+import com.mobile.home.HomeActivity
 import com.moviepass.R
 import dagger.android.AndroidInjection
 import java.io.IOException
@@ -101,23 +100,9 @@ class SplashActivity : AppCompatActivity() {
                 if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION) ||
                                 UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_FREE_TRIAL)) {
                     Crashlytics.setUserIdentifier(UserPreferences.getUserId().toString())
-                    if (typeMovie == 0) {
-                        val i = Intent(this@SplashActivity, MoviesActivity::class.java)
-                        i.putExtra(MoviesActivity.MOVIES, id)
-                        startActivity(i)
-                        finish()
-                    }
-                    if (typeMovie == 1) {
-                        val i = Intent(this@SplashActivity, TheatersActivity::class.java)
-                        i.putExtra(TheatersActivity.THEATER, id)
-                        startActivity(i)
-                        finish()
-                    }
-                    if (typeMovie == 2) {
-                        val i = Intent(this@SplashActivity, MoviesActivity::class.java)
-                        startActivity(i)
-                        finish()
-                    }
+                    val i = HomeActivity.newIntent(this@SplashActivity, typeMovie)
+                    startActivity(i);
+                    finish()
                 } else {
                     val i = Intent(this@SplashActivity, LogInActivity::class.java)
                     startActivity(i)

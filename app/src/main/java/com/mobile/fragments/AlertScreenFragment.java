@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobile.Constants;
-import com.mobile.activities.MoviesActivity;
 import com.mobile.helpers.LogUtils;
 import com.moviepass.R;
 
@@ -77,13 +76,6 @@ public class AlertScreenFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fr_alert_screen, container, false);
-
-
-        ((MoviesActivity) myActivity).CONTAIN = container;
-        Blurry.with(myActivity).radius(35).sampling(5).animate().async().onto(((MoviesActivity) myActivity).CONTAIN);
-
-        LogUtils.newLog(Constants.TAG, "onCreateView: " + ((MoviesActivity) myActivity).getSupportFragmentManager().getBackStackEntryCount());
-
 
         return root;
     }
