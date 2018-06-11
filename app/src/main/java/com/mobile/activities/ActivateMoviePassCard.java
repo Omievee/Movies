@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.fragments.MovieFragment;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
@@ -66,8 +67,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = intent.getParcelableExtra(MovieFragment.SCREENING);
-            selectedShowTime = getIntent().getStringExtra(MovieFragment.SHOWTIME);
+            screeningObject = intent.getParcelableExtra(Constants.SCREENING);
+            selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
         }
 
 
@@ -89,16 +90,6 @@ public class ActivateMoviePassCard extends AppCompatActivity {
             activateDigits.setVisibility(View.VISIBLE);
         });
 
-//CODE FOR TEST
-//        activateSubmitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-
         activateSubmitButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
             digits = activateDigits.getText().toString().trim();
@@ -111,7 +102,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                         progress.setVisibility(View.GONE);
                         Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
                         intent.putExtra(MovieFragment.SCREENING, Parcels.wrap(screeningObject));
-                        intent.putExtra(MovieFragment.SHOWTIME, selectedShowTime);
+                        intent.putExtra(Constants.SHOWTIME, selectedShowTime);
                         startActivity(intent);
 
                     } else {

@@ -62,5 +62,12 @@ interface GoWatchItApi {
                      @Query("ln") ln: String, @Query("eid[movie_pass]") movie_pass: String, @Query("eid[aaid]") idfa: String,
                      @Query("ab") ab: String, @Query("av") av: String, @Query("lts") lts: String): Call<GoWatchItResponse>
 
+    @GET("/prod/ingest")
+    fun openMovieEvent(@Query("ct") ct: String, @Query("ci") ci: String, @Query("p") position: String, @Query("cd") cd: String,
+                       @Query("e") e: String, @Query("c") campaign: String, @Query("m") m: String, @Query("mc") mc: String,
+                       @Query("u") u: String, @Query("o") o: String, @Query("l") l: String,
+                       @Query("ln") ln: String, @Query("eid[movie_pass]") movie_pass: String, @Query("eid[aaid]") idfa: String,
+                       @Query("ab") ab: String, @Query("av") av: String, @Query("lts") lts: String): Call<GoWatchItResponse>
+
 
 }
