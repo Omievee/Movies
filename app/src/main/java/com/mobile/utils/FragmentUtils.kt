@@ -23,6 +23,12 @@ fun Fragment.showFragmentExtension(fragment: Fragment? = null) {
             .replace(R.id.fragmentContainer, fragment).commit()
 }
 
+fun Fragment.replaceFragmentExtension(fragment: Fragment? = null) {
+    childFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, fragment).commit()
+}
+
 fun Fragment.onBackExtension(): Boolean {
     val fragment = findDeepestFragment(childFragmentManager) ?: return false
     val parent = fragment.parentFragment ?: return false

@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.mobile.BackFragment
 import com.mobile.utils.onBackExtension
+import com.mobile.utils.replaceFragmentExtension
 import com.mobile.utils.showFragmentExtension
 import com.moviepass.R
 
@@ -22,6 +23,10 @@ open class MPFragment : Fragment(), BackFragment {
 
     fun showFragment(fragment: Fragment) {
         showFragmentExtension(fragment)
+    }
+
+    fun replaceFragment(fragment: Fragment) {
+        replaceFragmentExtension(fragment)
     }
 
     override fun onBack(): Boolean {
