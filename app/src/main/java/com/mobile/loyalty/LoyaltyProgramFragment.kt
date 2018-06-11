@@ -1,12 +1,11 @@
 package com.mobile.loyalty
 
-import android.app.Activity
-import android.app.Fragment
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
+import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.text.InputFilter
 import android.text.InputType
@@ -38,14 +37,6 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
         presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
     }
 
-    //TODO REMOVE WHEN SWITCHING TO SUPPORT FRAGMENTS
-    override fun onAttach(activity: Activity?) {
-        super.onAttach(activity)
-        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.M) {
-            presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         presenter?.onResume()
@@ -59,19 +50,19 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     return getItem(position).chainName ?: ""
                 }
 
-                override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                    val view = MaterialSpinnerSpinnerView(activity)
+                override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+                    val view = MaterialSpinnerSpinnerView(parent.context)
                     view.minimumHeight = resources.getDimension(R.dimen.action_bar_size).toInt()
                     view.bind(getItemText(position))
                     return view
                 }
 
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
                     return getView(position, convertView, parent)
                 }
             }
             addLoyaltySpinner.setOnItemSelectedListener { _, _, _, item ->
-                val chain:TheaterChain? = item as? TheaterChain
+                val chain: TheaterChain? = item as? TheaterChain
                 chain?.let {
                     presenter?.onLoyaltyProgramSelected(chain)
                     addLoyaltySpinner.text = getString(R.string.loyalty_program_add_loyalty_program)
@@ -87,7 +78,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
         activity?.let { activity ->
             val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, TextInputEditText>>()
             theaterChain.requiredFields?.forEach { (name, type) ->
-                val inputEditText = TextInputEditText(ContextThemeWrapper(activity,R.style.TextInputEditText)).apply {
+                val inputEditText = TextInputEditText(ContextThemeWrapper(activity, R.style.TextInputEditText)).apply {
                     hint = name.toSentenceCase().toLowerCase()
                     inputType = when (type) {
                         RequiredField.FI_INT -> InputType.TYPE_NUMBER_FLAG_DECIMAL
@@ -97,7 +88,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     filters = arrayOf(InputFilter.LengthFilter(100))
                 }
                 fieldNameToValue.put(name, Pair(type, inputEditText))
-                val textInputLayout = TextInputLayout(ContextThemeWrapper(activity,R.style.TextInputLayout)).apply {
+                val textInputLayout = TextInputLayout(ContextThemeWrapper(activity, R.style.TextInputLayout)).apply {
                     addView(inputEditText)
                 }
                 loyaltyProgramFieldsLL.apply {
@@ -152,7 +143,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
     override fun showRegisteredTheaters(theaters: List<TheaterChain>) {
         registeredLoyaltyRV.visibility = View.VISIBLE
         myLoyaltyPrograms.visibility = View.VISIBLE
-        if(registerLoyaltyAdapter==null) {
+        if (registerLoyaltyAdapter == null) {
             registerLoyaltyAdapter = RegisteredLoyaltyAdapter()
             registeredLoyaltyRV.adapter = registerLoyaltyAdapter
         }

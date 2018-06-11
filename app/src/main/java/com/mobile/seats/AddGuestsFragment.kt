@@ -17,6 +17,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mobile.BackFragment
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_add_guests.*

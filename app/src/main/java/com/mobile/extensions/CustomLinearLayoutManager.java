@@ -26,6 +26,11 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
     }
 
     @Override
+    public boolean supportsPredictiveItemAnimations() {
+        return false;
+    }
+
+    @Override
     public boolean canScrollVertically() {
         return isScrollEnabled && super.canScrollVertically();
     }

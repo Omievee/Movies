@@ -155,7 +155,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -205,7 +205,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -256,7 +256,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                //Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -286,7 +286,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -318,7 +318,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -350,7 +350,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 

@@ -15,7 +15,6 @@
         android:visibility="visible"
         fresco:actualImageScaleType="centerCrop" />
 
-
     <FrameLayout
         android:id="@+id/videoFrameLayout"
         android:layout_width="match_parent"

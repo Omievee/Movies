@@ -42,45 +42,15 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_OK;
 
 
-public class ProfileAccountShippingInformation extends android.app.Fragment {
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    private String mParam1;
-//    private String mParam2;
-
+public class ProfileAccountShippingInformation extends Fragment {
 
     Button save,cancel;
     EditText address1,address2,city,state,zip;
     View rootView, progress;
     UserInfoResponse userInfoResponse;
     boolean firstClick = true;
-    private Context context;
-    private ProfileActivityInterface mListener;
+    private Activity context;
     private TextInputLayout address1TextInputLayout, cityTextInputLayout, stateTextInputLayout, zipTextInputLayout;
-//    private onAlertClickListener mListener;
-
-    public ProfileAccountShippingInformation() {
-        // Required empty public constructor
-    }
-
-//    public static ProfileAccountShippingInformation newInstance(String param1, String param2) {
-//        ProfileAccountShippingInformation fragment = new ProfileAccountShippingInformation();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,8 +113,6 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
                 }
             }
         });
-
-
         return rootView;
     }
 
@@ -200,7 +168,7 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.closeFragment();
+                context.onBackPressed();
             }
         });
     }
@@ -294,7 +262,7 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if(response!=null & response.isSuccessful()){
                             Toast.makeText(context, "Address updated", Toast.LENGTH_SHORT).show();
-                            mListener.closeFragment();
+                            context.onBackPressed();
                         }
                         else{
                             Toast.makeText(context, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
@@ -343,7 +311,7 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(context, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                mListener.closeFragment();
+                context.onBackPressed();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
@@ -352,39 +320,14 @@ public class ProfileAccountShippingInformation extends android.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.context = context;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
+        this.context = getActivity();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+        context = null;
     }
-//
-//    public interface onAlertClickListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 
     public class CustomTextWatcher implements TextWatcher{
 

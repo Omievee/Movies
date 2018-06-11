@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -59,14 +60,12 @@ import retrofit2.Response;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class ProfileAccountPlanAndBilling extends android.app.Fragment {
+public class ProfileAccountPlanAndBilling extends MPFragment {
 
 
     private static int YES = 0, NO = 1;
 
-    private Context myContext;
     ProfileCancellationFragment cancelSubscription;
-    private ProfileActivityInterface mListener;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
     private Button save, cancel;
     private TextView billingDate, plan, planPrice, planCancel, billingCard, billingChange, yesNo, moviesCountDown, moviesCountDownText;
@@ -167,7 +166,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         planCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.openCancellationFragment();
+                showFragment(new ProfileCancellationFragment());
             }
         });
 
@@ -253,6 +252,12 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myActivity = getActivity();
     }
 
     @Override
@@ -406,7 +411,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(myActivity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
-                mListener.closeFragment();
+                myActivity.onBackPressed();
                 progress.setVisibility(View.GONE);
             }
         });
@@ -458,7 +463,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.closeFragment();
+                myActivity.onBackPressed();
             }
         });
     }
@@ -490,7 +495,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 if (response != null && response.isSuccessful()) {
                     loadUserInfo();
                     Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
-                    mListener.closeFragment();
+                    myActivity.onBackPressed();
                 } else {
                     Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
                     ;
@@ -502,7 +507,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             public void onFailure(Call<Object> call, Throwable t) {
                 progress.setVisibility(View.GONE);
                 Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
-                mListener.closeFragment();
+                myActivity.onBackPressed();
             }
         });
     }
@@ -583,7 +588,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     newBillingCVV.clearComposingText();
                     newBillingExp.clearComposingText();
                     Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
-                    mListener.closeFragment();
+                    myActivity.onBackPressed();
                 } else {
                     loadUserInfo();
                     Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
@@ -596,7 +601,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                 if (myActivity != null) {
                     Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                     progress.setVisibility(View.GONE);
-                    mListener.closeFragment();
+                    myActivity.onBackPressed();
                 }
 
             }
@@ -692,7 +697,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                         if (response != null && response.isSuccessful()) {
                             loadUserInfo();
                             Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
-                            mListener.closeFragment();
+                            myActivity.onBackPressed();
                         } else {
                             Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
                         }
@@ -703,7 +708,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
                     public void onFailure(Call<Object> call, Throwable t) {
                         progress.setVisibility(View.GONE);
                         Toast.makeText(myActivity, "Server Response Error", Toast.LENGTH_SHORT).show();
-                        mListener.closeFragment();
+                        myActivity.onBackPressed();
                     }
                 });
             } else {
@@ -722,19 +727,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
 
             yesNo.setText("NO");
             yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.myContext = context;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
         }
     }
 
@@ -795,7 +787,7 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        myActivity = null;
     }
 
     public class CustomTextWatcher implements TextWatcher {
@@ -836,19 +828,6 @@ public class ProfileAccountPlanAndBilling extends android.app.Fragment {
             if (newBillingExp.hasFocus())
                 expTextInputLayout.setError(null);
 
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-
-        if (myActivity instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) myActivity;
-        } else {
-            throw new RuntimeException(myActivity.toString()
-                    + " must implement ProfileActivityInterface");
         }
     }
 }

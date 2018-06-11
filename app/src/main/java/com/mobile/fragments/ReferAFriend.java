@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Patterns;
@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.helpers.LogUtils;
@@ -30,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ReferAFriend extends android.app.Fragment {
+public class ReferAFriend extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     // TODO: Rename and change types of parameters

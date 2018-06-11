@@ -103,7 +103,7 @@ public class FeaturedAdapter extends RecyclerView.Adapter<FeaturedAdapter.ViewHo
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
                 TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
                 TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-                SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+                final SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
 
 
                 player.addListener(new Player.EventListener() {

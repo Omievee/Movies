@@ -1,15 +1,14 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +25,13 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
+import com.mobile.BackFragment;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.LogInActivity;
-import com.mobile.activities.ProfileActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.model.Reservation;
 import com.mobile.loyalty.LoyaltyProgramFragment;
@@ -42,8 +41,6 @@ import com.mobile.network.RestClient;
 import com.mobile.reservation.ETicket;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ETicketConfirmation;
-import com.mobile.responses.ReservationResponse;
-import com.mobile.rx.Schedulers;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -70,19 +67,16 @@ import static java.lang.String.valueOf;
  * Created by anubis on 5/31/17.
  */
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends MPFragment {
 
-    ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
-    PastReservations pastReservations = new PastReservations();
+    PastReservationsFragment pastReservations = new PastReservationsFragment();
     ReferAFriend refer = new ReferAFriend();
     View root;
     RelativeLayout details, history, currentRes, howToUse, help, referAFriend, loyaltyPrograms;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
-    Activity myActivity;
-    Context myContext;
-    ProfileActivityInterface listener;
+    FragmentActivity myActivity;
     Realm historyRealm;
 
     public ProfileFragment() {
@@ -175,27 +169,13 @@ public class ProfileFragment extends Fragment {
 
 
         details.setOnClickListener(view1 -> {
-            FragmentManager fragmentManager = myActivity.getFragmentManager();
-            fragmentManager.popBackStack();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.profile_container, profileAccountInformationFragment);
-            transaction.addToBackStack("");
-            transaction.commit();
-            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
+            showFragment(new ProfileAccountInformationFragment());
         });
 
         referAFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = myActivity.getFragmentManager();
-                fragmentManager.popBackStack();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-                transaction.replace(R.id.profile_container, refer);
-                transaction.addToBackStack("");
-                transaction.commit();
-                ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
+                showFragment(refer);
             }
         });
 
@@ -242,7 +222,7 @@ public class ProfileFragment extends Fragment {
                 if (starttime != null) {
                     long diff = starttime.getTime() - System.currentTimeMillis();
                     int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
-                    if(checkedIn && minutes>=-30) {
+                    if (checkedIn && minutes >= -30) {
                         customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
                     }
                 }
@@ -271,13 +251,7 @@ public class ProfileFragment extends Fragment {
         });
 
         history.setOnClickListener(view2 -> {
-            FragmentManager fragmentManager = myActivity.getFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
-            transaction.replace(R.id.profile_container, pastReservations);
-            transaction.addToBackStack("");
-            transaction.commit();
-            ((ProfileActivity) myActivity).bottomNavigationView.setVisibility(View.GONE);
+            showFragment(pastReservations);
         });
 
         currentRes.setOnClickListener(view1 -> {
@@ -330,37 +304,15 @@ public class ProfileFragment extends Fragment {
         });
 
         loyaltyPrograms.setOnClickListener(view1 -> {
-            FragmentTransaction transaction = myActivity.getFragmentManager().beginTransaction();
-            transaction.replace(R.id.profile_container, LoyaltyProgramFragment.Companion.newInstance());
-            transaction.addToBackStack("");
-            transaction.commit();
+            showFragment(LoyaltyProgramFragment.Companion.newInstance());
         });
-
-    }
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator());
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false);
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
 
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ProfileActivityInterface) {
-            listener = (ProfileActivityInterface) context;
-        }
-        myContext = context;
+        myActivity = getActivity();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-    }
 }

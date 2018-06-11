@@ -183,6 +183,8 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+
     //AWS
     implementation 'com.amazonaws:aws-android-sdk-core:2.+'
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'

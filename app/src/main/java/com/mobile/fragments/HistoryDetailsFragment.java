@@ -49,7 +49,7 @@ import retrofit2.Response;
  * Created by o_vicarra on 3/27/18.
  */
 
-public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
+public class HistoryDetailsFragment extends MPFragment {
 
     private static final String HISTORY_POSTER = "poster";
     private static final String EXTRA_TRANSITION_NAME = "transition_name";
@@ -59,6 +59,7 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
     TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
+    ViewGroup blurry;
 
     public HistoryDetailsFragment() {
     }
@@ -79,9 +80,8 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myActivity.startPostponedEnterTransition();
-        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(20000));
+        setSharedElementEnterTransition(TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(2000));
     }
-
 
 
     @Nullable
@@ -89,15 +89,26 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fr_historydetails, container, false);
+        blurry = container;
 
-
-        ((ProfileActivity) myActivity).CONTAINER = container;
-        Blurry.with(myActivity).radius(35).sampling(5).animate().onto(((ProfileActivity) myActivity).CONTAINER);
-
-
-        LogUtils.newLog(Constants.TAG, "onCreateView: " + ((ProfileActivity) myActivity).CONTAINER);
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBack();
+            }
+        });
 
         return root;
+    }
+
+    @Override
+    public boolean onBack() {
+        if (blurry != null) {
+            Blurry.delete(blurry);
+            blurry = null;
+            return true;
+        }
+        return super.onBack();
     }
 
     @Override
@@ -202,7 +213,7 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
                         fadeOut(like);
                         animate(dislike);
                     }
-                    PastReservations.newInstance().queryRealmForObjects();
+                    PastReservationsFragment.newInstance().queryRealmForObjects();
                     h.postDelayed(() -> myActivity.onBackPressed(), 2000);
                 }
             }
@@ -220,24 +231,7 @@ public class HistoryDetailsFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-    }
-
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(300);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-
-
+        myActivity = getActivity();
     }
 
     public void animate(View view) {

@@ -1,4 +1,4 @@
-package com.mobile.seats
+package com.mobile
 
 interface BackFragment {
 

@@ -1,16 +1,17 @@
 package com.mobile.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.helpshift.support.Log;
+import com.mobile.BackFragment;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.helpers.LogUtils;
@@ -20,15 +21,11 @@ import com.moviepass.R;
  * Created by anubis on 9/2/17.
  */
 
-public class ProfileAccountInformationFragment extends android.app.Fragment {
+public class ProfileAccountInformationFragment extends MPFragment {
 
     Context context;
     View rootView, progress, accountInformation, changePassword;
     RelativeLayout shippingClick, billingClick;
-    private static String CAMERA_PERMISSIONS[] = new String[]{
-            Manifest.permission.CAMERA
-    };
-    private ProfileActivityInterface mListener;
     Activity myActivity;
 
     @Override
@@ -40,7 +37,6 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.profile_account_details, container, false);
-
 
 
         accountInformation = rootView.findViewById(R.id.UP);
@@ -62,14 +58,14 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
 
 
         shippingClick.setOnClickListener(v -> {
-            mListener.openProfileAccountShippingInformation();
+            showFragment(new ProfileAccountShippingInformation());
         });
 
 
         accountInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.openProfileAccountInformation();
+                showFragment(new ProfileAccountInformation());
             }
         });
 
@@ -77,19 +73,16 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
         billingClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.openProfileAccountPlanAndInfo();
+                showFragment(new ProfileAccountPlanAndBilling());
             }
         });
 
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.openChangePassword();
+                showFragment(new ProfileAccountChangePassword());
             }
         });
-
-
-
     }
 
     @Override
@@ -97,33 +90,14 @@ public class ProfileAccountInformationFragment extends android.app.Fragment {
         super.onAttach(context);
         this.context = context;
         LogUtils.newLog(Constants.TAG, "onAttach cntx: ");
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.myActivity = activity;
-        LogUtils.newLog(Constants.TAG, "onAttach ACT: ");
-
-        if (activity instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) activity;
-        } else {
-            throw new RuntimeException(activity.toString() + " must implement ProfileActivityInterface");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         this.context = null;
-        mListener = null;
     }
+
 }
 
 
