@@ -339,6 +339,7 @@ public class RestClient {
                 Request.Builder requestBuilder = original.newBuilder()
                         .addHeader("user_id", String.valueOf(UserPreferences.getUserId()))
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
+                        .addHeader("device_uuid", "902183")
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
                         .addHeader("Accept", "application/json")
