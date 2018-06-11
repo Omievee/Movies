@@ -1,12 +1,11 @@
 package com.mobile.activities;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.transition.Fade;
@@ -92,7 +91,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
             } else {
@@ -153,7 +152,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountInformationFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileAccountInformationFragment profileAccountInformationFragment = new ProfileAccountInformationFragment();
@@ -164,7 +163,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.profile_container, profileFragment);
         transaction.commit();
@@ -175,7 +174,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             ProfileAccountShippingInformation shippingFragment = new ProfileAccountShippingInformation();
@@ -195,7 +194,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             ProfileAccountPlanAndBilling billingFragment = new ProfileAccountPlanAndBilling();
@@ -207,10 +206,10 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openProfileAccountInformation() {
-        if(!isOnline()){
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             ProfileAccountInformation accountInformation = new ProfileAccountInformation();
@@ -227,7 +226,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
             Blurry.delete(CONTAINER);
         }
 
-        if (bottomNavigationView.getVisibility() == View.GONE && getFragmentManager().getBackStackEntryCount() == 0) {
+        if (bottomNavigationView.getVisibility() == View.GONE && getSupportFragmentManager().getBackStackEntryCount() == 0) {
             bottomNavigationView.setVisibility(View.VISIBLE);
         }
     }
@@ -254,7 +253,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
         if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         } else {
-            FragmentManager manager = getFragmentManager();
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
             ProfileCancellationFragment cancelSubscription = new ProfileCancellationFragment();
@@ -266,7 +265,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openChangePassword() {
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileAccountChangePassword changePassword = new ProfileAccountChangePassword();
@@ -286,7 +285,7 @@ public class ProfileActivity extends BaseActivity implements ProfileActivityInte
 
     @Override
     public void openChangeEmail() {
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
         ProfileAccountChangeEmail changeEmail = new ProfileAccountChangeEmail();

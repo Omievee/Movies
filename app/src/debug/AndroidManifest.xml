@@ -15,6 +15,17 @@
             </intent-filter>
 
         </activity>
+
+        <activity android:name="com.mobile.home.HomeActivity"
+            android:label="MP Home"
+            android:theme="@style/HomeActivity"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

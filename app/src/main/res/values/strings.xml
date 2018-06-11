@@ -48,7 +48,7 @@
     <!-- MainActivity -->
     <string name="activity_main_mandatory_permissions">You must grant these permissions to use MoviePass</string>
 
-    <!-- MovieActivity -->
+    <!-- MovieFragment -->
     <string name="activity_movie_holder_title">[Title]</string>
     <string name="activity_movie_holder_rating">[Rating]</string>
     <string name="activity_movie_holder_running_time">[### minutes]</string>

@@ -646,6 +646,19 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="BottomNav" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/dark2</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
+        <item name="menu">@menu/navigation</item>
+        <item name="android:elevation">4dp</item>
+        <item name="itemTextColor">@color/drawer_item</item>
+        <item name="itemIconTint">@color/drawer_item</item>
+    </style>
+
+    <style name="HomeActivity" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
     <style name="ETicketCanNotBeCancelled" parent="MPText_Italic">
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center_horizontal</item>

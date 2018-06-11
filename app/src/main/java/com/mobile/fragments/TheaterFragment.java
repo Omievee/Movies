@@ -83,7 +83,7 @@ import retrofit2.Response;
  * Created by anubis on 6/8/17.
  */
 
-public class TheaterFragment extends Fragment implements ShowtimeClickListener, MissingCheckinListener {
+public class TheaterFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
     Theater theaterObject;
     ScreeningsResponseV2 screeningsResponse;
@@ -528,75 +528,6 @@ public class TheaterFragment extends Fragment implements ShowtimeClickListener, 
 
         startActivity(intent);
     }
-
-    public void fadeIn(View view) {
-        Animation old = view.getAnimation();
-        if (old != null) {
-            old.setAnimationListener(null);
-            old.cancel();
-        }
-        if (view.getVisibility() == View.VISIBLE) {
-            return;
-        }
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(500);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation old = view.getAnimation();
-        if (old != null) {
-            old.setAnimationListener(null);
-            old.cancel();
-        }
-        if (view.getVisibility() != View.VISIBLE) {
-            return;
-        }
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(500);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        view.setAnimation(animation);
-    }
-
 
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {

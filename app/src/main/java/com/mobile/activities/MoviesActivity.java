@@ -2,11 +2,8 @@ package com.mobile.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.RenderScript;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -32,7 +29,6 @@ import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.HistoryDetails;
 import com.mobile.helpers.LogUtils;
-import com.mobile.helpers.RSBlurProcessor;
 import com.mobile.model.Movie;
 import com.mobile.model.MoviesResponse;
 import com.mobile.network.RestClient;
@@ -501,9 +497,9 @@ public class MoviesActivity extends BaseActivity implements AlertScreenFragment.
     }
 
     public void startMovieActivity() {
-        Intent movieIntent = new Intent(this, MovieActivity.class);
-        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        movieIntent.putExtra(MovieActivity.DEEPLINK, url);
+        Intent movieIntent = new Intent(this, MovieFragment.class);
+        movieIntent.putExtra(MovieFragment.MOVIE, Parcels.wrap(movie));
+        movieIntent.putExtra(MovieFragment.DEEPLINK, url);
         startActivity(movieIntent);
     }
 

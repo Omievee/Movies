@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mobile.BackFragment
 import com.mobile.Constants
 import com.mobile.activities.ConfirmationActivity
 import com.mobile.model.ScreeningToken

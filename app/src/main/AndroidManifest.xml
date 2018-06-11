@@ -192,15 +192,6 @@
                 android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
         <activity
-            android:name="com.mobile.activities.MovieActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
-        <activity
             android:name="com.mobile.activities.MoviesActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

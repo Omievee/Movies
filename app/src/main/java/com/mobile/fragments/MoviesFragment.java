@@ -20,7 +20,6 @@ import android.provider.Settings;
 import android.renderscript.RenderScript;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -51,7 +51,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
-import com.mobile.activities.MovieActivity;
+import com.mobile.activities.MovieFragment;
 import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
@@ -92,7 +92,7 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
+public class MoviesFragment extends MPFragment implements MoviePosterClickListener, LocationListener {
 
     public static final String MOVIES = "movies";
     public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
@@ -320,7 +320,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         topBoxOfficeLayoutManager.setScrollEnabled(true);
         nowplayingManager.setScrollEnabled(true);
         lockableScrollView.setScrollingEnabled(true);
-
     }
 
     void getAllMovies() {
@@ -410,9 +409,7 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
     //TODO:
     public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
-        Intent movieIntent = new Intent(myActivity, MovieActivity.class);
-        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        startActivity(movieIntent);
+        showFragment(MovieFragment.newInstance(movie));
     }
 
     public void getMoviesForStorage() {
@@ -758,26 +755,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
     }
 
     @Override

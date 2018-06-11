@@ -36,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ProfileAccountChangeEmail extends Fragment implements View.OnClickListener {
+public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment implements View.OnClickListener {
 
     TextInputLayout newEmailTextInputLayout, currentPasswordTextInputLayout;
     EditText newEmail, currentPassword;

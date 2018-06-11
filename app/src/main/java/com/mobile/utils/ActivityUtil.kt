@@ -32,6 +32,4 @@ fun View?.expandTouchArea() {
                 rect.bottom += extraPadding
                 view.touchDelegate = TouchDelegate(rect, parent)
             }, {})
-
-
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ import retrofit2.Response;
  * Created by anubis on 9/1/17.
  */
 
-public class ProfileCancellationFragment extends android.app.Fragment {
+public class ProfileCancellationFragment extends Fragment {
 
     MaterialSpinner spinnerCancelReason;
     EditText cancelComments;

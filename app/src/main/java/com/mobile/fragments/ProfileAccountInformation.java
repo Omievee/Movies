@@ -1,7 +1,5 @@
 package com.mobile.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +7,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
-import org.w3c.dom.Text;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileAccountInformation extends android.app.Fragment {
+public class ProfileAccountInformation extends MPFragment {
 
-    private ProfileActivityInterface mListener;
-    private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
     private UserInfoResponse userInfoResponse;
@@ -58,13 +50,12 @@ public class ProfileAccountInformation extends android.app.Fragment {
 
         changeEmail.setClickable(true);
         changeEmail.setOnClickListener(v -> {
-            mListener.openChangeEmail();
+            showFragment(new ProfileAccountChangeEmail());
         });
 
 
         return rootView;
     }
-
 
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();
@@ -92,44 +83,9 @@ public class ProfileAccountInformation extends android.app.Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                mListener.closeFragment();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        this.context = null;
     }
 
 }

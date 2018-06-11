@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.helpshift.support.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -22,16 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.UserPreferences;
-import com.mobile.fragments.TicketVerificationDialog;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.responses.CardActivationResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import io.card.payment.CardIOActivity;
@@ -71,8 +65,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = intent.getParcelableExtra(MovieActivity.SCREENING);
-            selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
+            screeningObject = intent.getParcelableExtra(MovieFragment.SCREENING);
+            selectedShowTime = getIntent().getStringExtra(MovieFragment.SHOWTIME);
         }
 
 
@@ -115,8 +109,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                     if (cardActivationResponse != null && response.isSuccessful()) {
                         progress.setVisibility(View.GONE);
                         Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-                        intent.putExtra(MovieActivity.SCREENING, Parcels.wrap(screeningObject));
-                        intent.putExtra(MovieActivity.SHOWTIME, selectedShowTime);
+                        intent.putExtra(MovieFragment.SCREENING, Parcels.wrap(screeningObject));
+                        intent.putExtra(MovieFragment.SHOWTIME, selectedShowTime);
                         startActivity(intent);
 
                     } else {

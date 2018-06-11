@@ -63,13 +63,13 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
-            selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
-            theater = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.THEATER));
+            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieFragment.SCREENING));
+            selectedShowTime = getIntent().getStringExtra(MovieFragment.SHOWTIME);
+            theater = Parcels.unwrap(intent.getParcelableExtra(MovieFragment.THEATER));
         }
         done.setOnClickListener(v -> {
             if (screeningObject != null && selectedShowTime != null) {
-                MovieActivity reserAct = new MovieActivity();
+                MovieFragment reserAct = new MovieFragment();
                 reserAct.reserve(screeningObject, selectedShowTime);
             } else {
                 Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);

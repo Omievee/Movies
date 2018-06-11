@@ -1,11 +1,12 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
@@ -31,32 +33,29 @@ import io.realm.RealmResults;
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservations extends Fragment {
+public class PastReservationsFragment extends MPFragment implements historyPosterClickListener {
 
-    public static final String TAG = PastReservations.class.getSimpleName();
+    public static final String TAG = PastReservationsFragment.class.getSimpleName();
 
 
     View rootview;
-    static HistoryAdapter historyAdapter;
-    static RecyclerView historyRecycler;
-    static RealmList<Movie> historyList;
-    static TextView noMovies;
-    static View progress;
-    static HistoryResponse historyResponse;
+    HistoryAdapter historyAdapter;
+    RecyclerView historyRecycler;
+    RealmList<Movie> historyList;
+    TextView noMovies;
+    View progress;
     Activity myActivity;
     Context myContext;
-    Realm historyRealm;
-    RealmConfiguration config;
 
-    public PastReservations() {
+    public PastReservationsFragment() {
     }
 
 
-    public static PastReservations newInstance() {
+    public static PastReservationsFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        PastReservations fragment = new PastReservations();
+        PastReservationsFragment fragment = new PastReservationsFragment();
         fragment.setArguments(args);
 
         return fragment;
@@ -84,47 +83,12 @@ public class PastReservations extends Fragment {
 
         GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(myActivity, historyList, (historyPosterClickListener) this.getActivity());
+        historyAdapter = new HistoryAdapter(getActivity(), historyList, this);
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
         queryRealmForObjects();
-
-        LogUtils.newLog(Constants.TAG, "onViewCreated: " + getFragmentManager().getBackStackEntryCount());
     }
-
-
-//    public void loadHIstory() {
-//        historyList.clear();
-//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-//            @Override
-//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-//                historyResponse = response.body();
-//                if (response != null && response.isSuccessful()) {
-//                    progress.setVisibility(View.GONE);
-//                    if (historyResponse.getReservations().size() == 0) {
-//                        historyRecycler.setVisibility(View.GONE);
-//                        noMovies.setVisibility(View.VISIBLE);
-//                    } else {
-//                        historyList.addAll(historyResponse.getReservations());
-//                        historyRecycler.setVisibility(View.VISIBLE);
-//                        noMovies.setVisibility(View.GONE);
-//                    }
-//                    if (historyAdapter != null) {
-//                        historyRecycler.getRecycledViewPool().clear();
-//                        historyAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-//                progress.setVisibility(View.GONE);
-//                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
-//            }
-//        });
-//
-//    }
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -172,6 +136,11 @@ public class PastReservations extends Fragment {
             historyRecycler.getRecycledViewPool().clear();
             historyAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
+        showFragment(HistoryDetailsFragment.newInstance(historyposter, ViewCompat.getTransitionName(sharedView)));
     }
 }
 

@@ -5,11 +5,9 @@ import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -19,17 +17,12 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
-import com.mobile.Constants;
 import com.mobile.Interfaces.AfterSearchListener;
-import com.mobile.activities.MovieActivity;
+import com.mobile.activities.MovieFragment;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmList;
 
@@ -100,8 +93,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
 
         holder.cardView.setOnClickListener(view -> {
             listener.getSearchString();
-            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
-            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
+            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieFragment.class);
+            movieIntent.putExtra(MovieFragment.MOVIE, Parcels.wrap(suggestion));
             holder.itemView.getContext().startActivity(movieIntent);
         });
 
@@ -171,8 +164,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
 //
 //        holder.cardView.setOnClickListener(view -> {
 //            listener.getSearchString();
-//            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
-//            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
+//            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieFragment.class);
+//            movieIntent.putExtra(MovieFragment.MOVIE, Parcels.wrap(suggestion));
 //            holder.itemView.getContext().startActivity(movieIntent);
 //        });
 //
