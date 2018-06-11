@@ -66,6 +66,7 @@ import com.moviepass.R;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ import javax.annotation.Nullable;
 
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
+import kotlinx.android.parcel.Parcelize;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -114,8 +116,12 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "cinema";
 
-    public static TheaterFragment newInstance() {
-        return new TheaterFragment();
+    public static TheaterFragment newInstance(Theater theater) {
+        Bundle b = new Bundle();
+        b.putParcelable(THEATER, Parcels.wrap(Theater.class, theater));
+        TheaterFragment f = new TheaterFragment();
+        f.setArguments(b);
+        return f;
     }
 
     @Override
@@ -124,7 +130,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         ButterKnife.bind(this, rootView);
 
         //Object & Lists
-        theaterObject = Parcels.unwrap(myActivity.getIntent().getParcelableExtra(THEATER));
+        theaterObject = Parcels.unwrap(getArguments().getParcelable(THEATER));
         moviesAtSelectedTheater = new LinkedList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
         cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);

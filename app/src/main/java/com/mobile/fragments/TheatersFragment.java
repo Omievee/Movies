@@ -62,10 +62,10 @@ import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
-import com.mobile.activities.TheaterActivity;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.mobile.model.TheaterPin;
 import com.mobile.network.RestClient;
@@ -74,6 +74,7 @@ import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.io.IOException;
@@ -93,7 +94,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class TheatersFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
+public class TheatersFragment extends MPFragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
 
 
     public static final String GCM_ONEOFF_TAG = "oneoff|[0,0]";
@@ -173,7 +174,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         LinearLayoutManager manager = new LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false);
         theatersRECY = rootView.findViewById(R.id.listViewTheaters);
         theatersRECY.setLayoutManager(manager);
-        theaterAdapter = new TheatersAdapter(nearbyTheaters);
+        theaterAdapter = new TheatersAdapter(nearbyTheaters, (pos, theater, posX, posY) -> showFragment(TheaterFragment.newInstance(theater)));
         theatersRECY.setAdapter(theaterAdapter);
         searchThisArea = rootView.findViewById(R.id.SearchThisArea);
         listViewText = rootView.findViewById(R.id.ListViewText);
@@ -218,7 +219,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(this);
-        if(BuildConfig.DEFAULT_LOCATION!=null) {
+        if (BuildConfig.DEFAULT_LOCATION != null) {
             searchGP.setText(BuildConfig.DEFAULT_LOCATION);
         }
         myloc.setOnClickListener(v -> {
@@ -365,10 +366,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
         });
 
         mMap.setOnInfoWindowClickListener(marker -> {
-            mProgress.setVisibility(View.VISIBLE);
-            Intent intent = new Intent(myContext, TheaterActivity.class);
-            intent.putExtra("cinema", Parcels.wrap(Theater.class, markerTheaterMap.get(marker.getId())));
-            myContext.startActivity(intent);
+            showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
         });
 
     }
@@ -564,7 +562,7 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE).replaceAll(",",".")));
+            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE).replaceAll(",", ".")));
             tRealm.commitTransaction();
         }
         //Sort through shorter list..
@@ -727,26 +725,6 @@ public class TheatersFragment extends Fragment implements OnMapReadyCallback, Go
     /**
      * REALM CODE
      */
-
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(200);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(200);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-    }
 
     public void getAllTheatersForStorage() {
         RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
