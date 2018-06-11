@@ -13,7 +13,7 @@ interface GoWatchItManager {
 
     fun isAllMoviesEmpty(): Boolean
 
-    fun userOpenedMovie(movieId: String, url: String)
+    fun userOpenedMovie(movieId: String, url: String, position:String)
 
     fun userClickedOnShowtime(theater: Theater, screening: Screening, showtime: String, movieId: String, url: String)
 

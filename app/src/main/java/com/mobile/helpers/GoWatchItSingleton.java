@@ -1,8 +1,10 @@
 package com.mobile.helpers;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.gowatchit.GoWatchItApi;
 import com.mobile.gowatchit.GoWatchItManager;
@@ -123,9 +125,12 @@ public class GoWatchItSingleton implements GoWatchItManager {
     }
 
     @Override
-    public void userOpenedMovie(String movieId, String url) {
+    public void userOpenedMovie(String movieId, String url, String position) {
 
-        if (isAllMoviesEmpty())
+        Log.d(Constants.TAG, "userOpenedMovie: "+position
+        );
+
+        if(isAllMoviesEmpty())
             getMovies();
         String userId = String.valueOf(UserPreferences.getUserId());
         String versionName = BuildConfig.VERSION_NAME;
@@ -133,11 +138,11 @@ public class GoWatchItSingleton implements GoWatchItManager {
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
         IDFA = UserPreferences.getAAID();
-        LogUtils.newLog("WATCH", "userOpenedMovie: " + movieId);
+        LogUtils.newLog("WATCH", "userOpenedMovie: "+movieId);
         String movieTitle = getMovieTitle(movieId);
 
-        RestClient.getAuthenticatedAPIGoWatchIt().openAppEvent("Movie",
-                String.valueOf(movieId), movieTitle, "impression", campaign, "app", "android", url, "organic",
+        RestClient.getAuthenticatedAPIGoWatchIt().openMovieEvent("Movie",
+                String.valueOf(movieId),position,movieTitle, "impression", campaign, "app", "android", url, "organic",
                 l, ln, userId, IDFA, versionCode, versionName, lts).enqueue(new RestCallback<GoWatchItResponse>() {
             @Override
             public void onResponse(Call<GoWatchItResponse> call, Response<GoWatchItResponse> response) {
@@ -155,7 +160,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
             @Override
             public void failure(RestError restError) {
 //                progress.setVisibility(View.GONE);
-                // Toast.makeText(MovieFragment.this, restError.getMessage(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(MovieActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

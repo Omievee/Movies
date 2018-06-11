@@ -23,6 +23,7 @@ public class Constants {
     public static final String RESERVATION = "reservation";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
+    public static final String THEATER = "theater";
     public static final String TOKEN = "token";
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";

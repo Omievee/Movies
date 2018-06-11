@@ -108,4 +108,10 @@ class TheaterScreeningsAdapter(
     }
 }
 
-class ScreeningData(val data: List<ScreeningPresentation>?, val diffResult: DiffUtil.DiffResult)
+class ScreeningData(val data: List<ScreeningPresentation>?, val diffResult: DiffUtil.DiffResult) {
+    fun findPosition(screening: Screening): Int {
+        return data?.indexOfFirst {
+            it.screening?.moviepassId == screening.moviepassId
+        } ?: -1
+    }
+}
