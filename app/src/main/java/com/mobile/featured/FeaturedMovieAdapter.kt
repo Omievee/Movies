@@ -1,12 +1,11 @@
-package com.mobile.adapters
+package com.mobile.featured
 
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import com.mobile.adapters.BaseViewHolder
 import com.mobile.model.Movie
 
-class FeaturedMovieAdapter(val featured: List<Movie>) : RecyclerView.Adapter<BaseViewHolder>() {
+class FeaturedMovieAdapter(private val featured: List<Movie>) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var enablePlayback: Boolean = true
         set(value) {
@@ -19,7 +18,7 @@ class FeaturedMovieAdapter(val featured: List<Movie>) : RecyclerView.Adapter<Bas
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType == TYPE_TRAILER) {
             true -> BaseViewHolder(MovieTrailerView(parent.context))
-            else -> BaseViewHolder(FrameLayout(parent.context))
+            else -> BaseViewHolder(MoviePosterView(parent.context))
         }
     }
 
@@ -41,6 +40,8 @@ class FeaturedMovieAdapter(val featured: List<Movie>) : RecyclerView.Adapter<Bas
         val movie = featured.get(position)
         if (view is MovieTrailerView) {
             view.bind(movie, enablePlayback)
+        } else if (view is MoviePosterView) {
+            view.bind(movie)
         }
     }
 

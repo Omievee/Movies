@@ -52,13 +52,13 @@ import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
 import com.mobile.activities.MovieFragment;
-import com.mobile.adapters.FeaturedAdapter;
 import com.mobile.adapters.MoviesComingSoonAdapter;
 import com.mobile.adapters.MoviesNewReleasesAdapter;
 import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
 import com.mobile.adapters.NowPlayingMoviesAdapter;
 import com.mobile.extensions.CustomLinearLayoutManager;
 import com.mobile.extensions.LockableScrollView;
+import com.mobile.featured.FeaturedMovieAdapter;
 import com.mobile.helpers.LogUtils;
 import com.mobile.helpers.RSBlurProcessor;
 import com.mobile.model.Movie;
@@ -111,7 +111,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
     private MoviesComingSoonAdapter comingSoonAdapter;
     private NowPlayingMoviesAdapter nowPlayingAdapter;
-    private FeaturedAdapter featuredAdapter;
+    private FeaturedMovieAdapter featuredAdapter;
     MoviesResponse moviesResponse;
     SearchFragment searchFrag = new SearchFragment();
     ImageView movieLogo, searchicon;
@@ -248,7 +248,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
-        featuredAdapter = new FeaturedAdapter(myActivity, featured, this);
+        featuredAdapter = new FeaturedMovieAdapter(featured);
         featuredRecycler.setLayoutAnimation(animation2);
 
 
