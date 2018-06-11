@@ -1,10 +1,12 @@
-package com.mobile.adapters
+package com.mobile.featured
 
 import android.content.Context
 import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -17,7 +19,6 @@ import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import com.mobile.model.Movie
 import com.moviepass.R
-import kotlinx.android.synthetic.main.layout_movie_screening_poster_header.view.*
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 import java.io.File
 
@@ -29,15 +30,24 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
 
     init {
         inflate(context, R.layout.list_item_featured_poster, this)
+        layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        featuredPoster.minimumHeight = 9 * resources.getDisplayMetrics().heightPixels / 16
         val bandwidthMeter = DefaultBandwidthMeter()
         val videoTrackSelectionFactory = AdaptiveTrackSelection.Factory(bandwidthMeter)
         val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
+        player.addListener(this)
         featuredVideo.player = player
     }
 
     fun bind(movie: Movie, enableVideoPlayback: Boolean = true) {
+        if(!enableVideoPlayback) {
+            player.stop()
+        }
         if (lastSource == movie.teaserVideoUrl) {
+            if(player.playbackState==Player.STATE_READY) {
+                player.playWhenReady
+            }
             return
         }
         val video = ExtractorMediaSource(Uri.parse(movie.teaserVideoUrl), CacheDataSourceFactory(context, (100 * 1024 * 1024).toLong(), (5 * 1024 * 1024).toLong()), DefaultExtractorsFactory(), null, null)
