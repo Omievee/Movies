@@ -15,25 +15,15 @@ import com.helpshift.support.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.Constants;
-import com.mobile.activities.TheaterActivity;
-import com.mobile.activities.TheatersActivity;
-import com.mobile.fragments.TheatersFragment;
 import com.mobile.listeners.TheatersClickListener;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
-import org.parceler.Parcels;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import butterknife.BindView;
