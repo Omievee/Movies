@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mobile.model.Movie
 
-class FeaturedAdapter(val featured: List<Movie>) : RecyclerView.Adapter<BaseViewHolder>() {
+class FeaturedMovieAdapter(val featured: List<Movie>) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var enablePlayback: Boolean = true
         set(value) {
