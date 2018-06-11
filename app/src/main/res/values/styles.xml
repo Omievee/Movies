@@ -655,7 +655,7 @@
         <item name="itemIconTint">@color/drawer_item</item>
     </style>
     
-    <style name="HomeActivity" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="HomeActivity" parent="AppTheme">
 
     </style>
 
