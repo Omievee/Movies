@@ -654,9 +654,20 @@
         <item name="itemTextColor">@color/drawer_item</item>
         <item name="itemIconTint">@color/drawer_item</item>
     </style>
-    
+
     <style name="HomeActivity" parent="AppTheme">
 
     </style>
+
+    <style name="ETicketCanNotBeCancelled" parent="MPText_Italic">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+        <item name="android:text">@string/e_ticket_can_not_be_cancelled</item>
+    </style>
+
 
 </resources>

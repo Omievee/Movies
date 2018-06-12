@@ -50,6 +50,7 @@ class HomeActivity : FragmentActivity() {
             true
         }
         viewPager.adapter = adapter
+
     }
 
     override fun onBackPressed() {
