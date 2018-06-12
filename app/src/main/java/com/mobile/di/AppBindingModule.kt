@@ -1,5 +1,7 @@
 package com.mobile.di
 
+import com.mobile.fragments.MoviesFragment
+import com.mobile.fragments.MoviesFragmentModule
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.splash.SplashActivity
@@ -20,5 +22,9 @@ abstract class AppBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules=[HomeActivityModule::class])
     abstract fun homeActivity() : HomeActivity
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules=[MoviesFragmentModule::class])
+    abstract fun moviesFragment() : MoviesFragment
 
 }

@@ -47,8 +47,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
@@ -61,7 +65,10 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends MPFragment implements MoviePosterClickListener {
+public class MoviesFragment extends MPFragment implements MoviePosterClickListener, MoviesView {
+
+    @Inject
+    MoviesFragmentPresenter presenter;
 
     //Tag
     public static final String TAG = "MoviesFragment";
@@ -335,6 +342,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         activity = getActivity();
     }

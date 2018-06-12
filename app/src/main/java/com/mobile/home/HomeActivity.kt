@@ -16,11 +16,21 @@ import com.mobile.fragments.TheatersFragment
 import com.mobile.location.LocationManager
 import com.moviepass.R
 import dagger.android.AndroidInjection
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-class HomeActivity : FragmentActivity() {
+class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
+
+    @Inject
+    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return fragmentInjector
+    }
 
     @Inject
     lateinit var presenter: HomeActivityPresenter
