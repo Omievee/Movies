@@ -193,8 +193,8 @@
         </activity>
 
         <activity android:name="com.mobile.home.HomeActivity"
-            android:theme="@style/HomeActivity"
-            >
+            android:screenOrientation="portrait"
+            android:theme="@style/HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
