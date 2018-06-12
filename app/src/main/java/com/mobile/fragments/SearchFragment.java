@@ -4,52 +4,39 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Interfaces.AfterSearchListener;
-import com.mobile.UserPreferences;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
-import com.mobile.model.MoviesResponse;
-import com.mobile.network.RestClient;
 import com.moviepass.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static com.facebook.GraphRequest.TAG;
 
 /**
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends android.support.v4.app.Fragment implements AfterSearchListener {
+public class SearchFragment extends Fragment implements AfterSearchListener {
     public EditText searchBar;
     View rootView;
     SearchAdapter customAdapter;
@@ -57,14 +44,11 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     View progress;
     ArrayList<Movie> noDuplicates;
     String url;
-    Activity myActivity;
-    Context myContext;
     private RealmResults<Movie> movies;
     private RealmResults<Movie> allMovies;
     private RecyclerView recyclerView;
     private RealmList<Movie> suggestions;
     private ImageView backArrow, removeIcon;
-
 
     public SearchFragment() {
     }
@@ -100,9 +84,10 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         progress.setVisibility(View.VISIBLE);
-        LayoutInflater myInflater = (LayoutInflater) myActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.VERTICAL, false);
+        LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         searchBar.requestFocus();
 
@@ -149,8 +134,8 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(myActivity);
-                getActivity().getSupportFragmentManager().popBackStack();
+                hideSoftKeyboard(getActivity());
+                getActivity().onBackPressed();
             }
         });
 
@@ -214,30 +199,18 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         showSfotKeyboard();
     }
 
-
     @Override
-    public void getSearchString() {
+    public void getSearchString(Movie movie) {
         String url = "https://moviepass.com/go/movies";
         GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        myContext = context;
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        myActivity = activity;
+        MoviesFragment moviesFragment = (MoviesFragment) getParentFragment();
+        MovieFragment movieFragment = MovieFragment.newInstance(movie,"");
+        moviesFragment.replaceFragment(movieFragment);
     }
 
     public void showSfotKeyboard(){
-        InputMethodManager imm = (InputMethodManager) myActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(myActivity.getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
     }
 
 
@@ -248,4 +221,5 @@ public class SearchFragment extends android.support.v4.app.Fragment implements A
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
+
 }

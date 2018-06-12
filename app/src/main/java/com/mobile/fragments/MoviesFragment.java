@@ -31,7 +31,6 @@ import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
-import com.mobile.activities.MovieFragment;
 import com.mobile.adapters.DynamicMoviesTabAdapter;
 import com.mobile.featured.FeaturedMovieAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
