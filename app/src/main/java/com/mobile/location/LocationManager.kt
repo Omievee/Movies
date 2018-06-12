@@ -5,6 +5,8 @@ import io.reactivex.Single
 
 interface LocationManager {
 
+    fun isLocationEnabled():Boolean
+
     fun lastLocation():UserLocation?
 
     fun location(): Single<UserLocation>

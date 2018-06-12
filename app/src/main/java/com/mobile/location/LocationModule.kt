@@ -1,5 +1,6 @@
 package com.mobile.location
 
+import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mobile.application.Application
@@ -23,7 +24,13 @@ class LocationModule {
 
     @Provides
     @Singleton
-    fun provideLocationManager(application: Application, fused:FusedLocationProviderClient?) : LocationManager {
-        return LocationManagerImpl(application, fused)
+    fun provideSystemLocationManager(application: Application) : android.location.LocationManager {
+        return application.getSystemService(Context.LOCATION_SERVICE) as android.location.LocationManager
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationManager(application: Application, systemLocationManager: android.location.LocationManager, fused:FusedLocationProviderClient?) : LocationManager {
+        return LocationManagerImpl(application, systemLocationManager, fused)
     }
 }

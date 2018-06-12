@@ -7,15 +7,15 @@ import io.reactivex.schedulers.Schedulers
 class Schedulers {
 
     companion object {
-        private var SINGLE_DEFAULT: DefaultTransformer<*> = DefaultTransformer<Any>()
+        private var SINGLE_BACKGROUND: DefaultTransformer<*> = DefaultTransformer<Any>()
 
-        private var SINGLE_BACKGROUND: SingleBackgroundTransformer<*> = SingleBackgroundTransformer<Any>()
+        private var SINGLE_DEFAULT: SingleDefaultTransformer<*> = SingleDefaultTransformer<Any>()
 
         private var OBSERVABLE_DEFAULT: ObservableDefault<*> = ObservableDefault<Any>()
 
-        fun <T> singleDefault() : DefaultTransformer<T> {
+        fun <T> singleDefault() : SingleDefaultTransformer<T> {
             @Suppress("UNCHECKED_CAST")
-            return SINGLE_DEFAULT as DefaultTransformer<T>
+            return SINGLE_DEFAULT as SingleDefaultTransformer<T>
         }
 
         fun <T> singleBackground() : DefaultTransformer<T> {
@@ -36,7 +36,7 @@ class Schedulers {
         }
     }
 
-    class SingleBackgroundTransformer<T> : SingleTransformer<T, T> {
+    class SingleDefaultTransformer<T> : SingleTransformer<T, T> {
         override fun apply(upstream: Single<T>): SingleSource<T> {
             return upstream.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

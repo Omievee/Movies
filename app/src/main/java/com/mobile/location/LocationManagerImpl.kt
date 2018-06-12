@@ -3,6 +3,7 @@ package com.mobile.location
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationManager.*
 import android.support.v4.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -13,7 +14,7 @@ import com.mobile.rx.Schedulers
 import io.reactivex.*
 import io.reactivex.Single.create
 
-class LocationManagerImpl(val application: Application, val fused: FusedLocationProviderClient?) : LocationManager {
+class LocationManagerImpl(val application: Application, val systemLocationManager: android.location.LocationManager, val fused: FusedLocationProviderClient?) : LocationManager {
 
     private var _lastLocation: UserLocation? = null
 
@@ -22,6 +23,11 @@ class LocationManagerImpl(val application: Application, val fused: FusedLocation
                 .subscribe({
                     _lastLocation = it
                 }, {})
+    }
+
+    override fun isLocationEnabled(): Boolean {
+        return systemLocationManager.isProviderEnabled(GPS_PROVIDER) && systemLocationManager
+                .isProviderEnabled(NETWORK_PROVIDER)
     }
 
     override fun lastLocation(): UserLocation? {

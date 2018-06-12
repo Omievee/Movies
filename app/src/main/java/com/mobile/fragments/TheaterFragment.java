@@ -86,7 +86,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters, theaterName;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterScreeningsAdapter theaterMoviesAdapter;
-    boolean qualifiersApproved;
     Button buttonCheckIn;
     LinkedList<Screening> moviesAtSelectedTheater;
     ArrayList<String> showtimesAtSelectedTheater;
@@ -94,10 +93,11 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     Activity myActivity;
     Context myContext;
     Reservation reservation;
-    PerformanceInfoRequest mPerformReq;
     String url;
     @Nullable
     Pair<Screening, String> selected;
+
+    Location currentLocation;
 
     @Nullable
     Disposable disposable;
