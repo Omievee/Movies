@@ -554,7 +554,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                     fadeIn(searchThisArea);
                     searchThisArea.setVisibility(View.VISIBLE);
                     searchThisArea.setOnClickListener(v -> {
-                        eticketTheatersAdapter.notifyDataSetChanged();
+                        //eticketTheatersAdapter.notifyDataSetChanged();
                         double searchLat = googleMap.getCameraPosition().target.latitude;
                         double searchLon = googleMap.getCameraPosition().target.longitude;
                         queryRealmLoadTheaters(searchLat, searchLon);

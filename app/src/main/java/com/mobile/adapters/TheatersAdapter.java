@@ -1,17 +1,11 @@
 package com.mobile.adapters;
 
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-
-import com.helpshift.support.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.listeners.TheatersClickListener;
+import com.mobile.model.Header;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
@@ -33,21 +28,25 @@ import butterknife.ButterKnife;
  * Created by ryan on 4/26/17.
  */
 
-public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHolder> {
+public class TheatersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private LinkedList<Theater> theatersArrayList;
-    private final TheatersClickListener listener;
+
     public static final String THEATER = "cinema";
+    TheatersClickListener theatersClickListener;
 
-    public static final int TYPE_HEADeR = 0;
-    public static final int TYPE_ITEM = 1;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
+    Header header;
 
-    public TheatersAdapter(LinkedList<Theater> theatersArrayList, TheatersClickListener listener) {
-        this.listener = listener;
+    public TheatersAdapter(Header header, TheatersClickListener theatersClickListener, LinkedList<Theater> theatersArrayList) {
         this.theatersArrayList = theatersArrayList;
+        this.theatersClickListener = theatersClickListener;
+        this.header = header;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class VHITEM extends RecyclerView.ViewHolder {
+
         @BindView(R.id.list_item_theater)
         CardView listItemTheater;
         @BindView(R.id.theater_name)
@@ -62,11 +61,10 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         ImageView iconTicket;
         @BindView(R.id.icon_seat)
         ImageView iconSeat;
-
         @BindView(R.id.distanceView)
         RelativeLayout distanceView;
 
-        public ViewHolder(View v) {
+        public VHITEM(View v) {
             super(v);
             ButterKnife.bind(this, v);
 
@@ -81,82 +79,158 @@ public class TheatersAdapter extends RecyclerView.Adapter<TheatersAdapter.ViewHo
         }
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater, parent, false);
+    public class VHHEADER extends RecyclerView.ViewHolder {
 
+        TextView theaterHeader;
 
-        return new ViewHolder(view);
+        public VHHEADER(View v) {
+            super(v);
+            theaterHeader = v.findViewById(R.id.theaterHeader);
+        }
+    }
+
+    private Theater getItem(int position) {
+        return theatersArrayList.get(position);
     }
 
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Theater theater = theatersArrayList.get(position);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if (theater.ticketTypeIsStandard()) {
-            holder.iconTicket.setVisibility(View.INVISIBLE);
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        } else if (theater.ticketTypeIsETicket()) {
-            holder.iconSeat.setVisibility(View.INVISIBLE);
-        } else {
-            holder.iconSeat.setVisibility(View.VISIBLE);
-            holder.iconTicket.setVisibility(View.VISIBLE);
+        if (viewType == TYPE_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater, parent, false);
+            return new VHITEM(v);
+        } else if (viewType == TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_theater_header, parent, false);
+            return new VHHEADER(view);
         }
+        throw new RuntimeException("there is no type that matches the type " + viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof VHHEADER) {
+            ((VHHEADER) holder).theaterHeader.setText("Nearby");
+
+        } else if (holder instanceof VHITEM) {
 
 
-        holder.name.setText(theater.getName());
-        holder.address.setText(theater.getAddress());
+            Theater theater = theatersArrayList.get(holder.getLayoutPosition() - 1);
 
-/*
-        Location loc1 = new Location("");
-        loc1.setLatitude(lat1);
-        loc1.setLongitude(lon1);
 
-        Location loc2 = new Location("");
-        loc2.setLatitude(lat2);
-        loc2.setLongitude(lon2);
+            ((VHITEM) holder).name.setText(theater.getName());
 
-        float distanceInMeters = loc1.distanceTo(loc2); */
-
-        String city = theater.getCity();
-        String state = theater.getState();
-        String zip = String.valueOf(theater.getZip());
-
-        String cityThings = city + ", " + state + " " + zip;
-        holder.cityThings.setText(cityThings);
-
-        String formattedAddress = theater.getDistance() + " miles";
-        holder.distance.setText(formattedAddress);
-
-        final Uri uri = Uri.parse("geo:" + theater.getLat() + "," + theater.getLon() + "?q=" + Uri.encode(theater.getName()));
-        holder.distanceView.setOnClickListener(v -> {
-            try {
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
-                mapIntent.setPackage("com.google.android.apps.maps");
-                holder.itemView.getContext().startActivity(mapIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(holder.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
-            } catch (Exception x) {
-                x.getMessage();
+            if (theater.ticketTypeIsStandard()) {
+                ((VHITEM) holder).iconTicket.setVisibility(View.INVISIBLE);
+                ((VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
+            } else if (theater.ticketTypeIsETicket()) {
+                ((VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
+            } else {
+                ((VHITEM) holder).iconSeat.setVisibility(View.VISIBLE);
+                ((VHITEM) holder).iconTicket.setVisibility(View.VISIBLE);
             }
 
-        });
 
-        holder.listItemTheater.setTag(position);
-        holder.itemView.setOnClickListener(v -> {
-            listener.onTheaterClick(0, theater, 0, 0);
-        });
+            ((VHITEM) holder).address.setText(theater.getAddress());
+
+
+            String city = theater.getCity();
+            String state = theater.getState();
+            String zip = String.valueOf(theater.getZip());
+
+            String cityThings = city + ", " + state + " " + zip;
+            ((VHITEM) holder).cityThings.setText(cityThings);
+
+            String formattedAddress = theater.getDistance() + " miles";
+            ((VHITEM) holder).distance.setText(formattedAddress);
+
+            final Uri uri = Uri.parse("geo:" + theater.getLat() + "," + theater.getLon() + "?q=" + Uri.encode(theater.getName()));
+            ((VHITEM) holder).distanceView.setOnClickListener(v -> {
+                try {
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    holder.itemView.getContext().startActivity(mapIntent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(holder.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+                } catch (Exception x) {
+                    x.getMessage();
+                }
+
+            });
+
+            ((VHITEM) holder).listItemTheater.setTag(position);
+            Theater finalTheater = theater;
+            holder.itemView.setOnClickListener(v -> {
+                theatersClickListener.onTheaterClick(holder.getAdapterPosition(), finalTheater);
+            });
+
+        }
     }
+
+
+//    @Override
+//    public void onBindViewHolder(final ViewHolder holder, int position) {
+//
+//        if (theater.ticketTypeIsStandard()) {
+//            holder.iconTicket.setVisibility(View.INVISIBLE);
+//            holder.iconSeat.setVisibility(View.INVISIBLE);
+//        } else if (theater.ticketTypeIsETicket()) {
+//            holder.iconSeat.setVisibility(View.INVISIBLE);
+//        } else {
+//            holder.iconSeat.setVisibility(View.VISIBLE);
+//            holder.iconTicket.setVisibility(View.VISIBLE);
+//        }
+//
+//
+//        holder.name.setText(theater.getName());
+//        holder.address.setText(theater.getAddress());
+//
+//
+//        String city = theater.getCity();
+//        String state = theater.getState();
+//        String zip = String.valueOf(theater.getZip());
+//
+//        String cityThings = city + ", " + state + " " + zip;
+//        holder.cityThings.setText(cityThings);
+//
+//        String formattedAddress = theater.getDistance() + " miles";
+//        holder.distance.setText(formattedAddress);
+//
+//        final Uri uri = Uri.parse("geo:" + theater.getLat() + "," + theater.getLon() + "?q=" + Uri.encode(theater.getName()));
+//        holder.distanceView.setOnClickListener(v -> {
+//            try {
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
+//                mapIntent.setPackage("com.google.android.apps.maps");
+//                holder.itemView.getContext().startActivity(mapIntent);
+//            } catch (ActivityNotFoundException e) {
+//                Toast.makeText(holder.itemView.getContext(), "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+//            } catch (Exception x) {
+//                x.getMessage();
+//            }
+//
+//        });
+//
+//        holder.listItemTheater.setTag(position);
+//        holder.itemView.setOnClickListener(v -> {
+//            theatersClickListener.onTheaterClick(holder.getAdapterPosition(), theater);
+//        });
+//    }
 
     @Override
     public int getItemCount() {
-        return theatersArrayList.size();
+        return theatersArrayList.size() + 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        if (isPositionHeader(position))
+            return TYPE_HEADER;
+        return TYPE_ITEM;
     }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
 
 }
