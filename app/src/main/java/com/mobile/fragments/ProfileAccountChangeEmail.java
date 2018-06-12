@@ -41,7 +41,6 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
     TextInputLayout newEmailTextInputLayout, currentPasswordTextInputLayout;
     EditText newEmail, currentPassword;
     TextView save, cancel;
-    private ProfileActivityInterface listener;
     private Activity myActivity;
 
     public ProfileAccountChangeEmail() {
@@ -128,8 +127,8 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
                     Log.d(Constants.TAG, "onResponse: "+response.toString());
                     Toast.makeText(myActivity, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     UserPreferences.updateEmail(newEmail.getText().toString().trim());
-                    listener.closeFragment();
-                    listener.closeFragment();
+                    myActivity.onBackPressed();
+                    myActivity.onBackPressed();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -188,23 +187,6 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ProfileActivityInterface) {
-            listener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-        if (myActivity instanceof ProfileActivityInterface) {
-            listener = (ProfileActivityInterface) myActivity;
-        } else {
-            throw new RuntimeException(myActivity.toString()
-                    + " must implement ProfileActivityInterface");
-        }
+       myActivity = getActivity();
     }
 }

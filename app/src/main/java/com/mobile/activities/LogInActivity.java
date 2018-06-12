@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +30,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.GsonBuilder;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
@@ -260,7 +262,8 @@ public class LogInActivity extends AppCompatActivity {
 
                         alert.show();
 
-                    } else if (response.errorBody() != null) {
+                    }
+                    else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
@@ -404,7 +407,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-
+                    android.util.Log.d(Constants.TAG, "onResponse: CHECKING RESTRICTIONS");
                     String status = restriction.getSubscriptionStatus();
                     boolean fbPresent = restriction.getFacebookPresent();
                     boolean threeDEnabled = restriction.get3dEnabled();
@@ -451,7 +454,9 @@ public class LogInActivity extends AppCompatActivity {
                     try {
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
+                        UserPreferences.clearUserId();
                     } catch (Exception e) {
 
                     }

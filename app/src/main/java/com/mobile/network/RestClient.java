@@ -341,6 +341,7 @@ public class RestClient {
                         .addHeader("device_androidID", UserPreferences.getDeviceAndroidID())
                         .addHeader("auth_token", UserPreferences.getAuthToken())
                         .addHeader("Content-type", "application/json")
+                        .addHeader("device_uuid", "902183")
                         .addHeader("Accept", "application/json")
                         .addHeader("one_device_id", UserPreferences.getUserCredentials())
                         .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
