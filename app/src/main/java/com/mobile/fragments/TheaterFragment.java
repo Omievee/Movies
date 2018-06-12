@@ -40,6 +40,8 @@ import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.location.LocationManager;
+import com.mobile.location.UserLocation;
 import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -66,8 +68,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -79,6 +83,9 @@ import retrofit2.Response;
 
 public class TheaterFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
+
+    @Inject
+    LocationManager locationManager;
     Theater theaterObject;
     ScreeningsResponseV2 screeningsResponse;
     RecyclerView theaterSelectedRecyclerView;
@@ -97,7 +104,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Nullable
     Pair<Screening, String> selected;
 
-    Location currentLocation;
+    Location currentLocation = new Location("");
 
     @Nullable
     Disposable disposable;
@@ -210,7 +217,18 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     }
 
     @Override
+    public void onViewCreated(@NotNull View view, @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        UserLocation last = locationManager.lastLocation();
+        if (last != null) {
+            currentLocation.setLatitude(last.getLat());
+            currentLocation.setLongitude(last.getLon());
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         myContext = context;
     }
@@ -330,6 +348,22 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     public void onResume() {
         super.onResume();
         buttonCheckIn.setEnabled(true);
+        fetchLocation();
+    }
+
+    @Nullable
+    Disposable fetchLocationSub;
+
+    private void fetchLocation() {
+        if (fetchLocationSub != null) {
+            fetchLocationSub.dispose();
+        }
+        fetchLocationSub = locationManager.location().subscribe(v -> {
+            currentLocation.setLatitude(v.getLat());
+            currentLocation.setLongitude(v.getLon());
+        }, e -> {
+
+        });
     }
 
     public void reserve(Screening screening, String showtime) {

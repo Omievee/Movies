@@ -41,7 +41,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
 
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
-        return create({ emitter ->
+        val single:Single<UserLocation> = create({ emitter ->
             val permission = permission
             if (!permission) {
                 when (emitter.isDisposed) {
@@ -62,6 +62,10 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
                 emitter.onError(it)
             }
         })
+        single.map {
+            _lastLocation = it
+        }
+        return single.compose(Schedulers.singleDefault())
     }
 
     @SuppressLint("MissingPermission")
@@ -71,10 +75,13 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
             this.fastestInterval = timeToWait.toLong()
         })
         val observ: Observable<UserLocation> = Observable.create(updates)
+        observ.map {
+            _lastLocation = it
+        }
         observ.doOnDispose {
             updates.dispose()
         }
-        return observ
+        return observ.compose(Schedulers.observableDefault())
     }
 }
 

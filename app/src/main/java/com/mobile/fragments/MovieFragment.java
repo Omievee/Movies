@@ -5,23 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,10 +36,13 @@ import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
+import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.listeners.TheatersClickListener;
+import com.mobile.location.LocationManager;
+import com.mobile.location.UserLocation;
 import com.mobile.model.Availability;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
@@ -61,6 +61,7 @@ import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.seats.BringAFriendActivity;
 import com.moviepass.R;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -73,11 +74,14 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import dagger.android.support.AndroidSupportInjection;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MovieFragment extends MPFragment implements ShowtimeClickListener{
+public class MovieFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
 
     //Constants
     public static final String MOVIE = "movie";
@@ -91,8 +95,11 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
     public static final String TOKEN = "token";
     private static final String TAG = "MovieFragment";
 
+    @Inject
+    LocationManager locationManager;
 
-    private Location mMyLocation;
+
+    private Location mMyLocation = new Location("");
 
     //Go Watch It
     String campaign = "no_campaign";
@@ -158,6 +165,9 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
     private PerformanceInfoRequest mPerformReq;
     private ScreeningToken tk;
     private MoviesFragment movieFragment;
+
+    @Nullable
+    Pair<Screening, String> selected;
 
 
     public MovieFragment() {
@@ -269,6 +279,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
                 selectedRuntimeMinutes.setText(Integer.toString(minutes));
             }
         }
+        movieTheatersAdapter = new TheaterScreeningsAdapter(this, this);
     }
 
     public void setUpComingSoon() {
@@ -343,29 +354,33 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
     }
 
     public void isLocationEnabled() {
-        LocationManager manager = (LocationManager) myContext.getSystemService(Context.LOCATION_SERVICE);
-        if (manager != null) {
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                noWifi.setVisibility(View.GONE);
-                progress.setVisibility(View.GONE);
-                selectedTheatersRecyclerView.setVisibility(View.GONE);
-                locationMsg.setVisibility(View.VISIBLE);
-                enableLocation.setVisibility(View.VISIBLE);
-                enableLocation.setOnClickListener(v -> {
-                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                });
-            } else {
-                locationMsg.setVisibility(View.GONE);
-                enableLocation.setVisibility(View.GONE);
-                noWifi.setVisibility(View.GONE);
-                selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
-                if (movie != null) {
-                    loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), movie.getId());
-                } else {
-                    loadTheaters(mMyLocation.getLatitude(), mMyLocation.getLongitude(), screening.getMoviepassId());
-                }
-
+        if (!locationManager.isLocationEnabled()) {
+            noWifi.setVisibility(View.GONE);
+            progress.setVisibility(View.GONE);
+            selectedTheatersRecyclerView.setVisibility(View.GONE);
+            locationMsg.setVisibility(View.VISIBLE);
+            enableLocation.setVisibility(View.VISIBLE);
+            enableLocation.setOnClickListener(v -> {
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            });
+        } else {
+            locationMsg.setVisibility(View.GONE);
+            enableLocation.setVisibility(View.GONE);
+            noWifi.setVisibility(View.GONE);
+            selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
+            UserLocation location = locationManager.lastLocation();
+            double lat = 0;
+            double lon = 0;
+            if(location!=null) {
+                lat = location.getLat();
+                lon = location.getLon();
             }
+            if (movie != null) {
+                loadTheaters(lat, lon, movie.getId());
+            } else {
+                loadTheaters(lat, lon, screening.getMoviepassId());
+            }
+
         }
     }
 
@@ -395,7 +410,12 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
     }
 
     public void onShowtimeClick(Theater theater, final Screening screening, final String showtime) {
-
+        if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
+            selected = null;
+        } else {
+            selected = new Pair(screening, showtime);
+        }
+        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse.getScreenings(), selected));
         if (movie != null) {
             GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
         } else {
@@ -406,7 +426,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
             buttonCheckIn.setVisibility(View.VISIBLE);
         }
         Availability availability = screening.getAvailability(showtime);
-        if (availability.isETicket() || availability.getTicketType()==TicketType.SELECT_SEATING) {
+        if (availability.isETicket() || availability.getTicketType() == TicketType.SELECT_SEATING) {
             buttonCheckIn.setText("Continue to E-Ticketing");
         } else {
             buttonCheckIn.setText("Check In");
@@ -414,15 +434,15 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
         buttonCheckIn.setEnabled(true);
         buttonCheckIn.setOnClickListener(view -> {
 
-            if (isPendingSubscription() && availability.getTicketType()==TicketType.E_TICKET) {
+            if (isPendingSubscription() && availability.getTicketType() == TicketType.E_TICKET) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (isPendingSubscription() && availability.getTicketType()==TicketType.STANDARD) {
+            } else if (isPendingSubscription() && availability.getTicketType() == TicketType.STANDARD) {
                 showActivateCardDialog(screening, showtime);
-            } else if (isPendingSubscription() && availability.getTicketType()==TicketType.SELECT_SEATING) {
+            } else if (isPendingSubscription() && availability.getTicketType() == TicketType.SELECT_SEATING) {
                 progress.setVisibility(View.VISIBLE);
                 reserve(screening, showtime);
-            } else if (availability.getTicketType()==TicketType.STANDARD) {
+            } else if (availability.getTicketType() == TicketType.STANDARD) {
                 if (UserPreferences.getProofOfPurchaseRequired() || screening.getPopRequired()) {
                     alertTicketVerifNotice(theater, screening, showtime);
                 } else {
@@ -601,7 +621,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
                             }
                             Screening etix = screeningsResponse.getScreenings().get(j);
                             TicketType type = etix.getTicketType();
-                            if (type==TicketType.E_TICKET||type==TicketType.SELECT_SEATING) {
+                            if (type == TicketType.E_TICKET || type == TicketType.SELECT_SEATING) {
                                 sortedScreeningList.remove(screeningsResponse.getScreenings().get(j));
                                 sortedScreeningList.add(0, screeningsResponse.getScreenings().get(j));
                             }
@@ -663,14 +683,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
                 if (sortedScreeningList.size() == 0) {
                     selectedTheatersRecyclerView.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.VISIBLE);
+                } else {
+                    noTheaters.setVisibility(View.GONE);
+                    movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), sortedScreeningList, selected));
                 }
-
-
-                if (movieTheatersAdapter != null) {
-                    selectedTheatersRecyclerView.getRecycledViewPool().clear();
-                    movieTheatersAdapter.notifyDataSetChanged();
-                }
-
 
                 selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
                 progress.setVisibility(View.GONE);
@@ -717,6 +733,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
             @Override
             public void onFailure(Call<ScreeningsResponseV2> call, Throwable t) {
                 if (t != null) {
+                    t.printStackTrace();
                 }
             }
 
@@ -795,6 +812,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         myContext = context;
     }
@@ -803,6 +821,12 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener{
     public void onDetach() {
         super.onDetach();
         myContext = null;
+    }
+
+    @Override
+    public void onClick(@NotNull Screening screening, @NotNull String showTime) {
+        onShowtimeClick(null, screening, showTime);
+        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse.getScreenings(), selected));
     }
 
 }
