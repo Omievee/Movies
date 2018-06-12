@@ -557,5 +557,6 @@
     <string name="guest_emails_description"></string>
     <string name="restrictions_apply_see_details">Restrictions apply. See details.</string>
     <string name="if_asked_provide_zip">If asked, provide this zip code:</string>
+    <string name="e_ticket_can_not_be_cancelled">Before continuing, be aware that e-tickets can not be  canceled or changed.</string>
 
 </resources>
