@@ -115,7 +115,7 @@ class SeatsView(context: Context, attributeSet: AttributeSet? = null) : Constrai
         val diff = (seatsContainerWidth - diffy) / 2
         layoutManager.setTotalColumnCount(data.totalColumns)
         adapter?.data = data
-        when(!scrolled) {
+        when (!scrolled) {
             diffy < seatsContainerWidth -> {
                 val set = ConstraintSet()
                 set.clone(this)
@@ -265,7 +265,6 @@ class SeatView(context: Context) : ImageView(context) {
                     seatClickListener?.onClick(it)
                 }
             }
-
         }
     }
 
@@ -297,6 +296,7 @@ class SeatView(context: Context) : ImageView(context) {
         seat.seatInfo?.let {
             setImageDrawable(SeatHelper.getDrawable(it, resources))
         }
+        isEnabled = seat.seatInfo?.isAvailable ?: true
         isSelected = seat.selected
     }
 }

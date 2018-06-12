@@ -1,10 +1,11 @@
 package com.mobile.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class SeatInfo(var isAvailable: Boolean = false,
+class SeatInfo(@SerializedName("available") var isAvailable: Boolean = false,
                var row: Int = 0,
                var column: Int = 0,
                var seatName: String? = null,
