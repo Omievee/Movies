@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.Movie
 import com.mobile.model.Screening
+import com.mobile.model.Theater2
+import com.mobile.model.TicketType
+import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.NoMoreScreenings
 import com.mobile.screening.ScreeningPresentation
 import io.realm.Realm
@@ -53,6 +56,7 @@ class TheaterScreeningsAdapter(
         const val TYPE_SCREENING = 0
         const val TYPE_MISSING = 1
         const val TYPE_NO_MORE_SCREENINGS = 2
+        const val TYPE_THEATER = 3
         const val CHECK_IN_IF_MOVIE_MISSING = "Check In if Movie Missing"
 
         private fun sceneMovieIds(screenings: List<Screening>?): Map<Int, Movie>? {
@@ -69,20 +73,29 @@ class TheaterScreeningsAdapter(
                     .findAll()?.associateBy { it.id }
         }
 
-        fun createData(data: ScreeningData?, screenings: List<Screening>?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
-            val movies = sceneMovieIds(screenings)
+        fun createData(data: ScreeningData?, screeningsResponse:ScreeningsResponseV2, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+            val movies = sceneMovieIds(screeningsResponse.screenings)
             val old = data?.data ?: emptyList()
+            val screenings = screeningsResponse.screenings
+            val theaters = screeningsResponse.theaters?.associateBy {
+                it.tribuneTheaterId
+            }?: emptyMap()
             val presentations = screenings?.map {
+                val theater = theaters.get(it.tribuneTheaterId)?.let {
+                    Theater2(id=it.id, tribuneTheaterId = it.tribuneTheaterId, name = it.name,latitude = it.lat, longitude = it.lon)
+                }
                 ScreeningPresentation(
                         screening = it,
+                        theater = theater,
                         selected = when (selected?.first?.moviepassId == it.moviepassId) {
                             true -> selected
                             else -> null
                         },
                         movie = movies?.get(it.moviepassId),
-                        type = when (it.title == CHECK_IN_IF_MOVIE_MISSING) {
-                            true -> TYPE_MISSING
-                            false -> TYPE_SCREENING
+                        type = when {
+                            theater != null -> TYPE_THEATER
+                            it.title == CHECK_IN_IF_MOVIE_MISSING -> TYPE_MISSING
+                            else -> TYPE_SCREENING
                         }
                 )
             }?.filter { it ->
@@ -90,6 +103,11 @@ class TheaterScreeningsAdapter(
             }?.sortedWith(compareBy(
                     {
                         it.type == TYPE_MISSING
+                    },{
+                        when(it.screening?.getTicketType()) {
+                            TicketType.SELECT_SEATING,TicketType.E_TICKET->true
+                            else->false
+                        }
                     },
                     {
                         !(it.screening?.approved ?: false)

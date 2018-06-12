@@ -3,9 +3,11 @@ package com.mobile.screening
 import com.mobile.adapters.ItemSame
 import com.mobile.model.Movie
 import com.mobile.model.Screening
+import com.mobile.model.Theater2
 import com.mobile.utils.isValidShowtime
 
 data class ScreeningPresentation(
+        val theater:Theater2? = null,
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,
         val movie: Movie? = null,

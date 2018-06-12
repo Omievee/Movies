@@ -79,6 +79,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import dagger.android.support.AndroidSupportInjection;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
@@ -280,6 +281,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             }
         }
         movieTheatersAdapter = new TheaterScreeningsAdapter(this, this);
+        selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
     }
 
     public void setUpComingSoon() {
@@ -413,9 +415,9 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
             selected = null;
         } else {
-            selected = new Pair(screening, showtime);
+            selected = new Pair<>(screening, showtime);
         }
-        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
         if (movie != null) {
             GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
         } else {
@@ -595,138 +597,59 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     }
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
-        RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId).enqueue(new retrofit2.Callback<ScreeningsResponseV2>() {
+        RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId).enqueue(new Callback<ScreeningsResponseV2>() {
 
             @Override
             public void onResponse(Call<ScreeningsResponseV2> call, final Response<ScreeningsResponseV2> response) {
                 if (response != null && response.isSuccessful()) {
                     screeningsResponse = response.body();
-                    //Initial View to Display RecyclerView Based on User's Current Location
-                    selectedScreeningsList.clear();
-                    theatersList.clear();
-                    sortedScreeningList.clear();
-                    Collections.sort(theatersList, (theater, t1) -> Double.compare(theater.getDistance(), t1.getDistance()));
 
-                    LinkedList<Screening> resorted = new LinkedList<>();
-                    //Sort Theaters & have screenings follow suit
-                    selectedScreeningsList.addAll(screeningsResponse.getScreenings());
-                    theatersList.addAll(screeningsResponse.getTheaters());
-                    for (int i = 0; i < theatersList.size(); i++) {
-                        Theater t = theatersList.get(i);
-                        int ID = t.getTribuneTheaterId();
-                        for (int j = 0; j < selectedScreeningsList.size(); j++) {
-                            int screenID = selectedScreeningsList.get(j).getTribuneTheaterId();
-                            if (screenID == ID) {
-                                sortedScreeningList.add(selectedScreeningsList.get(j));
-                            }
-                            Screening etix = screeningsResponse.getScreenings().get(j);
-                            TicketType type = etix.getTicketType();
-                            if (type == TicketType.E_TICKET || type == TicketType.SELECT_SEATING) {
-                                sortedScreeningList.remove(screeningsResponse.getScreenings().get(j));
-                                sortedScreeningList.add(0, screeningsResponse.getScreenings().get(j));
-                            }
-                        }
+
+                    if (screeningsResponse.getScreenings().size() == 0) {
+                        selectedTheatersRecyclerView.setVisibility(View.GONE);
+                        noTheaters.setVisibility(View.VISIBLE);
+                    } else {
+                        noTheaters.setVisibility(View.GONE);
+                        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
                     }
 
-                    int i = 0;
-                    int count = sortedScreeningList.size();
-                    int currentShowTimes = 0;
-                    while (i < sortedScreeningList.size() && count >= 0) {
-                        Screening currentScreening = sortedScreeningList.get(i);
-                        currentShowTimes = currentScreening.getAvailabilities().size();
-                        if (currentScreening.getAvailabilities() != null) {
-
-                            for (int j = 0; j < currentScreening.getAvailabilities().size(); j++) {
-                                Availability availability = currentScreening.getAvailabilities().get(j);
-                                try {
-                                    Date systemClock = new Date();
-
-                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-                                    String curTime = sdf.format(systemClock);
-
-                                    Date theaterTime = sdf.parse(availability.getStartTime());
-                                    Date myTime = sdf.parse(curTime);
-
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTime(theaterTime);
-                                    cal.add(Calendar.MINUTE, 30);
+                    progress.setVisibility(View.GONE);
 
 
-                                    if (myTime.after(cal.getTime())) {
-                                        if (cal.getTime().getHours() > 3) {
-                                            currentShowTimes--;
-                                        }
-                                    }
+                    if (movie.getSynopsis().equals("")) {
+                        selectedSynopsis.setVisibility(View.GONE);
+                        selectedMoviePoster.setClickable(false);
+                    } else {
+                        selectedMoviePoster.setClickable(true);
 
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            if (currentShowTimes == 0) {
-                                sortedScreeningList.remove(i);
-                                i--;
-                            } else {
-                                Screening notApproved = sortedScreeningList.get(i);
-                                if (!notApproved.getApproved()) {
-                                    sortedScreeningList.remove(i);
-                                    sortedScreeningList.addLast(notApproved);
-                                    i--;
-                                }
-                            }
-                            count--;
-                        }
-                        i++;
+                        selectedSynopsis.setOnClickListener(view -> {
+                            String synopsis = movie.getSynopsis();
+                            String title = movie.getTitle();
+                            Bundle bundle = new Bundle();
+                            bundle.putString(MOVIE, synopsis);
+                            bundle.putString(TITLE, title);
+
+                            SynopsisFragment fragobj = new SynopsisFragment();
+                            fragobj.setArguments(bundle);
+                            FragmentManager fm = getChildFragmentManager();
+                            fragobj.show(fm, "fr_dialogfragment_synopsis");
+                        });
+
+                        selectedMoviePoster.setOnClickListener(v -> {
+                            String synopsis = movie.getSynopsis();
+                            String title = movie.getTitle();
+                            Bundle bundle = new Bundle();
+                            bundle.putString(MOVIE, synopsis);
+                            bundle.putString(TITLE, title);
+
+                            SynopsisFragment fragobj = new SynopsisFragment();
+                            fragobj.setArguments(bundle);
+                            FragmentManager fm = getChildFragmentManager();
+                            fragobj.show(fm, "fr_dialogfragment_synopsis");
+
+                        });
                     }
                 }
-
-
-                if (sortedScreeningList.size() == 0) {
-                    selectedTheatersRecyclerView.setVisibility(View.GONE);
-                    noTheaters.setVisibility(View.VISIBLE);
-                } else {
-                    noTheaters.setVisibility(View.GONE);
-                    movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), sortedScreeningList, selected));
-                }
-
-                selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
-                progress.setVisibility(View.GONE);
-
-
-                if (movie.getSynopsis().equals("")) {
-                    selectedSynopsis.setVisibility(View.GONE);
-                    selectedMoviePoster.setClickable(false);
-                } else {
-                    selectedMoviePoster.setClickable(true);
-
-                    selectedSynopsis.setOnClickListener(view -> {
-                        String synopsis = movie.getSynopsis();
-                        String title = movie.getTitle();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(MOVIE, synopsis);
-                        bundle.putString(TITLE, title);
-
-                        SynopsisFragment fragobj = new SynopsisFragment();
-                        fragobj.setArguments(bundle);
-                        FragmentManager fm = getChildFragmentManager();
-                        fragobj.show(fm, "fr_dialogfragment_synopsis");
-                    });
-
-                    selectedMoviePoster.setOnClickListener(v -> {
-                        String synopsis = movie.getSynopsis();
-                        String title = movie.getTitle();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(MOVIE, synopsis);
-                        bundle.putString(TITLE, title);
-
-                        SynopsisFragment fragobj = new SynopsisFragment();
-                        fragobj.setArguments(bundle);
-                        FragmentManager fm = getChildFragmentManager();
-                        fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-                    });
-                }
-
-
             }
 
 
@@ -826,7 +749,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
         onShowtimeClick(null, screening, showTime);
-        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
     }
 
 }
