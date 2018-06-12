@@ -2,34 +2,33 @@ package com.mobile.home
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
-import android.view.Window
-import android.view.WindowManager
-import com.jaeger.library.StatusBarUtil
 import com.mobile.BackFragment
 import com.mobile.Primary
 import com.mobile.fragments.MoviesFragment
 import com.mobile.fragments.ProfileFragment
 import com.mobile.fragments.TheatersFragment
+import com.mobile.location.LocationManager
 import com.moviepass.R
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
 class HomeActivity : FragmentActivity() {
 
-    companion object {
-        const val POSITION:String = "position"
+    @Inject
+    lateinit var presenter: HomeActivityPresenter
 
-        fun newIntent(context: Context, position: Int):Intent {
+    companion object {
+        const val POSITION: String = "position"
+
+        fun newIntent(context: Context, position: Int): Intent {
             return Intent(context, HomeActivity::class.java).putExtra(POSITION, position)
         }
     }
@@ -37,6 +36,7 @@ class HomeActivity : FragmentActivity() {
     var adapter: HomeViewPager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         adapter = HomeViewPager(supportFragmentManager)
@@ -48,6 +48,12 @@ class HomeActivity : FragmentActivity() {
                 else -> adapter?.profile
             } ?: 0
             true
+        }
+        bottomSheetNav.setOnNavigationItemReselectedListener {
+            val currItem = adapter?.currentItem ?: return@setOnNavigationItemReselectedListener
+            val backable: BackFragment = currItem as? BackFragment
+                    ?: return@setOnNavigationItemReselectedListener
+            backable.onBack()
         }
         viewPager.adapter = adapter
 
@@ -65,7 +71,7 @@ class HomeActivity : FragmentActivity() {
     private fun back() {
         when (viewPager.currentItem) {
             0 -> super.onBackPressed()
-            else -> currentItem = viewPager.currentItem-1
+            else -> currentItem = viewPager.currentItem - 1
         }
     }
 
