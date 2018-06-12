@@ -13,7 +13,6 @@ import com.mobile.Primary
 import com.mobile.fragments.MoviesFragment
 import com.mobile.fragments.ProfileFragment
 import com.mobile.fragments.TheatersFragment
-import com.mobile.location.LocationManager
 import com.moviepass.R
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector

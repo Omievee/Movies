@@ -106,9 +106,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     //Location
     public static final int LOCATION_PERMISSIONS = 99;
-    private android.location.LocationManager LocationManager;
-
-
     //Java Objects
     private String Provider;
 

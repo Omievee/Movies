@@ -12,13 +12,18 @@ class LocationModule {
 
     @Provides
     @Singleton
-    fun provideFusedLocation(application: Application): FusedLocationProviderClient {
-        return LocationServices.getFusedLocationProviderClient(application)
+    fun provideFusedLocation(application: Application): FusedLocationProviderClient? {
+        try {
+            return LocationServices.getFusedLocationProviderClient(application)
+        } catch (e:Error) {
+            e.printStackTrace()
+            return null
+        }
     }
 
     @Provides
     @Singleton
-    fun provideLocationManager(fused:FusedLocationProviderClient) : LocationManager {
-        return LocationManagerImpl(fused)
+    fun provideLocationManager(application: Application, fused:FusedLocationProviderClient?) : LocationManager {
+        return LocationManagerImpl(application, fused)
     }
 }

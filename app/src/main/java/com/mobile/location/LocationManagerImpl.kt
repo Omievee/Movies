@@ -1,41 +1,58 @@
 package com.mobile.location
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
+import android.support.v4.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.mobile.application.Application
 import com.mobile.rx.Schedulers
 import io.reactivex.*
 import io.reactivex.Single.create
 
-class LocationManagerImpl(val fused: FusedLocationProviderClient) : LocationManager {
+class LocationManagerImpl(val application: Application, val fused: FusedLocationProviderClient?) : LocationManager {
 
     private var _lastLocation: UserLocation? = null
 
     init {
         location().compose(Schedulers.singleDefault())
-                .subscribe { it ->
+                .subscribe({
                     _lastLocation = it
-                }
+                }, {})
     }
 
     override fun lastLocation(): UserLocation? {
         return _lastLocation
     }
 
+    private var permission: Boolean = false
+        get() {
+            return ContextCompat.checkSelfPermission(application, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        }
+
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
         return create({ emitter ->
-            val task = fused.lastLocation
-            task.addOnSuccessListener { location ->
+            val permission = permission
+            if (!permission) {
+                when (emitter.isDisposed) {
+                    false -> {
+                        emitter.onError(LocationPermission())
+                    }
+                }
+                return@create
+            }
+            val task = fused?.lastLocation
+            task?.addOnSuccessListener { location ->
                 if (emitter.isDisposed) {
                     return@addOnSuccessListener
                 }
                 emitter.onSuccess(location.toLocation())
             }
-            task.addOnFailureListener {
+            task?.addOnFailureListener {
                 emitter.onError(it)
             }
         })
@@ -43,7 +60,7 @@ class LocationManagerImpl(val fused: FusedLocationProviderClient) : LocationMana
 
     @SuppressLint("MissingPermission")
     override fun updatingLocation(timeToWait: Int, minDistanceInMeters: Int): Observable<UserLocation> {
-        val updates = LocationUpdates(fused, LocationRequest().apply {
+        val updates = LocationUpdates(permission, fused, LocationRequest().apply {
             this.smallestDisplacement = minDistanceInMeters.toFloat()
             this.fastestInterval = timeToWait.toLong()
         })
@@ -62,7 +79,7 @@ fun Location?.toLocation(): UserLocation {
 
 }
 
-class LocationUpdates(val fused: FusedLocationProviderClient, val locationRequest: LocationRequest) : ObservableOnSubscribe<UserLocation> {
+class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderClient?, val locationRequest: LocationRequest) : ObservableOnSubscribe<UserLocation> {
 
     var emitter: ObservableEmitter<UserLocation>? = null
 
@@ -79,11 +96,22 @@ class LocationUpdates(val fused: FusedLocationProviderClient, val locationReques
     @SuppressLint("MissingPermission")
     override fun subscribe(emitter: ObservableEmitter<UserLocation>) {
         this.emitter = emitter
-        fused.requestLocationUpdates(locationRequest, locationCallback, null)
+        val permission = permission
+        if (!permission) {
+            when (emitter.isDisposed) {
+                false -> {
+                    emitter.onError(LocationPermission())
+                    return
+                }
+            }
+        }
+        fused?.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
     fun dispose() {
-        fused.removeLocationUpdates(locationCallback)
+        fused?.removeLocationUpdates(locationCallback)
     }
 
 }
+
+class LocationPermission : Throwable("Location permission missing")

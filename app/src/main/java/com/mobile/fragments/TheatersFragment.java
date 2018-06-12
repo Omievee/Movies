@@ -86,7 +86,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import retrofit2.Call;
@@ -94,13 +97,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class TheatersFragment extends MPFragment implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, ClusterManager.OnClusterClickListener<TheaterPin>, LocationListener {
+public class TheatersFragment extends MPFragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<TheaterPin> {
 
 
     public static final String GCM_ONEOFF_TAG = "oneoff|[0,0]";
     public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
 
     private final static String senderID = "11111111111";
+    @Inject
+    com.mobile.location.LocationManager locationManager;
     public static Realm tRealm;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
     public static final int LOCATION_PERMISSIONS = 99;
@@ -109,14 +114,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     private HashMap<String, Theater> markerTheaterMap;
     Context myContext;
     Activity myActivity;
-    FragmentActivity myFragment;
-    private GoogleApiClient mGoogleApiClient;
     private TheatersAdapter theaterAdapter;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationRequest mLocationRequest;
-    private LocationSettingsRequest mLocationSettingsRequest;
-    private Boolean mRequestingLocationUpdates;
-    double lat, lon;
     GoogleMap mMap;
     MapView mMapView;
     String url;
@@ -147,27 +145,17 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
         rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(myContext)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
-
         searchGP = rootView.findViewById(R.id.SearchGP);
         mRelativeLayout = rootView.findViewById(R.id.relative_layout);
         mSearchClose = rootView.findViewById(R.id.search_inactive);
         mProgress = rootView.findViewById(R.id.progress);
         mMapView = rootView.findViewById(R.id.MPMAPVIEW);
         myloc = rootView.findViewById(R.id.myloc);
-        mRequestingLocationUpdates = true;
         listViewMaps = rootView.findViewById(R.id.ListViewMaps);
         goneList = rootView.findViewById(R.id.goneList);
         nearbyTheaters = new LinkedList<>();
         mMapData = new HashMap<>();
         markerTheaterMap = new HashMap<>();
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(myContext);
         slideup = rootView.findViewById(R.id.sliding_layout);
         /* Set up RecyclerView */
 
@@ -224,10 +212,10 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         }
         myloc.setOnClickListener(v -> {
             mRequestingLocationUpdates = true;
-            getMyLocation();
+            //getMyLocation();
         });
 
-        buildLocationSettingsRequest();
+        //buildLocationSettingsRequest();
         LogUtils.newLog(TAG, "onViewCreated: " + slideup.getPanelState());
 
 
@@ -373,25 +361,25 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
 
     void locationUpdateRealm() {
-        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
-        }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-            Location loc = task.getResult();
-            if (mRequestingLocationUpdates) {
-                if (loc != null) {
-                    mMap.setMyLocationEnabled(true);
-                    LogUtils.newLog(TAG, "*******HIT******: ");
-                    lat = loc.getLatitude();
-                    lon = loc.getLongitude();
-
-                    queryRealmLoadTheaters(lat, lon);
-                    LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
-                    mMap.moveCamera(current);
-                }
-            }
-        });
+//        if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
+//        }
+//        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+//            Location loc = task.getResult();
+//            if (mRequestingLocationUpdates) {
+//                if (loc != null) {
+//                    mMap.setMyLocationEnabled(true);
+//                    LogUtils.newLog(TAG, "*******HIT******: ");
+//                    lat = loc.getLatitude();
+//                    lon = loc.getLongitude();
+//
+//                    queryRealmLoadTheaters(lat, lon);
+//                    LatLng coordinates = new LatLng(loc.getLatitude(), loc.getLongitude());
+//                    CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+//                    mMap.moveCamera(current);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -415,33 +403,33 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     }
 
 
-    private void buildLocationSettingsRequest() {
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        mLocationSettingsRequest = builder.build();
-    }
+//    private void buildLocationSettingsRequest() {
+//        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+//        builder.addLocationRequest(mLocationRequest);
+//        mLocationSettingsRequest = builder.build();
+//    }
 
 
-    private void getMyLocation() {
-        boolean enabled = UserLocationManagerFused.getLocationInstance(myContext).isLocationEnabled();
-        if (!enabled) {
-            EnableLocation location = new EnableLocation();
-            android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
-            location.show(fm, "fr_enablelocation");
-        }
-        mProgress.setVisibility(View.VISIBLE);
-        LatLng latLng = new LatLng(lat, lon);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
-        mMap.animateCamera(cameraUpdate);
-        queryRealmLoadTheaters(lat, lon);
-        LogUtils.newLog(TAG, "getMyLocation:  " + lat + "  " + lon);
-        theatersRECY.getRecycledViewPool().clear();
-        theaterAdapter.notifyDataSetChanged();
-        if (searchThisArea.getVisibility() == View.VISIBLE) {
-            searchThisArea.setVisibility(View.GONE);
-            fadeOut(searchThisArea);
-        }
-    }
+//    private void getMyLocation() {
+//        boolean enabled = UserLocationManagerFused.getLocationInstance(myContext).isLocationEnabled();
+//        if (!enabled) {
+//            EnableLocation location = new EnableLocation();
+//            android.support.v4.app.FragmentManager fm = getActivity().getSupportFragmentManager();
+//            location.show(fm, "fr_enablelocation");
+//        }
+//        mProgress.setVisibility(View.VISIBLE);
+//        LatLng latLng = new LatLng(lat, lon);
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+//        mMap.animateCamera(cameraUpdate);
+//        queryRealmLoadTheaters(lat, lon);
+//        LogUtils.newLog(TAG, "getMyLocation:  " + lat + "  " + lon);
+//        theatersRECY.getRecycledViewPool().clear();
+//        theaterAdapter.notifyDataSetChanged();
+//        if (searchThisArea.getVisibility() == View.VISIBLE) {
+//            searchThisArea.setVisibility(View.GONE);
+//            fadeOut(searchThisArea);
+//        }
+//    }
 
 
     @Override
@@ -710,6 +698,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         myContext = context;
     }
