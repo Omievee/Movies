@@ -102,8 +102,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     com.mobile.location.LocationManager locationManager;
 
 
-
-
     public GoogleMap googleMap;
     MapView mapView;
     public static ClusterManager<TheaterPin> theaterClusterManager;
@@ -142,8 +140,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     Header eHEader = new Header();
 
 
-
-//    public static Realm tRealm;
+    //    public static Realm tRealm;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
     public static final int LOCATION_PERMISSIONS = 99;
 //    public boolean expanded;
@@ -206,7 +203,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         url = "http://moviepass.com/go/theaters";
         if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
-
 
 
         return rootView;
@@ -449,7 +445,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -483,17 +478,9 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
     @Override
     public void onTheaterClick(int pos, @NotNull Theater theater) {
-        showFragment();
+        TheaterFragment fragment = TheaterFragment.newInstance(theater);
+        showFragment(fragment);
     }
-
-//    void userSelectedTheater(Fragment fragment) {
-//        FragmentTransaction transaction = manager.beginTransaction();
-//        transaction.setCustomAnimations(R.anim.fragment_slide_left_enter, R.anim.fragment_slide_left_exit, R.anim.fragment_slide_right_enter, R.anim.fragment_slide_right_exit);
-//        transaction.replace(R.id.THEATERS_FRAME_LAYOUT, fragment);
-//        transaction.addToBackStack("selectedTheater");
-//        transaction.commit();
-//        manager.executePendingTransactions();
-//    }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {
         private final IconGenerator mClusterIconGenerator;
