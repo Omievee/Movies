@@ -40,6 +40,8 @@ import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.listeners.ShowtimeClickListener;
+import com.mobile.location.LocationManager;
+import com.mobile.location.UserLocation;
 import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
@@ -65,8 +67,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -79,6 +83,8 @@ import retrofit2.Response;
 public class TheaterFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
     Theater selectedTheaterObject;
+    @Inject
+    LocationManager locationManager;
     ScreeningsResponseV2 screeningsResponse;
     RecyclerView selectedTheaterRecyclerView;
     ImageView pinIcon, eticketIcon, reserveSeatIcon;
@@ -97,7 +103,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Nullable
     Pair<Screening, String> selected;
 
-    Location currentLocation;
+    Location currentLocation = new Location("");
 
     @Nullable
     Disposable disposable;
@@ -219,7 +225,18 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
 
     @Override
+    public void onViewCreated(@NotNull View view, @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        UserLocation last = locationManager.lastLocation();
+        if (last != null) {
+            currentLocation.setLatitude(last.getLat());
+            currentLocation.setLongitude(last.getLon());
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
         myContext = context;
     }
@@ -248,7 +265,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         } else {
             selected = new Pair(screening, showtime);
         }
-        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
         if (selected == null) {
             fadeOut(buttonCheckIn);
             return;
@@ -309,7 +326,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         disposable = RestClient.getAuthenticated().getScreeningsForTheaterV2(theaterId)
                 .subscribe(response -> {
                     screeningsResponse = response;
-                    theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+                    theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
                     progress.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.GONE);
 
@@ -332,6 +349,22 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     public void onResume() {
         super.onResume();
         buttonCheckIn.setEnabled(true);
+        fetchLocation();
+    }
+
+    @Nullable
+    Disposable fetchLocationSub;
+
+    private void fetchLocation() {
+        if (fetchLocationSub != null) {
+            fetchLocationSub.dispose();
+        }
+        fetchLocationSub = locationManager.location().subscribe(v -> {
+            currentLocation.setLatitude(v.getLat());
+            currentLocation.setLongitude(v.getLon());
+        }, e -> {
+
+        });
     }
 
     public void reserve(Screening screening, String showtime) {
@@ -534,6 +567,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
         onShowtimeClick(null, screening, showTime);
-        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse.getScreenings(), selected));
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
     }
 }

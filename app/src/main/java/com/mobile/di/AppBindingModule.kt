@@ -1,8 +1,6 @@
 package com.mobile.di
 
-import com.mobile.fragments.MoviesFragment
-import com.mobile.fragments.MoviesFragmentModule
-import com.mobile.fragments.TheatersFragment
+import com.mobile.fragments.*
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.splash.SplashActivity
@@ -17,19 +15,27 @@ abstract class AppBindingModule {
      * Generates boilerplate
      */
     @ActivityScope
-    @ContributesAndroidInjector(modules=[SplashActivityModule::class])
-    abstract fun splashActivity() : SplashActivity
+    @ContributesAndroidInjector(modules = [SplashActivityModule::class])
+    abstract fun splashActivity(): SplashActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules=[HomeActivityModule::class])
-    abstract fun homeActivity() : HomeActivity
+    @ContributesAndroidInjector(modules = [HomeActivityModule::class])
+    abstract fun homeActivity(): HomeActivity
 
     @FragmentScope
-    @ContributesAndroidInjector(modules=[MoviesFragmentModule::class])
-    abstract fun moviesFragment() : MoviesFragment
+    @ContributesAndroidInjector(modules = [MoviesFragmentModule::class])
+    abstract fun moviesFragment(): MoviesFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun theatersFragment() : TheatersFragment
+    abstract fun theatersFragment(): TheatersFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun theaterFragment(): TheaterFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun movieFragment(): MovieFragment
 
 }
