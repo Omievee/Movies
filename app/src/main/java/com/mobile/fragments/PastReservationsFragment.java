@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.mobile.Constants;
 import com.mobile.Interfaces.historyPosterClickListener;
 import com.mobile.adapters.HistoryAdapter;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Movie;
-import com.mobile.responses.HistoryResponse;
 import com.moviepass.R;
 
 import io.realm.Realm;
@@ -140,7 +137,7 @@ public class PastReservationsFragment extends MPFragment implements historyPoste
 
     @Override
     public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
-        showFragment(HistoryDetailsFragment.newInstance(historyposter, ViewCompat.getTransitionName(sharedView)));
+        showFragment(HistoryDetailsFragment.Companion.newInstance(historyposter, ViewCompat.getTransitionName(sharedView)));
     }
 }
 
