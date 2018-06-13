@@ -6,7 +6,6 @@ import android.location.Location;
 
 import com.google.gson.GsonBuilder;
 import com.mobile.model.Movie;
-import com.mobile.model.Reservation;
 import com.mobile.model.ScreeningToken;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
@@ -140,14 +139,10 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static void setLocation(String cityAndState, String zipCode, double lat, double lng, boolean isLocationUserDefined, boolean isSubscriptionActivationRequired) {
+    public static void setLocation( double lat, double lng) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.CITY_AND_STATE, cityAndState);
         editor.putLong(Constants.PREFS_LATITUDE, Double.doubleToRawLongBits(lat));
         editor.putLong(Constants.PREFS_LONGITUDE, Double.doubleToRawLongBits(lng));
-        editor.putString(Constants.ZIP_CODE, zipCode);
-        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, isSubscriptionActivationRequired);
-        editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
     }
 

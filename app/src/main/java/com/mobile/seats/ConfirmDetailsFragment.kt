@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
-import com.mobile.UserLocationManagerFused
 import com.mobile.model.GuestTicket
 import com.mobile.model.PerformanceInfoV2
 import com.mobile.network.RestClient
@@ -17,8 +16,12 @@ import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_confirm_details.*
+import javax.inject.Inject
 
 class ConfirmDetailsFragment : Fragment() {
+
+    @Inject
+    lateinit var locationManager: com.mobile.location.LocationManager
 
     var listener: BringAFriendListener? = null
 
@@ -85,7 +88,6 @@ class ConfirmDetailsFragment : Fragment() {
                         showDialogToReserveTickets()
                     }
                 }, {
-
                 })
     }
 
@@ -102,13 +104,13 @@ class ConfirmDetailsFragment : Fragment() {
     }
 
     private fun reserveTickets() {
+        var local = locationManager.lastLocation()
         val payload = payload ?: return
         val availability = payload.screening?.getAvailability(payload.showtime) ?: return
-        val location = UserLocationManagerFused.getLocationInstance(context) ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
-        val lat = location?.mCurrentLocation?.latitude ?: return
-        val lng = location?.mCurrentLocation?.longitude ?: return
+        val lat = local!!.lat
+        val lng = local.lon
         val mySeat = payload.selectedSeats?.first() ?: return
         val emails = payload.emails
         val hasMatchingSeatCount = payload.selectedSeats?.size ?: 0 - 1 == tpd.sumBy { it.tickets }.plus(1)
