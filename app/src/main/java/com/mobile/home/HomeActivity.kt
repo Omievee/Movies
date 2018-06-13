@@ -2,6 +2,7 @@ package com.mobile.home
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
@@ -58,6 +59,8 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
             } ?: 0
             true
         }
+        val black = Color.argb(150, Color.red(0), Color.green(0), Color.blue(0))
+        bottomSheetNav.setBackgroundColor(black)
         bottomSheetNav.setOnNavigationItemReselectedListener {
             val currItem = adapter?.currentItem ?: return@setOnNavigationItemReselectedListener
             val backable: BackFragment = currItem as? BackFragment

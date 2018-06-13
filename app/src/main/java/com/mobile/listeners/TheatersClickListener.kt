@@ -8,6 +8,6 @@ import com.mobile.model.Theater
 
 interface TheatersClickListener {
 
-    fun onTheaterClick(pos: Int, theater: Theater, posX: Int, posY: Int)
+    fun onTheaterClick(pos: Int, theater: Theater)
 
 }

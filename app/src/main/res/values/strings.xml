@@ -559,4 +559,8 @@
     <string name="if_asked_provide_zip">If asked, provide this zip code:</string>
     <string name="e_ticket_can_not_be_cancelled">Before continuing, be aware that e-tickets can not be  canceled or changed.</string>
 
+
+    <string name="gps_enable">In order to use the MoviePass app please enable location services in your phone’s settings.</string>
+    <string name="no_theaters">There are no more screenings at this theater today</string>
+    <string name="GPS_off_enable">Enable location services</string>
 </resources>

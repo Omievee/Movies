@@ -13,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,7 +37,6 @@ import com.moviepass.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +55,6 @@ public class HistoryDetailsFragment extends MPFragment {
     TextView historyDate, historyTitle, historyLocal, likeittext;
     ImageView close, like, dislike;
 
-    ViewGroup blurry;
 
     public HistoryDetailsFragment() {
     }
@@ -88,7 +84,6 @@ public class HistoryDetailsFragment extends MPFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fr_historydetails, container, false);
-        blurry = container;
 
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,16 +93,6 @@ public class HistoryDetailsFragment extends MPFragment {
         });
 
         return root;
-    }
-
-    @Override
-    public boolean onBack() {
-        if (blurry != null) {
-            Blurry.delete(blurry);
-            blurry = null;
-            return true;
-        }
-        return super.onBack();
     }
 
     @Override
@@ -148,10 +133,7 @@ public class HistoryDetailsFragment extends MPFragment {
             }
 
         } else {
-
-
             like.setOnClickListener(v -> rateMovie(historyItem.getId(), "GOOD"));
-
             dislike.setOnClickListener(v -> rateMovie(historyItem.getId(), "BAD"));
         }
 
@@ -231,6 +213,7 @@ public class HistoryDetailsFragment extends MPFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         myActivity = getActivity();
+        myContext = context;
     }
 
     public void animate(View view) {

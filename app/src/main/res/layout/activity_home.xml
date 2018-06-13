@@ -2,13 +2,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/dark2"
     android:layout_height="match_parent">
 
     <com.mobile.seats.SwipeViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomSheetNav"
+        android:layout_marginBottom="60dp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.BottomNavigationView
