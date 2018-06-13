@@ -37,7 +37,6 @@ import com.mobile.activities.EticketConfirmation;
 import com.mobile.adapters.EticketTheatersAdapter;
 import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.listeners.ShowtimeClickListener;
@@ -196,9 +195,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             FragmentManager fm = getActivity().getSupportFragmentManager();
             fragobj.show(fm, "fr_theaterpolicy");
         }
-
-
-        ContextSingleton.getInstance(getContext()).getGlobalContext();
 
         url = "https://moviepass.com/go/theaters/" + theaterObject.getId();
         if (!GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
