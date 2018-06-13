@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -37,7 +36,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
@@ -46,8 +44,11 @@ import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,6 +81,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     private boolean updateBillingCard = false;
     private boolean updateBillingAddress = false;
     private boolean billingAddressSameAsShipping = false;
+    Context myContext;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
@@ -257,6 +259,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
         myActivity = getActivity();
     }
 
@@ -388,7 +391,15 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
                     if (userInfoResponse.getNextBillingDate().equals("")) {
                         billingDate.setText("Unknown");
                     } else {
-                        billingDate.setText(userInfoResponse.getNextBillingDate());
+                        String currentDate = userInfoResponse.getNextBillingDate();
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date currentBillingDateFormatted = format.parse(currentDate);
+                            SimpleDateFormat SDFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                            billingDate.setText(SDFormat.format(currentBillingDateFormatted));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     plan.setText(userInfoResponse.getPlan());
@@ -397,7 +408,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
                         if (userInfoResponse.getRemainingCap().equals("1")) {
                             String amount = userInfoResponse.getRemainingCap() + " Movie";
                             moviesCountDown.setText(amount);
-                        }else {
+                        } else {
                             moviesCountDown.setText(userInfoResponse.getRemainingCap() + " Movies");
                         }
 
@@ -722,11 +733,11 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
 
         if (option == YES) {
             yesNo.setText("YES");
-            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
+            yesNo.setTextColor(ContextCompat.getColor(myContext, R.color.new_red));
         } else {
 
             yesNo.setText("NO");
-            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
+            yesNo.setTextColor(ContextCompat.getColor(myContext, R.color.white));
         }
     }
 

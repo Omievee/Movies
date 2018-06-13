@@ -45,6 +45,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.SimpleOnSearchActionListener;
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.adapters.EticketTheatersAdapter;
 import com.mobile.adapters.TheatersAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
@@ -360,7 +361,12 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         });
 
         this.googleMap.setOnInfoWindowClickListener(marker -> {
-            showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
+            if (!locationManager.isLocationEnabled()) {
+                new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
+                return;
+            }else {
+                showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
+            }
         });
     }
 
@@ -391,10 +397,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             }
             locationSub = locationManager.location()
                     .compose(Schedulers.Companion.singleDefault())
-                    .subscribe(location -> {
-                        onLocation(location);
-                    }, error -> {
-
+                    .subscribe(this::onLocation, error -> {
                     });
         }
     }
@@ -403,7 +406,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
-        locationUpdateRealm();
+        // locationUpdateRealm();
     }
 
     private void getMyLocation() {
@@ -423,7 +426,14 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
             googleMap.animateCamera(cameraUpdate);
         } else {
-            queryRealmLoadTheaters(0, 0);
+            Location local = UserPreferences.getLocation();
+            queryRealmLoadTheaters(local.getLatitude(), local.getLongitude());
+
+            LatLng latLng = new LatLng(local.getLatitude(), local.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+            googleMap.animateCamera(cameraUpdate);
+            Toast.makeText(myContext, "Location ", Toast.LENGTH_SHORT).show();
+
         }
         theatersRecyclerView.getRecycledViewPool().clear();
         theatersAdapter.notifyDataSetChanged();
@@ -435,7 +445,12 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
     @Override
     public void onTheaterClick(int pos, @NotNull Theater theater) {
-        showFragment(TheaterFragment.newInstance(theater));
+        if (!locationManager.isLocationEnabled()) {
+            new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
+            return;
+        } else {
+            showFragment(TheaterFragment.newInstance(theater));
+        }
     }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {

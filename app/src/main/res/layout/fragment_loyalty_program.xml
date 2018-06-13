@@ -5,7 +5,9 @@
     android:id="@+id/loyaltyCL"
     style="@style/ReservationBackground"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_standard"
+    android:clickable="true">
 
     <TextView
         android:id="@+id/loyaltyProgramsTitle"
@@ -49,17 +51,17 @@
     <TextView
         android:id="@+id/addLoyaltyProgramDescriptionTV"
         style="@style/LoyaltyAddProgramDescription"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/double_margin_standard"
         android:text="@string/loyalty_add_a_movie_theater_loyalty_program"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintWidth_percent=".82" />
+        app:layout_constraintWidth_percent=".82"
+        tools:visibility="visible" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/loyaltySignInCL"

@@ -3,15 +3,20 @@ package com.mobile.location
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager.*
+import android.location.LocationManager.GPS_PROVIDER
+import android.location.LocationManager.NETWORK_PROVIDER
 import android.support.v4.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.rx.Schedulers
-import io.reactivex.*
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Single
 import io.reactivex.Single.create
 
 class LocationManagerImpl(val application: Application, val systemLocationManager: android.location.LocationManager, val fused: FusedLocationProviderClient?) : LocationManager {
@@ -22,6 +27,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
         location().compose(Schedulers.singleDefault())
                 .subscribe({
                     _lastLocation = it
+                    UserPreferences.setLocation(_lastLocation!!.lat, _lastLocation!!.lon)
                 }, {})
     }
 

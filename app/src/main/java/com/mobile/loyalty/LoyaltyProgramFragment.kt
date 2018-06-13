@@ -13,13 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
-import com.mobile.fragments.MPFragment
 import com.mobile.utils.text.toSentenceCase
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
-class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView {
+class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
 
     var addLoyaltyAdapter: MaterialSpinnerAdapter<TheaterChain>? = null
 
@@ -31,7 +30,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView {
         return inflater.inflate(R.layout.fragment_loyalty_program, container, false)
     }
 
-    override fun onAttach(context: Context) {
+    override fun onAttach(context: Context?) {
         super.onAttach(context)
         presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
     }
@@ -56,7 +55,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView {
                     return view
                 }
 
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
                     return getView(position, convertView, parent)
                 }
             }

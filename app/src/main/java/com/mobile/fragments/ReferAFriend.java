@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.helpers.LogUtils;
@@ -83,20 +84,20 @@ public class ReferAFriend extends Fragment {
         });
     }
 
-    public boolean allFieldsAreValid(){
+    public boolean allFieldsAreValid() {
         boolean valid = true;
         fistNameTextInputLayout.setError("");
         lastNameTextInputLayout.setError("");
         emailTextInputLayout.setError("");
-        if(firstName.getText().toString().trim().isEmpty()) {
+        if (firstName.getText().toString().trim().isEmpty()) {
             fistNameTextInputLayout.setError("Required");
             valid = false;
         }
-        if(lastName.getText().toString().trim().isEmpty()){
+        if (lastName.getText().toString().trim().isEmpty()) {
             lastNameTextInputLayout.setError("Required");
             valid = false;
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             valid = false;
             emailTextInputLayout.setError("A valid email address is required");
         }
@@ -130,23 +131,27 @@ public class ReferAFriend extends Fragment {
             public void onResponse(Call<ReferAFriendResponse> call, Response<ReferAFriendResponse> response) {
                 ReferAFriendResponse referral = response.body();
                 if (response.isSuccessful()) {
-
-                    LogUtils.newLog(Constants.TAG, "onResponse: " + friendEmail);
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                    emailIntent.setType("application/octet-stream");
-                    emailIntent.setData(Uri.parse("mailto:"));
-                    emailIntent.setType("message/rfc822");
-                    emailIntent.setType("text/plain");
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
-                    Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
-                    startActivity(emailIntent);
+                    if (referral != null) {
+                        LogUtils.newLog(Constants.TAG, "onResponse: " + friendEmail);
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                        emailIntent.setType("application/octet-stream");
+                        emailIntent.setData(Uri.parse("mailto:"));
+                        emailIntent.setType("message/rfc822");
+                        emailIntent.setType("text/plain");
+                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
+                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
+                        Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
+                        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
+                        startActivity(emailIntent);
+                    } else {
+                        Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ReferAFriendResponse> call, Throwable t) {
+                Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
 
             }
         });

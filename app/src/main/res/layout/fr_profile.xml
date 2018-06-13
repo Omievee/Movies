@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/test_black"
+    android:clickable="true"
     android:orientation="vertical">
 
 
     <RelativeLayout
         android:id="@+id/HEADER"
+        android:layout_marginTop="@dimen/margin_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -362,7 +364,7 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Notifications"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -375,7 +377,7 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Be the first to hear about new movies, features, and promotions from MoviePass"
                     android:textColor="@color/almost_white"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
 
                 <Switch
@@ -399,7 +401,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Terms of Use"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/PP"
@@ -410,7 +412,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Privacy Policy"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/SignOut"
@@ -421,7 +423,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Sign Out"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/VERSIOn"
@@ -429,10 +431,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/SignOut"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/quadruple_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:paddingStart="@dimen/margin_standard"
-                android:textSize="10dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 

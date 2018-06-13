@@ -63,7 +63,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
             } ?: 0
             true
         }
-        val black = Color.argb(150, Color.red(0), Color.green(0), Color.blue(0))
+        val black = Color.argb(200, Color.red(0), Color.green(0), Color.blue(0))
         bottomSheetNav.setBackgroundColor(black)
         bottomSheetNav.setOnNavigationItemReselectedListener {
             val currItem = adapter?.currentItem ?: return@setOnNavigationItemReselectedListener
