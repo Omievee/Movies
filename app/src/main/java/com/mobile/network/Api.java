@@ -271,6 +271,9 @@ public interface Api {
     @GET("auth/v1/session/{userId}")
     Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
+    @GET("auth/v1/session/{userId}")
+    Single<MicroServiceRestrictionsResponse> getInterstitialAlertRx(@Path("userId") int userId);
+
     @POST("/rest/v1/movies/{movieId}/rate")
     Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
 

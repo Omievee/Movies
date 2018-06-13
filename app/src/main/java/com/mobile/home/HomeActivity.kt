@@ -31,6 +31,8 @@ import com.helpshift.activities.MainActivity
 import com.mobile.Constants
 import com.mobile.DeviceID
 import com.mobile.activities.LogInActivity
+import com.mobile.fragments.TicketVerificationDialog
+import com.mobile.model.PopInfo
 
 
 class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivityView {
@@ -123,6 +125,12 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivit
             0 -> super.onBackPressed()
             else -> currentItem = viewPager.currentItem - 1
         }
+    }
+
+    override fun showTicketVerification(it: PopInfo) {
+        TicketVerificationDialog
+                .newInstance(it)
+                .show(supportFragmentManager,"ticketVerification")
     }
 
     var currentItem: Int = 0
