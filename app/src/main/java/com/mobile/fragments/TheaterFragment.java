@@ -122,6 +122,10 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         ButterKnife.bind(this, rootView);
 
         //Object & Lists
+        
+
+
+
         theaterObject = Parcels.unwrap(getArguments().getParcelable(THEATER));
 
         moviesAtSelectedTheater = new LinkedList<>();
@@ -205,6 +209,8 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
         return rootView;
     }
+
+
 
     @Override
     public void onAttach(Context context) {
