@@ -383,7 +383,9 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     Disposable locationSub;
 
     private void fetchLocation() {
-        locationSub.dispose();
+        if (locationSub != null) {
+            locationSub.dispose();
+        }
         locationSub = locationManager
                 .location()
                 .subscribe(l -> {
@@ -538,12 +540,13 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         startActivity(intent);
     }
 
-    @Nullable Disposable reserveSub;
+    @Nullable
+    Disposable reserveSub;
 
     private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
         Theater theaterObject = screeningsResponse.getTheater(screening);
         Context context = getActivity();
-        if(reserveSub!=null) {
+        if (reserveSub != null) {
             reserveSub.dispose();
         }
         reserveSub = RestClient.getAuthenticated().reserve(checkInRequest)
@@ -740,7 +743,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public void onDetach() {
         super.onDetach();
         myContext = null;
-        if(reserveSub!=null) {
+        if (reserveSub != null) {
             reserveSub.dispose();
         }
     }
