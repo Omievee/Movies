@@ -1,7 +1,6 @@
 package com.mobile.loyalty
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
@@ -14,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
-import com.mobile.model.Theater
 import com.mobile.utils.text.toSentenceCase
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
@@ -50,7 +48,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     return getItem(position).chainName ?: ""
                 }
 
-                override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val view = MaterialSpinnerSpinnerView(parent.context)
                     view.minimumHeight = resources.getDimension(R.dimen.action_bar_size).toInt()
                     view.bind(getItemText(position))
