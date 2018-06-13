@@ -3,6 +3,7 @@ package com.mobile.di
 import com.mobile.fragments.*
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
+import com.mobile.seats.ConfirmDetailsFragment
 import com.mobile.splash.SplashActivity
 import com.mobile.splash.SplashActivityModule
 import dagger.Module
@@ -37,5 +38,9 @@ abstract class AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     abstract fun movieFragment(): MovieFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun ConfirmDetailsFragment(): ConfirmDetailsFragment
 
 }

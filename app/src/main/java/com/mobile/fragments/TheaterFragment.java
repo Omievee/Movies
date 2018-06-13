@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
@@ -40,7 +39,6 @@ import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.listeners.ShowtimeClickListener;
-import com.mobile.location.LocationManager;
 import com.mobile.location.UserLocation;
 import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
@@ -76,15 +74,13 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-/**
- * Created by anubis on 6/8/17.
- */
-
 public class TheaterFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
     Theater selectedTheaterObject;
+
     @Inject
-    LocationManager locationManager;
+    com.mobile.location.LocationManager locationManager;
+
     ScreeningsResponseV2 screeningsResponse;
     RecyclerView selectedTheaterRecyclerView;
     ImageView pinIcon, eticketIcon, reserveSeatIcon;
@@ -104,6 +100,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     Pair<Screening, String> selected;
 
     Location currentLocation = new Location("");
+
 
     @Nullable
     Disposable disposable;
@@ -178,7 +175,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         });
 
         /* Start Location Tasks */
-        UserLocationManagerFused.getLocationInstance(getContext()).startLocationUpdates();
 
         //Recycler / BringAFriendPagerAdapter / LLM
         int resId = R.anim.layout_anim_bottom;
@@ -223,7 +219,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     }
 
 
-
     @Override
     public void onViewCreated(@NotNull View view, @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -240,6 +235,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onAttach(context);
         myContext = context;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -343,7 +339,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         if (disposable != null) {
             disposable.dispose();
         }
-        if(fetchLocationSub!=null) {
+        if (fetchLocationSub != null) {
             fetchLocationSub.dispose();
         }
     }
@@ -373,13 +369,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     public void reserve(Screening screening, String showtime) {
         Screening screen = screening;
         String time = showtime;
-        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(getContext()).mCurrentLocation;
 
-        if (mCurrentLocation != null) {
-            UserLocationManagerFused.getLocationInstance(getContext()).updateLocation(mCurrentLocation);
-        } else {
-            Toast.makeText(myContext, "NULL", Toast.LENGTH_SHORT).show();
-        }
 
         buttonCheckIn.setEnabled(false);
         /* Standard Check In */
@@ -392,13 +382,12 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             if (isPendingSubscription()) {
                 showActivateCardDialog(screening, showtime);
             }
-            TicketInfoRequest checkInRequest = new TicketInfoRequest(availability.getProviderInfo(), null, null, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-            reservationRequest(screen, checkInRequest, time);
-
-        } else if (availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
-            progress.setVisibility(View.GONE);
-            showEticketConfirmation(screen, time);
-
+            if (currentLocation != null) {
+                TicketInfoRequest checkInRequest = new TicketInfoRequest(availability.getProviderInfo(), null, null, currentLocation.getLatitude(), currentLocation.getLongitude());
+                reservationRequest(screen, checkInRequest, time);
+            } else {
+                Toast.makeText(myActivity, "Enable GPS to check in.", Toast.LENGTH_SHORT).show();
+            }
         } else {
             progress.setVisibility(View.GONE);
             Intent intent = BringAFriendActivity.Companion.newIntent(myContext, selectedTheaterObject, screening, time);
@@ -538,12 +527,9 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
                 }
             }
         });
-        alert.setNegativeButton("Activate Later", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, int which) {
-                Toast.makeText(getContext(), R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
-                dialog.dismiss();
-            }
+        alert.setNegativeButton("Activate Later", (dialog, which) -> {
+            Toast.makeText(getContext(), R.string.dialog_activate_card_must_activate_standard_theater, Toast.LENGTH_LONG).show();
+            dialog.dismiss();
         });
         alert.show();
     }

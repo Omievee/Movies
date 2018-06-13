@@ -2,15 +2,10 @@ package com.mobile.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-
 import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,9 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
-import com.mobile.helpers.BottomNavigationViewHelper;
 import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.Availability;
@@ -125,8 +118,8 @@ public class EticketConfirmation extends BaseActivity {
     }
 
     public void reserve(Screening screening, String showtime, @Nullable SeatSelected seatSelected) {
-        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
-        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
+//        Location mCurrentLocation = UserLocationManagerFused.getLocationInstance(this).mCurrentLocation;
+//        UserLocationManagerFused.getLocationInstance(this).updateLocation(mCurrentLocation);
 
         @Nullable final SelectedSeat selectedSeat;
         if (seatSelected == null) {
@@ -136,10 +129,9 @@ public class EticketConfirmation extends BaseActivity {
         }
 
         Availability availability = screening.getAvailability(showtime);
-        TicketInfoRequest ticketInfoRequest = new TicketInfoRequest(availability
-                .getProviderInfo(), selectedSeat, null, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        //TicketInfoRequest ticketInfoRequest = new TicketInfoRequest(availability.getProviderInfo(), selectedSeat, null, mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-        reservationRequest(screening, ticketInfoRequest, showtime);
+       // reservationRequest(screening, ticketInfoRequest, showtime);
     }
 
 
