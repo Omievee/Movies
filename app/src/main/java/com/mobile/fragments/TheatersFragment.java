@@ -273,10 +273,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             });
         });
 
-        //buildLocationSettingsRequest();
-//        LogUtils.newLog(TAG, "onViewCreated: " + theatersListView.getPanelState());
-
-
         theatersListView.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
