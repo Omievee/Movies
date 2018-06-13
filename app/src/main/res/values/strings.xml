@@ -563,4 +563,5 @@
     <string name="gps_enable">In order to use the MoviePass app please enable location services in your phone’s settings.</string>
     <string name="no_theaters">There are no more screenings at this theater today</string>
     <string name="GPS_off_enable">Enable location services</string>
+    <string name="no_longer_authorized">This device is no longer authorized.</string>
 </resources>

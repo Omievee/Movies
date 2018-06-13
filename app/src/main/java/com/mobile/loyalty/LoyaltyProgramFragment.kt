@@ -1,7 +1,6 @@
 package com.mobile.loyalty
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
@@ -14,13 +13,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
-import com.mobile.model.Theater
+import com.mobile.fragments.MPFragment
 import com.mobile.utils.text.toSentenceCase
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
 
-class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
+class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView {
 
     var addLoyaltyAdapter: MaterialSpinnerAdapter<TheaterChain>? = null
 
@@ -32,7 +31,7 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
         return inflater.inflate(R.layout.fragment_loyalty_program, container, false)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         presenter = LoyaltyProgramPresenter(LoyaltyPresentationModel(addLoyaltyProgram = getString(R.string.loyalty_program_add_loyalty_program)), this)
     }
@@ -50,14 +49,14 @@ class LoyaltyProgramFragment : Fragment(), LoyaltyProgramView {
                     return getItem(position).chainName ?: ""
                 }
 
-                override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val view = MaterialSpinnerSpinnerView(parent.context)
                     view.minimumHeight = resources.getDimension(R.dimen.action_bar_size).toInt()
                     view.bind(getItemText(position))
                     return view
                 }
 
-                override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
+                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
                     return getView(position, convertView, parent)
                 }
             }

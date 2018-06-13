@@ -697,6 +697,9 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(locationSub!=null) {
+            locationSub.dispose();
+        }
         if(tRealm!=null) {
             tRealm.close();
         }

@@ -102,8 +102,8 @@ public class UserPreferences {
     }
 
 
-    public static String getUserCredentials() {
-        return sPrefs.getString(Constants.ONE_DEVICE_ID, "ODID");
+    public static @Nullable String getOneDeviceId() {
+        return sPrefs.getString(Constants.ONE_DEVICE_ID, null);
     }
 
     public static void setOneDeviceId(String id) {

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
+import android.widget.Toast
 import com.mobile.BackFragment
 import com.mobile.Primary
 import com.mobile.fragments.MoviesFragment
@@ -26,10 +27,13 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.helpshift.activities.MainActivity
 import com.mobile.Constants
+import com.mobile.DeviceID
+import com.mobile.activities.LogInActivity
 
 
-class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
+class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivityView {
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -80,6 +84,8 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
     override fun onResume() {
         super.onResume()
         checkGooglePlayServices()
+        presenter.onDeviceId(DeviceID.getID(this))
+        presenter.onResume()
     }
 
     fun checkGooglePlayServices(): Boolean {
@@ -138,6 +144,13 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
                 }
             }
         }
+
+    override fun logout() {
+        val logUserOutIntent = Intent(this, LogInActivity::class.java)
+        startActivity(logUserOutIntent);
+        finishAffinity();
+        Toast.makeText(this, R.string.no_longer_authorized, Toast.LENGTH_LONG).show();
+    }
 }
 
 class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {

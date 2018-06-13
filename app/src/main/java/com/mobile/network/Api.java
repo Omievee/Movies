@@ -283,6 +283,9 @@ public interface Api {
     @POST("/rest/v1/device/verification")
     Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
 
+    @POST("/rest/v1/device/verification")
+    Single<AndroidIDVerificationResponse> verifyAndroidIDRx(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+
     @GET("/rest/v1/loyalty/list")
     Single<List<TheaterChain>> theaterChains();
 

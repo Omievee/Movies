@@ -343,7 +343,7 @@ public class RestClient {
                         .addHeader("Content-type", "application/json")
                         .addHeader("device_uuid", "902183")
                         .addHeader("Accept", "application/json")
-                        .addHeader("one_device_id", UserPreferences.getUserCredentials())
+                        .addHeader("one_device_id", UserPreferences.getOneDeviceId())
                         .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
                 Request request = requestBuilder.build();
 
