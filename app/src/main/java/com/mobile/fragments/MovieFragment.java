@@ -79,6 +79,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,12 +112,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public String position;
     Screening screening;
 
-    ShowtimeClickListener listener;
-    TheatersClickListener theatersClickListener;
-
-    ArrayList<String> mShowtimesList;
-    boolean animationIsOver = false;
-    boolean isLoadingOver = false;
     boolean isMovieComingSoon = false;
 
 
@@ -326,7 +321,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         DefaultItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setSupportsChangeAnimations(false);
         selectedTheatersRecyclerView.setItemAnimator(itemAnimator);
-        listener = this;
 
         selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -334,7 +328,11 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        mMyLocation = UserLocationManagerFused.getLocationInstance(myContext).mCurrentLocation;
+        UserLocation loc = locationManager.lastLocation();
+        if (loc != null) {
+            mMyLocation.setLatitude(loc.getLat());
+            mMyLocation.setLongitude(loc.getLon());
+        }
         if (movie != null) {
             if (movie.getReleaseDate() == null || !isMovieComingSoon) {
                 if (mMyLocation != null) {
@@ -368,14 +366,32 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             if (location != null) {
                 lat = location.getLat();
                 lon = location.getLon();
-            }
-            if (movie != null) {
-                loadTheaters(lat, lon, movie.getId());
+                if (movie != null) {
+                    loadTheaters(lat, lon, movie.getId());
+                } else {
+                    loadTheaters(lat, lon, screening.getMoviepassId());
+                }
             } else {
-                loadTheaters(lat, lon, screening.getMoviepassId());
+                fetchLocation();
             }
 
+
         }
+    }
+
+    Disposable locationSub;
+
+    private void fetchLocation() {
+        locationSub.dispose();
+        locationSub = locationManager
+                .location()
+                .subscribe(l -> {
+                    mMyLocation.setLatitude(l.getLat());
+                    mMyLocation.setLongitude(l.getLon());
+                    loadTheaters(l.getLat(), l.getLon(), movie != null ? movie.getId() : screening.getMoviepassId());
+                }, e -> {
+
+                });
     }
 
     public void setUpView(View view) {
@@ -416,7 +432,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
         }
 
-        if(selected!=null) {
+        if (selected != null) {
             fadeIn(buttonCheckIn);
         } else {
             fadeOut(buttonCheckIn);
@@ -656,12 +672,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             }
 
         });
-    }
-
-
-    public void closeSynopsis() {
-        synopsisShowing = false;
-        getChildFragmentManager().popBackStack();
     }
 
     private void loadMoviePosterData() {

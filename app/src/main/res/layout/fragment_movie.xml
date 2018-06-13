@@ -297,6 +297,7 @@
         android:animateLayoutChanges="true"
         android:background="@color/new_red"
         android:text="@string/fragment_theater_check_in"
+        android:layout_marginBottom="@dimen/bottom_navigation_height"
         android:textAllCaps="false"
         android:stateListAnimator="@null"
         android:visibility="gone"
