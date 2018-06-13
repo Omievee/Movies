@@ -138,22 +138,20 @@ public class ReferAFriend extends Fragment {
                         emailIntent.setData(Uri.parse("mailto:"));
                         emailIntent.setType("message/rfc822");
                         emailIntent.setType("text/plain");
-
                         emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
                         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
                         Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
                         emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
-
                         startActivity(emailIntent);
                     } else {
-                        Toast.makeText(myActivity, "Failed to fetch invite messeges.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ReferAFriendResponse> call, Throwable t) {
-                Toast.makeText(myActivity, "Failed to fetch invite messeges.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
 
             }
         });
