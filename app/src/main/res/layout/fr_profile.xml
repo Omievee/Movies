@@ -10,6 +10,7 @@
 
     <RelativeLayout
         android:id="@+id/HEADER"
+        android:layout_marginTop="@dimen/margin_standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -428,7 +429,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/SignOut"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/quadruple_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:paddingStart="@dimen/margin_standard"
                 android:textSize="10dp" />
