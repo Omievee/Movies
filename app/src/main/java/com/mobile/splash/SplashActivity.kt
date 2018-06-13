@@ -136,11 +136,9 @@ class SplashActivity : AppCompatActivity() {
             } catch (e: GooglePlayServicesRepairableException) {
                 e.printStackTrace()
             }
-            if (adInfo!!.id != null) {
+            if (adInfo?.id != null) {
                 ID = adInfo.id
             }
-
-            val isLAT = adInfo.isLimitAdTrackingEnabled
 
             return ID
         }
