@@ -94,11 +94,6 @@ import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 public class TheatersFragment extends MPFragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<TheaterPin>, TheatersClickListener {
 
-
-    public static final String GCM_ONEOFF_TAG = "oneoff|[0,0]";
-    public static final String GCM_REPEAT_TAG = "repeat|[7200,1800]";
-
-    private final static String senderID = "11111111111";
     @Inject
     com.mobile.location.LocationManager locationManager;
 
@@ -659,7 +654,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             theatersListView.setEnabled(false);
             listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
             upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-            Toast.makeText(getActivity(), "No TheatersFragment found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
         } else {
             theatersListView.setEnabled(true);
             listViewText.setTextColor(getResources().getColor(R.color.white));
@@ -756,7 +751,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                 LocalStorageTheaters locallyStoredTheaters = response.body();
                 if (locallyStoredTheaters != null && response.isSuccessful()) {
                     tRealm.executeTransactionAsync(R -> {
-
                         for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
                             Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
                             RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
