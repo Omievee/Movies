@@ -3,11 +3,13 @@ package com.mobile.home
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
 import com.mobile.BackFragment
 import com.mobile.Primary
@@ -22,6 +24,10 @@ import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.mobile.Constants
+
 
 class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
 
@@ -69,7 +75,32 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
         }
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
+    }
 
+    override fun onResume() {
+        super.onResume()
+        checkGooglePlayServices()
+    }
+
+    fun checkGooglePlayServices(): Boolean {
+        val context = this
+        val googleApiAvailability = GoogleApiAvailability.getInstance()
+        val result = googleApiAvailability.isGooglePlayServicesAvailable(context)
+        val LINK_TO_GOOGLE_PLAY_SERVICES = "play.google.com/store/apps/details?id=com.google.android.gms&hl=en"
+
+        if (result != ConnectionResult.SUCCESS) {
+            AlertDialog.Builder(context).setMessage("Google Play Services must either be enabled or updated in order to continue")
+                    .setPositiveButton("OK", { dialog, which ->
+                        try {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
+                        } catch (anfe: android.content.ActivityNotFoundException) {
+                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://$LINK_TO_GOOGLE_PLAY_SERVICES")))
+                        }
+                        finish()
+                    }).setCancelable(false).show()
+            return false
+        }
+        return true
     }
 
     override fun onBackPressed() {

@@ -45,6 +45,7 @@ public class Constants {
     public final static int REQUEST_CAMERA_CODE = 0;
     public static final int REQUEST_STORAGE_CODE = 2;
     public static final int REQUEST_TICKET_VERIF = 00;
+    public static final int GOOGLE_PLAY_SERVICES_CODE = 1;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
     public static final String IS_ANDROID_ID_VERIFIED = "Android";

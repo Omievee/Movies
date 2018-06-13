@@ -25,13 +25,12 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var presenter: SplashActivityPresenter
 
-    lateinit var ID: String
+    var ID: String?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
-        this?.finish()
 
         val intent = intent
         val data = intent.data
@@ -86,7 +85,7 @@ class SplashActivity : AppCompatActivity() {
             GoWatchItSingleton.getInstance().userOpenedApp(this, url)
         }
 
-
+        finish()
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
@@ -118,12 +117,12 @@ class SplashActivity : AppCompatActivity() {
         private val SPLASH_TIME_OUT = 1000
     }
 
-    private inner class getAAID : AsyncTask<String, String, String>() {
-        override fun onPostExecute(result: String) {
+    private inner class getAAID : AsyncTask<Void, String?, String?>() {
+        override fun onPostExecute(result: String?) {
             UserPreferences.saveAAID(result)
         }
 
-        override fun doInBackground(vararg strings: String): String {
+        override fun doInBackground(vararg strings: Void): String? {
             var adInfo: AdvertisingIdClient.Info? = null
             try {
                 adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
