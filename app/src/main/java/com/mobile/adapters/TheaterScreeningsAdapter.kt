@@ -1,5 +1,6 @@
 package com.mobile.adapters
 
+import android.location.Location
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ class TheaterScreeningsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             TYPE_SCREENING -> BaseViewHolder(ScreeningView(parent.context))
+            TYPE_THEATER -> BaseViewHolder(MovieScreeningView(parent.context))
             TYPE_MISSING -> BaseViewHolder(MissingCheckinView(parent.context))
             else -> BaseViewHolder(NoMoreScreenings(parent.context))
         }
@@ -45,8 +47,9 @@ class TheaterScreeningsAdapter(
         val data = data?.data?.get(position)
         data?.let { pres ->
             when (view) {
-                is MissingCheckinView -> view.bind(pres, missingCheckinListener)
+                is MovieScreeningView -> view.bind(pres, listener)
                 is ScreeningView -> view.bind(pres, listener)
+                is MissingCheckinView -> view.bind(pres, missingCheckinListener)
             }
         }
 
@@ -73,18 +76,33 @@ class TheaterScreeningsAdapter(
                     .findAll()?.associateBy { it.id }
         }
 
-        fun createData(data: ScreeningData?, screeningsResponse:ScreeningsResponseV2, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+        fun createData(data: ScreeningData?, screeningsResponse: ScreeningsResponseV2, location: Location?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
             val movies = sceneMovieIds(screeningsResponse.screenings)
             val old = data?.data ?: emptyList()
             val screenings = screeningsResponse.screenings
             val theaters = screeningsResponse.theaters?.associateBy {
                 it.tribuneTheaterId
-            }?: emptyMap()
+            } ?: emptyMap()
+            val theaterLoc = location?.let { Location("") }
             val presentations = screenings?.map {
+
                 val theater = theaters.get(it.tribuneTheaterId)?.let {
-                    Theater2(id=it.id, tribuneTheaterId = it.tribuneTheaterId, name = it.name,latitude = it.lat, longitude = it.lon)
+                    Theater2(id = it.id,
+                            tribuneTheaterId = it.tribuneTheaterId,
+                            name = it.name,
+                            latitude = it.lat,
+                            longitude = it.lon,
+                            address = it.address,
+                            city = it.city,
+                            state = it.state,
+                            zip = it.zip
+
+                    )
                 }
+                theaterLoc?.latitude = theater?.latitude ?: 0.0
+                theaterLoc?.longitude = theater?.longitude ?: 0.0
                 ScreeningPresentation(
+                        distance = location?.distanceTo(theaterLoc)?.toDouble(),
                         screening = it,
                         theater = theater,
                         selected = when (selected?.first?.moviepassId == it.moviepassId) {
@@ -99,16 +117,16 @@ class TheaterScreeningsAdapter(
                         }
                 )
             }?.filter { it ->
-                it.type != TYPE_SCREENING || it.hasShowtimes
+                it.type != TYPE_SCREENING || it.type != TYPE_THEATER || it.hasShowtimes
             }?.sortedWith(compareBy(
                     {
                         it.type == TYPE_MISSING
-                    },{
-                        when(it.screening?.getTicketType()) {
-                            TicketType.SELECT_SEATING,TicketType.E_TICKET->true
-                            else->false
-                        }
-                    },
+                    }, {
+                when (it.screening?.getTicketType()) {
+                    TicketType.SELECT_SEATING, TicketType.E_TICKET -> true
+                    else -> false
+                }
+            },
                     {
                         !(it.screening?.approved ?: false)
                     },
@@ -116,7 +134,7 @@ class TheaterScreeningsAdapter(
                         it.movie != null
                     }
             ))?.toMutableList()
-            val noMoreScreenings = presentations?.filter { it.type == TYPE_SCREENING }?.isEmpty()
+            val noMoreScreenings = presentations?.none { it.type == TYPE_SCREENING || it.type == TYPE_THEATER }
                     ?: false
             if (noMoreScreenings) {
                 presentations?.add(ScreeningPresentation(type = TYPE_NO_MORE_SCREENINGS))

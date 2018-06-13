@@ -294,7 +294,6 @@
         android:id="@+id/button_check_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/bottom_navigation_height"
         android:animateLayoutChanges="true"
         android:background="@color/new_red"
         android:text="@string/fragment_theater_check_in"

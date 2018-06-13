@@ -1,5 +1,6 @@
 package com.mobile.utils.text
 
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 fun String?.toSentenceCase(): String {
@@ -23,4 +24,13 @@ fun String?.toSentenceCase(): String {
 
 fun Double?.toCurrency(): String {
     return DecimalFormat.getCurrencyInstance().format(this)
+}
+
+fun Double.toFixed(decimalPlaces: Int): Double {
+    val bd = BigDecimal(this).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP)
+    return bd.toDouble()
+}
+
+fun Double.toMiles(): Double {
+    return this / 1609.34
 }

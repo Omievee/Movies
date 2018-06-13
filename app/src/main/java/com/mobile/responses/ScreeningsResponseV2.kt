@@ -9,4 +9,11 @@ data class ScreeningsResponseV2(val screenings: List<Screening>?=null, val theat
             it?.tribuneTheaterId == screening?.tribuneTheaterId
         }
     }
+
+    fun mapMoviepassId(id:Int) {
+        screenings
+                ?.forEach {
+                    it.moviepassId = id
+                }
+    }
 }
