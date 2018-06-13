@@ -154,6 +154,7 @@ public class EticketTheatersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ((EticketTheatersAdapter.VHITEM) holder).listItemTheater.setTag(position);
             Theater finalTheater = theater;
             holder.itemView.setOnClickListener(v -> {
+                Log.d(Constants.TAG, "onBindViewHolder: " + finalTheater.getName());
                 theatersClickListener.onTheaterClick(holder.getAdapterPosition(), finalTheater);
             });
 

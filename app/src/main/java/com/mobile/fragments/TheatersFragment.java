@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -478,8 +479,8 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
     @Override
     public void onTheaterClick(int pos, @NotNull Theater theater) {
-        TheaterFragment fragment = TheaterFragment.newInstance(theater);
-        showFragment(fragment);
+        Log.d(Constants.TAG, "onTheaterClick: " + theater.getName());
+        showFragment(TheaterFragment.newInstance(theater));
     }
 
     private class TheaterPinRenderer extends DefaultClusterRenderer<TheaterPin> {
