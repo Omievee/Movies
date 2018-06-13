@@ -67,6 +67,7 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector {
                     ?: return@setOnNavigationItemReselectedListener
             backable.onBack()
         }
+        viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
 
     }
