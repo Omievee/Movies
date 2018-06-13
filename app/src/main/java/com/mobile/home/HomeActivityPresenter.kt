@@ -3,6 +3,7 @@ package com.mobile.home
 import android.os.Build
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.UserPreferences.setRestrictions
 import com.mobile.network.Api
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
@@ -58,11 +59,21 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
         val userId = sessionManager.getUser()?.id ?: return
         restrictionsDisposable = api.getInterstitialAlertRx(userId)
                 .subscribe({
+                    determineShowSnackbar(it)
+                    setRestrictions(it)
                     determineTicketVerification(it)
                 }, {
 
                 })
 
+    }
+
+    private fun determineShowSnackbar(it: MicroServiceRestrictionsResponse) {
+        val oldStatus = UserPreferences.getRestrictionSubscriptionStatus()
+        val newStatus = it.subscriptionStatus
+        if (oldStatus != newStatus) {
+            view.showSubscriptionButton(it)
+        }
     }
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {

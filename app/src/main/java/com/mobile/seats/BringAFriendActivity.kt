@@ -5,15 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
+import com.mobile.MPActivty
 import com.mobile.model.*
 import com.moviepass.R
+import dagger.android.AndroidInjection
 import kotlinx.android.parcel.Parcelize
 
-class BringAFriendActivity : FragmentActivity() {
+class BringAFriendActivity : MPActivty() {
 
     var bringAFriendFragment: BringAFriendFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bring_a_friend)
         val bringAFriendPayload = intent?.getParcelableExtra<BringAFriendPayload>("data")

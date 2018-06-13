@@ -101,7 +101,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     private Guideline guideLineLeft;
     private Guideline guideLineRight;
     public ImageView toolBarBackground;
-    private TextView activateYourMoviePassCardTv;
 
 
     //Location
@@ -170,7 +169,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         toolBarBackground = rootView.findViewById(R.id.toolBarBackground);
         scrollup = false;
         scrolldown = false;
-        activateYourMoviePassCardTv = rootView.findViewById(R.id.activateYourMoviePassCardTV);
     }
 
     /**
@@ -312,30 +310,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     @Override
     public void onResume() {
         super.onResume();
-        showSnackbar();
     }
-
-    public void hideSnackBar() {
-        activateYourMoviePassCardTv.animate().alpha(0.0f);
-        activateYourMoviePassCardTv.setClickable(false);
-    }
-
-    public void showSnackbar() {
-        if (UserPreferences.getIsSubscriptionActivationRequired()) {
-            activateYourMoviePassCardTv.animate().alpha(1.0f);
-            activateYourMoviePassCardTv.setClickable(true);
-            activateYourMoviePassCardTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent activateCard = new Intent(v.getContext(), ActivateMoviePassCard.class);
-                    startActivity(activateCard);
-                }
-            });
-        } else {
-            hideSnackBar();
-        }
-    }
-
 
     @Override
     public void onAttach(Context context) {

@@ -10,10 +10,9 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AlertDialog
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.mobile.BackFragment
-import com.mobile.Primary
 import com.mobile.fragments.MoviesFragment
 import com.mobile.fragments.ProfileFragment
 import com.mobile.fragments.TheatersFragment
@@ -27,22 +26,15 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.helpshift.activities.MainActivity
-import com.mobile.Constants
-import com.mobile.DeviceID
+import com.mobile.*
+import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.TicketVerificationDialog
 import com.mobile.model.PopInfo
+import com.mobile.responses.MicroServiceRestrictionsResponse
 
 
-class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivityView {
-
-    @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentInjector
-    }
+class HomeActivity : MPActivty(), HomeActivityView {
 
     @Inject
     lateinit var presenter: HomeActivityPresenter
@@ -90,7 +82,7 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivit
         presenter.onResume()
     }
 
-    fun checkGooglePlayServices(): Boolean {
+    private fun checkGooglePlayServices(): Boolean {
         val context = this
         val googleApiAvailability = GoogleApiAvailability.getInstance()
         val result = googleApiAvailability.isGooglePlayServicesAvailable(context)
@@ -127,10 +119,28 @@ class HomeActivity : FragmentActivity(), HasSupportFragmentInjector, HomeActivit
         }
     }
 
+    override fun showSubscriptionButton(it: MicroServiceRestrictionsResponse) {
+        if (it.isSubscriptionActivationRequired) {
+            bottomButton.animate().alpha(1.0f)
+            bottomButton.setClickable(true)
+            bottomButton.setOnClickListener(View.OnClickListener { v ->
+                val activateCard = Intent(v.context, ActivateMoviePassCard::class.java)
+                startActivity(activateCard)
+            })
+        } else {
+            hideSubscriptionBar()
+        }
+    }
+
+
+    private fun hideSubscriptionBar() {
+        bottomButton.animate().alpha(0.0f)
+    }
+
     override fun showTicketVerification(it: PopInfo) {
         TicketVerificationDialog
                 .newInstance(it)
-                .show(supportFragmentManager,"ticketVerification")
+                .show(supportFragmentManager, "ticketVerification")
     }
 
     var currentItem: Int = 0

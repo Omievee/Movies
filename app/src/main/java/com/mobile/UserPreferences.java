@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.mobile.model.Movie;
 import com.mobile.model.Reservation;
 import com.mobile.model.ScreeningToken;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
 
 import java.util.Calendar;
@@ -219,16 +220,15 @@ public class UserPreferences {
         return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true);
     }
 
-    public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
-                                       boolean proofOfPurchaseRequired, boolean hasActiveCard, boolean subscriptionRequired) {
+    public static void setRestrictions(MicroServiceRestrictionsResponse it) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.SUBSCRIPTION_STATUS, status);
-        editor.putBoolean(Constants.FB_PRESENT, fb);
-        editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
-        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
-        editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, proofOfPurchaseRequired);
-        editor.putBoolean(Constants.ACTIVE_CARD, hasActiveCard);
-        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, subscriptionRequired);
+        editor.putString(Constants.SUBSCRIPTION_STATUS, it.getSubscriptionStatus());
+        editor.putBoolean(Constants.FB_PRESENT, it.getFacebookPresent());
+        editor.putBoolean(Constants.THREE_D_ENABLED, it.get3dEnabled());
+        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, it.getAllFormatsEnabled());
+        editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, it.getProofOfPurchaseRequired());
+        editor.putBoolean(Constants.ACTIVE_CARD, it.getHasActiveCard());
+        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, it.isSubscriptionActivationRequired());
         editor.apply();
     }
 

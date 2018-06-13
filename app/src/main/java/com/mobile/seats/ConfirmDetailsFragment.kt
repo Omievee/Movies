@@ -14,6 +14,7 @@ import com.mobile.model.PerformanceInfoV2
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
 import com.moviepass.R
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_confirm_details.*
 
@@ -26,6 +27,7 @@ class ConfirmDetailsFragment : Fragment() {
     var payload: SelectSeatPayload? = null
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         listener = parentFragment as? BringAFriendListener
     }

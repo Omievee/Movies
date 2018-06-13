@@ -407,26 +407,7 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-                    android.util.Log.d(Constants.TAG, "onResponse: CHECKING RESTRICTIONS");
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-
-                    //Setting User Preferences When User Logs In
-                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
-
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-                    }
+                    UserPreferences.setRestrictions(restriction);
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in

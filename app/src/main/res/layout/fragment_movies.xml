@@ -122,21 +122,6 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/activateYourMoviePassCardTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:alpha="0"
-        android:background="@color/new_red"
-        android:gravity="center"
-        android:padding="@dimen/margin_standard"
-        android:layout_marginBottom="@dimen/bottom_navigation_height"
-        android:text="Activate your MoviePass card"
-        android:textColor="@color/almost_white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
