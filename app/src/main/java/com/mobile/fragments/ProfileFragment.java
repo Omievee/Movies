@@ -172,12 +172,7 @@ public class ProfileFragment extends MPFragment {
             showFragment(new ProfileAccountInformationFragment());
         });
 
-        referAFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(refer);
-            }
-        });
+        referAFriend.setOnClickListener(v -> showFragment(refer));
 
         TOS.setOnClickListener(view13 -> {
 
