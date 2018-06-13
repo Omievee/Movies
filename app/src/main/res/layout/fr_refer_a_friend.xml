@@ -6,6 +6,7 @@
     android:background="@color/dark"
     android:clickable="true"
     android:paddingEnd="@dimen/margin_standard"
+    android:fitsSystemWindows="true"
     android:paddingStart="@dimen/margin_standard"
     tools:context="com.mobile.fragments.ReferAFriend">
 
