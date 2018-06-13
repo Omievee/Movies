@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.model.GuestTicket
 import com.mobile.model.PerformanceInfoV2
+import com.mobile.model.TicketType
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
 import com.moviepass.R
@@ -111,9 +112,12 @@ class ConfirmDetailsFragment : Fragment() {
         val provideInfo = availability.providerInfo ?: return
         val lat = local!!.lat
         val lng = local.lon
-        val mySeat = payload.selectedSeats?.first() ?: return
+        val mySeat = payload.selectedSeats?.first()
+        if (availability.ticketType == TicketType.SELECT_SEATING) {
+            if (mySeat == null) return
+        }
         val emails = payload.emails
-        val hasMatchingSeatCount = payload.selectedSeats?.size ?: 0 - 1 == tpd.sumBy { it.tickets }.plus(1)
+        val hasMatchingSeatCount = mySeat == null || payload.selectedSeats?.size ?: 0 - 1 == tpd.sumBy { it.tickets }.plus(1)
         when (hasMatchingSeatCount) {
             false -> return
         }
@@ -140,7 +144,7 @@ class ConfirmDetailsFragment : Fragment() {
                                 format = provideInfo.format,
                                 performanceId = provideInfo.performanceId,
                                 dateTime = provideInfo.dateTime,
-                                seatPosition = mySeat.asPosition(),
+                                seatPosition = mySeat?.asPosition(),
                                 guestsAllowed = payload.screening.maximumGuests,
                                 guestTickets = guestTickets
                         ),
