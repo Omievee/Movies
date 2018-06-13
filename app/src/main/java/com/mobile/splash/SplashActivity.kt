@@ -84,8 +84,6 @@ class SplashActivity : AppCompatActivity() {
             var url = "https://www.moviepass.com/go"
             GoWatchItSingleton.getInstance().userOpenedApp(this, url)
         }
-
-        finish()
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
