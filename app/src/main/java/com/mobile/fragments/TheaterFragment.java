@@ -265,7 +265,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         } else {
             selected = new Pair(screening, showtime);
         }
-        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, null, selected));
         if (selected == null) {
             fadeOut(buttonCheckIn);
             return;
@@ -326,7 +326,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         disposable = RestClient.getAuthenticated().getScreeningsForTheaterV2(theaterId)
                 .subscribe(response -> {
                     screeningsResponse = response;
-                    theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
+                    theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, null, selected));
                     progress.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.GONE);
 
@@ -342,6 +342,9 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onDestroy();
         if (disposable != null) {
             disposable.dispose();
+        }
+        if(fetchLocationSub!=null) {
+            fetchLocationSub.dispose();
         }
     }
 
@@ -567,6 +570,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
         onShowtimeClick(null, screening, showTime);
-        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, selected));
+        theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, null, selected));
     }
 }

@@ -52,6 +52,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
                 return@create
             }
             val task = fused?.lastLocation
+
             task?.addOnSuccessListener { location ->
                 if (emitter.isDisposed) {
                     return@addOnSuccessListener

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.mobile.ApiError;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
@@ -53,6 +55,7 @@ import com.mobile.model.TicketType;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
+import com.mobile.recycler.decorator.SpaceDecorator;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
@@ -78,6 +81,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -110,12 +114,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public String position;
     Screening screening;
 
-    ShowtimeClickListener listener;
-    TheatersClickListener theatersClickListener;
-
-    ArrayList<String> mShowtimesList;
-    boolean animationIsOver = false;
-    boolean isLoadingOver = false;
     boolean isMovieComingSoon = false;
 
 
@@ -130,13 +128,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     TextView selectedMovieTitle;
     View comingSoonScrollView, showtimeScrolls;
     TextView comingSoonTitle, synopsisTitle, synopsisContent;
-
-    LinkedList<Screening> selectedScreeningsList;
-    LinkedList<Theater> theatersList;
-    LinkedList<Theater> sortedTheatersList;
-    LinkedList<Screening> sortedScreeningList;
-
-    ArrayList<String> selectedShowtimesList;
 
     @BindView(R.id.SELECTED_THEATERS)
     RecyclerView selectedTheatersRecyclerView;
@@ -321,28 +312,28 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
         showtimeScrolls.setVisibility(View.VISIBLE);
 
-
-        selectedScreeningsList = new LinkedList<>();
-        theatersList = new LinkedList<>();
-        sortedScreeningList = new LinkedList<>();
-        sortedTheatersList = new LinkedList<>();
-
         /* Theaters RecyclerView */
-        LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false) {
+            @Override
+            public boolean supportsPredictiveItemAnimations() {
+                return false;
+            }
+        };
         selectedTheatersRecyclerView.setLayoutManager(moviesLayoutManager);
-        listener = this;
-
-        /* Showtimes RecyclerView */
-        selectedShowtimesList = new ArrayList<>();
-        mShowtimesList = new ArrayList<>();
-
+        DefaultItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setSupportsChangeAnimations(false);
+        selectedTheatersRecyclerView.setItemAnimator(itemAnimator);
         selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mMyLocation = UserLocationManagerFused.getLocationInstance(myContext).mCurrentLocation;
+        UserLocation loc = locationManager.lastLocation();
+        if (loc != null) {
+            mMyLocation.setLatitude(loc.getLat());
+            mMyLocation.setLongitude(loc.getLon());
+        }
         if (movie != null) {
             if (movie.getReleaseDate() == null || !isMovieComingSoon) {
                 if (mMyLocation != null) {
@@ -373,17 +364,35 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             UserLocation location = locationManager.lastLocation();
             double lat = 0;
             double lon = 0;
-            if(location!=null) {
+            if (location != null) {
                 lat = location.getLat();
                 lon = location.getLon();
-            }
-            if (movie != null) {
-                loadTheaters(lat, lon, movie.getId());
+                if (movie != null) {
+                    loadTheaters(lat, lon, movie.getId());
+                } else {
+                    loadTheaters(lat, lon, screening.getMoviepassId());
+                }
             } else {
-                loadTheaters(lat, lon, screening.getMoviepassId());
+                fetchLocation();
             }
 
+
         }
+    }
+
+    Disposable locationSub;
+
+    private void fetchLocation() {
+        locationSub.dispose();
+        locationSub = locationManager
+                .location()
+                .subscribe(l -> {
+                    mMyLocation.setLatitude(l.getLat());
+                    mMyLocation.setLongitude(l.getLon());
+                    loadTheaters(l.getLat(), l.getLon(), movie != null ? movie.getId() : screening.getMoviepassId());
+                }, e -> {
+
+                });
     }
 
     public void setUpView(View view) {
@@ -417,15 +426,17 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         } else {
             selected = new Pair<>(screening, showtime);
         }
-        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
+        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, mMyLocation, selected));
         if (movie != null) {
             GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
         } else {
             GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
         }
 
-        if (buttonCheckIn.getVisibility() == View.GONE) {
-            buttonCheckIn.setVisibility(View.VISIBLE);
+        if (selected != null) {
+            fadeIn(buttonCheckIn);
+        } else {
+            fadeOut(buttonCheckIn);
         }
         Availability availability = screening.getAvailability(showtime);
         if (availability.isETicket() || availability.getTicketType() == TicketType.SELECT_SEATING) {
@@ -527,15 +538,18 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         startActivity(intent);
     }
 
+    @Nullable Disposable reserveSub;
+
     private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
         Theater theaterObject = screeningsResponse.getTheater(screening);
         Context context = getActivity();
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
+        if(reserveSub!=null) {
+            reserveSub.dispose();
+        }
+        reserveSub = RestClient.getAuthenticated().reserve(checkInRequest)
+                .subscribe(result -> {
+                    ReservationResponse reservationResponse = result;
 
-                if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
                     progress.setVisibility(View.GONE);
@@ -551,40 +565,27 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), "");
                     }
-                } else {
 
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        progress.setVisibility(View.GONE);
-                        buttonCheckIn.setVisibility(View.VISIBLE);
-                        buttonCheckIn.setEnabled(true);
-
-                        //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
-                        if (jObjError.getString("message").equals("You do not have an active card")) {
-                            Toast.makeText(context, "You do not have an active card", Toast.LENGTH_SHORT).show();
+                    progress.setVisibility(View.GONE);
+                    buttonCheckIn.setVisibility(View.VISIBLE);
+                    buttonCheckIn.setEnabled(true);
+                }, error -> {
+                    progress.setVisibility(View.GONE);
+                    buttonCheckIn.setVisibility(View.VISIBLE);
+                    buttonCheckIn.setEnabled(true);
+                    if (error instanceof ApiError) {
+                        ApiError apiError = (ApiError) error;
+                        Toast.makeText(myContext, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (apiError.getMessage() != null && apiError.getMessage().contains("active card")) {
                         } else {
-                            Toast.makeText(context, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                             GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), "");
                         }
-                    } catch (Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
                     buttonCheckIn.setEnabled(true);
-                }
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                progress.setVisibility(View.GONE);
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-            }
-        });
+                });
     }
 
 
@@ -604,13 +605,14 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 if (response != null && response.isSuccessful()) {
                     screeningsResponse = response.body();
 
+                    screeningsResponse.mapMoviepassId(moviepassId);
 
                     if (screeningsResponse.getScreenings().size() == 0) {
                         selectedTheatersRecyclerView.setVisibility(View.GONE);
                         noTheaters.setVisibility(View.VISIBLE);
                     } else {
                         noTheaters.setVisibility(View.GONE);
-                        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
+                        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, mMyLocation, selected));
                     }
 
                     progress.setVisibility(View.GONE);
@@ -661,12 +663,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             }
 
         });
-    }
-
-
-    public void closeSynopsis() {
-        synopsisShowing = false;
-        getChildFragmentManager().popBackStack();
     }
 
     private void loadMoviePosterData() {
@@ -744,12 +740,13 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public void onDetach() {
         super.onDetach();
         myContext = null;
+        if(reserveSub!=null) {
+            reserveSub.dispose();
+        }
     }
 
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
-        onShowtimeClick(null, screening, showTime);
-        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, selected));
     }
 
 }

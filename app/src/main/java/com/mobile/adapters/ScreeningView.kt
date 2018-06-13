@@ -101,10 +101,6 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 notSupported.visibility = View.GONE
             }
         }
-        screening.enabled?.let {
-        } ?: run {
-            notSupported.visibility = View.GONE
-        }
         posterSPV.controller = controller
         movieTime.text = screening.screening?.runningTime?.runningTimeString(context = context)
         movieTime.apply {

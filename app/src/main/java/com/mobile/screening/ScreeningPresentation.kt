@@ -7,6 +7,7 @@ import com.mobile.model.Theater2
 import com.mobile.utils.isValidShowtime
 
 data class ScreeningPresentation(
+        val distance:Double? = null,
         val theater:Theater2? = null,
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,

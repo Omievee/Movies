@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.Date;
 
 @Parcelize
-data class Screening(val moviepassId: Int? = null,
+data class Screening(var moviepassId: Int? = null,
                      val title: String? = null,
                      val approved: Boolean = false,
                      val tribuneTheaterId: Int = 0,
