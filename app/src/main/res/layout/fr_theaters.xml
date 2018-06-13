@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/THEATERS_FRAME_LAYOUT"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:nestedScrollingEnabled="false"
+        android:paddingBottom="40dp"
+        sothree:umanoDragView="@+id/ListViewMaps"
+        sothree:umanoOverlay="true"
+        sothree:umanoParallaxOffset="50dp"
+        sothree:umanoScrollableView="@id/nestedScrollREC"
+        sothree:umanoShadowHeight="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/progress"
+                layout="@layout/view_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true" />
+
+
+            <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/MPMAPVIEW"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/search_inactive"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="14dp"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/circle_white_alpha"
+                android:elevation="10dp"
+                android:padding="13dp"
+                android:src="@drawable/ic_search_black_24dp"
+                android:tint="@color/white" />
+
+            <com.mancj.materialsearchbar.MaterialSearchBar
+                android:id="@+id/SearchGP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginTop="40dp"
+                android:visibility="gone"
+                sothree:mt_backIconTint="@color/white"
+                sothree:mt_clearIconTint="@color/white"
+                sothree:mt_hint="Search City or Zip"
+                sothree:mt_hintColor="@color/white"
+                sothree:mt_navIconTint="@color/white"
+                sothree:mt_roundedSearchBarEnabled="true"
+                sothree:mt_searchBarColor="@color/test_black"
+                sothree:mt_searchIconTint="@color/white"
+
+                sothree:mt_textColor="@color/white">
+
+            </com.mancj.materialsearchbar.MaterialSearchBar>
+
+            <ImageView
+                android:id="@+id/myLocationButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="80dp"
+                android:layout_marginEnd="14dp"
+                android:background="@drawable/circle_white_alpha"
+                android:elevation="4dp"
+                android:src="@drawable/mylocation"
+                android:tint="@color/white" />
+
+            <Button
+                android:id="@+id/SearchThisArea"
+                android:layout_width="145dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="80dp"
+                android:background="@drawable/searchthisarea"
+                android:backgroundTint="@color/test_black"
+                android:elevation="5dp"
+                android:paddingBottom="4dp"
+                android:text="Search this area"
+                android:textAlignment="gravity"
+                android:textAllCaps="false"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/ListViewMaps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/a_lot_margin_standard"
+            android:background="@color/test_black">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="55dp">
+
+
+                <TextView
+                    android:id="@+id/ListViewText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="List View"
+                    android:textColor="@color/almost_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/uparrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_toEndOf="@id/ListViewText"
+                    android:src="@drawable/icon_arrow_up"
+                    android:tint="@color/almost_white" />
+
+                <TextView
+                    android:id="@+id/mapviewtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Map View"
+
+                    android:textColor="@color/almost_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/downarrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/margin_half"
+
+                    android:layout_marginTop="22dp"
+                    android:rotation="180"
+                    android:src="@drawable/icon_arrow_up"
+                    android:tint="@color/almost_white"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/goneList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ScrollView
+                    android:id="@+id/nestedScrollREC"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollbars="none">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="blocksDescendants"
+                        android:orientation="vertical">
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/eTicketTheatersRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_standard"
+                            android:nestedScrollingEnabled="false"
+                            android:visibility="gone"
+                            tools:listitem="@layout/list_item_theater" />
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/theatersRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/eTicketTheatersRecyclerView"
+                            android:layout_marginBottom="@dimen/doubledouble_margin_standard"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/list_item_theater" />
+
+                    </RelativeLayout>
+
+                </ScrollView>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+</FrameLayout>

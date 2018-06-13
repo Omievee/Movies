@@ -36,9 +36,9 @@ import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.EticketConfirmation;
 import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.home.HomeActivity;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.location.LocationManager;
 import com.mobile.location.UserLocation;
@@ -51,7 +51,6 @@ import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
 import com.mobile.requests.CardActivationRequest;
-import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
@@ -83,14 +82,13 @@ import retrofit2.Response;
 
 public class TheaterFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
     public static final String TAG = "found it";
-
+    Theater selectedTheaterObject;
     @Inject
     LocationManager locationManager;
-    Theater theaterObject;
     ScreeningsResponseV2 screeningsResponse;
-    RecyclerView theaterSelectedRecyclerView;
-    ImageView cinemaPin, eTicketingIcon, reserveSeatIcon;
-    TextView theaterSelectedAddress, theaterSelectedAddressZip, noTheaters, theaterName;
+    RecyclerView selectedTheaterRecyclerView;
+    ImageView pinIcon, eticketIcon, reserveSeatIcon;
+    TextView theaterSelectedAddress, selectedTheaterCity, noTheaters, selectedTheaterName;
     LinearLayoutManager theaterSelectedMovieManager;
     TheaterScreeningsAdapter theaterMoviesAdapter;
     Button buttonCheckIn;
@@ -101,6 +99,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     Context myContext;
     Reservation reservation;
     String url;
+    HomeActivity homeActivity;
     @Nullable
     Pair<Screening, String> selected;
 
@@ -117,10 +116,19 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
     public static TheaterFragment newInstance(Theater theater) {
         Bundle b = new Bundle();
-        b.putParcelable(THEATER, Parcels.wrap(Theater.class, theater));
+        b.putParcelable(Constants.THEATER, Parcels.wrap(Theater.class, theater));
         TheaterFragment f = new TheaterFragment();
         f.setArguments(b);
         return f;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            selectedTheaterObject = Parcels.unwrap(getArguments().getParcelable(Constants.THEATER));
+        }
     }
 
     @Override
@@ -129,40 +137,41 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         ButterKnife.bind(this, rootView);
 
         //Object & Lists
-        theaterObject = Parcels.unwrap(getArguments().getParcelable(THEATER));
-
+        homeActivity = (HomeActivity) getActivity();
         moviesAtSelectedTheater = new LinkedList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
-        cinemaPin = rootView.findViewById(R.id.CINEMA_PIN);
-        theaterName = rootView.findViewById(R.id.CINEMA_TITLE);
-        theaterName.setText(theaterObject.getName());
-        buttonCheckIn = rootView.findViewById(R.id.button_check_in);
-        progress = rootView.findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
-        eTicketingIcon = rootView.findViewById(R.id.CINEMA_E_TICKETING);
-        reserveSeatIcon = rootView.findViewById(R.id.CINEMA_RES_SEATS);
 
-        if (theaterObject.ticketTypeIsStandard()) {
-            eTicketingIcon.setVisibility(View.INVISIBLE);
+
+        pinIcon = rootView.findViewById(R.id.pinIcon);
+        selectedTheaterName = rootView.findViewById(R.id.selectedTheaterName);
+        selectedTheaterName.setText(selectedTheaterObject.getName());
+        buttonCheckIn = rootView.findViewById(R.id.button_check_in);
+        progress = rootView.findViewById(R.id.selectedTheaterProgress);
+        progress.setVisibility(View.VISIBLE);
+        eticketIcon = rootView.findViewById(R.id.eticketIcon);
+        reserveSeatIcon = rootView.findViewById(R.id.selectSeatIcon);
+
+        if (selectedTheaterObject.ticketTypeIsStandard()) {
+            eticketIcon.setVisibility(View.INVISIBLE);
             reserveSeatIcon.setVisibility(View.INVISIBLE);
-        } else if (theaterObject.ticketTypeIsETicket()) {
+        } else if (selectedTheaterObject.ticketTypeIsETicket()) {
             reserveSeatIcon.setVisibility(View.INVISIBLE);
         }
         //Textviews
-        theaterSelectedAddress = rootView.findViewById(R.id.CINEMA_ADDRESS);
-        theaterSelectedAddressZip = rootView.findViewById(R.id.CINEMA_ZIPCITY);
-        theaterSelectedAddress.setText(theaterObject.getAddress());
-        theaterSelectedAddressZip.setText(theaterObject.getCity() + " " + theaterObject.getState() + " " + theaterObject.getZip());
+        theaterSelectedAddress = rootView.findViewById(R.id.selectedTheaterAddress);
+        selectedTheaterCity = rootView.findViewById(R.id.selectedTheaterCity);
+        theaterSelectedAddress.setText(selectedTheaterObject.getAddress());
+        selectedTheaterCity.setText(selectedTheaterObject.getCity() + " " + selectedTheaterObject.getState() + " " + selectedTheaterObject.getZip());
         noTheaters = rootView.findViewById(R.id.NoTheaters);
-        final Uri uri = Uri.parse("geo:" + theaterObject.getLat() + "," + theaterObject.getLon() + "?q=" + Uri.encode(theaterObject.getName()));
+        final Uri uri = Uri.parse("geo:" + selectedTheaterObject.getLat() + "," + selectedTheaterObject.getLon() + "?q=" + Uri.encode(selectedTheaterObject.getName()));
 
-        cinemaPin.setOnClickListener(v -> {
+        pinIcon.setOnClickListener(v -> {
             try {
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.valueOf(uri)));
                 mapIntent.setPackage("com.google.android.apps.maps");
-                myActivity.startActivity(mapIntent);
+                myContext.startActivity(mapIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(myActivity, "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(myContext, "Google Maps isn't installed", Toast.LENGTH_SHORT).show();
             } catch (Exception x) {
                 x.getMessage();
             }
@@ -174,7 +183,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         //Recycler / BringAFriendPagerAdapter / LLM
         int resId = R.anim.layout_anim_bottom;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
-        theaterSelectedRecyclerView = rootView.findViewById(R.id.CINEMA_SELECTED_THEATER_RECYCLER);
+        selectedTheaterRecyclerView = rootView.findViewById(R.id.selectedTheaterRecyclerView);
         theaterSelectedMovieManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false) {
             @Override
             public boolean supportsPredictiveItemAnimations() {
@@ -182,18 +191,18 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             }
         };
         theaterMoviesAdapter = new TheaterScreeningsAdapter(this, this);
-        theaterSelectedRecyclerView.setLayoutManager(theaterSelectedMovieManager);
-        theaterSelectedRecyclerView.setAdapter(theaterMoviesAdapter);
-        theaterSelectedRecyclerView.setLayoutAnimation(animation);
+        selectedTheaterRecyclerView.setLayoutManager(theaterSelectedMovieManager);
+        selectedTheaterRecyclerView.setAdapter(theaterMoviesAdapter);
+        selectedTheaterRecyclerView.setLayoutAnimation(animation);
         SimpleItemAnimator animator = new DefaultItemAnimator();
         animator.setSupportsChangeAnimations(false);
-        theaterSelectedRecyclerView.setItemAnimator(animator);
-        theaterSelectedRecyclerView.setNestedScrollingEnabled(false);
+        selectedTheaterRecyclerView.setItemAnimator(animator);
+        selectedTheaterRecyclerView.setNestedScrollingEnabled(false);
 
         loadMovies();
 
-        if (theaterObject.getName().contains("Flix Brewhouse")) {
-            String theater = theaterObject.getName();
+        if (selectedTheaterObject.getName().contains("Flix Brewhouse")) {
+            String theater = selectedTheaterObject.getName();
             Bundle bundle = new Bundle();
             bundle.putString(POLICY, theater);
 
@@ -203,18 +212,17 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             fragobj.show(fm, "fr_theaterpolicy");
         }
 
-
-        ContextSingleton.getInstance(getContext()).getGlobalContext();
-
-        url = "https://moviepass.com/go/theaters/" + theaterObject.getId();
+        url = "https://moviepass.com/go/theaters/" + selectedTheaterObject.getId();
         if (!GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
 
-        GoWatchItSingleton.getInstance().userOpenedTheater(theaterObject, url);
+        GoWatchItSingleton.getInstance().userOpenedTheater(selectedTheaterObject, url);
 
         return rootView;
     }
+
+
 
     @Override
     public void onViewCreated(@NotNull View view, @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -232,13 +240,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onAttach(context);
         myContext = context;
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -286,7 +287,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             buttonCheckIn.setText("Check In");
         }
         buttonCheckIn.setEnabled(true);
-        GoWatchItSingleton.getInstance().userClickedOnShowtime(theaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
+        GoWatchItSingleton.getInstance().userClickedOnShowtime(selectedTheaterObject, screening, showtime, String.valueOf(screening.getMoviepassId()), url);
         buttonCheckIn.setOnClickListener(view -> {
             if (isPendingSubscription() && availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
                 progress.setVisibility(View.VISIBLE);
@@ -318,7 +319,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     }
 
     private void loadMovies() {
-        int theaterId = theaterObject.getTribuneTheaterId();
+        int theaterId = selectedTheaterObject.getTribuneTheaterId();
         if (disposable != null) {
             disposable.dispose();
         }
@@ -329,7 +330,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
                     progress.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.GONE);
 
-                    theaterSelectedRecyclerView.setVisibility(View.VISIBLE);
+                    selectedTheaterRecyclerView.setVisibility(View.VISIBLE);
                 }, error -> {
                     error.printStackTrace();
                     progress.setVisibility(View.GONE);
@@ -397,7 +398,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
         } else {
             progress.setVisibility(View.GONE);
-            Intent intent = BringAFriendActivity.Companion.newIntent(myActivity, theaterObject, screening, time);
+            Intent intent = BringAFriendActivity.Companion.newIntent(myContext, selectedTheaterObject, screening, time);
             startActivity(intent);
         }
     }
@@ -410,19 +411,19 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
                 if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
-                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
+                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, selectedTheaterObject));
                     progress.setVisibility(View.GONE);
 
                     if (reservationResponse.getETicketConfirmation() != null) {
 
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), theaterObject);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), selectedTheaterObject);
                         showConfirmation(token);
-                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
+                        GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase", String.valueOf(selectedTheaterObject.getId()), url);
 
                     } else {
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, theaterObject);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, selectedTheaterObject);
                         showConfirmation(token);
-                        GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), url);
+                        GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase", String.valueOf(selectedTheaterObject.getId()), url);
                     }
                 } else {
 
@@ -435,13 +436,13 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
                         //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
                         if (jObjError.getString("message").equals("You do not have an active card")) {
-                            Toast.makeText(myActivity, "You do not have an active card", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myContext, "You do not have an active card", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(myActivity, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), url);
+                            Toast.makeText(myContext, jObjError.getString("message"), Toast.LENGTH_LONG).show();
+                            GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(selectedTheaterObject.getId()), url);
                         }
                     } catch (Exception e) {
-                        Toast.makeText(myActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
@@ -546,16 +547,16 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
 
     private void showConfirmation(ScreeningToken token) {
         if (token.getConfirmationCode() != null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
-            startActivity(ReservationActivity.Companion.newInstance(myActivity, token));
+            startActivity(ReservationActivity.Companion.newInstance(myContext, token));
         } else {
-            startActivity(new Intent(myActivity, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
+            startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
         }
-        myActivity.finish();
+        homeActivity.finish();
     }
 
     private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
 
-        Intent intent = new Intent(myActivity, EticketConfirmation.class);
+        Intent intent = new Intent(myContext, EticketConfirmation.class);
 
         intent.putExtra(SCREENING, screeningObject);
         intent.putExtra(SHOWTIME, selectedShowTime);
