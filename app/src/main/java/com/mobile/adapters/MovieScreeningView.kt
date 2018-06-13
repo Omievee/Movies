@@ -36,15 +36,20 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet?=null) : Constra
         animator.supportsChangeAnimations = false
         recyclerView.itemAnimator = animator
         recyclerView.addItemDecoration(SpaceDecorator(resources.getDimension(R.dimen.card_button_margin_start).toInt()))
-        layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val margin = resources.getDimension(R.dimen.margin_half).toInt()
+        layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            marginStart = margin
+            marginEnd = margin
+            bottomMargin = margin*2
+        }
     }
 
     fun bind(p:ScreeningPresentation, showtimeClickListener:ShowtimeClickListener?) {
         this.screening = p
         this.showtimeListener = showtimeClickListener
         THEATER_NAME_LISTITEM.text = p.theater?.name
-        THEATER_ADDRESS_LISTITEM.text = p.theater?.address
-        THEATER_ADDRESS2_LISTITEM.text = p.theater?.cityStateZip
+        THEATER_ADDRESS_LISTITEM.text = p.theater?.cityStateZip
+        THEATER_ADDRESS2_LISTITEM.text = p.theater?.address
         THEATER_DISTANCE_LISTITEM.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
         icon_seat.visibility = when(screening?.screening?.getTicketType()) {
             TicketType.SELECT_SEATING->View.VISIBLE

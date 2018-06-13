@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/THEATERS_LISTITEM"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_standard"
     android:animateLayoutChanges="true"
-    android:background="@color/charcoalGrey"
-    app:cardElevation="-1dp">
+    android:background="@color/charcoalGrey">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -54,7 +50,7 @@
                 android:id="@+id/THEATER_NAME_LISTITEM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[MOVIE THEATER NAME]"
                 android:textColor="@color/almost_white"
@@ -67,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/THEATER_NAME_LISTITEM"
-                android:layout_marginLeft="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
                 android:text="[ADDRESS]"
                 android:textColor="@color/almost_white"
@@ -79,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/THEATER_ADDRESS2_LISTITEM"
-                android:layout_marginLeft="@dimen/margin_half"
+                android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_half"
                 android:orientation="horizontal">
 
@@ -139,6 +135,4 @@
             android:visibility="gone" />
 
     </RelativeLayout>
-
-
 </android.support.v7.widget.CardView>

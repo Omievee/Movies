@@ -55,6 +55,7 @@ import com.mobile.model.TicketType;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
+import com.mobile.recycler.decorator.SpaceDecorator;
 import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
@@ -322,7 +323,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         DefaultItemAnimator itemAnimator = new DefaultItemAnimator();
         itemAnimator.setSupportsChangeAnimations(false);
         selectedTheatersRecyclerView.setItemAnimator(itemAnimator);
-
         selectedTheatersRecyclerView.setVisibility(View.VISIBLE);
     }
 
