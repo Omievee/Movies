@@ -29,8 +29,8 @@ class HomeActivityPresenter(val view:HomeActivityView, val api: Api, val session
 
         val userId = sessionManager.getUser()?.id?.toString() ?: return
         val deviceId = this.deviceId ?: return
-        val device = Build.DEVICE?:return
-        val deviceType = "ANDROID"
+        val device = "ANDROID"
+        val deviceType = Build.DEVICE?:return
 
         val request = AndroidIDVerificationResponse(device, deviceId, deviceType, true)
         androidIdDisposable = api
