@@ -81,6 +81,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     private boolean updateBillingCard = false;
     private boolean updateBillingAddress = false;
     private boolean billingAddressSameAsShipping = false;
+    Context myContext;
     private static String CAMERA_PERMISSIONS[] = new String[]{
             Manifest.permission.CAMERA
     };
@@ -258,6 +259,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        myContext = context;
         myActivity = getActivity();
     }
 
@@ -731,11 +733,11 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
 
         if (option == YES) {
             yesNo.setText("YES");
-            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.new_red));
+            yesNo.setTextColor(ContextCompat.getColor(myContext, R.color.new_red));
         } else {
 
             yesNo.setText("NO");
-            yesNo.setTextColor(ContextCompat.getColor(myActivity, R.color.white));
+            yesNo.setTextColor(ContextCompat.getColor(myContext, R.color.white));
         }
     }
 
