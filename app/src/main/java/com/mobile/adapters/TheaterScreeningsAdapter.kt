@@ -126,6 +126,8 @@ class TheaterScreeningsAdapter(
                     TicketType.SELECT_SEATING, TicketType.E_TICKET -> true
                     else -> false
                 }
+            }, {
+                it.distance?:false
             },
                     {
                         !(it.screening?.approved ?: false)
