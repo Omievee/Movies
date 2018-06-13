@@ -18,7 +18,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -102,7 +100,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     MapView mapView;
     public static ClusterManager<TheaterPin> theaterClusterManager;
     public static double LAT, LON;
-    public FusedLocationProviderClient fusedLocationClient;
     //Views
     public ImageView searchIcon, myCurrentLocationButton, upArrow, downArrow, zoomOnCurrentLocationButton;
     public TextView listViewText, mapViewText;
@@ -111,7 +108,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     View progressLoader, customInfoWindow;
     public RelativeLayout listViewMaps, goneList;
     public SlidingUpPanelLayout theatersListView;
-    public static final String THEATER_CHILD = "theaterFragment";
 
     //Lists
     public HashMap<LatLng, Theater> mapData;
@@ -124,8 +120,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     public LinkedList<Theater> nearbyTheaters;
     public ArrayList<Theater> eticketingTheaters;
     ArrayList<Header> headerList;
-    //Interface for location
-//    MoviesInterface moviesInterface;
     //Variables
     String url;
     Context myContext;
@@ -136,38 +130,8 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     Header eHEader = new Header();
 
 
-    //    public static Realm tRealm;
     final static byte DEFAULT_ZOOM_LEVEL = 10;
     public static final int LOCATION_PERMISSIONS = 99;
-//    public boolean expanded;
-//    private HashMap<LatLng, Theater> mapData;
-//    private HashMap<String, Theater> markerTheaterMap;
-//    Context myContext;
-//    Activity myActivity;
-//    private TheatersAdapter theatersAdapter;
-//    EticketTheatersAdapter eticketTheatersAdapter;
-//    GoogleMap googleMap;
-//    MapView mMapView;
-//    String url;
-//    MaterialSearchBar searchGP;
-//    Button searchThisArea;
-//    RelativeLayout listViewMaps, mRelativeLayout;
-//    RelativeLayout goneList;
-//    ImageView mSearchClose, myloc, upArrow, downArrow;
-//    View mProgress;
-//    TextView listViewText, mapViewText;
-//    ClusterManager<TheaterPin> theaterClusterManager;
-//    RecyclerView theatersRecyclerView;
-//    RecyclerView eTicketTheatersRecyclerView;
-//    String TAG = "TAG";
-//    LinkedList<Theater> nearbyTheaters;
-//    SlidingUpPanelLayout theatersListView;
-//    double furthest, LAT, LON;
-//    View customInfoWindow;
-//    ArrayList<Theater> eticketingTheaters;
-//    ArrayList<Header> headerList;
-//    Header header = new Header();
-//    Header eHEader = new Header();
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -197,7 +161,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
 
         url = "http://moviepass.com/go/theaters";
-        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+        if (!GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
             url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
 
@@ -398,7 +362,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         this.googleMap.setOnInfoWindowClickListener(marker -> {
             showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
         });
-
     }
 
     static String[] permissions = {ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION};
@@ -456,9 +419,11 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         UserLocation last = locationManager.lastLocation();
         if (last != null) {
             queryRealmLoadTheaters(last.getLat(), last.getLon());
+            LatLng latLng = new LatLng(last.getLat(), last.getLon());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
+            googleMap.animateCamera(cameraUpdate);
         } else {
             queryRealmLoadTheaters(0, 0);
-
         }
         theatersRecyclerView.getRecycledViewPool().clear();
         theatersAdapter.notifyDataSetChanged();
@@ -470,7 +435,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
     @Override
     public void onTheaterClick(int pos, @NotNull Theater theater) {
-        Log.d(Constants.TAG, "onTheaterClick: " + theater.getName());
         showFragment(TheaterFragment.newInstance(theater));
     }
 
@@ -518,10 +482,8 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         @Override
         protected void onClusterItemRendered(TheaterPin theaterPin, Marker marker) {
             super.onClusterItemRendered(theaterPin, marker);
-
             Theater theater = theaterPin.getTheater();
             markerTheaterMap.put(marker.getId(), theater);
-
         }
 
         @Override
@@ -593,7 +555,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             furthest = userCurrentLocation.distanceTo(smallLocal);
             Theater etixSelect = nearbyTheaters.get(i);
             Collections.sort(eticketingTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
-
 
             if (etixSelect.ticketTypeIsETicket() || etixSelect.ticketTypeIsSelectSeating()) {
                 nearbyTheaters.remove(etixSelect);
