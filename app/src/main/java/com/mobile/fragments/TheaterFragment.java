@@ -343,6 +343,9 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         if (disposable != null) {
             disposable.dispose();
         }
+        if(fetchLocationSub!=null) {
+            fetchLocationSub.dispose();
+        }
     }
 
     @Override

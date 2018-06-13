@@ -31,6 +31,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.mobile.ApiError;
 import com.mobile.Constants;
 import com.mobile.UserLocationManagerFused;
 import com.mobile.UserPreferences;
@@ -537,15 +538,18 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         startActivity(intent);
     }
 
+    @Nullable Disposable reserveSub;
+
     private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
         Theater theaterObject = screeningsResponse.getTheater(screening);
         Context context = getActivity();
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
+        if(reserveSub!=null) {
+            reserveSub.dispose();
+        }
+        reserveSub = RestClient.getAuthenticated().reserve(checkInRequest)
+                .subscribe(result -> {
+                    ReservationResponse reservationResponse = result;
 
-                if (reservationResponse != null & response.isSuccessful()) {
                     reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
                     progress.setVisibility(View.GONE);
@@ -561,40 +565,27 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase", String.valueOf(theaterObject.getId()), "");
                     }
-                } else {
 
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        progress.setVisibility(View.GONE);
-                        buttonCheckIn.setVisibility(View.VISIBLE);
-                        buttonCheckIn.setEnabled(true);
-
-                        //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
-                        if (jObjError.getString("message").equals("You do not have an active card")) {
-                            Toast.makeText(context, "You do not have an active card", Toast.LENGTH_SHORT).show();
+                    progress.setVisibility(View.GONE);
+                    buttonCheckIn.setVisibility(View.VISIBLE);
+                    buttonCheckIn.setEnabled(true);
+                }, error -> {
+                    progress.setVisibility(View.GONE);
+                    buttonCheckIn.setVisibility(View.VISIBLE);
+                    buttonCheckIn.setEnabled(true);
+                    if (error instanceof ApiError) {
+                        ApiError apiError = (ApiError) error;
+                        Toast.makeText(myContext, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        if (apiError.getMessage() != null && apiError.getMessage().contains("active card")) {
                         } else {
-                            Toast.makeText(context, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                             GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), "");
                         }
-                    } catch (Exception e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
                     buttonCheckIn.setEnabled(true);
-                }
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                progress.setVisibility(View.GONE);
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-            }
-        });
+                });
     }
 
 
@@ -749,6 +740,9 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public void onDetach() {
         super.onDetach();
         myContext = null;
+        if(reserveSub!=null) {
+            reserveSub.dispose();
+        }
     }
 
     @Override
