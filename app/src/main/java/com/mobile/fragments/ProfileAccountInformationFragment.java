@@ -4,17 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.helpshift.support.Log;
-import com.mobile.BackFragment;
-import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
-import com.mobile.helpers.LogUtils;
 import com.moviepass.R;
 
 /*
@@ -89,7 +83,6 @@ public class ProfileAccountInformationFragment extends MPFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.context = context;
-        LogUtils.newLog(Constants.TAG, "onAttach cntx: ");
     }
 
     @Override
