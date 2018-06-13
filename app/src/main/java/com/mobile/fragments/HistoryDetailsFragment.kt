@@ -52,11 +52,8 @@ class HistoryDetailsFragment : MPFragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val root = inflater.inflate(R.layout.fr_historydetails, container, false)
-
         root.setOnClickListener { onBack() }
-
         return root
     }
 
@@ -187,7 +184,6 @@ class HistoryDetailsFragment : MPFragment() {
     }
 
     companion object {
-
         private val HISTORY_POSTER = "poster"
         private val EXTRA_TRANSITION_NAME = "transition_name"
 
