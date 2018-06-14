@@ -683,4 +683,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:text">@string/continue_without_guests</item>
     </style>
+
+    <style name="BillingCardOnFile" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">Your billing card on file will be charged the above amount.</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
 </resources>

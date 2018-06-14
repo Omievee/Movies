@@ -23,16 +23,16 @@ class DebugActivity : AppCompatActivity(), SeatPreviewListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_debug)
 
-        reservationView
-                .bind(showCurrentReservationText = true,
-                        reservation = CurrentReservationV2(
-                                reservation = Reservation2(_showtime = SimpleDateFormat("hh:mm a").parse("9:00 PM").time
-                                ),
-                                ticket = ETicket(TicketFormat.QRCODE.name, "MGU6RW", seats=listOf("D1","D2")),
-                                landscapeUrl = "https://a1.moviepass.com/posters/landscape/DEADPOOL2.jpg",
-                                theater = "Studio Movie Grill Arlington",
-                                title = "Deadpool 2"
-                        )
-                )
+//        reservationView
+//                .bind(showCurrentReservationText = true,
+//                        reservation = CurrentReservationV2(
+//                                reservation = Reservation2(_showtime = SimpleDateFormat("hh:mm a").parse("9:00 PM").time
+//                                ),
+//                                ticket = ETicket(TicketFormat.QRCODE.name, "MGU6RW", seats=listOf("D1","D2")),
+//                                landscapeUrl = "https://a1.moviepass.com/posters/landscape/DEADPOOL2.jpg",
+//                                theater = "Studio Movie Grill Arlington",
+//                                title = "Deadpool 2"
+//                        )
+//                )
     }
 }

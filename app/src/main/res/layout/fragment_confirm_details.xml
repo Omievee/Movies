@@ -44,8 +44,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintTop_toBottomOf="@id/guestTicketsKey" />
+    
+    <TextView
+        android:id="@+id/billingCardOnfile"
+        app:layout_constraintBottom_toTopOf="@+id/eTicketCanNotBeCancelled"
+        app:layout_constraintTop_toBottomOf="@id/guestTicketContainer"
+        style="@style/BillingCardOnFile" />
 
     <TextView
+        android:id="@+id/eTicketCanNotBeCancelled"
         style="@style/ETicketCanNotBeCancelled"
         app:layout_constraintBottom_toTopOf="@id/getTickets"
         android:layout_width="match_parent"
