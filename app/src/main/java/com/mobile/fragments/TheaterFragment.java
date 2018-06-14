@@ -94,7 +94,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     Context myContext;
     Reservation reservation;
     String url;
-    HomeActivity homeActivity;
     @Nullable
     Pair<Screening, String> selected;
 
@@ -133,7 +132,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         ButterKnife.bind(this, rootView);
 
         //Object & Lists
-        homeActivity = (HomeActivity) getActivity();
         moviesAtSelectedTheater = new LinkedList<>();
         showtimesAtSelectedTheater = new ArrayList<>();
 
@@ -541,7 +539,10 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         } else {
             startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
         }
-        homeActivity.finish();
+        Activity activity = getActivity();
+        if(activity!=null) {
+            activity.onBackPressed();
+        }
     }
 
     @Override
