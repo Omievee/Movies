@@ -1,12 +1,15 @@
 package com.mobile.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +73,7 @@ public class ProfileFragment extends MPFragment {
     boolean pushValue;
     Context myContext;
     Realm historyRealm;
+    Activity activity;
 
     public ProfileFragment() {
     }
@@ -99,6 +103,7 @@ public class ProfileFragment extends MPFragment {
 
         referAFriend = root.findViewById(R.id.ReferAFriend);
         fadeIn(root);
+        activity = getActivity();
 
 
         RealmConfiguration historyConfig = new RealmConfiguration.Builder()
@@ -110,6 +115,7 @@ public class ProfileFragment extends MPFragment {
         return root;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -156,143 +162,181 @@ public class ProfileFragment extends MPFragment {
             HelpshiftContext.getCoreApi().logout();
             Intent intent = new Intent(myContext, LogInActivity.class);
             startActivity(intent);
-            myContext.finishAffinity();
+            activity.finishAffinity();
         });
 
 
         details.setOnClickListener(view1 -> {
-            showFragment(new ProfileAccountInformationFragment());
+            if (isOnline())
+                showFragment(new ProfileAccountInformationFragment());
         });
 
-        referAFriend.setOnClickListener(v -> showFragment(refer));
+
+        referAFriend.setOnClickListener(v -> {
+            if (isOnline())
+                showFragment(refer);
+        });
+
 
         TOS.setOnClickListener(view13 -> {
-            Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tosURL));
-            myContext.startActivity(notifIntent);
+            if (isOnline()) {
+                Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tosURL));
+                myContext.startActivity(notifIntent);
+            }
+
         });
 
+        Log.d(Constants.TAG, "onViewCreated: " + isOnline());
         PP.setOnClickListener(view14 -> {
+            if (isOnline()) {
+                Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ppURL));
+                myContext.startActivity(notifIntent);
+            }
 
-            Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ppURL));
-            myContext.startActivity(notifIntent);
         });
 
         help.setOnClickListener(view12 -> {
-            Map<String, String[]> customIssueFileds = new HashMap<>();
-            HashMap<String, Object> userData = new HashMap<>();
-            customIssueFileds.put("version name", new String[]{"sl", versionName});
-            Long dateMillis = UserPreferences.getLastCheckInAttemptDate();
-            if (dateMillis != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(dateMillis);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
-                long diff = System.currentTimeMillis() - dateMillis;
-                long diffHours = diff / (60 * 60 * 1000);
-                long diffMinutes = diff / (60 * 1000);
+            if (isOnline()) {
+                Map<String, String[]> customIssueFileds = new HashMap<>();
+                HashMap<String, Object> userData = new HashMap<>();
+                customIssueFileds.put("version name", new String[]{"sl", versionName});
+                Long dateMillis = UserPreferences.getLastCheckInAttemptDate();
+                if (dateMillis != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(dateMillis);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
+                    long diff = System.currentTimeMillis() - dateMillis;
+                    long diffHours = diff / (60 * 60 * 1000);
+                    long diffMinutes = diff / (60 * 1000);
 
 
-                customIssueFileds.put("last_check_in_attempt_date", new String[]{"sl", dateFormat.format(cal.getTime())});
-                customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
-                customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
-                customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
-            }
-
-            ScreeningToken token = UserPreferences.getLastReservation();
-            final boolean checkedIn;
-
-            if (token != null) {
-                Reservation rs = token.getReservation();
-                checkedIn = rs != null && rs.getExpiration() > System.currentTimeMillis();
-                Date starttime = token.getTimeAsDate();
-                if (starttime != null) {
-                    long diff = starttime.getTime() - System.currentTimeMillis();
-                    int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
-                    if (checkedIn && minutes >= -30) {
-                        customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
-                    }
+                    customIssueFileds.put("last_check_in_attempt_date", new String[]{"sl", dateFormat.format(cal.getTime())});
+                    customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
+                    customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
+                    customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
                 }
-            } else {
-                checkedIn = false;
+
+                ScreeningToken token = UserPreferences.getLastReservation();
+                final boolean checkedIn;
+
+                if (token != null) {
+                    Reservation rs = token.getReservation();
+                    checkedIn = rs != null && rs.getExpiration() > System.currentTimeMillis();
+                    Date starttime = token.getTimeAsDate();
+                    if (starttime != null) {
+                        long diff = starttime.getTime() - System.currentTimeMillis();
+                        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
+                        if (checkedIn && minutes >= -30) {
+                            customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
+                        }
+                    }
+                } else {
+                    checkedIn = false;
+                }
+
+                customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
+                customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
+                customIssueFileds.put("total_movies_seen", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeen())});
+                customIssueFileds.put("total_movies_seen_last_thirty_days", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeenLastMonth())});
+                userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
+                String[] tags = new String[]{versionName};
+
+                userData.put("version", versionName);
+
+                Metadata meta = new Metadata(userData, tags);
+
+                ApiConfig apiConfig = new ApiConfig.Builder()
+                        .setEnableContactUs(Support.EnableContactUs.ALWAYS)
+                        .setCustomIssueFields(customIssueFileds)
+                        .setCustomMetadata(meta)
+                        .build();
+
+                if (activity != null) {
+                    Support.showFAQs(activity, apiConfig);
+                }
             }
 
-            customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
-            customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
-            customIssueFileds.put("total_movies_seen", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeen())});
-            customIssueFileds.put("total_movies_seen_last_thirty_days", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeenLastMonth())});
-            userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
-            String[] tags = new String[]{versionName};
-
-            userData.put("version", versionName);
-
-            Metadata meta = new Metadata(userData, tags);
-
-            ApiConfig apiConfig = new ApiConfig.Builder()
-                    .setEnableContactUs(Support.EnableContactUs.ALWAYS)
-                    .setCustomIssueFields(customIssueFileds)
-                    .setCustomMetadata(meta)
-                    .build();
-            Activity activity = getActivity();
-
-            if (activity != null) {
-                Support.showFAQs(activity, apiConfig);
-            }
         });
+
 
         history.setOnClickListener(view2 -> {
             showFragment(pastReservations);
         });
 
         currentRes.setOnClickListener(view1 -> {
-            RestClient
-                    .getAuthenticated()
-                    .lastReservation()
-                    .subscribe(v -> {
-                        if (myContext == null) {
-                            return;
-                        }
-                        final Intent intent;
-                        ETicket ticket = v.getTicket();
-                        if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
-                            intent =
-                                    ReservationActivity.Companion.newInstance(myContext, v);
-                        } else {
-                            Screening screening = Screening.Companion.from(v);
-                            ETicketConfirmation confirmation = null;
-                            if (v.getTicket() != null) {
-                                confirmation = new ETicketConfirmation();
-                                confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
-                                confirmation.setBarCodeUrl("");
+            if (isOnline()) {
+                RestClient
+                        .getAuthenticated()
+                        .lastReservation()
+                        .subscribe(v -> {
+                            if (myContext == null) {
+                                return;
                             }
-                            Reservation reservation = null;
-                            if (v.getReservation() != null) {
-                                reservation = new Reservation();
-                                reservation.setId(v.getReservation().getId());
+                            final Intent intent;
+                            ETicket ticket = v.getTicket();
+                            if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
+                                intent =
+                                        ReservationActivity.Companion.newInstance(myContext, v);
+                            } else {
+                                Screening screening = Screening.Companion.from(v);
+                                ETicketConfirmation confirmation = null;
+                                if (v.getTicket() != null) {
+                                    confirmation = new ETicketConfirmation();
+                                    confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
+                                    confirmation.setBarCodeUrl("");
+                                }
+                                Reservation reservation = null;
+                                if (v.getReservation() != null) {
+                                    reservation = new Reservation();
+                                    reservation.setId(v.getReservation().getId());
+                                }
+                                ScreeningToken token = new ScreeningToken(
+                                        screening,
+                                        new SimpleDateFormat("h:mm a").format(v.getShowtime()),
+                                        reservation,
+                                        confirmation,
+                                        null
+                                );
+                                intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
                             }
-                            ScreeningToken token = new ScreeningToken(
-                                    screening,
-                                    new SimpleDateFormat("h:mm a").format(v.getShowtime()),
-                                    reservation,
-                                    confirmation,
-                                    null
-                            );
-                            intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
-                        }
-                        startActivity(intent);
-                    }, e -> {
-                        Toast.makeText(myContext, "No current reservation at this time", Toast.LENGTH_SHORT).show();
-                    });
+                            startActivity(intent);
+                        }, e -> {
+                            Toast.makeText(myContext, "No current reservation at this time", Toast.LENGTH_SHORT).show();
+                        });
+            }
+
 
         });
+
 
         howToUse.setOnClickListener(view15 -> {
             Intent intent = new Intent(myContext, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
 
+
         loyaltyPrograms.setOnClickListener(view1 -> {
-            showFragment(LoyaltyProgramFragment.Companion.newInstance());
+            if (isOnline())
+                showFragment(LoyaltyProgramFragment.Companion.newInstance());
         });
+
+
+    }
+
+    boolean isOnline() {
+        ConnectivityManager connectivityManager = ((ConnectivityManager) myContext.getSystemService(Context.CONNECTIVITY_SERVICE));
+        NetworkInfo nInfo = null;
+        if (connectivityManager != null) {
+            nInfo = connectivityManager.getActiveNetworkInfo();
+        }
+
+        if (nInfo != null && nInfo.isConnected())
+            return true;
+
+        Toast.makeText(myContext, R.string.activity_no_internet_toast_message, Toast.LENGTH_SHORT).show();
+        return false;
+
 
     }
 
