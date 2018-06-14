@@ -48,7 +48,8 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
         featuredVideo.player = player
         this.setOnClickListener {
             Log.d(Constants.TAG, "clickclick: ")
-            moviePosterClickListener.onMoviePosterClick(this.movie!!)
+            val movie = this.movie?:return
+            moviePosterClickListener.onMoviePosterClick(movie)
         }
     }
 
