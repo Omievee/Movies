@@ -2,6 +2,7 @@
 <resources>
 
     <color name="red">#c82229</color>
+    <color name="red_disabled">#ccc82229</color>
     <color name="transparentRed">#40c82229</color>
     <color name="red_light">#ff5b52</color>
     <color name="red_dark">#8f0000</color>

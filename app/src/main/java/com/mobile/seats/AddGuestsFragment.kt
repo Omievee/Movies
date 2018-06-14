@@ -89,6 +89,7 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
         continueButton.setOnClickListener {
             listener?.onGuestsContinue(ticketContainer.ticketPurchaseData)
         }
+        continueButton.isEnabled = false
         closeButton.setOnClickListener {
             listener?.onClosePressed()
         }
@@ -96,7 +97,13 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
             showSeatPreviewFragment()
         }
         continueWithoutGuests.setOnClickListener {
-            listener?.onGuestsContinue(emptyList())
+            listener?.onContinueWithoutGuests(emptyList())
+        }
+        ticketContainer.ticketContainerListener = object : TicketContainerListener {
+            override fun onData(numberOfTickets: Int) {
+                continueButton.isEnabled = numberOfTickets!=0
+            }
+
         }
         subscribe()
     }
