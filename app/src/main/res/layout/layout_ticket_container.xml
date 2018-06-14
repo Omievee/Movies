@@ -78,6 +78,7 @@
 
     <TextView
         android:id="@+id/totalTxt"
+        android:layout_marginTop="@dimen/margin_standard"
         style="@style/TicketTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

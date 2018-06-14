@@ -512,6 +512,8 @@
     <string name="are_you_sure_exit">Are you sure you want to exit?</string>
     <string name="exit_checkout">Exit Checkout</string>
     <string name="stay">Stay</string>
+    <string name="add_guests">Add Guests</string>
+    <string name="continue_without_guests">Continue without guests</string>
     <string name="add_guest_emails">Guest Emails</string>
     <string name="add_guest_emails_description">Guests 18 years of age or older will be sent email instructions on how to sign up for MoviePass. You will be reimbursed the ticket price (excluding convenience fee) for each guest who signs up within 24 hours after the movie’s showtime and then activates their account.</string>
     <string name="provide_emails">Would you like to send this promotion to your guests?</string>
@@ -555,7 +557,6 @@
     <string name="choose_seats_error">You must choose seats for all tickets in the reservation before proceeding</string>
     <string name="cd_movie_screen">Movie Screen Front</string>
     <string name="eighteen_acknowledgement_error">You must acknlowedge that all emails belong to guests 18 years of age or older.</string>
-    <string name="guest_emails_description"></string>
     <string name="restrictions_apply_see_details">Restrictions apply. See details.</string>
     <string name="if_asked_provide_zip">If asked, provide this zip code:</string>
     <string name="e_ticket_can_not_be_cancelled">Before continuing, be aware that e-tickets can not be  canceled or changed.</string>

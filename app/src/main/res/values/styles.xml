@@ -534,7 +534,7 @@
         <item name="android:text">@string/e_ticket_cancellation_policy</item>
     </style>
 
-    <style name="TicketTotal" parent="MPText">
+    <style name="TicketTotal" parent="MPText_Bold">
         <item name="android:layout_marginEnd">@dimen/margin_standard_and_half</item>
         <item name="android:textSize">16sp</item>
         <item name="android:text">@string/total_empty</item>
@@ -676,5 +676,11 @@
         <item name="android:text">@string/e_ticket_can_not_be_cancelled</item>
     </style>
 
-
+    <style name="ContinueWithoutGuests" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:text">@string/continue_without_guests</item>
+    </style>
 </resources>

@@ -95,6 +95,9 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
         sofaIcon.setOnClickListener {
             showSeatPreviewFragment()
         }
+        continueWithoutGuests.setOnClickListener {
+            listener?.onGuestsContinue(emptyList())
+        }
         subscribe()
     }
 
