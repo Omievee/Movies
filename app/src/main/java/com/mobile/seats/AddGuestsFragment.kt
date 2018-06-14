@@ -58,7 +58,13 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
         val descriptionSpan = SpannableStringBuilder(SpannedString(getString(R.string.add_guests_descriptions)))
                 .apply {
                     append('\n')
-                    val span = SpannableString(getString(R.string.see_details))
+                    val okio = SpannableString(getString(R.string.add_guests_subject_to_convenience_fee))
+                            .apply {
+                                setSpan(TextAppearanceSpan(context, R.style.SubjectToConvenienceFee), 0, length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            }
+                    append(okio)
+                    append('\n')
+                    val span = SpannableString(getString(R.string.restrictions_apply_see_details))
                             .apply {
                                 setSpan(object : ClickableSpan() {
                                     override fun onClick(widget: View?) {

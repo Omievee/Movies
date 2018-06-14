@@ -492,7 +492,8 @@
 
     <!-- Bring A Friend-->
     <string name="add_guests_title">Add Guests</string>
-    <string name="add_guests_descriptions">Guest convenience fees are not refundable.</string>
+    <string name="add_guests_descriptions">Your guests may be eligible for a FREE ticket if they join MoviePass!</string>
+    <string name="add_guests_subject_to_convenience_fee">(subject to convenience fee)</string>
     <string name="convenience_fee">Convenience Fee:</string>
     <string name="bring_a_friend_legal">You will be charged the listed ticket price for every guest that does <b><i>not</i></b> subscribe to MoviePass.</string>
     <string name="e_ticket_cancellation_policy">E-Ticket Cancellation Policy</string>

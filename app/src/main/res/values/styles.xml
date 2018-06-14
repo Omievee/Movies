@@ -469,6 +469,7 @@
         <item name="android:paddingTop">@dimen/margin_half</item>
         <item name="android:paddingBottom">@dimen/margin_half</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@color/charcoalGrey</item>
         <item name="android:textColor">@color/white_ish</item>
@@ -561,6 +562,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:text">@string/see_details</item>
         <item name="android:background">@color/charcoalGrey</item>
+    </style>
+
+    <style name="SubjectToConvenienceFee" parent="MPText_Italic">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#B2B5B8</item>
+
     </style>
 
     <style name="AddUpToXGuests" parent="MPText">

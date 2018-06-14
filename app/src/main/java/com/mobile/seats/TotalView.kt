@@ -2,8 +2,11 @@ package com.mobile.seats
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.res.ResourcesCompat
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.SpannedString
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
@@ -22,11 +25,19 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
 
     fun bind(payload: SelectSeatPayload) {
         val total = payload.total
-        totalTxt.text = SpannableStringBuilder(resources.getString(R.string.total, total.toCurrency())).apply {
-            setSpan(ForegroundColorSpan(resources.getColor(R.color.white_ish)), 0, length - total.toCurrency().length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(ForegroundColorSpan(resources.getColor(R.color.red)), length - total.toCurrency().length, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(TextAppearanceSpan(context, R.style.MPText_Bold), length - total.toCurrency().length, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val totalSpan = SpannableStringBuilder().apply {
+            val span = SpannableString("Total").apply {
+                setSpan(ForegroundColorSpan(ResourcesCompat.getColor(resources,R.color.white_ish,null)),0,length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            append(span)
+            append(":   ")
+            val totalVal = SpannableString(total.toCurrency()).apply {
+                setSpan(TextAppearanceSpan(context, R.style.MPText_Bold),0,length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(ForegroundColorSpan(ResourcesCompat.getColor(resources,R.color.red,null)),0,length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            append(totalVal)
         }
+        totalTxt.text = totalSpan
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
