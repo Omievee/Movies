@@ -20,5 +20,6 @@ class MoviePosterView(context: Context?, attrs: AttributeSet? = null) : Constrai
     fun bind(movie: Movie) {
         featuredPoster
                 .setImageURI(movie.landscapeImageUrl)
+        videoTitle.text = movie.title
     }
 }

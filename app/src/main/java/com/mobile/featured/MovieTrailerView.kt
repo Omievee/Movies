@@ -41,6 +41,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
     }
 
     fun bind(movie: Movie, enableVideoPlayback: Boolean = true) {
+        videoTitle.text = movie.title
         if(!enableVideoPlayback) {
             player.stop()
         }

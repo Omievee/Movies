@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
-import com.mobile.activities.EticketConfirmation;
 import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
@@ -152,6 +151,8 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             eticketIcon.setVisibility(View.INVISIBLE);
             reserveSeatIcon.setVisibility(View.INVISIBLE);
         } else if (selectedTheaterObject.ticketTypeIsETicket()) {
+            reserveSeatIcon.setVisibility(View.INVISIBLE);
+        } else if (selectedTheaterObject.ticketTypeIsSelectSeating()) {
             reserveSeatIcon.setVisibility(View.INVISIBLE);
         }
         //Textviews
@@ -541,16 +542,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
         }
         homeActivity.finish();
-    }
-
-    private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
-
-        Intent intent = new Intent(myContext, EticketConfirmation.class);
-
-        intent.putExtra(SCREENING, screeningObject);
-        intent.putExtra(SHOWTIME, selectedShowTime);
-
-        startActivity(intent);
     }
 
     @Override

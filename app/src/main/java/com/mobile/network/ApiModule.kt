@@ -37,8 +37,8 @@ class ApiModule {
         httpClient.connectTimeout(40, TimeUnit.SECONDS)
         httpClient.readTimeout(40, TimeUnit.SECONDS)
         httpClient.cookieJar(cookieJar)
-        httpClient.addInterceptor(loggingInterceptor)
         httpClient.addInterceptor(authenticatedRequestInterceptor)
+        httpClient.addInterceptor(loggingInterceptor)
         httpClient.cache(cache)
         return httpClient.build()
     }
