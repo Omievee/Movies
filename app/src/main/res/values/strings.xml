@@ -503,11 +503,11 @@
     <string name="convenience_fee_empty">$0.00</string>
     <string name="convenience_fee_title">Convenience Fee</string>
     <string name="convenience_fee_message">A %1$s convenience fee is charged for each guest in your reservation. Convenience fees are non-refundable.</string>
-    <string name="e_ticket_cancellation_policy_description">At this time e-tickets can’t be cancelled or changed. No refunds will be issued for guests tickets.\n\nBe sure this is the movie, showtime and theater you want to attend before completing the checkout process.</string>
+    <string name="e_ticket_cancellation_policy_description">At this time e-tickets can’t be cancelled or changed. There are no refunds for guest tickets.\n\nBe sure this is the movie, showtime and theater you want to attend before completing the checkout process.</string>
     <string name="e_ticket_cancellation_dialog_body">You can cancel e-tickets up until 5 minutes before showtime and receive a refund on all guest tickets.\n\n<b>Guest convenience fees are not refundable.</b></string>
     <string name="see_details">See Details</string>
     <string name="free_guest_policy">Free Guest Policy</string>
-    <string name="free_guest_policy_description">Guests must be at least 18 years of age and must not be current or former MoviePass members to qualify. Each guest for whom you provide an email address will be sent an email with information on how to sign up for MoviePass\n\nYou earn reimbursement of the ticket price for each qualified guest who signs up for MoviePass within 24 hours after the showtime of the movie to which you invited them, and activates their MoviePass account (when they receive and activate their MoviePass card, or use MoviePass to check into a supported e-ticketing theater, whichever occurs first).</string>
+    <string name="free_guest_policy_description">Guests must be at least 18 years of age and must not be current or former MoviePass members to qualify. Each guest for whom you provide an email address will be sent an email with information on how to sign up for MoviePass.\n\nYou earn reimbursement of the ticket price for each qualified guest who signs up for MoviePass within 24 hours after the showtime of the movie to which you invited them, and activates their MoviePass account (when they receive and activate their MoviePass card, or use MoviePass to check into a supported e-ticketing theater, whichever occurs first).</string>
     <string name="choose_seats">Choose Seats</string>
     <string name="are_you_sure_exit">Are you sure you want to exit?</string>
     <string name="exit_checkout">Exit Checkout</string>
