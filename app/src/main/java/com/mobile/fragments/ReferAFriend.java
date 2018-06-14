@@ -143,7 +143,6 @@ public class ReferAFriend extends Fragment {
                 if (response.isSuccessful()) {
                     progress.setVisibility(View.GONE);
                     if (referalResponse != null) {
-                        referalResponse = response.body();
                         referMessage.setText(referalResponse.getReferralMessage());
                         referTitle.setText(referalResponse.getReferralTitle());
                     } else {

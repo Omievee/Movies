@@ -1,21 +1,15 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -25,16 +19,14 @@ import com.helpshift.support.ApiConfig;
 import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
-import com.mobile.BackFragment;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
-import com.mobile.model.Reservation;
 import com.mobile.loyalty.LoyaltyProgramFragment;
+import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.network.RestClient;
@@ -76,7 +68,7 @@ public class ProfileFragment extends MPFragment {
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
-    FragmentActivity myActivity;
+    Context myContext;
     Realm historyRealm;
 
     public ProfileFragment() {
@@ -162,9 +154,9 @@ public class ProfileFragment extends MPFragment {
             historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
 //            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
-            Intent intent = new Intent(myActivity, LogInActivity.class);
+            Intent intent = new Intent(myContext, LogInActivity.class);
             startActivity(intent);
-            myActivity.finishAffinity();
+            myContext.finishAffinity();
         });
 
 
@@ -175,15 +167,14 @@ public class ProfileFragment extends MPFragment {
         referAFriend.setOnClickListener(v -> showFragment(refer));
 
         TOS.setOnClickListener(view13 -> {
-
             Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(tosURL));
-            myActivity.startActivity(notifIntent);
+            myContext.startActivity(notifIntent);
         });
 
         PP.setOnClickListener(view14 -> {
 
             Intent notifIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ppURL));
-            myActivity.startActivity(notifIntent);
+            myContext.startActivity(notifIntent);
         });
 
         help.setOnClickListener(view12 -> {
@@ -241,8 +232,11 @@ public class ProfileFragment extends MPFragment {
                     .setCustomIssueFields(customIssueFileds)
                     .setCustomMetadata(meta)
                     .build();
+            Activity activity = getActivity();
 
-            Support.showFAQs(myActivity, apiConfig);
+            if (activity != null) {
+                Support.showFAQs(activity, apiConfig);
+            }
         });
 
         history.setOnClickListener(view2 -> {
@@ -250,19 +244,18 @@ public class ProfileFragment extends MPFragment {
         });
 
         currentRes.setOnClickListener(view1 -> {
-            Activity activity = getActivity();
             RestClient
                     .getAuthenticated()
                     .lastReservation()
                     .subscribe(v -> {
-                        if (activity == null) {
+                        if (myContext == null) {
                             return;
                         }
                         final Intent intent;
                         ETicket ticket = v.getTicket();
                         if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
                             intent =
-                                    ReservationActivity.Companion.newInstance(getActivity(), v);
+                                    ReservationActivity.Companion.newInstance(myContext, v);
                         } else {
                             Screening screening = Screening.Companion.from(v);
                             ETicketConfirmation confirmation = null;
@@ -283,18 +276,17 @@ public class ProfileFragment extends MPFragment {
                                     confirmation,
                                     null
                             );
-                            intent = new Intent(activity, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
+                            intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
                         }
                         startActivity(intent);
                     }, e -> {
-                        Toast.makeText(activity, "No current reservation at this time", Toast.LENGTH_SHORT).show();
-                        //Snackbar.make(t)
+                        Toast.makeText(myContext, "No current reservation at this time", Toast.LENGTH_SHORT).show();
                     });
 
         });
 
         howToUse.setOnClickListener(view15 -> {
-            Intent intent = new Intent(myActivity, ActivatedCard_TutorialActivity.class);
+            Intent intent = new Intent(myContext, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
 
@@ -307,7 +299,7 @@ public class ProfileFragment extends MPFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        myActivity = getActivity();
+        myContext = context;
     }
 
 }
