@@ -2,10 +2,12 @@ package com.mobile.featured
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.mobile.MoviePosterClickListener
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.model.Movie
+import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 
-class FeaturedMovieAdapter(private val featured: List<Movie>) : RecyclerView.Adapter<BaseViewHolder>() {
+class FeaturedMovieAdapter(private val featured: List<Movie>, val moviePosterClickListener: MoviePosterClickListener) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var enablePlayback: Boolean = true
         set(value) {
@@ -43,6 +45,12 @@ class FeaturedMovieAdapter(private val featured: List<Movie>) : RecyclerView.Ada
         } else if (view is MoviePosterView) {
             view.bind(movie)
         }
+        view.setOnClickListener {
+            moviePosterClickListener.onMoviePosterClick(movie)
+        }
+
+        view.videoTitle.text = movie.title
+
     }
 
     companion object {
