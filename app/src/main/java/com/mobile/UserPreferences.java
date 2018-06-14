@@ -33,7 +33,7 @@ public class UserPreferences {
     }
 
     public static String getDeviceAndroidID() {
-        return sPrefs.getString(Constants.DEVICE_ANDROID_ID, "ID");
+        return sPrefs.getString(Constants.DEVICE_ID, "ID");
     }
 
     public static boolean getHasUserLoggedInBefore() {

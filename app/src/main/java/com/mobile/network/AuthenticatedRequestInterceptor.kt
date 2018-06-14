@@ -19,7 +19,7 @@ class AuthenticatedRequestInterceptor(val sessionManager: SessionManager) : Inte
         }
         val HEADER_DEVICE_ANDROID_ID = "device_androidID"
         val HEADER_ONE_DEVICE_ID = "one_device_id"
-        val HEADER_USER_AGENT = Pair("User-Agent", "moviepass/android/${Build.VERSION.RELEASE}/v${USER_AGENT_VERSION}/${BuildConfig.VERSION_CODE}")
+        val HEADER_USER_AGENT = Pair("User-Agent", "moviepass/android/${Build.VERSION.RELEASE}/v${USER_AGENT_VERSION}/${BuildConfig.VERSION_NAME}/${BuildConfig.VERSION_CODE}")
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -39,6 +39,7 @@ class AuthenticatedRequestInterceptor(val sessionManager: SessionManager) : Inte
         UserPreferences.getOneDeviceId()?.let {
             requestBuilder.addHeader(HEADER_ONE_DEVICE_ID, it)
         }
+        requestBuilder.addHeader("Content-Type", "application/json")
         requestBuilder.addHeader("Accept", "application/json")
         requestBuilder.addHeader("device_uuid", "902183")
         return chain.proceed(requestBuilder.build())
