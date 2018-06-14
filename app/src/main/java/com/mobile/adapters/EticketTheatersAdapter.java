@@ -117,6 +117,7 @@ public class EticketTheatersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ((EticketTheatersAdapter.VHITEM) holder).iconTicket.setVisibility(View.INVISIBLE);
                 ((EticketTheatersAdapter.VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
             } else if (theater.ticketTypeIsETicket()) {
+                ((EticketTheatersAdapter.VHITEM) holder).iconTicket.setVisibility(View.VISIBLE);
                 ((EticketTheatersAdapter.VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
             } else {
                 ((EticketTheatersAdapter.VHITEM) holder).iconSeat.setVisibility(View.VISIBLE);
