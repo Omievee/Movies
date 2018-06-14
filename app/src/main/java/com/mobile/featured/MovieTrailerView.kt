@@ -55,6 +55,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
 
     fun bind(movie: Movie, enableVideoPlayback: Boolean = true) {
         this.movie = movie
+        videoTitle.text = movie.title
         if (!enableVideoPlayback) {
             player.stop()
         }

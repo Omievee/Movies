@@ -7,9 +7,7 @@
     android:clipChildren="false"
     tools:context=".debug.DebugActivity">
 
-    <com.mobile.reservation.ReservationView
-        android:id="@+id/reservationView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <include
+        layout="@layout/fragment_confirm_details"/>
 
 </android.support.constraint.ConstraintLayout>

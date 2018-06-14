@@ -30,6 +30,6 @@ class MoviePosterView(context: Context?, attrs: AttributeSet? = null, val movieP
         this.movie = movie
         featuredPoster
                 .setImageURI(movie.landscapeImageUrl)
-
+        videoTitle.text = movie.title
     }
 }

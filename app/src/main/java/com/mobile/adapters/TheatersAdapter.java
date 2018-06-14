@@ -125,6 +125,7 @@ public class TheatersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
             } else if (theater.ticketTypeIsETicket()) {
                 ((VHITEM) holder).iconSeat.setVisibility(View.INVISIBLE);
+                ((VHITEM) holder).iconTicket.setVisibility(View.VISIBLE);
             } else {
                 ((VHITEM) holder).iconSeat.setVisibility(View.VISIBLE);
                 ((VHITEM) holder).iconTicket.setVisibility(View.VISIBLE);

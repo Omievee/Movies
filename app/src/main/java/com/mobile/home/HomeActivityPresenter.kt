@@ -7,13 +7,14 @@ import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
 import com.mobile.model.Alert
 import com.mobile.network.Api
+import com.mobile.network.MicroApi
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
 import com.mobile.responses.AndroidIDVerificationResponse
 import com.mobile.responses.MicroServiceRestrictionsResponse
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessionManager: SessionManager) {
+class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi:MicroApi, val sessionManager: SessionManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
@@ -63,7 +64,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
     private fun checkRestrictions() {
         restrictionsDisposable?.dispose()
         val userId = sessionManager.getUser()?.id ?: return
-        restrictionsDisposable = api.getInterstitialAlertRx(userId + Constants.OFFSET)
+        restrictionsDisposable = microApi.getSession(userId)
                 .subscribe({
                     determineShowSnackbar(it)
                     determineTicketVerification(it)
@@ -77,11 +78,12 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
     }
 
     private fun determineForceLogout(it: MicroServiceRestrictionsResponse) {
-        if (it.logoutInfo?.isForceLogout == true) {
+        if (it.logoutInfo?.isForceLogout == false) {
             return
         }
         sessionManager.logout()
-        view.showForceLogout(it.logoutInfo)
+        val logout = it.logoutInfo?:return
+        view.showForceLogout(logout)
     }
 
     private fun determineAlertScreen(it: Alert?) {
@@ -96,7 +98,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
     private fun determineShowSnackbar(it: MicroServiceRestrictionsResponse) {
         val oldStatus = UserPreferences.getRestrictionSubscriptionStatus()
         val newStatus = it.subscriptionStatus
-        if (oldStatus != newStatus) {
+        if (oldStatus != newStatus.toString()) {
             view.showSubscriptionButton(it)
         }
     }

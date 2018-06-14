@@ -32,15 +32,15 @@ class ApiModule {
             loggingInterceptor: HttpLoggingInterceptor,
             authenticatedRequestInterceptor: AuthenticatedRequestInterceptor,
             cache: Cache
-    ): OkHttpClient {
+    ): OkHttpClient.Builder {
         val httpClient = OkHttpClient.Builder()
         httpClient.connectTimeout(40, TimeUnit.SECONDS)
         httpClient.readTimeout(40, TimeUnit.SECONDS)
         httpClient.cookieJar(cookieJar)
-        httpClient.addInterceptor(loggingInterceptor)
         httpClient.addInterceptor(authenticatedRequestInterceptor)
+        httpClient.addInterceptor(loggingInterceptor)
         httpClient.cache(cache)
-        return httpClient.build()
+        return httpClient
     }
 
     @Provides
@@ -78,13 +78,25 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideApi(client: OkHttpClient, gson: Gson): Api {
+    fun provideApi(client: OkHttpClient.Builder, gson: Gson): Api {
         return Retrofit.Builder()
                 .baseUrl(BuildConfig.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(client)
+                .client(client.build())
                 .build()
                 .create(Api::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMicroApi(client: OkHttpClient.Builder, gson: Gson): MicroApi {
+        return Retrofit.Builder()
+                .baseUrl(BuildConfig.microServiceURL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client.build())
+                .build()
+                .create(MicroApi::class.java)
     }
 }

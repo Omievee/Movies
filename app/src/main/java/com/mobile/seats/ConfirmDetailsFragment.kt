@@ -83,8 +83,10 @@ class ConfirmDetailsFragment : Fragment() {
                         0 -> View.GONE
                         else -> View.VISIBLE
                     }
+                    billingCardOnfile.visibility = guestTicketsKey.visibility
                     moviePosterHeader.bind(it)
                     guestTicketContainer.bind(it, freeClickListener)
+
                     getTickets.setOnClickListener {
                         showDialogToReserveTickets()
                     }

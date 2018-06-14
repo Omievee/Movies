@@ -272,7 +272,6 @@ public class RestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.connectTimeout(20, TimeUnit.SECONDS);
         httpClient.readTimeout(20, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
 
         CookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
@@ -299,6 +298,7 @@ public class RestClient {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
+        httpClient.addInterceptor(logging);
 
         sAuthenticatedRegistrationInstance = new Retrofit.Builder()
                 .baseUrl(BuildConfig.registrationURL)
@@ -350,6 +350,7 @@ public class RestClient {
                 return chain.proceed(request);
             }
         });
+        httpClient.addInterceptor(logging);
 
         Gson gson = new GsonBuilder()
                 .setLenient()

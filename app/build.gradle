@@ -35,6 +35,8 @@ android {
         buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
         buildConfigField "String", "DEFAULT_LOCATION", 'null'
+        buildConfigField "String", "REACTIVATION_URL", '"https://stg.moviepass.com/reactivate"'
+
     }
 
     splits {
@@ -80,6 +82,7 @@ android {
             buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
             buildConfigField "String", "REGISTRATION_URL", '"https://www.moviepass.com"'
+            buildConfigField "String", "REACTIVATION_URL", '"https://www.moviepass.com/reactivate"'
         }
     }
 

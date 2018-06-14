@@ -15,6 +15,8 @@ class TicketContainer(context: Context, attributeSet: AttributeSet? = null) : Co
 
     val fee = Constants.CONVENIENCE_FEE
 
+    var ticketContainerListener:TicketContainerListener?=null
+
     var constraints: TicketConstraint? = TicketConstraint(max = 4, min = 0)
         set(value) {
             field = value
@@ -45,6 +47,7 @@ class TicketContainer(context: Context, attributeSet: AttributeSet? = null) : Co
                     } + fee
             convenienceFee.text = fee.toCurrency()
             totalTxt.text = resources.getString(R.string.total, total.toCurrency())
+            ticketContainerListener?.onData(ticketPurchaseData.sumBy { it.tickets })
         }
     }
 
@@ -69,4 +72,9 @@ class TicketContainer(context: Context, attributeSet: AttributeSet? = null) : Co
         ).setMessage(resources.getString(R.string.convenience_fee_message, fee.toCurrency()))
                 .setPositiveButton(android.R.string.ok, null).show()
     }
+}
+
+interface TicketContainerListener {
+    fun onData(numberOfTickets:Int)
+
 }

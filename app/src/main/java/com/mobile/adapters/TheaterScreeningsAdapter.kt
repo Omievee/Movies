@@ -105,7 +105,7 @@ class TheaterScreeningsAdapter(
                         distance = location?.distanceTo(theaterLoc)?.toDouble(),
                         screening = it,
                         theater = theater,
-                        selected = when (selected?.first?.moviepassId == it.moviepassId) {
+                        selected = when (selected?.first == it) {
                             true -> selected
                             else -> null
                         },
@@ -117,7 +117,7 @@ class TheaterScreeningsAdapter(
                         }
                 )
             }?.filter { it ->
-                it.type != TYPE_SCREENING || it.type != TYPE_THEATER || it.hasShowtimes
+                (it.type == TYPE_MISSING) || it.hasShowtimes
             }?.sortedWith(compareBy(
                     {
                         it.type == TYPE_MISSING

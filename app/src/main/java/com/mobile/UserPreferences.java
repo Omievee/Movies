@@ -217,13 +217,13 @@ public class UserPreferences {
 
     public static void setRestrictions(MicroServiceRestrictionsResponse it) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.SUBSCRIPTION_STATUS, it.getSubscriptionStatus());
-        editor.putBoolean(Constants.FB_PRESENT, it.getFacebookPresent());
-        editor.putBoolean(Constants.THREE_D_ENABLED, it.get3dEnabled());
-        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, it.getAllFormatsEnabled());
+        editor.putString(Constants.SUBSCRIPTION_STATUS, it.getSubscriptionStatus().toString());
+        editor.putBoolean(Constants.FB_PRESENT, it.getFacebook());
+        editor.putBoolean(Constants.THREE_D_ENABLED, it.getHas3d());
+        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, it.getHasAllFormats());
         editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, it.getProofOfPurchaseRequired());
         editor.putBoolean(Constants.ACTIVE_CARD, it.getHasActiveCard());
-        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, it.isSubscriptionActivationRequired());
+        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, it.getSubscriptionActivationRequired());
         editor.apply();
     }
 

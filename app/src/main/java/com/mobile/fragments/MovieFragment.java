@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -512,8 +513,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
         } else if (availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
             progress.setVisibility(View.GONE);
-            showEticketConfirmation(screen, time);
-
+            showConfirmation(new ScreeningToken(screening, showtime, reservation, theaterObject));
         } else {
             progress.setVisibility(View.GONE);
             Intent intent = BringAFriendActivity.Companion.newIntent(context, theaterObject, screening, time);
@@ -521,14 +521,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         }
     }
 
-    private void showEticketConfirmation(Screening screeningObject, String selectedShowTime) {
-
-//        Intent intent = new Intent(myContext, EticketConfirmation.class);
-//        intent.putExtra(SCREENING, Parcels.wrap(screeningObject));
-//        intent.putExtra(SHOWTIME, selectedShowTime);
-//
-//        startActivity(intent);
-    }
 
     @Nullable
     Disposable reserveSub;
@@ -587,6 +579,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             startActivity(ReservationActivity.Companion.newInstance(myContext, token));
         } else {
             startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
+        }
+        Activity activity = getActivity();
+        if(activity!=null) {
+            activity.onBackPressed();
         }
     }
 

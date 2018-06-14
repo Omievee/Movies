@@ -15,7 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import com.mobile.ApiError
 import com.mobile.model.Emails
+import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.rx.Schedulers
 import com.moviepass.R
@@ -174,7 +176,18 @@ class GuestEmailsFragment : Fragment() {
                         else -> showErrorDialog(success.existingEmails)
                     }
                 }, { error ->
+                    (error as? ApiError)?.let {
+                        showErrorDialog(it)
+                    }
                 })
+    }
+
+    private fun showErrorDialog(error:ApiError) {
+        val context = context ?: return
+        AlertDialog.Builder(context).setMessage(error.message)
+                .setPositiveButton(android.R.string.ok, { _, _ ->
+                })
+                .show()
     }
 
     private fun showErrorDialog(ema: Set<String>) {

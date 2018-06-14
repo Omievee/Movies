@@ -7,6 +7,7 @@ import io.reactivex.Observable
 
 interface BringAFriendListener {
     fun onGuestsContinue(payload: List<TicketPurchaseData>)
+    fun onContinueWithoutGuests(payload: List<TicketPurchaseData>)
     fun payload(): Observable<SelectSeatPayload>
     fun onBackPressed()
     fun onClosePressed()

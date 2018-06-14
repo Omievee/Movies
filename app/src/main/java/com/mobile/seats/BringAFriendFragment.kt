@@ -72,6 +72,18 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                 ))
     }
 
+    override fun onContinueWithoutGuests(payload: List<TicketPurchaseData>) {
+        viewPager.currentItem++
+        payloadSub.onNext(
+                SelectSeatPayload(
+                        screening = bringAFriend?.screening,
+                        theater = bringAFriend?.theater,
+                        showtime = bringAFriend?.showtime,
+                        selectedSeats = emptyList(),
+                        ticketPurchaseData = payload
+                ))
+    }
+
     override fun onEmailContinueClicked(payload: SelectSeatPayload?) {
         val pay = payload ?: return
         viewPager.currentItem++

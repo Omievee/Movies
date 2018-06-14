@@ -65,7 +65,7 @@ class SeatPreviewFragment : Fragment() {
                 )
                 .subscribe({
                     seatInfo = it.seatingInfo ?: return@subscribe
-                    seatsView.bind(seatingsInfo = it.seatingInfo)
+                    seatsView.bind(seatingsInfo = it.seatingInfo, seatsNeeded = 0)
                 }, {
 
                 })
