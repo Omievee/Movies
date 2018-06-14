@@ -330,14 +330,11 @@ public class ProfileFragment extends MPFragment {
         if (connectivityManager != null) {
             nInfo = connectivityManager.getActiveNetworkInfo();
         }
-
         if (nInfo != null && nInfo.isConnected())
             return true;
 
         Toast.makeText(myContext, R.string.activity_no_internet_toast_message, Toast.LENGTH_SHORT).show();
         return false;
-
-
     }
 
     @Override

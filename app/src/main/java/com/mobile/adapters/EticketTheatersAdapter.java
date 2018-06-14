@@ -107,10 +107,6 @@ public class EticketTheatersAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         } else if (holder instanceof EticketTheatersAdapter.VHITEM) {
             Theater theater = eticketTheaters.get(holder.getLayoutPosition() - 1);
 
-
-            Log.d(Constants.TAG, "ETIKET THEATER >>>>>>>>>>: " + theater.getTicketType());
-
-
             ((EticketTheatersAdapter.VHITEM) holder).name.setText(theater.getName());
 
             if (theater.ticketTypeIsStandard()) {
