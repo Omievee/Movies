@@ -10,17 +10,15 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.Constants;
-import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.responses.ReferAFriendResponse;
 import com.moviepass.R;
@@ -33,14 +31,16 @@ import retrofit2.Response;
 public class ReferAFriend extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
-    // TODO: Rename and change types of parameters
     Activity myActivity;
     Context myContext;
     Button submitReferralButton;
     ImageView twitter, facebok;
     EditText firstName, lastName, email;
+    TextView referMessage, referTitle;
     TextInputLayout fistNameTextInputLayout, lastNameTextInputLayout, emailTextInputLayout;
     String friendEmail;
+    View root, progress;
+    ReferAFriendResponse referalResponse;
 
     public ReferAFriend() {
         // Required empty public constructor
@@ -64,11 +64,17 @@ public class ReferAFriend extends Fragment {
         facebok = view.findViewById(R.id.FacebookRefer);
         firstName = view.findViewById(R.id.RF);
         lastName = view.findViewById(R.id.RL);
+        referMessage = view.findViewById(R.id.Refermsg);
+        referTitle = view.findViewById(R.id.ReferTitle);
         email = view.findViewById(R.id.RE);
+        progress = view.findViewById(R.id.progress);
         submitReferralButton = view.findViewById(R.id.ReferSubmit);
         fistNameTextInputLayout = view.findViewById(R.id.ReferName);
         lastNameTextInputLayout = view.findViewById(R.id.ReferLast);
         emailTextInputLayout = view.findViewById(R.id.ReferEmail);
+        root = view.findViewById(R.id.root);
+
+        getReferalInfo();
 
 
         submitReferralButton.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +103,17 @@ public class ReferAFriend extends Fragment {
             lastNameTextInputLayout.setError("Required");
             valid = false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-            valid = false;
+
+        if (!isEmailValid(email.getText().toString())) {
             emailTextInputLayout.setError("A valid email address is required");
         }
+
         return valid;
 
+    }
+
+    boolean isEmailValid(CharSequence email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override
@@ -123,38 +134,44 @@ public class ReferAFriend extends Fragment {
         myActivity = activity;
     }
 
-
-    void submitReferral() {
-
+    public void getReferalInfo() {
+        progress.setVisibility(View.VISIBLE);
         RestClient.getAuthenticated().referAFriend().enqueue(new Callback<ReferAFriendResponse>() {
             @Override
             public void onResponse(Call<ReferAFriendResponse> call, Response<ReferAFriendResponse> response) {
-                ReferAFriendResponse referral = response.body();
+                referalResponse = response.body();
                 if (response.isSuccessful()) {
-                    if (referral != null) {
-                        LogUtils.newLog(Constants.TAG, "onResponse: " + friendEmail);
-                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                        emailIntent.setType("application/octet-stream");
-                        emailIntent.setData(Uri.parse("mailto:"));
-                        emailIntent.setType("message/rfc822");
-                        emailIntent.setType("text/plain");
-                        emailIntent.putExtra(Intent.EXTRA_SUBJECT, referral.getEmailSubject());
-                        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
-                        Spanned emailMessege = Html.fromHtml(referral.getEmailMessage());
-                        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
-                        startActivity(emailIntent);
+                    progress.setVisibility(View.GONE);
+                    if (referalResponse != null) {
+                        referalResponse = response.body();
+                        referMessage.setText(referalResponse.getReferralMessage());
+                        referTitle.setText(referalResponse.getReferralTitle());
                     } else {
-                        Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myContext, "Unable to retrieve invite messages.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<ReferAFriendResponse> call, Throwable t) {
-                Toast.makeText(myActivity, "Failed to fetch invite messages.", Toast.LENGTH_SHORT).show();
-
+                progress.setVisibility(View.GONE);
+                Toast.makeText(myContext, "Unable to retrieve invite messages.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
+    void submitReferral() {
+        if (referalResponse != null) {
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("application/octet-stream");
+            emailIntent.setData(Uri.parse("mailto:"));
+            emailIntent.setType("message/rfc822");
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, referalResponse.getEmailSubject());
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{friendEmail});
+            Spanned emailMessege = Html.fromHtml(referalResponse.getEmailMessage());
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Hey " + firstName.getText().toString() + " " + lastName.getText().toString() + "," + emailMessege);
+            startActivity(emailIntent);
+        }
+    }
+
 }
