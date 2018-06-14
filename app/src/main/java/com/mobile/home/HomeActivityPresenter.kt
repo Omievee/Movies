@@ -82,7 +82,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
             return
         }
         sessionManager.logout()
-        view.showForceLogout(it.logoutInfo)
+        val logout = it.logoutInfo?:return
+        view.showForceLogout(logout)
     }
 
     private fun determineAlertScreen(it: Alert?) {
@@ -97,7 +98,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     private fun determineShowSnackbar(it: MicroServiceRestrictionsResponse) {
         val oldStatus = UserPreferences.getRestrictionSubscriptionStatus()
         val newStatus = it.subscriptionStatus
-        if (oldStatus != newStatus) {
+        if (oldStatus != newStatus.toString()) {
             view.showSubscriptionButton(it)
         }
     }

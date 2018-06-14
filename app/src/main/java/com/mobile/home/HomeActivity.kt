@@ -132,7 +132,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showSubscriptionButton(it: MicroServiceRestrictionsResponse) {
-        if (it.isSubscriptionActivationRequired) {
+        if (it.subscriptionActivationRequired) {
             bottomButton.animate().alpha(1.0f)
             bottomButton.setClickable(true)
             bottomButton.setOnClickListener(View.OnClickListener { v ->

@@ -1,5 +1,6 @@
 package com.mobile.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +37,7 @@ import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.fragments.WebViewFragment;
+import com.mobile.fragments.WebViewListener;
 import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.User;
@@ -45,6 +47,8 @@ import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
+import com.mobile.responses.SubscriptionStatus;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -60,7 +64,7 @@ import retrofit2.Response;
  * Created by anubis on 4/27/17.
  */
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements WebViewListener {
 
     @BindView(R.id.input_email)
     EditText mInputEmail;
@@ -262,8 +266,7 @@ public class LogInActivity extends AppCompatActivity {
 
                         alert.show();
 
-                    }
-                    else if (response.errorBody() != null) {
+                    } else if (response.errorBody() != null) {
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
@@ -411,11 +414,17 @@ public class LogInActivity extends AppCompatActivity {
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
-                    if (restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED) ||
-                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)) {
-                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
-                        UserPreferences.clearUserId();
+                    if (restriction.getSubscriptionStatus().equals(SubscriptionStatus.MISSING)
+                     || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
+                            restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equals(SubscriptionStatus.ENDED_FREE_TRIAL)) {
                         progress.setVisibility(View.GONE);
+                        hideKeyboard();
+                        if(restriction.getCanReactivate().getCancelledWithinTimeframe()){
+                            openWebVIew();
+                        } else {
+                            UserPreferences.clearUserId();
+                            Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Crashlytics.setUserIdentifier(String.valueOf(UserPreferences.getUserId()));
                         if (!UserPreferences.getHasUserLoggedInBefore()) {
@@ -430,6 +439,7 @@ public class LogInActivity extends AppCompatActivity {
                         }
 //                        progress.setVisibility(View.GONE);
 //                        finish();
+                        progress.setVisibility(View.GONE);
                     }
                 } else {
                     try {
@@ -449,6 +459,25 @@ public class LogInActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void openWebVIew(){
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        WebViewFragment web = WebViewFragment.Companion.newInstance(BuildConfig.REACTIVATION_URL);
+        transaction.replace(R.id.fragmentContainer, web);
+        transaction.addToBackStack("");
+        transaction.commit();
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -489,5 +518,13 @@ public class LogInActivity extends AppCompatActivity {
             alert = builder.create();
             alert.show();
         }
+    }
+
+    @Override
+    public void onDoneWithWebview() {
+        Intent i = new Intent(LogInActivity.this, HomeActivity.class);
+        i.putExtra("launch", true);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }
