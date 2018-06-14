@@ -53,7 +53,7 @@ class ApiModule {
     @Singleton
     fun provideHttpLogging(): HttpLoggingInterceptor {
         val logging = HttpLoggingInterceptor()
-        logging.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
+        logging.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         return logging
     }
 

@@ -2,8 +2,10 @@ package com.mobile.home
 
 import android.os.Build
 import com.mobile.ApiError
+import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
+import com.mobile.model.Alert
 import com.mobile.network.Api
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
@@ -22,7 +24,11 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
     }
 
     fun onResume() {
-        checkOneDevice()
+        if (UserPreferences.getOneDeviceId() == null) {
+            checkOneDevice()
+        } else {
+            checkRestrictions()
+        }
     }
 
     private fun checkOneDevice() {
@@ -57,15 +63,34 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val sessio
     private fun checkRestrictions() {
         restrictionsDisposable?.dispose()
         val userId = sessionManager.getUser()?.id ?: return
-        restrictionsDisposable = api.getInterstitialAlertRx(userId)
+        restrictionsDisposable = api.getInterstitialAlertRx(userId + Constants.OFFSET)
                 .subscribe({
                     determineShowSnackbar(it)
-                    setRestrictions(it)
                     determineTicketVerification(it)
+                    determineAlertScreen(it.alert)
+                    determineForceLogout(it)
+                    setRestrictions(it)
                 }, {
-
+                    it.printStackTrace()
                 })
 
+    }
+
+    private fun determineForceLogout(it: MicroServiceRestrictionsResponse) {
+        if (it.logoutInfo?.isForceLogout == true) {
+            return
+        }
+        sessionManager.logout()
+        view.showForceLogout(it.logoutInfo)
+    }
+
+    private fun determineAlertScreen(it: Alert?) {
+        it ?: return
+        when {
+            it.id != UserPreferences.getAlertDisplayedId() -> {
+                view.showAlert(it)
+            }
+        }
     }
 
     private fun determineShowSnackbar(it: MicroServiceRestrictionsResponse) {

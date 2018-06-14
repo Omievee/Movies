@@ -6,32 +6,31 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.AlertDialogLayout
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.mobile.fragments.MoviesFragment
-import com.mobile.fragments.ProfileFragment
-import com.mobile.fragments.TheatersFragment
 import com.moviepass.R
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.helpshift.activities.MainActivity
 import com.mobile.*
 import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.LogInActivity
-import com.mobile.fragments.TicketVerificationDialog
+import com.mobile.fragments.*
+import com.mobile.model.Alert
+import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
 import com.mobile.responses.MicroServiceRestrictionsResponse
+import com.mobile.utils.onBackExtension
+import com.mobile.utils.showFragment
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
@@ -103,7 +102,20 @@ class HomeActivity : MPActivty(), HomeActivityView {
         return true
     }
 
+    override fun showForceLogout(it: LogoutInfo) {
+        AlertDialog.Builder(this)
+                .setMessage(it.getMessage())
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok, {dialog, which->
+                    startActivity(Intent(this, LogInActivity::class.java));
+                    finishAffinity();
+                }).show()
+    }
+
     override fun onBackPressed() {
+        if (onBackExtension()) {
+            return
+        }
         val currItem = adapter?.currentItem ?: return back()
         val backable: BackFragment = currItem as? BackFragment ?: return back()
         when (backable.onBack()) {
@@ -130,6 +142,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         } else {
             hideSubscriptionBar()
         }
+    }
+
+    override fun showAlert(it: Alert) {
+        showFragment(AlertScreenFragment.newInstance(it))
     }
 
 

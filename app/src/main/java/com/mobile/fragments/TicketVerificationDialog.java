@@ -106,6 +106,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         TicketVerificationDialog fragment = new TicketVerificationDialog();
         Bundle args = new Bundle();
         args.putParcelable("popInfo", pop);
+        fragment.setCancelable(false);
         fragment.setArguments(args);
         return fragment;
     }
