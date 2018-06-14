@@ -21,7 +21,7 @@ class MoviePosterView(context: Context?, attrs: AttributeSet? = null, val movieP
         featuredPoster.minimumHeight = 9 * resources.getDisplayMetrics().heightPixels / 16
         this.setOnClickListener {
             LogUtils.newLog("clickclick")
-            val movie = this.movie?:return
+            val movie = this.movie?: return@setOnClickListener
             moviePosterClickListener.onMoviePosterClick(movie)
         }
     }
