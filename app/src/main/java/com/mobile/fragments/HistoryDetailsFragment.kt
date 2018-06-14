@@ -67,7 +67,7 @@ class HistoryDetailsFragment : MPFragment() {
         val historyItem = arguments!!.getParcelable<Movie>(HISTORY_POSTER)
         val transition = arguments!!.getString(EXTRA_TRANSITION_NAME)
 
-        val black = Color.argb(150, 0, 0, 0)
+        val black = Color.argb(200, 0, 0, 0)
         detailsBackground.setBackgroundColor(black)
         Log.d(Constants.TAG, "onViewCreated: " + historyItem!!.userRating)
 

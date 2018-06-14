@@ -1,9 +1,7 @@
 package com.mobile.adapters;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,10 +22,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -146,7 +139,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listener.onMoviePosterClick(movie, holder.mNewReleasePosterDV);
+                        listener.onMoviePosterClick(movie);
                     }
                 });
         }catch (IllegalStateException onBind) {

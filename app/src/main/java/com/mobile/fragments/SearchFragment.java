@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -36,7 +35,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
  * Created by o_vicarra on 2/6/18.
  */
 
-public class SearchFragment extends Fragment implements AfterSearchListener {
+public class SearchFragment extends MPFragment implements AfterSearchListener {
     public EditText searchBar;
     View rootView;
     SearchAdapter customAdapter;
@@ -49,6 +48,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     private RecyclerView recyclerView;
     private RealmList<Movie> suggestions;
     private ImageView backArrow, removeIcon;
+    private Context myContext;
 
     public SearchFragment() {
     }
@@ -86,7 +86,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         progress.setVisibility(View.VISIBLE);
-        LayoutInflater myInflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater myInflater = (LayoutInflater) myContext.getSystemService(LAYOUT_INFLATER_SERVICE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         searchBar.requestFocus();
@@ -142,7 +142,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
         removeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!searchBar.getText().toString().trim().isEmpty()){
+                if (!searchBar.getText().toString().trim().isEmpty()) {
                     customAdapter.updateList(ALLMOVIES);
                     searchBar.setText("");
                 }
@@ -151,7 +151,7 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
     }
 
-    public void getMovies(){
+    public void getMovies() {
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .name("Movies.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -172,28 +172,18 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
 
     }
 
-    public void getAllMovies(){
+    public void getAllMovies() {
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .name("AllMovies.Realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm moviesRealm = Realm.getInstance(config);
         allMovies = moviesRealm.where(Movie.class).findAll();
-//
-//        HashMap<Integer, Movie> movieHashMap = new HashMap<>();
-//        for (Movie movie : movies) {
-//            movieHashMap.put(movie.getId(), movie);
-//        }
         ALLMOVIES.clear();
         for (Movie movie : allMovies) {
             ALLMOVIES.add(movie);
         }
-
-//        for (Movie movie : movieHashMap.values()) {
-//            ALLMOVIES.add(movie);
-//        }
-//        LogUtils.newLog(TAG, "getAllMovies: ALL MOVIES "+ALLMOVIES.size());
-        customAdapter = new SearchAdapter(this,ALLMOVIES);
+        customAdapter = new SearchAdapter(this, ALLMOVIES);
         recyclerView.setAdapter(customAdapter);
         progress.setVisibility(View.GONE);
         showSfotKeyboard();
@@ -203,12 +193,11 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
     public void getSearchString(Movie movie) {
         String url = "https://moviepass.com/go/movies";
         GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
-        MoviesFragment moviesFragment = (MoviesFragment) getParentFragment();
-        MovieFragment movieFragment = MovieFragment.newInstance(movie,"");
-        moviesFragment.replaceFragment(movieFragment);
+        MovieFragment movieFragment = MovieFragment.newInstance(movie, "");
+        showFragment(movieFragment);
     }
 
-    public void showSfotKeyboard(){
+    public void showSfotKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
     }
@@ -222,4 +211,9 @@ public class SearchFragment extends Fragment implements AfterSearchListener {
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myContext = context;
+    }
 }
