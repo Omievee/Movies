@@ -328,6 +328,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     }
 
     public void onMoviePosterClick(Movie movie) {
+        Log.d(TAG, "onMoviePosterClick: " + movie.getTitle());
         if (movie == null || !movie.isValid()) {
 
         } else {

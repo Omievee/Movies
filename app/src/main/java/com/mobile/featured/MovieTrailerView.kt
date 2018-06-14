@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -15,18 +16,25 @@ import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.*
-import com.google.android.exoplayer2.upstream.cache.*
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
+import com.mobile.Constants
+import com.mobile.MoviePosterClickListener
 import com.mobile.model.Movie
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 import java.io.File
 
-class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs), Player.EventListener {
+class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val moviePosterClickListener: MoviePosterClickListener) : ConstraintLayout(context, attrs), Player.EventListener {
 
     val player: SimpleExoPlayer
 
     var lastSource: String? = null
+
+    var movie: Movie? = null
 
     init {
         inflate(context, R.layout.list_item_featured_poster, this)
@@ -38,14 +46,19 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : Constra
         player = ExoPlayerFactory.newSimpleInstance(context, trackSelector)
         player.addListener(this)
         featuredVideo.player = player
+        this.setOnClickListener {
+            Log.d(Constants.TAG, "clickclick: ")
+            moviePosterClickListener.onMoviePosterClick(this.movie!!)
+        }
     }
 
     fun bind(movie: Movie, enableVideoPlayback: Boolean = true) {
-        if(!enableVideoPlayback) {
+        this.movie = movie
+        if (!enableVideoPlayback) {
             player.stop()
         }
         if (lastSource == movie.teaserVideoUrl) {
-            if(player.playbackState==Player.STATE_READY) {
+            if (player.playbackState == Player.STATE_READY) {
                 player.playWhenReady
             }
             return
