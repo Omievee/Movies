@@ -23,14 +23,18 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.helpshift.activities.MainActivity
 import com.mobile.*
 import com.mobile.activities.ActivateMoviePassCard
+import com.mobile.activities.ConfirmationActivity
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
+import com.mobile.model.ScreeningToken
+import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.MicroServiceRestrictionsResponse
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
+import org.parceler.Parcels
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
@@ -157,6 +161,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
         TicketVerificationDialog
                 .newInstance(it)
                 .show(supportFragmentManager, "ticketVerification")
+    }
+
+    override fun showConfirmationScreen(it: ScreeningToken) {
+        var intent = Intent(this, ConfirmationActivity::class.java).putExtra(Constants.TOKEN, Parcels.wrap<ScreeningToken>(it))
+        startActivity(intent)
     }
 
     var currentItem: Int = 0

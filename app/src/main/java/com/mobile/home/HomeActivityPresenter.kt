@@ -2,16 +2,21 @@ package com.mobile.home
 
 import android.os.Build
 import com.mobile.ApiError
-import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
 import com.mobile.model.Alert
+import com.mobile.model.Reservation
+import com.mobile.model.Screening
+import com.mobile.model.ScreeningToken
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
+import com.mobile.network.RestClient
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
 import com.mobile.responses.AndroidIDVerificationResponse
+import com.mobile.responses.ETicketConfirmation
 import com.mobile.responses.MicroServiceRestrictionsResponse
+import java.text.SimpleDateFormat
 
 
 class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi:MicroApi, val sessionManager: SessionManager) {
@@ -74,7 +79,6 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                 }, {
                     it.printStackTrace()
                 })
-
     }
 
     private fun determineForceLogout(it: MicroServiceRestrictionsResponse) {
@@ -105,9 +109,43 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
         it.popInfo?.let {
-            view.showTicketVerification(it)
+            if(!showReservation())
+                view.showTicketVerification(it)
         }
+    }
 
+    private fun showReservation(): Boolean {
+        var reservationAvailable: Boolean? = false
+        RestClient
+                .getAuthenticated()
+                .lastReservation()
+                .subscribe({
+                    val screening = Screening.from(it)
+                    var confirmation: ETicketConfirmation? = null
+                    if (it.ticket != null) {
+                        confirmation = ETicketConfirmation()
+                        confirmation.confirmationCode = it.ticket!!.redemptionCode
+                        confirmation.barCodeUrl = ""
+                    }
+                    var reservation: Reservation? = null
+                    if (it.reservation != null) {
+                        reservation = Reservation()
+                        reservation.id = it.reservation!!.id!!
+                    }
+                    val token = ScreeningToken(
+                            screening,
+                            SimpleDateFormat("h:mm a").format(it.showtime),
+                            reservation,
+                            confirmation,
+                            null
+                    )
+                    view.showConfirmationScreen(token)
+                    reservationAvailable = true
+                }
+                        ,{
+
+                })
+        return reservationAvailable ?: false
     }
 
     fun onDestroy() {

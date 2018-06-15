@@ -398,6 +398,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         myContext = context;
+        myActivity = getActivity();
     }
 
     @Override

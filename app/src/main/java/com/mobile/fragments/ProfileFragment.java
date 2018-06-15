@@ -38,6 +38,7 @@ import com.mobile.loyalty.LoyaltyProgramFragment;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.network.RestClient;
+import com.mobile.reservation.CurrentReservationV2;
 import com.mobile.reservation.ETicket;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ETicketConfirmation;
@@ -254,7 +255,7 @@ public class ProfileFragment extends MPFragment {
             RestClient
                     .getAuthenticated()
                     .lastReservation()
-                    .subscribe(v -> {
+                    .subscribe((CurrentReservationV2 v) -> {
                         if (activity == null) {
                             return;
                         }
@@ -290,7 +291,6 @@ public class ProfileFragment extends MPFragment {
                         Toast.makeText(activity, "No current reservation at this time", Toast.LENGTH_SHORT).show();
                         //Snackbar.make(t)
                     });
-
         });
 
         howToUse.setOnClickListener(view15 -> {
