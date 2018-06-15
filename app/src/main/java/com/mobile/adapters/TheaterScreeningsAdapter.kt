@@ -4,16 +4,14 @@ import android.location.Location
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
-import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater2
 import com.mobile.model.TicketType
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.NoMoreScreenings
 import com.mobile.screening.ScreeningPresentation
-import io.realm.Realm
-import io.realm.RealmConfiguration
 
 class TheaterScreeningsAdapter(
         var listener: ShowtimeClickListener? = null,
@@ -62,22 +60,9 @@ class TheaterScreeningsAdapter(
         const val TYPE_THEATER = 3
         const val CHECK_IN_IF_MOVIE_MISSING = "Check In if Movie Missing"
 
-        private fun sceneMovieIds(screenings: List<Screening>?): Map<Int, Movie>? {
-            if (screenings?.isEmpty() != false) {
-                return emptyMap()
-            }
-            val config = RealmConfiguration.Builder()
-                    .name("History.Realm")
-                    .deleteRealmIfMigrationNeeded()
-                    .build();
-            val historyRealm = Realm.getInstance(config)
-            return historyRealm.where(Movie::class.java)
-                    .`in`("id", screenings.map { it.moviepassId }.toTypedArray())
-                    .findAll()?.associateBy { it.id }
-        }
-
-        fun createData(data: ScreeningData?, screeningsResponse: ScreeningsResponseV2, location: Location?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
-            val movies = sceneMovieIds(screeningsResponse.screenings)
+        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>,ScreeningsResponseV2>, location: Location?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+            val screeningsResponse = response.second;
+            val movies = response.first.associateBy { it.id }
             val old = data?.data ?: emptyList()
             val screenings = screeningsResponse.screenings
             val theaters = screeningsResponse.theaters?.associateBy {

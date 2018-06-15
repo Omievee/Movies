@@ -68,7 +68,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         Fresco.initialize(this);
         RealmTaskService.scheduleRepeatTask(this);
         RealmTaskService.scheduleRepeatTaskTheaters(this);
-        RealmTaskService.scheduleRepeatTaskCheckHistory(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);

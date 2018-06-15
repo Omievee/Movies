@@ -20,7 +20,7 @@ class Schedulers {
 
         fun <T> singleBackground() : DefaultTransformer<T> {
             @Suppress("UNCHECKED_CAST")
-            return SINGLE_DEFAULT as DefaultTransformer<T>
+            return SINGLE_BACKGROUND as DefaultTransformer<T>
         }
 
         fun <T> observableDefault() : ObservableDefault<T> {

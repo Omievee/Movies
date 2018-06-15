@@ -28,6 +28,7 @@ import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
+import com.mobile.history.PastReservationsFragment;
 import com.mobile.loyalty.LoyaltyProgramFragment;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;

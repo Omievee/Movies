@@ -36,15 +36,11 @@ import retrofit2.Response;
 
 public class RealmTaskService extends GcmTaskService {
 
-
-    private static final String GCM_REPEAT_HISTORY_TAG = "repeat|[14400,0]";
     private Realm tRealm;
-    Realm historyRealm;
     Realm moviesRealm;
     Realm allMoviesRealm;
     RealmConfiguration config;
     RealmConfiguration allMoviesConfig;
-    RealmConfiguration historyConfig;
 
     public static final String GCM_REPEAT_TAG = "repeat|[7200,0]";
     private static final String GCM_REPEAT_THEATER_TAG = "repeat|[86400,0]";
@@ -74,15 +70,6 @@ public class RealmTaskService extends GcmTaskService {
                 @Override
                 public void run() {
                     getTheatersBucket();
-                }
-            });
-        }
-
-        if (taskParams.getTag().equals(GCM_REPEAT_HISTORY_TAG)) {
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    getHistory();
                 }
             });
         }
@@ -142,33 +129,6 @@ public class RealmTaskService extends GcmTaskService {
             e.printStackTrace();
         }
     }
-
-    public static void scheduleRepeatTaskCheckHistory(Context context) {
-        try {
-            PeriodicTask periodic = new PeriodicTask.Builder()
-                    //specify target service - must extend GcmTaskService
-                    .setService(RealmTaskService.class)
-                    //repeat x seconds
-                    .setPeriod(14400)
-                    //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(3600)
-                    //tag that is q unique to this task (can be used to cancel task)
-                    .setTag(GCM_REPEAT_HISTORY_TAG)
-                    //whether the task persists after device reboot
-                    .setPersisted(true)
-                    //set required network state, this line is optional
-                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
-                    .build();
-
-
-            GcmNetworkManager.getInstance(context).schedule(periodic);
-            LogUtils.newLog(Constants.TAG, "repeating history task scheduled");
-        } catch (Exception e) {
-            LogUtils.newLog(Constants.TAG, "scheduling failed");
-            e.printStackTrace();
-        }
-    }
-
 
     void getTheatersBucket() {
         try {
@@ -369,66 +329,6 @@ public class RealmTaskService extends GcmTaskService {
             });
         } catch (IllegalStateException e) {
 
-        }
-    }
-
-    void getHistory() {
-        try {
-            historyConfig = new RealmConfiguration.Builder()
-                    .name("History.Realm")
-                    .deleteRealmIfMigrationNeeded()
-                    .build();
-
-            historyRealm = Realm.getInstance(historyConfig);
-            historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
-
-            RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-                @Override
-                public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                    if (response.isSuccessful()) {
-                        HistoryResponse historyObjects = response.body();
-                        historyRealm.executeTransactionAsync(realm -> {
-                            if (historyObjects != null) {
-                                int lastMonthCount = 0;
-                                Movie newest = historyObjects.getReservations().size()>0?historyObjects.getReservations().get(0):null;
-                                for (int i = 0; i < historyObjects.getReservations().size(); i++) {
-                                    Movie movieReservation = historyObjects.getReservations().get(i);
-                                    Movie historyList = realm.createObject(Movie.class);
-                                    historyList.setId(movieReservation.getId());
-                                    historyList.setCreatedAt(movieReservation.getCreatedAt());
-                                    historyList.setImageUrl(movieReservation.getImageUrl());
-                                    historyList.setRating(movieReservation.getRating());
-                                    historyList.setReleaseDate(movieReservation.getReleaseDate());
-                                    historyList.setRunningTime(movieReservation.getRunningTime());
-                                    historyList.setTheaterName(movieReservation.getTheaterName());
-                                    historyList.setTitle(movieReservation.getTitle());
-                                    historyList.setTribuneId(movieReservation.getTribuneId());
-                                    historyList.setType(movieReservation.getType());
-                                    long diff = System.currentTimeMillis() - movieReservation.getCreatedAt();
-                                    if (TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) < 30) {
-                                        lastMonthCount++;
-                                    }
-                                    if(movieReservation.getCreatedAt()>newest.getCreatedAt()) {
-                                        newest = movieReservation;
-                                    }
-                                }
-                                UserPreferences.setTotalMoviesSeenLast30Days(lastMonthCount);
-                                UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
-                                if(newest!=null) {
-                                    UserPreferences.setLastMovieSeen(newest);
-                                }
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<HistoryResponse> call, Throwable t) {
-
-                }
-            });
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
         }
     }
 

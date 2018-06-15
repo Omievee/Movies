@@ -102,10 +102,6 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 
-    realm {
-        syncEnabled = true;
-    }
-
 //    /** THIS FIXES LOLLIPOP DEVICES DO NOT DELETE */
     dexOptions {
         preDexLibraries false

@@ -14,9 +14,13 @@ class DateAdapter : JsonSerializer<ParcelableDate>, JsonDeserializer<ParcelableD
         private val T = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS", Locale.US)
         private val HM = SimpleDateFormat("HH:mm:ss", Locale.US)
         private val HMA = SimpleDateFormat("hh:mm a", Locale.US)
+        private val NUMBER_REGEX = "-?\\d+(\\.\\d+)?".toRegex()
 
         fun deseralize(dateString: String? = null): ParcelableDate? {
             val str = dateString ?: return null
+            when(NUMBER_REGEX.matches(str)) {
+                true-> return ParcelableDate(str, str.toLong())
+            }
             val sdf: SimpleDateFormat = when {
                 str.length > 8 -> {
                     val ch = str.get(str.length - 4)

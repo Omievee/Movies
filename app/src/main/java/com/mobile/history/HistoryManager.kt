@@ -8,6 +8,6 @@ interface HistoryManager {
     /**
      * @return First element emitted is from local cache, second element emitted is from the api if local cache does not exist or has expired
      */
-    fun getHistory(): Observable<List<ReservationHistory>>?
+    fun getHistory(): Observable<List<ReservationHistory>>
 
 }

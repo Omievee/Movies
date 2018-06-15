@@ -86,7 +86,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         val controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build()
         posterSPV.setImageURI(imgUrl)
-        posterSPV.getHierarchy().setFadeDuration(500)
+        posterSPV.hierarchy.fadeDuration = 500
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
         when (screening.enabled) {
@@ -101,7 +101,9 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 notSupported.visibility = View.GONE
             }
         }
-        posterSPV.controller = controller
+        if(posterSPV.controller?.isSameImageRequest(controller)!=true) {
+            posterSPV.controller = controller
+        }
         movieTime.text = screening.screening?.runningTime?.runningTimeString(context = context)
         movieTime.apply {
             visibility = when (text.isEmpty()) {

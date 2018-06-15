@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -66,8 +67,13 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return GsonBuilder().setLenient().registerTypeAdapter(object : TypeToken<ParcelableDate>() {
-        }.type, DateAdapter()).create()
+        return GsonBuilder()
+                .setLenient()
+                .registerTypeAdapter(object : TypeToken<ParcelableDate>() {
+                    }.type, DateAdapter())
+                .registerTypeAdapter(object : TypeToken<Date>() {
+                }.type, DateAdapter())
+                .create()
     }
 
     @Provides

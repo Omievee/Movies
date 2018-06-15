@@ -1,17 +1,20 @@
 package com.mobile.history.model
 
+import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
 @RealmClass
+@Parcelize
 open class ReservationHistory(
         var id: Int? = null,
         var title: String? = null,
         var titleNormalized: String? = null,
-        var landscapeImageUrl: String? = null,
+        var imageUrl: String? = null,
         var userRating:String? = null,
         var theaterName: String? = null,
         var createdAt: Date? = null,
         var updatedAt: Date = Date()
-) : RealmObject()
+) : RealmObject(), Parcelable
