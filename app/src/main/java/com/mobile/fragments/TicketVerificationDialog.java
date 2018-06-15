@@ -79,7 +79,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     BitmapFactory.Options bmOptions;
 
     ProgressBar progress;
-    TextView noStub, FAQs;
+    TextView noStub, FAQs, movieTitle;
     ObjectMetadata objectMetadata;
     String key;
     Activity myActivity;
@@ -121,6 +121,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         progress = root.findViewById(R.id.progress);
         noStub = root.findViewById(R.id.NoStub);
         FAQs = root.findViewById(R.id.FAQs);
+        movieTitle = root.findViewById(R.id.movieTitle);
         transferUtility = TransferUtility.builder()
                 .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
@@ -134,6 +135,12 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         popInfo = getArguments().getParcelable("popInfo");
+
+        if(popInfo.getMovieTitle()!=null)
+        {
+            movieTitle.setVisibility(View.VISIBLE);
+            movieTitle.setText(popInfo.getMovieTitle());
+        }
 
         ticketScan.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
