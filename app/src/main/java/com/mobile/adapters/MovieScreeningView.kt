@@ -18,11 +18,11 @@ import com.mobile.utils.text.toMiles
 
 import kotlinx.android.synthetic.main.list_item_theaters_and_showtimes.view.*
 
-class MovieScreeningView(context: Context?, attrs: AttributeSet?=null) : ConstraintLayout(context, attrs) {
+class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
 
-    val adapter:ShowtimeAdapter = ShowtimeAdapter()
-    var screening:ScreeningPresentation? = null
-    var showtimeListener:ShowtimeClickListener? = null
+    val adapter: ShowtimeAdapter = ShowtimeAdapter()
+    var screening: ScreeningPresentation? = null
+    var showtimeListener: ShowtimeClickListener? = null
 
     init {
         View.inflate(context, R.layout.list_item_theaters_and_showtimes, this)
@@ -40,29 +40,34 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet?=null) : Constra
         layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             marginStart = margin
             marginEnd = margin
-            bottomMargin = margin*2
+            bottomMargin = margin * 2
         }
     }
 
-    fun bind(p:ScreeningPresentation, showtimeClickListener:ShowtimeClickListener?) {
+    fun bind(p: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
         this.screening = p
         this.showtimeListener = showtimeClickListener
         THEATER_NAME_LISTITEM.text = p.theater?.name
         THEATER_ADDRESS_LISTITEM.text = p.theater?.cityStateZip
         THEATER_ADDRESS2_LISTITEM.text = p.theater?.address
         THEATER_DISTANCE_LISTITEM.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
-        icon_seat.visibility = when(screening?.screening?.getTicketType()) {
-            TicketType.SELECT_SEATING->View.VISIBLE
-            else-> View.GONE
+        icon_seat.visibility = when (screening?.screening?.getTicketType()) {
+            TicketType.SELECT_SEATING -> View.VISIBLE
+            else -> View.GONE
         }
-        icon_ticket.visibility = when(screening?.screening?.getTicketType()) {
-            TicketType.SELECT_SEATING,TicketType.E_TICKET->View.VISIBLE
-            else->View.GONE
+        icon_ticket.visibility = when (screening?.screening?.getTicketType()) {
+            TicketType.SELECT_SEATING, TicketType.E_TICKET -> View.VISIBLE
+            else -> View.GONE
         }
-        notSupported.visibility = when(screening?.screening?.approved) {
-            true->View.GONE
-            else->View.VISIBLE
+        notSupported.visibility = when (screening?.screening?.approved) {
+            true -> View.GONE
+            else -> View.VISIBLE
         }
+        notSupported.text = when {
+            p.movie != null -> resources.getString(R.string.screening_already_seen)
+            else-> p.screening?.disabledExplanation
+        }
+        movieApproved.isEnabled = screening?.enabled ?: false
         adapter.screening = screening
         adapter.showtimeClickListener = showtimeClickListener
         adapter.data = ShowtimeAdapter.createData(adapter.data, p)

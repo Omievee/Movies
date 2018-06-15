@@ -9,14 +9,15 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
+import javax.inject.Provider
 
-class HistoryManagerImpl(@History val realmHistory: Realm, val api: Api) : HistoryManager {
+class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Api) : HistoryManager {
 
     var getHistoryFromApi: Disposable? = null
 
-    override fun getHistory(): Observable<List<ReservationHistory>>? {
+    override fun getHistory(): Observable<List<ReservationHistory>> {
         return Observable.create<List<ReservationHistory>> {
-            val movies = realmHistory
+            val movies = realmHistory.get()
                     .where(ReservationHistory::class.java)
                     .findAll()
             val wasHistoryUpdatedEver =
@@ -29,11 +30,15 @@ class HistoryManagerImpl(@History val realmHistory: Realm, val api: Api) : Histo
             if (it.isDisposed) {
                 return@create
             }
-            it.onNext(movies)
+            it.onNext(realmHistory.get().copyFromRealm(movies))
             if (!wasHistoryUpdatedEver || !wasHistoryUpdatedToday) {
                 getHistoryFromApi(it)
+            } else {
+                if(!it.isDisposed) {
+                    it.onComplete()
+                }
             }
-        }
+        }.compose(Schedulers.observableDefault())
     }
 
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {
@@ -43,7 +48,7 @@ class HistoryManagerImpl(@History val realmHistory: Realm, val api: Api) : Histo
                         .compose(Schedulers.singleBackground())
                         .map { reservationHistoryResponse ->
                             reservationHistoryResponse.reservations?.let {
-                                realmHistory.executeTransaction { transaction ->
+                                realmHistory.get().executeTransaction { transaction ->
                                     transaction.insertOrUpdate(it)
                                     saveHistoryLoadedDate()
                                 }

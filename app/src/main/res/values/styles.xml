@@ -321,6 +321,9 @@
         <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
         <item name="fontFamily">@font/roboto_font</item>
         <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_standard</item>
     </style>
 
     <style name="ReservationHeader" parent="ReservationText">

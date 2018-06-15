@@ -1,7 +1,5 @@
-package com.mobile.fragments
+package com.mobile.history
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.net.Uri
@@ -22,8 +20,9 @@ import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.Constants
+import com.mobile.fragments.MPFragment
 import com.mobile.helpers.LogUtils
-import com.mobile.model.Movie
+import com.mobile.history.model.ReservationHistory
 import com.mobile.network.RestClient
 import com.mobile.responses.HistoryResponse
 import com.moviepass.R
@@ -32,22 +31,18 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.util.*
-
 
 /**
  * Created by o_vicarra on 3/27/18.
  */
 
 class HistoryDetailsFragment : MPFragment() {
-    internal var myActivity: Activity? = null
-    internal var myContext: Context? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myActivity!!.startPostponedEnterTransition()
-        sharedElementEnterTransition = TransitionInflater.from(myActivity).inflateTransition(android.R.transition.explode).setDuration(2000)
+        val activity = activity?:return
+        activity.startPostponedEnterTransition()
+        sharedElementEnterTransition = TransitionInflater.from(activity).inflateTransition(android.R.transition.explode).setDuration(2000)
     }
 
 
@@ -61,10 +56,10 @@ class HistoryDetailsFragment : MPFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        close.setOnClickListener { v -> myActivity!!.onBackPressed() }
+        close.setOnClickListener { v -> activity?.onBackPressed() }
 
 
-        val historyItem = arguments!!.getParcelable<Movie>(HISTORY_POSTER)
+        val historyItem = arguments!!.getParcelable<ReservationHistory>(HISTORY_POSTER)
         val transition = arguments!!.getString(EXTRA_TRANSITION_NAME)
 
         val black = Color.argb(200, 0, 0, 0)
@@ -82,8 +77,9 @@ class HistoryDetailsFragment : MPFragment() {
             }
 
         } else {
-            like.setOnClickListener { v -> rateMovie(historyItem.id, "GOOD") }
-            dislike.setOnClickListener { v -> rateMovie(historyItem.id, "BAD") }
+            val id = historyItem.id?:return
+            like.setOnClickListener { v -> rateMovie(id, "GOOD") }
+            dislike.setOnClickListener { v -> rateMovie(id, "BAD") }
         }
 
         val imgUrl = Uri.parse(historyItem.imageUrl)
@@ -102,7 +98,7 @@ class HistoryDetailsFragment : MPFragment() {
                     }
 
                     override fun onFailure(id: String?, throwable: Throwable?) {
-                        if (historyItem.imageUrl.contains("https://s3.amazonaws.com/")) {
+                        if (historyItem.imageUrl?.contains("https://s3.amazonaws.com/") == true) {
                             enlargedImage.setImageURI(imgUrl.toString() + "/original.jpg")
                         }
                     }
@@ -112,14 +108,12 @@ class HistoryDetailsFragment : MPFragment() {
 
         val createdAt = historyItem.createdAt
         val sdf = SimpleDateFormat("M/dd/yyyy")
-        historyDate.text = sdf.format(Date(createdAt))
+        historyDate.text = sdf.format(createdAt)
 
         historyLocal.text = historyItem.theaterName
         historyTitle.text = historyItem.title
         enlargedImage.transitionName = transition
         enlargedImage.controller = controller
-
-
     }
 
 
@@ -138,24 +132,17 @@ class HistoryDetailsFragment : MPFragment() {
                         fadeOut(like)
                         animate(dislike)
                     }
-                    PastReservationsFragment.newInstance().queryRealmForObjects()
-                    h.postDelayed({ myActivity!!.onBackPressed() }, 2000)
+                    h.postDelayed({ activity?.onBackPressed() }, 2000)
                 }
             }
 
             override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                Toast.makeText(myActivity, t.message, Toast.LENGTH_SHORT).show()
+                val activity = activity?:return
+                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
             }
         })
 
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        myActivity = activity
-        myContext = context
     }
 
     fun animate(view: View) {
@@ -188,7 +175,7 @@ class HistoryDetailsFragment : MPFragment() {
         private val EXTRA_TRANSITION_NAME = "transition_name"
 
 
-        fun newInstance(moviePoster: Movie, transitionName: String): HistoryDetailsFragment {
+        fun newInstance(moviePoster: ReservationHistory, transitionName: String): HistoryDetailsFragment {
             val fragment = HistoryDetailsFragment()
 
             val bundle = Bundle()

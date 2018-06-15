@@ -1,6 +1,5 @@
-package com.mobile.fragments;
+package com.mobile.history;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,22 +14,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.mobile.Interfaces.historyPosterClickListener;
-import com.mobile.adapters.HistoryAdapter;
+import com.mobile.fragments.MPFragment;
 import com.mobile.helpers.LogUtils;
+import com.mobile.history.model.ReservationHistory;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 
 /**
  * Created by omievee on 1/27/18.
  */
 
-public class PastReservationsFragment extends MPFragment implements historyPosterClickListener {
+public class PastReservationsFragment extends MPFragment implements HistoryPosterClickListener {
 
     public static final String TAG = PastReservationsFragment.class.getSimpleName();
 
@@ -41,8 +41,12 @@ public class PastReservationsFragment extends MPFragment implements historyPoste
     RealmList<Movie> historyList;
     TextView noMovies;
     View progress;
-    Activity myActivity;
-    Context myContext;
+
+    @Inject
+    HistoryManager historyManager;
+
+    @Nullable
+    Disposable disposable;
 
     public PastReservationsFragment() {
     }
@@ -74,17 +78,15 @@ public class PastReservationsFragment extends MPFragment implements historyPoste
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int numOfColumns = calculateNoOfColumns(myActivity);
+        int numOfColumns = calculateNoOfColumns(getActivity());
 
-
-
-        GridLayoutManager manager = new GridLayoutManager(myActivity, numOfColumns, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager manager = new GridLayoutManager(getActivity(), numOfColumns, GridLayoutManager.VERTICAL, false);
         historyRecycler.setLayoutManager(manager);
-        historyAdapter = new HistoryAdapter(getActivity(), historyList, this);
+        historyAdapter = new HistoryAdapter(this);
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
-        queryRealmForObjects();
+        loadData();
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -96,47 +98,34 @@ public class PastReservationsFragment extends MPFragment implements historyPoste
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
-        myContext = context;
+    }
+
+    public void loadData() {
+        progress.setVisibility(View.VISIBLE);
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        disposable = historyManager
+                .getHistory()
+                .doFinally(() -> progress.setVisibility(View.GONE))
+                .subscribe(res -> {
+                    historyAdapter.setData(res);
+                    if (res.size() == 0) {
+                        historyRecycler.setVisibility(View.GONE);
+                        noMovies.setVisibility(View.VISIBLE);
+                    } else {
+                        historyRecycler.setVisibility(View.VISIBLE);
+                        noMovies.setVisibility(View.GONE);
+                    }
+                }, error -> {
+
+                });
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-    }
-
-
-    public void queryRealmForObjects() {
-        historyList.clear();
-        progress.setVisibility(View.GONE);
-
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("History.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
-        Realm historyRealm = Realm.getInstance(config);
-
-        RealmResults<Movie> allHIstory = historyRealm.where(Movie.class)
-                .findAll();
-
-        historyList.addAll(allHIstory);
-        if (historyList.size() == 0) {
-            historyRecycler.setVisibility(View.GONE);
-            noMovies.setVisibility(View.VISIBLE);
-        } else {
-            historyRecycler.setVisibility(View.VISIBLE);
-            noMovies.setVisibility(View.GONE);
-        }
-        if (historyAdapter != null) {
-            historyRecycler.getRecycledViewPool().clear();
-            historyAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onPosterClicked(int pos, Movie historyposter, SimpleDraweeView sharedView) {
+    public void onPosterClicked(int pos, ReservationHistory historyposter, SimpleDraweeView sharedView) {
         showFragment(HistoryDetailsFragment.Companion.newInstance(historyposter, ViewCompat.getTransitionName(sharedView)));
     }
 }

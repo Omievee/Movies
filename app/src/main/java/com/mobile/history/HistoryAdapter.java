@@ -1,6 +1,5 @@
-package com.mobile.adapters;
+package com.mobile.history;
 
-import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -17,11 +16,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mobile.Interfaces.historyPosterClickListener;
-import com.mobile.model.Movie;
+import com.mobile.history.model.ReservationHistory;
 import com.moviepass.R;
 
-import io.realm.RealmList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anubis on 7/31/17.
@@ -29,25 +28,25 @@ import io.realm.RealmList;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private RealmList<Movie> historyArrayList;
+    private List<ReservationHistory> historyArrayList;
 
     private final int TYPE_ITEM = 0;
-    private Context context;
-    ViewHolder HOLDER;
-    private final historyPosterClickListener historyListener;
+    private final HistoryPosterClickListener historyListener;
 
-    public HistoryAdapter(Context context, RealmList<Movie> historyArrayList, historyPosterClickListener historyListener) {
-        this.historyArrayList = historyArrayList;
-        this.context = context;
+    public HistoryAdapter(HistoryPosterClickListener historyListener) {
         this.historyListener = historyListener;
+    }
+
+    public void setData(List<ReservationHistory> data) {
+        historyArrayList = new ArrayList<>(data);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         SimpleDraweeView posterImageView;
 
-
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             posterImageView = v.findViewById(R.id.historyPoster);
         }
@@ -61,20 +60,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        final Movie movie = historyArrayList.get(position);
-        Uri imgUrl = null;
-        if (movie != null) {
-            imgUrl = Uri.parse(movie.getImageUrl());
-        }
-        holder.posterImageView.setImageURI(imgUrl);
+        final ReservationHistory movie = historyArrayList.get(position);
         holder.posterImageView.getHierarchy().setFadeDuration(500);
-        HOLDER = holder;
+        holder.posterImageView.setImageURI(movie.getImageUrl());
+        Uri imgUrl = Uri.parse(movie.getImageUrl());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
                 .build();
 
-        Uri finalImgUrl = imgUrl;
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(imgUrl)
                 .setImageRequest(request)
@@ -83,14 +77,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                     @Override
                     public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
-                        if (finalImgUrl.toString().contains("default")) {
-                            // holder.title.setText(movie.getTitle());
-                        }
                     }
 
                     @Override
                     public void onFailure(String id, Throwable throwable) {
-                        holder.posterImageView.setImageURI(finalImgUrl + "/original.jpg");
+                        holder.posterImageView.setImageURI(movie.getImageUrl() + "/original.jpg");
                     }
                 })
                 .build();
@@ -110,7 +101,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return historyArrayList.size();
+        if(historyArrayList!=null) {
+            return historyArrayList.size();
+        } return 0;
     }
 
     @Override
