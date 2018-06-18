@@ -1,32 +1,17 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     style="@style/ReservationBackground"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mobile.fragments.ProfileAccountInformation">
 
-    <RelativeLayout
-        android:id="@+id/ACCOUNTHEADER"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/accountHeader"
+        style="@style/TitleView"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal"
-        android:padding="@dimen/margin_half">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="Account Information"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text="Account Information" />
 
 
     <android.support.design.widget.TextInputLayout
@@ -41,7 +26,7 @@
         app:hintTextAppearance="@style/text_in_layout_hint_Style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ACCOUNTHEADER">
+        app:layout_constraintTop_toBottomOf="@id/accountHeader">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/USER_NAME"

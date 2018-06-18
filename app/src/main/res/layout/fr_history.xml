@@ -3,29 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/margin_standard"
-
     android:background="@color/test_black">
 
     <TextView
+        android:layout_marginTop="@dimen/status_bar_height"
         android:id="@+id/HEADER"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/margin_half"
-        android:text="History"
-        android:layout_marginTop="@dimen/margin_half"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
+        style="@style/TitleView"
+        android:text="History" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyReycler"
+        android:layout_below="@id/HEADER"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/doubledouble_margin_standard"
+        android:layout_height="match_parent"
         android:background="@color/test_black"
         android:layout_marginBottom="55dp"
         android:scrollbarAlwaysDrawVerticalTrack="true"

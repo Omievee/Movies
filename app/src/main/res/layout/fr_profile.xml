@@ -4,23 +4,15 @@
     android:id="@+id/settingsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/test_black"
     android:clickable="true"
     android:orientation="vertical">
 
-
-    <RelativeLayout
+    <TextView
         android:id="@+id/HEADER"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            style="@style/TitleView"
-            android:text="Account" />
-
-    </RelativeLayout>
+        style="@style/TitleView"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text="Account" />
 
 
     <ScrollView
