@@ -1,6 +1,7 @@
 package com.mobile.screening
 
 import com.mobile.adapters.ItemSame
+import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater2
@@ -11,7 +12,7 @@ data class ScreeningPresentation(
         val theater:Theater2? = null,
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,
-        val movie: Movie? = null,
+        val movie: ReservationHistory? = null,
         val type: Int = 0
 ) : ItemSame<ScreeningPresentation> {
 

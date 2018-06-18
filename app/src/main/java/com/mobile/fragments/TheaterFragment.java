@@ -36,6 +36,8 @@ import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.history.HistoryManager;
+import com.mobile.history.model.ReservationHistory;
 import com.mobile.home.HomeActivity;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.location.UserLocation;
@@ -44,6 +46,7 @@ import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.Theater;
+import com.mobile.network.Api;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
@@ -62,12 +65,14 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -80,7 +85,13 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Inject
     com.mobile.location.LocationManager locationManager;
 
-    ScreeningsResponseV2 screeningsResponse;
+    @Inject
+    Api api;
+
+    @Inject
+    HistoryManager historyManager;
+
+    Pair<List<ReservationHistory>,ScreeningsResponseV2> screeningsResponse;
     RecyclerView selectedTheaterRecyclerView;
     ImageView pinIcon, eticketIcon, reserveSeatIcon;
     TextView theaterSelectedAddress, selectedTheaterCity, noTheaters, selectedTheaterName;
@@ -318,13 +329,14 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         if (disposable != null) {
             disposable.dispose();
         }
-        disposable = RestClient.getAuthenticated().getScreeningsForTheaterV2(theaterId)
+        disposable = Observable.zip(historyManager.getHistory(),
+                api.getScreeningsForTheaterV2(theaterId).toObservable(),
+                (history, screeningsResponse) -> new Pair<>(history, screeningsResponse))
                 .subscribe(response -> {
                     screeningsResponse = response;
                     theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, null, selected));
                     progress.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.GONE);
-
                     selectedTheaterRecyclerView.setVisibility(View.VISIBLE);
                 }, error -> {
                     error.printStackTrace();

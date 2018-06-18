@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+
 import dagger.android.support.AndroidSupportInjection;
 
 import android.widget.TextView;
@@ -42,6 +43,8 @@ import com.mobile.activities.ConfirmationActivity;
 import com.mobile.adapters.MissingCheckinListener;
 import com.mobile.adapters.TheaterScreeningsAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.history.HistoryManager;
+import com.mobile.history.model.ReservationHistory;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.location.LocationManager;
 import com.mobile.location.UserLocation;
@@ -52,12 +55,12 @@ import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.Theater;
 import com.mobile.model.TicketType;
-import com.mobile.network.RestClient;
-import com.mobile.requests.PerformanceInfoRequest;
+import com.mobile.network.Api;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponseV2;
+import com.mobile.rx.Schedulers;
 import com.mobile.seats.BringAFriendActivity;
 import com.moviepass.R;
 
@@ -68,11 +71,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,6 +101,11 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     @Inject
     LocationManager locationManager;
 
+    @Inject
+    HistoryManager historyManager;
+
+    @Inject
+    Api api;
 
     private Location myLocation = new Location("");
 
@@ -113,7 +124,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     //TODO REMOVE OR USE
     Reservation reservation;
     TheaterScreeningsAdapter movieTheatersAdapter;
-    ScreeningsResponseV2 screeningsResponse;
+    Pair<List<ReservationHistory>,ScreeningsResponseV2> screeningsResponse;
 
     TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg, noWifi;
     ImageView arrow;
@@ -146,13 +157,18 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     boolean synopsisShowing;
 
     private static final String MOVIE_PARAM = "param1";
-    private PerformanceInfoRequest mPerformReq;
-    private ScreeningToken tk;
-    private MoviesFragment movieFragment;
 
     @Nullable
     Pair<Screening, String> selected;
 
+    @Nullable
+    Disposable locationSub;
+
+    @Nullable
+    Disposable reserveSub;
+
+    @javax.annotation.Nullable
+    Disposable theaterSub;
 
     public MovieFragment() {
         // Required empty public constructor
@@ -372,8 +388,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         }
     }
 
-    Disposable locationSub;
-
     private void fetchLocation() {
         if (locationSub != null) {
             locationSub.dispose();
@@ -485,11 +499,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     }
 
     public void reserve(Screening screening, String showtime) {
-        Theater theaterObject = screeningsResponse.getTheater(screening);
+        Theater theaterObject = screeningsResponse.second.getTheater(screening);
         Screening screen = screening;
         String time = showtime;
         Context context = getActivity();
-
 
 
         buttonCheckIn.setEnabled(false);
@@ -506,7 +519,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             if (myLocation != null) {
                 TicketInfoRequest checkInRequest = new TicketInfoRequest(availability.getProviderInfo(), null, null, myLocation.getLatitude(), myLocation.getLongitude());
                 reservationRequest(screen, checkInRequest, time);
-            }else {
+            } else {
                 Toast.makeText(context, "Enable GPS to check in.", Toast.LENGTH_SHORT).show();
             }
 
@@ -521,17 +534,13 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         }
     }
 
-
-    @Nullable
-    Disposable reserveSub;
-
     private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
-        Theater theaterObject = screeningsResponse.getTheater(screening);
+        Theater theaterObject = screeningsResponse.second.getTheater(screening);
         Context context = getActivity();
         if (reserveSub != null) {
             reserveSub.dispose();
         }
-        reserveSub = RestClient.getAuthenticated().reserve(checkInRequest)
+        reserveSub = api.reserve(checkInRequest)
                 .subscribe(result -> {
                     ReservationResponse reservationResponse = result;
 
@@ -581,77 +590,70 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
         }
         Activity activity = getActivity();
-        if(activity!=null) {
+        if (activity != null) {
             activity.onBackPressed();
         }
     }
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
-        RestClient.getAuthenticated().getScreeningsForMovie(latitude, longitude, moviepassId).enqueue(new Callback<ScreeningsResponseV2>() {
+        theaterSub = Observable.zip(
+                historyManager.getHistory(),
+                api.getScreeningsForMovieRx(latitude, longitude, moviepassId).toObservable(),
+                (history, screeningsResponse) -> new Pair<>(history, screeningsResponse))
+                .compose(Schedulers.Companion.observableDefault())
+                .doAfterTerminate(() -> progress.setVisibility(View.GONE))
+                .subscribe(res -> {
+                    screeningsResponse = res;
+                    screeningsResponse.second.mapMoviepassId(moviepassId);
+                    onScreeningsResponse();
+                }, error -> {
+                    error.printStackTrace();
+                });
+    }
 
-            @Override
-            public void onResponse(Call<ScreeningsResponseV2> call, final Response<ScreeningsResponseV2> response) {
-                if (response != null && response.isSuccessful()) {
-                    screeningsResponse = response.body();
+    private void onScreeningsResponse() {
+        ScreeningsResponseV2 response = screeningsResponse.second;
+        if (response.getScreenings().size() == 0) {
+            selectedTheatersRecyclerView.setVisibility(View.GONE);
+            noTheaters.setVisibility(View.VISIBLE);
+        } else {
+            noTheaters.setVisibility(View.GONE);
+            movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, selected));
+        }
 
-                    screeningsResponse.mapMoviepassId(moviepassId);
+        if (movie.getSynopsis().equals("")) {
+            selectedSynopsis.setVisibility(View.GONE);
+            selectedMoviePoster.setClickable(false);
+        } else {
+            selectedMoviePoster.setClickable(true);
 
-                    if (screeningsResponse.getScreenings().size() == 0) {
-                        selectedTheatersRecyclerView.setVisibility(View.GONE);
-                        noTheaters.setVisibility(View.VISIBLE);
-                    } else {
-                        noTheaters.setVisibility(View.GONE);
-                        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, selected));
-                    }
+            selectedSynopsis.setOnClickListener(view -> {
+                String synopsis = movie.getSynopsis();
+                String title = movie.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
 
-                    progress.setVisibility(View.GONE);
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = getChildFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
+            });
 
+            selectedMoviePoster.setOnClickListener(v -> {
+                String synopsis = movie.getSynopsis();
+                String title = movie.getTitle();
+                Bundle bundle = new Bundle();
+                bundle.putString(MOVIE, synopsis);
+                bundle.putString(TITLE, title);
 
-                    if (movie.getSynopsis().equals("")) {
-                        selectedSynopsis.setVisibility(View.GONE);
-                        selectedMoviePoster.setClickable(false);
-                    } else {
-                        selectedMoviePoster.setClickable(true);
+                SynopsisFragment fragobj = new SynopsisFragment();
+                fragobj.setArguments(bundle);
+                FragmentManager fm = getChildFragmentManager();
+                fragobj.show(fm, "fr_dialogfragment_synopsis");
 
-                        selectedSynopsis.setOnClickListener(view -> {
-                            String synopsis = movie.getSynopsis();
-                            String title = movie.getTitle();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(MOVIE, synopsis);
-                            bundle.putString(TITLE, title);
-
-                            SynopsisFragment fragobj = new SynopsisFragment();
-                            fragobj.setArguments(bundle);
-                            FragmentManager fm = getChildFragmentManager();
-                            fragobj.show(fm, "fr_dialogfragment_synopsis");
-                        });
-
-                        selectedMoviePoster.setOnClickListener(v -> {
-                            String synopsis = movie.getSynopsis();
-                            String title = movie.getTitle();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(MOVIE, synopsis);
-                            bundle.putString(TITLE, title);
-
-                            SynopsisFragment fragobj = new SynopsisFragment();
-                            fragobj.setArguments(bundle);
-                            FragmentManager fm = getChildFragmentManager();
-                            fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-                        });
-                    }
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<ScreeningsResponseV2> call, Throwable t) {
-                if (t != null) {
-                    t.printStackTrace();
-                }
-            }
-
-        });
+            });
+        }
     }
 
     private void loadMoviePosterData() {
@@ -729,8 +731,19 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public void onDetach() {
         super.onDetach();
         myContext = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         if (reserveSub != null) {
             reserveSub.dispose();
+        }
+        if (locationSub != null) {
+            locationSub.dispose();
+        }
+        if (theaterSub!=null) {
+            theaterSub.dispose();
         }
     }
 

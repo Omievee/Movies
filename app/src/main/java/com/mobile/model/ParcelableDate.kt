@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-data class ParcelableDate(val timeAsString: String? = null, val long: Long? = null) : Date(), Parcelable {
+data class ParcelableDate(val timeAsString: String? = null, val timeAsLong: Long? = null) : Date(), Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),
@@ -13,7 +13,7 @@ data class ParcelableDate(val timeAsString: String? = null, val long: Long? = nu
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(timeAsString)
-        parcel.writeValue(long)
+        parcel.writeValue(timeAsLong)
     }
 
     override fun describeContents(): Int {

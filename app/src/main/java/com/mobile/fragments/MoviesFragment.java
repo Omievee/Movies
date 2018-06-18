@@ -2,7 +2,6 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -24,13 +23,11 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.adapters.DynamicMoviesTabAdapter;
 import com.mobile.featured.FeaturedMovieAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
@@ -51,7 +48,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.AndroidInjection;
 import dagger.android.support.AndroidSupportInjection;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -195,7 +191,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
-        featuredAdapter = new FeaturedMovieAdapter(featured);
+        featuredAdapter = new FeaturedMovieAdapter(featured, this);
         featuredRecycler.setLayoutAnimation(animation2);
     }
 
@@ -331,7 +327,8 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         moviesRealm.close();
     }
 
-    public void onMoviePosterClick(Movie movie, ImageView sharedImageView) {
+    public void onMoviePosterClick(Movie movie) {
+        Log.d(TAG, "onMoviePosterClick: " + movie.getTitle());
         if (movie == null || !movie.isValid()) {
 
         } else {

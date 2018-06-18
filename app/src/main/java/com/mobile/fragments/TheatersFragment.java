@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -364,7 +365,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             if (!locationManager.isLocationEnabled()) {
                 new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
                 return;
-            }else {
+            } else {
                 showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
             }
         });
@@ -523,6 +524,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         Location userCurrentLocation;
         Location localPoints, smallLocal;
 
+        ArrayList<Theater> allTheatersFound = new ArrayList<>();
         theaterClusterManager.clearItems();
         nearbyTheaters.clear();
         eticketingTheaters.clear();
@@ -542,38 +544,41 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
             double disntanceTO = userCurrentLocation.distanceTo(pointB);
             if (disntanceTO <= 48280.3) {
-                nearbyTheaters.add(allTheaters.get(K));
+                allTheatersFound.add(allTheaters.get(K));
             }
         }
-        for (int j = 0; j < nearbyTheaters.size(); j++) {
+        for (int j = 0; j < allTheatersFound.size(); j++) {
             localPoints = new Location(LocationManager.GPS_PROVIDER);
-            localPoints.setLatitude(nearbyTheaters.get(j).getLat());
-            localPoints.setLongitude(nearbyTheaters.get(j).getLon());
+            localPoints.setLatitude(allTheatersFound.get(j).getLat());
+            localPoints.setLongitude(allTheatersFound.get(j).getLon());
 
             double d = userCurrentLocation.distanceTo(localPoints);
             double mtrMLE = (d / 1609.344);
             tRealm.beginTransaction();
-            nearbyTheaters.get(j).setDistance(Double.parseDouble(df.format(mtrMLE).replaceAll(",", ".")));
+            allTheatersFound.get(j).setDistance(Double.parseDouble(df.format(mtrMLE).replaceAll(",", ".")));
             tRealm.commitTransaction();
         }
         //Sort through shorter list..
-        Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
-        if (nearbyTheaters.size() > 40) {
-            nearbyTheaters.subList(40, nearbyTheaters.size()).clear();
+        Collections.sort(allTheatersFound, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
+        if (allTheatersFound.size() > 40) {
+            allTheatersFound.subList(40, allTheatersFound.size()).clear();
         }
 
-        for (int i = 0; i < nearbyTheaters.size() - 1; i++) {
+        for (int i = 0; i < allTheatersFound.size() - 1; i++) {
             smallLocal = new Location(LocationManager.GPS_PROVIDER);
-            smallLocal.setLatitude(nearbyTheaters.get(i).getLat());
-            smallLocal.setLongitude(nearbyTheaters.get(i).getLon());
+            smallLocal.setLatitude(allTheatersFound.get(i).getLat());
+            smallLocal.setLongitude(allTheatersFound.get(i).getLon());
 
             furthest = userCurrentLocation.distanceTo(smallLocal);
-            Theater etixSelect = nearbyTheaters.get(i);
+            Theater theaterTicketType = allTheatersFound.get(i);
             Collections.sort(eticketingTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
+            Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
 
-            if (etixSelect.ticketTypeIsETicket() || etixSelect.ticketTypeIsSelectSeating()) {
-                nearbyTheaters.remove(etixSelect);
-                eticketingTheaters.add(etixSelect);
+            Log.d(Constants.TAG, "theater ticketType>>>>>>>>>>>>>>> " + theaterTicketType.getTicketType() + "     " + theaterTicketType.getName());
+            if (theaterTicketType.ticketTypeIsETicket() || theaterTicketType.ticketTypeIsSelectSeating()) {
+                eticketingTheaters.add(theaterTicketType);
+            } else {
+                nearbyTheaters.add(theaterTicketType);
             }
 
 
@@ -712,10 +717,10 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(locationSub!=null) {
+        if (locationSub != null) {
             locationSub.dispose();
         }
-        if(tRealm!=null) {
+        if (tRealm != null) {
             tRealm.close();
         }
     }

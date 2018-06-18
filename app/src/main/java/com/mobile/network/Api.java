@@ -104,9 +104,8 @@ public interface Api {
     @GET("/rest/v1/movies")
     Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
 
-    /* Screenings for Movies (details) */
     @GET("/rest/v2/screenings")
-    Call<ScreeningsResponseV2> getScreeningsForMovie(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
+    Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
 
     /* Registration */
     @POST("mobile/check/email")
@@ -288,5 +287,4 @@ public interface Api {
 
     @POST("/rest/v1/loyalty/{chain}/signIn")
     Single<Map<String,Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String,String> chainData);
-
 }

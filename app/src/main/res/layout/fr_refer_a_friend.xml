@@ -1,69 +1,71 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
     android:clickable="true"
-    android:paddingEnd="@dimen/margin_standard"
+    android:fillViewport="true"
     android:fitsSystemWindows="true"
-    android:paddingStart="@dimen/margin_standard"
     tools:context="com.mobile.fragments.ReferAFriend">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/RefferHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="33dp"
-        android:text="Referrals"
-        android:textColor="@color/almost_white"
-        android:textSize="@dimen/text_size_16"
-        android:textStyle="bold" />
-
-
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_below="@id/RefferHeader"
-        android:fillViewport="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_standard">
 
+            <TextView
+                android:id="@+id/RefferHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/double_margin_standard"
+                android:gravity="center"
+                android:text="Referrals"
+                android:textColor="@color/almost_white"
+                android:textSize="@dimen/text_size_16"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/ReferTitle"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:padding="@dimen/margin_half"
-                android:text="@string/fragment_refer_a_friend_title"
                 android:textAlignment="center"
                 android:textColor="@color/almost_white"
                 android:textSize="@dimen/text_size_14"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/RefferHeader" />
 
             <TextView
                 android:id="@+id/Refermsg"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ReferTitle"
                 android:layout_marginTop="@dimen/margin_half"
                 android:lineSpacingExtra="5dp"
                 android:paddingLeft="40dp"
                 android:paddingRight="40dp"
-                android:text="@string/fragment_refer_a_friend_sub_titlte"
                 android:textAlignment="center"
                 android:textColor="@color/almost_white"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ReferTitle" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/ReferName"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/Refermsg"
                 android:layout_marginTop="@dimen/double_margin_standard"
@@ -71,7 +73,10 @@
                 android:theme="@style/EditTextStyle"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/error_appearance"
-                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                app:hintTextAppearance="@style/text_in_layout_hint_Style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/Refermsg">
 
 
                 <EditText
@@ -99,14 +104,17 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/ReferLast"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ReferName"
                 android:textColorHint="@color/white_80_opacity"
                 android:theme="@style/EditTextStyle"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/error_appearance"
-                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                app:hintTextAppearance="@style/text_in_layout_hint_Style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ReferName">
 
 
                 <EditText
@@ -133,14 +141,17 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/ReferEmail"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ReferLast"
                 android:textColorHint="@color/white_80_opacity"
                 android:theme="@style/EditTextStyle"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/error_appearance"
-                app:hintTextAppearance="@style/text_in_layout_hint_Style">
+                app:hintTextAppearance="@style/text_in_layout_hint_Style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ReferLast">
 
 
                 <EditText
@@ -171,14 +182,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ReferEmail"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/double_margin_standard"
                 android:layout_marginTop="@dimen/margin_standard"
-                android:layout_marginBottom="@dimen/margin_standard_and_half"
                 android:background="@drawable/mpbutton1"
                 android:elevation="2dp"
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ReferEmail" />
 
 
             <TextView
@@ -193,7 +207,6 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -220,6 +233,18 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
+            <include
+                android:id="@+id/progress"
+                layout="@layout/view_loading"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
     </ScrollView>
-</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

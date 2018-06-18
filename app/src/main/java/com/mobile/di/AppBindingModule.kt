@@ -1,6 +1,7 @@
 package com.mobile.di
 
 import com.mobile.fragments.*
+import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.seats.BringAFriendActivity
@@ -47,6 +48,10 @@ abstract class AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     abstract fun confirmDetailsFragment(): ConfirmDetailsFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun pastReservationsFragment(): PastReservationsFragment
 
 
 }
