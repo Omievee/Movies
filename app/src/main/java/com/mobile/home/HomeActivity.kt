@@ -9,20 +9,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.AlertDialogLayout
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.moviepass.R
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_home.*
-import java.util.concurrent.atomic.AtomicInteger
-import javax.inject.Inject
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.helpshift.activities.MainActivity
 import com.mobile.*
-import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.ConfirmationActivity
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
@@ -30,10 +21,15 @@ import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
 import com.mobile.model.ScreeningToken
+import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
-import com.mobile.responses.MicroServiceRestrictionsResponse
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
+import com.moviepass.R
+import dagger.android.AndroidInjection
+import kotlinx.android.synthetic.main.activity_home.*
+import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 import org.parceler.Parcels
 
 
@@ -94,11 +90,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         if (result != ConnectionResult.SUCCESS) {
             AlertDialog.Builder(context).setMessage("Google Play Services must either be enabled or updated in order to continue")
                     .setPositiveButton("OK", { dialog, which ->
-                        try {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
-                        } catch (anfe: android.content.ActivityNotFoundException) {
-                            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://$LINK_TO_GOOGLE_PLAY_SERVICES")))
-                        }
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
                         finish()
                     }).setCancelable(false).show()
             return false
@@ -110,10 +102,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         AlertDialog.Builder(this)
                 .setMessage(it.getMessage())
                 .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, {dialog, which->
+                .setPositiveButton(android.R.string.ok) { dialog, which ->
                     startActivity(Intent(this, LogInActivity::class.java));
                     finishAffinity();
-                }).show()
+                }.show()
     }
 
     override fun onBackPressed() {
@@ -135,27 +127,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         }
     }
 
-    override fun showSubscriptionButton(it: MicroServiceRestrictionsResponse) {
-        if (it.subscriptionActivationRequired) {
-            bottomButton.animate().alpha(1.0f)
-            bottomButton.setClickable(true)
-            bottomButton.setOnClickListener(View.OnClickListener { v ->
-                val activateCard = Intent(v.context, ActivateMoviePassCard::class.java)
-                startActivity(activateCard)
-            })
-        } else {
-            hideSubscriptionBar()
-        }
-    }
-
     override fun showAlert(it: Alert) {
         showFragment(AlertScreenFragment.newInstance(it))
     }
 
-
-    private fun hideSubscriptionBar() {
-        bottomButton.animate().alpha(0.0f)
-    }
 
     override fun showTicketVerification(it: PopInfo) {
         TicketVerificationDialog
@@ -163,9 +138,9 @@ class HomeActivity : MPActivty(), HomeActivityView {
                 .show(supportFragmentManager, "ticketVerification")
     }
 
-    override fun showConfirmationScreen(it: ScreeningToken) {
-        var intent = Intent(this, ConfirmationActivity::class.java).putExtra(Constants.TOKEN, Parcels.wrap<ScreeningToken>(it))
-        startActivity(intent)
+    override fun showConfirmationScreen(it: CurrentReservationV2) {
+        val context = this
+        startActivity(ReservationActivity.newInstance(context, it))
     }
 
     var currentItem: Int = 0

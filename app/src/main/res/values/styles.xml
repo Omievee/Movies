@@ -662,10 +662,12 @@
     </style>
 
     <style name="BottomNav" parent="Widget.Design.BottomNavigationView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
         <item name="android:background">@color/dark2</item>
+        <item name="android:elevation">0dp</item>
         <item name="android:windowSoftInputMode">adjustNothing</item>
         <item name="menu">@menu/navigation</item>
-        <item name="android:elevation">4dp</item>
         <item name="itemTextColor">@color/drawer_item</item>
         <item name="itemIconTint">@color/drawer_item</item>
     </style>

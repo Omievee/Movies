@@ -2,19 +2,23 @@ package com.mobile.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.model.Alert;
 import com.moviepass.R;
@@ -27,7 +31,7 @@ public class AlertScreenFragment extends Fragment {
 
     Context myContext;
 
-    private Alert alert;
+    private Alert alertObject;
 
     public static AlertScreenFragment newInstance(Alert alert) {
         AlertScreenFragment fragment = new AlertScreenFragment();
@@ -41,7 +45,7 @@ public class AlertScreenFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        alert = getArguments().getParcelable("alert");
+        alertObject = getArguments().getParcelable("alert");
     }
 
     @Override
@@ -59,13 +63,15 @@ public class AlertScreenFragment extends Fragment {
         close = view.findViewById(R.id.dismissAlert);
         alertClickMessage = view.findViewById(R.id.alertClickMessage);
 
-        alertTitle.setText(alert.getTitle());
-        alertBody.setText(alert.getBody());
+        alertTitle.setText(alertObject.getTitle());
+        alertBody.setText(alertObject.getBody());
 
 
-        if (alert.isDismissable()) {
+        Log.d(Constants.TAG, "onViewCreated: " + alertObject.getDismissible());
+
+        if (alertObject.getDismissible()) {
             close.setOnClickListener(v -> {
-                UserPreferences.setAlertDisplayedId(alert.getId());
+                UserPreferences.setAlertDisplayedId(alertObject.getId());
                 getActivity().onBackPressed();
             });
         } else {
@@ -73,12 +79,12 @@ public class AlertScreenFragment extends Fragment {
         }
 
 
-        if (TextUtils.isEmpty(alert.getUrlTitle()) || TextUtils.isEmpty(alert.getUrl())) {
+        if (TextUtils.isEmpty(alertObject.getUrlTitle()) || TextUtils.isEmpty(alertObject.getUrl())) {
             alertClickMessage.setVisibility(View.INVISIBLE);
         } else {
-            linkText.setText(alert.getUrlTitle());
+            linkText.setText(alertObject.getUrlTitle());
             alertClickMessage.setOnClickListener(v -> {
-                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(alert.getUrl()));
+                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(alertObject.getUrl()));
                 startActivity(alertIntentClick);
             });
         }
@@ -87,8 +93,8 @@ public class AlertScreenFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(alert.isDismissable()) {
-            UserPreferences.setAlertDisplayedId(alert.getId());
+        if (alertObject.getDismissible()) {
+            UserPreferences.setAlertDisplayedId(alertObject.getId());
         }
     }
 }

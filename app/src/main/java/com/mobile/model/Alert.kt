@@ -9,5 +9,5 @@ class Alert(val id: String? = null,
             val body: String? = null,
             val urlTitle: String? = null,
             val url: String? = null,
-            val isDismissable: Boolean = false
+            val dismissible: Boolean = false
 ) : Parcelable

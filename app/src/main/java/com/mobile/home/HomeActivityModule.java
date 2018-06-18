@@ -14,8 +14,8 @@ public abstract class HomeActivityModule {
 
     @Provides
     @ActivityScope
-    static HomeActivityPresenter provideLoginPresenter(HomeActivity activity, LocationManager manager, Api api, MicroApi micro, SessionManager sessionManager) {
-        return new HomeActivityPresenter(activity, api, micro, sessionManager);
+    static HomeActivityPresenter provideLoginPresenter(HomeActivity activity, Api api, MicroApi micro, SessionManager sessionManager, RestrictionsManager restrictionsManager) {
+        return new HomeActivityPresenter(activity, api, micro, sessionManager, restrictionsManager);
     }
 
 }
