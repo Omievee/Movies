@@ -3,18 +3,26 @@ package com.mobile.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import com.mobile.activities.LogInActivity
 import com.moviepass.R
 
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class ReactivateDialog : Fragment() {
-    // TODO: Rename and change types of parameters
+class ReactivateDialog : BottomSheetDialogFragment() {
+
+    var reactivateLink: View? = null
+    var closeButton: ImageView? = null
+    var activity: LogInActivity? = null
+
+
     private var param1: String? = null
     private var param2: String? = null
 //    private var listener: OnFragmentInteractionListener? = null
@@ -33,25 +41,33 @@ class ReactivateDialog : Fragment() {
         return inflater.inflate(R.layout.fragment_reactivate_dialog, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        reactivateLink = view.findViewById(R.id.reactivate)
+        closeButton = view.findViewById(R.id.closeButton)
+
+        reactivateLink?.setOnClickListener {
+            activity?.openWebVIew()
+            dismiss()
+        }
+
+        closeButton?.setOnClickListener {
+            dismiss()
+        }
+
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-//        if (context is OnFragmentInteractionListener) {
-//            listener = context
-//        } else {
-//            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-//        }
+        activity = getActivity() as LogInActivity?
     }
 
     override fun onDetach() {
         super.onDetach()
-//        listener = null
+        activity = null
     }
-//
-//    interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        fun onFragmentInteraction(uri: Uri)
-//    }
 
     companion object {
         @JvmStatic

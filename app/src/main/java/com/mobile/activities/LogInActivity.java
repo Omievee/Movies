@@ -36,6 +36,7 @@ import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.fragments.WebViewListener;
 import com.mobile.helpers.LogUtils;
@@ -420,7 +421,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         progress.setVisibility(View.GONE);
                         hideKeyboard();
                         if(restriction.getCanReactivate().getCancelledWithinTimeframe()){
-                            openWebVIew();
+                            reactivationDialog();
                         } else {
                             UserPreferences.clearUserId();
                             Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
@@ -461,7 +462,12 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
         });
     }
 
+    public void reactivationDialog(){
+        ReactivateDialog.newInstance("","").show(getSupportFragmentManager(),"reactivation");
+    }
+
     public void openWebVIew(){
+        progress.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
@@ -469,6 +475,8 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
         transaction.replace(R.id.fragmentContainer, web);
         transaction.addToBackStack("");
         transaction.commit();
+
+        progress.setVisibility(View.GONE);
     }
 
     public void hideKeyboard() {
