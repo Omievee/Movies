@@ -73,8 +73,13 @@
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
-        <item name="colorPrimary">@color/charcoalGrey</item>
-        <item name="colorAccent">@color/new_red</item>
+        <item name="colorPrimary">@color/dark2</item>
+        <item name="colorAccent">@color/red</item>
+        <item name="hs__chatBubbleAdminBackgroundColor">@color/white_ish</item>
+        <item name="hs__chatBubbleAdminText">@color/black_text</item>
+        <item name="hs__chatBubbleUserBackgroundColor">@color/gun_metal</item>
+        <item name="hs__chatBubbleUserText">@color/white_ish</item>
+        <item name="hs__composeBackgroundColor">@color/dark2</item>
         <item name="colorPrimaryDark">@color/test_black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
