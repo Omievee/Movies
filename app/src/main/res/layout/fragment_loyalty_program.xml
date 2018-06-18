@@ -6,7 +6,6 @@
     style="@style/ReservationBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/margin_standard"
     android:clickable="true">
 
     <TextView
@@ -15,6 +14,7 @@
         android:layout_width="0dp"
         android:text="@string/loyalty_programs_title"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/status_bar_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,6 @@
         style="@style/MaterialSpinner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_size"
-        android:layout_marginTop="@dimen/margin_standard"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/loyaltyProgramsTitle"
         app:ms_hint="@string/loyalty_program_add_loyalty_program"
@@ -73,6 +72,7 @@
         <TextView
             android:id="@+id/loyaltyProgramNameTV"
             style="@style/TitleView"
+            android:layout_marginTop="@dimen/status_bar_height"
             android:layout_width="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
