@@ -542,7 +542,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         userCurrentLocation.setLatitude(newLat);
         userCurrentLocation.setLongitude(newLong);
 
-        RealmResults<Theater> allTheaters = tRealm.where(Theater.class).findAll();
+        List<Theater> allTheaters = tRealm.copyFromRealm(tRealm.where(Theater.class).findAll());
         DecimalFormat df = new DecimalFormat("#.#");
 
         for (int K = 0; K < allTheaters.size(); K++) {

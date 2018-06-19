@@ -541,12 +541,16 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             reserveSub.dispose();
         }
         reserveSub = api.reserve(checkInRequest)
+                .doAfterTerminate(()-> {
+                    buttonCheckIn.setEnabled(true);
+                    progress.setVisibility(View.GONE);
+                })
                 .subscribe(result -> {
                     ReservationResponse reservationResponse = result;
 
                     reservation = reservationResponse.getReservation();
                     UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, theaterObject));
-                    progress.setVisibility(View.GONE);
+
 
                     if (reservationResponse.getETicketConfirmation() != null) {
 
@@ -578,7 +582,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
-                    buttonCheckIn.setEnabled(true);
                 });
     }
 

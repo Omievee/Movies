@@ -119,15 +119,11 @@ public interface Api {
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
     /* Check In */
-    @POST("/rest/v1/reservations")
+    @POST("/rest/v2/reservations")
     Call<ReservationResponse> checkIn(@Body TicketInfoRequest request);
 
     @POST("/rest/v2/reservations")
     Single<ReservationResponse> reserve(@Body TicketInfoRequest request);
-
-    /* GET PENDING RESERVATION */
-    @GET("rest/v1/reservations/last")
-    Call<ActiveReservationResponse> last();
 
     @GET("rest/v2/reservations/last")
     Single<CurrentReservationV2> lastReservation();

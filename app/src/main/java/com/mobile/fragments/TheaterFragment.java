@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.ApiError;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ConfirmationActivity;
@@ -91,7 +92,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Inject
     HistoryManager historyManager;
 
-    Pair<List<ReservationHistory>,ScreeningsResponseV2> screeningsResponse;
+    Pair<List<ReservationHistory>, ScreeningsResponseV2> screeningsResponse;
     RecyclerView selectedTheaterRecyclerView;
     ImageView pinIcon, eticketIcon, reserveSeatIcon;
     TextView theaterSelectedAddress, selectedTheaterCity, noTheaters, selectedTheaterName;
@@ -353,6 +354,9 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         if (fetchLocationSub != null) {
             fetchLocationSub.dispose();
         }
+        if (reserveSub != null) {
+            reserveSub.dispose();
+        }
     }
 
     @Override
@@ -406,20 +410,21 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         }
     }
 
+    @Nullable
+    Disposable reserveSub;
+
     private void reservationRequest(final Screening screening, TicketInfoRequest checkInRequest, final String showtime) {
-        RestClient.getAuthenticated().checkIn(checkInRequest).enqueue(new RestCallback<ReservationResponse>() {
-            @Override
-            public void onResponse(Call<ReservationResponse> call, Response<ReservationResponse> response) {
-                ReservationResponse reservationResponse = response.body();
+        if (reserveSub != null) {
+            reserveSub.dispose();
+        }
+        reserveSub = api.reserve(checkInRequest)
+                .doAfterTerminate(() -> progress.setVisibility(View.GONE))
+                .subscribe(res -> {
+                    reservation = res.getReservation();
+                    UserPreferences.saveReservation(new ScreeningToken(screening, res.getShowtime(), reservation, selectedTheaterObject));
+                    if (res.getETicketConfirmation() != null) {
 
-                if (reservationResponse != null & response.isSuccessful()) {
-                    reservation = reservationResponse.getReservation();
-                    UserPreferences.saveReservation(new ScreeningToken(screening, reservationResponse.getShowtime(), reservation, selectedTheaterObject));
-                    progress.setVisibility(View.GONE);
-
-                    if (reservationResponse.getETicketConfirmation() != null) {
-
-                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, reservationResponse.getETicketConfirmation(), selectedTheaterObject);
+                        ScreeningToken token = new ScreeningToken(screening, showtime, reservation, res.getETicketConfirmation(), selectedTheaterObject);
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase", String.valueOf(selectedTheaterObject.getId()), url);
 
@@ -428,56 +433,14 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
                         showConfirmation(token);
                         GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase", String.valueOf(selectedTheaterObject.getId()), url);
                     }
-                } else {
-
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        //PENDING RESERVATION GO TO TicketConfirmationActivity or TicketVerificationActivity
-                        progress.setVisibility(View.GONE);
-                        buttonCheckIn.setVisibility(View.VISIBLE);
-                        buttonCheckIn.setEnabled(true);
-
-                        //IF USER HASNT ACTIVATED CARD AND THEY TRY TO CHECK IN!
-                        if (jObjError.getString("message").equals("You do not have an active card")) {
-                            Toast.makeText(myContext, "You do not have an active card", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(myContext, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            GoWatchItSingleton.getInstance().checkInEvent(selectedTheaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(selectedTheaterObject.getId()), url);
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(myContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                }, err -> {
+                    if (err instanceof ApiError) {
+                        ApiError error = (ApiError) err;
+                        Toast.makeText(myContext, error.getError().getMessage(), Toast.LENGTH_LONG).show();
                     }
-                    progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);
                     buttonCheckIn.setEnabled(true);
-                }
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-            }
-
-            @Override
-            public void failure(RestError restError) {
-                progress.setVisibility(View.GONE);
-                buttonCheckIn.setVisibility(View.VISIBLE);
-                buttonCheckIn.setEnabled(true);
-
-                String hostname = "Unable to resolve host: No address associated with hostname";
-
-/*                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains("none.get")) {
-                    Toast.makeText(TheaterActivity.this, R.string.log_out_log_in, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().contains(hostname.toLowerCase())) {
-                    Toast.makeText(TheaterActivity.this, R.string.data_connection, Toast.LENGTH_LONG).show();
-                }
-                if (restError != null && restError.getMessage() != null && restError.getMessage().toLowerCase().matches("You have a pending reservation")) {
-                    Toast.makeText(TheaterActivity.this, "Pending Reservation", Toast.LENGTH_LONG).show();
-                } else if(restError!=null){
-                    LogUtils.newLog("resResponse:", "else onfail:" + "onRespnse fail");
-                    Toast.makeText(TheaterActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                clearSuccessCount(); */
-            }
-        });
+                });
     }
 
     public boolean isPendingSubscription() {
@@ -552,7 +515,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
         }
         Activity activity = getActivity();
-        if(activity!=null) {
+        if (activity != null) {
             activity.onBackPressed();
         }
     }
