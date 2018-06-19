@@ -24,7 +24,10 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.disposables.Disposable;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by omievee on 1/27/18.
@@ -86,7 +89,7 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
         historyRecycler.setAdapter(historyAdapter);
 
         progress.setVisibility(View.VISIBLE);
-        loadData();
+        queryRealmForObjects();
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -102,27 +105,56 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
         super.onAttach(context);
     }
 
-    public void loadData() {
-        progress.setVisibility(View.VISIBLE);
-        if (disposable != null) {
-            disposable.dispose();
-        }
-        disposable = historyManager
-                .getHistory()
-                .doFinally(() -> progress.setVisibility(View.GONE))
-                .subscribe(res -> {
-                    historyAdapter.setData(res);
-                    if (res.size() == 0) {
-                        historyRecycler.setVisibility(View.GONE);
-                        noMovies.setVisibility(View.VISIBLE);
-                    } else {
-                        historyRecycler.setVisibility(View.VISIBLE);
-                        noMovies.setVisibility(View.GONE);
-                    }
-                }, error -> {
 
-                });
+    public void queryRealmForObjects() {
+        historyList.clear();
+        progress.setVisibility(View.GONE);
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("History.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        Realm historyRealm = Realm.getInstance(config);
+
+        RealmResults<Movie> allHIstory = historyRealm.where(Movie.class)
+                .findAll();
+
+
+        historyList.addAll(allHIstory);
+        if (historyList.size() == 0) {
+            historyRecycler.setVisibility(View.GONE);
+            noMovies.setVisibility(View.VISIBLE);
+        } else {
+            historyRecycler.setVisibility(View.VISIBLE);
+            noMovies.setVisibility(View.GONE);
+        }
+        if (historyAdapter != null) {
+            historyRecycler.getRecycledViewPool().clear();
+            historyAdapter.notifyDataSetChanged();
+        }
     }
+//    public void loadData() {
+//        progress.setVisibility(View.VISIBLE);
+//        if (disposable != null) {
+//            disposable.dispose();
+//        }
+//        disposable = historyManager
+//                .getHistory()
+//                .doFinally(() -> progress.setVisibility(View.GONE))
+//                .subscribe(res -> {
+//                    historyAdapter.setData(res);
+//                    if (res.size() == 0) {
+//                        historyRecycler.setVisibility(View.GONE);
+//                        noMovies.setVisibility(View.VISIBLE);
+//                    } else {
+//                        historyRecycler.setVisibility(View.VISIBLE);
+//                        noMovies.setVisibility(View.GONE);
+//                    }
+//                }, error -> {
+//
+//                });
+//    }
 
     @Override
     public void onPosterClicked(int pos, ReservationHistory historyposter, SimpleDraweeView sharedView) {

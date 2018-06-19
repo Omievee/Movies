@@ -151,7 +151,7 @@ class HistoryDetailsFragment : MPFragment() {
                     ratedMovie[0]?.userRating = userRating
                     historyRealm.commitTransaction()
 
-                    PastReservationsFragment
+                    
                     h.postDelayed({ activity?.onBackPressed() }, 2000)
 
                 }
