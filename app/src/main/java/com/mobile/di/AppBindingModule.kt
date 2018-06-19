@@ -1,6 +1,7 @@
 package com.mobile.di
 
 import com.mobile.fragments.*
+import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
@@ -52,6 +53,10 @@ abstract class AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     abstract fun pastReservationsFragment(): PastReservationsFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    abstract fun historyDeatils(): HistoryDetailsFragment
 
 
 }

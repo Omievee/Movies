@@ -1,5 +1,6 @@
 package com.mobile.history
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.net.Uri
@@ -22,6 +23,7 @@ import com.mobile.fragments.MPFragment
 import com.mobile.history.model.Rating
 import com.mobile.history.model.ReservationHistory
 import com.moviepass.R
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fr_historydetails.*
 import java.text.SimpleDateFormat
@@ -123,15 +125,15 @@ class HistoryDetailsFragment : MPFragment() {
         historySub?.dispose()
 
         historySub = historyManagerImpl.submitRating(history, wasGood)
-                .subscribe({res->
+                .subscribe({ res ->
                     onHistorySaved(res)
-                },{
+                }, {
 
                 })
     }
 
     private fun onHistorySaved(res: ReservationHistory?) {
-        val wasGood = res?.rating==Rating.GOOD
+        val wasGood = res?.rating == Rating.GOOD
         if (wasGood) {
             dislike.visibility = View.GONE
             fadeOut(dislike)
@@ -187,5 +189,12 @@ class HistoryDetailsFragment : MPFragment() {
     override fun onDestroy() {
         super.onDestroy()
         historySub = null
+    }
+
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+
     }
 }
