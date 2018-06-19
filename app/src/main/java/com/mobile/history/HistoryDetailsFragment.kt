@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,32 +13,30 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
-import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.Constants
 import com.mobile.fragments.MPFragment
-import com.mobile.helpers.LogUtils
 import com.mobile.history.model.ReservationHistory
-import com.mobile.model.Movie
-import com.mobile.network.RestClient
-import com.mobile.responses.HistoryResponse
+import com.mobile.rx.Schedulers
 import com.moviepass.R
-import io.realm.Realm
-import io.realm.RealmConfiguration
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fr_historydetails.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
 /**
  * Created by o_vicarra on 3/27/18.
  */
 
 class HistoryDetailsFragment : MPFragment() {
+
+    @Inject
+    lateinit var historyManagerImpl: HistoryManagerImpl
+
+    var historySub: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +77,12 @@ class HistoryDetailsFragment : MPFragment() {
             }
 
         } else {
-            val id = historyItem.id ?: return
-            like.setOnClickListener { v -> rateMovie(id, "GOOD") }
-            dislike.setOnClickListener { v -> rateMovie(id, "BAD") }
+            like.setOnClickListener { v ->
+                userClickedRating(historyItem, true)
+            }
+            dislike.setOnClickListener { v ->
+                userClickedRating(historyItem, false)
+            }
         }
 
         val imgUrl = Uri.parse(historyItem.imageUrl)
@@ -119,50 +119,23 @@ class HistoryDetailsFragment : MPFragment() {
         enlargedImage.controller = controller
     }
 
+    private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
+        historySub?.dispose()
 
-    private fun rateMovie(historyId: Int, userRating: String) {
-        val rating = HistoryResponse(userRating)
-        RestClient.getAuthenticated().submitRating(historyId, rating).enqueue(object : Callback<HistoryResponse> {
-            override fun onResponse(call: Call<HistoryResponse>, response: Response<HistoryResponse>) {
-                val h = Handler()
-                if (response.isSuccessful) {
-                    if (userRating == "GOOD") {
-                        dislike.visibility = View.GONE
-                        fadeOut(dislike)
-                        animate(like)
-                    } else if (userRating == "BAD") {
-                        like.visibility = View.GONE
-                        fadeOut(like)
-                        animate(dislike)
-                    }
+        if (wasGood) {
+            dislike.visibility = View.GONE
+            fadeOut(dislike)
+            animate(like)
+        } else {
+            like.visibility = View.GONE
+            fadeOut(like)
+            animate(dislike)
+        }
 
-                    val config = RealmConfiguration.Builder()
-                            .name("History.Realm")
-                            .deleteRealmIfMigrationNeeded()
-                            .build()
+        historySub = historyManagerImpl.submitRating(history, wasGood)
+                .compose(Schedulers.singleDefault())
+                .subscribe()
 
-                    val historyRealm = Realm.getInstance(config)
-
-                    val ratedMovie = historyRealm.where(Movie::class.java)
-                            .equalTo("id", historyId)
-                            .findAll()
-
-                    historyRealm.beginTransaction()
-                    ratedMovie[0]?.userRating = userRating
-                    historyRealm.commitTransaction()
-
-                    
-                    h.postDelayed({ activity?.onBackPressed() }, 2000)
-
-                }
-            }
-
-            override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                val activity = activity ?: return
-                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
-            }
-        })
 
     }
 
@@ -207,4 +180,8 @@ class HistoryDetailsFragment : MPFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        historySub = null
+    }
 }
