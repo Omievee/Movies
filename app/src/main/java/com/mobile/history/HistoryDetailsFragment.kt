@@ -67,7 +67,7 @@ class HistoryDetailsFragment : MPFragment() {
 
         val black = Color.argb(200, 0, 0, 0)
         detailsBackground.setBackgroundColor(black)
-        Log.d(Constants.TAG, "onViewCreated: " + historyItem!!.userRating)
+        Log.d(Constants.TAG, "onViewCreated: " + historyItem.userRating)
 
         if (historyItem.userRating != null) {
             didYouLikeIt.visibility = View.GONE
@@ -148,10 +148,12 @@ class HistoryDetailsFragment : MPFragment() {
                             .findAll()
 
                     historyRealm.beginTransaction()
-                    ratedMovie[0]?.userRating
+                    ratedMovie[0]?.userRating = userRating
                     historyRealm.commitTransaction()
 
+                    PastReservationsFragment
                     h.postDelayed({ activity?.onBackPressed() }, 2000)
+
                 }
             }
 

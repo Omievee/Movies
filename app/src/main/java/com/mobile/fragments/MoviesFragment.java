@@ -296,6 +296,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     @Nullable
     Disposable restritionSub;
+
     private void subscribeToRestrictions() {
         if (restritionSub != null) {
             restritionSub.dispose();
@@ -306,7 +307,10 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 });
     }
 
+
     private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
+        Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionStatus());
+        Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionActivationRequired());
         if (res.getSubscriptionActivationRequired()) {
             activateMPCardButton.animate().alpha(1.0f);
             activateMPCardButton.setClickable(true);
@@ -318,7 +322,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
             activateMPCardButton.animate().alpha(0.0f);
         }
     }
-
 
 
     public int getStatusBarHeight() {
