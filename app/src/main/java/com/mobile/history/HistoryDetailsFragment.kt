@@ -23,9 +23,12 @@ import com.mobile.Constants
 import com.mobile.fragments.MPFragment
 import com.mobile.helpers.LogUtils
 import com.mobile.history.model.ReservationHistory
+import com.mobile.model.Movie
 import com.mobile.network.RestClient
 import com.mobile.responses.HistoryResponse
 import com.moviepass.R
+import io.realm.Realm
+import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.fr_historydetails.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +43,7 @@ class HistoryDetailsFragment : MPFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val activity = activity?:return
+        val activity = activity ?: return
         activity.startPostponedEnterTransition()
         sharedElementEnterTransition = TransitionInflater.from(activity).inflateTransition(android.R.transition.explode).setDuration(2000)
     }
@@ -77,7 +80,7 @@ class HistoryDetailsFragment : MPFragment() {
             }
 
         } else {
-            val id = historyItem.id?:return
+            val id = historyItem.id ?: return
             like.setOnClickListener { v -> rateMovie(id, "GOOD") }
             dislike.setOnClickListener { v -> rateMovie(id, "BAD") }
         }
@@ -132,12 +135,28 @@ class HistoryDetailsFragment : MPFragment() {
                         fadeOut(like)
                         animate(dislike)
                     }
+
+                    val config = RealmConfiguration.Builder()
+                            .name("History.Realm")
+                            .deleteRealmIfMigrationNeeded()
+                            .build()
+
+                    val historyRealm = Realm.getInstance(config)
+
+                    val ratedMovie = historyRealm.where(Movie::class.java)
+                            .equalTo("id", historyId)
+                            .findAll()
+
+                    historyRealm.beginTransaction()
+                    ratedMovie[0]?.userRating
+                    historyRealm.commitTransaction()
+
                     h.postDelayed({ activity?.onBackPressed() }, 2000)
                 }
             }
 
             override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                val activity = activity?:return
+                val activity = activity ?: return
                 Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
             }
