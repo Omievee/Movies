@@ -2,6 +2,7 @@ package com.mobile.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -407,7 +408,17 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
-        // locationUpdateRealm();
+        locationUpdateRealm();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            locationUpdateRealm();
+        } else {
+            Toast.makeText(myContext, "Location permissions are disabled. Go to settings.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getMyLocation() {
@@ -433,7 +444,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             LatLng latLng = new LatLng(local.getLatitude(), local.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
             googleMap.animateCamera(cameraUpdate);
-            Toast.makeText(myContext, "Location ", Toast.LENGTH_SHORT).show();
 
         }
         theatersRecyclerView.getRecycledViewPool().clear();
@@ -448,7 +458,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     public void onTheaterClick(int pos, @NotNull Theater theater) {
         if (!locationManager.isLocationEnabled()) {
             new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
-            return;
         } else {
             showFragment(TheaterFragment.newInstance(theater));
         }
@@ -574,12 +583,14 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             Collections.sort(eticketingTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
             Collections.sort(nearbyTheaters, (o1, o2) -> Double.compare(o1.getDistance(), o2.getDistance()));
 
-            Log.d(Constants.TAG, "theater ticketType>>>>>>>>>>>>>>> " + theaterTicketType.getTicketType() + "     " + theaterTicketType.getName());
             if (theaterTicketType.ticketTypeIsETicket() || theaterTicketType.ticketTypeIsSelectSeating()) {
                 eticketingTheaters.add(theaterTicketType);
             } else {
                 nearbyTheaters.add(theaterTicketType);
             }
+
+            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + nearbyTheaters.size());
+            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + eticketingTheaters.size());
 
 
             googleMap.setOnCameraMoveListener(() -> {

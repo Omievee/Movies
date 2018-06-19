@@ -3,6 +3,7 @@ package com.mobile.di
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.analytics.AnalyticsManagerImpl
 import com.mobile.history.HistoryModule
+import com.mobile.home.RestrictionsManager
 import com.mobile.location.LocationModule
 import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
@@ -23,6 +24,12 @@ class AppModule {
     @Singleton
     fun provideSessionManager(): SessionManager {
         return SessionManagerImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun restrictionManager() : RestrictionsManager {
+        return RestrictionsManager()
     }
 
 }

@@ -28,12 +28,16 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
                 .subscribe({
                     _lastLocation = it
                     UserPreferences.setLocation(_lastLocation!!.lat, _lastLocation!!.lon)
+
                 }, {})
     }
 
     override fun isLocationEnabled(): Boolean {
-        return systemLocationManager.isProviderEnabled(GPS_PROVIDER) && systemLocationManager
-                .isProviderEnabled(NETWORK_PROVIDER)
+        return systemLocationManager
+                .isProviderEnabled(GPS_PROVIDER)
+                &&
+                systemLocationManager
+                        .isProviderEnabled(NETWORK_PROVIDER)
     }
 
     override fun lastLocation(): UserLocation? {
@@ -47,7 +51,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
 
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
-        val single:Single<UserLocation> = create({ emitter ->
+        val single: Single<UserLocation> = create({ emitter ->
             val permission = permission
             if (!permission) {
                 when (emitter.isDisposed) {
@@ -96,7 +100,6 @@ fun Location?.toLocation(): UserLocation {
     this?.let {
         return UserLocation(lat = latitude, lon = longitude)
     } ?: return UserLocation.EMPTY
-
 }
 
 class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderClient?, val locationRequest: LocationRequest) : ObservableOnSubscribe<UserLocation> {
@@ -108,6 +111,7 @@ class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderC
             when (emitter?.isDisposed) {
                 false -> locationResult?.let {
                     emitter?.onNext(locationResult.lastLocation.toLocation())
+
                 }
             }
         }
@@ -131,7 +135,6 @@ class LocationUpdates(val permission: Boolean, val fused: FusedLocationProviderC
     fun dispose() {
         fused?.removeLocationUpdates(locationCallback)
     }
-
 }
 
 class LocationPermission : Throwable("Location permission missing")

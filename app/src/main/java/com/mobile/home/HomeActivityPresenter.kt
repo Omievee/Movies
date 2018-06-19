@@ -10,20 +10,25 @@ import com.mobile.model.Screening
 import com.mobile.model.ScreeningToken
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
-import com.mobile.network.RestClient
-import com.mobile.session.SessionManager
-import io.reactivex.disposables.Disposable
+import com.mobile.reservation.CurrentReservationV2
+import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.AndroidIDVerificationResponse
 import com.mobile.responses.ETicketConfirmation
 import com.mobile.responses.MicroServiceRestrictionsResponse
 import java.text.SimpleDateFormat
+import com.mobile.session.SessionManager
+import io.reactivex.disposables.Disposable
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi:MicroApi, val sessionManager: SessionManager) {
+class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
     var deviceId: String? = null
+    var lastRestrictionRequest: Long = 0
+    var currentReservation: CurrentReservationV2? = null
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
@@ -69,9 +74,15 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     private fun checkRestrictions() {
         restrictionsDisposable?.dispose()
         val userId = sessionManager.getUser()?.id ?: return
+        val diff = System.currentTimeMillis() - lastRestrictionRequest
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(diff).toInt()
+        when (minutes < 1) {
+            true -> return
+        }
         restrictionsDisposable = microApi.getSession(userId)
                 .subscribe({
-                    determineShowSnackbar(it)
+                    lastRestrictionRequest = System.currentTimeMillis()
+                    restrictionManager.publish(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
                     determineForceLogout(it)
@@ -86,66 +97,35 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
             return
         }
         sessionManager.logout()
-        val logout = it.logoutInfo?:return
+        val logout = it.logoutInfo ?: return
         view.showForceLogout(logout)
     }
 
     private fun determineAlertScreen(it: Alert?) {
         it ?: return
-        when {
-            it.id != UserPreferences.getAlertDisplayedId() -> {
-                view.showAlert(it)
+        when (it.id) {
+            UserPreferences.getAlertDisplayedId() -> {
             }
-        }
-    }
-
-    private fun determineShowSnackbar(it: MicroServiceRestrictionsResponse) {
-        val oldStatus = UserPreferences.getRestrictionSubscriptionStatus()
-        val newStatus = it.subscriptionStatus
-        if (oldStatus != newStatus.toString()) {
-            view.showSubscriptionButton(it)
+            else -> view.showAlert(it)
         }
     }
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
         it.popInfo?.let {
-            if(!showReservation())
-                view.showTicketVerification(it)
+            fetchReservation()
         }
     }
 
-    private fun showReservation(): Boolean {
-        var reservationAvailable: Boolean? = false
-        RestClient
-                .getAuthenticated()
+    private fun fetchReservation() {
+        api
                 .lastReservation()
                 .subscribe({
-                    val screening = Screening.from(it)
-                    var confirmation: ETicketConfirmation? = null
-                    if (it.ticket != null) {
-                        confirmation = ETicketConfirmation()
-                        confirmation.confirmationCode = it.ticket!!.redemptionCode
-                        confirmation.barCodeUrl = ""
-                    }
-                    var reservation: Reservation? = null
-                    if (it.reservation != null) {
-                        reservation = Reservation()
-                        reservation.id = it.reservation!!.id!!
-                    }
-                    val token = ScreeningToken(
-                            screening,
-                            SimpleDateFormat("h:mm a").format(it.showtime),
-                            reservation,
-                            confirmation,
-                            null
-                    )
-                    view.showConfirmationScreen(token)
-                    reservationAvailable = true
+                    currentReservation = it
+                    view.showConfirmationScreen(it)
                 }
-                        ,{
+                        , {
 
                 })
-        return reservationAvailable ?: false
     }
 
     fun onDestroy() {

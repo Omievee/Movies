@@ -2,6 +2,7 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -28,15 +30,18 @@ import android.widget.Toast;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
 import com.mobile.UserPreferences;
+import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.adapters.DynamicMoviesTabAdapter;
 import com.mobile.featured.FeaturedMovieAdapter;
 import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.home.RestrictionsManager;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.moviepass.R;
 
 import java.util.ArrayList;
@@ -49,6 +54,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
@@ -66,6 +72,8 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     @Inject
     MoviesFragmentPresenter presenter;
 
+    @Inject
+    RestrictionsManager restrictionsManager;
     //Tag
     public static final String TAG = "MoviesFragment";
 
@@ -97,7 +105,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     private Guideline guideLineLeft;
     private Guideline guideLineRight;
     public ImageView toolBarBackground;
-
+    public Button activateMPCardButton;
 
     //Location
     public static final int LOCATION_PERMISSIONS = 99;
@@ -165,6 +173,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         toolBarBackground = rootView.findViewById(R.id.toolBarBackground);
         scrollup = false;
         scrolldown = false;
+        activateMPCardButton = rootView.findViewById(R.id.bottomButton);
     }
 
     /**
@@ -203,12 +212,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         progress.setVisibility(View.VISIBLE);
 
         /** SEARCH */
-        searchicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(new SearchFragment());
-            }
-        });
+        searchicon.setOnClickListener(v -> showFragment(new SearchFragment()));
         childFragmentManager = getChildFragmentManager();
         config = new RealmConfiguration.Builder()
                 .name("Movies.Realm")
@@ -287,7 +291,35 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 }
             }
         });
+        subscribeToRestrictions();
     }
+
+    @Nullable
+    Disposable restritionSub;
+    private void subscribeToRestrictions() {
+        if (restritionSub != null) {
+            restritionSub.dispose();
+        }
+        restritionSub = restrictionsManager
+                .payload()
+                .subscribe(this::showSubscriptionButton, err -> {
+                });
+    }
+
+    private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
+        if (res.getSubscriptionActivationRequired()) {
+            activateMPCardButton.animate().alpha(1.0f);
+            activateMPCardButton.setClickable(true);
+            activateMPCardButton.setOnClickListener(v -> {
+                Intent activateCard = new Intent(getContext(), ActivateMoviePassCard.class);
+                startActivity(activateCard);
+            });
+        } else {
+            activateMPCardButton.animate().alpha(0.0f);
+        }
+    }
+
+
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -622,6 +654,8 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
     }
+
+
 }
 
 
