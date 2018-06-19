@@ -13,8 +13,21 @@ open class ReservationHistory(
         var title: String? = null,
         var titleNormalized: String? = null,
         var imageUrl: String? = null,
-        var userRating:String? = null,
+        var userRating: String? = null,
         var theaterName: String? = null,
         var createdAt: Date? = null,
         var updatedAt: Date = Date()
-) : RealmObject(), Parcelable
+) : RealmObject(), Parcelable {
+
+    val rating: Rating
+        get() {
+            return Rating.values().find {
+                it.name.toUpperCase() == userRating?.toUpperCase()
+            } ?: Rating.UNKNOWN
+        }
+
+}
+
+enum class Rating {
+    GOOD, BAD, UNKNOWN
+}

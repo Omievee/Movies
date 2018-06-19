@@ -46,7 +46,7 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
     HistoryManager historyManager;
 
     @Nullable
-    Disposable disposable;
+    Disposable historySub;
 
     public PastReservationsFragment() {
     }
@@ -104,10 +104,10 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
 
     public void loadData() {
         progress.setVisibility(View.VISIBLE);
-        if (disposable != null) {
-            disposable.dispose();
+        if (historySub != null) {
+            historySub.dispose();
         }
-        disposable = historyManager
+        historySub = historyManager
                 .getHistory()
                 .doFinally(() -> progress.setVisibility(View.GONE))
                 .subscribe(res -> {

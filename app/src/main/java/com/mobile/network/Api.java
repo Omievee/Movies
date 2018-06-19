@@ -92,7 +92,8 @@ public interface Api {
     Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest request);
 
     /**
-     * Change Email */
+     * Change Email
+     */
     @POST("rest/v1/emailChange")
     Call<ChangeEmailResponse> changeEmail(@Body ChangeEmailRequest request);
 
@@ -264,7 +265,7 @@ public interface Api {
     Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
     @POST("/rest/v1/movies/{movieId}/rate")
-    Call<HistoryResponse> submitRating(@Path("movieId") int movieId, @Body HistoryResponse request);
+    Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);
 
 
     //REFER A FRIEND
@@ -273,14 +274,14 @@ public interface Api {
 
     //Device ID  Verification
     @POST("/rest/v1/device/verification")
-    Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+    Call<AndroidIDVerificationResponse> verifyAndroidID(@Header(USER_ID) String user_id, @Body AndroidIDVerificationResponse request);
 
     @POST("/rest/v1/device/verification")
-    Single<AndroidIDVerificationResponse> verifyAndroidIDRx(@Header(USER_ID)String user_id, @Body AndroidIDVerificationResponse request);
+    Single<AndroidIDVerificationResponse> verifyAndroidIDRx(@Header(USER_ID) String user_id, @Body AndroidIDVerificationResponse request);
 
     @GET("/rest/v1/loyalty/list")
     Single<List<TheaterChain>> theaterChains();
 
     @POST("/rest/v1/loyalty/{chain}/signIn")
-    Single<Map<String,Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String,String> chainData);
+    Single<Map<String, Object>> theaterChainSignIn(@Path("chain") String chain, @Body Map<String, String> chainData);
 }

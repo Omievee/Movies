@@ -296,6 +296,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     @Nullable
     Disposable restritionSub;
+
     private void subscribeToRestrictions() {
         if (restritionSub != null) {
             restritionSub.dispose();
@@ -306,19 +307,21 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 });
     }
 
+
     private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
         if (res.getSubscriptionActivationRequired()) {
-            activateMPCardButton.animate().alpha(1.0f);
+            activateMPCardButton.setVisibility(View.VISIBLE);
+            fadeIn(activateMPCardButton);
             activateMPCardButton.setClickable(true);
             activateMPCardButton.setOnClickListener(v -> {
                 Intent activateCard = new Intent(getContext(), ActivateMoviePassCard.class);
                 startActivity(activateCard);
             });
         } else {
-            activateMPCardButton.animate().alpha(0.0f);
+            activateMPCardButton.setVisibility(View.GONE);
+            fadeOut(activateMPCardButton);
         }
     }
-
 
 
     public int getStatusBarHeight() {
@@ -360,10 +363,12 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     }
 
     public void onMoviePosterClick(Movie movie) {
-        Log.d(TAG, "onMoviePosterClick: " + movie.getTitle());
         if (movie == null || !movie.isValid()) {
-
         } else {
+//            if (activateMPCardButton.getVisibility() == View.VISIBLE) {
+//                fadeOut(activateMPCardButton);
+//                activateMPCardButton.setVisibility(View.GONE);
+//            }
             showFragment(MovieFragment.newInstance(movie));
         }
     }

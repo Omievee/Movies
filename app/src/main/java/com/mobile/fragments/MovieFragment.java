@@ -573,12 +573,11 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                     buttonCheckIn.setEnabled(true);
                     if (error instanceof ApiError) {
                         ApiError apiError = (ApiError) error;
-                        Toast.makeText(myContext, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(myContext, apiError.getError().getMessage(), Toast.LENGTH_SHORT).show();
                         if (apiError.getMessage() != null && apiError.getMessage().contains("active card")) {
                         } else {
                             GoWatchItSingleton.getInstance().checkInEvent(theaterObject, screening, showtime, "ticket_purchase_attempt", String.valueOf(theaterObject.getId()), "");
                         }
-
                     }
                     progress.setVisibility(View.GONE);
                     buttonCheckIn.setVisibility(View.VISIBLE);

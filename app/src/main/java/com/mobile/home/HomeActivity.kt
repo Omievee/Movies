@@ -13,14 +13,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.mobile.*
-import com.mobile.activities.ConfirmationActivity
+import com.mobile.BackFragment
+import com.mobile.DeviceID
+import com.mobile.MPActivty
+import com.mobile.Primary
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
-import com.mobile.model.ScreeningToken
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
 import com.mobile.utils.onBackExtension
@@ -30,7 +31,6 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import org.parceler.Parcels
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
@@ -112,6 +112,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         if (onBackExtension()) {
             return
         }
+
         val currItem = adapter?.currentItem ?: return back()
         val backable: BackFragment = currItem as? BackFragment ?: return back()
         when (backable.onBack()) {

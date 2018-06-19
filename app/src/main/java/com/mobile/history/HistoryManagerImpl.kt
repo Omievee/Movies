@@ -1,12 +1,15 @@
 package com.mobile.history
 
-import com.mobile.UserPreferences.*
+import com.mobile.UserPreferences.isHistoryLoadedToday
+import com.mobile.UserPreferences.saveHistoryLoadedDate
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
+import com.mobile.responses.HistoryResponse
 import com.mobile.rx.Schedulers
 import com.mobile.utils.DateUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
 import javax.inject.Provider
@@ -34,7 +37,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
             if (!wasHistoryUpdatedEver || !wasHistoryUpdatedToday) {
                 getHistoryFromApi(it)
             } else {
-                if(!it.isDisposed) {
+                if (!it.isDisposed) {
                     it.onComplete()
                 }
             }
@@ -56,7 +59,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             } ?: throw RuntimeException()
                         }
                         .doAfterTerminate {
-                            if(emitter.isDisposed) {
+                            if (emitter.isDisposed) {
                                 return@doAfterTerminate
                             }
                             emitter.onComplete()
@@ -70,6 +73,24 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             } ?: emitter.onNext(success)
 
                         }
+
+    }
+
+    override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
+        val id = history.id?:0
+        val rating = when (wasGood) {
+            true -> "GOOD"
+            false -> "BAD"
+        }
+        return api
+                .submitRatingRx(id, HistoryResponse(rating))
+                .doOnSuccess { v ->
+                    history.userRating = rating
+                    realmHistory.get().insertOrUpdate(history)
+                }
+                .map { res ->
+                    history
+                }
 
     }
 }

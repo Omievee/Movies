@@ -1,10 +1,10 @@
 package com.mobile.history
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,23 +14,20 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
-import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.Constants
 import com.mobile.fragments.MPFragment
-import com.mobile.helpers.LogUtils
+import com.mobile.history.model.Rating
 import com.mobile.history.model.ReservationHistory
-import com.mobile.network.RestClient
-import com.mobile.responses.HistoryResponse
 import com.moviepass.R
+import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fr_historydetails.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
 /**
  * Created by o_vicarra on 3/27/18.
@@ -38,9 +35,14 @@ import java.text.SimpleDateFormat
 
 class HistoryDetailsFragment : MPFragment() {
 
+    @Inject
+    lateinit var historyManagerImpl: HistoryManager
+
+    var historySub: Disposable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val activity = activity?:return
+        val activity = activity ?: return
         activity.startPostponedEnterTransition()
         sharedElementEnterTransition = TransitionInflater.from(activity).inflateTransition(android.R.transition.explode).setDuration(2000)
     }
@@ -64,7 +66,7 @@ class HistoryDetailsFragment : MPFragment() {
 
         val black = Color.argb(200, 0, 0, 0)
         detailsBackground.setBackgroundColor(black)
-        Log.d(Constants.TAG, "onViewCreated: " + historyItem!!.userRating)
+        Log.d(Constants.TAG, "onViewCreated: " + historyItem.userRating)
 
         if (historyItem.userRating != null) {
             didYouLikeIt.visibility = View.GONE
@@ -77,9 +79,12 @@ class HistoryDetailsFragment : MPFragment() {
             }
 
         } else {
-            val id = historyItem.id?:return
-            like.setOnClickListener { v -> rateMovie(id, "GOOD") }
-            dislike.setOnClickListener { v -> rateMovie(id, "BAD") }
+            like.setOnClickListener { v ->
+                userClickedRating(historyItem, true)
+            }
+            dislike.setOnClickListener { v ->
+                userClickedRating(historyItem, false)
+            }
         }
 
         val imgUrl = Uri.parse(historyItem.imageUrl)
@@ -116,33 +121,28 @@ class HistoryDetailsFragment : MPFragment() {
         enlargedImage.controller = controller
     }
 
+    private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
+        historySub?.dispose()
 
-    private fun rateMovie(historyId: Int, userRating: String) {
-        val rating = HistoryResponse(userRating)
-        RestClient.getAuthenticated().submitRating(historyId, rating).enqueue(object : Callback<HistoryResponse> {
-            override fun onResponse(call: Call<HistoryResponse>, response: Response<HistoryResponse>) {
-                val h = Handler()
-                if (response.isSuccessful) {
-                    if (userRating == "GOOD") {
-                        dislike.visibility = View.GONE
-                        fadeOut(dislike)
-                        animate(like)
-                    } else if (userRating == "BAD") {
-                        like.visibility = View.GONE
-                        fadeOut(like)
-                        animate(dislike)
-                    }
-                    h.postDelayed({ activity?.onBackPressed() }, 2000)
-                }
-            }
+        historySub = historyManagerImpl.submitRating(history, wasGood)
+                .subscribe({ res ->
+                    onHistorySaved(res)
+                }, {
 
-            override fun onFailure(call: Call<HistoryResponse>, t: Throwable) {
-                val activity = activity?:return
-                Toast.makeText(activity, t.message, Toast.LENGTH_SHORT).show()
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
-            }
-        })
+                })
+    }
 
+    private fun onHistorySaved(res: ReservationHistory?) {
+        val wasGood = res?.rating == Rating.GOOD
+        if (wasGood) {
+            dislike.visibility = View.GONE
+            fadeOut(dislike)
+            animate(like)
+        } else {
+            like.visibility = View.GONE
+            fadeOut(like)
+            animate(dislike)
+        }
     }
 
     fun animate(view: View) {
@@ -186,4 +186,15 @@ class HistoryDetailsFragment : MPFragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        historySub = null
+    }
+
+
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+
+    }
 }

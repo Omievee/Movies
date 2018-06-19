@@ -2,6 +2,7 @@ package com.mobile.history
 
 import com.mobile.history.model.ReservationHistory
 import io.reactivex.Observable
+import io.reactivex.Single
 
 interface HistoryManager {
 
@@ -10,4 +11,5 @@ interface HistoryManager {
      */
     fun getHistory(): Observable<List<ReservationHistory>>
 
+    fun submitRating(history:ReservationHistory, wasGood:Boolean): Single<ReservationHistory>
 }
