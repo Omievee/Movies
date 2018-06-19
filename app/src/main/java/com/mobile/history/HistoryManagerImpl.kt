@@ -77,7 +77,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     }
 
     override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
-        val id = history.id!!
+        val id = history.id?:0
         val rating = when (wasGood) {
             true -> "GOOD"
             false -> "BAD"

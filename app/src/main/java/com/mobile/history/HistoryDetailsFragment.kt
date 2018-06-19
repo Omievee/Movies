@@ -19,8 +19,8 @@ import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.Constants
 import com.mobile.fragments.MPFragment
+import com.mobile.history.model.Rating
 import com.mobile.history.model.ReservationHistory
-import com.mobile.rx.Schedulers
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fr_historydetails.*
@@ -34,7 +34,7 @@ import javax.inject.Inject
 class HistoryDetailsFragment : MPFragment() {
 
     @Inject
-    lateinit var historyManagerImpl: HistoryManagerImpl
+    lateinit var historyManagerImpl: HistoryManager
 
     var historySub: Disposable? = null
 
@@ -122,6 +122,16 @@ class HistoryDetailsFragment : MPFragment() {
     private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
         historySub?.dispose()
 
+        historySub = historyManagerImpl.submitRating(history, wasGood)
+                .subscribe({res->
+                    onHistorySaved(res)
+                },{
+
+                })
+    }
+
+    private fun onHistorySaved(res: ReservationHistory?) {
+        val wasGood = res?.rating==Rating.GOOD
         if (wasGood) {
             dislike.visibility = View.GONE
             fadeOut(dislike)
@@ -131,12 +141,6 @@ class HistoryDetailsFragment : MPFragment() {
             fadeOut(like)
             animate(dislike)
         }
-
-        historySub = historyManagerImpl.submitRating(history, wasGood)
-                .compose(Schedulers.singleDefault())
-                .subscribe()
-
-
     }
 
     fun animate(view: View) {
