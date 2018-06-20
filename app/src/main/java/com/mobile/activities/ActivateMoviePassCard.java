@@ -5,10 +5,10 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.fragments.AutoActivatedCardFragment;
 import com.mobile.fragments.MovieFragment;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
@@ -92,6 +93,8 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
         activateSubmitButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
+
+
             digits = activateDigits.getText().toString().trim();
             final CardActivationRequest request = new CardActivationRequest(digits);
             RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
@@ -100,7 +103,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                     CardActivationResponse cardActivationResponse = response.body();
                     if (cardActivationResponse != null && response.isSuccessful()) {
                         progress.setVisibility(View.GONE);
-                        Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
+                        Intent intent = new Intent(ActivateMoviePassCard.this, AutoActivatedCardFragment.class);
                         intent.putExtra(MovieFragment.SCREENING, Parcels.wrap(screeningObject));
                         intent.putExtra(Constants.SHOWTIME, selectedShowTime);
                         startActivity(intent);

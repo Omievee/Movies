@@ -248,6 +248,8 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
             getHistoryForStorage();
         }
 
+
+
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
         params.setMargins(0, getStatusBarHeight(), 0, 0);
         toolBar.setLayoutParams(params);
@@ -309,9 +311,9 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
 
     private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
-        if (res.getSubscriptionActivationRequired()) {
+        Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionActivationRequired());
+        if (!res.getSubscriptionActivationRequired()) {
             activateMPCardButton.setVisibility(View.VISIBLE);
-            fadeIn(activateMPCardButton);
             activateMPCardButton.setClickable(true);
             activateMPCardButton.setOnClickListener(v -> {
                 Intent activateCard = new Intent(getContext(), ActivateMoviePassCard.class);
@@ -319,7 +321,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
             });
         } else {
             activateMPCardButton.setVisibility(View.GONE);
-            fadeOut(activateMPCardButton);
         }
     }
 

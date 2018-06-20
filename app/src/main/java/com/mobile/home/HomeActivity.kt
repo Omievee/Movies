@@ -13,10 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.mobile.BackFragment
-import com.mobile.DeviceID
-import com.mobile.MPActivty
-import com.mobile.Primary
+import com.mobile.*
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.model.Alert
@@ -34,6 +31,7 @@ import javax.inject.Inject
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
+
 
     @Inject
     lateinit var presenter: HomeActivityPresenter
@@ -79,6 +77,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
         checkGooglePlayServices()
         presenter.onDeviceId(DeviceID.getID(this))
         presenter.onResume()
+
+
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -142,6 +142,14 @@ class HomeActivity : MPActivty(), HomeActivityView {
     override fun showConfirmationScreen(it: CurrentReservationV2) {
         val context = this
         startActivity(ReservationActivity.newInstance(context, it))
+    }
+
+    override fun showActivatedCardScreen() {
+        if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
+            showFragment(AutoActivatedCardFragment.newInstance())
+        }
+
+
     }
 
     var currentItem: Int = 0
@@ -209,5 +217,6 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getCount(): Int {
         return frags.size
     }
+
 
 }
