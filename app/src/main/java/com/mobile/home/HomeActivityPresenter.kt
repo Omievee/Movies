@@ -94,6 +94,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                 if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
                     view.showActivatedCardScreen()
                 }
+            else -> return
         }
 
     }
