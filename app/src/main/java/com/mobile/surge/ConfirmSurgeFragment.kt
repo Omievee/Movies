@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.fragments.MPFragment
 import com.mobile.model.*
@@ -37,6 +38,9 @@ class ConfirmSurgeFragment : MPFragment() {
 
     @Inject
     lateinit var sessionManager: UserManager
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     var listener: BringAFriendListener? = null
 
@@ -103,7 +107,7 @@ class ConfirmSurgeFragment : MPFragment() {
 
     val infoClickListener = object : InfoClickListener {
         override fun onClickInfo() {
-            val activity = activity?:return
+            val activity = activity ?: return
             startActivity(PeakPricingActivity.newInstance(activity))
         }
 
@@ -160,11 +164,12 @@ class ConfirmSurgeFragment : MPFragment() {
         val info = availability.providerInfo ?: return
         val lat = locationManager.lastLocation() ?: return
         submit.progress = true
+        val checkIn = Checkin(
+                screening = screening,
+                theater = theater,
+                availability = availability)
         ticketManager
-                .reserve(checkin = Checkin(
-                        screening = screening,
-                        theater = theater,
-                        availability = availability),
+                .reserve(checkin = checkIn,
                         ticketRequest = TicketInfoRequest(
                                 performanceInfo = info,
                                 latitude = lat.lat,
@@ -173,20 +178,19 @@ class ConfirmSurgeFragment : MPFragment() {
                 .doAfterTerminate({ submit.progress = false })
                 .subscribe({
                     val activity = activity ?: return@subscribe
+                    analyticsManager.onCheckinSuccessful(checkIn, it)
                     activity.setResult(Activity.RESULT_OK)
                     activity.finish()
 
                     startActivity(ReservationActivity
                             .newInstance(activity, ScreeningToken(
-                                    screening,
-                                    availability,
-                                    it.reservation,
-                                    it.eTicketConfirmation,
-                                    theater)
+                                    checkIn = checkIn,
+                                    reservation = it)
                             ))
                 }, {
                     val error = it as? ApiError ?: return@subscribe
                     showError(error)
+                    analyticsManager.onCheckinFailed(checkIn)
                 })
 
     }

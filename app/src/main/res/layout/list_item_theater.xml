@@ -1,121 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list_item_theater"
+    android:id="@+id/rel_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_standard"
-    android:layout_marginEnd="@dimen/margin_half"
-    android:layout_marginStart="@dimen/margin_half"
-    android:layout_marginTop="@dimen/margin_half"
-    app:cardBackgroundColor="@color/charcoalGrey"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="4dp">
+    android:layout_height="match_parent"
+    android:foreground="?selectableItemBackgroundBorderless"
+    android:background="@color/charcoalGrey">
+
+    <TextView
+        android:id="@+id/theaterName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="@dimen/more_spacing"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/fragment_theaters_name"
+        android:textAlignment="viewStart"
+        android:textColor="@color/almost_white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/theaterAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/theaterName"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/more_spacing"
+        android:paddingStart="@dimen/more_spacing"
+        android:textAlignment="viewStart"
+        android:textColor="@color/almost_white"
+        android:textSize="12sp"
+        tools:text="@string/fragment_theaters_address" />
+
+    <TextView
+        android:id="@+id/theaterCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/theaterAddress"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/more_spacing"
+        android:paddingStart="@dimen/more_spacing"
+        android:textAlignment="viewStart"
+        android:textColor="@color/almost_white"
+        android:textSize="12sp"
+        tools:text="@string/fragment_theaters_address" />
 
     <RelativeLayout
-        android:id="@+id/rel_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/distanceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/theaterAddress"
+        android:layout_marginBottom="@dimen/margin_standard">
 
         <TextView
-            android:id="@+id/theater_name"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="@dimen/more_spacing"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/fragment_theaters_name"
-            android:textAlignment="viewStart"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/theater_address"
+            android:id="@+id/theaterDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/theater_name"
-            android:maxLines="1"
-            android:paddingStart="@dimen/more_spacing"
-            android:text="@string/fragment_theaters_address"
-            android:textAlignment="viewStart"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_toStartOf="@id/theaterPin"
             android:textColor="@color/almost_white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="@string/fragment_theaters_distance" />
 
-
-        <TextView
-            android:id="@+id/theater_city_things"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/theater_address"
-            android:maxLines="1"
-            android:paddingStart="@dimen/more_spacing"
-            android:text="@string/fragment_theaters_address"
-            android:textAlignment="viewStart"
-            android:textColor="@color/almost_white"
-            android:textSize="12sp" />
-
-        <RelativeLayout
-            android:id="@+id/distanceView"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/theaterPin"
+            android:layout_width="18dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/theater_address"
-            android:layout_marginBottom="@dimen/margin_standard">
-
-
-            <TextView
-                android:id="@+id/theater_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:layout_toStartOf="@id/PIN"
-                android:text="@string/fragment_theaters_distance"
-                android:textColor="@color/almost_white"
-                android:textSize="12sp" />
-
-            <ImageView
-                android:id="@+id/PIN"
-                android:layout_width="18dp"
-                android:layout_height="20dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:paddingBottom="@dimen/margin_minimum"
-                android:src="@drawable/locationiconsmallred"
-                android:textAlignment="viewStart"
-                android:tint="@color/new_red" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/margin_standard">
-
-            <ImageView
-                android:id="@+id/icon_ticket"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="@dimen/margin_standard"
-                android:layout_toEndOf="@id/icon_seat"
-                android:src="@drawable/ticketnavwhite"
-                android:tint="@color/white" />
-
-            <ImageView
-                android:id="@+id/icon_seat"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="@dimen/margin_half"
-                android:src="@drawable/icon_seat_copy"
-                android:textAlignment="viewEnd" />
-        </RelativeLayout>
-
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:paddingBottom="@dimen/margin_minimum"
+            android:src="@drawable/locationiconsmallred"
+            android:textAlignment="viewStart"
+            android:tint="@color/new_red" />
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/margin_standard">
+
+        <ImageView
+            android:id="@+id/iconTicket"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_toEndOf="@id/iconSeat"
+            android:src="@drawable/ticketnavwhite"
+            android:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/iconSeat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="@dimen/margin_half"
+            android:src="@drawable/icon_seat_copy"
+            android:textAlignment="viewEnd" />
+    </RelativeLayout>
+</RelativeLayout>

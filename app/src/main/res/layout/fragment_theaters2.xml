@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/theaterListCL"
+    android:layout_width="match_parent"
+    android:clipToPadding="false"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        style="@style/ElevatedContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleView"
+            style="@style/TitleView"
+            android:layout_marginTop="@dimen/status_bar_height"
+            android:text="@string/theaters_list"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/mapIcon"
+            style="@style/ActionButton"
+            android:src="@drawable/icon_map"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/titleView" />
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            style="@style/ActionButton"
+            android:src="@drawable/search_icon_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/titleView" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/searchBar"
+            style="@style/DarkCardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_half"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="@dimen/margin_half"
+            android:visibility="invisible"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/mapIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/mapIcon"
+            app:layout_constraintTop_toTopOf="@id/mapIcon">
+
+            <com.mobile.theater.MapSearchBox
+                android:id="@+id/mapSearchBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/currentLocationContainer"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:layout_marginEnd="@dimen/margin_standard_and_half"
+            app:layout_constraintTop_toBottomOf="@id/titleView">
+
+            <TextView
+                android:id="@+id/currentLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/current_location_theaters_list_view"
+                android:textColor="@color/red"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/locationIcon"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/locationIcon"
+                style="@style/TheaterPin"
+                app:layout_constraintBottom_toBottomOf="@id/currentLocationText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.constraint.ConstraintLayout>

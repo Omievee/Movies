@@ -6,6 +6,7 @@ import android.widget.FrameLayout
 import com.mobile.model.Screening
 import com.mobile.screening.ScreeningPresentation
 import com.moviepass.R
+import kotlinx.android.synthetic.main.horizontal_poster.view.*
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
 
 class MissingCheckinView(context: Context) : FrameLayout(context) {

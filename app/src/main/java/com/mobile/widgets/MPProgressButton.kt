@@ -2,6 +2,7 @@ package com.mobile.widgets
 
 import android.content.Context
 import android.support.annotation.IntegerRes
+import android.support.annotation.StringRes
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
@@ -31,8 +32,11 @@ class MPProgressButton(context: Context, attrs: AttributeSet? = null) : Constrai
             }
             isEnabled = !value
         }
-    @IntegerRes var text:Int = 0
+    @IntegerRes @StringRes var text:Any? = null
     set(value) {
-        textView.setText(value)
+        when(value) {
+            is Int -> textView.setText(value)
+            is String-> textView.text = value
+        }
     }
 }

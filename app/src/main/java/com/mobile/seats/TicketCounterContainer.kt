@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.mobile.model.GuestTicket
-import com.mobile.model.SeatInfo
 
 class TicketCounterContainer(context: Context, attr: AttributeSet? = null) : LinearLayout(context, attr) {
 
@@ -30,7 +29,7 @@ class TicketCounterContainer(context: Context, attr: AttributeSet? = null) : Lin
         }
 
     private val listener = object : TicketCounterListener {
-        override fun onChange(ticketPurchaseDatas: TicketPurchaseData) {
+        override fun onChange(ticketPurchaseData: TicketPurchaseData) {
             val total = (0..childCount).sumBy {
                 val view = getChildAt(it)
                 when (view) {
@@ -49,7 +48,7 @@ class TicketCounterContainer(context: Context, attr: AttributeSet? = null) : Lin
                         it?.constraint = TicketConstraint(max = newMax, min = 0)
                     }
             ticketListener?.let {
-                it.onTickets(ticketPurchaseData = ticketPurchaseData)
+                it.onTickets(ticketPurchaseData = this@TicketCounterContainer.ticketPurchaseData)
             }
         }
     }

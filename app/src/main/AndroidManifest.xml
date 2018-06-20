@@ -179,10 +179,6 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.mobile.activities.ConfirmationActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name="com.mobile.reservation.ReservationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme" />

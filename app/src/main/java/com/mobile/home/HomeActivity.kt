@@ -57,11 +57,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
         adapter = HomeViewPager(supportFragmentManager)
         bottomSheetNav.setOnNavigationItemSelectedListener {
 
-            viewPager.currentItem = when (it.itemId) {
+            viewPager.setCurrentItem(when (it.itemId) {
                 R.id.action_movies -> adapter?.movies
                 R.id.action_theaters -> adapter?.theaters
                 else -> adapter?.profile
-            } ?: 0
+            } ?: 0, false)
             true
         }
         val black = Color.argb(200, Color.red(0), Color.green(0), Color.blue(0))
@@ -96,7 +96,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
         if (result != ConnectionResult.SUCCESS) {
             AlertDialog.Builder(context).setMessage("Google Play Services must either be enabled or updated in order to continue")
-                    .setPositiveButton("OK") { dialog, which ->
+                    .setPositiveButton("OK") { _, _ ->
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
                         finish()
                     }.setCancelable(false).show()
@@ -109,7 +109,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         AlertDialog.Builder(this)
                 .setMessage(it.getMessage())
                 .setCancelable(false)
-                .setPositiveButton(android.R.string.ok) { dialog, which ->
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     startActivity(Intent(this, LogInActivity::class.java));
                     finishAffinity();
                 }.show()
@@ -194,7 +194,7 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         theaters = position.getAndIncrement()
         profile = position.getAndIncrement()
         map.put(movies, MoviesFragment())
-        map.put(theaters, TheatersFragment())
+        map.put(theaters, TheatersFragmentV2())
         map.put(profile, ProfileFragment())
         map
     }
@@ -210,8 +210,8 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun setPrimaryItem(container: ViewGroup, position: Int, fragment: Any) {
         super.setPrimaryItem(container, position, fragment)
         when {
-            fragment !== currentItem -> {
-                currentItem = fragment as? Fragment
+            fragment !== currentItem && (fragment is Fragment) && fragment.isAdded -> {
+                currentItem = fragment
                 (currentItem as? Primary)?.onPrimary()
             }
         }

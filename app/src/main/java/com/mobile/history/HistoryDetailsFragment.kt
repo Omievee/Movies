@@ -6,6 +6,7 @@ import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.content.res.ResourcesCompat
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +59,7 @@ class HistoryDetailsFragment : MPFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        close.setOnClickListener { v -> activity?.onBackPressed() }
+        close.setOnClickListener { _ -> activity?.onBackPressed() }
 
 
         val historyItem = arguments!!.getParcelable<ReservationHistory>(HISTORY_POSTER)
@@ -72,18 +73,18 @@ class HistoryDetailsFragment : MPFragment() {
         if (historyItem.userRating != null) {
             didYouLikeIt.visibility = View.GONE
             if (historyItem.userRating == "GOOD") {
-                like.setImageDrawable(resources.getDrawable(R.drawable.thumbsupselect))
+                like.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.thumbsupselect, null))
                 dislike.visibility = View.GONE
             } else if (historyItem.userRating == "BAD") {
-                dislike.setImageDrawable(resources.getDrawable(R.drawable.thumbsdownselect))
+                dislike.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsdownselect,null))
                 like.visibility = View.GONE
             }
 
         } else {
-            like.setOnClickListener { v ->
+            like.setOnClickListener { _ ->
                 userClickedRating(historyItem, true)
             }
-            dislike.setOnClickListener { v ->
+            dislike.setOnClickListener { _ ->
                 userClickedRating(historyItem, false)
             }
         }

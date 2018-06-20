@@ -73,7 +73,7 @@ class BringAFriendPagerAdapter(val screening: Screening, val availability: Avail
                 else -> map[position.getAndIncrement()] = ConfirmDetailsFragment()
             }
             map
-        } ?: emptyMap<String, Fragment>()
+        }
 
     }
 

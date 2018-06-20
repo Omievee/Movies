@@ -15,8 +15,3 @@ interface LocationManager {
 
 }
 
-class UserLocation(val lat:Double=0.0, val lon:Double=0.0) {
-    companion object {
-        val EMPTY:UserLocation = UserLocation()
-    }
-}

@@ -7,7 +7,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson
 import com.mobile.application.Application
 import com.mobile.network.ApiModule
-import com.mobile.helpers.GoWatchItSingleton
+import com.mobile.location.LocationManager
 import com.mobile.rx.RxJava2CallAdapterFactory
 import com.moviepass.BuildConfig
 import dagger.Module
@@ -65,10 +65,13 @@ class GoWatchItModule {
 
     @Provides
     @Singleton
-    fun goWatchItSingleton(goWatchItApi: GoWatchItApi): GoWatchItSingleton {
-        return GoWatchItSingleton(goWatchItApi)
+    fun goWatchItManager(goWatchItApi: GoWatchItApi, gson:Gson, locationManager: LocationManager, application: Application):GoWatchItManager {
+        return GoWatchitManagerImpl(
+                goWatchItApi = goWatchItApi,
+                gson = gson,
+                locationManager = locationManager,
+                application = application)
     }
-
 
     @Provides
     @Singleton

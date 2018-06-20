@@ -61,7 +61,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
         activateScanCardIcon = findViewById(R.id.ACTIVATECARD_SCAN_ICON)
         activateXOut = findViewById(R.id.ACTIVATECARD_X_OUT)
         progress = findViewById(R.id.progress)
-        activateScanCardIcon.setOnClickListener { v -> scanCard() }
+        activateScanCardIcon.setOnClickListener { _ -> scanCard() }
 
 
         api = RestClient.getAuthenticated()
@@ -71,12 +71,12 @@ class ActivateMoviePassCard : AppCompatActivity() {
         selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME)
 
 
-        activateXOut.setOnClickListener { v ->
+        activateXOut.setOnClickListener { _ ->
             val closeIntent = Intent(this@ActivateMoviePassCard, HomeActivity::class.java)
             startActivity(closeIntent)
         }
 
-        activateManualInput.setOnClickListener { v ->
+        activateManualInput.setOnClickListener { _ ->
             activatecard_instructions.text = getString(R.string.last_4)
             header1.visibility = View.GONE
             instruct1.visibility = View.GONE
@@ -93,7 +93,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
             activateDigits.visibility = View.VISIBLE
         }
 
-        activateButton.setOnClickListener { v: View ->
+        activateButton.setOnClickListener { _: View ->
             progress.visibility = View.VISIBLE
             continueActivation()
         }
@@ -131,7 +131,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
                 instruct2.visibility = View.GONE
                 activatecard_instructions.text = getString(R.string.last_4)
 
-                activateButton.setOnClickListener { v -> continueActivation() }
+                activateButton.setOnClickListener { _ -> continueActivation() }
 
             }
         }
@@ -147,7 +147,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
         activateCardDisposable = api
                 .activateCardRX(request)
-                .subscribe({ result ->
+                .subscribe({ _ ->
                     progress.visibility = View.GONE
                     val activate = Intent(this@ActivateMoviePassCard, AutoActivatedCard::class.java)
                     activate.putExtra(Constants.SCREENING, screeningObject)
@@ -159,7 +159,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
                 ) { error ->
                     progress.visibility = View.GONE
                     if (error is ApiError) {
-                        Toast.makeText(this@ActivateMoviePassCard, error.error?.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ActivateMoviePassCard, error.error.message, Toast.LENGTH_SHORT).show()
                     }
                 }
     }

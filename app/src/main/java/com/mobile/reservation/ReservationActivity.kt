@@ -121,13 +121,13 @@ class ReservationActivity : MPActivty() {
         fun newInstance(context: Context, reservation: ScreeningToken, canClose: Boolean = false): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
-                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs.seats
-                val re2:Reservation2? = rs?.let {
+                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName?:"" }?: rs.reservation.seats
+                val re2:Reservation2? = rs.let {
                     Reservation2(
-                            checkinId = rs.id,
-                            createdAt = rs.expiration,
-                            id = rs.id,
-                            _showtime = reservation.availability?.startTime?.let {
+                            checkinId = rs.reservation.id,
+                            createdAt = rs.reservation.expiration,
+                            id = rs.reservation.id,
+                            _showtime = reservation.checkIn.availability.startTime.let {
                                 try {
                                     SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
                                 } catch (e:Error) {0L}
@@ -137,19 +137,19 @@ class ReservationActivity : MPActivty() {
                 var ticket : ETicket? = null
                 if(reservation.confirmationCode!=null){
                     ticket = ETicket(
-                            confirmationCodeFormat = reservation.confirmationCode?.confirmationCodeFormat,
-                            redemptionCode = reservation.confirmationCode?.confirmationCode,
+                            confirmationCodeFormat = reservation.confirmationCode.confirmationCodeFormat,
+                            redemptionCode = reservation.confirmationCode.confirmationCode,
                             seats = seatsToUse
                     )
                 }
                 val reservationV2 = CurrentReservationV2(
                         ticket,
                         reservation = re2,
-                        landscapeUrl = reservation.screening.landscapeImageUrl,
-                        latitude = reservation.theater?.lat,
-                        longitude = reservation.theater?.lon,
-                        title = reservation.screening.title,
-                        theater = reservation.theater?.name?:reservation.screening.theaterName
+                        landscapeUrl = reservation.checkIn.screening.landscapeImageUrl,
+                        latitude = reservation.checkIn.theater.lat,
+                        longitude = reservation.checkIn.theater.lon,
+                        title = reservation.checkIn.screening.title,
+                        theater = reservation.checkIn.theater.name?:reservation.checkIn.screening.theaterName
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)

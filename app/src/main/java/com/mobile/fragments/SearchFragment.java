@@ -18,7 +18,6 @@ import android.widget.ImageView;
 
 import com.mobile.Interfaces.AfterSearchListener;
 import com.mobile.adapters.SearchAdapter;
-import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
@@ -68,8 +67,8 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
 
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
-        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
-            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
+//        if (GoWatchItSingleton.getInstance().getCampaign() != null && !GoWatchItSingleton.getInstance().getCampaign().equalsIgnoreCase("no_campaign"))
+//            url = url + "/" + GoWatchItSingleton.getInstance().getCampaign();
 
         return rootView;
     }
@@ -192,7 +191,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
     @Override
     public void getSearchString(Movie movie) {
         String url = "https://moviepass.com/go/movies";
-        GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
+        //GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
         MovieFragment movieFragment = MovieFragment.newInstance(movie, "");
         showFragment(movieFragment);
     }

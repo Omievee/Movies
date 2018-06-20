@@ -40,7 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/movieCL"
         android:layout_width="match_parent"

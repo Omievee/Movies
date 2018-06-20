@@ -57,14 +57,14 @@ class ProfileCancellationFragment : MPFragment() {
         spinnerCancelReason
                 .setAdapter(object : MaterialSpinnerAdapter<String>(activity, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                        val view = MaterialSpinnerSpinnerView(parent.context)
-                        view.bind(getItemText(position))
-                        return view
+                        val spinner = MaterialSpinnerSpinnerView(parent.context)
+                        spinner.bind(getItemText(position))
+                        return spinner
                     }
                 })
         loadUserInfo()
 
-        spinnerCancelReason.setOnItemSelectedListener { view1, position, id, item ->
+        spinnerCancelReason.setOnItemSelectedListener { view1, position, _, _ ->
             cancelReasons = view1.getItems<Any>()[position] as String
             if (cancelReasons == "Reason for Cancellation") {
                 cancelbutton.isEnabled = false
@@ -74,8 +74,8 @@ class ProfileCancellationFragment : MPFragment() {
             }
         }
 
-        cancelBack.setOnClickListener { v -> activity?.onBackPressed() }
-        cancelbutton.setOnClickListener { v -> showCancellationConfirmationDialog() }
+        cancelBack.setOnClickListener { _ -> activity?.onBackPressed() }
+        cancelbutton.setOnClickListener { _ -> showCancellationConfirmationDialog() }
 
 
     }
@@ -90,11 +90,11 @@ class ProfileCancellationFragment : MPFragment() {
         }
         builder.setMessage(message)
                 .setTitle(R.string.profile_cancel_cancel_membership)
-                .setPositiveButton("Cancel Membership") { dialog, id ->
+                .setPositiveButton("Cancel Membership") { _, _ ->
                     progress.visibility = View.VISIBLE
                     cancelFlow()
                 }
-                .setNegativeButton("Keep") { dialog, id ->
+                .setNegativeButton("Keep") { _, _ ->
 
                 }
         builder.create()
@@ -124,7 +124,7 @@ class ProfileCancellationFragment : MPFragment() {
         profileCancellationDisposable =
                 api
                         .requestCancellation(request)
-                        .subscribe({ r ->
+                        .subscribe({ _ ->
                             progress.visibility = View.GONE
                             Toast.makeText(activity, "Cancellation successful", Toast.LENGTH_SHORT).show()
                             activity?.onBackPressed()
@@ -132,7 +132,7 @@ class ProfileCancellationFragment : MPFragment() {
                         { error ->
                             progress.visibility = View.GONE
                             if (error is ApiError) {
-                                Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, error.error.message, Toast.LENGTH_SHORT).show()
                             }
                         }
     }

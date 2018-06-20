@@ -15,6 +15,10 @@ import com.mobile.seats.BringAFriendActivity
 import com.mobile.seats.ConfirmDetailsFragment
 import com.mobile.splash.SplashActivity
 import com.mobile.splash.SplashActivityModule
+import com.mobile.theater.TheaterMapFragment
+import com.mobile.theater.TheatersFragmentModule
+import com.mobile.ticketverification.OcrCaptureFragment
+import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.surge.ConfirmSurgeFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
@@ -39,12 +43,12 @@ interface AppBindingModule {
     fun moviesFragment(): MoviesFragment
 
     @FragmentScope
-    @ContributesAndroidInjector
-    fun theatersFragment(): TheatersFragment
+    @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
+    fun theatersFragment(): TheatersFragmentV2
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun theaterFragment(): TheaterFragment
+    fun theaterFragmentV2(): ScreeningsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -65,6 +69,18 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun historyDeatils(): HistoryDetailsFragment
+
+    @TVScope
+    @ContributesAndroidInjector(modules = [TicketVerificationBottomSheetModule::class])
+    fun ticketVerificationBottomSheetDialogFragment(): TicketVerificationBottomSheetDialogFragment
+
+    @TVScope
+    @ContributesAndroidInjector()
+    fun ocrCaptureFragment():OcrCaptureFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun theaterMap(): TheaterMapFragment
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [ReservationActivityModule::class])
