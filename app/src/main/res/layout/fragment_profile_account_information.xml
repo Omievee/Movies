@@ -4,14 +4,15 @@
     style="@style/ReservationBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     tools:context="com.mobile.fragments.ProfileAccountInformation">
 
     <TextView
         android:id="@+id/accountHeader"
         style="@style/TitleView"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/status_bar_height"
-        android:text="Account Information" />
+        android:text="Account Information"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <android.support.design.widget.TextInputLayout

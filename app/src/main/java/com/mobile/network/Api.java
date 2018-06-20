@@ -3,8 +3,6 @@ package com.mobile.network;
 import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
-import com.mobile.model.MoviePassCard;
-import com.mobile.model.MoviesResponse;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
@@ -14,16 +12,13 @@ import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.CredentialsRequest;
 import com.mobile.requests.CreditCardChangeRequest;
-import com.mobile.requests.FacebookLinkRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
-import com.mobile.requests.PerformanceInfoRequest;
 import com.mobile.requests.SignUpRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.reservation.CurrentReservationV2;
-import com.mobile.responses.ActiveReservationResponse;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.CancellationResponse;
@@ -81,9 +76,7 @@ public interface Api {
     @POST("/rest/v1/auth/fb_login")
     Call<User> loginWithFacebook(@Header(HEADER_UUID) String deviceId, @Body FacebookSignInRequest request);
 
-    /* Get Cards? */
-    @GET("/rest/v1/cards")
-    Call<List<MoviePassCard>> getMoviePassCards();
+
 
     /**
      * Change Password
@@ -101,9 +94,7 @@ public interface Api {
     @POST("/rest/v1/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
-    /* Movies */
-    @GET("/rest/v1/movies")
-    Call<MoviesResponse> getMovies(@Query("lat") double latitude, @Query("long") double longitude);
+
 
     @GET("/rest/v2/screenings")
     Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
@@ -119,9 +110,6 @@ public interface Api {
     @POST("mobile/register")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
-    /* Check In */
-    @POST("/rest/v2/reservations")
-    Call<ReservationResponse> checkIn(@Body TicketInfoRequest request);
 
     @POST("/rest/v2/reservations")
     Single<ReservationResponse> reserve(@Body TicketInfoRequest request);
@@ -140,9 +128,6 @@ public interface Api {
     @GET("/rest/v1/reservations/history")
     Single<ReservationHistoryResponse> getReservationHistory();
 
-    /* Get Seats */
-    @POST("/rest/v1/seats")
-    Call<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Body PerformanceInfoRequest request);
 
     @GET("/rest/v2/seats")
     Single<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Query("performanceId") String performanceId);
@@ -174,9 +159,7 @@ public interface Api {
     @PUT("/rest/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
-    /* FB Link to */
-    @POST("/rest/v1/users/link_to_facebook")
-    Call<Object> linkToFacebook(@Body FacebookLinkRequest request);
+
 
     /* Cancel Subscription */
     @POST("/rest/v1/subscription/cancellation")

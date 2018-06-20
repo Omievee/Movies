@@ -1,6 +1,5 @@
 package com.mobile.adapters
 
-import com.moviepass.R
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.DefaultItemAnimator
@@ -8,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import com.mobile.helpers.LogUtils
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.TicketType
 import com.mobile.recycler.decorator.SpaceDecorator
@@ -15,7 +15,7 @@ import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
 import com.mobile.utils.text.toFixed
 import com.mobile.utils.text.toMiles
-
+import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_theaters_and_showtimes.view.*
 
 class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
@@ -63,9 +63,13 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             true -> View.GONE
             else -> View.VISIBLE
         }
+
+        LogUtils.newLog("DISABLED::", "REASON>>>>>" + p.screening?.disabledExplanation)
         notSupported.text = when {
-            p.movie != null -> resources.getString(R.string.screening_already_seen)
-            else-> p.screening?.disabledExplanation
+            p.movie != null ->
+                resources.getString(R.string.screening_already_seen)
+            else -> p.screening?.disabledExplanation
+
         }
         movieApproved.isEnabled = screening?.enabled ?: false
         adapter.screening = screening
