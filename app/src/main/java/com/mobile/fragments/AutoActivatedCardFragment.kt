@@ -58,8 +58,7 @@ class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
 
         LogUtils.newLog("..>>>>>>>>>", "First boolean: " + UserPreferences.getHasUserSeenCardActivationScreen())
         closebutton.setOnClickListener {
-            if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
-
+            if (!UserPreferences.getHasUserSeenCardActivationScreen() && !UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
 
                 UserPreferences.setUserHasSeenCardActivationScreen(true)
                 LogUtils.newLog("..>>>>>>>>>", "Second boolean: " + UserPreferences.getHasUserSeenCardActivationScreen())

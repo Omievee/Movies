@@ -145,7 +145,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showActivatedCardScreen() {
-        if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
+        if (!UserPreferences.getHasUserSeenCardActivationScreen() ) {
             showFragment(AutoActivatedCardFragment.newInstance())
         }
 
