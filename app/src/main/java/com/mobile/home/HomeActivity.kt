@@ -13,7 +13,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.mobile.*
+import com.mobile.BackFragment
+import com.mobile.DeviceID
+import com.mobile.MPActivty
+import com.mobile.Primary
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.model.Alert
@@ -77,8 +80,6 @@ class HomeActivity : MPActivty(), HomeActivityView {
         checkGooglePlayServices()
         presenter.onDeviceId(DeviceID.getID(this))
         presenter.onResume()
-
-
     }
 
     private fun checkGooglePlayServices(): Boolean {
@@ -145,9 +146,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showActivatedCardScreen() {
-        if (!UserPreferences.getHasUserSeenCardActivationScreen() ) {
-            showFragment(AutoActivatedCardFragment.newInstance())
-        }
+        showFragment(AutoActivatedCardFragment.newInstance())
 
 
     }

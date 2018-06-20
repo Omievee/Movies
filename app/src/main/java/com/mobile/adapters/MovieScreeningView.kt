@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import com.mobile.helpers.LogUtils
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.TicketType
 import com.mobile.recycler.decorator.SpaceDecorator
@@ -64,7 +63,6 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             else -> View.VISIBLE
         }
 
-        LogUtils.newLog("DISABLED::", "REASON>>>>>" + p.screening?.disabledExplanation)
         notSupported.text = when {
             p.movie != null ->
                 resources.getString(R.string.screening_already_seen)
