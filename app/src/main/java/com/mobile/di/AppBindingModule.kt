@@ -13,50 +13,50 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class AppBindingModule {
+interface AppBindingModule {
 
     /**
      * Generates boilerplate
      */
     @ActivityScope
     @ContributesAndroidInjector(modules = [SplashActivityModule::class])
-    abstract fun splashActivity(): SplashActivity
+    fun splashActivity(): SplashActivity
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [HomeActivityModule::class])
-    abstract fun homeActivity(): HomeActivity
+    fun homeActivity(): HomeActivity
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [MoviesFragmentModule::class])
-    abstract fun moviesFragment(): MoviesFragment
+    fun moviesFragment(): MoviesFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun theatersFragment(): TheatersFragment
+    fun theatersFragment(): TheatersFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun theaterFragment(): TheaterFragment
+    fun theaterFragment(): TheaterFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun movieFragment(): MovieFragment
+    fun movieFragment(): MovieFragment
 
     @ActivityScope
     @ContributesAndroidInjector
-    abstract fun bringAFriendActivity(): BringAFriendActivity
+    fun bringAFriendActivity(): BringAFriendActivity
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun confirmDetailsFragment(): ConfirmDetailsFragment
+    fun confirmDetailsFragment(): ConfirmDetailsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun pastReservationsFragment(): PastReservationsFragment
+    fun pastReservationsFragment(): PastReservationsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    abstract fun historyDeatils(): HistoryDetailsFragment
+    fun historyDeatils(): HistoryDetailsFragment
 
 
 }
