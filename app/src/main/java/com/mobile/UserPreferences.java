@@ -46,6 +46,18 @@ public class UserPreferences {
         editor.apply();
     }
 
+
+    public static void setUserHasSeenCardActivationScreen(boolean cardScreen) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putBoolean(Constants.CARD_ACTIVATED_SCREEN, cardScreen);
+        editor.apply();
+    }
+
+    public static boolean getHasUserSeenCardActivationScreen() {
+        return sPrefs.getBoolean(Constants.CARD_ACTIVATED_SCREEN, false);
+    }
+
+
     public static void verifyAndroidIDFirstRun(boolean isAndroidIDVerified) {
         SharedPreferences.Editor edit = sPrefs.edit();
         edit.putBoolean(Constants.IS_ANDROID_ID_VERIFIED, isAndroidIDVerified);
@@ -102,7 +114,8 @@ public class UserPreferences {
     }
 
 
-    public static @Nullable String getOneDeviceId() {
+    public static @Nullable
+    String getOneDeviceId() {
         return sPrefs.getString(Constants.ONE_DEVICE_ID, null);
     }
 
@@ -139,7 +152,7 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static void setLocation( double lat, double lng) {
+    public static void setLocation(double lat, double lng) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putLong(Constants.PREFS_LATITUDE, Double.doubleToRawLongBits(lat));
         editor.putLong(Constants.PREFS_LONGITUDE, Double.doubleToRawLongBits(lng));
@@ -284,15 +297,15 @@ public class UserPreferences {
     }
 
     public static void saveReservation(ScreeningToken reservation) {
-        if(reservation!=null) {
+        if (reservation != null) {
             String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
-            String gson  = new GsonBuilder().create().toJson(reservation);
+            String gson = new GsonBuilder().create().toJson(reservation);
             sPrefs.edit().putString(key, gson).apply();
         }
     }
 
     public static void saveBilling(UserInfoResponse userPreferences) {
-        if(userPreferences!=null) {
+        if (userPreferences != null) {
             String key = Constants.BILLING + "_" + getUserId();
             String gson = new GsonBuilder().create().toJson(userPreferences);
             sPrefs.edit().putString(key, gson).apply();
@@ -301,8 +314,8 @@ public class UserPreferences {
 
     public static UserInfoResponse getBilling() {
         String key = Constants.BILLING + "_" + getUserId();
-        String billing = sPrefs.getString(key,null);
-        if(billing!=null) {
+        String billing = sPrefs.getString(key, null);
+        if (billing != null) {
             try {
                 return new GsonBuilder().create().fromJson(billing, UserInfoResponse.class);
             } catch (Exception ignored) {
@@ -314,8 +327,8 @@ public class UserPreferences {
 
     public static ScreeningToken getLastReservation() {
         String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
-        String reservation = sPrefs.getString(key,null);
-        if(reservation!=null) {
+        String reservation = sPrefs.getString(key, null);
+        if (reservation != null) {
             try {
                 return new GsonBuilder().create().fromJson(reservation, ScreeningToken.class);
             } catch (Exception ignored) {
@@ -351,7 +364,7 @@ public class UserPreferences {
 
     public static void setTotalMoviesSeenLast30Days(int totalMoviesSeenLast30Days) {
         sPrefs
-                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" +getUserId(), totalMoviesSeenLast30Days).apply();
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + getUserId(), totalMoviesSeenLast30Days).apply();
     }
 
     public static void setLastMovieSeen(Movie movie) {
@@ -364,7 +377,7 @@ public class UserPreferences {
     }
 
     public static int getTotalMovieSeenLastMonth() {
-        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" +getUserId(),-1);
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + getUserId(), -1);
     }
 
     public static String getLastMovieSeen() {

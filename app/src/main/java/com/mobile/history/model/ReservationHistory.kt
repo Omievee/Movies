@@ -4,7 +4,7 @@ import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.RealmClass
 import kotlinx.android.parcel.Parcelize
-import java.util.Date
+import java.util.*
 
 @RealmClass
 @Parcelize
@@ -17,6 +17,7 @@ open class ReservationHistory(
         var theaterName: String? = null,
         var createdAt: Date? = null,
         var updatedAt: Date = Date()
+
 ) : RealmObject(), Parcelable {
 
     val rating: Rating

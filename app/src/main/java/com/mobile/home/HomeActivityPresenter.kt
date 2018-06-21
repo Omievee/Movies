@@ -5,20 +5,14 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
 import com.mobile.model.Alert
-import com.mobile.model.Reservation
-import com.mobile.model.Screening
-import com.mobile.model.ScreeningToken
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
-import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.AndroidIDVerificationResponse
-import com.mobile.responses.ETicketConfirmation
 import com.mobile.responses.MicroServiceRestrictionsResponse
-import java.text.SimpleDateFormat
+import com.mobile.responses.SubscriptionStatus
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -87,9 +81,22 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     determineAlertScreen(it.alert)
                     determineForceLogout(it)
                     setRestrictions(it)
+                    determineActivationScreen(it)
                 }, {
                     it.printStackTrace()
                 })
+    }
+
+    private fun determineActivationScreen(it: MicroServiceRestrictionsResponse?) {
+        it ?: return
+        when (it.subscriptionStatus) {
+            SubscriptionStatus.ACTIVE ->
+                if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
+                    view.showActivatedCardScreen()
+                }
+            else -> return
+        }
+
     }
 
     private fun determineForceLogout(it: MicroServiceRestrictionsResponse) {

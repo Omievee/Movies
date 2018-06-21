@@ -51,32 +51,13 @@ public class ProfileAccountInformationFragment extends MPFragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        shippingClick.setOnClickListener(v -> {
-            showFragment(new ProfileAccountShippingInformation());
-        });
+        shippingClick.setOnClickListener(v -> showFragment(new ProfileAccountShippingInformation()));
 
+        accountInformation.setOnClickListener(v -> showFragment(new ProfileAccountInformation()));
 
-        accountInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(new ProfileAccountInformation());
-            }
-        });
+        billingClick.setOnClickListener(v -> showFragment(new ProfileAccountPlanAndBilling()));
 
-
-        billingClick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(new ProfileAccountPlanAndBilling());
-            }
-        });
-
-        changePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFragment(new ProfileAccountChangePassword());
-            }
-        });
+        changePassword.setOnClickListener(v -> showFragment(new ProfileAccountChangePassword()));
     }
 
     @Override

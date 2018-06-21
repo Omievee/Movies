@@ -35,6 +35,7 @@ import javax.inject.Inject
 
 class HomeActivity : MPActivty(), HomeActivityView {
 
+
     @Inject
     lateinit var presenter: HomeActivityPresenter
 
@@ -144,6 +145,12 @@ class HomeActivity : MPActivty(), HomeActivityView {
         startActivity(ReservationActivity.newInstance(context, it))
     }
 
+    override fun showActivatedCardScreen() {
+        showFragment(AutoActivatedCardFragment.newInstance())
+
+
+    }
+
     var currentItem: Int = 0
         set(value) {
             field = value
@@ -209,5 +216,6 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getCount(): Int {
         return frags.size
     }
+
 
 }
