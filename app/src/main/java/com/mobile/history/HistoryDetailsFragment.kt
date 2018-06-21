@@ -111,9 +111,11 @@ class HistoryDetailsFragment : MPFragment() {
                 .build()
 
 
-        val createdAt = historyItem.createdAt
-        val sdf = SimpleDateFormat("M/dd/yyyy")
-        historyDate.text = sdf.format(createdAt)
+        val createdAt = historyItem.created
+        createdAt?.let {
+            val sdf = SimpleDateFormat("M/dd/yyyy")
+            historyDate.text = sdf.format(createdAt)
+        }
 
         historyLocal.text = historyItem.theaterName
         historyTitle.text = historyItem.title
