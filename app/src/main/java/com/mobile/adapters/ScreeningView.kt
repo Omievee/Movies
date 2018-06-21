@@ -89,7 +89,6 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 .setImageRequest(request).build()
         posterSPV.setImageURI(imgUrl)
 
-        posterSPV.hierarchy.fadeDuration = 500
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
         when (screening.enabled) {
