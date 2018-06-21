@@ -12,11 +12,12 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.listeners.ShowtimeClickListener
+import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
-import com.mobile.recycler.decorator.SpaceDecorator
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
 
@@ -81,11 +82,13 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         val imgUrl = Uri.parse(screening.screening?.landscapeImageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
+                .setResizeOptions(ResizeOptions(1280, 720))
                 .build()
 
         val controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request).build()
         posterSPV.setImageURI(imgUrl)
+
         posterSPV.hierarchy.fadeDuration = 500
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
@@ -96,12 +99,15 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                     true -> resources.getString(R.string.screening_already_seen)
                     false -> screening.screening?.disabledExplanation
                 }
+                if (screening.screening?.disabledExplanation.equals("") && !screening.enabled) {
+                    notSupported.text = "This premium screening is not supported"
+                }
             }
             true -> {
                 notSupported.visibility = View.GONE
             }
         }
-        if(posterSPV.controller?.isSameImageRequest(controller)!=true) {
+        if (posterSPV.controller?.isSameImageRequest(controller) != true) {
             posterSPV.controller = controller
         }
         movieTime.text = screening.screening?.runningTime?.runningTimeString(context = context)

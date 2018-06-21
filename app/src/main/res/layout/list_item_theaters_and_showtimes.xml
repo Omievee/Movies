@@ -119,8 +119,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/ONE"
-            android:animateLayoutChanges="false" />
+            android:animateLayoutChanges="false"
+            app:layout_constraintTop_toBottomOf="@id/ONE" />
 
         <View
             android:id="@+id/movieApproved"
@@ -144,4 +144,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
+
 </android.support.v7.widget.CardView>

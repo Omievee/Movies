@@ -105,8 +105,8 @@ class TheaterScreeningsAdapter(
                 (it.type == TYPE_MISSING) || it.hasShowtimes
             }?.sortedWith(compareBy(
                     {
-                        it.type == TYPE_MISSING
-                    }, {
+                        it.type == TYPE_MISSING },
+                    {
                 when (it.screening?.getTicketType()) {
                     TicketType.SELECT_SEATING, TicketType.E_TICKET -> true
                     else -> false
