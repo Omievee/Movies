@@ -478,7 +478,7 @@
     </style>
 
     <style name="NoMoreScreenings" parent="TitleView">
-        <item name="android:maxLines">1</item>
+        <item name="android:maxLines">2</item>
         <item name="android:padding">@dimen/margin_standard_and_half</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">400dp</item>
