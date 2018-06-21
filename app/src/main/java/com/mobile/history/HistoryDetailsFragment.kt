@@ -6,7 +6,6 @@ import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,8 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
-import com.mobile.Constants
 import com.mobile.fragments.MPFragment
+import com.mobile.helpers.LogUtils
 import com.mobile.history.model.Rating
 import com.mobile.history.model.ReservationHistory
 import com.moviepass.R
@@ -66,7 +65,8 @@ class HistoryDetailsFragment : MPFragment() {
 
         val black = Color.argb(200, 0, 0, 0)
         detailsBackground.setBackgroundColor(black)
-        Log.d(Constants.TAG, "onViewCreated: " + historyItem.userRating)
+
+
 
         if (historyItem.userRating != null) {
             didYouLikeIt.visibility = View.GONE
@@ -126,6 +126,8 @@ class HistoryDetailsFragment : MPFragment() {
     private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
         historySub?.dispose()
 
+        LogUtils.newLog("RATING!! >>>>", " RATED: " + wasGood)
+
         historySub = historyManagerImpl.submitRating(history, wasGood)
                 .subscribe({ res ->
                     onHistorySaved(res)
@@ -136,7 +138,10 @@ class HistoryDetailsFragment : MPFragment() {
 
     private fun onHistorySaved(res: ReservationHistory?) {
         val wasGood = res?.rating == Rating.GOOD
+
         if (wasGood) {
+            LogUtils.newLog("RATING 2>>>>", " RATED: " + wasGood)
+
             dislike.visibility = View.GONE
             fadeOut(dislike)
             animate(like)
@@ -145,6 +150,7 @@ class HistoryDetailsFragment : MPFragment() {
             fadeOut(like)
             animate(dislike)
         }
+        activity?.onBackPressed()
     }
 
     fun animate(view: View) {
@@ -197,6 +203,5 @@ class HistoryDetailsFragment : MPFragment() {
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
-
     }
 }
