@@ -10,7 +10,7 @@ class SpaceDecorator(
         val bottom: Int? = null,
         val end: Int? = null,
         val lastEnd: Int? = null,
-        val colEnd:Int? = null
+        val lastBottom: Int? = null
 ) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -30,6 +30,11 @@ class SpaceDecorator(
         lastEnd?.let {
             if (state.itemCount - 1 == position) {
                 outRect.right += it
+            }
+        }
+        lastBottom?.let {
+            if (state.itemCount - 1 == position) {
+                outRect.bottom += it
             }
         }
     }

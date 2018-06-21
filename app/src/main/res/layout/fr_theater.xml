@@ -1,202 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/frame_layout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    android:clickable="true"
+    android:fitsSystemWindows="true"
+    android:focusable="true">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
+        android:id="@+id/fakeToolbar"
+        style="@style/ReservationBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp">
+
+        <TextView
+            android:id="@+id/selectedTheaterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="@dimen/double_margin_standard"
+            android:maxLines="2"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/selectedTheaterAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectedTheaterName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_half"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/selectedTheaterCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectedTheaterAddress"
+            android:layout_centerHorizontal="true"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/pinIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_below="@id/selectedTheaterAddress"
+            android:layout_toEndOf="@id/selectedTheaterCity"
+            android:padding="@dimen/margin_minimum"
+            android:src="@drawable/locationiconsmallred"
+            android:tint="@color/new_red" />
+
+
+        <ImageView
+            android:id="@+id/selectSeatIcon"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_below="@id/selectedTheaterAddress"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginTop="6dp"
+            android:layout_toStartOf="@id/eticketIcon"
+            android:background="@android:color/transparent"
+            android:src="@drawable/iconseatcopy"
+            android:tint="@color/almost_white"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/eticketIcon"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/selectedTheaterAddress"
+            android:layout_marginEnd="@dimen/margin_half"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ticketnavwhite"
+            android:tint="@color/white"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/test_black"
-        android:clickable="true"
-        android:fitsSystemWindows="false"
-        android:focusable="true">
+        android:layout_below="@id/fakeToolbar">
 
-        <android.support.design.widget.AppBarLayout
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/selectedTheaterRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.design.widget.CollapsingToolbarLayout xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="5dp"
-                android:fitsSystemWindows="true"
-                app:contentScrim="@color/test_black"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <TextView
-                        android:id="@+id/selectedTheaterName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="@dimen/double_margin_standard"
-                        android:maxLines="2"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_collapseMode="pin" />
-
-                    <TextView
-                        android:id="@+id/selectedTheaterAddress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/selectedTheaterName"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_half"
-                        android:lines="1"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        app:layout_collapseMode="parallax" />
-
-                    <TextView
-                        android:id="@+id/selectedTheaterCity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/selectedTheaterAddress"
-                        android:layout_centerHorizontal="true"
-                        android:lines="1"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        app:layout_collapseMode="parallax" />
-
-                    <ImageView
-                        android:id="@+id/pinIcon"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_below="@id/selectedTheaterAddress"
-                        android:layout_toEndOf="@id/selectedTheaterCity"
-                        android:padding="@dimen/margin_minimum"
-                        android:src="@drawable/locationiconsmallred"
-                        android:tint="@color/new_red"
-                        app:layout_collapseMode="parallax" />
-
-
-                    <ImageView
-                        android:id="@+id/selectSeatIcon"
-                        android:layout_width="25dp"
-                        android:layout_height="20dp"
-                        android:layout_below="@id/selectedTheaterAddress"
-                        android:layout_marginEnd="@dimen/margin_standard"
-                        android:layout_marginTop="6dp"
-                        android:layout_toStartOf="@id/eticketIcon"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/iconseatcopy"
-                        android:tint="@color/almost_white"
-                        android:visibility="visible"
-                        app:layout_collapseMode="parallax" />
-
-                    <ImageView
-                        android:id="@+id/eticketIcon"
-                        android:layout_width="25dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_below="@id/selectedTheaterAddress"
-                        android:layout_marginEnd="@dimen/margin_half"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ticketnavwhite"
-                        android:tint="@color/white"
-                        android:visibility="visible"
-                        app:layout_collapseMode="parallax" />
-
-
-                </RelativeLayout>
-
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/CINEMA_TOOLBAR"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:elevation="5dp"
-                    app:layout_collapseMode="pin"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
-
-                </android.support.v7.widget.Toolbar>
-
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/NESTED_SCROLL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/test_black"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <TextView
+            android:id="@+id/NoTheaters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectedTheaterRecyclerView"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/doubledouble_margin_standard"
+            android:text="@string/no_theaters"
+            android:textAlignment="center"
+            android:textColor="@color/almost_white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
-
-                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/selectedTheaterRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/test_black"
-                    android:layout_alignParentTop="true"
-                    android:layoutAnimation="@anim/layout_anim_bottom"
-                    android:layout_marginBottom="95dp"
-                    android:visibility="visible">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <TextView
-                    android:id="@+id/NoTheaters"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/selectedTheaterRecyclerView"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="@dimen/doubledouble_margin_standard"
-                    android:text="@string/no_theaters"
-                    android:textAlignment="center"
-                    android:textColor="@color/almost_white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/no_wifi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/selectedTheaterRecyclerView"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/quadruple_margin_standard"
-                    android:padding="@dimen/doubledouble_margin_standard"
-                    android:text="@string/"
-                    android:textAlignment="center"
-                    android:textColor="@color/almost_white"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-
-            </RelativeLayout>
-
-
-        </android.support.v4.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/no_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectedTheaterRecyclerView"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/quadruple_margin_standard"
+            android:padding="@dimen/doubledouble_margin_standard"
+            android:textAlignment="center"
+            android:textColor="@color/almost_white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <Button
-
             android:id="@+id/button_check_in"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:layout_marginBottom="55dp"
             android:animateLayoutChanges="true"
@@ -211,7 +149,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
 
-</FrameLayout>
-
+</RelativeLayout>
