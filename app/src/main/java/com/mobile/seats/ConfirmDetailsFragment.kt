@@ -140,7 +140,7 @@ class ConfirmDetailsFragment : Fragment() {
                 .getAuthenticated()
                 .reserve(TicketInfoRequest(
                         performanceInfo = PerformanceInfoV2(
-                                tribuneTheaterId = payload?.theater?.tribuneTheaterId ?: 0,
+                                tribuneTheaterId = payload.theater?.tribuneTheaterId ?: 0,
                                 normalizedMovieId = provideInfo.normalizedMovieId,
                                 externalMovieId = provideInfo.externalMovieId,
                                 format = provideInfo.format,
@@ -148,7 +148,10 @@ class ConfirmDetailsFragment : Fragment() {
                                 dateTime = provideInfo.dateTime,
                                 seatPosition = mySeat?.asPosition(),
                                 guestsAllowed = payload.screening.maximumGuests,
-                                guestTickets = guestTickets
+                                guestTickets = when (guestTickets.isEmpty()) {
+                                    true -> null
+                                    false -> guestTickets
+                                }
                         ),
                         longitude = lng,
                         latitude = lat
