@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +52,7 @@ import com.mobile.network.Api;
 import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
 import com.mobile.network.RestError;
+import com.mobile.recycler.decorator.SpaceDecorator;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
@@ -201,10 +203,8 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         selectedTheaterRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         selectedTheaterRecyclerView.setAdapter(theaterMoviesAdapter);
         selectedTheaterRecyclerView.setLayoutAnimation(animation);
-        SimpleItemAnimator animator = new DefaultItemAnimator();
-        animator.setSupportsChangeAnimations(false);
-        selectedTheaterRecyclerView.setItemAnimator(animator);
-        selectedTheaterRecyclerView.setNestedScrollingEnabled(false);
+        selectedTheaterRecyclerView.setItemAnimator(null);
+        selectedTheaterRecyclerView.addItemDecoration(new SpaceDecorator(null,null,null,null,null,300));
 
         loadMovies();
 
@@ -252,10 +252,12 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onStart();
     }
 
+    private Parcelable state;
 
     @Override
     public void onPause() {
         super.onPause();
+        state = theaterSelectedMovieManager.onSaveInstanceState();
     }
 
 
@@ -364,6 +366,9 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onResume();
         buttonCheckIn.setEnabled(true);
         fetchLocation();
+        if(state!=null) {
+            theaterSelectedMovieManager.onRestoreInstanceState(state);
+        }
     }
 
     @Nullable
@@ -523,6 +528,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     @Override
     public void onClick(@NotNull Screening screening, @NotNull String showTime) {
         onShowtimeClick(null, screening, showTime);
+        int pos = selectedTheaterRecyclerView.getScrollY();
         theaterMoviesAdapter.setData(TheaterScreeningsAdapter.Companion.createData(theaterMoviesAdapter.getData(), screeningsResponse, null, selected));
     }
 }
