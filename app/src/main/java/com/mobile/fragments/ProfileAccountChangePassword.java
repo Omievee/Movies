@@ -163,11 +163,9 @@ public class ProfileAccountChangePassword extends MPFragment {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableSaveAndCancel();
-            }
+        cancel.setOnClickListener(v -> {
+            disableSaveAndCancel();
+            myActivity.onBackPressed();
         });
     }
 

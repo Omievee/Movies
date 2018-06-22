@@ -98,9 +98,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                     true -> resources.getString(R.string.screening_already_seen)
                     false -> screening.screening?.disabledExplanation
                 }
-                if (screening.screening?.disabledExplanation.equals("") && !screening.enabled) {
-                    notSupported.text = "This premium screening is not supported"
-                }
+
             }
             true -> {
                 notSupported.visibility = View.GONE
