@@ -242,7 +242,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING ) {
 
                     downArrow.animate().alpha(1f);
                     mapViewText.animate().alpha(1f);
@@ -252,22 +252,12 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
                     String url = "https://www.moviepass.com/go/list";
                     GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
-
                 } else {
                     downArrow.animate().alpha(0f);
                     mapViewText.animate().alpha(0f);
 
                     listViewText.animate().alpha(1f);
                     upArrow.animate().alpha(1f);
-//                    fadeOut(downArrow);
-//                    downArrow.setVisibility(View.GONE);
-//
-//                    fadeOut(mapViewText);
-//                    mapViewText.setVisibility(View.GONE);
-//                    fadeIn(listViewText);
-//                    listViewText.setVisibility(View.VISIBLE);
-//                    fadeIn(upArrow);
-//                    upArrow.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -777,6 +767,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                 Toast.makeText(myContext, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 
