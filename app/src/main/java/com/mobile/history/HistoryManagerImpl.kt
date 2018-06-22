@@ -90,8 +90,6 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                     realmHistory.get().executeTransaction { r->
                         r.insertOrUpdate(history)
                     }
-
-
                 }
                 .map { res ->
                     history

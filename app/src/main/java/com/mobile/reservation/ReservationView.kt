@@ -7,13 +7,12 @@ import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.View
 import com.google.zxing.BarcodeFormat
-import com.mobile.UserPreferences
 import com.mobile.utils.MapUtil
+import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_current_reservation.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import com.mobile.utils.startIntentIfResolves
 
 class ReservationView(context: Context, attributeSet: AttributeSet?) : ConstraintLayout(context, attributeSet) {
 
@@ -51,7 +50,6 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 if (latitude != null && longitude != null) {
                     context.startIntentIfResolves(MapUtil.mapIntent(latitude, longitude))
                 }
-
             }
         }
         reservation.ticket?.let {
@@ -105,11 +103,11 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
             reservationCode.background = null
 
         }
-
         currentReservationTV.visibility = when (showCurrentReservationText) {
             true -> View.VISIBLE
             else -> View.GONE
         }
+
     }
 
     fun setOnCloseListener(onCloseListener: OnCloseListener?) {

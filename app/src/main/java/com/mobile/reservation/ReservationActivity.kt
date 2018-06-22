@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.mobile.model.ScreeningToken
-import com.mobile.requests.SelectedSeat
 import com.moviepass.R
 import kotlinx.android.synthetic.main.activity_reservation.*
 import java.text.SimpleDateFormat
@@ -47,8 +46,9 @@ class ReservationActivity : AppCompatActivity() {
         fun newInstance(context: Context, reservation: ScreeningToken): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
-                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs.seats
-                val re2:Reservation2? = rs?.let {
+                val seatsToUse: List<String>? = reservation.seatSelected?.map { it.seatName }
+                        ?: rs.seats
+                val re2: Reservation2? = rs?.let {
                     Reservation2(
                             checkinId = rs.id,
                             createdAt = rs.expiration,
@@ -56,8 +56,10 @@ class ReservationActivity : AppCompatActivity() {
                             _showtime = reservation.time?.let {
                                 try {
                                     SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
-                                } catch (e:Error) {0L}
-                            }?:0
+                                } catch (e: Error) {
+                                    0L
+                                }
+                            } ?: 0
                     )
                 }
                 val reservationV2 = CurrentReservationV2(
@@ -71,7 +73,7 @@ class ReservationActivity : AppCompatActivity() {
                         latitude = reservation.theater?.lat,
                         longitude = reservation.theater?.lon,
                         title = reservation.screening.title,
-                        theater = reservation.theater?.name?:reservation.screening.theaterName
+                        theater = reservation.theater?.name ?: reservation.screening.theaterName
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)
