@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
@@ -140,7 +141,6 @@ class HistoryDetailsFragment : MPFragment() {
         val wasGood = res?.rating == Rating.GOOD
 
         if (wasGood) {
-            LogUtils.newLog("RATING 2>>>>", " RATED: " + wasGood)
 
             dislike.visibility = View.GONE
             fadeOut(dislike)
@@ -150,7 +150,10 @@ class HistoryDetailsFragment : MPFragment() {
             fadeOut(like)
             animate(dislike)
         }
-        activity?.onBackPressed()
+
+        val h = Handler()
+        h.postDelayed({ activity?.onBackPressed() }, 3000)
+
     }
 
     fun animate(view: View) {
