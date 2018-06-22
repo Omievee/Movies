@@ -105,7 +105,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
         final Uri imgUrl = Uri.parse(movie.getImageUrl());
         try {
             holder.mNewReleasePosterDV.setImageURI(imgUrl);
-            holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(500);
+            holder.mNewReleasePosterDV.getHierarchy().setFadeDuration(50);
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                     .setProgressiveRenderingEnabled(true)
                     .setResizeOptions(new ResizeOptions(1080, 1920))
