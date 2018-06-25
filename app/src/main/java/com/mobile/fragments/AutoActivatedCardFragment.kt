@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.activities.ActivatedCard_TutorialActivity
-import com.mobile.home.HomeActivity
 import com.mobile.model.Screening
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fr_mpcard_autoactivated.*
 import org.parceler.Parcels
 
 
-class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
+class AutoActivatedCardFragment : MPFragment() {
 
 
     var screeningObject: Screening? = null
@@ -49,8 +48,7 @@ class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
                 startActivity(activatedIntent)
             } else {
                 UserPreferences.setUserHasSeenCardActivationScreen(true)
-                val dismissScreen = Intent(context, HomeActivity::class.java)
-                startActivity(dismissScreen)
+                activity?.onBackPressed()
             }
 
         }
