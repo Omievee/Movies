@@ -31,8 +31,6 @@ class AutoActivatedCardFragment : MPFragment() {
             screeningObject = it.getParcelable(Constants.SCREENING)
             selectedShowTime = it.getString(Constants.SHOWTIME)
         }
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +38,9 @@ class AutoActivatedCardFragment : MPFragment() {
 
         closebutton.setOnClickListener {
             if (!UserPreferences.getHasUserSeenCardActivationScreen() && !UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
-
                 UserPreferences.setUserHasSeenCardActivationScreen(true)
+
+                activity?.onBackPressed()
                 val activatedIntent = Intent(context, ActivatedCard_TutorialActivity::class.java)
                 activatedIntent.putExtra(MovieFragment.SCREENING, Parcels.wrap<Screening>(screeningObject))
                 activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
