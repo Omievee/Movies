@@ -7,50 +7,52 @@
     android:clickable="true">
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/search"
-        android:background="@drawable/movie_search_rounded_background"
-        android:layout_marginRight="@dimen/margin_standard"
-        android:layout_marginLeft="@dimen/margin_standard"
-        android:layout_marginTop="@dimen/double_margin_standard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_half"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_marginLeft="@dimen/margin_standard"
+        android:layout_marginRight="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/double_margin_standard"
+        android:background="@drawable/movie_search_rounded_background"
+        android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:src="@drawable/arrowforward"
-            android:backgroundTint="@color/white"
             android:id="@+id/backArrow"
-            android:rotation="180"
-            android:padding="@dimen/margin_half"
-            android:tint="@color/almost_white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content" />
+            android:layout_weight="0.1"
+            android:backgroundTint="@color/white"
+            android:padding="@dimen/margin_half"
+            android:rotation="180"
+            android:src="@drawable/arrowforward"
+            android:tint="@color/almost_white" />
 
         <EditText
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:hint="Search a movie"
-            android:layout_gravity="center_vertical"
             android:id="@+id/searchBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin_half"
-            android:textSize="@dimen/text_size_14"
-            android:textColorHint="@color/almost_white"
-            android:textColor="@color/almost_white"
+            android:layout_weight="0.8"
             android:backgroundTint="@color/charcoalGrey"
-            android:layout_height="wrap_content" />
+            android:hint="Search a movie"
+            android:lines="1"
+            android:maxLines="1"
+            android:textColor="@color/almost_white"
+            android:textColorHint="@color/almost_white"
+            android:textSize="@dimen/text_size_14" />
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:padding="@dimen/margin_half"
-            android:src="@drawable/close_white"
-            android:backgroundTint="@color/almost_white"
             android:id="@+id/removeIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content" />
+            android:layout_weight="0.1"
+            android:backgroundTint="@color/almost_white"
+            android:padding="@dimen/margin_half"
+            android:src="@drawable/close_white" />
 
     </LinearLayout>
 

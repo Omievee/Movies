@@ -1,4 +1,5 @@
 package com.mobile.fragments;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -145,7 +146,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
 
         /* Set up RecyclerView */
-
         LinearLayoutManager manager = new LinearLayoutManager(myContext, LinearLayoutManager.VERTICAL, false);
         theatersRecyclerView = rootView.findViewById(R.id.theatersRecyclerView);
         theatersRecyclerView.setLayoutManager(manager);
@@ -242,32 +242,22 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
-                    fadeIn(downArrow);
-                    downArrow.setVisibility(View.VISIBLE);
-                    fadeIn(mapViewText);
-                    mapViewText.setVisibility(View.VISIBLE);
+                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING ) {
 
-                    fadeOut(listViewText);
-                    listViewText.setVisibility(View.INVISIBLE);
-                    fadeOut(upArrow);
-                    upArrow.setVisibility(View.INVISIBLE);
+                    downArrow.animate().alpha(1f);
+                    mapViewText.animate().alpha(1f);
+
+                    listViewText.animate().alpha(0f);
+                    upArrow.animate().alpha(0f);
+
                     String url = "https://www.moviepass.com/go/list";
                     GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
-
-//                    String url = "http://moviepass.com/go/list";
-//                    GoWatchItSingleton.getInstance().userOpenedTheaterTab(url, "list_view_click");
-
                 } else {
-                    fadeOut(downArrow);
-                    downArrow.setVisibility(View.GONE);
+                    downArrow.animate().alpha(0f);
+                    mapViewText.animate().alpha(0f);
 
-                    fadeOut(mapViewText);
-                    mapViewText.setVisibility(View.GONE);
-                    fadeIn(listViewText);
-                    listViewText.setVisibility(View.VISIBLE);
-                    fadeIn(upArrow);
-                    upArrow.setVisibility(View.VISIBLE);
+                    listViewText.animate().alpha(1f);
+                    upArrow.animate().alpha(1f);
                 }
             }
         });
@@ -777,6 +767,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                 Toast.makeText(myContext, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 

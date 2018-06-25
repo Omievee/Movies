@@ -58,17 +58,17 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             TicketType.SELECT_SEATING, TicketType.E_TICKET -> View.VISIBLE
             else -> View.GONE
         }
+
         notSupported.visibility = when (screening?.screening?.approved) {
             true -> View.GONE
             else -> View.VISIBLE
         }
 
-        notSupported.text = when {
-            p.movie != null ->
-                resources.getString(R.string.screening_already_seen)
+        notSupported.text = when {p.movie != null ->
+            resources.getString(R.string.screening_already_seen)
             else -> p.screening?.disabledExplanation
-
         }
+
         movieApproved.isEnabled = screening?.enabled ?: false
         adapter.screening = screening
         adapter.showtimeClickListener = showtimeClickListener

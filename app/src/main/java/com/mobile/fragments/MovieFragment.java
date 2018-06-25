@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -24,9 +25,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
-import dagger.android.support.AndroidSupportInjection;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,12 +75,9 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import dagger.android.support.AndroidSupportInjection;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MovieFragment extends MPFragment implements ShowtimeClickListener, MissingCheckinListener {
 
@@ -202,6 +197,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
 
             movie = getArguments().getParcelable(MOVIE_PARAM);
             screening = Parcels.unwrap(getArguments().getParcelable(Constants.SCREENING));

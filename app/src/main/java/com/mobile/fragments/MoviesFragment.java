@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -187,10 +185,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         featured = new RealmList<>();
         nowPlaying = new RealmList<>();
 
-        int resId = R.anim.layout_animation;
-        int res2 = R.anim.layout_anim_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
-        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(getContext(), res2);
 
         LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(newReleasesLayoutManager);
@@ -201,7 +195,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
         featuredAdapter = new FeaturedMovieAdapter(featured, this);
-        featuredRecycler.setLayoutAnimation(animation2);
     }
 
     @Override

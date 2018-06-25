@@ -64,11 +64,11 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             }
                             emitter.onComplete()
                         }
-                        .subscribe { success, errror ->
+                        .subscribe { success, error ->
                             if (emitter.isDisposed) {
                                 return@subscribe
                             }
-                            errror?.let {
+                            error?.let {
                                 emitter.onError(it)
                             } ?: emitter.onNext(success)
 
@@ -78,6 +78,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
     override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
         val id = history.id?:0
+
         val rating = when (wasGood) {
             true -> "GOOD"
             false -> "BAD"
@@ -86,7 +87,9 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                 .submitRatingRx(id, HistoryResponse(rating))
                 .doOnSuccess { v ->
                     history.userRating = rating
-                    realmHistory.get().insertOrUpdate(history)
+                    realmHistory.get().executeTransaction { r->
+                        r.insertOrUpdate(history)
+                    }
                 }
                 .map { res ->
                     history

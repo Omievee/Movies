@@ -24,7 +24,6 @@
         android:divider="@null"
         android:layout_marginTop="@dimen/margin_half"
         android:dividerHeight="0dp"
-        android:layoutAnimation="@anim/layout_animation"
         android:listSelector="@android:color/transparent"
         android:orientation="horizontal" />
 

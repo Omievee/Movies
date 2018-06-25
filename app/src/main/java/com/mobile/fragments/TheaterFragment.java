@@ -11,10 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -40,7 +38,6 @@ import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.history.HistoryManager;
 import com.mobile.history.model.ReservationHistory;
-import com.mobile.home.HomeActivity;
 import com.mobile.listeners.ShowtimeClickListener;
 import com.mobile.location.UserLocation;
 import com.mobile.model.Availability;
@@ -49,21 +46,17 @@ import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.model.Theater;
 import com.mobile.network.Api;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
 import com.mobile.recycler.decorator.SpaceDecorator;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.reservation.ReservationActivity;
 import com.mobile.responses.CardActivationResponse;
-import com.mobile.responses.ReservationResponse;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.seats.BringAFriendActivity;
 import com.moviepass.R;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -203,7 +196,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         selectedTheaterRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         selectedTheaterRecyclerView.setAdapter(theaterMoviesAdapter);
         selectedTheaterRecyclerView.setLayoutAnimation(animation);
-        selectedTheaterRecyclerView.setItemAnimator(null);
         selectedTheaterRecyclerView.addItemDecoration(new SpaceDecorator(null,null,null,null,null,300));
 
         loadMovies();
