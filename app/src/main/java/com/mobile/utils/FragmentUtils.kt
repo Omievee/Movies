@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import com.mobile.BackFragment
 import com.moviepass.R
 
 fun Fragment.showFragmentExtension(fragment: Fragment? = null) {
@@ -34,6 +33,7 @@ fun Fragment.onBackExtension(): Boolean {
     val parent = fragment.parentFragment ?: return false
 
     val listener = object : TransitionListenerAdapter() {
+
         override fun onTransitionEnd(transition: Transition) {
             val frag = parent.childFragmentManager.findFragmentById(R.id.fragmentContainer)
             frag.let {
@@ -42,7 +42,6 @@ fun Fragment.onBackExtension(): Boolean {
                         .remove(it)
                         .commit()
             }
-
         }
     }
     val set = TransitionSet()
@@ -52,6 +51,7 @@ fun Fragment.onBackExtension(): Boolean {
     val view = parent.view as? ViewGroup ?: return false
     val fl = view.findViewById<ViewGroup>(R.id.fragmentContainer)
     set.addListener(listener)
+    TransitionManager.endTransitions(fl)
     TransitionManager.beginDelayedTransition(fl, set)
     fl.visibility = View.INVISIBLE
     return true
