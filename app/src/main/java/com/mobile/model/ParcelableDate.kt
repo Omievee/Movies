@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-data class ParcelableDate(val timeAsString: String? = null, val timeAsLong: Long? = null) : Date(), Parcelable {
+data class ParcelableDate(val timeAsString: String? = null, val timeAsLong: Long? = null) : Date(timeAsLong?:0), Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readString(),
