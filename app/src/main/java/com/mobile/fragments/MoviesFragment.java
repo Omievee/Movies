@@ -238,11 +238,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         } else {
             setAdaptersWithRealmOBjects();
         }
-        historyManager.getHistory();
 
-//        if (historyRealm.isEmpty()) {
-//            getHistoryForStorage();
-//        }
 
 
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
@@ -361,10 +357,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     public void onMoviePosterClick(Movie movie) {
         if (movie == null || !movie.isValid()) {
         } else {
-//            if (activateMPCardButton.getVisibility() == View.VISIBLE) {
-//                fadeOut(activateMPCardButton);
-//                activateMPCardButton.setVisibility(View.GONE);
-//            }
             showFragment(MovieFragment.newInstance(movie));
         }
     }
@@ -517,62 +509,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
             }
         });
     }
-
-//    void getHistoryForStorage() {
-//        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-//            @Override
-//            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-//                if (response.isSuccessful()) {
-//                    HistoryResponse historyObjects = response.body();
-//                    historyRealm.executeTransactionAsync(realm -> {
-//                        if (historyObjects != null) {
-//                            Calendar lastMonthYear = Calendar.getInstance();
-//                            lastMonthYear.add(Calendar.MONTH, -1);
-//                            int year = lastMonthYear.get(Calendar.YEAR);
-//                            int lastMonth = lastMonthYear.get(Calendar.MONTH) + 1;
-//                            int lastMonthCount = 0;
-//                            Movie newest = historyObjects.getReservations().size() > 0 ? historyObjects.getReservations().get(0) : null;
-//                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
-//                                Movie movieReservation = historyObjects.getReservations().get(i);
-//                                Movie historyList = realm.createObject(Movie.class);
-//                                historyList.setId(movieReservation.getId());
-//                                historyList.setCreatedAt(movieReservation.getCreatedAt());
-//                                historyList.setImageUrl(movieReservation.getImageUrl());
-//                                historyList.setRating(movieReservation.getRating());
-//                                historyList.setReleaseDate(movieReservation.getReleaseDate());
-//                                historyList.setRunningTime(movieReservation.getRunningTime());
-//                                historyList.setTheaterName(movieReservation.getTheaterName());
-//                                historyList.setTitle(movieReservation.getTitle());
-//                                historyList.setTribuneId(movieReservation.getTribuneId());
-//                                historyList.setType(movieReservation.getType());
-//                                historyList.setUserRating(movieReservation.getUserRating());
-//
-//                                Calendar cal = Calendar.getInstance();
-//                                cal.setTimeInMillis(movieReservation.getCreatedAt());
-//                                int movieSeenYear = cal.get(Calendar.YEAR);
-//                                int movieSeenMonth = cal.get(Calendar.MONTH);
-//                                if (movieSeenMonth == lastMonth && movieSeenYear == year) {
-//                                    lastMonthCount++;
-//                                }
-//                                if (movieReservation.getCreatedAt() > newest.getCreatedAt()) {
-//                                    newest = movieReservation;
-//                                }
-//                            }
-//                            UserPreferences.setTotalMoviesSeenLast30Days(lastMonthCount);
-//                            UserPreferences.setTotalMoviesSeen(historyObjects.getReservations().size());
-//                            if (newest != null) {
-//                                UserPreferences.setLastMovieSeen(newest);
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HistoryResponse> call, Throwable t) {
-//            }
-//        });
-//    }
 
     public void getMovie(int movieId) {
         Log.d(TAG, "getMovie: " + movieId);

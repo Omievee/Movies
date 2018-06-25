@@ -71,9 +71,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             error?.let {
                                 emitter.onError(it)
                             } ?: emitter.onNext(success)
-
                         }
-
     }
 
     override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
