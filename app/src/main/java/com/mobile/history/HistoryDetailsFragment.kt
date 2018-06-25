@@ -152,7 +152,7 @@ class HistoryDetailsFragment : MPFragment() {
         }
 
         val h = Handler()
-        h.postDelayed({ activity?.onBackPressed() }, 3000)
+        h.postDelayed({ activity?.onBackPressed() }, 1000)
 
     }
 
