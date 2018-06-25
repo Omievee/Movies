@@ -107,32 +107,40 @@ class ConfirmDetailsFragment : Fragment() {
     }
 
     private fun reserveTickets() {
-        var local = locationManager.lastLocation()
+        val local = locationManager.lastLocation()
         val payload = payload ?: return
         val availability = payload.screening?.getAvailability(payload.showtime) ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
-        val lat = local!!.lat
+        val lat = local?.lat ?: return
         val lng = local.lon
         val mySeat = payload.selectedSeats?.first()
         if (availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
         }
         val emails = payload.emails
-        val hasMatchingSeatCount = mySeat == null || payload.selectedSeats?.size ?: 0 - 1 == tpd.sumBy { it.tickets }.plus(1)
+        val hasMatchingSeatCount = mySeat == null || ((payload.selectedSeats?.size
+                ?: 0) - 1) == tpd.sumBy { it.tickets }
         when (hasMatchingSeatCount) {
             false -> return
         }
-        val guestTickets = tpd.filter { it.tickets > 0 }.mapIndexed { index, ticketPurchaseData ->
-            val seat = payload.selectedSeats?.get(index + 1)
-            GuestTicket(ticketType = ticketPurchaseData.ticket.ticketType,
-                    price = ticketPurchaseData.ticket.price,
-                    seatPosition = seat?.asPosition(),
-                    email = when {
-                        index < emails.size -> emails[index].email
-                        else -> null
-                    }
-            )
+        val guestTickets = tpd.filter { it.tickets > 0 }.map { ticketPurchaseData ->
+            val expanded = (0 until ticketPurchaseData.tickets).map {
+                ticketPurchaseData
+            }
+            expanded
+        }.flatMap { it->
+            it.mapIndexed { index, tpd ->
+                val seat = payload.selectedSeats?.get(index + 1)
+                GuestTicket(ticketType = tpd.ticket.ticketType,
+                        price = tpd.ticket.price,
+                        seatPosition = seat?.asPosition(),
+                        email = when {
+                            index < emails.size -> emails[index].email
+                            else -> null
+                        }
+                )
+            }
         }
         getTickets.progress = true
         getTicketsDisposable?.dispose()
