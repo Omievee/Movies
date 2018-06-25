@@ -97,9 +97,9 @@ class ConfirmDetailsFragment : Fragment() {
     private fun showDialogToReserveTickets() {
         val context = context ?: return
         AlertDialog.Builder(context).setTitle(
-                R.string.e_ticket_cancellation_policy
+                R.string.e_ticket_cancellation_policy_modal_title
         )
-                .setMessage(R.string.e_ticket_cancellation_policy_description)
+                .setMessage(R.string.e_ticket_cancellation_policy_modal)
                 .setPositiveButton(R.string.continue_button, { _, _ ->
                     reserveTickets()
                 }).setNegativeButton(R.string.cancel, null).show()

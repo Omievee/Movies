@@ -566,4 +566,6 @@
     <string name="GPS_off_enable">Enable location services</string>
     <string name="no_longer_authorized">This device is no longer authorized.</string>
     <string name="activate_your_moviepass_card">Activate your MoviePass card</string>
+    <string name="e_ticket_cancellation_policy_modal">Be sure this is the movie, showtime, and theater you want to attend before proceeding.</string>
+    <string name="e_ticket_cancellation_policy_modal_title">E-tickets can\'t be cancelled or changed.</string>
 </resources>
