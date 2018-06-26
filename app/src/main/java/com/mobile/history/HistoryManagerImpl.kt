@@ -1,5 +1,6 @@
 package com.mobile.history
 
+import com.mobile.UserPreferences
 import com.mobile.UserPreferences.isHistoryLoadedToday
 import com.mobile.UserPreferences.saveHistoryLoadedDate
 import com.mobile.history.model.ReservationHistory
@@ -12,6 +13,7 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
+import java.util.*
 import javax.inject.Provider
 
 class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Api) : HistoryManager {
@@ -57,6 +59,17 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                                 }
                                 it
                             } ?: throw RuntimeException()
+                        }.map {
+                            val lastMovie = it.firstOrNull()
+                            lastMovie?.let {
+                                UserPreferences
+                                        .setLastMovieSeen(lastMovie)
+                            }
+                            UserPreferences
+                                    .setTotalMoviesSeen(it.size)
+                            val count = it.count { it.created?.after(Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR,-30) }.time)==true }
+                            UserPreferences.setTotalMoviesSeenLast30Days(count)
+                            it
                         }
                         .doAfterTerminate {
                             if (emitter.isDisposed) {

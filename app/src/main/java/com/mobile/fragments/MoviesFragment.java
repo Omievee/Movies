@@ -494,7 +494,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                             newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
                         }
                     }, () -> {
-                        UserPreferences.saveTheatersLoadedDate();
                         LogUtils.newLog(Constants.TAG, "onSuccess: ");
                     }, error -> {
                         // Transaction failed and was automatically canceled.
