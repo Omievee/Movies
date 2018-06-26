@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.google.gson.GsonBuilder;
+import com.mobile.history.model.ReservationHistory;
 import com.mobile.model.Movie;
 import com.mobile.model.ScreeningToken;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
@@ -367,7 +368,7 @@ public class UserPreferences {
                 .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + getUserId(), totalMoviesSeenLast30Days).apply();
     }
 
-    public static void setLastMovieSeen(Movie movie) {
+    public static void setLastMovieSeen(ReservationHistory movie) {
         sPrefs
                 .edit().putString(Constants.LAST_MOVIE_SEEN + "_" + getUserId(), movie.getTitle()).apply();
     }
