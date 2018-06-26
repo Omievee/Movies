@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
@@ -27,7 +28,7 @@ import retrofit2.Response;
 public class TicketVerification_NoStub extends AppCompatActivity {
 
     ImageView closeOut;
-    Button submit;
+    TextView submit;
     EditText noStubReason;
     int reservationID;
     View progress;
