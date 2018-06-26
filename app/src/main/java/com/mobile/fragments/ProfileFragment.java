@@ -278,7 +278,7 @@ public class ProfileFragment extends MPFragment {
                             ETicket ticket = v.getTicket();
                             if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
                                 intent =
-                                        ReservationActivity.Companion.newInstance(myContext, v);
+                                        ReservationActivity.Companion.newInstance(myContext, v, true);
                             } else {
                                 Screening screening = Screening.Companion.from(v);
                                 ETicketConfirmation confirmation = null;

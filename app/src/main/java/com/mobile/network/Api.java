@@ -119,7 +119,7 @@ public interface Api {
 
     /* Cancel Reservation  */
     @PUT("/rest/v1/reservations")
-    Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
+    Single<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
     /* History  */
     @GET("/rest/v1/reservations/history")

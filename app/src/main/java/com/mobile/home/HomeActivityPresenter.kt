@@ -5,6 +5,7 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
 import com.mobile.model.Alert
+import com.mobile.model.PopInfo
 import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
@@ -119,12 +120,11 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
         it.popInfo?.let {
-            view.showTicketVerification(it)
-//            fetchReservation()
+            fetchReservation(it)
         }
     }
 
-    private fun fetchReservation() {
+    private fun fetchReservation(popInfo: PopInfo) {
         api
                 .lastReservation()
                 .subscribe({
@@ -132,7 +132,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     view.showConfirmationScreen(it)
                 }
                         , {
-
+                    view.showTicketVerification(popInfo)
                 })
     }
 

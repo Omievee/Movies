@@ -5,14 +5,17 @@ import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.google.zxing.BarcodeFormat
+import com.mobile.UserPreferences
 import com.mobile.utils.MapUtil
 import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_current_reservation.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import dagger.android.AndroidInjection
 
 class ReservationView(context: Context, attributeSet: AttributeSet?) : ConstraintLayout(context, attributeSet) {
 
@@ -20,11 +23,17 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         inflate(context, R.layout.layout_current_reservation, this)
     }
 
-    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = true) {
+    var reservationId: Int? = null
+
+    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false, canClose: Boolean = true) {
+        reservationId = reservation.reservation?.id
         movieName.text = reservation.title
         theaterName.text = reservation.theater
         movieShowtime.text = reservation.showtime?.let {
             SimpleDateFormat("h:mm a", Locale.getDefault()).format(it)
+        }
+        if(!canClose){
+            closeIV.visibility = View.INVISIBLE
         }
         seats.text = reservation.ticket?.seats?.let {
             SpannableStringBuilder().apply {
@@ -52,60 +61,68 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 }
             }
         }
-        reservation.ticket?.let {
-            val barcodeFormat = when (it.format) {
-                TicketFormat.QRCODE -> {
-                    BarcodeFormat.QR_CODE
+        if (!reservation.ticket?.redemptionCode.isNullOrEmpty()) {
+            reservation.ticket?.let {
+                val barcodeFormat = when (it.format) {
+                    TicketFormat.QRCODE -> {
+                        BarcodeFormat.QR_CODE
+                    }
+                    TicketFormat.BARCODE -> {
+                        BarcodeFormat.CODE_128
+                    }
+                    else -> {
+                        null
+                    }
                 }
-                TicketFormat.BARCODE -> {
-                    BarcodeFormat.CODE_128
+                val redemptionCode = it.redemptionCode
+                val middleCLTop: Int
+                val reservationDescriptionBottom: Int
+                if (barcodeFormat != null && redemptionCode != null) {
+                    middleCLTop = codeCL.id
+                    reservationDescriptionBottom = codeCL.id
+                    barcodeL.visibility = View.VISIBLE
+                    codeCL.visibility = View.VISIBLE
+                    barcodeL.bind(redemptionCode, barcodeFormat)
+                } else {
+                    middleCLTop = reservationDescriptionTV.id
+                    reservationDescriptionBottom = middleCL.id
+                    codeCL.visibility = View.GONE
+                    barcodeL.visibility = View.GONE
                 }
-                else -> {
-                    null
+                val set = ConstraintSet()
+                set.clone(reservationCL)
+                set.connect(middleCL.id, ConstraintSet.TOP, middleCLTop, ConstraintSet.BOTTOM)
+                set.connect(reservationDescriptionBottom, ConstraintSet.BOTTOM, middleCL.id, ConstraintSet.TOP)
+                set.applyTo(reservationCL)
+                if (codeCL.visibility == View.GONE) {
+                    set.clone(middleCL)
+                    set.setVerticalBias(reservationCode.id, 0f)
+                    set.applyTo(middleCL)
                 }
+                when (it.format == TicketFormat.UNKNOWN) {
+                    true -> reservationCode.background = null
+                }
+                reservationCode.visibility = View.VISIBLE
+                reservationCode.text = it.redemptionCode
             }
-            val redemptionCode = it.redemptionCode
-            val middleCLTop: Int
-            val reservationDescriptionBottom: Int
-            if (barcodeFormat != null && redemptionCode != null) {
-                middleCLTop = codeCL.id
-                reservationDescriptionBottom = codeCL.id
-                barcodeL.visibility = View.VISIBLE
-                codeCL.visibility = View.VISIBLE
-                barcodeL.bind(redemptionCode, barcodeFormat)
-            } else {
-                middleCLTop = reservationDescriptionTV.id
-                reservationDescriptionBottom = middleCL.id
-                codeCL.visibility = View.GONE
-                barcodeL.visibility = View.GONE
-            }
-            val set = ConstraintSet()
-            set.clone(reservationCL)
-            set.connect(middleCL.id, ConstraintSet.TOP, middleCLTop, ConstraintSet.BOTTOM)
-            set.connect(reservationDescriptionBottom, ConstraintSet.BOTTOM, middleCL.id, ConstraintSet.TOP)
-            set.applyTo(reservationCL)
-            if (codeCL.visibility == View.GONE) {
-                set.clone(middleCL)
-                set.setVerticalBias(reservationCode.id, 0f)
-                set.applyTo(middleCL)
-            }
-            when (it.format == TicketFormat.UNKNOWN) {
-                true -> reservationCode.background = null
-            }
-            reservationCode.text = it.redemptionCode
-        } ?: run {
-            reservationDescriptionTV.setText(R.string.reservation_use_card_description)
-            creditCardIV.visibility = View.VISIBLE
-            zipCodeDescription.apply {
-                setText(R.string.if_asked_provide_zip)
-                visibility = View.VISIBLE
-            }
-            reservationCode.background = null
+        } else {
+            run {
 
-        }
-        currentReservationTV.visibility = when (showCurrentReservationText) {
-            true -> View.VISIBLE
-            else -> View.GONE
+                if (UserPreferences.getProofOfPurchaseRequired()) {
+                    ticketVerificationBanner.visibility = View.VISIBLE
+                }
+
+//            UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().popRequired
+                reservationDescriptionTV.visibility = View.VISIBLE
+                reservationDescriptionTV.text = resources.getString(R.string.reservation_description)
+                creditCardIV.visibility = View.VISIBLE
+                zipCodeDescription.apply {
+                    setText(R.string.if_asked_provide_zip)
+                    visibility = View.VISIBLE
+                }
+                ZipCodeNumberReservation.text = UserPreferences.getZipCode()
+                cancelCurrentReservationTV.visibility = View.VISIBLE
+            }
         }
 
     }
@@ -114,10 +131,20 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         closeIV.setOnClickListener {
             onCloseListener?.onClose()
         }
-    }
 
+        cancelCurrentReservationTV.setOnClickListener {
+            onCloseListener?.cancelReservation(reservationId ?: 0)
+            progress.visibility = View.VISIBLE
+        }
+
+        ticketVerificationBanner.setOnClickListener {
+            onCloseListener?.openTicketVerificationFragment()
+        }
+    }
 }
 
 interface OnCloseListener {
     fun onClose()
+    fun cancelReservation(reservationId: Int)
+    fun openTicketVerificationFragment()
 }

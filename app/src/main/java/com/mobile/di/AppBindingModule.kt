@@ -5,10 +5,12 @@ import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
+import com.mobile.reservation.ReservationActivity
 import com.mobile.seats.BringAFriendActivity
 import com.mobile.seats.ConfirmDetailsFragment
 import com.mobile.splash.SplashActivity
 import com.mobile.splash.SplashActivityModule
+import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -57,6 +59,10 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun historyDeatils(): HistoryDetailsFragment
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = [ReservationActivityModule::class])
+    fun reservationActivity(): ReservationActivity
 
 
 }

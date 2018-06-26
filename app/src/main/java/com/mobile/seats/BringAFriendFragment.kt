@@ -121,7 +121,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                 payload.screening, payload.showtime, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater?.toTheater()
         )
         activity.finish()
-        startActivity(ReservationActivity.newInstance(activity, screeningToken))
+        startActivity(ReservationActivity.newInstance(activity, screeningToken, true))
     }
 
     override fun onBackPressed() {

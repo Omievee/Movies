@@ -352,6 +352,8 @@
 
     <style name="ReservationHeader" parent="ReservationText">
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textColor">@color/almost_white</item>
     </style>
 
     <style name="ReservationSubHeader" parent="ReservationText">
@@ -371,6 +373,14 @@
 
     <style name="ZipCodeDescription" parent="ReservationDescription">
         <item name="android:text">@string/reservation_zip_code_description</item>
+    </style>
+
+    <style name="ZipCodeNumberReservation" parent="ReservationDescription">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
     </style>
 
     <style name="ReservationCode">
@@ -396,9 +406,17 @@
         <item name="android:text">@string/reservation_current</item>
     </style>
 
+    <style name="ticketVerificationBanner" parent="ReservationText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/ticket_verification_banner</item>
+    </style>
+
     <style name="ReservationCancel" parent="ReservationCurrent">
         <item name="android:padding">@dimen/margin_half</item>
         <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:textStyle">normal</item>
         <item name="android:foreground">?selectableItemBackgroundBorderless</item>
         <item name="android:text">@string/reservation_cancel</item>
@@ -448,6 +466,26 @@
 
     <style name="NextButton" parent="ContinueButton">
         <item name="android:text">@string/next</item>
+    </style>
+
+    <style name="CheckInButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:text">@string/check_in_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/red</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="TicketVerificationButton" parent="CheckInButton">
+        <item name="android:text">@string/ticket_verification_banner</item>
+
+
+
     </style>
 
     <style name="DialogFragment">
