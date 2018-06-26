@@ -38,6 +38,7 @@ import com.mobile.helpers.LogUtils
 import com.mobile.model.PopInfo
 import com.mobile.network.RestClient
 import com.mobile.requests.VerificationRequest
+import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.VerificationResponse
 import com.mobile.tv.TicketVerificationView
 import com.mobile.utils.AppUtils
@@ -292,7 +293,7 @@ class TicketVerificationV2 : MPFragment() {
                                 //TODO
                                 ticketVerificationV.disableLoading()
                                 Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
-                                onBackExtension()
+                                pictureSubmitted()
                             } else {
                                 ticketVerificationV.disableLoading()
                                 var jObjError: JSONObject? = null
@@ -302,7 +303,6 @@ class TicketVerificationV2 : MPFragment() {
                                         //TODO
                                         ticketVerificationV.disableLoading()
                                         Toast.makeText(activity, "Error uploading picture", Toast.LENGTH_LONG).show()
-                                        onBackExtension()
                                     }
                                 } catch (e: JSONException) {
                                     e.printStackTrace()
@@ -329,6 +329,13 @@ class TicketVerificationV2 : MPFragment() {
                 LogUtils.newLog(Constants.TAG, "onError: ")
             }
         })
+    }
+
+    fun pictureSubmitted(){
+        when (isTicketRedeemed){
+            true -> activity?.onBackExtension()
+            false -> activity?.finish()
+        }
     }
 
     private fun metaDataMap(reservationId: String, showTime: String, movieId: String, movieTitle: String,

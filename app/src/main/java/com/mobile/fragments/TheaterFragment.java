@@ -196,7 +196,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         selectedTheaterRecyclerView.setLayoutManager(theaterSelectedMovieManager);
         selectedTheaterRecyclerView.setAdapter(theaterMoviesAdapter);
         selectedTheaterRecyclerView.setLayoutAnimation(animation);
-        selectedTheaterRecyclerView.addItemDecoration(new SpaceDecorator(null,null,null,null,null,300));
+        selectedTheaterRecyclerView.addItemDecoration(new SpaceDecorator(null, null, null, null, null, 300));
 
         loadMovies();
 
@@ -358,7 +358,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
         super.onResume();
         buttonCheckIn.setEnabled(true);
         fetchLocation();
-        if(state!=null) {
+        if (state != null) {
             theaterSelectedMovieManager.onRestoreInstanceState(state);
         }
     }
@@ -506,11 +506,7 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
     }
 
     private void showConfirmation(ScreeningToken token) {
-        if (token.getConfirmationCode() != null && !TextUtils.isEmpty(token.getConfirmationCode().getConfirmationCode())) {
-            startActivity(ReservationActivity.Companion.newInstance(myContext, token, true));
-        } else {
-            startActivity(new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token)));
-        }
+        startActivity(ReservationActivity.Companion.newInstance(myContext, token, true));
         Activity activity = getActivity();
         if (activity != null) {
             activity.onBackPressed();
