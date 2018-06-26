@@ -135,9 +135,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
 
     override fun showTicketVerification(it: PopInfo) {
-        TicketVerificationDialog
-                .newInstance(it)
-                .show(supportFragmentManager, "ticketVerification")
+        TicketVerificationDialog.newInstance(it).show(supportFragmentManager, "ticketVerification")
     }
 
     override fun showConfirmationScreen(it: CurrentReservationV2) {
@@ -147,8 +145,6 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showActivatedCardScreen() {
         showFragment(AutoActivatedCardFragment.newInstance())
-
-
     }
 
     var currentItem: Int = 0

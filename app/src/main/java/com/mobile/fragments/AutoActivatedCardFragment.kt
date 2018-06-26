@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.activities.ActivatedCard_TutorialActivity
-import com.mobile.home.HomeActivity
 import com.mobile.model.Screening
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fr_mpcard_autoactivated.*
 import org.parceler.Parcels
 
 
-class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
+class AutoActivatedCardFragment : MPFragment() {
 
 
     var screeningObject: Screening? = null
@@ -32,8 +31,6 @@ class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
             screeningObject = it.getParcelable(Constants.SCREENING)
             selectedShowTime = it.getString(Constants.SHOWTIME)
         }
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,16 +38,16 @@ class AutoActivatedCardFragment : android.support.v4.app.Fragment() {
 
         closebutton.setOnClickListener {
             if (!UserPreferences.getHasUserSeenCardActivationScreen() && !UserPreferences.getRestrictionSubscriptionStatus().equals("ACTIVE")) {
-
                 UserPreferences.setUserHasSeenCardActivationScreen(true)
+
+                activity?.onBackPressed()
                 val activatedIntent = Intent(context, ActivatedCard_TutorialActivity::class.java)
                 activatedIntent.putExtra(MovieFragment.SCREENING, Parcels.wrap<Screening>(screeningObject))
                 activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
                 startActivity(activatedIntent)
             } else {
                 UserPreferences.setUserHasSeenCardActivationScreen(true)
-                val dismissScreen = Intent(context, HomeActivity::class.java)
-                startActivity(dismissScreen)
+                activity?.onBackPressed()
             }
 
         }

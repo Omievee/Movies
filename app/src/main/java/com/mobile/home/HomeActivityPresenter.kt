@@ -119,7 +119,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
         it.popInfo?.let {
-            fetchReservation()
+            view.showTicketVerification(it)
+//            fetchReservation()
         }
     }
 

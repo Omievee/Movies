@@ -38,7 +38,6 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.PopInfo;
 import com.mobile.network.RestClient;
@@ -56,8 +55,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -136,8 +133,8 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         popInfo = getArguments().getParcelable("popInfo");
 
-        if(popInfo.getMovieTitle()!=null)
-        {
+        Log.d(Constants.TAG, "onViewCreated: " + popInfo.getMovieTitle());
+        if (popInfo.getMovieTitle() != null) {
             movieTitle.setVisibility(View.VISIBLE);
             movieTitle.setText(popInfo.getMovieTitle());
         }
@@ -320,7 +317,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
-                    int reservationId = getArguments().getInt("reservationId");
+                    int reservationId = popInfo.getReservationId();
                     VerificationRequest ticketVerificationRequest = new VerificationRequest();
                     RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
                         @Override
