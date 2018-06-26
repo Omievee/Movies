@@ -15,6 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_half"
         android:layout_marginTop="40dp"
+        android:visibility="gone"
         android:src="@drawable/close_white"
         android:tint="@color/white" />
 
@@ -55,7 +56,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Please explain why you don't have your ticket stub..."
+                    android:hint="@string/no_ticket_stub_message"
                     android:textColorHint="@color/gray_dark"
                     app:counterEnabled="true"
                     app:counterMaxLength="250"
@@ -76,21 +77,22 @@
             </android.support.v7.widget.CardView>
 
 
-            <Button
-                android:id="@+id/SubmitStub"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ReasonCard"
+                android:id="@+id/SubmitStub"
+                android:textSize="@dimen/text_size_16"
+                android:text="Submit"
+                android:background="@drawable/button_red"
+                android:paddingRight="@dimen/margin_standard"
+                android:paddingLeft="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/margin_standard"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:padding="@dimen/margin_half"
+                android:textColor="@color/white_ish"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/mpbutton"
-                android:layout_marginBottom="@dimen/margin_standard"
-                android:text="Submit"
-                android:layout_alignParentBottom="true"
-                android:textAllCaps="false"
-                android:textColorHint="@color/white"
-                android:textSize="18sp" />
+                style="@style/RedMoviepassButton"/>
 
         </android.support.constraint.ConstraintLayout>
 

@@ -484,8 +484,6 @@
     <style name="TicketVerificationButton" parent="CheckInButton">
         <item name="android:text">@string/ticket_verification_banner</item>
 
-
-
     </style>
 
     <style name="DialogFragment">
