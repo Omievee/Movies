@@ -110,17 +110,18 @@ class TheaterScreeningsAdapter(
                         }
 
                     }, {
-                !(it.screening?.approved ?: false)
+                it.distance ?: false
 
             }, {
-                it.distance ?: false
+                it.type == TYPE_MISSING
             },
                     {
                         it.movie != null
 
                     },
                     {
-                        it.type == TYPE_MISSING
+                        !(it.screening?.approved ?: false)
+
 
                     }
             ))?.toMutableList()

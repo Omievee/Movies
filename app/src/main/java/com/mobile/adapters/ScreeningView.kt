@@ -54,7 +54,7 @@ fun Int.runningTimeString(context: Context): SpannableStringBuilder {
 class ScreeningView(context: Context) : FrameLayout(context) {
 
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
-    var screening: ScreeningPresentation? = null
+    var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
 
     init {
@@ -73,13 +73,13 @@ class ScreeningView(context: Context) : FrameLayout(context) {
     }
 
     fun bind(screening: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
-        this.screening = screening
+        this.screeningPresentation = screening
         this.showtimeListener = showtimeListener
         adapter.screening = screening
         adapter.showtimeClickListener = showtimeClickListener
         adapter.data = ShowtimeAdapter.createData(adapter.data, screening)
         synopsis.visibility = View.GONE
-        val imgUrl = Uri.parse(screening.screening?.landscapeImageUrl)
+        val imgUrl = Uri.parse(screeningPresentation?.screening?.landscapeImageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setResizeOptions(ResizeOptions(1280, 720))
@@ -91,14 +91,20 @@ class ScreeningView(context: Context) : FrameLayout(context) {
 
         cinemaApprovedV.isEnabled = screening.enabled
         movieTitle.text = screening.screening?.title
+        val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
+        val approval = screeningPresentation?.screening?.approved ?: true
+
         when (screening.enabled) {
             false -> {
                 notSupported.visibility = View.VISIBLE
                 notSupported.text = when (screening.movie != null) {
                     true -> resources.getString(R.string.screening_already_seen)
-                    false -> screening.screening?.disabledExplanation
+                    false -> disabledEx
                 }
 
+                if (disabledEx.isEmpty() && !approval) {
+                    notSupported.text = "This premium screening is not supported"
+                }
             }
             true -> {
                 notSupported.visibility = View.GONE

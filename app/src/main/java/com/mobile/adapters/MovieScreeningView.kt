@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.list_item_theaters_and_showtimes.view.*
 class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs) {
 
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
-    var screening: ScreeningPresentation? = null
+    var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
 
     init {
@@ -44,33 +44,43 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
     }
 
     fun bind(p: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
-        this.screening = p
+        this.screeningPresentation = p
         this.showtimeListener = showtimeClickListener
         THEATER_NAME_LISTITEM.text = p.theater?.name
         THEATER_ADDRESS2_LISTITEM.text = p.theater?.address
         THEATER_DISTANCE_LISTITEM.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
         THEATER_ADDRESS_LISTITEM.text = p.theater?.cityStateZip
-        icon_seat.visibility = when (screening?.screening?.getTicketType()) {
+        icon_seat.visibility = when (screeningPresentation?.screening?.getTicketType()) {
             TicketType.SELECT_SEATING -> View.VISIBLE
             else -> View.GONE
         }
-        icon_ticket.visibility = when (screening?.screening?.getTicketType()) {
+        icon_ticket.visibility = when (screeningPresentation?.screening?.getTicketType()) {
             TicketType.SELECT_SEATING, TicketType.E_TICKET -> View.VISIBLE
             else -> View.GONE
         }
 
-        notSupported.visibility = when (screening?.screening?.approved) {
-            true -> View.GONE
-            else -> View.VISIBLE
-        }
+        val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
+        val approval = screeningPresentation?.screening?.approved ?: true
+
+        notSupported.visibility =
+                when (!approval  || p.movie != null) {
+                    true -> View.VISIBLE
+                    else -> View.GONE
+                }
 
         notSupported.text = when {p.movie != null ->
             resources.getString(R.string.screening_already_seen)
-            else -> p.screening?.disabledExplanation
+            else -> screeningPresentation?.screening?.disabledExplanation
         }
 
-        movieApproved.isEnabled = screening?.enabled ?: false
-        adapter.screening = screening
+
+
+        if (disabledEx.isEmpty() && !approval) {
+            notSupported.text = "This premium screening is not supported"
+        }
+
+        movieApproved.isEnabled = screeningPresentation?.enabled ?: false
+        adapter.screening = screeningPresentation
         adapter.showtimeClickListener = showtimeClickListener
         adapter.data = ShowtimeAdapter.createData(adapter.data, p)
     }
