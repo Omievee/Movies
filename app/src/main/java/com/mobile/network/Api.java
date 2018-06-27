@@ -148,6 +148,10 @@ public interface Api {
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
 
+    /* user Data */
+    @GET("/rest/v1/users/{userId}")
+    Single<UserInfoResponse> getUserDataRx(@Path("userId") int userId);
+
     @POST("/rest/v1/users/exists")
     Single<Emails> usersExist(@Body Emails emails);
 

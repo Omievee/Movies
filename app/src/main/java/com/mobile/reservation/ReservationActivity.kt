@@ -39,6 +39,8 @@ class ReservationActivity : MPActivty() {
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
+            if(UserPreferences.getZipCode() == "1234")
+                presenter.getUserZipCode()
             reservationV.bind(it, showCurrentReservationText, canClose)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {

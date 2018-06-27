@@ -339,6 +339,10 @@ public class UserPreferences {
         return sPrefs.getString(Constants.ZIP_CODE, "1234");
     }
 
+    public static void setZipCode(String zip) {
+         sPrefs.edit().putString(Constants.ZIP_CODE, zip).apply();
+    }
+
     public static ScreeningToken getLastReservation() {
         String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
         String reservation = sPrefs.getString(key, null);

@@ -34,4 +34,13 @@ class UserInfoResponse(
             }
         }
     }
+
+    val billingZipCode:String? by lazy {
+        billingAddressLine2?.split(",")?.let {
+            when(it.size>0) {
+                true-> it.get(it.size-1).trim()
+                else-> ""
+            }
+        }
+    }
 }
