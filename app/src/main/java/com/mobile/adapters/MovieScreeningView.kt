@@ -73,10 +73,8 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             else -> screeningPresentation?.screening?.disabledExplanation
         }
 
-
-
         if (disabledEx.isEmpty() && !approval) {
-            notSupported.text = "This premium screening is not supported"
+            notSupported.text = resources.getString(R.string.screening_premium)
         }
 
         movieApproved.isEnabled = screeningPresentation?.enabled ?: false

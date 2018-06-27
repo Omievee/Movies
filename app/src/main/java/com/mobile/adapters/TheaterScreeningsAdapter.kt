@@ -108,21 +108,25 @@ class TheaterScreeningsAdapter(
                             TicketType.SELECT_SEATING, TicketType.E_TICKET -> false
                             else -> true
                         }
-
                     }, {
-                it.distance ?: false
+
+                when (it.type) {
+                    TYPE_MISSING -> true
+                    else -> false
+                }
+
 
             }, {
-                it.type == TYPE_MISSING
+                !(it.screening?.approved ?: false)
             },
                     {
-                        it.movie != null
-
+                        it.distance ?: false
                     },
                     {
-                        !(it.screening?.approved ?: false)
-
-
+                        when (it.movie) {
+                            null -> false
+                            else -> true
+                        }
                     }
             ))?.toMutableList()
             val noMoreScreenings = presentations?.none { it.type == TYPE_SCREENING || it.type == TYPE_THEATER }

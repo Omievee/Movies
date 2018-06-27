@@ -488,6 +488,7 @@
     <string name="screenings_no_more_screenings">There are no more screenings at this theater today</string>
     <string name="screening_unlisted_showtime">Unlisted Showtime</string>
     <string name="screening_unlisted_showtime_desc">Click here to check in to a movie that is playing at this theater, but isn\'t appearing on the app.</string>
+    <string name="screening_premium">This premium screening is not supported</string>
 
     <!-- Bring A Friend-->
     <string name="add_guests_title">Add Guests</string>
