@@ -334,7 +334,10 @@ class TicketVerificationV2 : MPFragment() {
 
     fun pictureSubmitted(){
         when (isTicketRedeemed){
-            true -> activity?.onBackExtension()
+            true -> {
+                isTicketRedeemed = false
+                activity?.onBackPressed()
+            }
             false -> activity?.finish()
         }
     }
