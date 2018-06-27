@@ -3,6 +3,7 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.constraint.ConstraintLayout;
 
 import com.google.gson.GsonBuilder;
 import com.mobile.history.model.ReservationHistory;
@@ -311,6 +312,14 @@ public class UserPreferences {
             String gson = new GsonBuilder().create().toJson(userPreferences);
             sPrefs.edit().putString(key, gson).apply();
         }
+    }
+
+    public static void saveLastReservationPopInfo(int reservationId) {
+            sPrefs.edit().putInt(Constants.RESERVATION_ID, reservationId).apply();
+    }
+
+    public static int getLastReservationPopInfo() {
+        return sPrefs.getInt(Constants.RESERVATION_ID, 0);
     }
 
     public static UserInfoResponse getBilling() {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.home.HomeActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationLostRequest;
@@ -73,6 +74,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
                 if (lostResponse != null) {
                     progress.setVisibility(View.GONE);
                     displayWarning();
+                    UserPreferences.saveLastReservationPopInfo(reservationID);
                 }
             }
 

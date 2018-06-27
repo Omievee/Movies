@@ -333,6 +333,7 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     fun pictureSubmitted(){
+        UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
         when (isTicketRedeemed){
             true -> {
                 isTicketRedeemed = false
