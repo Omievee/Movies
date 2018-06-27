@@ -3,22 +3,17 @@ package com.mobile.reservation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.mobile.MPActivty
-import com.mobile.home.HomeActivityPresenter
-import com.mobile.adapters.EticketTheatersAdapter
+import com.mobile.UserPreferences
 import com.mobile.fragments.TicketVerificationV2
 import com.mobile.model.PopInfo
 import com.mobile.model.ScreeningToken
-import com.mobile.requests.ChangedMindRequest
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
 import com.moviepass.R
 import dagger.android.AndroidInjection
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_reservation.*
 import kotlinx.android.synthetic.main.layout_current_reservation.view.*
 import java.text.SimpleDateFormat
@@ -30,8 +25,6 @@ class ReservationActivity : MPActivty() {
     @Inject
     lateinit var presenter: ReservationActivityPresenter
 
-    var canClose : Boolean = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         val windowParams = window.attributes
         windowParams.screenBrightness = 1.0f
@@ -40,10 +33,9 @@ class ReservationActivity : MPActivty() {
         AndroidInjection.inject(this)
         setContentView(R.layout.activity_reservation)
         val reservation: CurrentReservationV2? = intent.getParcelableExtra(KEY_RESERVATION)
-        val showcurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
-        canClose = intent.getBooleanExtra(KEY_CAN_CLOSE,false)
+        val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         reservation?.let {
-            reservationV.bind(it, showcurrentReservationText, canClose)
+            reservationV.bind(it, showCurrentReservationText)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun openTicketVerificationFragment() {
@@ -75,7 +67,7 @@ class ReservationActivity : MPActivty() {
 
     override fun onBackPressed() {
         onBackExtension()
-        if(canClose)
+        if(!UserPreferences.getProofOfPurchaseRequired())
             super.onBackPressed()
     }
 
@@ -90,15 +82,14 @@ class ReservationActivity : MPActivty() {
         const val KEY_SHOW_CURRENT_RESERVATION_TEXT = "show_as_current_reservation"
         const val KEY_CAN_CLOSE = "can_close"
 
-        fun newInstance(context: Context, reservation: CurrentReservationV2, canClose: Boolean): Intent {
+        fun newInstance(context: Context, reservation: CurrentReservationV2): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 putExtra(KEY_RESERVATION, reservation)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
-                putExtra(KEY_CAN_CLOSE,canClose)
             }
         }
 
-        fun newInstance(context: Context, reservation: ScreeningToken, canClose: Boolean): Intent {
+        fun newInstance(context: Context, reservation: ScreeningToken): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
                 val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs.seats
@@ -133,7 +124,6 @@ class ReservationActivity : MPActivty() {
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)
-                putExtra(KEY_CAN_CLOSE,canClose)
             }
         }
     }

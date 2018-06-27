@@ -140,7 +140,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showConfirmationScreen(it: CurrentReservationV2) {
         val context = this
-        startActivity(ReservationActivity.newInstance(context, it,false))
+        startActivity(ReservationActivity.newInstance(context, it))
     }
 
     override fun showActivatedCardScreen() {

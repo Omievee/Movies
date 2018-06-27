@@ -302,7 +302,8 @@ class TicketVerificationV2 : MPFragment() {
                                     if (jObjError.getString("message") == "Verification status is different from PENDING_SUBMISSION") {
                                         //TODO
                                         ticketVerificationV.disableLoading()
-                                        Toast.makeText(activity, "Error uploading picture", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
+                                        pictureSubmitted()
                                     }
                                 } catch (e: JSONException) {
                                     e.printStackTrace()

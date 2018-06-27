@@ -25,15 +25,12 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
 
     var reservationId: Int? = null
 
-    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false, canClose: Boolean = true) {
+    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false) {
         reservationId = reservation.reservation?.id
         movieName.text = reservation.title
         theaterName.text = reservation.theater
         movieShowtime.text = reservation.showtime?.let {
             SimpleDateFormat("h:mm a", Locale.getDefault()).format(it)
-        }
-        if(!canClose){
-            closeIV.visibility = View.INVISIBLE
         }
         seats.text = reservation.ticket?.seats?.let {
             SpannableStringBuilder().apply {
@@ -110,6 +107,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
 
                 if (UserPreferences.getProofOfPurchaseRequired()) {
                     ticketVerificationBanner.visibility = View.VISIBLE
+                    closeIV.visibility = View.INVISIBLE
                 }
 
 //            UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().popRequired
