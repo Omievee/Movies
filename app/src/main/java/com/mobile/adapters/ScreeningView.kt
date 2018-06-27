@@ -103,7 +103,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 }
 
                 if (disabledEx.isEmpty() && !approval) {
-                    notSupported.text = "This premium screening is not supported"
+                    notSupported.text = resources.getString(R.string.screening_premium)
                 }
             }
             true -> {

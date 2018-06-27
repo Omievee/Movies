@@ -59,11 +59,12 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             else -> View.GONE
         }
 
+
         val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
         val approval = screeningPresentation?.screening?.approved ?: true
 
         notSupported.visibility =
-                when (!approval  || p.movie != null) {
+                when (!approval || p.movie != null) {
                     true -> View.VISIBLE
                     else -> View.GONE
                 }
