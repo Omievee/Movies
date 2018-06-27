@@ -200,7 +200,7 @@
     <style name="TitleView">
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:gravity">center</item>
-        <item name="android:lines">1</item>
+        <item name="android:maxLines">2</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="autoSizeMinTextSize">9sp</item>
         <item name="autoSizeMaxTextSize">20sp</item>
@@ -478,11 +478,10 @@
     </style>
 
     <style name="NoMoreScreenings" parent="TitleView">
-        <item name="android:maxLines">2</item>
-        <item name="android:padding">@dimen/margin_standard_and_half</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
         <item name="android:layout_height">400dp</item>
-        <item name="android:gravity">center</item>
         <item name="android:text">@string/screenings_no_more_screenings</item>
     </style>
 
