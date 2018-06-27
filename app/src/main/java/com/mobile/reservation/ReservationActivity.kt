@@ -25,6 +25,9 @@ class ReservationActivity : MPActivty() {
     @Inject
     lateinit var presenter: ReservationActivityPresenter
 
+    private var canClose: Boolean = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val windowParams = window.attributes
         windowParams.screenBrightness = 1.0f
@@ -34,8 +37,9 @@ class ReservationActivity : MPActivty() {
         setContentView(R.layout.activity_reservation)
         val reservation: CurrentReservationV2? = intent.getParcelableExtra(KEY_RESERVATION)
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
+        canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
-            reservationV.bind(it, showCurrentReservationText)
+            reservationV.bind(it, showCurrentReservationText, canClose)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun openTicketVerificationFragment() {
@@ -69,6 +73,10 @@ class ReservationActivity : MPActivty() {
         onBackExtension()
         if(!UserPreferences.getProofOfPurchaseRequired())
             super.onBackPressed()
+        else{
+            if(canClose)
+                super.onBackPressed()
+        }
     }
 
     fun hideProgress(){
@@ -82,14 +90,15 @@ class ReservationActivity : MPActivty() {
         const val KEY_SHOW_CURRENT_RESERVATION_TEXT = "show_as_current_reservation"
         const val KEY_CAN_CLOSE = "can_close"
 
-        fun newInstance(context: Context, reservation: CurrentReservationV2): Intent {
+        fun newInstance(context: Context, reservation: CurrentReservationV2, canClose: Boolean = false): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 putExtra(KEY_RESERVATION, reservation)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
+                putExtra(KEY_CAN_CLOSE, canClose)
             }
         }
 
-        fun newInstance(context: Context, reservation: ScreeningToken): Intent {
+        fun newInstance(context: Context, reservation: ScreeningToken, canClose: Boolean = false): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
                 val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs.seats
@@ -124,6 +133,7 @@ class ReservationActivity : MPActivty() {
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)
+                putExtra(KEY_CAN_CLOSE, canClose)
             }
         }
     }

@@ -274,34 +274,7 @@ public class ProfileFragment extends MPFragment {
                             if (myContext == null) {
                                 return;
                             }
-                            final Intent intent;
-                            ETicket ticket = v.getTicket();
-                            if (ticket != null && !isEmpty(ticket.getRedemptionCode())) {
-                                intent =
-                                        ReservationActivity.Companion.newInstance(myContext, v);
-                            } else {
-                                Screening screening = Screening.Companion.from(v);
-                                ETicketConfirmation confirmation = null;
-                                if (v.getTicket() != null) {
-                                    confirmation = new ETicketConfirmation();
-                                    confirmation.setConfirmationCode(v.getTicket().getRedemptionCode());
-                                    confirmation.setBarCodeUrl("");
-                                }
-                                Reservation reservation = null;
-                                if (v.getReservation() != null) {
-                                    reservation = new Reservation();
-                                    reservation.setId(v.getReservation().getId());
-                                }
-                                ScreeningToken token = new ScreeningToken(
-                                        screening,
-                                        new SimpleDateFormat("h:mm a").format(v.getShowtime()),
-                                        reservation,
-                                        confirmation,
-                                        null
-                                );
-                                intent = new Intent(myContext, ConfirmationActivity.class).putExtra(Constants.TOKEN, Parcels.wrap(token));
-                            }
-                            startActivity(intent);
+                            startActivity(ReservationActivity.Companion.newInstance(myContext, v, true));
                         }, e -> {
                             Toast.makeText(myContext, "No current reservation at this time", Toast.LENGTH_SHORT).show();
                         });

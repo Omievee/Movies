@@ -25,7 +25,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
 
     var reservationId: Int? = null
 
-    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false) {
+    fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false, canClose: Boolean) {
         reservationId = reservation.reservation?.id
         movieName.text = reservation.title
         theaterName.text = reservation.theater
@@ -41,6 +41,12 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 }
             }
         }
+
+        when(canClose){
+            true -> closeIV.visibility = View.VISIBLE
+            false -> closeIV.visibility = View.INVISIBLE
+        }
+
         reservationDescriptionTV.text = resources.getQuantityText(R.plurals.reservation_code_description, reservation.ticket?.seats?.size
                 ?: 1)
         if (seats.text.isEmpty()) {
@@ -105,9 +111,8 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         } else {
             run {
 
-                if (UserPreferences.getProofOfPurchaseRequired()) {
+                if (UserPreferences.getProofOfPurchaseRequired() && UserPreferences.getLastReservationPopInfo()!=reservationId) {
                     ticketVerificationBanner.visibility = View.VISIBLE
-                    closeIV.visibility = View.INVISIBLE
                 }
 
 //            UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().popRequired
@@ -122,7 +127,6 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 cancelCurrentReservationTV.visibility = View.VISIBLE
             }
         }
-
     }
 
     fun setOnCloseListener(onCloseListener: OnCloseListener?) {

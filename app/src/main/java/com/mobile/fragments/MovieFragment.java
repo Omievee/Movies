@@ -582,7 +582,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
 
     private void showConfirmation(ScreeningToken token) {
-        startActivity(ReservationActivity.Companion.newInstance(myContext, token));
+        startActivity(ReservationActivity.Companion.newInstance(myContext,token,false));
         Activity activity = getActivity();
         if (activity != null) {
             activity.onBackPressed();
