@@ -59,6 +59,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
         if (!enableVideoPlayback) {
             player.stop()
         }
+
         if (lastSource == movie.teaserVideoUrl) {
             if (player.playbackState == Player.STATE_READY) {
                 player.playWhenReady
@@ -70,6 +71,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
         player.playWhenReady = true
         player.volume = Player.DISCONTINUITY_REASON_INTERNAL.toFloat()
         player.repeatMode = Player.REPEAT_MODE_ONE
+
     }
 
     override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
@@ -84,8 +86,9 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
-        videoFrameLayout.visibility = View.GONE
+        featuredVideo.visibility = View.GONE
         featuredPoster.visibility = View.VISIBLE
+        featuredPoster.setImageURI(movie?.landscapeImageUrl)
     }
 
     override fun onLoadingChanged(isLoading: Boolean) {
