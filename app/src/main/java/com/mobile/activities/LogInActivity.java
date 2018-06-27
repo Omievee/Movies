@@ -61,6 +61,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.mobile.UserPreferences.*;
+
 /**
  * Created by anubis on 4/27/17.
  */
@@ -155,7 +157,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                String device = UserPreferences.getDeviceUuid();
+                String device = INSTANCE.getDeviceUuid();
                 FacebookSignInRequest fbSigninRequest = new FacebookSignInRequest(loginResult.getAccessToken().getToken());
                 RestClient.getAuthenticated().loginWithFacebook(device, fbSigninRequest).enqueue(new Callback<User>() {
                     @Override
@@ -246,7 +248,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                             areYouSure.setPositiveButton("Switch to this device", (d, w) -> {
                                 d.dismiss();
                                 String userSwitchDeviceID = DeviceID.getID(getApplicationContext());
-                                UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
+                                INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
                                 verifyAndroidID(deviceType, userSwitchDeviceID, device, true);
                             });
 
@@ -308,7 +310,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                 if (response.code() == 200 || response.code() == 201) {
                     androidId = response.body();
                     moviePassLoginSucceeded(userRESPONSE);
-                    UserPreferences.setOneDeviceId(androidId.getOneDeviceId());
+                    INSTANCE.setOneDeviceId(androidId.getOneDeviceId());
 
                 } else if (response.code() == 403) {
                     //TODO: ADD MESSAGE
@@ -397,7 +399,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             String ODID = user.getOneDeviceId();
             LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
-            UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
+            INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
             checkRestrictions(user);
         }
     }
@@ -411,7 +413,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-                    UserPreferences.setRestrictions(restriction);
+                    INSTANCE.setRestrictions(restriction);
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
@@ -423,13 +425,13 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         if(restriction.getCanReactivate().getCancelledWithinTimeframe()){
                             reactivationDialog();
                         } else {
-                            UserPreferences.clearUserId();
+                            INSTANCE.clearUserId();
                             Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Crashlytics.setUserIdentifier(String.valueOf(UserPreferences.getUserId()));
-                        if (!UserPreferences.getHasUserLoggedInBefore()) {
-                            UserPreferences.hasUserLoggedInBefore(true);
+                        Crashlytics.setUserIdentifier(String.valueOf(INSTANCE.getUserId()));
+                        if (!INSTANCE.getHasUserLoggedInBefore()) {
+                            INSTANCE.hasUserLoggedInBefore(true);
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
                             startActivity(i);
                         } else {
@@ -448,7 +450,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
-                        UserPreferences.clearUserId();
+                        INSTANCE.clearUserId();
                     } catch (Exception e) {
 
                     }

@@ -28,7 +28,7 @@ class MovieScreeningPosterHeader(context: Context, attrs: AttributeSet? = null) 
                 context.startIntentIfResolves(mapIntent(lat, lng))
             }
         }
-        showTime.text = payload.showtime
+        showTime.text = payload.availability?.startTime
         val seatsSize = payload.selectedSeats?.size ?: 1
         val seatText = resources.getQuantityString(R.plurals.seats, seatsSize, seatsSize)
         seats.text = "${seatText} ${payload.selectedSeats?.joinToString(", ") {

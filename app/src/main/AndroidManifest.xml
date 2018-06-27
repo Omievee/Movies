@@ -165,11 +165,19 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.mobile.surge.PeakPricingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TicketReservationTheme"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="com.mobile.seats.BringAFriendActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="com.mobile.activities.ConfirmationActivity"
             android:screenOrientation="portrait"
@@ -178,6 +186,7 @@
             android:name="com.mobile.reservation.ReservationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme" />
+
         <activity
             android:name="com.mobile.activities.LogInActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"

@@ -21,6 +21,8 @@ import com.mobile.UserPreferences;
 import com.mobile.model.Alert;
 import com.moviepass.R;
 
+import static com.mobile.UserPreferences.*;
+
 public class AlertScreenFragment extends Fragment {
 
     TextView alertTitle, alertBody, linkText;
@@ -69,7 +71,7 @@ public class AlertScreenFragment extends Fragment {
 
         if (alertObject.getDismissible()) {
             close.setOnClickListener(v -> {
-                UserPreferences.setAlertDisplayedId(alertObject.getId());
+                INSTANCE.setAlertDisplayedId(alertObject.getId());
                 getActivity().onBackPressed();
             });
         } else {
@@ -92,7 +94,7 @@ public class AlertScreenFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (alertObject.getDismissible()) {
-            UserPreferences.setAlertDisplayedId(alertObject.getId());
+            INSTANCE.setAlertDisplayedId(alertObject.getId());
         }
     }
 }

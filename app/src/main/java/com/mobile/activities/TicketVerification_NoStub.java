@@ -95,7 +95,7 @@ public class TicketVerification_NoStub extends AppCompatActivity {
                 if (lostResponse != null) {
                     progress.setVisibility(View.GONE);
                     displayWarning();
-                    UserPreferences.saveLastReservationPopInfo(reservationID);
+                    UserPreferences.INSTANCE.saveLastReservationPopInfo(reservationID);
                 }
             }
 

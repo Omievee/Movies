@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.gson.Gson;
 import com.helpshift.All;
 import com.helpshift.Core;
 import com.helpshift.InstallConfig;
@@ -36,6 +37,9 @@ public class Application extends MultiDexApplication implements HasActivityInjec
 
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
+
+    @Inject
+    Gson gson;
 
     private static Application mApplication;
     public static final String TAG = "TAG";
@@ -71,7 +75,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
-        UserPreferences.load(this);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
         RestClient.setUpLocalStorage(getApplicationContext());
@@ -80,12 +83,8 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
 
-        DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this);
-
+        inject();
+        UserPreferences.INSTANCE.load(this, gson);
         try {
             Core.install(this,
                     "d7307fbf50724282a116acadd54fb053",
@@ -97,6 +96,14 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         } catch (InstallException e) {
         }
 
+    }
+
+    protected void inject() {
+        DaggerAppComponent
+                .builder()
+                .application(this)
+                .build()
+                .inject(this);
     }
 
 

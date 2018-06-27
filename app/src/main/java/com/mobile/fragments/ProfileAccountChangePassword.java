@@ -170,7 +170,7 @@ public class ProfileAccountChangePassword extends MPFragment {
     }
 
     private void changePassword() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         ChangePasswordRequest request = new ChangePasswordRequest(oldPassword.getText().toString().trim(), newPassword1.getText().toString().trim(), userId);
         RestClient.getAuthenticated().changePassword(request).enqueue(new Callback<ChangePasswordResponse>() {
             @Override
@@ -194,7 +194,7 @@ public class ProfileAccountChangePassword extends MPFragment {
     }
 
     private void logIn() {
-        String email = UserPreferences.getUserEmail().trim();
+        String email = UserPreferences.INSTANCE.getUserEmail().trim();
         String password = newPassword1.getText().toString().trim();
         String device_ID = DeviceID.getID(myActivity);
         String device_type = Build.DEVICE;

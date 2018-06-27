@@ -13,9 +13,10 @@ data class Screening(var moviepassId: Int? = null,
                      val landscapeImageUrl: String? = null,
                      val qualifiersApproved: Boolean = false,
                      val availabilities: List<Availability> = emptyList(),
+                     val surge: Map<String, Surge> = emptyMap(),
                      val popRequired: Boolean = false,
                      val imageUrl: String? = null,
-                     val theaterAddress:String? = null,
+                     val theaterAddress: String? = null,
                      val theaterName: String? = null,
                      val date: ParcelableDate? = null,
                      val disabledExplanation: String? = null,
@@ -33,12 +34,34 @@ data class Screening(var moviepassId: Int? = null,
                 }
     }
 
+    fun getSurge(time: String?, userSegments: List<Int>): Surge {
+        val surge = surge[time] ?: return Surge.NONE
+        if (surge.level == SurgeType.NO_SURGE) {
+            return surge
+        }
+        val independentSurge = when {
+            surge.independentUserSegments.isEmpty() -> false
+            surge.independentUserSegments.intersect(userSegments).isNotEmpty() -> true
+            else -> false
+        }
+        val dependentSurge = when {
+            !surge.screeningSurging -> false
+            surge.dependentUserSegments.isEmpty() ||
+                    surge.dependentUserSegments.intersect(userSegments).isNotEmpty() -> true
+            else -> false
+        }
+        return when (independentSurge || dependentSurge) {
+            true -> surge
+            false -> Surge.NONE
+        }
+    }
+
     fun getTicketType(): TicketType? {
         return availabilities
                 .firstOrNull {
-                    when(it.ticketType) {
-                        null->false
-                        else->true
+                    when (it.ticketType) {
+                        null -> false
+                        else -> true
                     }
                 }?.ticketType
     }
@@ -49,7 +72,7 @@ data class Screening(var moviepassId: Int? = null,
                     moviepassId = r.reservation?.moviepassId,
                     theaterName = r.theater,
                     title = r.title,
-                    tribuneTheaterId = r.reservation?.tribuneTheaterId?:0
+                    tribuneTheaterId = r.reservation?.tribuneTheaterId ?: 0
             )
         }
     }

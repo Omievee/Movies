@@ -324,13 +324,13 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     }
 
     private void loadUserInfo() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
                 userInfoResponse = response.body();
                 if (userInfoResponse != null) {
-                    UserPreferences.saveBilling(userInfoResponse);
+                    UserPreferences.INSTANCE.saveBilling(userInfoResponse);
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
                     String shippingCity = "", shippingState = "", shippingZip = "";
@@ -482,7 +482,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     //LOGIC IS HERE
     //CANT USE RIGHT NOW BECAUSE OF THE WAY ADDRESS IS SET UP IN THE BACK END
     private void updateBillingAddressToShippingAddress() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
 
         String address = userInfoResponse.getShippingAddressLine2();
         List<String> addressList = Arrays.asList(address.split(",", -1));
@@ -587,7 +587,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
 
     public void updateCreditCard(String creditCardNumber, String expirationDate, String cvv) {
         progress.setVisibility(View.VISIBLE);
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         CreditCardChangeRequest request = new CreditCardChangeRequest(creditCardNumber, expirationDate, cvv);
         RestClient.getAuthenticated().updateBillingCard(userId, request).enqueue(new Callback<UserInfoResponse>() {
             @Override
@@ -690,7 +690,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     }
 
     public void updateBillingAddress() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         if (address1.getText().toString() != userInfoResponse.getBillingAddressLine1()) {
             if (isValidAddress()) {
                 String newAddress = address1.getText().toString();

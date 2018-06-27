@@ -5,15 +5,14 @@
 
     <application
         tools:replace="android:name"
-        android:name="com.mobile.application.Application">
+        android:name=".debug.DebugApplication">
         <activity android:name=".debug.DebugActivity"
-            android:label="MP Debug"
-            >
+            android:windowSoftInputMode="adjustPan"
+            android:label="MP Debug">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
-
         </activity>
     </application>
 

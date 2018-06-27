@@ -63,7 +63,7 @@
 
     </ScrollView>
 
-    <com.mobile.seats.MPProgressButton
+    <com.mobile.widgets.MPProgressButton
         android:id="@+id/continueButton"
         android:enabled="false"
         android:layout_width="wrap_content"

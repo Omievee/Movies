@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    style="@style/ReservationBackground"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/titleView"
+                style="@style/TitleView"
+                android:text="@string/billing" />
+
+            <TextView
+                android:id="@+id/cancel"
+                style="@style/ProfileButton"
+                android:layout_width="wrap_content"
+                android:text="@string/cancel_lower" />
+
+            <TextView
+                android:id="@+id/save"
+                style="@style/ProfileSave"
+                android:layout_width="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/billingDescription"
+                style="@style/BillingDescription"
+                app:layout_constraintTop_toBottomOf="@id/titleView" />
+
+            <TextView
+                android:id="@+id/paymentMethod"
+                style="@style/BillingPaymentMethod"
+                app:layout_constraintTop_toBottomOf="@id/billingDescription" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/creditCardLayout"
+                style="@style/BillingInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/paymentMethod">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/creditCardNumber"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/credit_card_hint"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/expirationDate"
+                    android:nextFocusRight="@+id/expirationDate" />
+            </android.support.design.widget.TextInputLayout>
+
+            <FrameLayout
+                android:id="@+id/cameraFL"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:elevation="@dimen/dp_1"
+                android:background="@drawable/shape_circle_red"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:layout_marginEnd="@dimen/margin_standard"
+                app:layout_constraintBottom_toBottomOf="@id/creditCardLayout"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:padding="@dimen/margin_half"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_camera"
+                    android:tint="@color/white_ish" />
+            </FrameLayout>
+
+            <android.support.constraint.Guideline
+                android:id="@+id/middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/expirationDateLayout"
+                style="@style/BillingInputLayout"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toStartOf="@id/middle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/creditCardLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/expirationDate"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/expiration_date"
+                    android:inputType="numberDecimal"
+                    android:maxLength="5"
+                    android:nextFocusDown="@+id/securityCode"
+                    android:nextFocusRight="@+id/securityCode" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/securityCodeLayout"
+                style="@style/BillingInputLayout"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/middle"
+                app:layout_constraintTop_toBottomOf="@id/creditCardLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/securityCode"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/security_code_hint"
+                    android:inputType="numberDecimal"
+                    android:maxLength="4"
+                    android:nextFocusDown="@+id/streetAddress"
+                    android:nextFocusRight="@+id/streetAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/billingAddress"
+                style="@style/BillingPaymentMethod"
+                android:text="@string/billing_address"
+                app:layout_constraintTop_toBottomOf="@id/expirationDateLayout" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/streetAddressLayout"
+                style="@style/BillingInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/billingAddress">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/streetAddress"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/street_address_hint"
+                    android:inputType="textPostalAddress"
+                    android:nextFocusDown="@+id/streetAddress2"
+                    android:nextFocusRight="@+id/streetAddress2" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/streetAddressLayout2"
+                style="@style/BillingInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/streetAddressLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/streetAddress2"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/street_address2_hint"
+                    android:inputType="textPostalAddress"
+                    android:nextFocusDown="@+id/city"
+                    android:nextFocusRight="@+id/city" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/cityLayout"
+                style="@style/BillingInputLayout"
+                app:layout_constraintTop_toBottomOf="@id/streetAddressLayout2">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/city"
+                    style="@style/BillingInputEditText"
+                    android:hint="@string/city_hint"
+                    android:inputType="textPostalAddress"
+                    android:nextFocusDown="@+id/state"
+                    android:nextFocusRight="@+id/state" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.constraint.Guideline
+                android:id="@+id/third"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".333" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/stateLayout"
+                style="@style/BillingInputLayout"
+                android:layout_width="0dp"
+                android:nextFocusDown="@+id/zip"
+                android:nextFocusRight="@+id/zip"
+                app:layout_constraintEnd_toStartOf="@id/third"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cityLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/state"
+                    style="@style/BillingInputEditText"
+                    android:inputType="textCapCharacters"
+                    android:nextFocusDown="@+id/zip"
+                    android:nextFocusRight="@+id/zip"
+                    android:hint="@string/state_hint"
+                    android:maxLength="2" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/zipLayout"
+                style="@style/BillingInputLayout"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/third"
+                app:layout_constraintTop_toBottomOf="@id/cityLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/zip"
+                    style="@style/BillingInputEditText"
+                    android:imeOptions="actionSend"
+                    android:hint="@string/zip_hint"
+                    android:maxLength="10" />
+            </android.support.design.widget.TextInputLayout>
+
+            <FrameLayout
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparentBlack"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progressView"
+                    style="@style/CircularProgress"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:theme="@style/Widget.AppCompat.ProgressBar" />
+            </FrameLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</FrameLayout>

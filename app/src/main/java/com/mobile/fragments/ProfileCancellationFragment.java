@@ -208,7 +208,7 @@ public class ProfileCancellationFragment extends Fragment {
     }
 
     private void loadUserInfo() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {

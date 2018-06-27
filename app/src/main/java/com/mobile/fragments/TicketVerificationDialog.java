@@ -375,7 +375,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         meta.put("reservation_kind", reservationKind);//reservationKind
         meta.put("device_name", AppUtils.getDeviceName());//Device Name
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
-        meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
+        meta.put("user_id", String.valueOf(UserPreferences.INSTANCE.getUserId()));//UserId
         meta.put("version_code", String.valueOf(BuildConfig.VERSION_CODE));
         meta.put("version_name", BuildConfig.VERSION_NAME);
         meta.put("os", "android");

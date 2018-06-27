@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.UserPreferences
-import com.mobile.helpers.LogUtils
 import com.mobile.model.GuestTicket
-import com.mobile.model.PerformanceInfoV2
+import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
@@ -111,11 +110,24 @@ class ConfirmDetailsFragment : Fragment() {
     private fun reserveTickets() {
         val local = locationManager.lastLocation()
         val payload = payload ?: return
-        val availability = payload.screening?.getAvailability(payload.showtime) ?: return
+        val availability = payload.availability ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
-        val lat = local?.lat ?: UserPreferences.getLocation()?.latitude
-        val lng = local?.lon ?: UserPreferences.getLocation()?.longitude
+        val lat:Double
+        val lng:Double
+        when(local==null) {
+            true-> {
+                val location = UserPreferences.location
+                lat = location.latitude
+                lng = location.longitude
+            }
+            false-> {
+                val loc = local?:return
+                lat = loc.lat
+                lng = loc.lon
+            }
+        }
+
         val mySeat = payload.selectedSeats?.first()
         if (availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
@@ -150,10 +162,9 @@ class ConfirmDetailsFragment : Fragment() {
         getTicketsDisposable?.dispose()
         getTicketsDisposable = RestClient
                 .getAuthenticated()
-                .reserve(lng?.let {
-                    lat?.let { it1 ->
+                .reserve(
                         TicketInfoRequest(
-                                performanceInfo = PerformanceInfoV2(
+                                performanceInfo = ProviderInfo(
                                         tribuneTheaterId = payload.theater?.tribuneTheaterId ?: 0,
                                         normalizedMovieId = provideInfo.normalizedMovieId,
                                         externalMovieId = provideInfo.externalMovieId,
@@ -161,17 +172,16 @@ class ConfirmDetailsFragment : Fragment() {
                                         performanceId = provideInfo.performanceId,
                                         dateTime = provideInfo.dateTime,
                                         seatPosition = mySeat?.asPosition(),
-                                        guestsAllowed = payload.screening.maximumGuests,
+                                        guestsAllowed = payload.screening?.maximumGuests,
                                         guestTickets = when (guestTickets.isEmpty()) {
                                             true -> null
                                             false -> guestTickets
                                         }
                                 ),
-                                longitude = it,
-                                latitude = it1
+                                longitude = lat,
+                                latitude = lng
                         )
-                    }
-                })
+                )
                 .doAfterTerminate { getTickets.progress = false }
                 .subscribe({ result ->
                     result?.let {

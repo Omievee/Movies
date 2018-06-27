@@ -10,6 +10,7 @@ import com.mobile.utils.isValidShowtime
 data class ScreeningPresentation(
         val distance:Double? = null,
         val theater:Theater2? = null,
+        val userSegments:List<Int> = emptyList(),
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,
         val movie: ReservationHistory? = null,

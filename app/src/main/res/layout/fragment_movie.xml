@@ -291,19 +291,6 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/button_check_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:background="@color/new_red"
-        android:text="@string/fragment_theater_check_in"
-        android:layout_marginBottom="@dimen/bottom_navigation_height"
-        android:textAllCaps="false"
-        android:stateListAnimator="@null"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
     <FrameLayout
         android:id="@+id/synopsis"
         android:layout_width="0dp"
@@ -329,5 +316,9 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/checkinFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>
