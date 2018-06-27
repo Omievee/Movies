@@ -49,6 +49,7 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
         THEATER_NAME_LISTITEM.text = p.theater?.name
         THEATER_ADDRESS2_LISTITEM.text = p.theater?.address
         THEATER_DISTANCE_LISTITEM.text = "${p.distance?.toMiles()?.toFixed(1)?.toString()} mi"
+        THEATER_ADDRESS_LISTITEM.text = p.theater?.cityStateZip
         icon_seat.visibility = when (screening?.screening?.getTicketType()) {
             TicketType.SELECT_SEATING -> View.VISIBLE
             else -> View.GONE
