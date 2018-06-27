@@ -115,7 +115,6 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     ticketVerificationBanner.visibility = View.VISIBLE
                 }
 
-//            UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().popRequired
                 reservationDescriptionTV.visibility = View.VISIBLE
                 reservationDescriptionTV.text = resources.getString(R.string.reservation_description)
                 creditCardIV.visibility = View.VISIBLE
