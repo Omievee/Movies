@@ -27,9 +27,8 @@ class MoviePosterView(context: Context?, attrs: AttributeSet? = null, val movieP
     }
 
     fun bind(movie: Movie) {
-        this.movie = movie
-        featuredPoster
-                .setImageURI(movie.landscapeImageUrl)
+
+        featuredPoster.setImageURI(movie.landscapeImageUrl)
         videoTitle.text = movie.title
     }
 }

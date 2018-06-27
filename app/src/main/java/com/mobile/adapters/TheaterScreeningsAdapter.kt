@@ -104,21 +104,24 @@ class TheaterScreeningsAdapter(
                 (it.type == TYPE_MISSING) || it.hasShowtimes
             }?.sortedWith(compareBy(
                     {
-                        it.type == TYPE_MISSING
-                    },
-                    {
                         when (it.screening?.getTicketType()) {
-                            TicketType.SELECT_SEATING, TicketType.E_TICKET -> true
-                            else -> false
+                            TicketType.SELECT_SEATING, TicketType.E_TICKET -> false
+                            else -> true
                         }
+
                     }, {
+                !(it.screening?.approved ?: false)
+
+            }, {
                 it.distance ?: false
             },
                     {
-                        !(it.screening?.approved ?: false)
+                        it.movie != null
+
                     },
                     {
-                        it.movie != null
+                        it.type == TYPE_MISSING
+
                     }
             ))?.toMutableList()
             val noMoreScreenings = presentations?.none { it.type == TYPE_SCREENING || it.type == TYPE_THEATER }

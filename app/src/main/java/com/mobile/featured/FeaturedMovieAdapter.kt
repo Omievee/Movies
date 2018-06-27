@@ -26,6 +26,7 @@ class FeaturedMovieAdapter(private val featured: List<Movie>, val moviePosterCli
 
     override fun getItemViewType(position: Int): Int {
         val movie = featured.get(position)
+
         if (movie.teaserVideoUrl.isNullOrEmpty()) {
             return TYPE_POSTER
         } else {
@@ -40,6 +41,8 @@ class FeaturedMovieAdapter(private val featured: List<Movie>, val moviePosterCli
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val view = holder.itemView
         val movie = featured.get(position)
+
+
         if (view is MovieTrailerView) {
             view.bind(movie, enablePlayback)
         } else if (view is MoviePosterView) {
