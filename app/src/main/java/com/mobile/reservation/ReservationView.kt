@@ -102,7 +102,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     set.setVerticalBias(reservationCode.id, 0f)
                     set.applyTo(middleCL)
                 }
-                when (it.format == TicketFormat.UNKNOWN) {
+                when (it.format == TicketFormat.UNKNOWN || it.format == TicketFormat.QRCODE) {
                     true -> reservationCode.background = null
                 }
                 reservationCode.visibility = View.VISIBLE
@@ -122,7 +122,10 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     setText(R.string.if_asked_provide_zip)
                     visibility = View.VISIBLE
                 }
-                ZipCodeNumberReservation.text = UserPreferences.getZipCode()
+                ZipCodeNumberReservation.apply {
+                    text = UserPreferences.getZipCode()
+                    visibility = View.VISIBLE
+                }
                 cancelCurrentReservationTV.visibility = View.VISIBLE
             }
         }

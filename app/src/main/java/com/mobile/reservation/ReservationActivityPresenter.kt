@@ -20,7 +20,7 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
                 .subscribe({
                     Toast.makeText(view, it.message, Toast.LENGTH_SHORT).show()
                     view.hideProgress()
-                    view.onBackExtension()
+                    view.finish()
                 }
                         , { error ->
                     if (error is ApiError) {
