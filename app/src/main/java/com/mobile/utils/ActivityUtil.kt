@@ -52,10 +52,10 @@ fun FragmentActivity.showFragment(fragment: Fragment) {
     set.duration = 250
     val slide = Slide(Gravity.END);
     set.addTransition(slide);
+    TransitionManager.endTransitions(vg)
     TransitionManager.beginDelayedTransition(vg, set)
     vg.visibility = View.VISIBLE
     supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right)
             .replace(R.id.activityFragmentContainer, fragment).commit()
 }
 

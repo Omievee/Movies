@@ -30,7 +30,7 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
                 })
     }
 
-    fun getUserZipCode(){
+    fun getUserZipCode() {
         userInfoDisposable?.dispose()
         userInfoDisposable = api
                 .getUserDataRx(UserPreferences.getUserId())

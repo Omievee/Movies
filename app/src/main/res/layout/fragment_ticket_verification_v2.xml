@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
+    android:clickable="true"
     tools:context="com.mobile.fragments.TicketVerificationV2">
 
     <com.mobile.tv.TicketVerificationView
