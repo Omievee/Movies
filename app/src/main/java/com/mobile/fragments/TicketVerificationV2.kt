@@ -158,7 +158,11 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     override fun onBack(): Boolean {
-        return isTicketRedeemed==true
+        if(super.onBack()) {
+            return true;
+        } else {
+            return isTicketRedeemed == true
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
