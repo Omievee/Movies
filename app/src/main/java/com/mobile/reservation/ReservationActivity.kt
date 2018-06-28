@@ -79,12 +79,12 @@ class ReservationActivity : MPActivty() {
 
     override fun onBackPressed() {
         onBackExtension()
-        if(reservation?.ticket?.redemptionCode.isNullOrEmpty()){
-            if(!UserPreferences.getProofOfPurchaseRequired()){
-                super.onBackPressed()
-            }
-        }else{
+        val canGoBack = !UserPreferences.getProofOfPurchaseRequired() || reservation?.ticket?.redemptionCode!=null
+        if(canGoBack)
             super.onBackPressed()
+        else{
+            if(canClose)
+                super.onBackPressed()
         }
     }
 
