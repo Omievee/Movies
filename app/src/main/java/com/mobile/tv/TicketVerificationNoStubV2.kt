@@ -25,7 +25,25 @@ import retrofit2.Response
 private const val TICKET_STATUS = "ticket_status"
 private const val RESERVATION_ID = "reservation_id"
 
-class TicketVerificationNoStubV2 : MPFragment() {
+class TicketVerificationNoStubV2 : MPFragment(), TicketVerificationNoStubView.SubmitListener {
+    override fun submitNoStubMessage() {
+        val lostTicket = VerificationLostRequest(ticketVerificationNoStubV.getReason())
+
+        RestClient.getAuthenticated().lostTicket(reservationID, lostTicket).enqueue(object : Callback<VerificationLostResponse> {
+            override fun onResponse(call: Call<VerificationLostResponse>, response: Response<VerificationLostResponse>) {
+                val lostResponse = response.body()
+                if (lostResponse != null) {
+                    ticketVerificationNoStubV.displayWarning()
+                    UserPreferences.saveLastReservationPopInfo(reservationID)
+                }
+            }
+
+            override fun onFailure(call: Call<VerificationLostResponse>, t: Throwable) {
+                Toast.makeText(context, "Error submitting ticket verification message",Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     var isTicketRedeemed: Boolean = true
     var reservationID: Int = 0
 
@@ -45,40 +63,16 @@ class TicketVerificationNoStubV2 : MPFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ticketVerificationNoStubV.bind()
-        ticketVerificationNoStubV.onSubmit(object : TicketVerificationNoStubView.SubmitListener{
-            override fun submitNoStubMessage() {
-                submitMessage(ticketVerificationNoStubV.getReason())
-            }
-        })
+        ticketVerificationNoStubV.bind(this)
     }
 
-    private fun submitMessage(reason: String) {
-        val lostTicket = VerificationLostRequest(reason)
 
-        RestClient.getAuthenticated().lostTicket(reservationID, lostTicket).enqueue(object : Callback<VerificationLostResponse> {
-            override fun onResponse(call: Call<VerificationLostResponse>, response: Response<VerificationLostResponse>) {
-                val lostResponse = response.body()
-                if (lostResponse != null) {
-//                    progress.setVisibility(View.GONE)
-//                    displayWarning()
-                    UserPreferences.saveLastReservationPopInfo(reservationID)
-                    closeFragment()
-                }
-            }
-
-            override fun onFailure(call: Call<VerificationLostResponse>, t: Throwable) {
-                Toast.makeText(context, "Error submitting ticket verification message",Toast.LENGTH_SHORT).show()
-            }
-        })    }
-
-    private fun closeFragment() {
+    override fun closeFragment() {
         var parent : Fragment? = parentFragment
         if(parent is TicketVerificationV2){
             parent.closeFragment()
         }
     }
-
 
     companion object {
         fun newInstance(ticketStatus: Boolean, reservationId: Int) =
