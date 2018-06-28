@@ -12,10 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import com.mobile.BackFragment
 import com.mobile.rx.Schedulers
 import com.moviepass.R
 import io.reactivex.Single
-import kotlinx.android.synthetic.main.fragment_profile_account_plan_and_billing.*
 
 fun Context?.startIntentIfResolves(intent: Intent) {
     this?.packageManager?.let {
@@ -52,15 +52,23 @@ fun FragmentActivity.showFragment(fragment: Fragment) {
     set.duration = 250
     val slide = Slide(Gravity.END);
     set.addTransition(slide);
+    TransitionManager.endTransitions(vg)
     TransitionManager.beginDelayedTransition(vg, set)
     vg.visibility = View.VISIBLE
     supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right)
             .replace(R.id.activityFragmentContainer, fragment).commit()
 }
 
 fun FragmentActivity.onBackExtension(): Boolean {
     val fragment = supportFragmentManager.findFragmentById(R.id.activityFragmentContainer) ?: return false
+
+    when(fragment) {
+        is BackFragment -> {
+            when(fragment.onBack()) {
+                true-> return true
+            }
+        }
+    }
 
     val listener = object : TransitionListenerAdapter() {
         override fun onTransitionEnd(transition: Transition) {
@@ -70,7 +78,6 @@ fun FragmentActivity.onBackExtension(): Boolean {
                         .remove(it)
                         .commit()
             }
-
         }
     }
     val set = TransitionSet()

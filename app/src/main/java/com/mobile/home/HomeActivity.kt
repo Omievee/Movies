@@ -135,7 +135,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
 
     override fun showTicketVerification(it: PopInfo) {
-        TicketVerificationDialog.newInstance(it).show(supportFragmentManager, "ticketVerification")
+        showFragment(TicketVerificationV2.newInstance(it,true))
     }
 
     override fun showConfirmationScreen(it: CurrentReservationV2) {
@@ -169,9 +169,9 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun logout() {
         val logUserOutIntent = Intent(this, LogInActivity::class.java)
-        startActivity(logUserOutIntent);
-        finishAffinity();
-        Toast.makeText(this, R.string.no_longer_authorized, Toast.LENGTH_LONG).show();
+        startActivity(logUserOutIntent)
+        finishAffinity()
+        Toast.makeText(this, R.string.no_longer_authorized, Toast.LENGTH_LONG).show()
     }
 }
 

@@ -3,6 +3,7 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.constraint.ConstraintLayout;
 
 import com.google.gson.GsonBuilder;
 import com.mobile.history.model.ReservationHistory;
@@ -313,6 +314,14 @@ public class UserPreferences {
         }
     }
 
+    public static void saveLastReservationPopInfo(int reservationId) {
+            sPrefs.edit().putInt(Constants.RESERVATION_ID, reservationId).apply();
+    }
+
+    public static int getLastReservationPopInfo() {
+        return sPrefs.getInt(Constants.RESERVATION_ID, 0);
+    }
+
     public static UserInfoResponse getBilling() {
         String key = Constants.BILLING + "_" + getUserId();
         String billing = sPrefs.getString(key, null);
@@ -324,6 +333,14 @@ public class UserPreferences {
             }
         }
         return null;
+    }
+
+    public static String getZipCode() {
+        return sPrefs.getString(Constants.ZIP_CODE, null);
+    }
+
+    public static void setZipCode(String zip) {
+         sPrefs.edit().putString(Constants.ZIP_CODE, zip).apply();
     }
 
     public static ScreeningToken getLastReservation() {

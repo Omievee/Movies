@@ -15,6 +15,7 @@ fun Fragment.showFragmentExtension(fragment: Fragment? = null) {
     set.addTransition(slide);
     val view = view as? ViewGroup ?: return
     val fl = view.findViewById<ViewGroup>(R.id.fragmentContainer)
+    TransitionManager.endTransitions(fl)
     TransitionManager.beginDelayedTransition(fl, set)
     fl.visibility = View.VISIBLE
     childFragmentManager.beginTransaction()

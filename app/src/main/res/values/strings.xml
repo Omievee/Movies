@@ -195,7 +195,7 @@
     <string name="activity_verification_lost_ticket_title_post">Ticket Verification</string>
     <string name="activity_verification_lost_ticket_message_post">In the future please submit pictures of your ticket stubs. Your account status could be affected if you fail to do so.</string>
     <string name="activity_verification_empty_reason">You must list a reason</string>
-    <string name="pre_pop_dialog">After you purchase your ticket, don\'t forget  to take a picture of the ticket stub. You can submit it any time before your next movie. </string>
+    <string name="pre_pop_dialog">Please take a picture of your ticket stub after using your MoviePass card to get your ticket. Follow the prompt provided to submit a photo of the ticket any time before seeing your next movie with MoviePass. </string>
     <string name="pre_pop_dialog2">Your account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
 
 
@@ -205,6 +205,11 @@
     <!-- Fragments -->
     <!--<PendingReservationFragmentment>&ndash;&gt;-->
     <string name="fragment_history_no_history">Start seeing movies to begin your reservation history</string>
+
+    <!--Ticket Verification-->
+    <string name="ticket_verification_banner">Click here to verify your ticket purchase</string>
+    <string name="ticket_verification_no_redeemed">After you have purchased your ticket with your MoviePass card please take a picture of your ticket stub. You will not be able to proceed in the app or see another movie with MoviePass until doing so.</string>
+    <string name="ticket_verification_redeemed">Before you can proceed in the app or see another movie with MoviePass you must verify your last ticket purchase. Please take a picture of your last movie ticket stub.</string>
 
     <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>
@@ -367,6 +372,9 @@
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
 
+    <!--Check in-->
+    <string name="check_in_button">"Check In</string>
+
     <!-- List Item Movie Poster -->
     <string name="list_item_history_title_placeholder">[Title]</string>
     <string name="list_item_history_theater_placeholder">[Theater]</string>
@@ -472,7 +480,7 @@
     </plurals>
     <string name="reservation_code_description">Use the code below to redeem your tickets</string>
     <string name="reservation_current">This code can also be found in your account under “Current Reservation”</string>
-    <string name="reservation_cancel">Cancel Reservation</string>
+    <string name="reservation_cancel">Cancel/Change Check-In</string>
     <string name="reservation_use_card_description">You can now use your MoviePass card to purchase your ticket!</string>
 
     <plurals name="seat">
@@ -483,6 +491,7 @@
 
     <!-- Screenings -->
     <string name="reservation_zip_code_description">If asked, provide this zip code:</string>
+    <string name="reservation_description">You have 30 minutes to use your MoviePass card to purchase your ticket!</string>
     <string name="screening_already_seen">You\'ve already seen this movie.</string>
     <string name="screening_rating">Rated</string>
     <string name="screenings_no_more_screenings">There are no more screenings at this theater today</string>
@@ -569,4 +578,9 @@
     <string name="activate_your_moviepass_card">Activate your MoviePass card</string>
     <string name="e_ticket_cancellation_policy_modal">Be sure this is the movie, showtime, and theater you want to attend before proceeding.</string>
     <string name="e_ticket_cancellation_policy_modal_title">E-tickets can\'t be cancelled or changed.</string>
+    <string name="no_ticket_stub_message">Please describe what went wrong with your ticket verification process.</string>
+    <string name="no_ticket_stub_title">Don’t have your ticket stub?</string>
+    <string name="open_help_title">Help</string>
+    <string name="ticket_verification_no_receipt_ticket">DO NOT TAKE A PICTURE OF YOUR RECEIPT</string>
+    <string name="submit_button">Submit</string>
 </resources>

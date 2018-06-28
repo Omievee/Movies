@@ -119,7 +119,7 @@ public interface Api {
 
     /* Cancel Reservation  */
     @PUT("/rest/v1/reservations")
-    Call<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
+    Single<ChangedMindResponse> changedMind(@Body ChangedMindRequest request);
 
     /* History  */
     @GET("/rest/v1/reservations/history")
@@ -147,6 +147,10 @@ public interface Api {
     /* user Data */
     @GET("/rest/v1/users/{userId}")
     Call<UserInfoResponse> getUserData(@Path("userId") int userId);
+
+    /* user Data */
+    @GET("/rest/v1/users/{userId}")
+    Single<UserInfoResponse> getUserDataRx(@Path("userId") int userId);
 
     @POST("/rest/v1/users/exists")
     Single<Emails> usersExist(@Body Emails emails);

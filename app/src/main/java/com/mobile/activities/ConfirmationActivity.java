@@ -37,12 +37,9 @@ import com.mobile.helpers.LogUtils;
 import com.mobile.model.Reservation;
 import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
-import com.mobile.network.RestCallback;
 import com.mobile.network.RestClient;
-import com.mobile.network.RestError;
 import com.mobile.requests.ChangedMindRequest;
 import com.mobile.requests.VerificationRequest;
-import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.mobile.responses.VerificationResponse;
 import com.mobile.utils.AppUtils;
@@ -207,42 +204,6 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
         cancelButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
-            ChangedMindRequest request = new ChangedMindRequest(reservation.getId());
-            RestClient.getAuthenticated().changedMind(request).enqueue(new RestCallback<ChangedMindResponse>() {
-                @Override
-                public void onResponse(Call<ChangedMindResponse> call, Response<ChangedMindResponse> response) {
-                    ChangedMindResponse responseBody = response.body();
-                    progress.setVisibility(View.GONE);
-
-                    if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You have already purchased your ticket.")) {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                        }
-                    } else if (responseBody != null && responseBody.getMessage().matches("Failed to cancel reservation: You do not have a pending reservation.")) {
-                        finish();
-                    } else if (responseBody != null && response.isSuccessful()) {
-                        Toast.makeText(ConfirmationActivity.this, responseBody.getMessage(), Toast.LENGTH_LONG).show();
-                        finish();
-                    } else {
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-
-                            Toast.makeText(ConfirmationActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-
-                        }
-                    }
-                }
-
-                @Override
-                public void failure(RestError restError) {
-                    progress.setVisibility(View.GONE);
-                    Toast.makeText(ConfirmationActivity.this, restError.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
         });
     }
 

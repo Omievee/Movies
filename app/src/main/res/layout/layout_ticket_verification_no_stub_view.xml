@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_width="369dp"
         android:layout_height="wrap_content"
         android:minHeight="300dp"
@@ -90,17 +90,17 @@
     </ScrollView>
 
     <TextView
-        android:id="@+id/SubmitStub"
+        android:id="@+id/submitStub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/margin_standard_and_half"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_red"
         android:paddingRight="@dimen/double_margin_standard"
         android:paddingLeft="@dimen/double_margin_standard"
         android:paddingTop="@dimen/margin_half"
         android:paddingBottom="@dimen/margin_half"
-        android:text="Submit"
+        android:text="@string/submit_button"
         android:textColor="@color/white_ish"
         android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toBottomOf="parent"

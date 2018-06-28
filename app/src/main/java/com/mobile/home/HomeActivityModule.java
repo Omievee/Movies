@@ -1,7 +1,6 @@
 package com.mobile.home;
 
 import com.mobile.di.ActivityScope;
-import com.mobile.location.LocationManager;
 import com.mobile.network.Api;
 import com.mobile.network.MicroApi;
 import com.mobile.session.SessionManager;

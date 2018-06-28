@@ -21,6 +21,7 @@ public class Constants {
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
     public static final String RESERVATION = "reservation";
+    public static final String RESERVATION_ID = "reservation_id";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "theater";
