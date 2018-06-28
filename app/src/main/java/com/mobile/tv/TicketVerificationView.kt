@@ -18,13 +18,17 @@ class TicketVerificationView(context: Context?, attrs: AttributeSet? = null) : C
 
     fun bind(popInfo: PopInfo, isTicketRedeemed: Boolean){
         ticketVerificationMovieTitle.text = popInfo.movieTitle
-        when(isTicketRedeemed){
-            false -> ticketVerificationMessage.text = resources.getString(R.string.ticket_verification_no_redeemed)
-            true -> {
-                ticketVerificationMessage.text = resources.getString(R.string.ticket_verification_redeemed)
-                closeButton.visibility = View.GONE
-            }
+
+        ticketVerificationMessage.text = when(isTicketRedeemed){
+            false -> resources.getString(R.string.ticket_verification_no_redeemed)
+            true -> resources.getString(R.string.ticket_verification_redeemed)
         }
+
+        closeButton.visibility = when(isTicketRedeemed){
+            true -> View.GONE
+            false -> View.VISIBLE
+        }
+
     }
 
     fun setOnClickListeners(clickListeners: ClickListeners?){
@@ -45,11 +49,11 @@ class TicketVerificationView(context: Context?, attrs: AttributeSet? = null) : C
         }
     }
 
-    fun enableLoading(){
+    fun showProgress(){
         progress.visibility = View.VISIBLE
     }
 
-    fun disableLoading(){
+    fun hideProgress(){
         progress.visibility = View.GONE
     }
 

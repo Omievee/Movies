@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -26,30 +25,21 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.s3.model.ObjectMetadata
-import com.helpshift.support.ApiConfig
-import com.helpshift.support.Metadata
 import com.helpshift.support.Support
-import com.helpshift.util.HelpshiftConnectionUtil.isOnline
 import com.mobile.Constants
 import com.mobile.UserPreferences
-import com.mobile.activities.TicketVerification_NoStub
 import com.mobile.application.Application
 import com.mobile.helpers.LogUtils
 import com.mobile.model.PopInfo
 import com.mobile.network.RestClient
 import com.mobile.requests.VerificationRequest
-import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.VerificationResponse
 import com.mobile.tv.TicketVerificationNoStubV2
 import com.mobile.tv.TicketVerificationView
 import com.mobile.utils.AppUtils
-import com.mobile.utils.onBackExtension
-import com.mobile.utils.showFragment
 import com.moviepass.BuildConfig
 import com.moviepass.R
-import kotlinx.android.synthetic.main.activity_reservation.*
 import kotlinx.android.synthetic.main.fragment_ticket_verification_v2.*
-import kotlinx.android.synthetic.main.layout_current_reservation.*
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
@@ -58,7 +48,6 @@ import retrofit2.Response
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 private const val POP_INFO = "pop_info"
@@ -120,10 +109,6 @@ class TicketVerificationV2 : MPFragment() {
             }
 
             override fun noTicketSub() {
-//                val intent = Intent(activity, TicketVerification_NoStub::class.java)
-//                val res = popInfo?.reservationId
-//                intent.putExtra(Constants.SCREENING, res)
-//                startActivity(intent)
                 showFragment(TicketVerificationNoStubV2.newInstance(isTicketRedeemed ?: false,popInfo?.reservationId ?: 0))
             }
 
@@ -173,10 +158,7 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     override fun onBack(): Boolean {
-        return when (isTicketRedeemed) {
-            true -> true
-            else -> false
-        }
+        return isTicketRedeemed==true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -235,7 +217,7 @@ class TicketVerificationV2 : MPFragment() {
     fun createFileForUpload() {
         val handler = Handler()
         //TODO
-        ticketVerificationV.enableLoading()
+        ticketVerificationV.showProgress()
 //        ticketScan.setVisibility(View.INVISIBLE)
 
         handler.postDelayed({
@@ -294,17 +276,17 @@ class TicketVerificationV2 : MPFragment() {
                         override fun onResponse(call: Call<VerificationResponse>, response: Response<VerificationResponse>) {
                             if (response != null && response.isSuccessful) {
                                 //TODO
-                                ticketVerificationV.disableLoading()
+                                ticketVerificationV.hideProgress()
                                 Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
                                 pictureSubmitted()
                             } else {
-                                ticketVerificationV.disableLoading()
+                                ticketVerificationV.hideProgress()
                                 var jObjError: JSONObject? = null
                                 try {
                                     jObjError = JSONObject(response.errorBody()?.string())
                                     if (jObjError.getString("message") == "Verification status is different from PENDING_SUBMISSION") {
                                         //TODO
-                                        ticketVerificationV.disableLoading()
+                                        ticketVerificationV.hideProgress()
                                         Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
                                         pictureSubmitted()
                                     }
@@ -318,7 +300,7 @@ class TicketVerificationV2 : MPFragment() {
                         }
 
                         override fun onFailure(call: Call<VerificationResponse>, t: Throwable) {
-                            ticketVerificationV.disableLoading()
+                            ticketVerificationV.hideProgress()
                             Toast.makeText(activity, "Server Error. Try Again", Toast.LENGTH_SHORT).show()
                         }
                     })

@@ -16,9 +16,6 @@ class TicketVerificationNoStubView(context: Context?, attrs: AttributeSet? = nul
 
     init {
         View.inflate(context, R.layout.layout_ticket_verification_no_stub_view, this)
-    }
-
-    fun bind(){
         noStubMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -32,6 +29,10 @@ class TicketVerificationNoStubView(context: Context?, attrs: AttributeSet? = nul
 
             }
         })
+    }
+
+    fun bind(){
+        
     }
 
     fun getReason(): String{

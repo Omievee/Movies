@@ -29,36 +29,30 @@ class ReservationActivity : MPActivty() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         val windowParams = window.attributes
         windowParams.screenBrightness = 1.0f
         window.attributes = windowParams
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
         setContentView(R.layout.activity_reservation)
         val reservation: CurrentReservationV2? = intent.getParcelableExtra(KEY_RESERVATION)
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
-            if(UserPreferences.getZipCode() == "1234")
+            if(UserPreferences.getZipCode() == null)
                 presenter.getUserZipCode()
             reservationV.bind(it, showCurrentReservationText, canClose)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun openTicketVerificationFragment() {
-                showFragment(TicketVerificationV2.newInstance(PopInfo(
-                        reservation?.reservation?.id ?: 0,
-                        reservation?.title,
-                        reservation?.theater,
-                        reservation?.reservation?.tribuneTheaterId.toString(),
-                        reservation?.showtime.toString(),
-                        reservation?.reservation?.moviepassId.toString()
-                ),false))
-
+                reservation?.let {
+                    showFragment(TicketVerificationV2.newInstance(it.toPop(),false))
+                }
             }
 
             override fun cancelReservation(reservationId: Int) {
                 if(reservationId == 0){
-                    Toast.makeText(reservationV.context,"Can't cancel reservation, try again later.",Toast.LENGTH_SHORT)
+                    Toast.makeText(reservationV.context,"Can't cancel reservation, try again later.",Toast.LENGTH_SHORT).show()
                 }else{
                     presenter.cancelCurrentReservation(reservationId)
                 }
@@ -69,6 +63,16 @@ class ReservationActivity : MPActivty() {
             }
         }
         )
+    }
+
+    fun CurrentReservationV2.toPop() : PopInfo {
+        return PopInfo(
+                reservationId = reservation?.id?:0,
+                movieTitle= title,
+                theaterName = theater,
+                tribuneMovieId = reservation?.tribuneTheaterId.toString(),
+                showtime = showtime.toString(),
+                tribuneTheaterId = reservation?.moviepassId.toString())
     }
 
     override fun onBackPressed() {

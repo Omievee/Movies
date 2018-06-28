@@ -336,7 +336,7 @@ public class UserPreferences {
     }
 
     public static String getZipCode() {
-        return sPrefs.getString(Constants.ZIP_CODE, "1234");
+        return sPrefs.getString(Constants.ZIP_CODE, null);
     }
 
     public static void setZipCode(String zip) {

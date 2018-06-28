@@ -21,7 +21,7 @@
 
 
     <TextView
-        android:id="@+id/ticketHEADER"
+        android:id="@+id/ticketHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -35,21 +35,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_width="369dp"
         android:layout_height="wrap_content"
         android:minHeight="300dp"
-        android:layout_below="@id/ticketHEADER"
+        android:layout_below="@id/ticketHeader"
         android:fillViewport="true"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_standard_and_half"
         android:layout_marginStart="@dimen/margin_standard_and_half"
         android:layout_marginEnd="@dimen/margin_standard_and_half"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ticketHEADER">
+        app:layout_constraintTop_toBottomOf="@+id/ticketHeader">
 
         <android.support.v7.widget.CardView
-            android:id="@+id/ReasonCard"
+            android:id="@+id/reasonCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:cardBackgroundColor="@color/white"
@@ -93,14 +93,14 @@
         android:id="@+id/submitStub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/margin_standard_and_half"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_red"
         android:paddingRight="@dimen/double_margin_standard"
         android:paddingLeft="@dimen/double_margin_standard"
         android:paddingTop="@dimen/margin_half"
         android:paddingBottom="@dimen/margin_half"
-        android:text="Submit"
+        android:text="@string/submit_button"
         android:textColor="@color/white_ish"
         android:textSize="@dimen/text_size_16"
         app:layout_constraintBottom_toBottomOf="parent"
