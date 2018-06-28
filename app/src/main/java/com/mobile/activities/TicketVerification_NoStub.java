@@ -7,6 +7,9 @@ import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.helpshift.support.Log;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +32,7 @@ import retrofit2.Response;
 public class TicketVerification_NoStub extends AppCompatActivity {
 
     ImageView closeOut;
-    TextView submit;
+    TextView submit, counter;
     EditText noStubReason;
     int reservationID;
     View progress;
@@ -41,7 +44,8 @@ public class TicketVerification_NoStub extends AppCompatActivity {
 
         closeOut = findViewById(R.id.closeOut);
         submit = findViewById(R.id.SubmitStub);
-        noStubReason = findViewById(R.id.NoStubComments);
+        counter = findViewById(R.id.charactersCounter);
+        noStubReason = findViewById(R.id.noStubMessage);
         progress = findViewById(R.id.progress);
         Intent badExcuses = getIntent();
         submit.setOnClickListener(v -> {
@@ -59,6 +63,23 @@ public class TicketVerification_NoStub extends AppCompatActivity {
 
         closeOut.setOnClickListener(v -> {
             finish();
+        });
+
+        noStubReason.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                counter.setText(noStubReason.getText().toString().length()+"/250");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
     }

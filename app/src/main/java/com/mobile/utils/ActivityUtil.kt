@@ -78,7 +78,6 @@ fun FragmentActivity.onBackExtension(): Boolean {
                         .remove(it)
                         .commit()
             }
-
         }
     }
     val set = TransitionSet()

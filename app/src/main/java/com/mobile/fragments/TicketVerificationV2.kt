@@ -40,9 +40,11 @@ import com.mobile.network.RestClient
 import com.mobile.requests.VerificationRequest
 import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.VerificationResponse
+import com.mobile.tv.TicketVerificationNoStubV2
 import com.mobile.tv.TicketVerificationView
 import com.mobile.utils.AppUtils
 import com.mobile.utils.onBackExtension
+import com.mobile.utils.showFragment
 import com.moviepass.BuildConfig
 import com.moviepass.R
 import kotlinx.android.synthetic.main.activity_reservation.*
@@ -118,10 +120,11 @@ class TicketVerificationV2 : MPFragment() {
             }
 
             override fun noTicketSub() {
-                val intent = Intent(activity, TicketVerification_NoStub::class.java)
-                val res = popInfo?.reservationId
-                intent.putExtra(Constants.SCREENING, res)
-                startActivity(intent)
+//                val intent = Intent(activity, TicketVerification_NoStub::class.java)
+//                val res = popInfo?.reservationId
+//                intent.putExtra(Constants.SCREENING, res)
+//                startActivity(intent)
+                showFragment(TicketVerificationNoStubV2.newInstance(isTicketRedeemed ?: false,popInfo?.reservationId ?: 0))
             }
 
         })
@@ -334,6 +337,11 @@ class TicketVerificationV2 : MPFragment() {
 
     fun pictureSubmitted(){
         UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
+        closeFragment()
+
+    }
+
+    fun closeFragment() {
         when (isTicketRedeemed){
             true -> {
                 isTicketRedeemed = false
