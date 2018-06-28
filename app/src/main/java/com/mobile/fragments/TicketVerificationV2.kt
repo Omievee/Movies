@@ -252,6 +252,22 @@ class TicketVerificationV2 : MPFragment() {
         }, 4000)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        //Check permissions results.. one for camera, the other for storage
+        if (requestCode == Constants.REQUEST_CAMERA_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            scanTicket()
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(activity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show()
+        }
+        if (requestCode == Constants.REQUEST_STORAGE_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            createFileForUpload()
+        } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+            Toast.makeText(activity, "You must grant permissions to continue", Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
 
     private fun uploadToAWS(ticketPhoto: File) {
         objectMetadata = ObjectMetadata()
