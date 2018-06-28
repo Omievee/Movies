@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
-import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.adapters.DynamicMoviesTabAdapter;
 import com.mobile.featured.FeaturedMovieAdapter;
@@ -123,6 +122,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     boolean scrolldown, scrollup;
     int movieId;
+    private Context myContext;
 
 
     public static MoviesFragment newInstance(int movieId) {
@@ -223,7 +223,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         setUpMoviesList(view);
 
         swiper.setOnRefreshListener(() -> {
-
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             moviesRealm.executeTransaction(realm -> {
                 realm.deleteAll();
@@ -238,7 +237,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         } else {
             setAdaptersWithRealmOBjects();
         }
-
 
 
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();

@@ -2,10 +2,8 @@ package com.mobile.reservation
 
 import android.content.Context
 import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
 import android.text.SpannableStringBuilder
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import com.google.zxing.BarcodeFormat
 import com.mobile.UserPreferences
@@ -15,7 +13,6 @@ import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_current_reservation.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import dagger.android.AndroidInjection
 
 class ReservationView(context: Context, attributeSet: AttributeSet?) : ConstraintLayout(context, attributeSet) {
 
@@ -92,16 +89,16 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     codeCL.visibility = View.GONE
                     barcodeL.visibility = View.GONE
                 }
-                val set = ConstraintSet()
-                set.clone(reservationCL)
-                set.connect(middleCL.id, ConstraintSet.TOP, middleCLTop, ConstraintSet.BOTTOM)
-                set.connect(reservationDescriptionBottom, ConstraintSet.BOTTOM, middleCL.id, ConstraintSet.TOP)
-                set.applyTo(reservationCL)
-                if (codeCL.visibility == View.GONE) {
-                    set.clone(middleCL)
-                    set.setVerticalBias(reservationCode.id, 0f)
-                    set.applyTo(middleCL)
-                }
+//                val set = ConstraintSet()
+//                set.clone(reservationCL)
+//                set.connect(middleCL.id, ConstraintSet.TOP, middleCLTop, ConstraintSet.BOTTOM)
+//                set.connect(reservationDescriptionBottom, ConstraintSet.BOTTOM, middleCL.id, ConstraintSet.TOP)
+//                set.applyTo(reservationCL)
+//                if (codeCL.visibility == View.GONE) {
+//                    set.clone(middleCL)
+//                    set.setVerticalBias(reservationCode.id, 0f)
+//                    set.applyTo(middleCL)
+//                }
                 when (it.format == TicketFormat.UNKNOWN || it.format == TicketFormat.QRCODE) {
                     true -> reservationCode.background = null
                 }

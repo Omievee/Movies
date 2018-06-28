@@ -139,7 +139,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_theaters, container, false);
+        View rootView = inflater.inflate(R.layout.fr_theaters, container, false);
         ButterKnife.bind(this, rootView);
 
         rootView = inflater.inflate(R.layout.fr_theaters, container, false);
@@ -242,7 +242,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
             @Override
             public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING ) {
+                if (theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED || theatersListView.getPanelState() == SlidingUpPanelLayout.PanelState.DRAGGING) {
 
                     downArrow.animate().alpha(1f);
                     mapViewText.animate().alpha(1f);
@@ -631,16 +631,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         }
 
 
-        if (theatersList.size() == 0 && eticketingTheaters.size() == 0) {
-            theatersListView.setEnabled(false);
-            listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
-            upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
-            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
-        } else {
-            theatersListView.setEnabled(true);
-            listViewText.setTextColor(getResources().getColor(R.color.white));
-            upArrow.setColorFilter(getResources().getColor(R.color.white));
-        }
 
         if (eticketingTheaters.size() > 0) {
             for (Theater eTheater : eticketingTheaters) {
@@ -663,6 +653,19 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         theatersAdapter = new TheatersAdapter(header, this, theatersList);
         theatersRecyclerView.setAdapter(theatersAdapter);
         theatersAdapter.notifyDataSetChanged();
+
+
+        if (theatersList.size() == 0 && eticketingTheaters.size() == 0) {
+            theatersListView.setEnabled(false);
+            listViewText.setTextColor(getResources().getColor(R.color.gray_icon));
+            upArrow.setColorFilter(getResources().getColor(R.color.gray_icon));
+//            Toast.makeText(getActivity(), "No Theaters found", Toast.LENGTH_SHORT).show();
+        } else {
+            theatersListView.setEnabled(true);
+            listViewText.setTextColor(getResources().getColor(R.color.white));
+            upArrow.setColorFilter(getResources().getColor(R.color.white));
+        }
+
     }
 
 

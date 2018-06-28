@@ -120,7 +120,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
         it.popInfo?.let {
-            if(UserPreferences.getLastReservationPopInfo() == 0 ||
+            if (UserPreferences.getLastReservationPopInfo() == 0 ||
                     UserPreferences.getLastReservationPopInfo() != it.reservationId) {
                 UserPreferences.saveLastReservationPopInfo(0)
                 fetchReservation(it)
