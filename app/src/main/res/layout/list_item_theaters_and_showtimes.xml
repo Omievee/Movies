@@ -102,7 +102,7 @@
                     android:textSize="12sp" />
 
                 <ImageView
-                    android:id="@+id/THEATER_PIN_LISTITEM"
+                    android:id="@+id/pinIcon"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_alignParentEnd="true"

@@ -1,12 +1,16 @@
 package com.mobile.adapters
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.TicketType
 import com.mobile.recycler.decorator.SpaceDecorator
@@ -41,6 +45,23 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
             marginEnd = margin
             bottomMargin = margin * 2
         }
+
+        pinIcon.setOnClickListener {
+            val screeningPresentation = this.screeningPresentation ?: return@setOnClickListener
+            val uri = Uri.parse("geo:" + screeningPresentation.theater?.latitude + "," + screeningPresentation.theater?.longitude + "?q=" + Uri.encode(screeningPresentation.theater?.name))
+
+            try {
+                val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()))
+                mapIntent.setPackage("com.google.android.apps.maps")
+                context?.startActivity(mapIntent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, "Google Maps isn't installed", Toast.LENGTH_SHORT).show()
+            } catch (x: Exception) {
+                x.message
+            }
+
+        }
+
     }
 
     fun bind(p: ScreeningPresentation, showtimeClickListener: ShowtimeClickListener?) {
