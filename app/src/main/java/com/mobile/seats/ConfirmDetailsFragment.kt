@@ -150,35 +150,40 @@ class ConfirmDetailsFragment : Fragment() {
         getTicketsDisposable?.dispose()
         getTicketsDisposable = RestClient
                 .getAuthenticated()
-                .reserve(TicketInfoRequest(
-                        performanceInfo = PerformanceInfoV2(
-                                tribuneTheaterId = payload.theater?.tribuneTheaterId ?: 0,
-                                normalizedMovieId = provideInfo.normalizedMovieId,
-                                externalMovieId = provideInfo.externalMovieId,
-                                format = provideInfo.format,
-                                performanceId = provideInfo.performanceId,
-                                dateTime = provideInfo.dateTime,
-                                seatPosition = mySeat?.asPosition(),
-                                guestsAllowed = payload.screening.maximumGuests,
-                                guestTickets = when (guestTickets.isEmpty()) {
-                                    true -> null
-                                    false -> guestTickets
-                                }
-                        ),
-                        longitude = lng,
-                        latitude = lat
-                ))
+                .reserve(lng?.let {
+                    lat?.let { it1 ->
+                        TicketInfoRequest(
+                                performanceInfo = PerformanceInfoV2(
+                                        tribuneTheaterId = payload.theater?.tribuneTheaterId ?: 0,
+                                        normalizedMovieId = provideInfo.normalizedMovieId,
+                                        externalMovieId = provideInfo.externalMovieId,
+                                        format = provideInfo.format,
+                                        performanceId = provideInfo.performanceId,
+                                        dateTime = provideInfo.dateTime,
+                                        seatPosition = mySeat?.asPosition(),
+                                        guestsAllowed = payload.screening.maximumGuests,
+                                        guestTickets = when (guestTickets.isEmpty()) {
+                                            true -> null
+                                            false -> guestTickets
+                                        }
+                                ),
+                                longitude = it,
+                                latitude = it1
+                        )
+                    }
+                })
                 .doAfterTerminate { getTickets.progress = false }
                 .subscribe({ result ->
                     result?.let {
                         listener?.onTicketsPurchased(result)
                     }
-                }, { error ->
+                }
+                ) { error ->
                     if (error is ApiError) {
                         val context = context ?: return@subscribe
                         AlertDialog.Builder(context).setTitle(error.error?.title)
                                 .setMessage(error.error?.message)
-                                .setPositiveButton(android.R.string.ok, { _, _ ->
+                                .setPositiveButton(android.R.string.ok) { _, _ ->
                                     when (error.httpErrorCode) {
                                         409 -> {
                                             listener?.navigateToSeats(error.error?.unavailablePositions
@@ -187,10 +192,9 @@ class ConfirmDetailsFragment : Fragment() {
                                         else -> {
                                         }
                                     }
-                                })
+                                }
                                 .show()
                     }
                 }
-                )
     }
 }
