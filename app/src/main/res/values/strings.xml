@@ -151,6 +151,7 @@
     <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!</string>
 
     <!-- Credit Card Errors-->
+
     <string name="invalid_credit_card_number">Invalid credit card number</string>
     <string name="invalid_exp">Invalid expiration</string>
     <string name="invalid_cvv">Invalid CVV</string>
@@ -373,7 +374,7 @@
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
 
     <!--Check in-->
-    <string name="check_in_button">"Check In</string>
+    <string name="check_in_button">Check In</string>
 
     <!-- List Item Movie Poster -->
     <string name="list_item_history_title_placeholder">[Title]</string>
