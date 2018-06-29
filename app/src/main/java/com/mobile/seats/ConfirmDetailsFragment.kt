@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
+import com.mobile.UserPreferences
+import com.mobile.helpers.LogUtils
 import com.mobile.model.GuestTicket
 import com.mobile.model.PerformanceInfoV2
 import com.mobile.model.TicketType
@@ -100,9 +102,9 @@ class ConfirmDetailsFragment : Fragment() {
                 R.string.e_ticket_cancellation_policy_modal_title
         )
                 .setMessage(R.string.e_ticket_cancellation_policy_modal)
-                .setPositiveButton(R.string.continue_button, { _, _ ->
+                .setPositiveButton(R.string.continue_button) { _, _ ->
                     reserveTickets()
-                }).setNegativeButton(R.string.cancel, null).show()
+                }.setNegativeButton(R.string.cancel, null).show()
 
     }
 
@@ -112,12 +114,14 @@ class ConfirmDetailsFragment : Fragment() {
         val availability = payload.screening?.getAvailability(payload.showtime) ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
-        val lat = local?.lat ?: return
-        val lng = local.lon
+        val lat = local?.lat ?: UserPreferences.getLocation()?.latitude
+        val lng = local?.lon ?: UserPreferences.getLocation()?.longitude
         val mySeat = payload.selectedSeats?.first()
         if (availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
         }
+
+
         val emails = payload.emails
         val hasMatchingSeatCount = mySeat == null || ((payload.selectedSeats?.size
                 ?: 0) - 1) == tpd.sumBy { it.tickets }
@@ -129,7 +133,7 @@ class ConfirmDetailsFragment : Fragment() {
                 ticketPurchaseData
             }
             expanded
-        }.flatMap { it->
+        }.flatMap { it ->
             it.mapIndexed { index, tpd ->
                 val seat = payload.selectedSeats?.get(index + 1)
                 GuestTicket(ticketType = tpd.ticket.ticketType,
