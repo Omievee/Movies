@@ -57,6 +57,8 @@ class TicketVerificationNoStubView(context: Context?, attrs: AttributeSet? = nul
     fun displayWarning() {
         val alert = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
         alert.setTitle(R.string.activity_verification_lost_ticket_title_post)
+        alert.setCancelable(false)
+        alert.setOnDismissListener { listener?.closeFragment() }
         alert.setMessage(R.string.activity_verification_lost_ticket_message_post)
         alert.setPositiveButton(android.R.string.ok) { dialog, which ->
             listener?.closeFragment()
