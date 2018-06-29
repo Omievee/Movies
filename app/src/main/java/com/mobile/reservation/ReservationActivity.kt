@@ -27,6 +27,7 @@ class ReservationActivity : MPActivty() {
 
     private var canClose: Boolean = false
 
+    private var reservation:CurrentReservationV2? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -35,7 +36,8 @@ class ReservationActivity : MPActivty() {
         window.attributes = windowParams
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reservation)
-        val reservation: CurrentReservationV2? = intent.getParcelableExtra(KEY_RESERVATION)
+        reservation = intent.getParcelableExtra(KEY_RESERVATION)
+
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
@@ -77,11 +79,12 @@ class ReservationActivity : MPActivty() {
 
     override fun onBackPressed() {
         onBackExtension()
-        if(!UserPreferences.getProofOfPurchaseRequired())
-            super.onBackPressed()
-        else{
-            if(canClose)
+        if(reservation?.ticket?.redemptionCode.isNullOrEmpty()){
+            if(!UserPreferences.getProofOfPurchaseRequired()){
                 super.onBackPressed()
+            }
+        }else{
+            super.onBackPressed()
         }
     }
 

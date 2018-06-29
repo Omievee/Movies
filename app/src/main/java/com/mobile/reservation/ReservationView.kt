@@ -38,12 +38,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 }
             }
         }
-
-        when(canClose){
-            true -> closeIV.visibility = View.VISIBLE
-            false -> closeIV.visibility = View.INVISIBLE
-        }
-
+        
         reservationDescriptionTV.text = resources.getQuantityText(R.plurals.reservation_code_description, reservation.ticket?.seats?.size
                 ?: 1)
         if (seats.text.isEmpty()) {
@@ -62,6 +57,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
             }
         }
         if (!reservation.ticket?.redemptionCode.isNullOrEmpty()) {
+            closeIV.visibility = View.VISIBLE
             reservation.ticket?.let {
                 val barcodeFormat = when (it.format) {
                     TicketFormat.QRCODE -> {
@@ -110,6 +106,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
 
                 if (UserPreferences.getProofOfPurchaseRequired() && UserPreferences.getLastReservationPopInfo()!=reservationId) {
                     ticketVerificationBanner.visibility = View.VISIBLE
+                    closeIV.visibility = View.GONE
                 }
 
                 reservationDescriptionTV.visibility = View.VISIBLE
