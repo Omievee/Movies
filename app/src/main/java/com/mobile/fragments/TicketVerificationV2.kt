@@ -37,6 +37,7 @@ import com.mobile.responses.VerificationResponse
 import com.mobile.tv.TicketVerificationNoStubV2
 import com.mobile.tv.TicketVerificationView
 import com.mobile.utils.AppUtils
+import com.mobile.utils.onBackExtension
 import com.moviepass.BuildConfig
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_ticket_verification_v2.*
@@ -340,14 +341,14 @@ class TicketVerificationV2 : MPFragment() {
     fun pictureSubmitted(){
         UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
         closeFragment()
-
     }
 
     fun closeFragment() {
         when (isTicketRedeemed){
             true -> {
                 isTicketRedeemed = false
-                activity?.onBackPressed()
+                onBackExtension()
+                activity?.onBackExtension()
             }
             false -> activity?.finish()
         }
