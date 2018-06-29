@@ -1,67 +1,56 @@
 package com.mobile.fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LayoutAnimationController;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.MoviePosterClickListener;
-import com.mobile.UserPreferences;
-import com.mobile.activities.MovieActivity;
-import com.mobile.adapters.FeaturedAdapter;
-import com.mobile.adapters.MoviesComingSoonAdapter;
-import com.mobile.adapters.MoviesNewReleasesAdapter;
-import com.mobile.adapters.MoviesTopBoxOfficeAdapter;
-import com.mobile.adapters.NowPlayingMoviesAdapter;
+import com.mobile.activities.ActivateMoviePassCard;
+import com.mobile.adapters.DynamicMoviesTabAdapter;
+import com.mobile.featured.FeaturedMovieAdapter;
+import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.history.HistoryManager;
+import com.mobile.home.RestrictionsManager;
 import com.mobile.model.Movie;
-import com.mobile.model.MoviesResponse;
-import com.mobile.network.Api;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
-import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
@@ -74,62 +63,87 @@ import retrofit2.Response;
  * Created by ryan on 4/25/17.
  */
 
-public class MoviesFragment extends Fragment implements MoviePosterClickListener, LocationListener {
+public class MoviesFragment extends MPFragment implements MoviePosterClickListener, MoviesView {
 
-    public static final String MOVIES = "movies";
-    public static final String EXTRA_MOVIE_IMAGE_TRANSITION_NAME = "movie_image_transition_name";
-    public static final String EXTRA_MOVIE_ITEM = "movie_image_url";
+    @Inject
+    MoviesFragmentPresenter presenter;
+
+    @Inject
+    RestrictionsManager restrictionsManager;
+
+    @Inject
+    HistoryManager historyManager;
+    //Tag
+    public static final String TAG = "MoviesFragment";
+
+    public static final String MOVIE = "movie";
+
+    //Realm
+    public static Realm moviesRealm;
+    private Realm allMoviesRealm;
+    private RealmList<Movie> TopBoxOffice;
+    private RealmList<Movie> comingSoon;
+    private RealmList<Movie> NEWRelease;
+    private RealmList<Movie> featured;
+    private RealmList<Movie> nowPlaying;
+    public RealmConfiguration config;
+    private RealmConfiguration allMoviesConfig;
+    private Activity activity;
     Realm historyRealm;
     RealmConfiguration historyConfig;
-    public static final int LOCATION_PERMISSIONS = 99;
-    android.location.LocationManager LocationManager;
-    String Provider;
-    TextView newReleaseTXT, nowPlayingTXT, comingSoonTXT, topBoxTXT;
 
+    //Recycler View Adapters
+    private FeaturedMovieAdapter featuredAdapter;
+    //Views
     public static SwipeRefreshLayout swiper;
-    public static Realm moviesRealm;
-    Realm allMoviesRealm;
-    private MoviesNewReleasesAdapter newRealeasesAdapter;
-    private MoviesTopBoxOfficeAdapter topBoxOfficeAdapter;
-    private MoviesComingSoonAdapter comingSoonAdapter;
-    private NowPlayingMoviesAdapter nowPlayingAdapter;
-    private FeaturedAdapter featuredAdapter;
-    MoviesResponse moviesResponse;
-    SearchFragment searchFrag = new SearchFragment();
-    ImageView movieLogo, searchicon;
-    Context myContext;
-    RealmList<Movie> TopBoxOffice;
-    RealmList<Movie> comingSoon;
-    RealmList<Movie> NEWRelease;
-    RealmList<Movie> featured;
-    RealmList<Movie> nowPlaying;
+    private ImageView movieLogo, searchicon;
+    private View progress;
+    private View parentLayout;
+    private ScrollView scrollView;
+    private ViewGroup toolBar;
+    private Guideline guideLineLeft;
+    private Guideline guideLineRight;
+    public ImageView toolBarBackground;
+    public Button activateMPCardButton;
 
-
-    private searchMoviesInterface searchMoviesInterface;
-
-    public ArrayList<Movie> ALLMOVIES;
-    ArrayList<String> lastSuggestions;
-    Activity myActivity;
-    @BindView(R.id.new_releases)
-    RecyclerView newReleasesRecycler;
-    @BindView(R.id.top_box_office)
-    RecyclerView topBoxOfficeRecycler;
-    @BindView(R.id.coming_soon)
-    RecyclerView comingSoonRecycler;
-    @BindView(R.id.now_playing)
-    RecyclerView nowPlayingRecycler;
+    //Location
+    public static final int LOCATION_PERMISSIONS = 99;
+    //Java Objects
+    private String Provider;
 
     @BindView(R.id.FeaturedRE)
     RecyclerView featuredRecycler;
 
-    public RealmConfiguration config;
+    RecyclerView recyclerView;
+    FrameLayout childFragment;
+    ArrayList<Fragment> backStack;
+    public static FragmentManager childFragmentManager;
 
-    View progress;
-    private RealmConfiguration allMoviesConfig;
+
+    boolean scrolldown, scrollup;
+    int movieId;
+    private Context myContext;
 
 
-    public static MoviesFragment newInstance() {
-        return new MoviesFragment();
+    public static MoviesFragment newInstance(int movieId) {
+        MoviesFragment fragment = new MoviesFragment();
+        Bundle args = new Bundle();
+        args.putInt(MOVIE, movieId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            movieId = getArguments().getInt(MOVIE);
+        } else {
+            movieId = -1;
+        }
+    }
+
+    public MoviesFragment() {
     }
 
     @Override
@@ -137,20 +151,36 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
 
         View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    /**
+     * Setting up all views
+     */
+    public void setUpViews(View rootView) {
+        backStack = new ArrayList<>();
         swiper = rootView.findViewById(R.id.SWIPE2REFRESH);
         progress = rootView.findViewById(R.id.progress);
-        newReleaseTXT = rootView.findViewById(R.id.new_releases_text);
-        newReleaseTXT.setVisibility(View.GONE);
-        nowPlayingTXT = rootView.findViewById(R.id.now_Playing_text);
-        nowPlayingTXT.setVisibility(View.GONE);
-        comingSoonTXT = rootView.findViewById(R.id.coming_soon_text);
-        comingSoonTXT.setVisibility(View.GONE);
-        topBoxTXT = rootView.findViewById(R.id.top_box_office_text);
-        topBoxTXT.setVisibility(View.GONE);
+        recyclerView = rootView.findViewById(R.id.moviesRecyclerView);
         searchicon = rootView.findViewById(R.id.search_inactive);
         searchicon.setVisibility(View.GONE);
         movieLogo = rootView.findViewById(R.id.MoviePass_HEADER);
-        Api api;
+        childFragment = rootView.findViewById(R.id.frame_layout);
+        scrollView = rootView.findViewById(R.id.MOVIES_MAINCONTENT);
+        toolBar = rootView.findViewById(R.id.toolBar);
+        guideLineLeft = rootView.findViewById(R.id.guideline);
+        guideLineRight = rootView.findViewById(R.id.guideline1);
+        toolBarBackground = rootView.findViewById(R.id.toolBarBackground);
+        scrollup = false;
+        scrolldown = false;
+        activateMPCardButton = rootView.findViewById(R.id.bottomButton);
+    }
+
+    /**
+     * Setting Up Recycler Views
+     * Setting Up Realm
+     */
+    public void setUpMoviesList(View rootView) {
         NEWRelease = new RealmList<>();
         TopBoxOffice = new RealmList<>();
         comingSoon = new RealmList<>();
@@ -158,89 +188,27 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         nowPlaying = new RealmList<>();
 
 
-        int resId = R.anim.layout_animation;
-        int res2 = R.anim.layout_anim_bottom;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(myActivity, resId);
-        LayoutAnimationController animation2 = AnimationUtils.loadLayoutAnimation(myActivity, res2);
-
-        /** New Releases RecyclerView */
-        LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
-
-        newReleasesRecycler = rootView.findViewById(R.id.new_releases);
-        newReleasesRecycler.setLayoutManager(newReleasesLayoutManager);
-        newReleasesRecycler.setItemAnimator(null);
-        fadeIn(newReleasesRecycler);
-        newReleasesRecycler.setLayoutAnimation(animation);
-        newRealeasesAdapter = new MoviesNewReleasesAdapter(myActivity, NEWRelease, this);
-
-        /** Top Box Office RecyclerView */
-        LinearLayoutManager topBoxOfficeLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
-
-        topBoxOfficeRecycler = rootView.findViewById(R.id.top_box_office);
-        topBoxOfficeRecycler.setLayoutManager(topBoxOfficeLayoutManager);
-        topBoxOfficeRecycler.setItemAnimator(null);
-        fadeIn(topBoxOfficeRecycler);
-        topBoxOfficeRecycler.setLayoutAnimation(animation);
-
-        topBoxOfficeAdapter = new MoviesTopBoxOfficeAdapter(myActivity, TopBoxOffice, this);
-
-        /** Coming Soon RecyclerView */
-        LinearLayoutManager comingSoonLayoutManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
-        comingSoonRecycler = rootView.findViewById(R.id.coming_soon);
-        comingSoonRecycler.setLayoutManager(comingSoonLayoutManager);
-        comingSoonRecycler.setItemAnimator(null);
-        fadeIn(comingSoonRecycler);
-        comingSoonRecycler.setLayoutAnimation(animation);
-
-        comingSoonAdapter = new MoviesComingSoonAdapter(myActivity, comingSoon, this);
-
-        /** NOW PLAYING */
-        LinearLayoutManager nowplayingManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
-        nowPlayingRecycler = rootView.findViewById(R.id.now_playing);
-        nowPlayingRecycler.setLayoutManager(nowplayingManager);
-        fadeIn(nowPlayingRecycler);
-        nowPlayingRecycler.setLayoutAnimation(animation);
-
-        nowPlayingAdapter = new NowPlayingMoviesAdapter(myActivity, nowPlaying, this);
+        LinearLayoutManager newReleasesLayoutManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(newReleasesLayoutManager);
 
         /** FEATURED */
-        LinearLayoutManager featuredManager = new LinearLayoutManager(myActivity, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager featuredManager = new LinearLayoutManager(recyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         featuredRecycler = rootView.findViewById(R.id.FeaturedRE);
         featuredRecycler.setLayoutManager(featuredManager);
         fadeIn(featuredRecycler);
-        featuredAdapter = new FeaturedAdapter(myActivity, featured, this);
-        featuredRecycler.setLayoutAnimation(animation2);
-
-
-        /** SEARCH */
-        searchicon.setOnClickListener(view -> {
-
-            searchMoviesInterface.onSearchMoviesInterface();
-        });
-
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        LocationManager = (LocationManager) myActivity.getSystemService(Context.LOCATION_SERVICE);
-        if (LocationManager != null) {
-            Provider = LocationManager.getBestProvider(criteria, true);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-
-        progress.setVisibility(View.VISIBLE);
-
-
-        LogUtils.newLog(Constants.TAG, "ANDROID ID >>>>>>>>>>>>>: " + Settings.Secure.getString(myContext.getContentResolver(), Settings.Secure.ANDROID_ID));
-        return rootView;
+        featuredAdapter = new FeaturedMovieAdapter(featured, this);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setUpViews(view);
+        progress.setVisibility(View.VISIBLE);
 
+        /** SEARCH */
+        searchicon.setOnClickListener(v -> showFragment(new SearchFragment()));
+        childFragmentManager = getChildFragmentManager();
         config = new RealmConfiguration.Builder()
                 .name("Movies.Realm")
                 .deleteRealmIfMigrationNeeded()
@@ -251,19 +219,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                 .build();
 
         moviesRealm = Realm.getInstance(config);
-        TheatersFragment.tRealm = Realm.getDefaultInstance();
         historyRealm = Realm.getInstance(historyConfig);
+        setUpMoviesList(view);
 
         swiper.setOnRefreshListener(() -> {
-
-            myActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             moviesRealm.executeTransaction(realm -> {
                 realm.deleteAll();
             });
             getMoviesForStorage();
-//            GoWatchItSingleton.getInstance().getMovies();
+            GoWatchItSingleton.getInstance().getMovies();
         });
-
 
         if (moviesRealm.isEmpty()) {
             getMoviesForStorage();
@@ -272,49 +238,89 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             setAdaptersWithRealmOBjects();
         }
 
-        if (historyRealm.isEmpty()) {
-            getHistoryForStorage();
-        }
+
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) toolBar.getLayoutParams();
+        params.setMargins(0, getStatusBarHeight(), 0, 0);
+        toolBar.setLayoutParams(params);
+        toolBarBackground.setLayoutParams(params);
 
 
-    }
-
-    void getAllMovies() {
-        LogUtils.newLog(Constants.TAG, "getAllMovies: GETTING ALL MOVIES");
-        allMoviesConfig = new RealmConfiguration.Builder()
-                .name("AllMovies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-
-
-        allMoviesRealm = Realm.getInstance(allMoviesConfig);
-        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
+        scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
-            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
-                List<AllMoviesResponse> info = new ArrayList<>();
-                info = response.body();
-                if (response.isSuccessful() && response != null) {
-                    List<AllMoviesResponse> finalInfo = info;
-                    allMoviesRealm.executeTransaction(realm -> {
-                        for (AllMoviesResponse movie : finalInfo) {
-                            Movie newMovie = realm.createObject(Movie.class);
-                            newMovie.setId(Integer.parseInt(movie.getId()));
-                            newMovie.setTitle(movie.getTitle());
-                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
-                            newMovie.setRating(movie.getRating());
-                            newMovie.setSynopsis(movie.getSynopsis());
-                            newMovie.setImageUrl(movie.getImageUrl());
-                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
-                        }
-                    });
+            public void onScrollChanged() {
+                if (scrollView.getScrollY() >= 150 && !scrolldown) {
+                    scrolldown = true;
+                    scrollup = false;
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) guideLineLeft.getLayoutParams();
+                    params.guidePercent = 0.35f; // 45% // range: 0 <-> 1
+                    guideLineLeft.setLayoutParams(params);
+
+                    ConstraintLayout.LayoutParams params1 = (ConstraintLayout.LayoutParams) guideLineRight.getLayoutParams();
+                    params1.guidePercent = 0.65f; // 45% // range: 0 <-> 1
+
+
+                    toolBarBackground.animate().alpha(1.0f);
+                    TransitionManager.beginDelayedTransition(toolBar);
+                    guideLineRight.setLayoutParams(params1);
+
+                }
+                if (scrollView.getScrollY() < 150 && !scrollup) {
+                    scrollup = true;
+                    scrolldown = false;
+
+
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) guideLineLeft.getLayoutParams();
+                    params.guidePercent = 0.3f; // 45% // range: 0 <-> 1
+                    guideLineLeft.setLayoutParams(params);
+
+                    ConstraintLayout.LayoutParams params1 = (ConstraintLayout.LayoutParams) guideLineRight.getLayoutParams();
+                    params1.guidePercent = 0.7f; // 45% // range: 0 <-> 1
+                    TransitionManager.beginDelayedTransition(toolBar);
+                    toolBarBackground.animate().alpha(0.0f);
+                    guideLineRight.setLayoutParams(params1);
+
                 }
             }
-
-            @Override
-            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
-            }
         });
+        subscribeToRestrictions();
+    }
 
+    @Nullable
+    Disposable restritionSub;
+
+    private void subscribeToRestrictions() {
+        if (restritionSub != null) {
+            restritionSub.dispose();
+        }
+        restritionSub = restrictionsManager
+                .payload()
+                .subscribe(this::showSubscriptionButton, err -> {
+                });
+    }
+
+
+    private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
+        Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionActivationRequired());
+        if (res.getSubscriptionActivationRequired()) {
+            activateMPCardButton.setVisibility(View.VISIBLE);
+            activateMPCardButton.setClickable(true);
+            activateMPCardButton.setOnClickListener(v -> {
+                Intent activateCard = new Intent(getContext(), ActivateMoviePassCard.class);
+                startActivity(activateCard);
+            });
+        } else {
+            activateMPCardButton.setVisibility(View.GONE);
+        }
+    }
+
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     @Override
@@ -325,37 +331,19 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
     @Override
     public void onResume() {
         super.onResume();
-        if (checkLocationPermission()) {
-            if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //Request location updates:
-                Toast.makeText(myActivity, "GPS Location Is Required", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        config = new RealmConfiguration.Builder()
-                .name("Movies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        moviesRealm = Realm.getInstance(config);
-        TheatersFragment.tRealm = Realm.getDefaultInstance();
-
     }
-
 
     @Override
     public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
-        if (context instanceof searchMoviesInterface) {
-            searchMoviesInterface = (searchMoviesInterface) context;
-        }
-        myContext = context;
+        activity = getActivity();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        myContext = null;
-        searchMoviesInterface = null;
+        activity = null;
     }
 
     @Override
@@ -364,11 +352,11 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         moviesRealm.close();
     }
 
-    //TODO:
-    public void onMoviePosterClick(int pos, Movie movie, ImageView sharedImageView) {
-        Intent movieIntent = new Intent(myActivity, MovieActivity.class);
-        movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(movie));
-        startActivity(movieIntent);
+    public void onMoviePosterClick(Movie movie) {
+        if (movie == null || !movie.isValid()) {
+        } else {
+            showFragment(MovieFragment.newInstance(movie));
+        }
     }
 
     public void getMoviesForStorage() {
@@ -377,7 +365,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             public void onResponse(Call<LocalStorageMovies> call, Response<LocalStorageMovies> response) {
                 LocalStorageMovies localStorageMovies = response.body();
                 if (response.isSuccessful() && localStorageMovies != null) {
-
                     moviesRealm.executeTransactionAsync(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
@@ -394,8 +381,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 newReleaseMovies.setTribuneId(localStorageMovies.getNewReleases().get(i).getTribuneId());
                                 newReleaseMovies.setRating(localStorageMovies.getNewReleases().get(i).getRating());
                                 newReleaseMovies.setTeaserVideoUrl(localStorageMovies.getNewReleases().get(i).getTeaserVideoUrl());
-
-
                             }
                             for (int i = 0; i < localStorageMovies.getNowPlaying().size(); i++) {
                                 Movie nowPlayingMovies = realm.createObject(Movie.class);
@@ -410,8 +395,6 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 nowPlayingMovies.setTribuneId(localStorageMovies.getNowPlaying().get(i).getTribuneId());
                                 nowPlayingMovies.setRating(localStorageMovies.getNowPlaying().get(i).getRating());
                                 nowPlayingMovies.setTeaserVideoUrl(localStorageMovies.getNowPlaying().get(i).getTeaserVideoUrl());
-
-
                             }
                             for (int i = 0; i < localStorageMovies.getFeatured().size(); i++) {
                                 Movie featuredMovie = realm.createObject(Movie.class);
@@ -426,11 +409,9 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
                                 featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
-
-
+                                featuredMovie.setCreatedAt(localStorageMovies.getFeatured().get(i).getCreatedAt());
+                                featuredMovie.setReleaseDate(localStorageMovies.getFeatured().get(i).getReleaseDate());
                             }
-
-
                             for (int i = 0; i < localStorageMovies.getComingSoon().size(); i++) {
                                 Movie comingSoonMovies = realm.createObject(Movie.class);
                                 comingSoonMovies.setType("Coming Soon");
@@ -466,78 +447,86 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
                     }, () -> {
                         LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         setAdaptersWithRealmOBjects();
+                        moviesRealm.close();
                     }, error -> {
                         LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
+                        moviesRealm.close();
                     });
-
                     swiper.setRefreshing(false);
                 }
-
             }
 
             @Override
             public void onFailure(Call<LocalStorageMovies> call, Throwable t) {
-                Toast.makeText(myActivity, "Failure Updating Movies", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failure Updating Movies", Toast.LENGTH_SHORT).show();
                 swiper.setRefreshing(false);
-                ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
             }
         });
     }
 
-    void getHistoryForStorage() {
 
-        RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
+    void getAllMovies() {
+        allMoviesConfig = new RealmConfiguration.Builder()
+                .name("AllMovies.Realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+
+        allMoviesRealm = Realm.getInstance(allMoviesConfig);
+        RestClient.getLocalStorageAPI().getAllMovies().enqueue(new Callback<List<AllMoviesResponse>>() {
             @Override
-            public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                if (response.isSuccessful()) {
-                    HistoryResponse historyObjects = response.body();
-                    historyRealm.executeTransactionAsync(realm -> {
-                        if (historyObjects != null) {
-                            for (int i = 0; i < historyObjects.getReservations().size(); i++) {
-                                Movie historyList = realm.createObject(Movie.class);
-                                historyList.setId(historyObjects.getReservations().get(i).getId());
-//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
-                                historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
-                                historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
-//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
-                                historyList.setRating(historyObjects.getReservations().get(i).getRating());
-                                historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
-                                historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
-                                historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
-                                historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
-                                historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
-                                historyList.setType(historyObjects.getReservations().get(i).getType());
-
-                            }
+            public void onResponse(Call<List<AllMoviesResponse>> call, Response<List<AllMoviesResponse>> response) {
+                List<AllMoviesResponse> info = new ArrayList<>();
+                info = response.body();
+                if (response.isSuccessful() && response != null) {
+                    List<AllMoviesResponse> finalInfo = info;
+                    allMoviesRealm.executeTransactionAsync(realm -> {
+                        Log.d(TAG, "onResponse: ");
+                        for (AllMoviesResponse movie : finalInfo) {
+                            Movie newMovie = realm.createObject(Movie.class);
+                            newMovie.setId(Integer.parseInt(movie.getId()));
+                            newMovie.setTitle(movie.getTitle());
+                            newMovie.setRunningTime(Integer.parseInt(movie.getRunningTime()));
+                            newMovie.setRating(movie.getRating());
+                            newMovie.setSynopsis(movie.getSynopsis());
+                            newMovie.setImageUrl(movie.getImageUrl());
+                            newMovie.setLandscapeImageUrl(movie.getLandscapeImageUrl());
                         }
+                    }, () -> {
+                        LogUtils.newLog(Constants.TAG, "onSuccess: ");
+                    }, error -> {
+                        // Transaction failed and was automatically canceled.
                     });
                 }
+
             }
 
+
             @Override
-            public void onFailure(Call<HistoryResponse> call, Throwable t) {
+            public void onFailure(Call<List<AllMoviesResponse>> call, Throwable t) {
             }
         });
+    }
+
+    public void getMovie(int movieId) {
+        Log.d(TAG, "getMovie: " + movieId);
+
+        RealmResults<Movie> movie = moviesRealm.where(Movie.class)
+                .equalTo("id", movieId)
+                .findAll();
+
+        if (movie != null && movie.size() > 0) {
+            showFragment(MovieFragment.newInstance(movie.get(0)));
+        }
+        progress.setVisibility(View.GONE);
     }
 
 
     public void setAdaptersWithRealmOBjects() {
-
         TopBoxOffice.clear();
         comingSoon.clear();
         NEWRelease.clear();
         nowPlaying.clear();
         featured.clear();
-
-        topBoxTXT.setVisibility(View.VISIBLE);
-        fadeIn(topBoxTXT);
-        comingSoonTXT.setVisibility(View.VISIBLE);
-        fadeIn(comingSoonTXT);
-        newReleaseTXT.setVisibility(View.VISIBLE);
-        fadeIn(newReleaseTXT);
-        nowPlayingTXT.setVisibility(View.VISIBLE);
-        fadeIn(nowPlayingTXT);
-
 
         RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
                 .equalTo("type", "Top Box Office")
@@ -566,34 +555,22 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
             } else if (allMovies.get(i).getType().matches("Top Box Office")) {
                 TopBoxOffice.add(allMovies.get(i));
             }
-
         }
 
-        if (newRealeasesAdapter != null) {
-            newReleasesRecycler.getRecycledViewPool().clear();
-            newReleasesRecycler.setAdapter(newRealeasesAdapter);
-            newRealeasesAdapter.notifyDataSetChanged();
+        ArrayList<RealmList<Movie>> moviesList = new ArrayList<>();
+        moviesList.add(NEWRelease);
+        moviesList.add(nowPlaying);
+        moviesList.add(TopBoxOffice);
+        moviesList.add(comingSoon);
 
-        }
+        ArrayList<String> titlesList = new ArrayList<>();
+        titlesList.add("New Releases");
+        titlesList.add("Now Playing");
+        titlesList.add("Top Box Office");
+        titlesList.add("Coming Soon");
 
-        if (topBoxOfficeAdapter != null) {
-            topBoxOfficeRecycler.getRecycledViewPool().clear();
-            topBoxOfficeRecycler.setAdapter(topBoxOfficeAdapter);
-            topBoxOfficeAdapter.notifyDataSetChanged();
-        }
-
-        if (comingSoonAdapter != null) {
-            comingSoonRecycler.getRecycledViewPool().clear();
-            comingSoonRecycler.setAdapter(comingSoonAdapter);
-            comingSoonAdapter.notifyDataSetChanged();
-        }
-
-        if (nowPlayingAdapter != null) {
-            nowPlayingRecycler.getRecycledViewPool().clear();
-            nowPlayingRecycler.setAdapter(nowPlayingAdapter);
-            nowPlayingAdapter.notifyDataSetChanged();
-        }
-
+        DynamicMoviesTabAdapter adapter = new DynamicMoviesTabAdapter(titlesList, moviesList, this);
+        recyclerView.setAdapter(adapter);
         if (featuredAdapter != null) {
             featuredRecycler.getRecycledViewPool().clear();
             featuredRecycler.setAdapter(featuredAdapter);
@@ -603,135 +580,17 @@ public class MoviesFragment extends Fragment implements MoviePosterClickListener
         searchicon.setVisibility(View.VISIBLE);
         fadeIn(searchicon);
 
-        progress.setVisibility(View.GONE);
-        myActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-
-    }
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(myActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(myActivity)
-                        .setTitle("GPS Services Are Required For MoviePass to Run Properlly")
-                        .setMessage(" Allow GPS Location Access? ")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(myActivity,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        LOCATION_PERMISSIONS);
-                            }
-                        })
-                        .create()
-                        .show();
-
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(myActivity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSIONS);
-            }
-            return false;
+        if (movieId == -1) {
+            progress.setVisibility(View.GONE);
         } else {
-            return true;
+            getMovie(movieId);
         }
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSIONS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(myActivity,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-
-                        //Request location updates:
-                        LocationManager.requestLocationUpdates(Provider, 400, 1, this);
-                    }
-
-                } else {
-                    Toast.makeText(myActivity, "GPS Permissions Are Required. Go To App Settings.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-        }
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    public void fadeIn(View view) {
-        Animation fadeIn = new AlphaAnimation(0, 1);
-        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeIn.setDuration(1000);
-
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeIn);
-        view.setAnimation(animation);
-
-    }
-
-    public void fadeOut(View view) {
-        Animation fadeOut = new AlphaAnimation(1, 0);
-        fadeOut.setInterpolator(new DecelerateInterpolator()); //add this
-        fadeOut.setDuration(1000);
-        AnimationSet animation = new AnimationSet(false); //change to false
-        animation.addAnimation(fadeOut);
-        view.setAnimation(animation);
-    }
-
-
-    public interface searchMoviesInterface {
-        void onSearchMoviesInterface();
-
-        void closeFragment();
-
-        void hideSnackBar();
-
-        void showSnackbar();
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
     }
 
 
 }
-
 
 
 

@@ -5,27 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
+    android:clickable="true"
     android:orientation="vertical">
 
-
-    <RelativeLayout
+    <TextView
         android:id="@+id/HEADER"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_standard"
-            android:layout_marginTop="@dimen/margin_half"
-            android:text="Account"
-            android:textColor="@color/almost_white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
+        style="@style/TitleView"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text="Account" />
 
 
     <ScrollView
@@ -177,7 +164,6 @@
             </RelativeLayout>
 
 
-
             <RelativeLayout
                 android:id="@+id/ReferAFriend"
                 android:layout_width="match_parent"
@@ -217,7 +203,44 @@
                     android:background="@color/gray_icon" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/LoyaltyPrograms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_half">
 
+                <TextView
+                    android:id="@+id/LoyaltyProgramsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="@dimen/margin_half"
+                    android:text="Loyalty Programs"
+                    android:textAllCaps="false"
+                    android:textColor="@color/almost_white"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/arrowforward"
+                    android:tint="@color/white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="6dp"
+                    android:alpha=".5"
+                    android:background="@color/gray_icon" />
+            </RelativeLayout>
 
 
             <TextView
@@ -333,7 +356,7 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Notifications"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -346,7 +369,7 @@
                     android:paddingStart="@dimen/margin_half"
                     android:text="Be the first to hear about new movies, features, and promotions from MoviePass"
                     android:textColor="@color/almost_white"
-                    android:textSize="12sp" />
+                    android:textSize="13sp" />
 
 
                 <Switch
@@ -370,7 +393,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Terms of Use"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/PP"
@@ -381,7 +404,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Privacy Policy"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/SignOut"
@@ -392,7 +415,7 @@
                 android:paddingStart="@dimen/margin_standard"
                 android:text="Sign Out"
                 android:textColor="@color/new_red"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/VERSIOn"
@@ -400,10 +423,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/SignOut"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/quadruple_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:paddingStart="@dimen/margin_standard"
-                android:textSize="10dp" />
+                android:textSize="14dp" />
 
         </LinearLayout>
 

@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <View
+        style="@style/ReservationBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/moviePosterHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/cd_movie_poster"
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="@+id/movieCL"
+        app:layout_constraintEnd_toEndOf="@+id/movieCL"
+        app:layout_constraintStart_toStartOf="@+id/movieCL"
+        app:layout_constraintTop_toTopOf="@+id/movieCL" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/reservation_gradient"
+        app:layout_constraintBottom_toBottomOf="@+id/movieCL"
+        app:layout_constraintEnd_toEndOf="@+id/movieCL"
+        app:layout_constraintStart_toStartOf="@+id/movieCL"
+        app:layout_constraintTop_toTopOf="@+id/movieCL"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/closeIV"
+        style="@style/CloseButton"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/movieCL"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingEnd="@dimen/margin_standard"
+        android:paddingStart="@dimen/margin_standard"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/top_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".45"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/movieName"
+            style="@style/ReservationHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            app:layout_constraintBottom_toTopOf="@id/top_guide"
+            app:layout_constraintTop_toBottomOf="@id/top_guide"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            tools:text="A Wrinkle In Time" />
+
+        <TextView
+            android:id="@+id/theaterName"
+            style="@style/ReservationSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_half"
+            android:foreground="?selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toStartOf="@id/theaterPin"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieName"
+            tools:text="Cinema Village 12th Street" />
+
+        <ImageView
+            android:id="@+id/theaterPin"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_location_pin"
+            android:tint="@color/red"
+            app:layout_constraintBottom_toBottomOf="@id/theaterName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/theaterName"
+            app:layout_constraintTop_toTopOf="@id/theaterName" />
+
+        <TextView
+            android:id="@+id/movieShowtime"
+            style="@style/ReservationSubHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_half"
+            android:maxLines="1"
+            app:layout_constraintTop_toBottomOf="@id/theaterName"
+            tools:text="7:00 PM" />
+
+        <TextView
+            android:id="@+id/seats"
+            style="@style/ReservationSeats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_half"
+            android:maxLines="1"
+            app:layout_constraintTop_toBottomOf="@id/movieShowtime"
+            app:layout_constraintVertical_bias="1"
+            tools:text="Seats A3, A4, A5, A6" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/reservationCL"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movieCL">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".10" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".9" />
+
+        <TextView
+            android:id="@+id/reservationDescriptionTV"
+            style="@style/ReservationDescription"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/codeCL"
+            app:layout_constraintEnd_toStartOf="@id/guideEnd"
+            app:layout_constraintStart_toEndOf="@id/guideStart"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/codeCL"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            app:layout_constraintBottom_toTopOf="@+id/middleCL"
+            app:layout_constraintEnd_toStartOf="@id/guideEnd"
+            app:layout_constraintStart_toStartOf="@id/guideStart"
+            app:layout_constraintTop_toBottomOf="@id/reservationDescriptionTV"
+            app:layout_constraintVertical_bias=".5"
+            tools:layout_height="100dp"
+            tools:layout_width="250dp">
+
+            <com.mobile.barcode.BarcodeLayout
+                android:id="@+id/barcodeL"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@color/white_ish"
+                tools:layout_height="100dp"
+                tools:layout_width="250dp"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/creditCardIV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/moviepass_credit_card"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideCCEnd"
+                app:layout_constraintStart_toStartOf="@id/guideCCStart"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideCCStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".2" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideCCEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".8" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/middleCL"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingBottom="@dimen/margin_half"
+            android:paddingTop="@dimen/margin_half"
+            app:layout_constraintBottom_toTopOf="@+id/bottomCL"
+            app:layout_constraintEnd_toStartOf="@id/guideEnd"
+            app:layout_constraintStart_toStartOf="@id/guideStart"
+            app:layout_constraintTop_toBottomOf="@id/codeCL">
+
+            <TextView
+                android:id="@+id/zipCodeDescription"
+                style="@style/ZipCodeDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_half"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ZipCodeNumberReservation"
+                style="@style/ZipCodeNumberReservation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="1234"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/zipCodeDescription" />
+
+            <TextView
+                android:id="@+id/reservationCode"
+                style="@style/ReservationCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/zipCodeDescription" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bottomCL"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_standard"
+            app:layout_constraintBottom_toTopOf="@id/ticketVerificationBanner"
+            app:layout_constraintEnd_toStartOf="@id/guideEnd"
+            app:layout_constraintStart_toEndOf="@id/guideStart"
+            app:layout_constraintTop_toBottomOf="@id/middleCL">
+
+            <TextView
+                android:id="@+id/currentReservationTV"
+                style="@style/ReservationCurrent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/cancelCurrentReservationTV"
+                style="@style/ReservationCancel"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:gravity="center" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/ticketVerificationBanner"
+            style="@style/TicketVerificationButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include
+            android:id="@+id/progress"
+            layout="@layout/view_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</merge>

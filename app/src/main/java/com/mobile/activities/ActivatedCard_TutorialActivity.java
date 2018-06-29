@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobile.Constants;
+import com.mobile.fragments.MovieFragment;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
@@ -52,7 +55,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         two = findViewById(R.id.tutorial_indicator_2);
         three = findViewById(R.id.tutorial_indicator_3);
         four = findViewById(R.id.tutorial_indicator_4);
-        five =  findViewById(R.id.tutorial_indicator_5);
+        five = findViewById(R.id.tutorial_indicator_5);
         dots = findViewById(R.id.dots);
         done = findViewById(R.id.TUTORIAL_DONE);
         tutorialViewPager = findViewById(R.id.tutorial_container);
@@ -63,16 +66,16 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
-            selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
-            theater = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.THEATER));
+            screeningObject = Parcels.unwrap(intent.getParcelableExtra(Constants.SCREENING));
+            selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
+            theater = Parcels.unwrap(intent.getParcelableExtra(Constants.THEATER));
         }
         done.setOnClickListener(v -> {
             if (screeningObject != null && selectedShowTime != null) {
-                MovieActivity reserAct = new MovieActivity();
-                reserAct.reserve(null,screeningObject, selectedShowTime);
+                MovieFragment reserAct = new MovieFragment();
+                reserAct.reserve(screeningObject, selectedShowTime);
             } else {
-                Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, MoviesActivity.class);
+                Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, HomeActivity.class);
                 doneIntent.putExtra("launch", true);
                 doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(doneIntent);
@@ -123,11 +126,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                     i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
             );
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
     }
 
     public class tutorialAdapter extends FragmentPagerAdapter {
@@ -207,7 +205,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             TextView bodyText = rootView.findViewById(R.id.tutorial_body);
             bodyText.setText(tutorialBodies[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
-            if(getArguments().getInt(ARG_SECTION_NUMBER) - 1 == 4){
+            if (getArguments().getInt(ARG_SECTION_NUMBER) - 1 == 4) {
                 relativeEtick.setVisibility(View.VISIBLE);
                 finePrint.setVisibility(View.VISIBLE);
             }

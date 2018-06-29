@@ -5,12 +5,10 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import com.helpshift.support.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -22,16 +20,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.UserPreferences;
-import com.mobile.fragments.TicketVerificationDialog;
+import com.mobile.fragments.AutoActivatedCardFragment;
+import com.mobile.fragments.MovieFragment;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.responses.CardActivationResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.moviepass.R;
 
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import io.card.payment.CardIOActivity;
@@ -71,13 +68,13 @@ public class ActivateMoviePassCard extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = Parcels.unwrap(intent.getParcelableExtra(MovieActivity.SCREENING));
-            selectedShowTime = getIntent().getStringExtra(MovieActivity.SHOWTIME);
+            screeningObject = intent.getParcelableExtra(Constants.SCREENING);
+            selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
         }
 
 
         activateXOut.setOnClickListener(v -> {
-            Intent closeIntent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
+            Intent closeIntent = new Intent(ActivateMoviePassCard.this, HomeActivity.class);
             startActivity(closeIntent);
         });
 
@@ -94,18 +91,10 @@ public class ActivateMoviePassCard extends AppCompatActivity {
             activateDigits.setVisibility(View.VISIBLE);
         });
 
-//CODE FOR TEST
-//        activateSubmitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-
         activateSubmitButton.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
+
+
             digits = activateDigits.getText().toString().trim();
             final CardActivationRequest request = new CardActivationRequest(digits);
             RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
@@ -114,9 +103,9 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                     CardActivationResponse cardActivationResponse = response.body();
                     if (cardActivationResponse != null && response.isSuccessful()) {
                         progress.setVisibility(View.GONE);
-                        Intent intent = new Intent(ActivateMoviePassCard.this, ActivatedCard_TutorialActivity.class);
-                        intent.putExtra(MovieActivity.SCREENING, Parcels.wrap(screeningObject));
-                        intent.putExtra(MovieActivity.SHOWTIME, selectedShowTime);
+                        Intent intent = new Intent(ActivateMoviePassCard.this, AutoActivatedCardFragment.class);
+                        intent.putExtra(MovieFragment.SCREENING, Parcels.wrap(screeningObject));
+                        intent.putExtra(Constants.SHOWTIME, selectedShowTime);
                         startActivity(intent);
 
                     } else {
@@ -182,7 +171,7 @@ public class ActivateMoviePassCard extends AppCompatActivity {
                             public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
                                 CardActivationResponse cardActivationResponse = response.body();
                                 if (cardActivationResponse != null && response.isSuccessful()) {
-                                    Intent intent = new Intent(ActivateMoviePassCard.this, MoviesActivity.class);
+                                    Intent intent = new Intent(ActivateMoviePassCard.this, HomeActivity.class);
                                     startActivity(intent);
                                 } else {
                                     Snackbar.make(findViewById(R.id.ACTIVATE), "Incorrect card number", Snackbar.LENGTH_LONG);

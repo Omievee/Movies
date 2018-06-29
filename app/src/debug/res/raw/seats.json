@@ -1,0 +1,456 @@
+{
+  "seatingInfo": {
+    "columns": 16,
+    "rows": 8,
+    "seats": [
+      {
+        "available": true,
+        "column": 6,
+        "row": 5,
+        "seatName": "D6",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 2,
+        "row": 3,
+        "seatName": "B9",
+        "type": "Companion"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 4,
+        "seatName": "C5",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 13,
+        "row": 1,
+        "seatName": "A2",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 3,
+        "seatName": "B4",
+        "type": "Wheelchair"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 5,
+        "seatName": "D2",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 6,
+        "row": 3,
+        "seatName": "B5",
+        "type": "Companion"
+      },
+      {
+        "available": true,
+        "column": 2,
+        "row": 6,
+        "seatName": "E10",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 3,
+        "row": 3,
+        "seatName": "B8",
+        "type": "Wheelchair"
+      },
+      {
+        "available": false,
+        "column": 4,
+        "row": 4,
+        "seatName": "C8",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 5,
+        "seatName": "D5",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 8,
+        "row": 5,
+        "seatName": "D4",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 5,
+        "seatName": "D7",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 3,
+        "seatName": "B6",
+        "type": "Companion"
+      },
+      {
+        "available": true,
+        "column": 6,
+        "row": 4,
+        "seatName": "C6",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 12,
+        "row": 1,
+        "seatName": "A3",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 4,
+        "seatName": "C3",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 3,
+        "row": 5,
+        "seatName": "D9",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 2,
+        "row": 5,
+        "seatName": "D10",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 3,
+        "seatName": "B3",
+        "type": "Wheelchair"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 1,
+        "seatName": "A10",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 4,
+        "seatName": "C2",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 14,
+        "row": 1,
+        "seatName": "A1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 4,
+        "seatName": "C7",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 4,
+        "seatName": "C1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 4,
+        "row": 3,
+        "seatName": "B7",
+        "type": "Wheelchair"
+      },
+      {
+        "available": true,
+        "column": 3,
+        "row": 4,
+        "seatName": "C9",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 4,
+        "row": 6,
+        "seatName": "E8",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 2,
+        "row": 4,
+        "seatName": "C10",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 3,
+        "seatName": "B2",
+        "type": "Companion"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 1,
+        "seatName": "A6",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 1,
+        "seatName": "A5",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 1,
+        "seatName": "A8",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 4,
+        "row": 1,
+        "seatName": "A11",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 5,
+        "seatName": "D1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 8,
+        "row": 4,
+        "seatName": "C4",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 3,
+        "seatName": "B1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 5,
+        "seatName": "D3",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 8,
+        "row": 1,
+        "seatName": "A7",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 4,
+        "row": 5,
+        "seatName": "D8",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 1,
+        "seatName": "A4",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 3,
+        "row": 6,
+        "seatName": "E9",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 6,
+        "row": 1,
+        "seatName": "A9",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 3,
+        "row": 7,
+        "seatName": "F11",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 6,
+        "seatName": "E7",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 6,
+        "seatName": "E5",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 6,
+        "seatName": "E3",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 9,
+        "row": 7,
+        "seatName": "F5",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 1,
+        "row": 7,
+        "seatName": "F13",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 8,
+        "row": 6,
+        "seatName": "E4",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 7,
+        "row": 7,
+        "seatName": "F7",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 0,
+        "row": 7,
+        "seatName": "F14",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 6,
+        "seatName": "E1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 2,
+        "row": 7,
+        "seatName": "F\n    12",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 7,
+        "seatName": "F4",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 10,
+        "row": 6,
+        "seatName": "E2",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 6,
+        "row": 7,
+        "seatName": "F8",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 8,
+        "row": 7,
+        "seatName": "F6",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 5,
+        "row": 7,
+        "seatName": "F9",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 12,
+        "row": 7,
+        "seatName": "F2",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 6,
+        "row": 6,
+        "seatName": "E6",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 13,
+        "row": 7,
+        "seatName": "F1",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 4,
+        "row": 7,
+        "seatName": "F10",
+        "type": "CanReserve"
+      },
+      {
+        "available": true,
+        "column": 11,
+        "row": 7,
+        "seatName": "F3",
+        "type": "CanReserve"
+      }
+    ]
+  }
+}

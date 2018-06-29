@@ -5,6 +5,8 @@ public class Header {
     String eticket;
     String nearby;
 
+    private String header;
+
     public Header() {
     }
 

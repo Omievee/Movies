@@ -5,12 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import com.helpshift.support.Log;
+
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -20,20 +17,10 @@ import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.helpshift.util.HelpshiftContext;
-import com.mobile.Constants;
-import com.mobile.UserPreferences;
-import com.mobile.fragments.NoInternetFragment;
-import com.mobile.fragments.TicketVerificationDialog;
+
 import com.mobile.helpers.LogUtils;
-import com.mobile.network.RestClient;
+import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
@@ -42,17 +29,14 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import static com.mobile.UserPreferences.getUserEmail;
+import static com.mobile.UserPreferences.getUserId;
+import static com.mobile.UserPreferences.getUserName;
+import static java.lang.String.valueOf;
 
-import jp.wasabeef.blurry.Blurry;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-//import com.taplytics.sdk.Taplytics;
+public abstract class BaseActivity extends AppCompatActivity {
 
-public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-    int offset = 3232323;
     Bundle bundle;
     /* Permissions */
     public final static int REQUEST_LOCATION_CODE = 1000;
@@ -69,7 +53,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
     };
 
     UserInfoResponse userInfoResponse;
-    public BottomNavigationView bottomNavigationView;
 
     public String myZip;
 
@@ -83,17 +66,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
         try {
             JSONObject attributes = new JSONObject();
-            attributes.put("email", UserPreferences.getUserEmail());
-            attributes.put("name", UserPreferences.getUserName());
-            attributes.put("user_id", String.valueOf(UserPreferences.getUserId()));
-            LogUtils.newLog("taplytics put", UserPreferences.getUserEmail());
+            attributes.put("email", getUserEmail());
+            attributes.put("name", getUserName());
+            attributes.put("user_id", valueOf(getUserId()));
+            LogUtils.newLog("taplytics put", getUserEmail());
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 
         }
 
         try {
-            HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+            HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
         } catch (Exception e) {
 
         }
@@ -116,8 +99,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         checkInternetConnection();
     }
 
-    public void checkInternetConnection(){
-        if(!isOnline()){
+    public void checkInternetConnection() {
+        if (!isOnline()) {
             Toast.makeText(this, getResources().getString(R.string.activity_no_internet_toast_message), Toast.LENGTH_LONG).show();
         }
     }
@@ -139,15 +122,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         }
     }
 
-    public boolean isPendingSubscription() {
-        if (UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_ACTIVATION") ||
-                UserPreferences.getRestrictionSubscriptionStatus().matches("PENDING_FREE_TRIAL")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void fadeIn(View view) {
         Animation fadeIn = new AlphaAnimation(0, 1);
         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
@@ -156,7 +130,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
         AnimationSet animation = new AnimationSet(false); //change to false
         animation.addAnimation(fadeIn);
         view.setAnimation(animation);
-
     }
 
     public void fadeOut(View view) {

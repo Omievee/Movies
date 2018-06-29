@@ -18,10 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.User;
@@ -36,13 +34,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mobile.fragments.PendingReservationFragment.TAG;
+public class ProfileAccountChangePassword extends MPFragment {
 
-
-public class ProfileAccountChangePassword extends android.app.Fragment {
-
-
-    private ProfileActivityInterface listener;
     private EditText oldPassword, newPassword1, newPassword2;
     private TextInputLayout oldPasswordTextInputLayout, newPassword1TextInputLayout, newPassword2TextInputLayout;
     private Button save, cancel;
@@ -52,6 +45,8 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     private boolean firstTime = true;
     private Activity myActivity;
 
+    private static final String TAG = "ProfileAccountChangePassword";
+
     public ProfileAccountChangePassword() {
         // Required empty public constructor
     }
@@ -60,7 +55,12 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        myActivity = getActivity();
     }
 
     public void setUpView(View view) {
@@ -163,11 +163,9 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disableSaveAndCancel();
-            }
+        cancel.setOnClickListener(v -> {
+            disableSaveAndCancel();
+            myActivity.onBackPressed();
         });
     }
 
@@ -213,7 +211,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
                     Toast.makeText(myActivity, "Password changed", Toast.LENGTH_LONG).show();
                     progress.setVisibility(View.GONE);
                     disableSaveAndCancel();
-                    listener.closeFragment();
+                    myActivity.onBackPressed();
                 } else {
                     progress.setVisibility(View.GONE);
                     LogUtils.newLog(TAG, "onResponse: FAILURE LOG IN " + response.toString());
@@ -235,7 +233,7 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
 
-           // UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
+            // UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
         }
     }
 
@@ -268,31 +266,8 @@ public class ProfileAccountChangePassword extends android.app.Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ProfileActivityInterface) {
-            listener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-        if (myActivity instanceof ProfileActivityInterface) {
-            listener = (ProfileActivityInterface) myActivity;
-        } else {
-            throw new RuntimeException(myActivity.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-
-    @Override
     public void onDetach() {
+        myActivity = null;
         super.onDetach();
     }
 

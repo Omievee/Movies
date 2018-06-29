@@ -38,8 +38,8 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.TicketVerification_NoStub;
 import com.mobile.application.Application;
-import com.mobile.helpers.ContextSingleton;
 import com.mobile.helpers.LogUtils;
+import com.mobile.model.PopInfo;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationRequest;
 import com.mobile.responses.VerificationResponse;
@@ -55,8 +55,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,7 +76,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     BitmapFactory.Options bmOptions;
 
     ProgressBar progress;
-    TextView noStub, FAQs;
+    TextView noStub, FAQs, movieTitle;
     ObjectMetadata objectMetadata;
     String key;
     Activity myActivity;
@@ -87,6 +85,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     String photoFileName = "TicketVerification.jpg";
 
     private TransferUtility transferUtility;
+    private PopInfo popInfo;
 
 
     private static String CAMERA_PERMISSIONS[] = new String[]{
@@ -100,15 +99,11 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public TicketVerificationDialog() {
     }
 
-    public static TicketVerificationDialog newInstance(int resID, String movieTitle, String tribuneMovieId, String theaterName, String tribuneTheaterId, String showtime) {
+    public static TicketVerificationDialog newInstance(PopInfo pop) {
         TicketVerificationDialog fragment = new TicketVerificationDialog();
         Bundle args = new Bundle();
-        args.putInt("reservationId", resID);
-        args.putString("mSelectedMovieTitle", movieTitle);
-        args.putString("tribuneMovieId", tribuneMovieId);
-        args.putString("mTheaterSelected", theaterName);
-        args.putString("tribuneTheaterId", tribuneTheaterId);
-        args.putString("showtime", showtime);
+        args.putParcelable("popInfo", pop);
+        fragment.setCancelable(false);
         fragment.setArguments(args);
         return fragment;
     }
@@ -123,6 +118,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         progress = root.findViewById(R.id.progress);
         noStub = root.findViewById(R.id.NoStub);
         FAQs = root.findViewById(R.id.FAQs);
+        movieTitle = root.findViewById(R.id.movieTitle);
         transferUtility = TransferUtility.builder()
                 .context(myActivity.getApplicationContext())
                 .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
@@ -133,16 +129,15 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
-
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        popInfo = getArguments().getParcelable("popInfo");
 
+        Log.d(Constants.TAG, "onViewCreated: " + popInfo.getMovieTitle());
+        if (popInfo.getMovieTitle() != null) {
+            movieTitle.setVisibility(View.VISIBLE);
+            movieTitle.setText(popInfo.getMovieTitle());
+        }
 
         ticketScan.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -161,7 +156,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
         noStub.setOnClickListener(v -> {
             Intent intent = new Intent(myActivity, TicketVerification_NoStub.class);
-            int res = getArguments().getInt("reservationId");
+            int res = popInfo.getReservationId();
             intent.putExtra(Constants.SCREENING, res);
             startActivity(intent);
         });
@@ -209,22 +204,32 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
                 int photoW = bmOptions.outWidth;
                 int photoH = bmOptions.outHeight;
 
-                int scaleFactor = Math.min(photoW / 2048, photoH / 2048);
+                int scaleFactor = Math.min(photoW / 1024, photoH / 1024);
                 if (scaleFactor != 1) {
-                    bmOptions.inJustDecodeBounds = false;
                     bmOptions.inSampleSize = scaleFactor;
+                }
+                bmOptions.inJustDecodeBounds = false;
+                Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(photoFile);
+                    LogUtils.newLog("compressing file " + photoFile.getAbsolutePath());
+                    image.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+                } catch (Exception ignored) {
 
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-                    image.recycle();
-
-                } else {
-                    Bitmap image = BitmapFactory.decodeFile(photoFile.getAbsolutePath(), bmOptions);
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     image.recycle();
                 }
+
+
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(myActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -296,26 +301,15 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
 
     private void uploadToAWS(File ticketPhoto) {
         objectMetadata = new ObjectMetadata();
-        key = String.valueOf(getArguments().getInt("reservationId"));
-
-        try {
-            if (getArguments() != null) {
-                String reservationId = String.valueOf(getArguments().getInt("reservationId"));
-                String showTime = getArguments().getString("showtime");
-                String movieTitle = getArguments().getString("mSelectedMovieTitle");
-                String theaterName = getArguments().getString("mTheaterSelected");
-                URLEncoder.encode(Build.MODEL, "UTF-8");
-                String reservationKind = "reskind";
-                String tribuneMovieId = getArguments().getString("tribuneMovieId");
-                String tribuneTheaterId = getArguments().getString("tribuneTheaterId");
-                objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, tribuneMovieId, movieTitle, tribuneTheaterId, theaterName, reservationKind));
-            }
-
-
-            //Setting MetaData
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        key = String.valueOf(popInfo.getReservationId());
+        String reservationId = String.valueOf(popInfo.getReservationId());
+        String showTime = popInfo.getShowtime();
+        String movieTitle = popInfo.getMovieTitle();
+        String theaterName = popInfo.getTheaterName();
+        String reservationKind = "reskind";
+        String tribuneMovieId = popInfo.getTribuneMovieId();
+        String tribuneTheaterId = popInfo.getTribuneTheaterId();
+        objectMetadata.setUserMetadata(metaDataMap(reservationId, showTime, tribuneMovieId, movieTitle, tribuneTheaterId, theaterName, reservationKind));
 
 
         TransferObserver observer = transferUtility.upload(BuildConfig.BUCKET, key, ticketPhoto, objectMetadata);
@@ -323,7 +317,7 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
-                    int reservationId = getArguments().getInt("reservationId");
+                    int reservationId = popInfo.getReservationId();
                     VerificationRequest ticketVerificationRequest = new VerificationRequest();
                     RestClient.getAuthenticated().verifyTicket(reservationId, ticketVerificationRequest).enqueue(new Callback<VerificationResponse>() {
                         @Override
@@ -382,6 +376,9 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
         meta.put("device_name", AppUtils.getDeviceName());//Device Name
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
         meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
+        meta.put("version_code", String.valueOf(BuildConfig.VERSION_CODE));
+        meta.put("version_name", BuildConfig.VERSION_NAME);
+        meta.put("os", "android");
 
         return meta;
     }
@@ -405,8 +402,14 @@ public class TicketVerificationDialog extends BottomSheetDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         myContext = context;
+        myActivity = getActivity();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        myContext = null;
+    }
 }
 
 

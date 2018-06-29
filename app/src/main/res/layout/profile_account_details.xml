@@ -1,192 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/test_black"
-    android:orientation="vertical">
+    android:clickable="true">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="33dp"
-        android:padding="@dimen/margin_half"
-        android:text="Account Details"
-        android:textColor="@color/almost_white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-
-    <RelativeLayout
-        android:id="@+id/UP"
+    <LinearLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:padding="@dimen/margin_half">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/margin_half"
-            android:text="Account Information"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/DOWN0"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_half"
-            android:rotation="270"
-            android:src="@drawable/icondown"
-            android:textAlignment="center"
-            android:tint="@color/white" />
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/DOWN0"
-            android:layout_marginEnd="6dp"
-            android:layout_marginStart="6dp"
-            android:alpha=".5"
-            android:background="@color/gray_icon" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/changePassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:animateLayoutChanges="true"
-        android:padding="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/margin_half"
-            android:text="Change Password"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/DOWNChangeAddress"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_half"
-            android:rotation="270"
-            android:src="@drawable/icondown"
-            android:textAlignment="center"
-            android:tint="@color/white" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/DOWNChangeAddress"
-            android:layout_marginEnd="6dp"
-            android:layout_marginStart="6dp"
-            android:alpha=".5"
-            android:background="@color/gray_icon" />
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/MIDDLE"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:animateLayoutChanges="true"
-        android:padding="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/margin_half"
-            android:text="Shipping Address"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/DOWN"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_half"
-            android:rotation="270"
-            android:src="@drawable/icondown"
-            android:textAlignment="center"
-            android:tint="@color/white" />
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/DOWN"
-            android:layout_marginEnd="6dp"
-            android:layout_marginStart="6dp"
-            android:alpha=".5"
-            android:background="@color/gray_icon" />
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/END"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_standard"
-        android:animateLayoutChanges="true"
-        android:padding="5dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/margin_half"
-            android:text="Plan &amp; Billing Info"
-            android:textColor="@color/almost_white"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/DOWN2"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:paddingTop="@dimen/margin_half"
-            android:rotation="270"
-            android:src="@drawable/icondown"
-            android:textAlignment="center"
-            android:tint="@color/white" />
+            style="@style/TitleView"
+            android:layout_marginTop="@dimen/status_bar_height"
+            android:text="Account Details" />
 
 
-        <View
+        <RelativeLayout
+            android:id="@+id/UP"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/DOWN2"
-            android:layout_marginEnd="6dp"
-            android:layout_marginStart="6dp"
-            android:alpha=".5"
-            android:background="@color/gray_icon" />
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:padding="@dimen/margin_half">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/margin_half"
+                android:text="Account Information"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/DOWN0"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="@dimen/margin_half"
+                android:rotation="270"
+                android:src="@drawable/icondown"
+                android:textAlignment="center"
+                android:tint="@color/white" />
 
 
-</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/DOWN0"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:alpha=".5"
+                android:background="@color/gray_icon" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/margin_half"
+                android:text="Change Password"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/DOWNChangeAddress"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="@dimen/margin_half"
+                android:rotation="270"
+                android:src="@drawable/icondown"
+                android:textAlignment="center"
+                android:tint="@color/white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/DOWNChangeAddress"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:alpha=".5"
+                android:background="@color/gray_icon" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/MIDDLE"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/margin_half"
+                android:text="Shipping Address"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/DOWN"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="@dimen/margin_half"
+                android:rotation="270"
+                android:src="@drawable/icondown"
+                android:textAlignment="center"
+                android:tint="@color/white" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/DOWN"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:alpha=".5"
+                android:background="@color/gray_icon" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/END"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:padding="5dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:padding="@dimen/margin_half"
+                android:text="Plan &amp; Billing Info"
+                android:textColor="@color/almost_white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/DOWN2"
+                android:layout_width="60dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingTop="@dimen/margin_half"
+                android:rotation="270"
+                android:src="@drawable/icondown"
+                android:textAlignment="center"
+                android:tint="@color/white" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/DOWN2"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:alpha=".5"
+                android:background="@color/gray_icon" />
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:text="@string/choose_seats" />
+
+    <ImageView
+        android:id="@+id/backButton"
+        style="@style/BackButton" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton" />
+
+    <com.mobile.seats.SeatScreeningHeaderView
+        android:id="@+id/screeningsHeaderView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/titleView" />
+
+    <com.mobile.seats.SeatsView
+        android:id="@+id/seatsView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_standard"
+        app:layout_constraintBottom_toTopOf="@id/continueButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/screeningsHeaderView" />
+
+    <com.mobile.seats.MPProgressButton
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mp_text="@string/continue_button" />
+
+</android.support.constraint.ConstraintLayout>

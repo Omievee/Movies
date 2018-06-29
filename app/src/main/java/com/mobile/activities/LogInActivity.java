@@ -1,5 +1,6 @@
 package com.mobile.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -29,12 +31,16 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.GsonBuilder;
 import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
+import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
+import com.mobile.fragments.WebViewListener;
 import com.mobile.helpers.LogUtils;
+import com.mobile.home.HomeActivity;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
@@ -42,6 +48,8 @@ import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.RestrictionsResponse;
+import com.mobile.responses.SubscriptionStatus;
+import com.moviepass.BuildConfig;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -57,7 +65,7 @@ import retrofit2.Response;
  * Created by anubis on 4/27/17.
  */
 
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements WebViewListener {
 
     @BindView(R.id.input_email)
     EditText mInputEmail;
@@ -403,34 +411,21 @@ public class LogInActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
-
-                    String status = restriction.getSubscriptionStatus();
-                    boolean fbPresent = restriction.getFacebookPresent();
-                    boolean threeDEnabled = restriction.get3dEnabled();
-                    boolean allFormatsEnabled = restriction.getAllFormatsEnabled();
-                    boolean proofOfPurchaseRequired = restriction.getProofOfPurchaseRequired();
-                    boolean hasActiveCard = restriction.getHasActiveCard();
-                    boolean subscriptionActivationRequired = restriction.isSubscriptionActivationRequired();
-
-                    //Setting User Preferences When User Logs In
-                    if (!UserPreferences.getRestrictionSubscriptionStatus().equals(status) ||
-                            UserPreferences.getRestrictionFacebookPresent() != fbPresent ||
-                            UserPreferences.getRestrictionThreeDEnabled() != threeDEnabled ||
-                            UserPreferences.getRestrictionAllFormatsEnabled() != allFormatsEnabled ||
-                            UserPreferences.getProofOfPurchaseRequired() != proofOfPurchaseRequired ||
-                            UserPreferences.getRestrictionHasActiveCard() != hasActiveCard ||
-                            UserPreferences.getIsSubscriptionActivationRequired() != subscriptionActivationRequired) {
-
-                        UserPreferences.setRestrictions(status, fbPresent, threeDEnabled, allFormatsEnabled, proofOfPurchaseRequired, hasActiveCard, subscriptionActivationRequired);
-                    }
+                    UserPreferences.setRestrictions(restriction);
 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
-                    if (restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.MISSING) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED) ||
-                            restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equalsIgnoreCase(Constants.ENDED_FREE_TRIAL)) {
-                        Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
-                        UserPreferences.clearUserId();
+                    if (restriction.getSubscriptionStatus().equals(SubscriptionStatus.MISSING)
+                     || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
+                            restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equals(SubscriptionStatus.ENDED_FREE_TRIAL)) {
                         progress.setVisibility(View.GONE);
+                        hideKeyboard();
+                        if(restriction.getCanReactivate().getCancelledWithinTimeframe()){
+                            reactivationDialog();
+                        } else {
+                            UserPreferences.clearUserId();
+                            Toast.makeText(LogInActivity.this, "You don't have an active subscription", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Crashlytics.setUserIdentifier(String.valueOf(UserPreferences.getUserId()));
                         if (!UserPreferences.getHasUserLoggedInBefore()) {
@@ -438,19 +433,22 @@ public class LogInActivity extends AppCompatActivity {
                             Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
                             startActivity(i);
                         } else {
-                            Intent i = new Intent(LogInActivity.this, MoviesActivity.class);
+                            Intent i = new Intent(LogInActivity.this, HomeActivity.class);
                             i.putExtra("launch", true);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(i);
                         }
 //                        progress.setVisibility(View.GONE);
 //                        finish();
+                        progress.setVisibility(View.GONE);
                     }
                 } else {
                     try {
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
                         LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
+                        UserPreferences.clearUserId();
                     } catch (Exception e) {
 
                     }
@@ -462,6 +460,32 @@ public class LogInActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void reactivationDialog(){
+        ReactivateDialog.newInstance("","").show(getSupportFragmentManager(),"reactivation");
+    }
+
+    public void openWebVIew(){
+        progress.setVisibility(View.VISIBLE);
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right);
+        WebViewFragment web = WebViewFragment.Companion.newInstance(BuildConfig.REACTIVATION_URL);
+        transaction.replace(R.id.fragmentContainer, web);
+        transaction.addToBackStack("");
+        transaction.commit();
+
+        progress.setVisibility(View.GONE);
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
@@ -502,5 +526,13 @@ public class LogInActivity extends AppCompatActivity {
             alert = builder.create();
             alert.show();
         }
+    }
+
+    @Override
+    public void onDoneWithWebview() {
+        Intent i = new Intent(LogInActivity.this, HomeActivity.class);
+        i.putExtra("launch", true);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }

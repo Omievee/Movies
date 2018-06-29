@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetBottom="@dimen/margin_standard"
+    android:insetLeft="@dimen/margin_standard"
+    android:insetRight="@dimen/margin_standard"
+    android:insetTop="@dimen/margin_standard">
+
+    <bitmap android:src="@drawable/filmreel1" />
+
+</inset>

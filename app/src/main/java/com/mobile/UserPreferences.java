@@ -3,8 +3,16 @@ package com.mobile;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.support.constraint.ConstraintLayout;
 
-import com.helpshift.util.HelpshiftContext;
+import com.google.gson.GsonBuilder;
+import com.mobile.history.model.ReservationHistory;
+import com.mobile.model.Movie;
+import com.mobile.model.ScreeningToken;
+import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.responses.UserInfoResponse;
+
+import java.util.Calendar;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +48,18 @@ public class UserPreferences {
         editor.apply();
     }
 
+
+    public static void setUserHasSeenCardActivationScreen(boolean cardScreen) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putBoolean(Constants.CARD_ACTIVATED_SCREEN, cardScreen);
+        editor.apply();
+    }
+
+    public static boolean getHasUserSeenCardActivationScreen() {
+        return sPrefs.getBoolean(Constants.CARD_ACTIVATED_SCREEN, false);
+    }
+
+
     public static void verifyAndroidIDFirstRun(boolean isAndroidIDVerified) {
         SharedPreferences.Editor edit = sPrefs.edit();
         edit.putBoolean(Constants.IS_ANDROID_ID_VERIFIED, isAndroidIDVerified);
@@ -54,6 +74,12 @@ public class UserPreferences {
     public static void saveAAID(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.AAID, id);
+        editor.apply();
+    }
+
+    public static void updateEmail(String email) {
+        SharedPreferences.Editor editor = sPrefs.edit();
+        editor.putString(Constants.USER_EMAIL, email);
         editor.apply();
     }
 
@@ -90,11 +116,12 @@ public class UserPreferences {
     }
 
 
-    public static String getUserCredentials() {
-        return sPrefs.getString(Constants.ONE_DEVICE_ID, "ODID");
+    public static @Nullable
+    String getOneDeviceId() {
+        return sPrefs.getString(Constants.ONE_DEVICE_ID, null);
     }
 
-    public static void setOneDeviceId(String id){
+    public static void setOneDeviceId(String id) {
         SharedPreferences.Editor editor = sPrefs.edit();
         editor.putString(Constants.ONE_DEVICE_ID, id);
         editor.apply();
@@ -127,14 +154,10 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public static void setLocation(String cityAndState, String zipCode, double lat, double lng, boolean isLocationUserDefined, boolean isSubscriptionActivationRequired) {
+    public static void setLocation(double lat, double lng) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.CITY_AND_STATE, cityAndState);
         editor.putLong(Constants.PREFS_LATITUDE, Double.doubleToRawLongBits(lat));
         editor.putLong(Constants.PREFS_LONGITUDE, Double.doubleToRawLongBits(lng));
-        editor.putString(Constants.ZIP_CODE, zipCode);
-        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, isSubscriptionActivationRequired);
-        editor.putBoolean(Constants.IS_LOCATION_USER_DEFINED, isLocationUserDefined);
         editor.apply();
     }
 
@@ -150,29 +173,26 @@ public class UserPreferences {
     public static void clearEverything() {
         boolean logIn = getHasUserLoggedInBefore();
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.clear().commit();
+        editor.clear().apply();
 
         hasUserLoggedInBefore(logIn);
     }
 
-    public static void setLastCheckInAttempt(String date, String time) {
+    public static void setLastCheckInAttemptDate() {
         SharedPreferences.Editor editor = sPrefs.edit();
-        String dateKey, timeKey;
-        dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
-        timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
-        editor.putString(dateKey, date);
-        editor.putString(timeKey, time);
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + getUserId();
+        editor.putLong(dateKey, System.currentTimeMillis());
         editor.apply();
     }
 
-    public static String getLastCheckInAttemptDate() {
-        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATE + "_" + getUserId();
-        return sPrefs.getString(dateKey, "0");
-    }
-
-    public static String getLastCheckInAttemptTime() {
-        String timeKey = Constants.LAST_CHECK_IN_ATTEMPT_TIME + "_" + getUserId();
-        return sPrefs.getString(timeKey, "0");
+    public static @Nullable
+    Long getLastCheckInAttemptDate() {
+        String dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + getUserId();
+        long val = sPrefs.getLong(dateKey, -1);
+        if (val == -1) {
+            return null;
+        }
+        return val;
     }
 
     public static Location getLocation() {
@@ -210,16 +230,15 @@ public class UserPreferences {
         return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true);
     }
 
-    public static void setRestrictions(String status, boolean fb, boolean threeDEnabled, boolean allFormatsEnabled,
-                                       boolean proofOfPurchaseRequired, boolean hasActiveCard, boolean subscriptionRequired) {
+    public static void setRestrictions(MicroServiceRestrictionsResponse it) {
         SharedPreferences.Editor editor = sPrefs.edit();
-        editor.putString(Constants.SUBSCRIPTION_STATUS, status);
-        editor.putBoolean(Constants.FB_PRESENT, fb);
-        editor.putBoolean(Constants.THREE_D_ENABLED, threeDEnabled);
-        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, allFormatsEnabled);
-        editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, proofOfPurchaseRequired);
-        editor.putBoolean(Constants.ACTIVE_CARD, hasActiveCard);
-        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, subscriptionRequired);
+        editor.putString(Constants.SUBSCRIPTION_STATUS, it.getSubscriptionStatus().toString());
+        editor.putBoolean(Constants.FB_PRESENT, it.getFacebook());
+        editor.putBoolean(Constants.THREE_D_ENABLED, it.getHas3d());
+        editor.putBoolean(Constants.ALL_FORMATS_ENABLED, it.getHasAllFormats());
+        editor.putBoolean(Constants.PROOF_OF_PUCHASE_REQUIRED, it.getProofOfPurchaseRequired());
+        editor.putBoolean(Constants.ACTIVE_CARD, it.getHasActiveCard());
+        editor.putBoolean(Constants.IS_SUBSCRIPTION_ACTIVATION_REQUIRED, it.getSubscriptionActivationRequired());
         editor.apply();
     }
 
@@ -279,8 +298,107 @@ public class UserPreferences {
         return sPrefs.getString(Constants.FB_TOKEN, "token");
     }
 
-    public static void helpshift() {
-        HelpshiftContext.getCoreApi().login(String.valueOf(UserPreferences.getUserId()), UserPreferences.getUserName(), UserPreferences.getUserEmail());
+    public static void saveReservation(ScreeningToken reservation) {
+        if (reservation != null) {
+            String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
+            String gson = new GsonBuilder().create().toJson(reservation);
+            sPrefs.edit().putString(key, gson).apply();
+        }
     }
 
+    public static void saveBilling(UserInfoResponse userPreferences) {
+        if (userPreferences != null) {
+            String key = Constants.BILLING + "_" + getUserId();
+            String gson = new GsonBuilder().create().toJson(userPreferences);
+            sPrefs.edit().putString(key, gson).apply();
+        }
+    }
+
+    public static void saveLastReservationPopInfo(int reservationId) {
+            sPrefs.edit().putInt(Constants.RESERVATION_ID, reservationId).apply();
+    }
+
+    public static int getLastReservationPopInfo() {
+        return sPrefs.getInt(Constants.RESERVATION_ID, 0);
+    }
+
+    public static UserInfoResponse getBilling() {
+        String key = Constants.BILLING + "_" + getUserId();
+        String billing = sPrefs.getString(key, null);
+        if (billing != null) {
+            try {
+                return new GsonBuilder().create().fromJson(billing, UserInfoResponse.class);
+            } catch (Exception ignored) {
+
+            }
+        }
+        return null;
+    }
+
+    public static String getZipCode() {
+        return sPrefs.getString(Constants.ZIP_CODE, null);
+    }
+
+    public static void setZipCode(String zip) {
+         sPrefs.edit().putString(Constants.ZIP_CODE, zip).apply();
+    }
+
+    public static ScreeningToken getLastReservation() {
+        String key = Constants.LAST_CHECK_IN_RESERVATION + "_" + getUserId();
+        String reservation = sPrefs.getString(key, null);
+        if (reservation != null) {
+            try {
+                return new GsonBuilder().create().fromJson(reservation, ScreeningToken.class);
+            } catch (Exception ignored) {
+
+            }
+        }
+        return null;
+    }
+
+    public static void saveTheatersLoadedDate() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS, dayOfYear).apply();
+    }
+
+    public static void saveHistoryLoadedDate() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_HISTORY, dayOfYear).apply();
+    }
+
+
+    public static boolean isHistoryLoadedToday() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        return sPrefs.getInt(Constants.LAST_DOWNLOADED_HISTORY, -1) == dayOfYear;
+    }
+
+    public static void setTotalMoviesSeen(int totalMoviesSeen) {
+        sPrefs
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN + "_" + getUserId(), totalMoviesSeen).apply();
+    }
+
+    public static void setTotalMoviesSeenLast30Days(int totalMoviesSeenLast30Days) {
+        sPrefs
+                .edit().putInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + getUserId(), totalMoviesSeenLast30Days).apply();
+    }
+
+    public static void setLastMovieSeen(ReservationHistory movie) {
+        sPrefs
+                .edit().putString(Constants.LAST_MOVIE_SEEN + "_" + getUserId(), movie.getTitle()).apply();
+    }
+
+    public static int getTotalMovieSeen() {
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN + "_" + getUserId(), -1);
+    }
+
+    public static int getTotalMovieSeenLastMonth() {
+        return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + getUserId(), -1);
+    }
+
+    public static String getLastMovieSeen() {
+        return sPrefs.getString(Constants.LAST_MOVIE_SEEN + "_" + getUserId(), null);
+    }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cd_back_button">Back Button</string>
+    <string name="cd_movie_poster">Movie Poster</string>
+    <string name="cd_info_icon">Convenience Fee Info</string>
+</resources>

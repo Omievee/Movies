@@ -14,4 +14,5 @@ public interface ProfileActivityInterface {
     void openChangePassword();
     void openProfileAccountInformationFragment();
     void logOutUserAfterCancellation();
+    void openChangeEmail();
 }

@@ -1,15 +1,12 @@
 package com.mobile.adapters;
 
-import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -19,17 +16,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
-import com.mobile.Constants;
 import com.mobile.Interfaces.AfterSearchListener;
-import com.mobile.activities.MovieActivity;
 import com.mobile.model.Movie;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmList;
 
@@ -99,10 +88,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
         holder.image.setController(controller);
 
         holder.cardView.setOnClickListener(view -> {
-            listener.getSearchString();
-            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
-            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
-            holder.itemView.getContext().startActivity(movieIntent);
+            listener.getSearchString(suggestion);
         });
 
     }
@@ -116,69 +102,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
     public int getItemCount() {
         return moviesArrayList.size();
     }
-
-//    public SearchAdapter(LayoutInflater inflater) {
-//        super(inflater);
-//    }
-//
-//    public SearchAdapter(LayoutInflater inflater, AfterSearchListener listener) {
-//        super(inflater);
-//        this.listener = listener;
-//    }
-
-//    @Override
-//    public void onBindSuggestionHolder(Movie suggestion, SuggestionHolder holder, int position) {
-//        holder.title.setText(suggestion.getTitle());
-//        holder.rating.setText("Rated " + suggestion.getRating());
-//        int t = suggestion.getRunningTime();
-//        int hours = t / 60; //since both are ints, you get an int
-//        int minutes = t % 60;
-//        if (t == 0) {
-//            holder.runTime.setVisibility(View.GONE);
-//        } else if (hours > 1) {
-//            String translatedRunTime = hours + " hours " + minutes + " minutes";
-//            holder.runTime.setText(translatedRunTime);
-//        } else {
-//            String translatedRunTime = hours + " hour " + minutes + " minutes";
-//            holder.runTime.setText(translatedRunTime);
-//        }
-//
-//        final Uri imgUrl = Uri.parse(suggestion.getImageUrl());
-//        holder.image.setImageURI(imgUrl);
-//        holder.image.getHierarchy().setFadeDuration(500);
-//
-//        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
-//                .setProgressiveRenderingEnabled(true)
-//                .build();
-//
-//        DraweeController controller = Fresco.newDraweeControllerBuilder()
-//                .setImageRequest(request)
-//                .setControllerListener(new BaseControllerListener<ImageInfo>() {
-//                    @Override
-//                    public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
-//                        super.onFinalImageSet(id, imageInfo, animatable);
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String id, Throwable throwable) {
-//                        holder.image.setImageURI(imgUrl + "/original.jpg");
-//                    }
-//                })
-//                .build();
-//
-//        holder.image.setController(controller);
-//
-//        holder.cardView.setOnClickListener(view -> {
-//            listener.getSearchString();
-//            Intent movieIntent = new Intent(holder.itemView.getContext(), MovieActivity.class);
-//            movieIntent.putExtra(MovieActivity.MOVIE, Parcels.wrap(suggestion));
-//            holder.itemView.getContext().startActivity(movieIntent);
-//        });
-//
-//    }
-
-
 
     public class SuggestionHolder extends RecyclerView.ViewHolder {
         protected TextView title;
@@ -197,47 +120,4 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
         }
     }
 
-
-//    @Override
-//    public Filter getFilter() {
-//        return new Filter() {
-//            @Override
-//            protected FilterResults performFiltering(CharSequence charSequence) {
-//                FilterResults results = new FilterResults();
-//                String movieSearch = charSequence.toString();
-//                boolean isMovieDuplicated = false;
-//                if (movieSearch.equals("")) {
-//                    suggestions = suggestions_clone;
-//                } else {
-//                    suggestions = new ArrayList<>();
-//                    for (Movie movieTitle : suggestions_clone) {
-//                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
-//                            for (Movie movieDuplicate : suggestions) {
-//                                if (movieDuplicate.getId() == movieTitle.getId()) {
-//                                    isMovieDuplicated = true;
-//                                }
-//
-//                            }
-//                            if (isMovieDuplicated == false)
-//                                suggestions.add(movieTitle);
-//                        }
-//                    }
-//                }
-//                results.values = suggestions;
-//                LogUtils.newLog(Constants.TAG, "performFiltering: "+results.values);
-//
-//                return results;
-//            }
-//
-//            @Override
-//            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-//                suggestions = (List<Movie>) filterResults.values;
-//                notifyDataSetChanged();
-//            }
-//        };
-//
-//    }
-
-
 }
-

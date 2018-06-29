@@ -4,15 +4,27 @@
     android:layout_height="wrap_content"
     android:background="@color/test_blue">
 
+    <TextView
+        android:id="@+id/movieTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
 
     <TextView
         android:id="@+id/VerificationMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/movieTitle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_standard"
-        android:padding="@dimen/margin_standard"
         android:lineSpacingExtra="5dp"
+        android:padding="@dimen/margin_standard"
         android:text="In order to proceed, you must verify your ticket purchase. Please take a picture of your ticket stub. DO NOT SUBMIT A PICTURE OF YOUR RECEIPT."
         android:textAlignment="center"
         android:textColor="@color/white"

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:background="@android:color/transparent"
+        android:text="@string/confirm_details" />
+
+    <ImageView
+        android:id="@+id/backButton"
+        style="@style/BackButton" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton" />
+
+    <com.mobile.seats.MovieScreeningPosterHeader
+        android:id="@+id/moviePosterHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard_and_half"
+        android:layout_marginStart="@dimen/margin_standard_and_half"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/titleView" />
+
+    <TextView
+        android:id="@+id/guestTicketsKey"
+        style="@style/GuestTicketsKey"
+        android:layout_marginStart="@dimen/margin_standard_and_half"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/moviePosterHeader" />
+
+    <com.mobile.seats.GuestTicketsContainer
+        android:id="@+id/guestTicketContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard"
+        app:layout_constraintTop_toBottomOf="@id/guestTicketsKey" />
+    
+    <TextView
+        android:id="@+id/billingCardOnfile"
+        app:layout_constraintBottom_toTopOf="@+id/eTicketCanNotBeCancelled"
+        app:layout_constraintTop_toBottomOf="@id/guestTicketContainer"
+        style="@style/BillingCardOnFile" />
+
+    <TextView
+        android:id="@+id/eTicketCanNotBeCancelled"
+        style="@style/ETicketCanNotBeCancelled"
+        app:layout_constraintBottom_toTopOf="@id/getTickets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.mobile.seats.MPProgressButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/getTickets"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mp_text="@string/get_e_tickets" />
+
+</android.support.constraint.ConstraintLayout>

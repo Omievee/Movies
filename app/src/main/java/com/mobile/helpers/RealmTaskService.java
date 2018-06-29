@@ -11,8 +11,8 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.google.android.gms.gcm.TaskParams;
 import com.mobile.Constants;
+import com.mobile.UserPreferences;
 import com.mobile.model.Movie;
-import com.mobile.model.Theater;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.HistoryResponse;
@@ -20,7 +20,9 @@ import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.LocalStorageTheaters;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -34,15 +36,11 @@ import retrofit2.Response;
 
 public class RealmTaskService extends GcmTaskService {
 
-
-    private static final String GCM_REPEAT_HISTORY_TAG = "repeat|[14400,0]";
     private Realm tRealm;
-    Realm historyRealm;
     Realm moviesRealm;
     Realm allMoviesRealm;
     RealmConfiguration config;
     RealmConfiguration allMoviesConfig;
-    RealmConfiguration historyConfig;
 
     public static final String GCM_REPEAT_TAG = "repeat|[7200,0]";
     private static final String GCM_REPEAT_THEATER_TAG = "repeat|[86400,0]";
@@ -72,15 +70,6 @@ public class RealmTaskService extends GcmTaskService {
                 @Override
                 public void run() {
                     getTheatersBucket();
-                }
-            });
-        }
-
-        if (taskParams.getTag().equals(GCM_REPEAT_HISTORY_TAG)) {
-            h.post(new Runnable() {
-                @Override
-                public void run() {
-                    getHistory();
                 }
             });
         }
@@ -141,33 +130,6 @@ public class RealmTaskService extends GcmTaskService {
         }
     }
 
-    public static void scheduleRepeatTaskCheckHistory(Context context) {
-        try {
-            PeriodicTask periodic = new PeriodicTask.Builder()
-                    //specify target service - must extend GcmTaskService
-                    .setService(RealmTaskService.class)
-                    //repeat x seconds
-                    .setPeriod(14400)
-                    //specify how much earlier the task can be executed (in seconds)
-                    .setFlex(3600)
-                    //tag that is q unique to this task (can be used to cancel task)
-                    .setTag(GCM_REPEAT_HISTORY_TAG)
-                    //whether the task persists after device reboot
-                    .setPersisted(true)
-                    //set required network state, this line is optional
-                    .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
-                    .build();
-
-
-            GcmNetworkManager.getInstance(context).schedule(periodic);
-            LogUtils.newLog(Constants.TAG, "repeating history task scheduled");
-        } catch (Exception e) {
-            LogUtils.newLog(Constants.TAG, "scheduling failed");
-            e.printStackTrace();
-        }
-    }
-
-
     void getTheatersBucket() {
         try {
             tRealm = Realm.getDefaultInstance();
@@ -178,25 +140,12 @@ public class RealmTaskService extends GcmTaskService {
                     LocalStorageTheaters locallyStoredTheaters = response.body();
                     if (locallyStoredTheaters != null && response.isSuccessful()) {
 
-                        tRealm.executeTransactionAsync(R -> {
+                        tRealm.executeTransactionAsync(realm -> {
 
-                            for (int j = 0; j < locallyStoredTheaters.getTheaters().size(); j++) {
-                                Theater RLMTH = R.createObject(Theater.class, locallyStoredTheaters.getTheaters().get(j).getId());
-                                RLMTH.setMoviepassId(locallyStoredTheaters.getTheaters().get(j).getMoviepassId());
-                                RLMTH.setTribuneTheaterId(locallyStoredTheaters.getTheaters().get(j).getTribuneTheaterId());
-                                RLMTH.setName(locallyStoredTheaters.getTheaters().get(j).getName());
-                                RLMTH.setAddress(locallyStoredTheaters.getTheaters().get(j).getAddress());
-                                RLMTH.setCity(locallyStoredTheaters.getTheaters().get(j).getCity());
-                                RLMTH.setState(locallyStoredTheaters.getTheaters().get(j).getState());
-                                RLMTH.setZip(locallyStoredTheaters.getTheaters().get(j).getZip());
-                                RLMTH.setDistance(locallyStoredTheaters.getTheaters().get(j).getDistance());
-                                RLMTH.setLat(locallyStoredTheaters.getTheaters().get(j).getLat());
-                                RLMTH.setLon(locallyStoredTheaters.getTheaters().get(j).getLon());
-                                RLMTH.setTicketType(locallyStoredTheaters.getTheaters().get(j).getTicketType());
-                            }
-
+                            realm.copyToRealmOrUpdate(locallyStoredTheaters.getTheaters());
 
                         }, () -> {
+                            UserPreferences.saveTheatersLoadedDate();
                             LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         }, error -> {
                             // Transaction failed and was automatically canceled.
@@ -321,8 +270,8 @@ public class RealmTaskService extends GcmTaskService {
                                 featuredMovie.setTribuneId(localStorageMovies.getFeatured().get(i).getTribuneId());
                                 featuredMovie.setRating(localStorageMovies.getFeatured().get(i).getRating());
                                 featuredMovie.setTeaserVideoUrl(localStorageMovies.getFeatured().get(i).getTeaserVideoUrl());
-
-
+                                featuredMovie.setCreatedAt(localStorageMovies.getFeatured().get(i).getCreatedAt());
+                                featuredMovie.setReleaseDate(localStorageMovies.getFeatured().get(i).getReleaseDate());
                             }
 
 
@@ -380,57 +329,6 @@ public class RealmTaskService extends GcmTaskService {
             });
         } catch (IllegalStateException e) {
 
-        }
-    }
-
-    void getHistory() {
-        try {
-            historyConfig = new RealmConfiguration.Builder()
-                    .name("History.Realm")
-                    .deleteRealmIfMigrationNeeded()
-                    .build();
-
-            historyRealm = Realm.getInstance(historyConfig);
-            historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
-
-            RestClient.getAuthenticated().getReservations().enqueue(new Callback<HistoryResponse>() {
-                @Override
-                public void onResponse(Call<HistoryResponse> call, Response<HistoryResponse> response) {
-                    if (response.isSuccessful()) {
-                        HistoryResponse historyObjects = response.body();
-                        historyRealm.executeTransactionAsync(realm -> {
-                            if (historyObjects != null) {
-
-                                for (int i = 0; i < historyObjects.getReservations().size(); i++) {
-                                    Movie historyList = realm.createObject(Movie.class);
-                                    historyList.setId(historyObjects.getReservations().get(i).getId());
-//                                    historyList.setTeaserVideoUrl(historyObjects.getReservations().get(i).getTeaserVideoUrl());
-                                    historyList.setCreatedAt(historyObjects.getReservations().get(i).getCreatedAt());
-                                    historyList.setImageUrl(historyObjects.getReservations().get(i).getImageUrl());
-//                                    historyList.setLandscapeImageUrl(historyObjects.getReservations().get(i).getLandscapeImageUrl());
-                                    historyList.setRating(historyObjects.getReservations().get(i).getRating());
-                                    historyList.setReleaseDate(historyObjects.getReservations().get(i).getReleaseDate());
-                                    historyList.setRunningTime(historyObjects.getReservations().get(i).getRunningTime());
-                                    historyList.setTheaterName(historyObjects.getReservations().get(i).getTheaterName());
-                                    historyList.setTitle(historyObjects.getReservations().get(i).getTitle());
-                                    historyList.setTribuneId(historyObjects.getReservations().get(i).getTribuneId());
-                                    historyList.setType(historyObjects.getReservations().get(i).getType());
-
-                                }
-
-
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<HistoryResponse> call, Throwable t) {
-
-                }
-            });
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
         }
     }
 

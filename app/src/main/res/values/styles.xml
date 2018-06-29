@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
@@ -8,12 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/dark</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:toolbarStyle">@android:color/transparent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:colorBackground">@color/dark</item>
         <item name="android:windowFullscreen">false</item>
     </style>
 
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -21,19 +25,72 @@
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>
 
-    <style name="MoviePassThemeTransparentStatusBar" parent="AppTheme">
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:background">@color/charcoalGrey</item>
+    </style>
+
+    <style name="TicketReservationTheme" parent="AppTheme">
+
+    </style>
+
+    <style name="MoviePassThemeTransparentStatusBar" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="MoviepassButton">
+        <item name="android:background">@drawable/mpbutton</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+    </style>
+
+
+    <style name="RedMoviepassButton" parent="MoviepassButton">
+        <item name="android:background">@drawable/button_red</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ProgressMPButtonText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/almost_white</item>
+
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
     </style>
 
     <style name="Helpshift.Theme.Base" parent="MyCustomHelpshiftTheme" />
 
     <style name="MyCustomHelpshiftTheme" parent="Helpshift.Theme.Dark">
-        <item name="colorPrimary">@color/charcoalGrey</item>
-        <item name="colorAccent">@color/new_red</item>
+        <item name="colorPrimary">@color/dark2</item>
+        <item name="colorAccent">@color/red</item>
+        <item name="hs__chatBubbleAdminBackgroundColor">@color/white_ish</item>
+        <item name="hs__chatBubbleAdminText">@color/black_text</item>
+        <item name="hs__chatBubbleUserBackgroundColor">@color/gun_metal</item>
+        <item name="hs__chatBubbleUserText">@color/white_ish</item>
+        <item name="hs__composeBackgroundColor">@color/dark2</item>
         <item name="colorPrimaryDark">@color/test_black</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -58,10 +115,18 @@
     <!-- Red theme -->
     <style name="RedTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:background">@color/red</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/red_dark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Style for Alert Dialogs -->
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- SET BUTTON COLOR IN DIALOG BUILDER -->
+        <item name="android:textColor">@color/red_dark</item>
+        <item name="android:textColorPrimary">@color/black_overlay</item>
     </style>
 
     <!-- Style for Alert Dialogs -->
@@ -83,17 +148,17 @@
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:editTextColor">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <!-- <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/charcoal</item>
-    </style> -->
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="spinBars">true</item>
         <item name="color">@android:color/white</item>
     </style>
@@ -102,9 +167,11 @@
         <item name="android:colorControlActivated">@color/white_80_opacity</item>
     </style>
 
-    <style name="text_in_layout_hint_Style">
+    <style name="text_in_layout_hint_Style" parent="TextAppearance.Design.Hint">
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
     </style>
 
     <style name="normal_text_in_layout_Style">
@@ -112,11 +179,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="error_appearance" parent="@android:style/TextAppearance">
+    <style name="error_appearance" parent="TextAppearance.Design.Error">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/new_red</item>
-
-
     </style>
 
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
@@ -124,4 +189,572 @@
         <item name="colorPrimary">@color/test_black</item>
     </style>
 
+    <style name="MaterialSpinner" parent="LoyaltySpinnerItemSet">
+        <item name="ms_arrow_tint">@color/almost_white</item>
+        <item name="ms_background_color">@color/charcoalGrey</item>
+        <item name="ms_hint_color">@color/almost_white</item>
+        <item name="ms_text_color">@color/almost_white</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+    </style>
+
+    <style name="TitleView">
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="autoSizeMinTextSize">9sp</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="fontWeight" tools:targetApi="26">500</item>
+        <item name="android:fontWeight" tools:targetApi="26">500</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
+        <item name="android:layout_height">?android:actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/dark</item>
+        <item name="android:padding">@dimen/margin_half</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LoyaltySpinnerItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingStart">@dimen/margin_half</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:fontWeight" tools:targetApi="o">300</item>
+        <item name="fontWeight" tools:targetApi="o">300</item>
+    </style>
+
+    <style name="LoyaltySpinnerItemSet" parent="LoyaltySpinnerItem">
+        <item name="android:textSize">16sp</item>
+        <item name="fontWeight" tools:targetApi="26">500</item>
+        <item name="android:fontWeight" tools:targetApi="26">500</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">0dp</item>
+    </style>
+
+    <style name="LoyaltyProgramDescription">
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="LoyaltyAddProgramDescription">
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily" tools:targetApi="26">@font/roboto_font</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="TextInputLayout">
+        <item name="colorControlActivated">@color/almost_white</item>
+        <item name="colorControlHighlight">@color/almost_white</item>
+        <item name="colorControlNormal">@color/white_40_opacity</item>
+        <item name="hintTextAppearance">@style/text_in_layout_hint_Style</item>
+        <item name="errorTextAppearance">@style/error_appearance</item>
+        <item name="passwordToggleTint">@color/almost_white</item>
+    </style>
+
+    <style name="TextInputEditText">
+        <item name="android:textColorHint">@color/white_80_opacity</item>
+        <item name="colorControlActivated">@color/white_80_opacity</item>
+        <item name="android:colorControlActivated">@color/white_80_opacity</item>
+        <item name="android:textAppearance">@style/normal_text_in_layout_Style</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:letterSpacing">.15</item>
+        <item name="android:fontFamily" target="26">@font/roboto_font</item>
+        <item name="colorControlNormal">@color/white_40_opacity</item>
+        <item name="android:colorControlNormal">@color/white_40_opacity</item>
+        <item name="colorControlHighlight">@color/white_80_opacity</item>
+        <item name="android:colorControlHighlight">@color/white_80_opacity</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textColorHighlight">@color/white_80_opacity</item>
+        <item name="android:textColorLink">@android:color/transparent</item>
+        <item name="android:backgroundTint">@color/white_40_opacity</item>
+        <item name="backgroundTint">@color/white_40_opacity</item>
+    </style>
+
+    <style name="LoyaltyMyProgramsHeader" parent="LoyaltyProgramDescription">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:paddingStart">@dimen/margin_half</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:text">@string/loyalty_my_loyalty_programs</item>
+    </style>
+
+    <style name="BackButton">
+        <item name="android:layout_width">@dimen/action_bar_size</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:tint">@color/white_ish</item>
+        <item name="android:contentDescription">@string/cd_back_button</item>
+        <item name="android:src">@drawable/iconback</item>
+    </style>
+
+    <style name="CloseButton">
+        <item name="android:layout_width">@dimen/action_bar_size</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:tint">@color/white_ish</item>
+        <item name="android:contentDescription">@string/cd_back_button</item>
+        <item name="android:src">@drawable/close_white</item>
+    </style>
+
+    <style name="ReservationText" parent="@style/RatedText">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RatedText" parent="RatingText">
+        <item name="android:textColor">@color/white_ish_transparent</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RatingText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="MovieTitleText">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="MovieNotSupportedText">
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+    </style>
+
+    <style name="ReservationHeader" parent="ReservationText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="ReservationSubHeader" parent="ReservationText">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ReservationSeats" parent="ReservationText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingBottom">@dimen/margin_standard</item>
+    </style>
+
+    <style name="ReservationDescription" parent="ReservationText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">@dimen/margin_half</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ZipCodeDescription" parent="ReservationDescription">
+        <item name="android:text">@string/reservation_zip_code_description</item>
+    </style>
+
+    <style name="ZipCodeNumberReservation" parent="ReservationDescription">
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="ReservationCode">
+        <item name="android:minWidth">175dp</item>
+        <item name="android:minHeight">70dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/white_ish</item>
+
+        <item name="android:background">@drawable/button_red_outline</item>
+        <item name="android:textAlignment">center</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ReservationCurrent" parent="ReservationText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+        <item name="android:text">@string/reservation_current</item>
+    </style>
+
+    <style name="ticketVerificationBanner" parent="ReservationText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/ticket_verification_banner</item>
+    </style>
+
+    <style name="ReservationCancel" parent="ReservationCurrent">
+        <item name="android:padding">@dimen/margin_half</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+        <item name="android:text">@string/reservation_cancel</item>
+    </style>
+
+    <style name="ReservationBackground">
+        <item name="android:background">@color/test_black</item>
+    </style>
+
+    <style name="ShowtimeButton">
+        <item name="android:background">@drawable/showtime_background</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:textColor">@color/showtime_csl</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="MPText">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textColor">@color/white_ish</item>
+    </style>
+
+    <style name="MPText_Bold" parent="MPText">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MPText_Italic" parent="MPText">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ContinueButton" parent="RedMoviepassButton">
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+        <item name="android:text">@string/continue_button</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="NextButton" parent="ContinueButton">
+        <item name="android:text">@string/next</item>
+    </style>
+
+    <style name="CheckInButton">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:text">@string/check_in_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/red</item>
+        <item name="android:textColor">@color/almost_white</item>
+    </style>
+
+    <style name="TicketVerificationButton" parent="CheckInButton">
+        <item name="android:text">@string/ticket_verification_banner</item>
+
+    </style>
+
+    <style name="DialogFragment">
+        <item name="android:background">@drawable/dialog_fragment_graient</item>
+    </style>
+
+    <style name="DialogFragmentTitleView" parent="TitleView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white_ish</item>
+    </style>
+
+    <style name="DialogFragmentErrorView" parent="TitleView">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="trackTint">@color/track_solid</item>
+        <item name="thumbTint">@color/white</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:background">@color/white_ish</item>
+        <item name="android:alpha">.2</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+    </style>
+
+    <style name="NoMoreScreenings" parent="TitleView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_height">400dp</item>
+        <item name="android:text">@string/screenings_no_more_screenings</item>
+    </style>
+
+    <style name="AddGuestsDescription">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:text">@string/add_guests_descriptions</item>
+        <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingTop">@dimen/margin_half</item>
+        <item name="android:paddingBottom">@dimen/margin_half</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/charcoalGrey</item>
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+    </style>
+
+    <style name="AddGuestEmailDescription" parent="AddGuestsDescription">
+        <item name="android:text">@string/add_guest_emails_description</item>
+    </style>
+
+    <style name="TicketCounterBold" parent="MPText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TicketCounterButton" parent="MPText">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:backgroundTint">@color/red</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:padding">@dimen/more_spacing</item>
+        <item name="android:tint">@color/button_csl</item>
+    </style>
+
+    <style name="TicketCounterSubtract" parent="TicketCounterButton">
+        <item name="android:src">@drawable/icon_subtract</item>
+    </style>
+
+    <style name="TicketCounterAdd" parent="TicketCounterButton">
+        <item name="android:src">@drawable/icon_add</item>
+    </style>
+
+    <style name="TicketConvenienceFee" parent="MPText">
+        <item name="android:text">@string/convenience_fee</item>
+        <item name="android:layout_marginEnd">@dimen/margin_half</item>
+    </style>
+
+    <style name="TicketLegal" parent="MPText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/bring_a_friend_legal</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="InfoIcon">
+        <item name="android:layout_width">23dp</item>
+        <item name="android:padding">1dp</item>
+        <item name="android:layout_height">23dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_half</item>
+        <item name="android:src">@drawable/infoicon2</item>
+        <item name="android:tint">@color/red</item>
+    </style>
+
+    <style name="ETicketCancellationPolicy" parent="MPText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/e_ticket_cancellation_policy</item>
+    </style>
+
+    <style name="TicketTotal" parent="MPText_Bold">
+        <item name="android:layout_marginEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:text">@string/total_empty</item>
+    </style>
+
+    <style name="ETicketCancellationPolicyDescription" parent="MPText">
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_standard_and_half</item>
+        <item name="android:text">@string/e_ticket_cancellation_policy_description</item>
+    </style>
+
+    <style name="FreeGuestPolicy" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+
+    <style name="SeeDetails" parent="ETicketCancellationPolicy">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/see_details</item>
+        <item name="android:background">@color/charcoalGrey</item>
+    </style>
+
+    <style name="SubjectToConvenienceFee" parent="MPText_Italic">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#B2B5B8</item>
+
+    </style>
+
+    <style name="AddUpToXGuests" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard_and_half</item>
+    </style>
+
+    <style name="SofaIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:src">@drawable/icon_seat_red</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard_and_half</item>
+    </style>
+
+    <style name="ScreeningHeaderText" parent="MPText">
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="ScreeningSubHeaderText" parent="ScreeningHeaderText">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ScreeningSeats" parent="ScreeningHeaderText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="ScreeningSelectSeats" parent="ScreeningHeaderText">
+        <item name="android:alpha">.7</item>
+        <item name="android:gravity">end|top</item>
+    </style>
+
+    <style name="ProvideEmails" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="mp_text">@string/provide_emails</item>
+    </style>
+
+    <style name="SeatKeyText" parent="MPText">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ConfirmMovieTitleText" parent="ConfirmDetailsText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ConfirmDetailsText" parent="MPText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TheaterPin">
+        <item name="android:layout_width">26dp</item>
+        <item name="android:layout_height">26dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_half</item>
+        <item name="android:tint">@color/red</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+        <item name="android:src">@drawable/icon_location_pin</item>
+    </style>
+
+    <style name="GuestTicketTotal" parent="MPText_Bold">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="GuestTicketsKey" parent="MPText_Bold">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/guest_tickets</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BottomNav" parent="Widget.Design.BottomNavigationView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:background">@color/dark2</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
+        <item name="menu">@menu/navigation</item>
+        <item name="itemTextColor">@color/drawer_item</item>
+        <item name="itemIconTint">@color/drawer_item</item>
+    </style>
+
+    <style name="HomeActivity" parent="AppTheme">
+
+    </style>
+
+    <style name="ETicketCanNotBeCancelled" parent="MPText_Italic">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
+        <item name="android:text">@string/e_ticket_can_not_be_cancelled</item>
+    </style>
+
+    <style name="ContinueWithoutGuests" parent="MPText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:text">@string/continue_without_guests</item>
+    </style>
+
+    <style name="BillingCardOnFile" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">Your billing card on file will be charged the above amount.</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
 </resources>

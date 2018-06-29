@@ -21,12 +21,16 @@ public class Constants {
     public static final String MOVIE = "movie";
     public static final String TITLE = "title";
     public static final String RESERVATION = "reservation";
+    public static final String RESERVATION_ID = "reservation_id";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
+    public static final String THEATER = "theater";
     public static final String TOKEN = "token";
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";
+    public static final String LAST_DOWNLOADED_THEATERS = "last_dl_theaters";
+    public static final String LAST_DOWNLOADED_HISTORY = "last_dl_history";
     //RESTRICTIONS
     public static final String ACTIVE = "ACTIVE";
     public static final String ACTIVE_FREE_TRIAL = "ACTIVE_FREE_TRIAL";
@@ -42,9 +46,11 @@ public class Constants {
     public final static int REQUEST_CAMERA_CODE = 0;
     public static final int REQUEST_STORAGE_CODE = 2;
     public static final int REQUEST_TICKET_VERIF = 00;
+    public static final int GOOGLE_PLAY_SERVICES_CODE = 1;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
     public static final String IS_ANDROID_ID_VERIFIED = "Android";
+    public static final String CARD_ACTIVATED_SCREEN =  "activated";
     /* TODO REMOVE GENERIC VALUES */
     public static final String USER_ID = "0";
     public static final String DEVICE_ANDROID_ID = "androidID";
@@ -87,9 +93,18 @@ public class Constants {
     //Taplytics Notifs
     public static final String CUSTOM_DATA = "custom_keys";
 
+    //Billing
+    public static final String BILLING = "billing";
+
     //Check In Attempt
-    public static final String LAST_CHECK_IN_ATTEMPT_DATE = "lastCheckInAttemptDate";
-    public static final String LAST_CHECK_IN_ATTEMPT_TIME = "lastCheckInAttemptTime";
+    public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
+    public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInScreening";
+
+    //Movie History Data
+    public static final String TOTAL_MOVIES_SEEN = "totalMoviesSeen";
+    public static final String TOTAL_MOVIES_SEEN_LAST_DAYS = "totalMoviesSeenLast30Days";
+    public static final String LAST_MOVIE_SEEN = "lastMovieSeen";
+
 
     //FIREBASE
     public static final String FIREBASE_TOKEN = "firebase_token";
@@ -100,5 +115,8 @@ public class Constants {
     //TICKET VERIFICATION
     public static final String TICKET_VERIFICATION_FAQ_SECTION = "38";
 
+    public static final double CONVENIENCE_FEE = 1.50;
+    public static final int CONVENIENCE_FEE_CENTS = (int) (CONVENIENCE_FEE * 100);
 
+    public static final int OFFSET = 3232323;
 }

@@ -26,7 +26,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
     <uses-feature
         android:name="android.hardware.WIFI"
         android:required="false" />
@@ -133,7 +132,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mobile.activities.SplashActivity"
+            android:name="com.mobile.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -166,9 +165,22 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.mobile.seats.BringAFriendActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TicketReservationTheme"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="com.mobile.activities.ConfirmationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.mobile.reservation.ReservationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TicketReservationTheme" />
+
         <activity
             android:name="com.mobile.activities.LogInActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
@@ -179,20 +191,10 @@
                 android:screenOrientation="portrait"
                 android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
-        <activity
-            android:name="com.mobile.activities.MovieActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
+
+        <activity android:name="com.mobile.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
-        <activity
-            android:name="com.mobile.activities.MoviesActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -204,7 +206,6 @@
 
                 <data android:scheme="tl-6ea3ea4d" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -214,39 +215,6 @@
             android:label="@string/title_activity_onboarding"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name="com.mobile.activities.ProfileActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
-        <!--<activity-->
-            <!--android:name="com.mobile.activities.ReservationsActivity"-->
-            <!--android:parentActivityName="com.mobile.activities.MoviesActivity"-->
-            <!--android:theme="@style/AppTheme">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:screenOrientation="portrait"-->
-                <!--android:value="com.mobile.activities.MoviesActivity" />-->
-        <!--</activity>-->
-        <activity
-            android:name="com.mobile.activities.SelectSeatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="com.mobile.activities.SettingsActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:screenOrientation="portrait"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
         <activity
             android:name="com.mobile.activities.SignUpFirstOpenActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
@@ -260,43 +228,16 @@
             android:name="com.mobile.activities.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="com.mobile.activities.TheaterActivity"
-            android:parentActivityName="com.mobile.activities.TheatersActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.TheatersActivity" />
-        </activity>
-        <activity
-            android:name="com.mobile.activities.TheatersActivity"
-            android:parentActivityName="com.mobile.activities.MoviesActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:screenOrientation="portrait"
-                android:value="com.mobile.activities.MoviesActivity" />
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="817d4d68505df552813b127d4149583ade2132e1" />
 
-        <activity
-            android:name="com.mobile.activities.EticketConfirmation"
-            android:screenOrientation="portrait" />
         <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
         <activity
             android:name="com.mobile.activities.ActivatedCard_TutorialActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.mobile.fragments.NearMe"
-            android:label="@string/title_activity_near_me" />
-        <!--<activity android:name="com.mobile.activities.MoviePassCardAutoActivate" />-->
         <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
 
         <service
@@ -308,7 +249,6 @@
             </intent-filter>
         </service>
 
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/authority_file_provider"
@@ -318,7 +258,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
         </provider>
-
 
     </application>
 

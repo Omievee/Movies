@@ -9,4 +9,15 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="MPProgressButton">
+        <attr name="mp_text" format="string|reference" />
+        <attr name="mp_textColor" format="color|reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="MPSwitchView">
+        <attr name="mp_text" />
+        <attr name="mp_textColor"/>
+        <attr name="mp_checked" format="boolean|reference" />
+    </declare-styleable>
+
 </resources>

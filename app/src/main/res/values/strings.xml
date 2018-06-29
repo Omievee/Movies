@@ -40,15 +40,14 @@
     <string name="activity_confirmation_seat_selected"> Seat: </string>
 
     <!-- Internet Connection -->
-    <string name="activity_no_internet_error_message">We can\'t reach the network. Please check your internet connection.</string>
+    <string name="activity_no_internet_toast_message">You are offline. Please check your internet connection.</string>
     <string name="activity_no_internet_button">Retry</string>
-    <string name="activity_no_internet_toast_message">The internet connection appears to be offline</string>
 
 
     <!-- MainActivity -->
     <string name="activity_main_mandatory_permissions">You must grant these permissions to use MoviePass</string>
 
-    <!-- MovieActivity -->
+    <!-- MovieFragment -->
     <string name="activity_movie_holder_title">[Title]</string>
     <string name="activity_movie_holder_rating">[Rating]</string>
     <string name="activity_movie_holder_running_time">[### minutes]</string>
@@ -152,6 +151,7 @@
     <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!</string>
 
     <!-- Credit Card Errors-->
+
     <string name="invalid_credit_card_number">Invalid credit card number</string>
     <string name="invalid_exp">Invalid expiration</string>
     <string name="invalid_cvv">Invalid CVV</string>
@@ -196,7 +196,7 @@
     <string name="activity_verification_lost_ticket_title_post">Ticket Verification</string>
     <string name="activity_verification_lost_ticket_message_post">In the future please submit pictures of your ticket stubs. Your account status could be affected if you fail to do so.</string>
     <string name="activity_verification_empty_reason">You must list a reason</string>
-    <string name="pre_pop_dialog">After you purchase your ticket, don\'t forget  to take a picture of the ticket stub. You can submit it any time before your next movie. </string>
+    <string name="pre_pop_dialog">Please take a picture of your ticket stub after using your MoviePass card to get your ticket. Follow the prompt provided to submit a photo of the ticket any time before seeing your next movie with MoviePass. </string>
     <string name="pre_pop_dialog2">Your account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
 
 
@@ -206,6 +206,11 @@
     <!-- Fragments -->
     <!--<PendingReservationFragmentment>&ndash;&gt;-->
     <string name="fragment_history_no_history">Start seeing movies to begin your reservation history</string>
+
+    <!--Ticket Verification-->
+    <string name="ticket_verification_banner">Click here to verify your ticket purchase</string>
+    <string name="ticket_verification_no_redeemed">After you have purchased your ticket with your MoviePass card please take a picture of your ticket stub. You will not be able to proceed in the app or see another movie with MoviePass until doing so.</string>
+    <string name="ticket_verification_redeemed">Before you can proceed in the app or see another movie with MoviePass you must verify your last ticket purchase. Please take a picture of your last movie ticket stub.</string>
 
     <!-- MoviesFragment -->
     <string name="fragment_movies_new_releases">New Releases</string>
@@ -368,6 +373,9 @@
     <!-- UserLocationManagerFused -->
     <string name="user_location_manager_fused_zip_code_empty">Zip code can not be empty.</string>
 
+    <!--Check in-->
+    <string name="check_in_button">Check In</string>
+
     <!-- List Item Movie Poster -->
     <string name="list_item_history_title_placeholder">[Title]</string>
     <string name="list_item_history_theater_placeholder">[Theater]</string>
@@ -454,4 +462,126 @@
     <string name="Policy_two">We begin seating approximately 30 minutes prior to showtime in order to provide food and beverage service before the feature begins. We do not seat late arrivals after the feature begins, so you will not be able to see the show if you are not on time. </string>
     <string name="title_activity_near_me">Map</string>
 
+    <!-- Loyalty -->
+    <string name="loyalty_program_add_loyalty_program">Add loyalty program</string>
+    <string name="loyalty_program_new_title">Add %1$s loyalty program</string>
+    <string name="loyalty_programs_title">Loyalty Programs</string>
+    <string name="loyalty_program_generic_error_title">Error adding the %1$s loyalty program</string>
+    <string name="loyalty_program_sign_in">Sign In</string>
+    <string name="loyalty_program_add_description">Sign into this loyalty program with your membership card number.</string>
+    <string name="loyalty_my_loyalty_programs">My loyalty programs</string>
+    <string name="loyalty_add_a_movie_theater_loyalty_program">Add a movie theater loyalty program to your MoviePass account by selecting a program from the list above.</string>
+
+    <!-- Reservation -->
+    <string name="current_reservation">Current Reservation</string>
+    <plurals name="reservation_code_description">
+        <item quantity="one">Use the code below to redeem your tickets</item>
+        <item quantity="many">Use the code below to redeem all of the tickets in this reservation.</item>
+        <item quantity="other">Use the code below to redeem all of the tickets in this reservation.</item>
+    </plurals>
+    <string name="reservation_code_description">Use the code below to redeem your tickets</string>
+    <string name="reservation_current">This code can also be found in your account under “Current Reservation”</string>
+    <string name="reservation_cancel">Cancel/Change Check-In</string>
+    <string name="reservation_use_card_description">You can now use your MoviePass card to purchase your ticket!</string>
+
+    <plurals name="seat">
+        <item quantity="one">Seat</item>
+        <item quantity="other">Seats</item>
+        <item quantity="many">Seats</item>
+    </plurals>
+
+    <!-- Screenings -->
+    <string name="reservation_zip_code_description">If asked, provide this zip code:</string>
+    <string name="reservation_description">You have 30 minutes to use your MoviePass card to purchase your ticket!</string>
+    <string name="screening_already_seen">You\'ve already seen this movie.</string>
+    <string name="screening_rating">Rated</string>
+    <string name="screenings_no_more_screenings">There are no more screenings at this theater today</string>
+    <string name="screening_unlisted_showtime">Unlisted Showtime</string>
+    <string name="screening_unlisted_showtime_desc">Click here to check in to a movie that is playing at this theater, but isn\'t appearing on the app.</string>
+    <string name="screening_premium">This premium screening is not supported</string>
+
+    <!-- Bring A Friend-->
+    <string name="add_guests_title">Add Guests</string>
+    <string name="add_guests_descriptions">Your guests may be eligible for a FREE ticket if they join MoviePass!</string>
+    <string name="add_guests_subject_to_convenience_fee">(subject to convenience fee)</string>
+    <string name="convenience_fee">Convenience Fee:</string>
+    <string name="bring_a_friend_legal">You will be charged the listed ticket price for every guest that does <b><i>not</i></b> subscribe to MoviePass.</string>
+    <string name="e_ticket_cancellation_policy">E-Ticket Cancellation Policy</string>
+    <string name="continue_button">Continue</string>
+    <string name="total">Total:  %1$s</string>
+    <string name="total_empty">Total: $0.00</string>
+    <string name="convenience_fee_empty">$0.00</string>
+    <string name="convenience_fee_title">Convenience Fee</string>
+    <string name="convenience_fee_message">A %1$s convenience fee is charged for each guest in your reservation. Convenience fees are non-refundable.</string>
+    <string name="e_ticket_cancellation_policy_description">At this time e-tickets can’t be cancelled or changed. There are no refunds for guest tickets.\n\nBe sure this is the movie, showtime and theater you want to attend before completing the checkout process.</string>
+    <string name="e_ticket_cancellation_dialog_body">You can cancel e-tickets up until 5 minutes before showtime and receive a refund on all guest tickets.\n\n<b>Guest convenience fees are not refundable.</b></string>
+    <string name="see_details">See Details</string>
+    <string name="free_guest_policy">Free Guest Policy</string>
+    <string name="free_guest_policy_description">Guests must be at least 18 years of age and must not be current or former MoviePass members to qualify. Each guest for whom you provide an email address will be sent an email with information on how to sign up for MoviePass.\n\nYou earn reimbursement of the ticket price for each qualified guest who signs up for MoviePass within 24 hours after the showtime of the movie to which you invited them, and activates their MoviePass account (by activating their MoviePass card upon receipt or by using the MoviePass app to check into a supported e–ticketing theater, whichever occurs first). Both steps are required.\n\nReimbursement (excluding the non–refundable $1.50 ticket convenience fee) will be applied to your card within about 3–5 business days after the guest activates their new MoviePass account.\n\nNo responsibility is assumed for undeliverable emails to guests due to improper email address, prior opt-out by the guest from commercial emails from MoviePass, or any other reason.  Offer valid only for limited screenings at participating theaters. Maximum four (4) guests per reservation. MoviePass reserves the right to terminate any promotional offer at any time.</string>
+    <string name="choose_seats">Choose Seats</string>
+    <string name="are_you_sure_exit">Are you sure you want to exit?</string>
+    <string name="exit_checkout">Exit Checkout</string>
+    <string name="stay">Stay</string>
+    <string name="add_guests">Add Guests</string>
+    <string name="continue_without_guests">Continue without guests</string>
+    <string name="add_guest_emails">Guest Emails</string>
+    <string name="add_guest_emails_description">Guests 18 years of age or older will be sent email instructions on how to sign up for MoviePass. You will be reimbursed the ticket price (excluding convenience fee) for each guest who signs up within 24 hours after the movie’s showtime and then activates their account.</string>
+    <string name="provide_emails">Would you like to send this promotion to your guests?</string>
+    <string name="guest_email_hint">Guest %1$d Email</string>
+    <string name="already_moviepass_member">Already a MoviePass member</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="available">Available</string>
+    <string name="reserved">Reserved</string>
+    <string name="tickets">%1$s Tickets:</string>
+    <string name="x">x</string>
+    <string name="free_guest_convenience">$1.50 convenience fee applies per guest ticket</string>
+    <string name="seats_scroll_around">*scroll around to see more seats</string>
+    <string name="get_e_tickets">Get E-Tickets</string>
+    <string name="duplicate_emails">The following guests are current or  former MoviePass members, or on our do-not-email list. No reimbursements can be applied for these guests:\n\n</string>
+    <string name="available_seats">Available Seats</string>
+    <string name="eighteen_acknowledgement">I acknowledge that all of the above guests are 18 years of age or older.</string>
+    <string name="confirm_details">Confirm Details</string>
+    <string name="guest_tickets">Guest Tickets:</string>
+    <plurals name="add_up_to_x">
+        <item quantity="many">You can add up to %1$d guests</item>
+        <item quantity="one">You can add up to %1$d guest</item>
+        <item quantity="other">You can add up to %1$d guests</item>
+    </plurals>
+    <plurals name="seats">
+        <item quantity="many">Seats</item>
+        <item quantity="one">Seat</item>
+        <item quantity="other">Seats</item>
+    </plurals>
+    <plurals name="select_seats">
+        <item quantity="many">Select %1$d seats</item>
+        <item quantity="one">Select %1$d seat</item>
+        <item quantity="other">Select %1$d seats</item>
+    </plurals>
+    <plurals name="select_seats_over">
+        <item quantity="many">Please only select $1$d seats</item>
+        <item quantity="other">Please only select $1$d seats</item>
+        <item quantity="one">Please only select $1$d seat</item>
+    </plurals>
+    <string name="next">Next</string>
+    <string name="choose_seats_error">You must choose seats for all tickets in the reservation before proceeding</string>
+    <string name="cd_movie_screen">Movie Screen Front</string>
+    <string name="eighteen_acknowledgement_error">You must acknlowedge that all emails belong to guests 18 years of age or older.</string>
+    <string name="restrictions_apply_see_details">Restrictions apply. See details.</string>
+    <string name="if_asked_provide_zip">If asked, provide this zip code:</string>
+    <string name="e_ticket_can_not_be_cancelled">Before continuing, be aware that e-tickets can not be  canceled or changed.</string>
+
+
+    <string name="gps_enable">In order to use the MoviePass app please enable location services in your phone’s settings.</string>
+    <string name="no_theaters">There are no more screenings at this theater today</string>
+    <string name="GPS_off_enable">Enable location services</string>
+    <string name="no_longer_authorized">This device is no longer authorized.</string>
+    <string name="activate_your_moviepass_card">Activate your MoviePass card</string>
+    <string name="e_ticket_cancellation_policy_modal">Be sure this is the movie, showtime, and theater you want to attend before proceeding.</string>
+    <string name="e_ticket_cancellation_policy_modal_title">E-tickets can\'t be cancelled or changed.</string>
+    <string name="no_ticket_stub_message">Please describe what went wrong with your ticket verification process.</string>
+    <string name="no_ticket_stub_title">Don’t have your ticket stub?</string>
+    <string name="open_help_title">Help</string>
+    <string name="ticket_verification_no_receipt_ticket">DO NOT TAKE A PICTURE OF YOUR RECEIPT</string>
+    <string name="submit_button">Submit</string>
 </resources>

@@ -2,6 +2,7 @@
 <resources>
 
     <color name="red">#c82229</color>
+    <color name="red_disabled">#ccc82229</color>
     <color name="transparentRed">#40c82229</color>
     <color name="red_light">#ff5b52</color>
     <color name="red_dark">#8f0000</color>
@@ -33,6 +34,8 @@
     <!--TODO: DARKER COLORS?-->
     <color name="test_blue">#14171b</color>
     <color name="test_black">#202b36</color>
+    <color name="test_black_30_opacity">#65040000</color>
+    <color name="test_black_transparent">#55202b36</color>
     <!--<color name="test_black">#0e1013</color>-->
 
 
@@ -42,7 +45,8 @@
     <color name="TRUEBLACK">#000000</color>
 
 
-    <color name="white_ish">#f7f7f7</color>
+    <color name="white_ish">@color/almost_white</color>
+    <color name="white_ish_transparent">#eef7f7f7</color>
     <color name="pinkish_gray">#d1d1d1</color>
 
     <color name="gray_icon">#7F7F7F</color>

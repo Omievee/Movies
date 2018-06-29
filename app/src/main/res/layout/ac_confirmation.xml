@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/test_black">
 
     <ScrollView
@@ -200,10 +202,11 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/E_TICKET"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                tools:visibility="visible"
                 android:layout_below="@id/PENDING_DATA"
                 android:visibility="gone">
 
@@ -218,12 +221,22 @@
                     android:textColor="@color/almost_white"
                     android:textSize="@dimen/text_size_16" />
 
+                <com.mobile.barcode.BarcodeLayout
+                    android:layout_width="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/E_Ticket_MSG"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/ConfirmCode"
+                    app:layout_constraintDimensionRatio="1:1"
+                    android:layout_height="0dp"/>
+
                 <TextView
                     android:id="@+id/ConfirmCode"
                     android:layout_width="175dp"
                     android:layout_height="70dp"
                     android:layout_below="@id/E_Ticket_MSG"
-                    android:layout_centerHorizontal="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="@dimen/quadruple_margin_standard"
                     android:background="@drawable/confirm"
                     android:gravity="center"
@@ -245,7 +258,7 @@
                     android:textSize="@dimen/text_size_16" />
 
 
-            </RelativeLayout>
+            </android.support.constraint.ConstraintLayout>
 
 
         </RelativeLayout>
@@ -361,16 +374,6 @@
 
 
     </RelativeLayout>
-
-
-    <include
-        android:id="@+id/CONFIRMED_BOTTOMNAV"
-        layout="@layout/element_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="visible" />
-
 
     <include
         android:id="@+id/confirm_progress"

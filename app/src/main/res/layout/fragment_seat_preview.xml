@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:text="@string/available_seats" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton" />
+
+    <com.mobile.seats.SeatsView
+        android:id="@+id/seatsView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent  "
+        app:layout_constraintTop_toBottomOf="@id/titleView" />
+
+</android.support.constraint.ConstraintLayout>

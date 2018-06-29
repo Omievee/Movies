@@ -3,6 +3,7 @@ package com.mobile.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.moviepass.R;
 
@@ -43,6 +43,8 @@ public class LegalFragment extends Fragment {
 
         webView = view.findViewById(R.id.Web);
         webView.getSettings().setJavaScriptEnabled(true);
+
+
         privacyPolicy = view.findViewById(R.id.PP);
         ToS = view.findViewById(R.id.TOS);
 

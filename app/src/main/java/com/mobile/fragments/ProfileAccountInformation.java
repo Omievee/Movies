@@ -1,7 +1,5 @@
 package com.mobile.fragments;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
@@ -22,13 +18,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileAccountInformation extends android.app.Fragment {
+public class ProfileAccountInformation extends MPFragment {
 
-    private ProfileActivityInterface mListener;
-    private Context context;
     private View rootView, progress;
     private TextView userName,userEmail,moviePassCard;
     private UserInfoResponse userInfoResponse;
+    private TextView changeEmail;
 
     public ProfileAccountInformation() {
         // Required empty public constructor
@@ -50,11 +45,17 @@ public class ProfileAccountInformation extends android.app.Fragment {
         moviePassCard = rootView.findViewById(R.id.MPCardNum);
         progress = rootView.findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
+        changeEmail = rootView.findViewById(R.id.changeEmailTextView);
         loadUserInfo();
+
+        changeEmail.setClickable(true);
+        changeEmail.setOnClickListener(v -> {
+            showFragment(new ProfileAccountChangeEmail());
+        });
+
 
         return rootView;
     }
-
 
     private void loadUserInfo() {
         int userId = UserPreferences.getUserId();
@@ -66,10 +67,11 @@ public class ProfileAccountInformation extends android.app.Fragment {
 
                     String firstName = userInfoResponse.getUser().getFirstName();
                     String lastName = userInfoResponse.getUser().getLastName();
-                    String email = userInfoResponse.getEmail();
+                    String email = userInfoResponse.getUser().getEmail();
 
                     userName.setText(firstName + " " + lastName);
                     userEmail.setText(email);
+                    android.util.Log.d(Constants.TAG, "onResponse: EMAIL "+email);
 
                     moviePassCard.setText(userInfoResponse.getMoviePassCardNumber());
 
@@ -81,44 +83,9 @@ public class ProfileAccountInformation extends android.app.Fragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                mListener.closeFragment();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.context = activity;
-
-        if (context instanceof ProfileActivityInterface) {
-            mListener = (ProfileActivityInterface) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement ProfileActivityInterface");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        this.context = null;
     }
 
 }

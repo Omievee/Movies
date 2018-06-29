@@ -15,7 +15,6 @@
         android:visibility="visible"
         fresco:actualImageScaleType="centerCrop" />
 
-
     <FrameLayout
         android:id="@+id/videoFrameLayout"
         android:layout_width="match_parent"
@@ -32,23 +31,11 @@
             app:use_controller="false" />
 
 
-        <TextView
-            android:id="@+id/videoTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="@dimen/double_margin_standard"
-            android:layout_marginStart="@dimen/margin_half"
-            android:elevation="5dp"
-            android:text="Movie Title"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:visibility="gone"
             android:layout_marginBottom="@dimen/margin_half"
             android:layout_marginStart="@dimen/margin_half">
 
@@ -75,6 +62,19 @@
         </RelativeLayout>
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/videoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/margin_half"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:elevation="5dp"
+        android:text="Movie Title"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.jaredrummler.materialspinner.MaterialSpinnerAdapter;
 import com.mobile.Constants;
 import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
+import com.mobile.widgets.MaterialSpinnerSpinnerView;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
@@ -29,6 +31,7 @@ import com.moviepass.R;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
@@ -40,7 +43,7 @@ import retrofit2.Response;
  * Created by anubis on 9/1/17.
  */
 
-public class ProfileCancellationFragment extends android.app.Fragment {
+public class ProfileCancellationFragment extends Fragment {
 
     MaterialSpinner spinnerCancelReason;
     EditText cancelComments;
@@ -68,8 +71,15 @@ public class ProfileCancellationFragment extends android.app.Fragment {
         progress = rootView.findViewById(R.id.progress);
         cancelComments = rootView.findViewById(R.id.CancelComments);
         buttonCancel.setEnabled(false);
-
-        spinnerCancelReason.setItems("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other");
+        spinnerCancelReason
+                .setAdapter(new MaterialSpinnerAdapter<String>(getActivity(), Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        MaterialSpinnerSpinnerView view = new MaterialSpinnerSpinnerView(parent.getContext());
+                        view.bind(getItemText(position));
+                        return view;
+                    }
+                });
         loadUserInfo();
 
         return rootView;

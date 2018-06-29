@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.support.constraint.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/addUpToX"
+        style="@style/AddUpToXGuests" />
+
+    <ImageView
+        android:id="@+id/sofaIcon"
+        style="@style/SofaIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/addUpToX" />
+
+    <com.mobile.seats.TicketCounterContainer
+        android:id="@+id/ticketCounter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard_and_half"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/addUpToX">
+
+        <com.mobile.seats.TicketCounterView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mobile.seats.TicketCounterView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.mobile.seats.TicketCounterView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </com.mobile.seats.TicketCounterContainer>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/convenienceFeeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard_and_half"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/ticketCounter">
+
+        <TextView
+            style="@style/TicketConvenienceFee"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/infoIcon" />
+
+        <ImageView
+            android:id="@+id/infoIcon"
+            style="@style/InfoIcon"
+            app:layout_constraintEnd_toStartOf="@+id/convenienceFee" />
+
+        <TextView
+            android:id="@+id/convenienceFee"
+            style="@style/MPText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/convenience_fee_empty"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="$6.00" />
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/totalTxt"
+        android:layout_marginTop="@dimen/margin_standard"
+        style="@style/TicketTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/convenienceFeeContainer" />
+
+</merge>
