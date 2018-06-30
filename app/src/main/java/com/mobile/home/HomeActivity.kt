@@ -82,6 +82,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
         presenter.onResume()
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
+
     private fun checkGooglePlayServices(): Boolean {
         val context = this
         val googleApiAvailability = GoogleApiAvailability.getInstance()

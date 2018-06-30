@@ -149,4 +149,9 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
     }
+
+    fun onPause() {
+        androidIdDisposable?.dispose()
+        restrictionsDisposable?.dispose()
+    }
 }
