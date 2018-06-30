@@ -13,16 +13,17 @@ import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.RealmList;
 
 public class DynamicMoviesTabAdapter extends RecyclerView.Adapter<DynamicMoviesTabAdapter.ViewHolder> {
 
     //Title List
-    private ArrayList<String> titlesList;
+    private List<String> titlesList;
 
     //Movie List
-    private ArrayList<RealmList<Movie>> moviesList;
+    private List<List<Movie>> moviesList;
 
     //Interface
     private MoviePosterClickListener listener;
@@ -34,7 +35,7 @@ public class DynamicMoviesTabAdapter extends RecyclerView.Adapter<DynamicMoviesT
      * @param moviesList - Movies on each section
      * @param listener   - Interface
      */
-    public DynamicMoviesTabAdapter(ArrayList<String> titlesList, ArrayList<RealmList<Movie>> moviesList, MoviePosterClickListener listener) {
+    public DynamicMoviesTabAdapter(List<String> titlesList, List<List<Movie>> moviesList, MoviePosterClickListener listener) {
         this.titlesList = titlesList;
         this.moviesList = moviesList;
         this.listener = listener;

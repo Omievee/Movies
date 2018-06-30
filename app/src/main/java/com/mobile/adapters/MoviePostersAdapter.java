@@ -24,6 +24,8 @@ import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
@@ -39,13 +41,13 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
     private int dynamicListPosition;
 
     //Movie List
-    private RealmList<Movie> moviesArrayList;
+    private List<Movie> moviesArrayList;
 
     MoviePosterClickListener listener;
 
     private final int TYPE_ITEM = 0;
 
-    public MoviePostersAdapter(RealmList<Movie> moviesArrayList, MoviePosterClickListener listener, int dynamicListPosition) {
+    public MoviePostersAdapter(List<Movie> moviesArrayList, MoviePosterClickListener listener, int dynamicListPosition) {
         this.listener = listener;
         this.moviesArrayList = moviesArrayList;
         this.dynamicListPosition = dynamicListPosition;
