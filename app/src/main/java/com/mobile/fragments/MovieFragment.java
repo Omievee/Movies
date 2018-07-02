@@ -518,11 +518,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             } else {
                 Toast.makeText(context, "Enable GPS to check in.", Toast.LENGTH_SHORT).show();
             }
-
-
-        } else if (availability.getTicketType() == com.mobile.model.TicketType.E_TICKET) {
-            progress.setVisibility(View.GONE);
-            showConfirmation(new ScreeningToken(screening, showtime, reservation, theaterObject));
+            
         } else {
             progress.setVisibility(View.GONE);
             Intent intent = BringAFriendActivity.Companion.newIntent(context, theaterObject, screening, time);
