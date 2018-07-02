@@ -165,13 +165,11 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.mobile.seats.BringAFriendActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme"
             android:windowSoftInputMode="adjustPan" />
-
         <activity
             android:name="com.mobile.activities.ConfirmationActivity"
             android:screenOrientation="portrait"
@@ -180,7 +178,6 @@
             android:name="com.mobile.reservation.ReservationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme" />
-
         <activity
             android:name="com.mobile.activities.LogInActivity"
             android:parentActivityName="com.mobile.activities.OnboardingActivity"
@@ -191,8 +188,8 @@
                 android:screenOrientation="portrait"
                 android:value="com.mobile.activities.OnboardingActivity" />
         </activity>
-
-        <activity android:name="com.mobile.home.HomeActivity"
+        <activity
+            android:name="com.mobile.home.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/HomeActivity">
             <intent-filter>
@@ -206,6 +203,7 @@
 
                 <data android:scheme="tl-6ea3ea4d" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -259,6 +257,7 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
+        <activity android:name="com.mobile.activities.AutoActivatedCard" />
     </application>
 
 </manifest>

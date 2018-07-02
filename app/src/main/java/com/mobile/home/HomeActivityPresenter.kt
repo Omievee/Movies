@@ -1,7 +1,6 @@
 package com.mobile.home
 
 import android.os.Build
-import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.setRestrictions
@@ -79,11 +78,11 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                 .subscribe({
                     lastRestrictionRequest = System.currentTimeMillis()
                     restrictionManager.publish(it)
-                    determineTicketVerification(it)
-                    determineAlertScreen(it.alert)
+                    determineActivationScreen(it)
                     determineForceLogout(it)
                     setRestrictions(it)
-                    determineActivationScreen(it)
+                    determineTicketVerification(it)
+                    determineAlertScreen(it.alert)
                 }, {
                     it.printStackTrace()
                 })
@@ -120,10 +119,6 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
-
-
-        Log.d("reservationID",UserPreferences.getLastReservationPopInfo().toString())
-
         it.popInfo?.let {
             if (UserPreferences.getLastReservationPopInfo() == 0 ||
                     UserPreferences.getLastReservationPopInfo() != it.reservationId) {

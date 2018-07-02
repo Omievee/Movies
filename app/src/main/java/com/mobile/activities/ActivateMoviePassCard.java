@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,15 +17,20 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.fragments.AutoActivatedCardFragment;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CardActivationRequest;
 import com.mobile.responses.CardActivationResponse;
 import com.moviepass.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import io.card.payment.CardIOActivity;
 import io.card.payment.CreditCard;
@@ -89,35 +93,45 @@ public class ActivateMoviePassCard extends AppCompatActivity {
         });
 
         activateSubmitButton.setOnClickListener(v -> {
-//            progress.setVisibility(View.VISIBLE);
-//
-//            progress.setVisibility(View.GONE);
-            Log.d(Constants.TAG, "onCreate: ");
-            AutoActivatedCardFragment.newInstance(screeningObject, selectedShowTime);
-//            digits = activateDigits.getText().toString().trim();
-//            final CardActivationRequest request = new CardActivationRequest(digits);
-//            RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
-//                @Override
-//                public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
-//                    CardActivationResponse cardActivationResponse = response.body();
-//                    if (cardActivationResponse != null && response.isSuccessful()) {
-//                        progress.setVisibility(View.GONE);
-//                        AutoActivatedCardFragment.Companion.newInstance(screeningObject, selectedShowTime);
-//                    } else {
-//                        progress.setVisibility(View.GONE);
-//                        Toast.makeText(ActivateMoviePassCard.this, response.message(), Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<CardActivationResponse> call, Throwable t) {
-//                    progress.setVisibility(View.GONE);
-//                    Toast.makeText(ActivateMoviePassCard.this, "Server Error. Try again later", Toast.LENGTH_SHORT).show();
-//
-//
-//                }
-//            });
+            progress.setVisibility(View.VISIBLE);
+
+            digits = activateDigits.getText().toString().trim();
+            final CardActivationRequest request = new CardActivationRequest(digits);
+            RestClient.getAuthenticated().activateCard(request).enqueue(new Callback<CardActivationResponse>() {
+                @Override
+                public void onResponse(Call<CardActivationResponse> call, Response<CardActivationResponse> response) {
+                    CardActivationResponse cardActivationResponse = response.body();
+                    if (cardActivationResponse != null && response.isSuccessful()) {
+                        progress.setVisibility(View.GONE);
+                        Intent activate = new Intent(ActivateMoviePassCard.this, AutoActivatedCard.class);
+                        activate.putExtra(Constants.SCREENING, screeningObject);
+                        activate.putExtra(Constants.SHOWTIME, selectedShowTime);
+                        startActivity(activate);
+                        finish();
+                    } else {
+                        progress.setVisibility(View.GONE);
+                        try {
+                            JSONObject err = null;
+                            if (response.errorBody() != null) {
+                                err = new JSONObject(response.errorBody().string());
+                            }
+                            Toast.makeText(ActivateMoviePassCard.this, err.toString(), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException | IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CardActivationResponse> call, Throwable t) {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(ActivateMoviePassCard.this, "Server Error. Try again later", Toast.LENGTH_SHORT).show();
+
+
+                }
+            });
         });
 
 
