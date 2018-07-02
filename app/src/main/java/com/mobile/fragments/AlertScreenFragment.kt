@@ -40,23 +40,24 @@ class AlertScreenFragment : Fragment() {
 
 
         Log.d(Constants.TAG, "onViewCreated: " + alertObject!!.dismissible)
-
+        val showButton = alertObject?.dismissButton ?: return
         val dismiss = alertObject?.dismissible ?: return
+
         if (dismiss) {
             dismissAlert.setOnClickListener { v ->
                 UserPreferences.setAlertDisplayedId(alertObject!!.id)
-                activity!!.onBackPressed()
+                activity?.onBackPressed()
             }
         } else {
             dismissAlert.visibility = View.INVISIBLE
         }
 
-        val showButton = alertObject?.dismissButton ?: return
+
 
         if (TextUtils.isEmpty(alertObject!!.urlTitle) || TextUtils.isEmpty(alertObject!!.url)) {
             alertClickMessage.visibility = View.INVISIBLE
         } else {
-            LinkText.text = alertObject!!.urlTitle
+            LinkText.text = alertObject?.urlTitle
             alertClickMessage.setOnClickListener { v ->
                 if (showButton) {
                     acceptButton.visibility = View.VISIBLE

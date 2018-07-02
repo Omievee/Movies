@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,13 @@ import android.widget.Toast;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
-import com.mobile.widgets.MaterialSpinnerSpinnerView;
 import com.mobile.network.RestClient;
 import com.mobile.requests.CancellationRequest;
 import com.mobile.responses.CancellationResponse;
 import com.mobile.responses.UserInfoResponse;
+import com.mobile.widgets.MaterialSpinnerSpinnerView;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -43,7 +41,7 @@ import retrofit2.Response;
  * Created by anubis on 9/1/17.
  */
 
-public class ProfileCancellationFragment extends Fragment {
+public class ProfileCancellationFragment extends MPFragment {
 
     MaterialSpinner spinnerCancelReason;
     EditText cancelComments;
@@ -57,7 +55,6 @@ public class ProfileCancellationFragment extends Fragment {
     Context myContext;
     private UserInfoResponse userInfoResponse;
     private String billingDate;
-    private ProfileActivityInterface listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -114,7 +111,7 @@ public class ProfileCancellationFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               showCancellationConfirmationDialog();
+                showCancellationConfirmationDialog();
             }
         });
 
@@ -126,12 +123,12 @@ public class ProfileCancellationFragment extends Fragment {
 
     }
 
-    public void showCancellationConfirmationDialog(){
+    public void showCancellationConfirmationDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(spinnerCancelReason.getContext(), R.style.CUSTOM_ALERT);
         String message;
-        if(billingDate!=null)
-           message  = "You account will remain active until "+billingDate+" (paid through date).";
+        if (billingDate != null)
+            message = "You account will remain active until " + billingDate + " (paid through date).";
         else
             message = "Are you sure you want to cancel your membership?";
         builder.setMessage(message)
@@ -187,7 +184,7 @@ public class ProfileCancellationFragment extends Fragment {
                 progress.setVisibility(View.GONE);
                 if (cancellationResponse != null && response.isSuccessful()) {
                     Toast.makeText(myActivity, "Cancellation successful", Toast.LENGTH_SHORT).show();
-                    listener.logOutUserAfterCancellation();
+                    myActivity.onBackPressed();
                 } else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -220,6 +217,7 @@ public class ProfileCancellationFragment extends Fragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
@@ -232,15 +230,13 @@ public class ProfileCancellationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof ProfileActivityInterface){
-            listener = (ProfileActivityInterface) context;
-        }
         myContext = context;
+        myActivity = getActivity();
     }
 
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        myActivity = activity;
+    public void onDetach() {
+        super.onDetach();
     }
 }

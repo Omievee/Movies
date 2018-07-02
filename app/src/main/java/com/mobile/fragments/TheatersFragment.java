@@ -507,7 +507,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            // Always render clusters.
             return false;
         }
     }
