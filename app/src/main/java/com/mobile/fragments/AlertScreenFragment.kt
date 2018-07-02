@@ -6,12 +6,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.model.Alert
 import com.moviepass.R
@@ -38,8 +36,6 @@ class AlertScreenFragment : Fragment() {
         alertTitle.text = alertObject?.title
         alertBody.text = alertObject?.body
 
-
-        Log.d(Constants.TAG, "onViewCreated: " + alertObject!!.dismissible)
         val showButton = alertObject?.dismissButton ?: return
         val dismiss = alertObject?.dismissible ?: return
 
@@ -62,9 +58,12 @@ class AlertScreenFragment : Fragment() {
                 if (showButton) {
                     acceptButton.visibility = View.VISIBLE
                     acceptButton.text = alertObject?.dismissButtonText
-                    val acceptURL = alertObject?.dismissButtonWebhook ?: return@setOnClickListener
+                    val acceptURL = alertObject?.dismissButtonWebhook
+
                     acceptButton.setOnClickListener {
                         //TODO
+                        UserPreferences.setAlertDisplayedId(alertObject!!.id)
+                        activity?.onBackPressed()
                     }
                 } else {
                     if (Patterns.WEB_URL.matcher(alertObject!!.url!!).matches()) {
