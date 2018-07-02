@@ -2,7 +2,6 @@ package com.mobile.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobile.Constants;
@@ -98,3 +96,21 @@ public class AlertScreenFragment extends Fragment {
         }
     }
 }
+
+
+//
+//
+//        if (urlTitle == null && url == null) {
+//                alertClickMessage.setVisibility(View.INVISIBLE);
+//                } else {
+//                linkText.setText(urlTitle);
+//                alertClickMessage.setOnClickListener(v -> {
+//                if (Patterns.WEB_URL.matcher(url).matches()) {
+//                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                startActivity(alertIntentClick);
+//                } else {
+//                onButtonPressed(id);
+//                }
+//
+//                });
+//                }
