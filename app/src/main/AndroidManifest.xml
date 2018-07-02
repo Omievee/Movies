@@ -257,7 +257,9 @@
                 android:resource="@xml/fileprovider" />
         </provider>
 
-        <activity android:name="com.mobile.activities.AutoActivatedCard" />
+        <activity
+            android:name="com.mobile.activities.AutoActivatedCard"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
