@@ -91,8 +91,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
             progress.visibility = View.VISIBLE
             continueActivation()
         }
-
-
     }
 
 

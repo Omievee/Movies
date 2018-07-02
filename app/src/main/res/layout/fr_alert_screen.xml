@@ -32,7 +32,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/alertMessage"
+        android:id="@+id/alertBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/alertTitle"
@@ -50,7 +50,7 @@
         android:id="@+id/alertClickMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alertMessage"
+        android:layout_below="@id/alertBody"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/a_lot_margin_standard">
 
@@ -68,6 +68,16 @@
 
 
     </FrameLayout>
+
+    <Button
+        android:id="@+id/acceptButton"
+        style="@style/MoviepassButton"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/doubledouble_margin_standard" />
 
 
 </RelativeLayout>
