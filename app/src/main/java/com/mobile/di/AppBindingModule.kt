@@ -1,5 +1,6 @@
 package com.mobile.di
 
+import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
@@ -63,6 +64,10 @@ interface AppBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [ReservationActivityModule::class])
     fun reservationActivity(): ReservationActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    fun activateMoviepassCardActivity(): ActivateMoviePassCard
 
 
 }
