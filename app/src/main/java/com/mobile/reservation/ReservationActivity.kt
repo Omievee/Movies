@@ -110,7 +110,7 @@ class ReservationActivity : MPActivty() {
         fun newInstance(context: Context, reservation: ScreeningToken, canClose: Boolean = false): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
-                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs.seats
+                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName }?: rs?.seats
                 val re2:Reservation2? = rs?.let {
                     Reservation2(
                             checkinId = rs.id,
