@@ -19,6 +19,7 @@ class AutoActivatedCardFragment : MPFragment() {
 
     var screeningObject: Screening? = null
     var selectedShowTime: String? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fr_mpcard_autoactivated, container, false)
@@ -56,12 +57,13 @@ class AutoActivatedCardFragment : MPFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
+        fun newInstance(screening: Screening?, showtime: String?) =
                 AutoActivatedCardFragment().apply {
                     arguments = Bundle().apply {
+                        getString(Constants.SHOWTIME, showtime)
+                        Parcels.unwrap(getParcelable(Constants.SCREENING))
                     }
                 }
     }
-
-
 }
+

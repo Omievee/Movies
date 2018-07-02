@@ -144,7 +144,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showActivatedCardScreen() {
-        showFragment(AutoActivatedCardFragment.newInstance())
+        showFragment(AutoActivatedCardFragment.newInstance(null, null))
     }
 
     var currentItem: Int = 0
