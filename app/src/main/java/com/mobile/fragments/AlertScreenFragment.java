@@ -98,19 +98,3 @@ public class AlertScreenFragment extends Fragment {
 }
 
 
-//
-//
-//        if (urlTitle == null && url == null) {
-//                alertClickMessage.setVisibility(View.INVISIBLE);
-//                } else {
-//                linkText.setText(urlTitle);
-//                alertClickMessage.setOnClickListener(v -> {
-//                if (Patterns.WEB_URL.matcher(url).matches()) {
-//                Intent alertIntentClick = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//                startActivity(alertIntentClick);
-//                } else {
-//                onButtonPressed(id);
-//                }
-//
-//                });
-//                }
