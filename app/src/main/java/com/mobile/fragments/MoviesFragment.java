@@ -301,7 +301,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
 
     private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
         Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionActivationRequired());
-        if (!res.getSubscriptionActivationRequired()) {
+        if (res.getSubscriptionActivationRequired()) {
             activateMPCardButton.setVisibility(View.VISIBLE);
             activateMPCardButton.setClickable(true);
             activateMPCardButton.setOnClickListener(v -> {

@@ -187,7 +187,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
     }
 
     companion object {
-        private val REQUEST_CAMERA_CODE = 0
+        private val REQUEST_CAMERA_CODE = 201
         private val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
 }
