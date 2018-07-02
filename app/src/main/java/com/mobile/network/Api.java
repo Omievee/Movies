@@ -94,6 +94,9 @@ public interface Api {
     @POST("/rest/v1/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
+    /* Activate MP Card */
+    @POST("/rest/v1/cards/activate")
+    Single<CardActivationResponse> activateCardRX(@Body CardActivationRequest request);
 
 
     @GET("/rest/v2/screenings")
