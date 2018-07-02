@@ -106,6 +106,15 @@ class AlertScreenFragment : MPFragment() {
             return fragment
         }
     }
+
+    override fun onBack(): Boolean {
+        if (alertObject?.dismissible!!) {
+            activity?.onBackPressed()
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 
