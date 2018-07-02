@@ -4,19 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.loopj.android.http.AsyncHttpClient
+import com.loopj.android.http.AsyncHttpResponseHandler
 import com.mobile.UserPreferences
-import com.mobile.helpers.LogUtils
 import com.mobile.model.Alert
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fr_alert_screen.*
 
-class AlertScreenFragment : Fragment() {
+
+class AlertScreenFragment : MPFragment() {
 
 
     internal var myContext: Context? = null
@@ -49,8 +50,6 @@ class AlertScreenFragment : Fragment() {
             dismissAlert.visibility = View.INVISIBLE
         }
 
-        LogUtils.newLog("log>>>", "button?" + alertObject?.dismissButton)
-
         if (TextUtils.isEmpty(alertObject?.urlTitle) || TextUtils.isEmpty(alertObject?.url)) {
             alertClickMessage.visibility = View.INVISIBLE
 
@@ -61,23 +60,25 @@ class AlertScreenFragment : Fragment() {
                     val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject!!.url))
                     startActivity(alertIntentClick)
                 }
-
-
             }
         }
-        if (alertObject?.dismissButton!! == true) {
-
+        if (showButton) {
             acceptButton.visibility = View.VISIBLE
             acceptButton.text = alertObject?.dismissButtonText
 
-            val acceptURL = alertObject?.dismissButtonWebhook
-
+            val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.getUserId()
             acceptButton.setOnClickListener {
                 //TODO
-                if (Patterns.WEB_URL.matcher(alertObject?.dismissButtonWebhook).matches()) {
-                    val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject?.dismissButtonWebhook))
-                    startActivity(alertIntentClick)
-                }
+                val client = AsyncHttpClient()
+                client.get(acceptURL, object : AsyncHttpResponseHandler() {
+                    override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray) {
+
+                    }
+
+                    override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray, error: Throwable) {
+
+                    }
+                })
                 UserPreferences.setAlertDisplayedId(alertObject!!.id)
                 activity?.onBackPressed()
             }
@@ -88,8 +89,10 @@ class AlertScreenFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        alertObject?.dismissible ?: return
-        UserPreferences.setAlertDisplayedId(alertObject?.id)
+        if (alertObject?.dismissible!!) {
+            UserPreferences.setAlertDisplayedId(alertObject?.id)
+        }
+
     }
 
     companion object {
