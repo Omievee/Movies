@@ -577,10 +577,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                 nearbyTheaters.add(theaterTicketType);
             }
 
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + nearbyTheaters.size());
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + eticketingTheaters.size());
-
-
             googleMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
                 cameraLocal.setLatitude(googleMap.getCameraPosition().target.latitude);

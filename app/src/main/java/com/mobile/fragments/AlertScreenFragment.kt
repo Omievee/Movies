@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.UserPreferences
+import com.mobile.helpers.LogUtils
 import com.mobile.model.Alert
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fr_alert_screen.*
@@ -48,31 +49,40 @@ class AlertScreenFragment : Fragment() {
             dismissAlert.visibility = View.INVISIBLE
         }
 
+        LogUtils.newLog("log>>>", "button?" + alertObject?.dismissButton)
 
-
-        if (TextUtils.isEmpty(alertObject!!.urlTitle) || TextUtils.isEmpty(alertObject!!.url)) {
+        if (TextUtils.isEmpty(alertObject?.urlTitle) || TextUtils.isEmpty(alertObject?.url)) {
             alertClickMessage.visibility = View.INVISIBLE
+
         } else {
             LinkText.text = alertObject?.urlTitle
             alertClickMessage.setOnClickListener { v ->
-                if (showButton) {
-                    acceptButton.visibility = View.VISIBLE
-                    acceptButton.text = alertObject?.dismissButtonText
-                    val acceptURL = alertObject?.dismissButtonWebhook
-
-                    acceptButton.setOnClickListener {
-                        //TODO
-                        UserPreferences.setAlertDisplayedId(alertObject!!.id)
-                        activity?.onBackPressed()
-                    }
-                } else {
-                    if (Patterns.WEB_URL.matcher(alertObject!!.url!!).matches()) {
-                        val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject!!.url))
-                        startActivity(alertIntentClick)
-                    }
+                if (Patterns.WEB_URL.matcher(alertObject?.url).matches()) {
+                    val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject!!.url))
+                    startActivity(alertIntentClick)
                 }
 
+
             }
+        }
+        if (alertObject?.dismissButton!! == true) {
+
+            acceptButton.visibility = View.VISIBLE
+            acceptButton.text = alertObject?.dismissButtonText
+
+            val acceptURL = alertObject?.dismissButtonWebhook
+
+            acceptButton.setOnClickListener {
+                //TODO
+                if (Patterns.WEB_URL.matcher(alertObject?.dismissButtonWebhook).matches()) {
+                    val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject?.dismissButtonWebhook))
+                    startActivity(alertIntentClick)
+                }
+                UserPreferences.setAlertDisplayedId(alertObject!!.id)
+                activity?.onBackPressed()
+            }
+        } else {
+
         }
     }
 
