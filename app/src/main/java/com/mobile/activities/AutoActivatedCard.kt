@@ -20,11 +20,11 @@ class AutoActivatedCard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fr_mpcard_autoactivated)
-
         val arguments = intent ?: return
+
+
         screeningObject = arguments.getParcelableExtra(Constants.SCREENING)
         selectedShowTime = arguments.getStringExtra(Constants.SHOWTIME)
-
 
         closebutton.setOnClickListener {
             checkPreference()
