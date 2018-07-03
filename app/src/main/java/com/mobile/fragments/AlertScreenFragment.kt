@@ -22,6 +22,7 @@ class AlertScreenFragment : MPFragment() {
 
     internal var myContext: Context? = null
     private var alertObject: Alert? = null
+    var acceptedClick: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +78,10 @@ class AlertScreenFragment : MPFragment() {
                     override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray, error: Throwable) {
                     }
                 })
-                UserPreferences.setAlertDisplayedId(alertObject!!.id)
+                UserPreferences.setAlertDisplayedId(alertObject?.id)
+                alertObject?.dismissible = true
                 activity?.onBackPressed()
+
             }
         }
     }
@@ -102,8 +105,9 @@ class AlertScreenFragment : MPFragment() {
             return fragment
         }
     }
-
+ 
     override fun onBack(): Boolean {
+
         return !alertObject?.dismissible!!
     }
 }
