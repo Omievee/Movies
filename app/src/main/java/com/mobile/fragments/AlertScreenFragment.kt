@@ -34,7 +34,6 @@ class AlertScreenFragment : MPFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         alertTitle.text = alertObject?.title
         alertBody.text = alertObject?.body
 
@@ -61,17 +60,17 @@ class AlertScreenFragment : MPFragment() {
                 }
             }
         }
+
+
         if (showButton) {
             acceptButton.visibility = View.VISIBLE
             acceptButton.text = alertObject?.dismissButtonText
-
             val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.getUserId()
             acceptButton.setOnClickListener {
                 val client = AsyncHttpClient()
                 client.get(acceptURL, object : AsyncHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray) {
                     }
-
                     override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray, error: Throwable) {
                     }
                 })
@@ -95,7 +94,6 @@ class AlertScreenFragment : MPFragment() {
         fun newInstance(alert: Alert): AlertScreenFragment {
             val fragment = AlertScreenFragment()
             val args = Bundle()
-
             args.putParcelable("alert", alert)
             fragment.arguments = args
             return fragment
