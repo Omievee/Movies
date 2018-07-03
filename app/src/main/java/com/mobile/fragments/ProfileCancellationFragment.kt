@@ -148,7 +148,7 @@ class ProfileCancellationFragment : MPFragment() {
     }
 
     private fun loadUserInfo() {
-        val userId = UserPreferences.getUserId()
+        val userId = UserPreferences.userId
         RestClient.getAuthenticated().getUserData(userId).enqueue(object : Callback<UserInfoResponse> {
             override fun onResponse(call: Call<UserInfoResponse>, response: Response<UserInfoResponse>) {
                 userInfoResponse = response.body()

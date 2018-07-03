@@ -39,7 +39,7 @@ class AutoActivatedCard : AppCompatActivity() {
     }
 
     fun checkPreference() {
-        if (!UserPreferences.getHasUserSeenCardActivationScreen() && !UserPreferences.getRestrictionSubscriptionStatus().equals(SubscriptionStatus.ACTIVE.name)) {
+        if (!UserPreferences.hasUserSeenCardActivationScreen && !UserPreferences.restrictions.equals(SubscriptionStatus.ACTIVE.name)) {
             UserPreferences.setUserHasSeenCardActivationScreen(true)
             val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
             activatedIntent.putExtra(MovieFragment.SCREENING, screeningObject)

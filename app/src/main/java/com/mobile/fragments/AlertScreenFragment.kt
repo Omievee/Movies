@@ -43,7 +43,7 @@ class AlertScreenFragment : MPFragment() {
 
         if (dismiss) {
             dismissAlert.setOnClickListener { v ->
-                UserPreferences.setAlertDisplayedId(alertObject?.id)
+                UserPreferences.alertDisplayedId = alertObject?.id
                 activity?.onBackPressed()
             }
         } else {
@@ -66,10 +66,10 @@ class AlertScreenFragment : MPFragment() {
         if (showButton) {
             acceptButton.visibility = View.VISIBLE
             acceptButton.text = alertObject?.dismissButtonText
-            val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.getUserId()
+            val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.userId
             acceptButton.setOnClickListener {
                 run(acceptURL)
-                UserPreferences.setAlertDisplayedId(alertObject?.id)
+                UserPreferences.alertDisplayedId = alertObject?.id
                 alertObject?.dismissible = true
                 activity?.onBackPressed()
             }
@@ -79,7 +79,7 @@ class AlertScreenFragment : MPFragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (alertObject?.dismissible == true) {
-            UserPreferences.setAlertDisplayedId(alertObject?.id)
+            UserPreferences.alertDisplayedId = alertObject?.id
         }
 
     }
@@ -116,6 +116,7 @@ class AlertScreenFragment : MPFragment() {
             override fun onResponse(call: Call?, response: Response?) {
                 Log.d("RESPONSE", ">>>>>>>>>>> PASS")
             }
+
             @Throws(IOException::class)
             fun onResponse(response: Response) {
             }
