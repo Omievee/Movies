@@ -66,6 +66,8 @@ public class Application extends MultiDexApplication implements HasActivityInjec
     @Override
     public void onCreate() {
         super.onCreate();
+        inject();
+        UserPreferences.INSTANCE.load(this, gson);
         Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
         s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
@@ -82,9 +84,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
-
-        inject();
-        UserPreferences.INSTANCE.load(this, gson);
         try {
             Core.install(this,
                     "d7307fbf50724282a116acadd54fb053",

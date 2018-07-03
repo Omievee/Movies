@@ -31,8 +31,6 @@ class AutoActivatedCard : AppCompatActivity() {
         }
 
     }
-
-
     override fun onBackPressed() {
         super.onBackPressed()
         checkPreference()

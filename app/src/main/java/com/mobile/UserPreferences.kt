@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.ScreeningToken
 import com.mobile.responses.MicroServiceRestrictionsResponse
+import com.mobile.responses.SubscriptionStatus
 import com.mobile.responses.UserInfoResponse
 
 import java.util.Calendar
@@ -21,12 +22,29 @@ object UserPreferences {
     private lateinit var sPrefs: SharedPreferences
     private lateinit var gson:Gson
 
+    var restrictionsLoaded:Boolean = false
     var restrictions:MicroServiceRestrictionsResponse = MicroServiceRestrictionsResponse()
     set(it) {
         field = it
         sPrefs.edit()
                 .putString(Constants.RESTRICTIONS,
                        gson.toJson(it)).apply()
+    }
+    get() {
+        if(restrictionsLoaded==false) {
+            val ss = sPrefs.getString(Constants.RESTRICTIONS,null)
+            if(ss==null) {
+                field = MicroServiceRestrictionsResponse()
+            } else {
+                try {
+                    field = gson.fromJson(ss, MicroServiceRestrictionsResponse::class.java)
+                } catch (e:Exception) {
+                    field = MicroServiceRestrictionsResponse()
+                }
+            }
+            restrictionsLoaded = true
+        }
+        return field
     }
 
     val deviceAndroidID: String
@@ -56,7 +74,7 @@ object UserPreferences {
 
     val userId: Int
         get() {
-            return sPrefs?.getInt(Constants.USER_ID, 0) ?: 0
+            return sPrefs.getInt(Constants.USER_ID, 0)
         }
 
     val deviceUuid: String
