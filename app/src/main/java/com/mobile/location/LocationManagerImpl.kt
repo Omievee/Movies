@@ -10,7 +10,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.rx.Schedulers
 import io.reactivex.Observable
@@ -27,8 +26,6 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
         location().compose(Schedulers.singleDefault())
                 .subscribe({
                     _lastLocation = it
-                    UserPreferences.setLocation(_lastLocation!!.lat, _lastLocation!!.lon)
-
                 }, {})
     }
 
