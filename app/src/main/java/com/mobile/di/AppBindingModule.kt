@@ -74,6 +74,10 @@ interface AppBindingModule {
     @ContributesAndroidInjector
     fun activateMoviepassCardActivity(): ActivateMoviePassCard
 
+    @ActivityScope
+    @ContributesAndroidInjector
+    fun profileAccountCancellation(): ProfileCancellationFragment
+
     @FragmentScope
     @ContributesAndroidInjector(modules = [MissingBillingFragmentModule::class])
     fun missingBilling(): MissingBillingFragment

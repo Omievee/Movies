@@ -32,7 +32,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/alertMessage"
+        android:id="@+id/alertBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/alertTitle"
@@ -46,11 +46,11 @@
         android:textSize="18sp" />
 
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/alertClickMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alertMessage"
+        android:layout_below="@id/alertBody"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/a_lot_margin_standard">
 
@@ -59,15 +59,32 @@
             android:id="@+id/LinkText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:padding="@dimen/margin_standard"
             android:text=""
             android:textAlignment="center"
             android:textColor="@color/new_red"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            style="@style/BackButton"
+            android:layout_toEndOf="@id/LinkText"
+            android:rotation="180"
+            android:tint="@color/new_red" />
 
 
-    </FrameLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/acceptButton"
+        style="@style/RedMoviepassButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/double_margin_standard"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

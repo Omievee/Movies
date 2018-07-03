@@ -19,7 +19,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -507,7 +506,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            // Always render clusters.
             return false;
         }
     }
@@ -577,10 +575,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             } else {
                 nearbyTheaters.add(theaterTicketType);
             }
-
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + nearbyTheaters.size());
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + eticketingTheaters.size());
-
 
             googleMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
@@ -774,6 +768,4 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         });
 
     }
-
-
 }

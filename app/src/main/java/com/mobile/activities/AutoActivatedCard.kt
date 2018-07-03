@@ -20,25 +20,35 @@ class AutoActivatedCard : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fr_mpcard_autoactivated)
-
         val arguments = intent ?: return
+
+
         screeningObject = arguments.getParcelableExtra(Constants.SCREENING)
         selectedShowTime = arguments.getStringExtra(Constants.SHOWTIME)
 
-
         closebutton.setOnClickListener {
-            if (!UserPreferences.hasUserSeenCardActivationScreen && UserPreferences.restrictions.subscriptionStatus != SubscriptionStatus.ACTIVE) {
-                UserPreferences.setUserHasSeenCardActivationScreen(true)
-                val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
-                activatedIntent.putExtra(MovieFragment.SCREENING, screeningObject)
-                activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
-                startActivity(activatedIntent)
-                finish()
-            } else {
-                UserPreferences.setUserHasSeenCardActivationScreen(true)
-                finish()
-            }
+            checkPreference()
         }
 
+    }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        checkPreference()
+    }
+
+    fun checkPreference() {
+        if (!UserPreferences.getHasUserSeenCardActivationScreen() && !UserPreferences.getRestrictionSubscriptionStatus().equals(SubscriptionStatus.ACTIVE.name)) {
+            UserPreferences.setUserHasSeenCardActivationScreen(true)
+            val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
+            activatedIntent.putExtra(MovieFragment.SCREENING, screeningObject)
+            activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
+            startActivity(activatedIntent)
+            finish()
+        } else {
+            UserPreferences.setUserHasSeenCardActivationScreen(true)
+            finish()
+        }
     }
 }

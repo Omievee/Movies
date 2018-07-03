@@ -27,6 +27,10 @@ import com.moviepass.R
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.ac_activate_movie_pass_card.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.IOException
 import javax.inject.Inject
 
 class ActivateMoviePassCard : AppCompatActivity() {
@@ -40,7 +44,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
     internal lateinit var progress: View
     internal lateinit var activateInstructions: TextView
     internal lateinit var activateManualInput: TextView
-    internal lateinit var activateSubmitButton: TextView
     internal lateinit var activateDigits: EditText
     internal lateinit var activateScanCardIcon: ImageView
     internal lateinit var activateXOut: ImageView
@@ -53,10 +56,8 @@ class ActivateMoviePassCard : AppCompatActivity() {
         setContentView(R.layout.ac_activate_movie_pass_card)
 
 
-        activateInstructions = findViewById(R.id.ACTIVATECARD_INTRUCTIONS)
         activateManualInput = findViewById(R.id.ACTIVATECARD_MANULINPUT)
         activateDigits = findViewById(R.id.ACTIVATE_DIGITS)
-        activateSubmitButton = findViewById(R.id.ACTIVATE_BUTTON)
         activateScanCardIcon = findViewById(R.id.ACTIVATECARD_SCAN_ICON)
         activateXOut = findViewById(R.id.ACTIVATECARD_X_OUT)
         progress = findViewById(R.id.progress)
@@ -76,23 +77,26 @@ class ActivateMoviePassCard : AppCompatActivity() {
         }
 
         activateManualInput.setOnClickListener { v ->
+            activatecard_instructions.text = getString(R.string.last_4)
+            header1.visibility = View.GONE
+            instruct1.visibility = View.GONE
+            instruct2.visibility = View.GONE
+
             fadeOut(activateScanCardIcon)
             activateScanCardIcon.visibility = View.GONE
             fadeOut(activateManualInput)
             activateManualInput.visibility = View.GONE
 
-            fadeIn(activateSubmitButton)
-            activateSubmitButton.visibility = View.VISIBLE
+            fadeIn(activateButton)
+            activateButton.visibility = View.VISIBLE
             fadeIn(activateDigits)
             activateDigits.visibility = View.VISIBLE
         }
 
-        activateSubmitButton.setOnClickListener { v: View ->
+        activateButton.setOnClickListener { v: View ->
             progress.visibility = View.VISIBLE
             continueActivation()
         }
-
-
     }
 
 
@@ -119,11 +123,15 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
                 activateScanCardIcon.visibility = View.GONE
                 activateManualInput.visibility = View.GONE
-                activateSubmitButton.visibility = View.VISIBLE
+                activateButton.visibility = View.VISIBLE
                 activateDigits.visibility = View.VISIBLE
                 activateDigits.setText(scanResult.lastFourDigitsOfCardNumber)
+                header1.visibility = View.GONE
+                instruct1.visibility = View.GONE
+                instruct2.visibility = View.GONE
+                activatecard_instructions.text = getString(R.string.last_4)
 
-                activateSubmitButton.setOnClickListener { v -> continueActivation() }
+                activateButton.setOnClickListener { v -> continueActivation() }
 
             }
         }
@@ -190,4 +198,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
         private val REQUEST_CAMERA_CODE = 201
         private val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
+
+
+
 }
