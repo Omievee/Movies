@@ -41,4 +41,11 @@ class AutoActivatedCard : AppCompatActivity() {
         }
 
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        UserPreferences.setUserHasSeenCardActivationScreen(true)
+
+    }
 }
