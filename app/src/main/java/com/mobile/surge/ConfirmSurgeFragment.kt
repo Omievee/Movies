@@ -4,10 +4,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.support.transition.Transition
-import android.support.transition.TransitionListenerAdapter
-import android.support.transition.TransitionManager
-import android.support.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,14 +23,12 @@ import com.mobile.seats.BringAFriendListener
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SelectSeatPayload
 import com.mobile.seats.SheetData
-import com.mobile.session.SessionManager
 import com.mobile.session.UserManager
 import com.mobile.tickets.TicketManager
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_confirm_surcharge.*
-import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.*
 import javax.inject.Inject
 
 class ConfirmSurgeFragment : MPFragment() {
@@ -149,7 +143,7 @@ class ConfirmSurgeFragment : MPFragment() {
         val availability: Availability = payload?.availability ?: return
         val info = availability.providerInfo ?: return
         val lat = locationManager.lastLocation() ?: return
-        continueOrCheckin.progress = true
+        submit.progress = true
         ticketManager
                 .reserve(checkin = Checkin(
                         screening = screening,
@@ -160,7 +154,7 @@ class ConfirmSurgeFragment : MPFragment() {
                                 latitude = lat.lat,
                                 longitude = lat.lon)
                 )
-                .doAfterTerminate({ continueOrCheckin.progress = false })
+                .doAfterTerminate({ submit.progress = false })
                 .subscribe({
                     val activity = activity ?: return@subscribe
                     activity.setResult(Activity.RESULT_OK)
@@ -184,7 +178,7 @@ class ConfirmSurgeFragment : MPFragment() {
     private fun showError(apiError: ApiError) {
         val context = activity ?: return
         AlertDialog.Builder(context)
-                .setMessage(apiError.message)
+                .setMessage(apiError.error.message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
 

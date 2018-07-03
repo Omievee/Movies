@@ -35,8 +35,6 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         startActivity(activateCard)
     }
 
-
-
     override fun navigateTo(checkin: Checkin, reservation: ReservationResponse) {
         val activity = activity?:return
         activity.onBackPressed()

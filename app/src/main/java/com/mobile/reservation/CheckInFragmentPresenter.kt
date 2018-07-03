@@ -90,6 +90,12 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         if (showActivateCard) {
             return view.showActivateCard(checkin)
         }
+
+        val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
+        when(surge.level) {
+            SurgeType.SURGING-> return showSurgeModal(surge.amount)
+            else-> {}
+        }
         view.showProgress()
         surgeCheckDis = api.peakCheck(
                 payload

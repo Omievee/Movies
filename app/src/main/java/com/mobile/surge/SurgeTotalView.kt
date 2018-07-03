@@ -9,6 +9,7 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.mobile.model.Availability
@@ -43,6 +44,7 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
             null -> R.string.add_payment_method
             else -> R.string.edit_payment_method
         })
+        linkText.visibility = View.GONE
 
     }
 
