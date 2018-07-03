@@ -105,7 +105,7 @@ class AlertScreenFragment : MPFragment() {
             return fragment
         }
     }
- 
+
     override fun onBack(): Boolean {
 
         return !alertObject?.dismissible!!
