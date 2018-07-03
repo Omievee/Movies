@@ -42,7 +42,7 @@
 
 
         <com.jaredrummler.materialspinner.MaterialSpinner
-            android:id="@+id/SPINNER"
+            android:id="@+id/spinnerCancelReason"
             style="@style/MaterialSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

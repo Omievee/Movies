@@ -615,4 +615,8 @@
     <string name="peak_pricing">Peak Pricing</string>
     <string name="go_back">Go Back</string>
     <string name="last_4">Confirm the last 4 digits of your card</string>
+    <string name="profile_cancel_remain_active">You account will remain active until</string>
+    <string name="profile_cancel_paid_through">(paid through date).</string>
+    <string name="profile_cancel_are_you_sure">Are you sure you want to cancel your membership?</string>
+    <string name="profile_cancel_cancel_membership">Cancel Membership</string>
 </resources>

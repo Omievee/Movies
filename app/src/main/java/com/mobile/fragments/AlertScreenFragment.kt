@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -51,9 +50,8 @@ class AlertScreenFragment : MPFragment() {
             dismissAlert.visibility = View.INVISIBLE
         }
 
-        if (TextUtils.isEmpty(alertObject?.urlTitle) || TextUtils.isEmpty(alertObject?.url)) {
+        if (alertObject?.urlTitle.isNullOrEmpty() || alertObject?.url.isNullOrEmpty()) {
             alertClickMessage.visibility = View.INVISIBLE
-
         } else {
             LinkText.text = alertObject?.urlTitle
             alertClickMessage.setOnClickListener { v ->
@@ -69,7 +67,6 @@ class AlertScreenFragment : MPFragment() {
 
             val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.getUserId()
             acceptButton.setOnClickListener {
-                //TODO
                 val client = AsyncHttpClient()
                 client.get(acceptURL, object : AsyncHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray) {
@@ -81,7 +78,6 @@ class AlertScreenFragment : MPFragment() {
                 UserPreferences.setAlertDisplayedId(alertObject?.id)
                 alertObject?.dismissible = true
                 activity?.onBackPressed()
-
             }
         }
     }

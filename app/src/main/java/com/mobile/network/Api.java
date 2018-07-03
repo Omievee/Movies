@@ -179,7 +179,7 @@ public interface Api {
 
     /* Cancel Subscription */
     @POST("/rest/v1/subscription/cancellation")
-    Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
+    Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")

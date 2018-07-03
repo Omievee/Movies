@@ -64,16 +64,13 @@
             android:text=""
             android:textAlignment="center"
             android:textColor="@color/new_red"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/arrow"
-            android:layout_width="25dp"
-            android:layout_marginTop="@dimen/margin_minimum"
-            android:layout_height="25dp"
-            android:layout_marginStart="@dimen/margin_half"
+            style="@style/BackButton"
             android:layout_toEndOf="@id/LinkText"
-            android:src="@drawable/arrowforward"
+            android:rotation="180"
             android:tint="@color/new_red" />
 
 
