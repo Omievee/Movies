@@ -4,11 +4,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.ViewGroup
+import com.mobile.model.Availability
 import com.mobile.model.Screening
+import com.mobile.model.SurgeType
 import com.mobile.model.TicketType
+import com.mobile.surge.ConfirmSurgeFragment
 import java.util.concurrent.atomic.AtomicInteger
 
-class BringAFriendPagerAdapter(val screening: Screening, val showtime: String, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+class BringAFriendPagerAdapter(val screening: Screening, val availability: Availability, userSegments:List<Int>, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
     var emailIndex: Int? = null
     var seatIndex: Int? = null
@@ -29,13 +32,12 @@ class BringAFriendPagerAdapter(val screening: Screening, val showtime: String, f
     }
 
     private val frags by lazy {
-        val availability = screening.getAvailability(showtime)
-        availability?.let {
+        availability.let {
             val map = mutableMapOf<Int, Fragment>()
             var position = AtomicInteger(0)
             when (screening.maximumGuests > 0) {
                 true -> {
-                    map.put(position.getAndIncrement(), AddGuestsFragment())
+                    map[position.getAndIncrement()] = AddGuestsFragment()
                 }
                 else -> {
 
@@ -45,7 +47,7 @@ class BringAFriendPagerAdapter(val screening: Screening, val showtime: String, f
                 TicketType.SELECT_SEATING -> {
                     val seatPos = position.getAndIncrement()
                     seatIndex = seatPos
-                    map.put(seatPos, SeatSelectionFragment())
+                    map[seatPos] = SeatSelectionFragment()
                 }
                 else -> {
 
@@ -55,12 +57,21 @@ class BringAFriendPagerAdapter(val screening: Screening, val showtime: String, f
                 true -> {
                     val index = position.getAndIncrement()
                     emailIndex = index
-                    map.put(index, GuestEmailsFragment())
+                    map[index] = GuestEmailsFragment()
                 }
                 else -> {
                 }
             }
-            map.put(position.getAndIncrement(), ConfirmDetailsFragment())
+            val surge = screening.getSurge(availability.startTime, userSegments)
+            when (availability.ticketType) {
+                TicketType.STANDARD -> when (surge.level) {
+                    SurgeType.SURGING -> map.put(position.getAndIncrement(), ConfirmSurgeFragment())
+                    else-> {
+
+                    }
+                }
+                else -> map[position.getAndIncrement()] = ConfirmDetailsFragment()
+            }
             map
         } ?: emptyMap<String, Fragment>()
 

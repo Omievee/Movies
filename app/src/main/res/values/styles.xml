@@ -757,4 +757,122 @@
         <item name="android:layout_marginStart">@dimen/margin_standard</item>
         <item name="android:layout_marginEnd">@dimen/margin_standard</item>
     </style>
+
+    <style name="ProfileButton" parent="MPText">
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="fontFamily">@font/roboto_light</item>
+    </style>
+
+    <style name="ProfileSave" parent="MPText_Bold">
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:text">@string/save</item>
+    </style>
+
+    <style name="BillingDescription">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:text">@string/billing_description</item>
+        <item name="android:paddingEnd">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingStart">@dimen/margin_standard_and_half</item>
+        <item name="android:paddingTop">@dimen/margin_half</item>
+        <item name="android:paddingBottom">@dimen/margin_half</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white_ish</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+    </style>
+
+    <style name="BillingPaymentMethod" parent="MPText_Bold">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:text">@string/payment_method</item>
+    </style>
+
+    <style name="BillingInputLayout" parent="TextInputLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="BillingInputEditText" parent="TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ReservationCheckinButton" parent="MPText_Bold">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_height">60dp</item>
+    </style>
+
+    <style name="ReservationCheckinDescription" parent="MPText">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="SurgeChargeDescription" parent="MPText">
+        <item name="android:alpha">.7</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:text">@string/surge_charge_description</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:padding">@dimen/margin_standard</item>
+    </style>
+
+    <style name="SurgeCancellationPolicy" parent="MPText">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/action_bar_size</item>
+        <item name="android:text">@string/surge_cancellation</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="NewPeakPricing" parent="MPText_Bold">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PeakPricingDescription" parent="MPText">
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PeakIconText" parent="MPText">
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ProgressMPText" parent="ProgressMPButtonText">
+        <item name="android:elevation">0dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

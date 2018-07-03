@@ -2,6 +2,7 @@ package com.mobile.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.mobile.requests.SurgeCheck
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -11,7 +12,7 @@ data class Availability(
         val ticketType: TicketType? = null,
         val available: Boolean = false,
         @SerializedName("providerPerformanceInfo")
-        val providerInfo: PerformanceInfoV2? = null,
+        val providerInfo: ProviderInfo? = null,
         val guestsTicketTypes: List<GuestTicket>? = null
 
 ) : Parcelable {
@@ -21,4 +22,17 @@ data class Availability(
             else -> false
         }
     }
+}
+
+fun fromTime(str:String):Availability {
+    return Availability(startTime = str)
+}
+
+fun Availability.toSurgeCheck(): SurgeCheck {
+    return SurgeCheck(
+            tribuneTheaterId = providerInfo?.tribuneTheaterId?:0,
+            normalizedMovieId = providerInfo?.normalizedMovieId?:0,
+            dateTime = providerInfo?.dateTime?.timeAsString?:"",
+            showtimeStart = ""
+    )
 }

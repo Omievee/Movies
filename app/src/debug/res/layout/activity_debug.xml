@@ -7,7 +7,11 @@
     android:clipChildren="false"
     tools:context=".debug.DebugActivity">
 
-    <include
-        layout="@layout/fragment_confirm_details"/>
+    <fragment
+        android:id="@+id/fragment"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:name="com.mobile.billing.MissingBillingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </android.support.constraint.ConstraintLayout>

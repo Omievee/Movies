@@ -104,7 +104,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
         } else {
             run {
 
-                if (UserPreferences.getProofOfPurchaseRequired() && UserPreferences.getLastReservationPopInfo()!=reservationId) {
+                if (UserPreferences.restrictions?.proofOfPurchaseRequired==true && UserPreferences.lastReservationPopInfo != reservationId) {
                     ticketVerificationBanner.visibility = View.VISIBLE
                     closeIV.visibility = View.GONE
                 }
@@ -117,7 +117,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     visibility = View.VISIBLE
                 }
                 ZipCodeNumberReservation.apply {
-                    text = UserPreferences.getZipCode()
+                    text = UserPreferences.zipCode
                     visibility = View.VISIBLE
                 }
                 cancelCurrentReservationTV.visibility = View.VISIBLE

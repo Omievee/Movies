@@ -18,7 +18,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
          LogUtils.newLog(TAG, "Refreshed token: " + refreshedToken);
 
-        UserPreferences.saveFirebaseHelpshiftToken(refreshedToken);
+        UserPreferences.INSTANCE.saveFirebaseHelpshiftToken(refreshedToken);
 
         Core.registerDeviceToken(this,refreshedToken);
     }

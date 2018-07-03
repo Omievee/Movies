@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.helpshift.util.HelpshiftContext;
+
 import com.mobile.helpers.LogUtils;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.responses.UserInfoResponse;
@@ -24,11 +25,8 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.mobile.UserPreferences.getUserEmail;
-import static com.mobile.UserPreferences.getUserId;
-import static com.mobile.UserPreferences.getUserName;
+import static com.mobile.UserPreferences.INSTANCE;
 import static java.lang.String.valueOf;
-
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -43,10 +41,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         try {
             JSONObject attributes = new JSONObject();
-            attributes.put("email", getUserEmail());
-            attributes.put("name", getUserName());
-            attributes.put("user_id", valueOf(getUserId()));
-            LogUtils.newLog("taplytics put", getUserEmail());
+            attributes.put("email", INSTANCE.getUserEmail());
+            attributes.put("name", INSTANCE.getUserName());
+            attributes.put("user_id", valueOf(INSTANCE.getUserId()));
+            LogUtils.newLog("taplytics put", INSTANCE.getUserEmail());
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 

@@ -26,7 +26,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                     .where(ReservationHistory::class.java)
                     .findAll()
             val wasHistoryUpdatedEver =
-                    isHistoryLoadedToday()
+                    isHistoryLoadedToday
 
             val wasHistoryUpdatedToday = movies
                     .find {

@@ -118,7 +118,7 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
     }
 
     private void updateEmail() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         ChangeEmailRequest request = new ChangeEmailRequest(newEmail.getText().toString().trim(),currentPassword.getText().toString().trim(), userId);
         RestClient.getAuthenticated().changeEmail(request).enqueue(new Callback<ChangeEmailResponse>() {
             @Override
@@ -126,7 +126,7 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
                 if (response != null && response.isSuccessful()) {
                     Log.d(Constants.TAG, "onResponse: "+response.toString());
                     Toast.makeText(myActivity, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    UserPreferences.updateEmail(newEmail.getText().toString().trim());
+                    UserPreferences.INSTANCE.updateEmail(newEmail.getText().toString().trim());
                     myActivity.onBackPressed();
                     myActivity.onBackPressed();
                 } else {

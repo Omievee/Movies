@@ -41,7 +41,7 @@ class ReservationActivity : MPActivty() {
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
-            if(UserPreferences.getZipCode() == null)
+            if(UserPreferences.zipCode == null)
                 presenter.getUserZipCode()
             reservationV.bind(it, showCurrentReservationText, canClose)
         }
@@ -79,12 +79,12 @@ class ReservationActivity : MPActivty() {
 
     override fun onBackPressed() {
         onBackExtension()
-        if(reservation?.ticket?.redemptionCode.isNullOrEmpty()){
-            if(!UserPreferences.getProofOfPurchaseRequired()){
-                super.onBackPressed()
-            }
-        }else{
+        val canGoBack = UserPreferences.restrictions?.proofOfPurchaseRequired==false || reservation?.ticket?.redemptionCode!=null
+        if(canGoBack)
             super.onBackPressed()
+        else{
+            if(canClose)
+                super.onBackPressed()
         }
     }
 
@@ -116,7 +116,7 @@ class ReservationActivity : MPActivty() {
                             checkinId = rs.id,
                             createdAt = rs.expiration,
                             id = rs.id,
-                            _showtime = reservation.time?.let {
+                            _showtime = reservation.availability?.startTime?.let {
                                 try {
                                     SimpleDateFormat("hh:mm a", Locale.US).parse(it).time
                                 } catch (e:Error) {0L}

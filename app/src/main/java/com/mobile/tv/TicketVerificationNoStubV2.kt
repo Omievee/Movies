@@ -66,6 +66,7 @@ class TicketVerificationNoStubV2 : MPFragment(), TicketVerificationNoStubView.Su
         ticketVerificationNoStubV.bind(this)
     }
 
+
     override fun closeFragment() {
         var parent : Fragment? = parentFragment
         if(parent is TicketVerificationV2){

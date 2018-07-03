@@ -8,6 +8,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
 open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
+
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 

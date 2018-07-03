@@ -119,7 +119,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         screeningToken = Parcels.unwrap(getIntent().getParcelableExtra(Constants.TOKEN));
         screening = screeningToken.getScreening();
         reservation = screeningToken.getReservation();
-        String screeningTime = screeningToken.getTime();
+        String screeningTime = screeningToken.getAvailability().getStartTime();
         noStub = findViewById(R.id.ConfirmNotStub);
         verifyTicketFlag = findViewById(R.id.VerifyTicketFLag);
         noCurrentRes = findViewById(R.id.NO_Current_Res);
@@ -156,7 +156,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
             }
         } else {
             StandardTicket.setVisibility(View.VISIBLE);
-            if (UserPreferences.getProofOfPurchaseRequired() || screeningToken.getScreening().getPopRequired()) {
+            if (UserPreferences.INSTANCE.getRestrictions().getProofOfPurchaseRequired() || screeningToken.getScreening().getPopRequired()) {
                 verifyTicketFlag.setVisibility(View.VISIBLE);
                 expand(verifyMsgExpanded);
                 verifyTicketFlag.setOnTouchListener((v, event) -> {
@@ -276,7 +276,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
     }
 
     public void userData() {
-        int userId = UserPreferences.getUserId();
+        int userId = UserPreferences.INSTANCE.getUserId();
         RestClient.getAuthenticated().getUserData(userId).enqueue(new Callback<UserInfoResponse>() {
             @Override
             public void onResponse(Call<UserInfoResponse> call, Response<UserInfoResponse> response) {
@@ -352,7 +352,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
 
             try {
                 String reservationId = String.valueOf(screeningToken.getReservation().getId());
-                String showTime = screeningToken.getTime();
+                String showTime = screeningToken.getAvailability().getStartTime();
                 String movieTitle = screeningToken.getScreening().getTitle();
                 String theaterName = screeningToken.getScreening().getTheaterName();
                 URLEncoder.encode(Build.MODEL, "UTF-8");
@@ -433,7 +433,7 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         meta.put("reservation_kind", reservationKind);//reservationKind
         meta.put("device_name", AppUtils.getDeviceName());//Device Name
         meta.put("os_version", AppUtils.getOsCodename());//OS VERSION
-        meta.put("user_id", String.valueOf(UserPreferences.getUserId()));//UserId
+        meta.put("user_id", String.valueOf(UserPreferences.INSTANCE.getUserId()));//UserId
         meta.put("version_code", String.valueOf(BuildConfig.VERSION_CODE));
         meta.put("version_name", BuildConfig.VERSION_NAME);
         meta.put("os", "android");

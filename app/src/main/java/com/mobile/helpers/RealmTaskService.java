@@ -145,7 +145,7 @@ public class RealmTaskService extends GcmTaskService {
                             realm.copyToRealmOrUpdate(locallyStoredTheaters.getTheaters());
 
                         }, () -> {
-                            UserPreferences.saveTheatersLoadedDate();
+                            UserPreferences.INSTANCE.saveTheatersLoadedDate();
                             LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         }, error -> {
                             // Transaction failed and was automatically canceled.

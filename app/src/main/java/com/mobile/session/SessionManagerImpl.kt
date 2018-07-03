@@ -2,18 +2,23 @@ package com.mobile.session
 
 import com.mobile.UserPreferences
 import com.mobile.model.User
+import com.mobile.network.Api
+import com.mobile.responses.UserInfoResponse
+import com.mobile.rx.Schedulers
+import io.reactivex.Single
 
-class SessionManagerImpl : SessionManager {
+class SessionManagerImpl() : SessionManager {
+
     override fun getUser(): User? {
-        val userId = UserPreferences.getUserId()
+        val userId = UserPreferences.userId
         if (userId == 0) {
             return null;
         }
-        val token = UserPreferences.getAuthToken()
-        val oneDeviceId = UserPreferences.getOneDeviceId()
-        val email = UserPreferences.getUserEmail()
-        val androidId = UserPreferences.getDeviceAndroidID()
-        UserPreferences.getFirebaseHelpshiftToken()
+        val token = UserPreferences.authToken
+        val oneDeviceId = UserPreferences.oneDeviceId
+        val email = UserPreferences.userEmail
+        val androidId = UserPreferences.deviceAndroidID
+        UserPreferences.firebaseHelpshiftToken
         return User(
                 id = userId,
                 authToken = token,

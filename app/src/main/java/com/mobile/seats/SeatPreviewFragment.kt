@@ -54,7 +54,7 @@ class SeatPreviewFragment : Fragment() {
     private fun fetchSeatInfo() {
         val tribuneTheaterId = payload?.screening?.tribuneTheaterId ?: return
         val theaterId = payload?.theater?.id ?: return
-        val performanceId = payload?.screening?.getAvailability(payload?.showtime)?.providerInfo?.performanceId
+        val performanceId = payload?.availability?.providerInfo?.performanceId
                 ?: return
         disposable?.dispose()
         disposable = RestClient
@@ -94,4 +94,4 @@ interface SeatPreviewListener {
 }
 
 @Parcelize
-class SeatPreviewPayload(val screening: Screening? = null, val theater: Theater2? = null, val showtime: String? = null) : Parcelable
+class SeatPreviewPayload(val screening: Screening? = null, val theater: Theater2? = null, val availability: Availability? = null) : Parcelable

@@ -427,7 +427,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
             googleMap.animateCamera(cameraUpdate);
         } else {
-            Location local = UserPreferences.getLocation();
+            Location local = UserPreferences.INSTANCE.getLocation();
             queryRealmLoadTheaters(local.getLatitude(), local.getLongitude());
 
             LatLng latLng = new LatLng(local.getLatitude(), local.getLongitude());

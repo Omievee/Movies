@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:layout_height="match_parent"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:background="@android:color/transparent"
+        android:text="@string/confirm_details" />
+
+    <ImageView
+        android:id="@+id/backButton"
+        style="@style/BackButton" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton" />
+
+    <com.mobile.seats.MovieScreeningPosterHeader
+        android:id="@+id/moviePosterHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard_and_half"
+        android:layout_marginStart="@dimen/margin_standard_and_half"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/titleView" />
+
+    <com.mobile.surge.SurgeTicketView
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/moviePosterHeader"
+        android:id="@+id/surgeTicket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/divider"
+        style="@style/divider"
+        app:layout_constraintTop_toBottomOf="@id/surgeTicket"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    
+    <com.mobile.surge.TotalView
+        android:id="@+id/surgeTotal"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/surgeChargeDescription"
+        app:layout_constraintTop_toBottomOf="@id/surgeTotal"
+        app:layout_constraintBottom_toTopOf="@id/surgeCancellationAndRefundPolicy"
+        style="@style/SurgeChargeDescription" />
+
+    <TextView
+        android:id="@+id/surgeCancellationAndRefundPolicy"
+        app:layout_constraintBottom_toTopOf="@+id/submit"
+        style="@style/SurgeCancellationPolicy"
+    />
+
+    <com.mobile.widgets.MPProgressButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/submit"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:mp_text="@string/submit" />
+
+    <com.mobile.surge.PeakPricingSplashView
+        android:id="@+id/peakPricingSplash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -366,7 +366,7 @@ class TicketVerificationV2 : MPFragment() {
         meta["reservation_kind"] = reservationKind//reservationKind
         meta["device_name"] = AppUtils.getDeviceName()//Device Name
         meta["os_version"] = AppUtils.getOsCodename()//OS VERSION
-        meta["user_id"] = UserPreferences.getUserId().toString()//UserId
+        meta["user_id"] = UserPreferences.userId.toString()//UserId
         meta["version_code"] = BuildConfig.VERSION_CODE.toString()
         meta["version_name"] = BuildConfig.VERSION_NAME
         meta["os"] = "android"

@@ -29,6 +29,8 @@ import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.mobile.UserPreferences.*;
+
 /**
  * Created by ivonneortega on 3/11/18.
  */
@@ -94,7 +96,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
     @Override
     public void userOpenedApp(Context context, String deepLink) {
 
-        String userId = String.valueOf(UserPreferences.getUserId());
+        String userId = String.valueOf(INSTANCE.getUserId());
         if (deepLink == null)
             deepLink = "https://www.moviepass.com/go";
         String thisCampaign = GoWatchItSingleton.getInstance().getCampaign();
@@ -102,7 +104,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String lts = currentTimeStamp();
-        IDFA = UserPreferences.getAAID();
+        IDFA = INSTANCE.getAAID();
 
         api.openAppEvent("Unset",
                 "-1", "-1", "app_open", thisCampaign, "app", "android", deepLink, "organic",
@@ -132,12 +134,12 @@ public class GoWatchItSingleton implements GoWatchItManager {
 
         if(isAllMoviesEmpty())
             getMovies();
-        String userId = String.valueOf(UserPreferences.getUserId());
+        String userId = String.valueOf(INSTANCE.getUserId());
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
         String lts = currentTimeStamp();
-        IDFA = UserPreferences.getAAID();
+        IDFA = INSTANCE.getAAID();
         LogUtils.newLog("WATCH", "userOpenedMovie: "+movieId);
         String movieTitle = getMovieTitle(movieId);
 
@@ -170,8 +172,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
 
         if (isAllMoviesEmpty())
             getMovies();
-        String userId = String.valueOf(UserPreferences.getUserId());
-        IDFA = UserPreferences.getAAID();
+        String userId = String.valueOf(INSTANCE.getUserId());
+        IDFA = INSTANCE.getAAID();
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String tht, thd, tn, thc, thr, thz, tha;
@@ -220,8 +222,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
 
         if (isAllMoviesEmpty())
             getMovies();
-        String userId = String.valueOf(UserPreferences.getUserId());
-        IDFA = UserPreferences.getAAID();
+        String userId = String.valueOf(INSTANCE.getUserId());
+        IDFA = INSTANCE.getAAID();
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String tht, thd, tn, thc, thr, thz, tha;
@@ -233,7 +235,7 @@ public class GoWatchItSingleton implements GoWatchItManager {
         tha = theater.getAddress();
         String lts = currentTimeStamp();
         String movieTitle = getMovieTitle(movieId);
-        UserPreferences.setLastCheckInAttemptDate();
+        INSTANCE.setLastCheckInAttemptDate();
 
         String result = "";
         thd = "";
@@ -269,8 +271,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
     @Override
     public void searchEvent(String search, String engagement, String url) {
 
-        String userId = String.valueOf(UserPreferences.getUserId());
-        IDFA = UserPreferences.getAAID();
+        String userId = String.valueOf(INSTANCE.getUserId());
+        IDFA = INSTANCE.getAAID();
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
@@ -299,8 +301,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
     @Override
     public void userOpenedTheater(Theater theaterObject, String url) {
 
-        String userId = String.valueOf(UserPreferences.getUserId());
-        IDFA = UserPreferences.getAAID();
+        String userId = String.valueOf(INSTANCE.getUserId());
+        IDFA = INSTANCE.getAAID();
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
         String campaign = GoWatchItSingleton.getInstance().getCampaign();
@@ -331,8 +333,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
     @Override
     public void userOpenedTheaterTab(String url, String et) {
 
-        String userId = String.valueOf(UserPreferences.getUserId());
-        IDFA = UserPreferences.getAAID();
+        String userId = String.valueOf(INSTANCE.getUserId());
+        IDFA = INSTANCE.getAAID();
 
         String versionName = BuildConfig.VERSION_NAME;
         String versionCode = String.valueOf(BuildConfig.VERSION_CODE);

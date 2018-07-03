@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mobile.application.Application
 import com.mobile.model.ParcelableDate
+import com.mobile.model.SurgeType
 import com.mobile.rx.RxJava2CallAdapterFactory
 import com.mobile.session.SessionManager
 import com.moviepass.BuildConfig
@@ -73,6 +74,9 @@ class ApiModule {
                     }.type, DateAdapter())
                 .registerTypeAdapter(object : TypeToken<Date>() {
                 }.type, DateAdapter())
+                .registerTypeAdapter(object : TypeToken<SurgeType>() {
+
+                }.type, SurgeTypeAdapter())
                 .create()
     }
 

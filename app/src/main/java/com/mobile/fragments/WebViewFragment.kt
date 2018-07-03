@@ -50,7 +50,7 @@ class WebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val cookeiManager = CookieManager.getInstance()
-        val tokens = arrayOf(Pair("at", UserPreferences.getAuthToken()), Pair(("uid"), UserPreferences.getUserId()))
+        val tokens = arrayOf(Pair("at", UserPreferences.authToken), Pair(("uid"), UserPreferences.userId))
         if (tokens.filter { it.second != null }.size == tokens.size) {
             tokens.forEach {
                 cookeiManager.setCookie(url, "${it.first}=${it.second}")

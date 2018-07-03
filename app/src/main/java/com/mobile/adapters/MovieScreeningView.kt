@@ -38,7 +38,7 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
         val animator = DefaultItemAnimator()
         animator.supportsChangeAnimations = false
         recyclerView.itemAnimator = animator
-        recyclerView.addItemDecoration(SpaceDecorator(resources.getDimension(R.dimen.card_button_margin_start).toInt()))
+        recyclerView.addItemDecoration(SpaceDecorator(bottom = resources.getDimension(R.dimen.card_button_margin_start).toInt()))
         val margin = resources.getDimension(R.dimen.margin_half).toInt()
         layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
             marginStart = margin

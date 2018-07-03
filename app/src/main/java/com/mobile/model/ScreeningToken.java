@@ -24,7 +24,7 @@ public class ScreeningToken {
     Screening screening;
     int seatCol;
     int seatRow;
-    String time;
+    Availability availability;
     String zipCodeTicket;
     List<SeatSelected> seatSelected;
     Theater theater;
@@ -32,24 +32,24 @@ public class ScreeningToken {
     public ScreeningToken() {
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, Theater theater) {
+    public ScreeningToken(Screening screening, Availability availability, Reservation res, Theater theater) {
         this.screening = screening;
-        this.time = time;
+        this.availability = availability;
         this.reservation = res;
         this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ETicketConfirmation eTicketConfirmation, Theater theater) {
+    public ScreeningToken(Screening screening, Availability availability, Reservation res, ETicketConfirmation eTicketConfirmation, Theater theater) {
         this.screening = screening;
-        this.time = time;
+        this.availability = availability;
         this.reservation = res;
         this.confirmationCode = eTicketConfirmation;
         this.theater = theater;
     }
 
-    public ScreeningToken(Screening screening, String time, Reservation res, ETicketConfirmation confirmationCode, List<SeatSelected> seatSelected, Theater theater) {
+    public ScreeningToken(Screening screening, Availability availability, Reservation res, ETicketConfirmation confirmationCode, List<SeatSelected> seatSelected, Theater theater) {
         this.screening = screening;
-        this.time = time;
+        this.availability = availability;
         this.reservation = res;
         this.qrUrl = qrUrl;
         this.confirmationCode = confirmationCode;
@@ -61,8 +61,8 @@ public class ScreeningToken {
         return screening;
     }
 
-    public String getTime() {
-        return time;
+    public Availability getAvailability() {
+        return availability;
     }
 
     public Reservation getReservation() {
@@ -72,7 +72,7 @@ public class ScreeningToken {
     @Nullable
     public Date getTimeAsDate() {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(time);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(availability.getStartTime());
         } catch (Exception e) {
             e.printStackTrace();
         }

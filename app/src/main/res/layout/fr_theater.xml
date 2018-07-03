@@ -130,19 +130,6 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/button_check_in"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="55dp"
-            android:animateLayoutChanges="true"
-            android:background="@color/new_red"
-            android:text="@string/fragment_theater_check_in"
-            android:textAllCaps="false"
-            android:visibility="gone" />
-
         <include
             android:id="@+id/selectedTheaterProgress"
             layout="@layout/view_loading"
@@ -150,5 +137,10 @@
             android:layout_height="match_parent" />
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/checkinFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

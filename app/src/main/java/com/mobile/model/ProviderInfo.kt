@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-class PerformanceInfoV2(
+class ProviderInfo(
         val normalizedMovieId: Int? = 0,
         val externalMovieId: String? = null,
         val format: Format? = null,
