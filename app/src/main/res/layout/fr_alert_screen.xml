@@ -81,7 +81,7 @@
         style="@style/RedMoviepassButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/quadruple_margin_standard"
+        android:layout_marginBottom="@dimen/double_margin_standard"
         android:textAllCaps="false"
         android:textSize="20sp"
         android:visibility="gone" />
