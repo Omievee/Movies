@@ -81,13 +81,11 @@
                     android:textSize="35sp"
                     android:visibility="gone" />
 
-                <TextView
+                <Button
                     android:id="@+id/ACTIVATE_BUTTON"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/RedMoviepassButton"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/mpbutton1"
-                    android:paddingTop="10dp"
+                    android:layout_marginTop="@dimen/double_margin_standard"
                     android:text="Activate Card"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -123,8 +121,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="@dimen/double_margin_standard"
             android:layout_marginEnd="@dimen/margin_half"
+            android:layout_marginTop="@dimen/double_margin_standard"
             android:src="@drawable/close_white" />
 
 

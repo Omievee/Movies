@@ -41,7 +41,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
     internal lateinit var progress: View
     internal lateinit var activateInstructions: TextView
     internal lateinit var activateManualInput: TextView
-    internal lateinit var activateSubmitButton: TextView
     internal lateinit var activateDigits: EditText
     internal lateinit var activateScanCardIcon: ImageView
     internal lateinit var activateXOut: ImageView
@@ -57,7 +56,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
         activateInstructions = findViewById(R.id.ACTIVATECARD_INTRUCTIONS)
         activateManualInput = findViewById(R.id.ACTIVATECARD_MANULINPUT)
         activateDigits = findViewById(R.id.ACTIVATE_DIGITS)
-        activateSubmitButton = findViewById(R.id.ACTIVATE_BUTTON)
         activateScanCardIcon = findViewById(R.id.ACTIVATECARD_SCAN_ICON)
         activateXOut = findViewById(R.id.ACTIVATECARD_X_OUT)
         progress = findViewById(R.id.progress)
@@ -83,13 +81,13 @@ class ActivateMoviePassCard : AppCompatActivity() {
             fadeOut(activateManualInput)
             activateManualInput.visibility = View.GONE
 
-            fadeIn(activateSubmitButton)
-            activateSubmitButton.visibility = View.VISIBLE
+            fadeIn(ACTIVATE_BUTTON)
+            ACTIVATE_BUTTON.visibility = View.VISIBLE
             fadeIn(activateDigits)
             activateDigits.visibility = View.VISIBLE
         }
 
-        activateSubmitButton.setOnClickListener { v: View ->
+        ACTIVATE_BUTTON.setOnClickListener { v: View ->
             progress.visibility = View.VISIBLE
             continueActivation()
         }
@@ -119,11 +117,11 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
                 activateScanCardIcon.visibility = View.GONE
                 activateManualInput.visibility = View.GONE
-                activateSubmitButton.visibility = View.VISIBLE
+                ACTIVATE_BUTTON.visibility = View.VISIBLE
                 activateDigits.visibility = View.VISIBLE
                 activateDigits.setText(scanResult.lastFourDigitsOfCardNumber)
                 ACTIVATECARD_INTRUCTIONS.text = getString(R.string.last_4)
-                activateSubmitButton.setOnClickListener { v -> continueActivation() }
+                ACTIVATE_BUTTON.setOnClickListener { v -> continueActivation() }
 
             }
         }
