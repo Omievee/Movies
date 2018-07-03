@@ -26,7 +26,7 @@ class AlertScreenFragment : MPFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        alertObject = arguments!!.getParcelable("alert")
+        alertObject = arguments?.getParcelable("alert")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,7 +44,7 @@ class AlertScreenFragment : MPFragment() {
 
         if (dismiss) {
             dismissAlert.setOnClickListener { v ->
-                UserPreferences.setAlertDisplayedId(alertObject!!.id)
+                UserPreferences.setAlertDisplayedId(alertObject?.id)
                 activity?.onBackPressed()
             }
         } else {
@@ -58,7 +58,7 @@ class AlertScreenFragment : MPFragment() {
             LinkText.text = alertObject?.urlTitle
             alertClickMessage.setOnClickListener { v ->
                 if (Patterns.WEB_URL.matcher(alertObject?.url).matches()) {
-                    val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject!!.url))
+                    val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject?.url))
                     startActivity(alertIntentClick)
                 }
             }
@@ -88,7 +88,7 @@ class AlertScreenFragment : MPFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (alertObject?.dismissible!!) {
+        if (alertObject?.dismissible == true) {
             UserPreferences.setAlertDisplayedId(alertObject?.id)
         }
 
@@ -107,8 +107,7 @@ class AlertScreenFragment : MPFragment() {
     }
 
     override fun onBack(): Boolean {
-
-        return !alertObject?.dismissible!!
+        return alertObject?.dismissible == false
     }
 }
 
