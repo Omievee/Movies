@@ -69,9 +69,9 @@ class AlertScreenFragment : MPFragment() {
             val acceptURL = alertObject?.dismissButtonWebhook + "&userId=" + UserPreferences.getUserId()
             acceptButton.setOnClickListener {
                 run(acceptURL)
-//                UserPreferences.setAlertDisplayedId(alertObject?.id)
-//                alertObject?.dismissible = true
-//                activity?.onBackPressed()
+                UserPreferences.setAlertDisplayedId(alertObject?.id)
+                alertObject?.dismissible = true
+                activity?.onBackPressed()
             }
         }
     }
