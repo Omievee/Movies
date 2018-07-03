@@ -61,8 +61,6 @@ class AlertScreenFragment : MPFragment() {
                 }
             }
         }
-
-
         if (showButton) {
             acceptButton.visibility = View.VISIBLE
             acceptButton.text = alertObject?.dismissButtonText

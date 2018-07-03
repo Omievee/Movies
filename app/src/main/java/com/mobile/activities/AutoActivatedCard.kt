@@ -31,13 +31,14 @@ class AutoActivatedCard : AppCompatActivity() {
         }
 
     }
+
     override fun onBackPressed() {
         super.onBackPressed()
         checkPreference()
     }
 
     fun checkPreference() {
-        if (!UserPreferences.hasUserSeenCardActivationScreen && !UserPreferences.restrictions.equals(SubscriptionStatus.ACTIVE.name)) {
+        if (!UserPreferences.hasUserSeenCardActivationScreen && !UserPreferences.restrictions.subscriptionStatus.equals(SubscriptionStatus.ACTIVE)) {
             UserPreferences.setUserHasSeenCardActivationScreen(true)
             val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
             activatedIntent.putExtra(MovieFragment.SCREENING, screeningObject)
