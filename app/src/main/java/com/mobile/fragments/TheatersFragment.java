@@ -396,7 +396,7 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @Override
     public void onResume() {
         super.onResume();
-        locationUpdateRealm();
+//        locationUpdateRealm();
     }
 
     @Override

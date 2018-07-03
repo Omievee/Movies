@@ -47,11 +47,12 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
     private var permission: Boolean = false
         get() {
             return ContextCompat.checkSelfPermission(application, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(application, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         }
 
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
-        val single: Single<UserLocation> = create({ emitter ->
+        val single: Single<UserLocation> = create { emitter ->
             val permission = permission
             if (!permission) {
                 when (emitter.isDisposed) {
@@ -72,7 +73,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
             task?.addOnFailureListener {
                 emitter.onError(it)
             }
-        })
+        }
         single.map {
             _lastLocation = it
         }
