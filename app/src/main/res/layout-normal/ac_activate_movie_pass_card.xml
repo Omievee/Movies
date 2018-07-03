@@ -83,7 +83,7 @@
                     android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/ACTIVATE_BUTTON"
+                    android:id="@+id/activateButton"
                     style="@style/RedMoviepassButton"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/double_margin_standard"

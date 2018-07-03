@@ -85,13 +85,13 @@ class ActivateMoviePassCard : AppCompatActivity() {
             fadeOut(activateManualInput)
             activateManualInput.visibility = View.GONE
 
-            fadeIn(ACTIVATE_BUTTON)
-            ACTIVATE_BUTTON.visibility = View.VISIBLE
+            fadeIn(activateButton)
+            activateButton.visibility = View.VISIBLE
             fadeIn(activateDigits)
             activateDigits.visibility = View.VISIBLE
         }
 
-        ACTIVATE_BUTTON.setOnClickListener { v: View ->
+        activateButton.setOnClickListener { v: View ->
             progress.visibility = View.VISIBLE
             continueActivation()
         }
@@ -121,7 +121,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
                 activateScanCardIcon.visibility = View.GONE
                 activateManualInput.visibility = View.GONE
-                ACTIVATE_BUTTON.visibility = View.VISIBLE
+                activateButton.visibility = View.VISIBLE
                 activateDigits.visibility = View.VISIBLE
                 activateDigits.setText(scanResult.lastFourDigitsOfCardNumber)
                 Header1.visibility = View.GONE
@@ -129,7 +129,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
                 instruct2.visibility = View.GONE
                 ACTIVATECARD_INTRUCTIONS.text = getString(R.string.last_4)
 
-                ACTIVATE_BUTTON.setOnClickListener { v -> continueActivation() }
+                activateButton.setOnClickListener { v -> continueActivation() }
 
             }
         }
