@@ -72,18 +72,14 @@ class AlertScreenFragment : MPFragment() {
                 val client = AsyncHttpClient()
                 client.get(acceptURL, object : AsyncHttpResponseHandler() {
                     override fun onSuccess(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray) {
-
                     }
 
                     override fun onFailure(statusCode: Int, headers: Array<cz.msebera.android.httpclient.Header>, responseBody: ByteArray, error: Throwable) {
-
                     }
                 })
                 UserPreferences.setAlertDisplayedId(alertObject!!.id)
                 activity?.onBackPressed()
             }
-        } else {
-
         }
     }
 
@@ -108,12 +104,7 @@ class AlertScreenFragment : MPFragment() {
     }
 
     override fun onBack(): Boolean {
-        if (alertObject?.dismissible!!) {
-            activity?.onBackPressed()
-            return true
-        } else {
-            return false
-        }
+        return !alertObject?.dismissible!!
     }
 }
 
