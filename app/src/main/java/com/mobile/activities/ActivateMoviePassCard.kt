@@ -27,6 +27,7 @@ import com.moviepass.R
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.ac_activate_movie_pass_card.*
 import javax.inject.Inject
 
 class ActivateMoviePassCard : AppCompatActivity() {
@@ -76,6 +77,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
         }
 
         activateManualInput.setOnClickListener { v ->
+            ACTIVATECARD_INTRUCTIONS.text = getString(R.string.last_4)
             fadeOut(activateScanCardIcon)
             activateScanCardIcon.visibility = View.GONE
             fadeOut(activateManualInput)
@@ -120,7 +122,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
                 activateSubmitButton.visibility = View.VISIBLE
                 activateDigits.visibility = View.VISIBLE
                 activateDigits.setText(scanResult.lastFourDigitsOfCardNumber)
-
+                ACTIVATECARD_INTRUCTIONS.text = getString(R.string.last_4)
                 activateSubmitButton.setOnClickListener { v -> continueActivation() }
 
             }

@@ -536,7 +536,7 @@
     <string name="tickets">%1$s Tickets:</string>
     <string name="x">x</string>
     <string name="free_guest_convenience">$1.50 convenience fee applies per guest ticket</string>
-    <string name="seats_scroll_around">*scrollItem around to see more seats</string>
+    <string name="seats_scroll_around">*scroll around to see more seats</string>
     <string name="get_e_tickets">Get E-Tickets</string>
     <string name="duplicate_emails">The following guests are current or  former MoviePass members, or on our do-not-email list. No reimbursements can be applied for these guests:\n\n</string>
     <string name="available_seats">Available Seats</string>
@@ -614,4 +614,5 @@
     <string name="update_payment_method_description">Your payment for your last reservation was declined. Please update your payment information in “Account Details”.   \n\nYou’ll be able to check into your next movie the day after updating your payment details.</string>
     <string name="peak_pricing">Peak Pricing</string>
     <string name="go_back">Go Back</string>
+    <string name="last_4">Confirm the last 4 digits of your card</string>
 </resources>
