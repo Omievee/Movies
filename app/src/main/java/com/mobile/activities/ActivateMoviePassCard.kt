@@ -28,6 +28,9 @@ import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.ac_activate_movie_pass_card.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.IOException
 import javax.inject.Inject
 
 class ActivateMoviePassCard : AppCompatActivity() {
@@ -53,7 +56,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
         setContentView(R.layout.ac_activate_movie_pass_card)
 
 
-        activateInstructions = findViewById(R.id.ACTIVATECARD_INTRUCTIONS)
         activateManualInput = findViewById(R.id.ACTIVATECARD_MANULINPUT)
         activateDigits = findViewById(R.id.ACTIVATE_DIGITS)
         activateScanCardIcon = findViewById(R.id.ACTIVATECARD_SCAN_ICON)
@@ -196,4 +198,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
         private val REQUEST_CAMERA_CODE = 201
         private val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
+
+
+
 }
