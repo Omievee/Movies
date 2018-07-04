@@ -73,9 +73,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:mp_text="@string/submit" />
 
-    <com.mobile.surge.PeakPricingSplashView
-        android:id="@+id/peakPricingSplash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
 </android.support.constraint.ConstraintLayout>

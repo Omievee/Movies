@@ -49,6 +49,7 @@ import com.mobile.reservation.CheckInFragmentKt;
 import com.mobile.reservation.Checkin;
 import com.mobile.responses.ScreeningsResponseV2;
 import com.mobile.rx.Schedulers;
+import com.mobile.surge.PeakPricingActivity;
 import com.moviepass.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -255,6 +256,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
         int margin = (int) getResources().getDimension(R.dimen.margin_half);
         selectedTheatersRecyclerView.addItemDecoration(new SpaceDecorator(null,null, 0,null,null,null));
+
+        if(!UserPreferences.INSTANCE.getShownPeakPricing()) {
+            startActivity(PeakPricingActivity.Companion.newInstance(getActivity()));
+        }
     }
 
     public void setUpComingSoon() {
