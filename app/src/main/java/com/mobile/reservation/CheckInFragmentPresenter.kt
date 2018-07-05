@@ -93,7 +93,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
         val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
         when(surge.level) {
-            SurgeType.SURGING-> return showSurgeModal(surge.amount)
+            SurgeType.SURGING-> return view.navigateToSurchargeConfirm(checkin)
             else-> {}
         }
         view.showProgress()
@@ -113,13 +113,21 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private fun onSurgeResponse(it: SurgeResponse) {
         when (it.currentlyPeaking) {
-            true -> showSurgeModal(it.peakAmount)
+            true -> showSurgeModal(it)
             false -> createReservation()
         }
     }
 
-    private fun showSurgeModal(peakAmount: Int) {
-        view.showSurgeModal(peakAmount.centsAsDollars)
+    private fun showSurgeModal(surge:SurgeResponse) {
+        val message = surge.peakMessage
+        when(message) {
+            null-> view.showSurgeModal(surge.peakAmount.centsAsDollars)
+            else-> view.showSurgeModal(message)
+        }
+    }
+
+    private fun showSurgeModal(text: String) {
+        view.showSurgeModal(text)
     }
 
     private fun createReservation() {
