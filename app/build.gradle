@@ -24,7 +24,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 127
-        versionName "3.0.22"
+        versionName "3.0.23"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
