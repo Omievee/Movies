@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.view.View
 import com.mobile.utils.MapUtil.Companion.mapIntent
 import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
@@ -34,5 +35,9 @@ class MovieScreeningPosterHeader(context: Context, attrs: AttributeSet? = null) 
         seats.text = "${seatText} ${payload.selectedSeats?.joinToString(", ") {
             it.seatName ?: ""
         } ?: ""}"
+        seats.visibility = when (payload.selectedSeats?.size ?: 0 > 0) {
+            true -> View.VISIBLE
+            else -> View.GONE
+        }
     }
 }
