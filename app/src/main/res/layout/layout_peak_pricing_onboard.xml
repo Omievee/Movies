@@ -6,6 +6,7 @@
 
     <ImageView
         android:id="@+id/closeButton"
+        android:layout_marginTop="@dimen/status_bar_height"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         style="@style/CloseButton" />
