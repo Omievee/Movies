@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/newPeakPricing"
         style="@style/NewPeakPricing"
-        android:text="New Peak Pricing"
+        android:text="Peak Pricing"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintBottom_toTopOf="@+id/description"
@@ -28,9 +28,8 @@
         app:layout_constraintBottom_toTopOf="@id/surge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MoviePass is committed to maintaining our low monthly price as we grow. Rather than raise our prices or limit viewings we are implementing a pricing system based on demand for particular showtimes.
-
-If the combination of demand for a title, date or part of day is higher, subscribers may be asked to pay a small additional fee depending on the level of demand. You can avoid this peak surcharge by choosing an alternative date or film." />
+        android:text="MoviePass is committed to keeping our low monthly price as we grow. We’re implementing a pricing system based on demand for certain showtimes instead of raising monthly prices or limiting viewings.\n\n
+Peak Pricing is in effect when there’s a high demand for a movie or showtime. MoviePass members may be asked to pay a small additional fee depending on the level of demand. You can avoid this peak surcharge by choosing a different showtime or movie." />
 
     <android.support.constraint.ConstraintLayout
         app:layout_constraintTop_toBottomOf="@id/description"
@@ -55,7 +54,7 @@ If the combination of demand for a title, date or part of day is higher, subscri
             app:layout_constraintStart_toEndOf="@id/surgeIcon"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/PeakIconText"
-            android:text="This icon indicates that a specific showtime is at Peak Pricing and there will be an added fee."
+            android:text="This icon indicates that a specific showtime is in Peak Pricing and there will be an added fee."
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
     </android.support.constraint.ConstraintLayout>
@@ -84,7 +83,7 @@ If the combination of demand for a title, date or part of day is higher, subscri
             style="@style/PeakIconText"
             app:layout_constraintStart_toEndOf="@id/willSurgeIcon"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="This icon indicates that a showtime does NOT have a surcharge, but is growing in demand and therefore could be at Peak Pricing in the near future. "
+            android:text="This icon indicates that a showtime does NOT have an added fee, but is growing in demand and could be in Peak Pricing soon."
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
     </android.support.constraint.ConstraintLayout>
