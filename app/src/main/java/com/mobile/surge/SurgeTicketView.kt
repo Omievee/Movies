@@ -17,16 +17,26 @@ import kotlinx.android.synthetic.main.layout_guest_ticket.view.*
 
 class SurgeTicketView(context: Context, attributeSet: AttributeSet?=null) : ConstraintLayout(context,attributeSet) {
 
+    var infoClickListener:InfoClickListener? = null
+
     init {
         inflate(context, R.layout.layout_guest_ticket, this)
         infoIcon.visibility = View.VISIBLE
+        infoIcon.setOnClickListener {
+            infoClickListener?.onClickInfo()
+        }
     }
 
-    fun bind(surge:Surge) {
+    fun bind(surge:Surge, infoClickListener: InfoClickListener?=null) {
         ticketType.setText(R.string.peak_surcharge)
+        this.infoClickListener = infoClickListener
         price.text = surge.costAsDollars
         val one = 1
         quantity.text = one.toString()
         total.text = surge.costAsDollars
     }
+}
+
+interface InfoClickListener {
+    fun onClickInfo()
 }

@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
+import com.mobile.seats.MPBottomSheetFragment
+import com.mobile.seats.SheetData
 import com.moviepass.R
 import io.card.payment.CardIOActivity
 
@@ -61,6 +63,10 @@ fun Fragment.showFragmentExtension(id:Int, fragment: Fragment? = null) {
     childFragmentManager.beginTransaction()
             .setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right)
             .replace(id, fragment).commit()
+}
+
+fun Fragment.showBottomFragment(sheetData: SheetData) {
+    MPBottomSheetFragment.newInstance(sheetData).show(fragmentManager, "")
 }
 
 fun Fragment.replaceFragmentExtension(fragment: Fragment? = null) {

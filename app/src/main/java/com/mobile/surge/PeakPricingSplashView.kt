@@ -17,12 +17,7 @@ class PeakPricingSplashView(context: Context?, attrs: AttributeSet? = null) : Co
         willSurgeIcon.isEnabled = false
         setOnClickListener {  }
         closeButton.setOnClickListener {
-            (context as? Activity)?.let {
-                it.onBackPressed()
-            }
-        }
-        if(UserPreferences.shownPeakPricing) {
-            visibility = View.GONE
+            (context as? Activity)?.onBackPressed()
         }
     }
 }

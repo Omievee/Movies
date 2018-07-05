@@ -15,16 +15,15 @@ import com.mobile.model.Availability
 import com.mobile.model.Screening
 import com.mobile.model.ScreeningToken
 import com.mobile.model.Theater
-import com.mobile.network.Api
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.reservation.Checkin
 import com.mobile.reservation.ReservationActivity
 import com.mobile.seats.BringAFriendListener
-import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SelectSeatPayload
 import com.mobile.seats.SheetData
 import com.mobile.session.UserManager
 import com.mobile.tickets.TicketManager
+import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -97,12 +96,16 @@ class ConfirmSurgeFragment : MPFragment() {
                 .setMessage(R.string.update_payment_method_description)
     }
 
-    private fun showBottomFragment(sheetData: SheetData) {
-        MPBottomSheetFragment.newInstance(sheetData).show(fragmentManager, "")
-    }
-
     val clickListener = View.OnClickListener {
         showFragment(MissingBillingFragment())
+    }
+
+    val infoClickListener = object : InfoClickListener {
+        override fun onClickInfo() {
+            val activity = activity?:return
+            startActivity(PeakPricingActivity.newInstance(activity))
+        }
+
     }
 
     private fun subscribe() {
@@ -113,7 +116,7 @@ class ConfirmSurgeFragment : MPFragment() {
                     moviePosterHeader.bind(it)
                     val surge = it.screening?.getSurge(it.availability?.startTime, UserPreferences.restrictions.userSegments)
                             ?: return@subscribe
-                    surgeTicket.bind(surge)
+                    surgeTicket.bind(surge, infoClickListener = infoClickListener)
                     surgeTotal.bind(surge)
                     surgeTotal.setOnClickListener(clickListener)
                     submit.isEnabled = true

@@ -14,6 +14,7 @@ import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
+import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -69,10 +70,6 @@ class ConfirmDetailsFragment : Fragment() {
                 title = getString(R.string.free_guest_policy),
                 description = getString(R.string.free_guest_policy_description)
         ))
-    }
-
-    private fun showBottomFragment(sheetData: SheetData) {
-        MPBottomSheetFragment.newInstance(sheetData).show(fragmentManager, "")
     }
 
     private fun subscribe() {
