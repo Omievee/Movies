@@ -119,7 +119,7 @@ public interface Api {
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
 
-    @POST("/rest/v2/reservations/peak-check")
+    @POST("/rest/v3/reservations/peak-check")
     Single<SurgeResponse> surgeCheck(@Body ProviderInfo info);
 
     @POST("/rest/v2/reservations")
