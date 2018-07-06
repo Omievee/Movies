@@ -36,3 +36,5 @@ Thumbs.db
 build/
 app/.externalNativeBuild/
 captures/
+app/prod
+app/staging
