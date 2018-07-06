@@ -113,7 +113,10 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private fun onSurgeResponse(it: SurgeResponse) {
         when (it.currentlyPeaking) {
-            true -> showSurgeModal(it)
+            true -> {
+                checkin?.screening?.updateSurge(checkin?.availability, it)
+                showSurgeModal(it)
+            }
             false -> createReservation()
         }
     }

@@ -1,6 +1,7 @@
 package com.mobile.model
 
 import android.os.Parcelable
+import com.mobile.network.SurgeResponse
 import com.mobile.reservation.CurrentReservationV2
 import kotlinx.android.parcel.Parcelize
 import java.util.Date;
@@ -64,6 +65,21 @@ data class Screening(var moviepassId: Int? = null,
                         else -> true
                     }
                 }?.ticketType
+    }
+
+    fun updateSurge(availability: Availability?, surgeResponse: SurgeResponse) {
+        val avail = availability?:return
+        val surge = surge[avail.startTime]?:return
+        when(surge!== Surge.NONE) {
+            true-> {
+                when(surgeResponse.currentlyPeaking) {
+                    true-> {
+                        surge.level = SurgeType.SURGING
+                        surge.amount = surgeResponse.peakAmount
+                    }
+                }
+            }
+        }
     }
 
     companion object {
