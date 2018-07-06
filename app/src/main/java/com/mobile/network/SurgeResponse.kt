@@ -1,12 +1,20 @@
 package com.mobile.network
 
-import com.google.gson.annotations.SerializedName
+data class SurgeResponse(val data: SurgeData = SurgeData()) {
+    val peakMessage: String?
+        get() {
+            return data.attributes.peakMessage
+        }
+    val peakAmount: Int
+        get() {
+            return data.attributes.peakAmount
+        }
+    val currentlyPeaking: Boolean
+        get() {
+            return data.attributes.currentlyPeaking
+        }
+}
 
-data class SurgeResponse(
-        @SerializedName("data.attributes.currentlyPeaking")
-        val currentlyPeaking:Boolean=false,
-        @SerializedName("data.attributes.peakMessage")
-        val peakMessage:String?=null,
-        @SerializedName("data.attributes.peakAmount")
-        val peakAmount:Int=0
-)
+class SurgeData(val attributes: SurgeAttributes = SurgeAttributes())
+
+class SurgeAttributes(val peakMessage: String? = null, val peakAmount: Int = 0, val currentlyPeaking: Boolean = false)
