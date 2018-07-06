@@ -257,9 +257,6 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         int margin = (int) getResources().getDimension(R.dimen.margin_half);
         selectedTheatersRecyclerView.addItemDecoration(new SpaceDecorator(null,null, 0,null,null,null));
 
-        if(!UserPreferences.INSTANCE.getShownPeakPricing()) {
-            startActivity(PeakPricingActivity.Companion.newInstance(getActivity()));
-        }
     }
 
     public void setUpComingSoon() {
@@ -442,6 +439,13 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 });
     }
 
+    private void showSurgeInterstitial() {
+        if(!UserPreferences.INSTANCE.getShownPeakPricing() && screeningsResponse.second.isSurging(UserPreferences.INSTANCE.getRestrictions().getUserSegments())) {
+            startActivity(PeakPricingActivity.Companion.newInstance(getActivity()));
+        }
+    }
+
+
     private void onScreeningsResponse() {
         ScreeningsResponseV2 response = screeningsResponse.second;
         if (response.getScreenings().size() == 0) {
@@ -485,6 +489,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
             });
         }
+        showSurgeInterstitial();
     }
 
     private void loadMoviePosterData() {

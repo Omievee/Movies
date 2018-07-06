@@ -232,9 +232,6 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
             currentLocation.setLatitude(last.getLat());
             currentLocation.setLongitude(last.getLon());
         }
-        if(!UserPreferences.INSTANCE.getShownPeakPricing()) {
-            startActivity(PeakPricingActivity.Companion.newInstance(getActivity()));
-        }
     }
 
     @Override
@@ -299,10 +296,17 @@ public class TheaterFragment extends MPFragment implements ShowtimeClickListener
                     progress.setVisibility(View.GONE);
                     noTheaters.setVisibility(View.GONE);
                     selectedTheaterRecyclerView.setVisibility(View.VISIBLE);
+                    showSurgeInterstitial();
                 }, error -> {
                     error.printStackTrace();
                     progress.setVisibility(View.GONE);
                 });
+    }
+
+    private void showSurgeInterstitial() {
+        if(!UserPreferences.INSTANCE.getShownPeakPricing() && screeningsResponse.second.isSurging(UserPreferences.INSTANCE.getRestrictions().getUserSegments())) {
+            startActivity(PeakPricingActivity.Companion.newInstance(getActivity()));
+        }
     }
 
     @Override
