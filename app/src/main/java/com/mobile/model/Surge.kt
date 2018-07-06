@@ -6,8 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Surge(
-        val level: SurgeType = SurgeType.WILL_SURGE,
-        val amount: Int = 0,
+        var level: SurgeType = SurgeType.WILL_SURGE,
+        var amount: Int = 0,
         val screeningSurging: Boolean = false,
         val dependentUserSegments: List<Int> = emptyList(),
         val independentUserSegments: List<Int> = emptyList()
