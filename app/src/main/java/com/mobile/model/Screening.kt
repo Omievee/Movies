@@ -57,6 +57,24 @@ data class Screening(var moviepassId: Int? = null,
         }
     }
 
+    fun isSurging(userSegments: List<Int>):Boolean {
+        return surge.values.any { surge->
+            val independentSurge = when {
+                surge.independentUserSegments.isEmpty() -> false
+                surge.independentUserSegments.intersect(userSegments).isNotEmpty() -> true
+                else -> false
+            }
+            val dependentSurge = when {
+                !surge.screeningSurging -> false
+                surge.dependentUserSegments.isEmpty() ||
+                        surge.dependentUserSegments.intersect(userSegments).isNotEmpty() -> true
+                else -> false
+            }
+            val surging = independentSurge||dependentSurge
+            surging
+        }
+    }
+
     fun getTicketType(): TicketType? {
         return availabilities
                 .firstOrNull {
