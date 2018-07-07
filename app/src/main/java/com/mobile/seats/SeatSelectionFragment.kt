@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mobile.ApiError
 import com.mobile.model.GuestTicketType
 import com.mobile.model.SeatInfo
 import com.mobile.network.RestClient
@@ -107,7 +108,13 @@ class SeatSelectionFragment : Fragment() {
                 ?: return
         if (state.seatsInfo == null) {
             state.seatDisposable = RestClient.getAuthenticated()
-                    .getSeats(tribuneId, theaterId.toString(), performanceInfo?.performanceId)
+                    .getSeats(tribuneId, theaterId.toString(), performanceInfo.performanceId)
+                    .map { it ->
+                        when (it.seatingInfo?.hasNoSeats) {
+                            null, true -> throw ApiError()
+                            else -> it
+                        }
+                    }
                     .subscribe({ seatResponse ->
                         state.seatsInfo = seatResponse
                         state.error = null
