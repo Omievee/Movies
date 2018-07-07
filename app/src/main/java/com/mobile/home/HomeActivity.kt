@@ -17,6 +17,7 @@ import com.mobile.BackFragment
 import com.mobile.DeviceID
 import com.mobile.MPActivty
 import com.mobile.Primary
+import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.model.Alert
@@ -82,6 +83,11 @@ class HomeActivity : MPActivty(), HomeActivityView {
         presenter.onResume()
     }
 
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
+
     private fun checkGooglePlayServices(): Boolean {
         val context = this
         val googleApiAvailability = GoogleApiAvailability.getInstance()
@@ -144,7 +150,9 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showActivatedCardScreen() {
-        showFragment(AutoActivatedCardFragment.newInstance())
+        val activate = Intent(this@HomeActivity, AutoActivatedCard::class.java)
+        startActivity(activate)
+
     }
 
     var currentItem: Int = 0

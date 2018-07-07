@@ -34,9 +34,9 @@ class AuthenticatedRequestInterceptor(val sessionManager: SessionManager) : Inte
         }
         requestBuilder.apply {
             addHeader(HEADER_USER_AGENT.first, HEADER_USER_AGENT.second);
-            addHeader(HEADER_DEVICE_ANDROID_ID, UserPreferences.getDeviceAndroidID())
+            addHeader(HEADER_DEVICE_ANDROID_ID, UserPreferences.deviceAndroidID)
         }
-        UserPreferences.getOneDeviceId()?.let {
+        UserPreferences.oneDeviceId?.let {
             requestBuilder.addHeader(HEADER_ONE_DEVICE_ID, it)
         }
         requestBuilder.addHeader("Content-Type", "application/json")

@@ -33,9 +33,9 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
     fun getUserZipCode() {
         userInfoDisposable?.dispose()
         userInfoDisposable = api
-                .getUserDataRx(UserPreferences.getUserId())
+                .getUserDataRx(UserPreferences.userId)
                 .subscribe({
-                    UserPreferences.setZipCode(it.billingZipCode)
+                    UserPreferences.zipCode = it.billingZipCode
                 },{
 
                 })

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.BackFragment
 import com.mobile.Constants
+import com.mobile.UserPreferences
 import com.mobile.activities.ConfirmationActivity
 import com.mobile.model.ScreeningToken
 import com.mobile.model.SeatPosition
@@ -44,13 +45,13 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         bringAFriend = arguments?.getParcelable("data")
         viewPager.offscreenPageLimit = 5
         val screening = bringAFriend?.screening ?: return
-        val showtime = bringAFriend?.showtime ?: return
-        adapter = BringAFriendPagerAdapter(screening, showtime, childFragmentManager)
+        val availability = bringAFriend?.availability ?: return
+        adapter = BringAFriendPagerAdapter(screening, availability, UserPreferences.restrictions.userSegments, childFragmentManager)
         viewPager.adapter = adapter
         payloadSub.onNext(SelectSeatPayload(
                 theater = bringAFriend?.theater,
                 screening = bringAFriend?.screening,
-                showtime = bringAFriend?.showtime
+                availability = bringAFriend?.availability
         ))
     }
 
@@ -66,7 +67,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                 SelectSeatPayload(
                         screening = bringAFriend?.screening,
                         theater = bringAFriend?.theater,
-                        showtime = bringAFriend?.showtime,
+                        availability = bringAFriend?.availability,
                         selectedSeats = payloadSub.value?.selectedSeats,
                         ticketPurchaseData = payload
                 ))
@@ -78,7 +79,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                 SelectSeatPayload(
                         screening = bringAFriend?.screening,
                         theater = bringAFriend?.theater,
-                        showtime = bringAFriend?.showtime,
+                        availability = bringAFriend?.availability,
                         selectedSeats = emptyList(),
                         ticketPurchaseData = payload
                 ))
@@ -118,7 +119,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         val payload: SelectSeatPayload = payloadSub.value ?: return
         val activity = activity ?: return
         val screeningToken = ScreeningToken(
-                payload.screening, payload.showtime, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater?.toTheater()
+                payload.screening, payload.availability, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater?.toTheater()
         )
         activity.finish()
         startActivity(ReservationActivity.newInstance(activity, screeningToken))

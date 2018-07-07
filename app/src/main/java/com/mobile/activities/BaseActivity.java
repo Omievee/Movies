@@ -1,13 +1,10 @@
 package com.mobile.activities;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -21,7 +18,6 @@ import com.helpshift.util.HelpshiftContext;
 
 import com.mobile.helpers.LogUtils;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -29,35 +25,14 @@ import com.taplytics.sdk.Taplytics;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.mobile.UserPreferences.getUserEmail;
-import static com.mobile.UserPreferences.getUserId;
-import static com.mobile.UserPreferences.getUserName;
+import static com.mobile.UserPreferences.INSTANCE;
 import static java.lang.String.valueOf;
-
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    Bundle bundle;
-    /* Permissions */
-    public final static int REQUEST_LOCATION_CODE = 1000;
-    public final static int REQUEST_STORAGE_CODE = 1001;
-    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 1004;
-    public RestrictionsResponse restriction;
-    private static String LOCATION_PERMISSIONS[] = new String[]{
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
-    };
-    private static String STORAGE_PERMISSIONS[] = new String[]{
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
     UserInfoResponse userInfoResponse;
 
-    public String myZip;
 
-    AlertDialog alert;
-    public static final String MyPREFERENCES = "myprefs";
 
     /* Creation */
     @Override
@@ -66,10 +41,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         try {
             JSONObject attributes = new JSONObject();
-            attributes.put("email", getUserEmail());
-            attributes.put("name", getUserName());
-            attributes.put("user_id", valueOf(getUserId()));
-            LogUtils.newLog("taplytics put", getUserEmail());
+            attributes.put("email", INSTANCE.getUserEmail());
+            attributes.put("name", INSTANCE.getUserName());
+            attributes.put("user_id", valueOf(INSTANCE.getUserId()));
+            LogUtils.newLog("taplytics put", INSTANCE.getUserEmail());
             Taplytics.setUserAttributes(attributes);
         } catch (JSONException e) {
 

@@ -25,25 +25,20 @@ import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
-import com.mobile.activities.ConfirmationActivity;
 import com.mobile.activities.LogInActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.history.PastReservationsFragment;
 import com.mobile.loyalty.LoyaltyProgramFragment;
 import com.mobile.model.Reservation;
-import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
 import com.mobile.network.RestClient;
-import com.mobile.reservation.ETicket;
 import com.mobile.reservation.ReservationActivity;
-import com.mobile.responses.ETicketConfirmation;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,6 +52,8 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 import static android.text.TextUtils.isEmpty;
+import static com.mobile.UserPreferences.*;
+import static com.mobile.model.AvailabilityKt.fromTime;
 import static java.lang.String.valueOf;
 
 /**
@@ -127,7 +124,7 @@ public class ProfileFragment extends MPFragment {
         final String ppURL = "https://www.moviepass.com/privacy/";
         final String tosURL = "https://www.moviepass.com/terms";
 
-        if (UserPreferences.getPushPermission()) {
+        if (INSTANCE.getPushPermission()) {
             pushSwitch.setChecked(true);
         } else {
             pushSwitch.setChecked(false);
@@ -136,10 +133,10 @@ public class ProfileFragment extends MPFragment {
 
         pushSwitch.setOnClickListener(v -> {
             if (pushSwitch.isChecked()) {
-                UserPreferences.setPushPermission(true);
+                INSTANCE.setPushPermission(true);
                 pushValue = true;
             } else {
-                UserPreferences.setPushPermission(false);
+                INSTANCE.setPushPermission(false);
                 pushValue = false;
             }
 
@@ -156,8 +153,8 @@ public class ProfileFragment extends MPFragment {
 
 
         signout.setOnClickListener(view16 -> {
-            UserPreferences.clearUserId();
-            UserPreferences.clearFbToken();
+            INSTANCE.clearUserId();
+            INSTANCE.clearFbToken();
             historyRealm.executeTransactionAsync(realm -> realm.deleteAll());
 //            UserPreferences.clearEverything();
             HelpshiftContext.getCoreApi().logout();
@@ -201,7 +198,7 @@ public class ProfileFragment extends MPFragment {
                 Map<String, String[]> customIssueFileds = new HashMap<>();
                 HashMap<String, Object> userData = new HashMap<>();
                 customIssueFileds.put("version name", new String[]{"sl", versionName});
-                Long dateMillis = UserPreferences.getLastCheckInAttemptDate();
+                Long dateMillis = INSTANCE.getLastCheckInAttemptDate();
                 if (dateMillis != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(dateMillis);
@@ -218,7 +215,7 @@ public class ProfileFragment extends MPFragment {
                     customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
                 }
 
-                ScreeningToken token = UserPreferences.getLastReservation();
+                ScreeningToken token = INSTANCE.getLastReservation();
                 final boolean checkedIn;
 
                 if (token != null) {
@@ -236,11 +233,11 @@ public class ProfileFragment extends MPFragment {
                     checkedIn = false;
                 }
 
-                customIssueFileds.put("subscription_type", new String[]{"dd", UserPreferences.getRestrictionSubscriptionStatus()});
+                customIssueFileds.put("subscription_type", new String[]{"dd", INSTANCE.getRestrictions().getSubscriptionStatus().name()});
                 customIssueFileds.put("checked_in", new String[]{"b", valueOf(checkedIn)});
-                customIssueFileds.put("total_movies_seen", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeen())});
-                customIssueFileds.put("total_movies_seen_last_thirty_days", new String[]{"n", valueOf(UserPreferences.getTotalMovieSeenLastMonth())});
-                userData.put("last_movie_seen", UserPreferences.getLastMovieSeen());
+                customIssueFileds.put("total_movies_seen", new String[]{"n", valueOf(INSTANCE.getTotalMovieSeen())});
+                customIssueFileds.put("total_movies_seen_last_thirty_days", new String[]{"n", valueOf(INSTANCE.getTotalMovieSeenLastMonth())});
+                userData.put("last_movie_seen", INSTANCE.getLastMovieSeen());
                 String[] tags = new String[]{versionName};
 
                 userData.put("version", versionName);

@@ -15,6 +15,20 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Adult Tickets:" />
 
+    <ImageView
+        android:id="@+id/infoIcon"
+        app:layout_constraintStart_toEndOf="@id/ticketType"
+        android:layout_marginStart="2dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="@id/ticketType"
+        app:layout_constraintBottom_toBottomOf="@id/ticketType"
+        android:src="@drawable/infoicon2"
+        android:tint="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBaseline_toBaselineOf="@id/ticketType" />
+
     <TextView
         android:id="@+id/quantity"
         style="@style/MPText_Bold"

@@ -1,32 +1,42 @@
 package com.mobile.screening
 
 import android.content.Context
-import android.support.v7.widget.AppCompatTextView
-import android.view.ContextThemeWrapper
-import android.view.ViewGroup
+import android.support.constraint.ConstraintLayout
+import android.util.AttributeSet
+import android.view.View
+import com.mobile.model.Availability
+import com.mobile.model.Surge
+import com.mobile.model.SurgeType
 import com.moviepass.R
+import kotlinx.android.synthetic.main.layout_showtime.view.*
 
-class ShowtimeView(context: Context) : AppCompatTextView(ContextThemeWrapper(context, R.style.ShowtimeButton)) {
+class ShowtimeView(context: Context, attr: AttributeSet? = null) : ConstraintLayout(context, attr) {
 
     var time: String? = null
 
     init {
-        val startMargin = resources.getDimension(R.dimen.card_button_margin_start).toInt()
-        val margin = resources.getDimension(R.dimen.more_spacing).toInt()
-        layoutParams = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)?.apply {
-            marginStart = startMargin
-            topMargin = margin
-            bottomMargin = margin
-        }
+        View.inflate(context, R.layout.layout_showtime, this)
     }
 
-    fun bind(time: String?, screening: ScreeningPresentation) {
-        this.time = time
-        this.text = time
-        when (screening.selected?.second == time) {
+    fun bind(availability: Availability, surge:Surge, screening: ScreeningPresentation) {
+        this.time = availability.startTime
+        text.text = time
+        when (screening.selected?.second == availability.startTime) {
             true -> isSelected = true
             else -> isSelected = false
         }
         isEnabled = screening.enabled
+        surgeIcon.visibility = when (surge.level) {
+            SurgeType.NO_SURGE -> View.INVISIBLE
+            else -> when(screening.enabled) {
+                true-> View.VISIBLE
+                else-> View.INVISIBLE
+            }
+        }
+        surgeIcon.isEnabled = when (surge.level) {
+            SurgeType.SURGING -> true
+            else -> false
+        }
+
     }
 }

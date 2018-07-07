@@ -66,21 +66,15 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if (getIntent() != null) {
-            screeningObject = Parcels.unwrap(intent.getParcelableExtra(Constants.SCREENING));
+            screeningObject = intent.getParcelableExtra(Constants.SCREENING);
             selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
             theater = Parcels.unwrap(intent.getParcelableExtra(Constants.THEATER));
         }
         done.setOnClickListener(v -> {
-            if (screeningObject != null && selectedShowTime != null) {
-                MovieFragment reserAct = new MovieFragment();
-                reserAct.reserve(screeningObject, selectedShowTime);
-            } else {
                 Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, HomeActivity.class);
                 doneIntent.putExtra("launch", true);
                 doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(doneIntent);
-            }
-
         });
 
 
@@ -114,7 +108,6 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-
 
         });
 
@@ -221,6 +214,4 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             return rootView;
         }
     }
-
-
 }

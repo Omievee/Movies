@@ -49,7 +49,9 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         val showTime = data?.data?.get(position)
         (view as? ShowtimeView)?.let { v ->
             screening?.let {
-                v.bind(showTime?.availability?.startTime, it)
+                val avail = showTime?.availability?:return
+                val surge = showTime?.surge?:return
+                v.bind(avail, surge, it)
             }
 
         }
@@ -60,7 +62,7 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         fun createData(data: ShowtimeData?, screening: ScreeningPresentation): ShowtimeData {
             val old = data?.data ?: emptyList()
             val newb = screening?.screening?.availabilities?.map {
-                ShowtimePresentation(screening?.screening, it)
+                ShowtimePresentation(screening?.screening, it, screening.screening?.getSurge(it.startTime, screening.userSegments))
             }?.filter {
                 isValidShowtime(it.availability?.startTime)
             }

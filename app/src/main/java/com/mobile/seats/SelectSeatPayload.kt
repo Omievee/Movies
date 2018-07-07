@@ -1,6 +1,7 @@
 package com.mobile.seats
 
 import com.mobile.Constants
+import com.mobile.model.Availability
 import com.mobile.model.Screening
 import com.mobile.model.SeatInfo
 import com.mobile.model.Theater2
@@ -8,7 +9,7 @@ import com.mobile.model.Theater2
 class SelectSeatPayload(
         val theater: Theater2? = null,
         val screening: Screening? = null,
-        val showtime: String? = null,
+        val availability: Availability? = null,
         val ticketPurchaseData: List<TicketPurchaseData>? = null,
         var selectedSeats: List<SeatInfo>? = null,
         var emails: MutableList<GuestEmail> = mutableListOf()

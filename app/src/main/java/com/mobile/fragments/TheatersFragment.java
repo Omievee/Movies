@@ -354,7 +354,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         this.googleMap.setOnInfoWindowClickListener(marker -> {
             if (!locationManager.isLocationEnabled()) {
                 new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
-                return;
             } else {
                 showFragment(TheaterFragment.newInstance(markerTheaterMap.get(marker.getId())));
             }
@@ -373,10 +372,23 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
     @SuppressLint("MissingPermission")
     void onLocation(@NonNull UserLocation userLocation) {
         googleMap.setMyLocationEnabled(true);
-        queryRealmLoadTheaters(userLocation.getLat(), userLocation.getLon());
-        LatLng coordinates = new LatLng(userLocation.getLat(), userLocation.getLon());
-        CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
-        googleMap.moveCamera(current);
+
+        if (locationManager.isLocationEnabled()) {
+            Log.d(Constants.TAG, "onLocation: ");
+            queryRealmLoadTheaters(userLocation.getLat(), userLocation.getLon());
+            LatLng coordinates = new LatLng(userLocation.getLat(), userLocation.getLon());
+            CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+            googleMap.moveCamera(current);
+        } else {
+            Log.d(Constants.TAG, "onLocation2>>>>: ");
+            Location last = UserPreferences.INSTANCE.getLocation();
+            queryRealmLoadTheaters(last.getLatitude(), last.getLongitude());
+            LatLng coordinates = new LatLng(last.getLatitude(), last.getLongitude());
+            CameraUpdate current = CameraUpdateFactory.newLatLngZoom(coordinates, DEFAULT_ZOOM_LEVEL);
+            googleMap.moveCamera(current);
+            Toast.makeText(myContext, "Most recent location could not be found. Enable GPS settings.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     void locationUpdateRealm() {
@@ -393,27 +405,19 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         }
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        locationUpdateRealm();
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             locationUpdateRealm();
         } else {
-            Toast.makeText(myContext, "Location permissions are disabled. Go to settings.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, "Location permissions are disabled. Check your app settings.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void getMyLocation() {
         if (!hasPermissions()) {
             requestPermissions(permissions, LOCATION_PERMISSIONS);
-            return;
         }
         if (!locationManager.isLocationEnabled()) {
             new EnableLocation().show(getChildFragmentManager(), "fr_enablelocation");
@@ -427,13 +431,11 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
             googleMap.animateCamera(cameraUpdate);
         } else {
-            Location local = UserPreferences.getLocation();
+            Location local = UserPreferences.INSTANCE.getLocation();
             queryRealmLoadTheaters(local.getLatitude(), local.getLongitude());
-
             LatLng latLng = new LatLng(local.getLatitude(), local.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM_LEVEL);
             googleMap.animateCamera(cameraUpdate);
-
         }
         theatersRecyclerView.getRecycledViewPool().clear();
         theatersAdapter.notifyDataSetChanged();
@@ -507,7 +509,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
-            // Always render clusters.
             return false;
         }
     }
@@ -530,6 +531,8 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
         userCurrentLocation = new Location(LocationManager.GPS_PROVIDER);
         userCurrentLocation.setLatitude(newLat);
         userCurrentLocation.setLongitude(newLong);
+
+        UserPreferences.INSTANCE.setLocation(userCurrentLocation.getLatitude(), userCurrentLocation.getLongitude());
 
         List<Theater> allTheaters = tRealm.copyFromRealm(tRealm.where(Theater.class).findAll());
         DecimalFormat df = new DecimalFormat("#.#");
@@ -577,16 +580,10 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             } else {
                 nearbyTheaters.add(theaterTicketType);
             }
-
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + nearbyTheaters.size());
-            Log.d("TAG>>>>>", "queryRealmLoadTheaters: " + eticketingTheaters.size());
-
-
             googleMap.setOnCameraMoveListener(() -> {
                 Location cameraLocal = new Location(LocationManager.GPS_PROVIDER);
                 cameraLocal.setLatitude(googleMap.getCameraPosition().target.latitude);
                 cameraLocal.setLongitude(googleMap.getCameraPosition().target.longitude);
-
 
                 double distance = userCurrentLocation.distanceTo(cameraLocal);
                 double myLocationToCameraLocation = (distance / 1609.344);
@@ -596,7 +593,9 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
                     fadeIn(searchThisArea);
                     searchThisArea.setVisibility(View.VISIBLE);
                     searchThisArea.setOnClickListener(v -> {
-                        eticketTheatersAdapter.notifyDataSetChanged();
+                        if (eticketTheatersAdapter != null) {
+                            eticketTheatersAdapter.notifyDataSetChanged();
+                        }
                         double searchLat = googleMap.getCameraPosition().target.latitude;
                         double searchLon = googleMap.getCameraPosition().target.longitude;
                         queryRealmLoadTheaters(searchLat, searchLon);
@@ -629,7 +628,6 @@ public class TheatersFragment extends MPFragment implements OnMapReadyCallback, 
             });
 
         }
-
 
 
         if (eticketingTheaters.size() > 0) {

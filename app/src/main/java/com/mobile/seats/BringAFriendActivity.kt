@@ -3,13 +3,11 @@ package com.mobile.seats
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
-import android.support.v4.app.FragmentActivity
 import com.mobile.MPActivty
 import com.mobile.model.*
+import com.mobile.reservation.Checkin
 import com.moviepass.R
 import dagger.android.AndroidInjection
-import kotlinx.android.parcel.Parcelize
 
 class BringAFriendActivity : MPActivty() {
 
@@ -38,14 +36,21 @@ class BringAFriendActivity : MPActivty() {
     }
 
     companion object {
-        fun newIntent(context: Context, theater: Theater, screening: Screening, showtime: String): Intent {
+        fun newIntent(context: Context, theater: Theater, screening: Screening, availability: Availability): Intent {
             return Intent(context, BringAFriendActivity::class.java).apply {
                 putExtra("data", BringAFriendPayload(
                         theater = from(theater),
                         screening = screening,
-                        showtime = showtime
+                        availability = availability
                 ))
             }
+        }
+
+        fun newIntent(context: Context, checkIn:Checkin) : Intent {
+            val theater = checkIn.theater
+            val screening = checkIn.screening
+            val availability = checkIn.availability
+            return newIntent(context, theater, screening, availability)
         }
     }
 
@@ -53,10 +58,3 @@ class BringAFriendActivity : MPActivty() {
         bringAFriendFragment?.onBackPressed() ?: super.onBackPressed()
     }
 }
-
-@Parcelize
-data class BringAFriendPayload(
-        var theater: Theater2,
-        var screening: Screening,
-        var showtime: String
-) : Parcelable

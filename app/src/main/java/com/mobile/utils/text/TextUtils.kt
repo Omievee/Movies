@@ -26,6 +26,11 @@ fun Double?.toCurrency(): String {
     return DecimalFormat.getCurrencyInstance().format(this)
 }
 
+val Int.centsAsDollars: String
+    get() {
+        return this.div(100.0).toCurrency()
+    }
+
 fun Double.toFixed(decimalPlaces: Int): Double {
     val bd = BigDecimal(this).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP)
     return bd.toDouble()

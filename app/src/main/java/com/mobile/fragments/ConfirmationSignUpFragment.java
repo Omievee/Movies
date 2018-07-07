@@ -81,14 +81,14 @@ public class ConfirmationSignUpFragment extends Fragment {
                 LogUtils.newLog(Constants.TAG, "RESPONSE CODE??? : " + response.code());
                 if (response.code() == 200) {
                     progress.setVisibility(View.GONE);
-                    UserPreferences.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
+                    UserPreferences.INSTANCE.setHeaders(userRESPONSE.getAuthToken(), userRESPONSE.getId());
 //                    verifyAndroidID(deviceType, deviceId, device, true);
 
                     RestClient.userId = userRESPONSE.getId();
                     RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
                     RestClient.authToken = userRESPONSE.getAuthToken();
 
-                    UserPreferences.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
+                    UserPreferences.INSTANCE.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
                     Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

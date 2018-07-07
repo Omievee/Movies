@@ -18,5 +18,6 @@ class MicroServiceRestrictionsResponse(
         var alert: Alert? = null,
         var logoutInfo: LogoutInfo? = null,
         var subscriptionActivationRequired:Boolean = false,
-        var canReactivate: canReactivate? = null
+        var canReactivate: canReactivate? = null,
+        var userSegments:List<Int> = emptyList()
 )

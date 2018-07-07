@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/closeButton"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/CloseButton" />
+
+    <TextView
+        android:id="@+id/newPeakPricing"
+        style="@style/NewPeakPricing"
+        android:text="Peak Pricing"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread"
+        app:layout_constraintBottom_toTopOf="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/PeakPricingDescription"
+        android:id="@+id/description"
+        app:layout_constraintTop_toBottomOf="@id/newPeakPricing"
+        app:layout_constraintBottom_toTopOf="@id/surge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MoviePass is committed to keeping our low monthly price as we grow. We’re implementing a pricing system based on demand for certain showtimes instead of raising monthly prices or limiting viewings.\n\n
+Peak Pricing is in effect when there’s a high demand for a movie or showtime. MoviePass members may be asked to pay a small additional fee depending on the level of demand. You can avoid this peak surcharge by choosing a different showtime or movie." />
+
+    <android.support.constraint.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@id/description"
+        app:layout_constraintBottom_toTopOf="@+id/willSurge"
+        android:id="@+id/surge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/surgeIcon"
+            android:layout_marginStart="@dimen/margin_standard"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/surge_background"
+            app:layout_constraintStart_toStartOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/icon_lightningbolt"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+        <TextView
+            app:layout_constraintStart_toEndOf="@id/surgeIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/PeakIconText"
+            android:text="This icon indicates that a specific showtime is in Peak Pricing and there will be an added fee."
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@id/surge"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/willSurge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/willSurgeIcon"
+            android:clickable="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:background="@drawable/surge_background"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/icon_lightningbolt"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:focusable="true" />
+
+        <TextView
+            style="@style/PeakIconText"
+            app:layout_constraintStart_toEndOf="@id/willSurgeIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="This icon indicates that a showtime does NOT have an added fee, but is growing in demand and could be in Peak Pricing soon."
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </android.support.constraint.ConstraintLayout>
+
+</merge>

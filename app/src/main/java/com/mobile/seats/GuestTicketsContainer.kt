@@ -10,9 +10,11 @@ import android.widget.LinearLayout
 import com.mobile.Constants
 import com.mobile.model.GuestTicket
 import com.mobile.model.GuestTicketType
+import com.mobile.model.SurgeType
 import com.mobile.seats.GuestTicketView
 import com.mobile.seats.SelectSeatPayload
 import com.mobile.seats.TicketPurchaseData
+import com.mobile.surge.SurgeTicketView
 import com.moviepass.R
 
 class GuestTicketsContainer(context: Context?, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {
@@ -43,11 +45,11 @@ class GuestTicketsContainer(context: Context?, attrs: AttributeSet? = null) : Li
                 })
             }
         }
-        when (payload.totalGuestTickets) {
-            0 -> {
+        when (payload.totalGuestTickets>0) {
+            false -> {
 
             }
-            else -> {
+            true -> {
                 addView(View(ContextThemeWrapper(context, R.style.divider), null, R.style.divider), MATCH_PARENT, resources.getDimension(R.dimen.dp_1).toInt())
                 addView(TotalView(context).apply {
                     bind(payload)

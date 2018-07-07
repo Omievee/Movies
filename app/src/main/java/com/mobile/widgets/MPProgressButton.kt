@@ -1,6 +1,7 @@
-package com.mobile.seats
+package com.mobile.widgets
 
 import android.content.Context
+import android.support.annotation.IntegerRes
 import android.support.constraint.ConstraintLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
@@ -14,8 +15,8 @@ class MPProgressButton(context: Context, attrs: AttributeSet? = null) : Constrai
         inflate(context, R.layout.layout_mp_progress, this)
         setBackgroundResource(R.drawable.button_red)
         val array = context.obtainStyledAttributes(attrs, R.styleable.MPProgressButton)
-        text.text = array.getText(R.styleable.MPProgressButton_mp_text)
-        text.setTextColor(array.getColor(R.styleable.MPProgressButton_mp_textColor, ResourcesCompat.getColor(resources, R.color.white, context.theme)))
+        textView.text = array.getText(R.styleable.MPProgressButton_mp_text)
+        textView.setTextColor(array.getColor(R.styleable.MPProgressButton_mp_textColor, ResourcesCompat.getColor(resources, R.color.white, context.theme)))
         array.recycle()
     }
 
@@ -30,5 +31,8 @@ class MPProgressButton(context: Context, attrs: AttributeSet? = null) : Constrai
             }
             isEnabled = !value
         }
-
+    @IntegerRes var text:Int = 0
+    set(value) {
+        textView.setText(value)
+    }
 }

@@ -10,7 +10,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.rx.Schedulers
 import io.reactivex.Observable
@@ -27,8 +26,6 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
         location().compose(Schedulers.singleDefault())
                 .subscribe({
                     _lastLocation = it
-                    UserPreferences.setLocation(_lastLocation!!.lat, _lastLocation!!.lon)
-
                 }, {})
     }
 
@@ -47,11 +44,12 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
     private var permission: Boolean = false
         get() {
             return ContextCompat.checkSelfPermission(application, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(application, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         }
 
     @SuppressLint("MissingPermission")
     override fun location(): Single<UserLocation> {
-        val single: Single<UserLocation> = create({ emitter ->
+        val single: Single<UserLocation> = create { emitter ->
             val permission = permission
             if (!permission) {
                 when (emitter.isDisposed) {
@@ -72,7 +70,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
             task?.addOnFailureListener {
                 emitter.onError(it)
             }
-        })
+        }
         single.map {
             _lastLocation = it
         }

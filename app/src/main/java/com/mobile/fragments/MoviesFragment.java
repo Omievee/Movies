@@ -81,11 +81,11 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     //Realm
     public static Realm moviesRealm;
     private Realm allMoviesRealm;
-    private RealmList<Movie> TopBoxOffice;
-    private RealmList<Movie> comingSoon;
-    private RealmList<Movie> NEWRelease;
-    private RealmList<Movie> featured;
-    private RealmList<Movie> nowPlaying;
+    private List<Movie> TopBoxOffice;
+    private List<Movie> comingSoon;
+    private List<Movie> NEWRelease;
+    private List<Movie> featured;
+    private List<Movie> nowPlaying;
     public RealmConfiguration config;
     private RealmConfiguration allMoviesConfig;
     private Activity activity;
@@ -528,7 +528,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         nowPlaying.clear();
         featured.clear();
 
-        RealmResults<Movie> allMovies = moviesRealm.where(Movie.class)
+        List<Movie> allMovies = moviesRealm.copyFromRealm(moviesRealm.where(Movie.class)
                 .equalTo("type", "Top Box Office")
                 .or()
                 .equalTo("type", "New Releases")
@@ -538,7 +538,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 .equalTo("type", "Now Playing")
                 .or()
                 .equalTo("type", "Featured")
-                .findAll();
+                .findAll());
 
         LogUtils.newLog(Constants.TAG, "setAdaptersWithRealmOBjects: " + allMovies.size());
         for (int i = 0; i < allMovies.size(); i++) {
@@ -557,7 +557,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
             }
         }
 
-        ArrayList<RealmList<Movie>> moviesList = new ArrayList<>();
+        List<List<Movie>> moviesList = new ArrayList<>();
         moviesList.add(NEWRelease);
         moviesList.add(nowPlaying);
         moviesList.add(TopBoxOffice);

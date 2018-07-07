@@ -60,7 +60,7 @@ class TheaterScreeningsAdapter(
         const val TYPE_THEATER = 3
         const val CHECK_IN_IF_MOVIE_MISSING = "Check In if Movie Missing"
 
-        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: Location?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: Location?, userSegments:List<Int>?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
             val screeningsResponse = response.second;
             val movies = response.first.associateBy { it.id }
             val old = data?.data ?: emptyList()
@@ -89,6 +89,7 @@ class TheaterScreeningsAdapter(
                         distance = location?.distanceTo(theaterLoc)?.toDouble(),
                         screening = it,
                         theater = theater,
+                        userSegments = userSegments?: emptyList(),
                         selected = when (selected?.first == it) {
                             true -> selected
                             else -> null

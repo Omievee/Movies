@@ -1,8 +1,11 @@
 package com.mobile.network;
 
+import com.mobile.billing.BillingInfo;
 import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
+import com.mobile.model.PerformanceInfo;
+import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CancellationRequest;
@@ -15,6 +18,7 @@ import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.requests.SignUpRequest;
+import com.mobile.requests.SurgeCheckRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
@@ -45,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -94,6 +99,9 @@ public interface Api {
     @POST("/rest/v1/cards/activate")
     Call<CardActivationResponse> activateCard(@Body CardActivationRequest request);
 
+    /* Activate MP Card */
+    @POST("/rest/v1/cards/activate")
+    Single<CardActivationResponse> activateCardRX(@Body CardActivationRequest request);
 
 
     @GET("/rest/v2/screenings")
@@ -110,6 +118,9 @@ public interface Api {
     @POST("mobile/register")
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
+
+    @POST("/rest/v3/reservations/peak-check")
+    Single<SurgeResponse> surgeCheck(@Body ProviderInfo info);
 
     @POST("/rest/v2/reservations")
     Single<ReservationResponse> reserve(@Body TicketInfoRequest request);
@@ -163,11 +174,12 @@ public interface Api {
     @PUT("/rest/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
-
+    @PUT("/rest/v2/users/{userId}")
+    Single<ResponseBody> updateBilling(@Path("userId") int userId, @Body BillingInfo info);
 
     /* Cancel Subscription */
     @POST("/rest/v1/subscription/cancellation")
-    Call<CancellationResponse> requestCancellation(@Body CancellationRequest request);
+    Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
     /* Open App Go Watch It Event */
     @GET("/prod/ingest")

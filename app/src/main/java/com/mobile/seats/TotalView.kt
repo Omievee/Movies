@@ -6,7 +6,6 @@ import android.support.v4.content.res.ResourcesCompat
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.SpannedString
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
@@ -41,7 +40,7 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
     }
 
     override fun setOnClickListener(l: OnClickListener?) {
-        freeGuestPolicy.setOnClickListener(l)
+        linkText.setOnClickListener(l)
     }
 
 }

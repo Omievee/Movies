@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        style="@style/DialogFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/continueDescription"
+            style="@style/ReservationCheckinDescription"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/continueOrCheckin" />
+
+        <com.mobile.widgets.MPProgressText
+            android:id="@+id/continueOrCheckin"
+            style="@style/ReservationCheckinButton"
+            app:layout_constraintBottom_toTopOf="@id/bottomNav" />
+
+        <View
+            android:id="@+id/bottomNav"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/bottom_navigation_height"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

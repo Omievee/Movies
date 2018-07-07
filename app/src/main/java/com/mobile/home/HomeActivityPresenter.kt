@@ -1,10 +1,8 @@
 package com.mobile.home
 
 import android.os.Build
-import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
-import com.mobile.UserPreferences.setRestrictions
 import com.mobile.model.Alert
 import com.mobile.model.PopInfo
 import com.mobile.network.Api
@@ -22,6 +20,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
+    var reservationDisposable: Disposable? = null
     var deviceId: String? = null
     var lastRestrictionRequest: Long = 0
     var currentReservation: CurrentReservationV2? = null
@@ -31,7 +30,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
     fun onResume() {
-        if (UserPreferences.getOneDeviceId() == null) {
+        if (UserPreferences.oneDeviceId == null) {
             checkOneDevice()
         } else {
             checkRestrictions()
@@ -53,7 +52,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                         request
                 )
                 .subscribe({ result ->
-                    UserPreferences.setOneDeviceId(result.oneDeviceId);
+                    UserPreferences.oneDeviceId = result.oneDeviceId;
                     checkRestrictions()
                 }, { error ->
                     if (error is ApiError) {
@@ -79,11 +78,11 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                 .subscribe({
                     lastRestrictionRequest = System.currentTimeMillis()
                     restrictionManager.publish(it)
+                    determineActivationScreen(it)
+                    determineForceLogout(it)
+                    UserPreferences.restrictions = it
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
-                    determineForceLogout(it)
-                    setRestrictions(it)
-                    determineActivationScreen(it)
                 }, {
                     it.printStackTrace()
                 })
@@ -93,7 +92,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         it ?: return
         when (it.subscriptionStatus) {
             SubscriptionStatus.ACTIVE ->
-                if (!UserPreferences.getHasUserSeenCardActivationScreen()) {
+                if (!UserPreferences.hasUserSeenCardActivationScreen) {
                     view.showActivatedCardScreen()
                 }
             else -> return
@@ -113,28 +112,24 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     private fun determineAlertScreen(it: Alert?) {
         it ?: return
         when (it.id) {
-            UserPreferences.getAlertDisplayedId() -> {
+            UserPreferences.alertDisplayedId -> {
             }
             else -> view.showAlert(it)
         }
     }
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
-
-
-        Log.d("reservationID",UserPreferences.getLastReservationPopInfo().toString())
-
-        it.popInfo?.let {
-            if (UserPreferences.getLastReservationPopInfo() == 0 ||
-                    UserPreferences.getLastReservationPopInfo() != it.reservationId) {
-                UserPreferences.saveLastReservationPopInfo(0)
-                fetchReservation(it)
-            }
+        val popInfo = it.popInfo?:return
+        if (UserPreferences.lastReservationPopInfo == 0 ||
+                UserPreferences.lastReservationPopInfo != popInfo.reservationId) {
+            UserPreferences.saveLastReservationPopInfo(0)
+            fetchReservation(popInfo)
         }
     }
 
     private fun fetchReservation(popInfo: PopInfo) {
-        api
+        reservationDisposable?.dispose()
+        reservationDisposable = api
                 .lastReservation()
                 .subscribe({
                     currentReservation = it
@@ -146,6 +141,12 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
     fun onDestroy() {
+        androidIdDisposable?.dispose()
+        restrictionsDisposable?.dispose()
+        reservationDisposable?.dispose()
+    }
+
+    fun onPause() {
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
     }

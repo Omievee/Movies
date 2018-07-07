@@ -15,6 +15,8 @@ import com.mobile.activities.LogInActivity
 import com.mobile.activities.OnboardingActivity
 import com.mobile.helpers.GoWatchItSingleton
 import com.mobile.home.HomeActivity
+import com.mobile.responses.SubscriptionStatus
+import com.mobile.responses.SubscriptionStatus.*
 import com.moviepass.R
 import dagger.android.AndroidInjection
 import java.io.IOException
@@ -25,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
     @Inject
     lateinit var presenter: SplashActivityPresenter
 
-    var ID: String?=null
+    var ID: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -89,21 +91,24 @@ class SplashActivity : AppCompatActivity() {
     fun launchActivity(typeMovie: Int, id: Int) {
 
         Handler().postDelayed({
-            if (UserPreferences.getUserId() == 0 || UserPreferences.getUserId().equals("")) {
+            if (UserPreferences.userId == 0 || UserPreferences.userId.equals("")) {
                 val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
                 startActivity(i)
                 finish()
             } else {
-                if (UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.ACTIVE_FREE_TRIAL) || UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_ACTIVATION) ||
-                                UserPreferences.getRestrictionSubscriptionStatus().equals(Constants.PENDING_FREE_TRIAL)) {
-                    Crashlytics.setUserIdentifier(UserPreferences.getUserId().toString())
-                    val i = HomeActivity.newIntent(this@SplashActivity, typeMovie)
-                    startActivity(i);
-                    finish()
-                } else {
-                    val i = Intent(this@SplashActivity, LogInActivity::class.java)
-                    startActivity(i)
-                    finish()
+                val restrictions = UserPreferences.restrictions
+                when (restrictions?.subscriptionStatus) {
+                    ACTIVE, ACTIVE_FREE_TRIAL, PENDING_ACTIVATION, PENDING_FREE_TRIAL -> {
+                        Crashlytics.setUserIdentifier(UserPreferences.userId.toString())
+                        val i = HomeActivity.newIntent(this@SplashActivity, typeMovie)
+                        startActivity(i);
+                        finish()
+                    }
+                    else -> {
+                        val i = Intent(this@SplashActivity, LogInActivity::class.java)
+                        startActivity(i)
+                        finish()
+                    }
                 }
             }
 
@@ -117,7 +122,10 @@ class SplashActivity : AppCompatActivity() {
 
     private inner class getAAID : AsyncTask<Void, String?, String?>() {
         override fun onPostExecute(result: String?) {
-            UserPreferences.saveAAID(result)
+            result?.let {
+                UserPreferences.saveAAID(it)
+            }
+
         }
 
         override fun doInBackground(vararg strings: Void): String? {

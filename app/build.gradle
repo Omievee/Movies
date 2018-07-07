@@ -23,8 +23,8 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 125
-        versionName "3.0.22"
+        versionCode 129
+        versionName "3.0.24"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
@@ -274,6 +274,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 
+    implementation 'com.loopj.android:android-async-http:1.4.9'
 
 }
 

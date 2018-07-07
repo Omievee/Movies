@@ -16,7 +16,7 @@ public class DeviceID {
     public static String getID(Context context) {
 
         String androidID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        UserPreferences.saveDeviceAndroidID(ID);
+        UserPreferences.INSTANCE.saveDeviceAndroidID(ID);
         return androidID;
     }
 

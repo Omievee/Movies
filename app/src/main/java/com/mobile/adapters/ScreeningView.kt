@@ -2,7 +2,6 @@ package com.mobile.adapters
 
 import android.content.Context
 import android.net.Uri
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -56,19 +55,21 @@ class ScreeningView(context: Context) : FrameLayout(context) {
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
+    val layoutManager:LinearLayoutManager
 
     init {
         View.inflate(context, R.layout.list_item_cinemaposter, this)
-        recyclerView.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+        layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
             override fun supportsPredictiveItemAnimations(): Boolean {
                 return false
             }
         }
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
-        val animator = DefaultItemAnimator()
-        animator.supportsChangeAnimations = false
-        recyclerView.itemAnimator = animator
-        recyclerView.addItemDecoration(SpaceDecorator(resources.getDimension(R.dimen.card_button_margin_start).toInt()))
+        recyclerView.itemAnimator = null
+        recyclerView.addItemDecoration(SpaceDecorator(
+                top=resources.getDimension(R.dimen.margin_quarter).toInt(),
+                bottom = resources.getDimension(R.dimen.margin_half).toInt()))
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
