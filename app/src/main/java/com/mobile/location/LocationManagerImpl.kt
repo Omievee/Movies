@@ -32,7 +32,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
     override fun isLocationEnabled(): Boolean {
         return systemLocationManager
                 .isProviderEnabled(GPS_PROVIDER)
-                &&
+                ||
                 systemLocationManager
                         .isProviderEnabled(NETWORK_PROVIDER)
     }
