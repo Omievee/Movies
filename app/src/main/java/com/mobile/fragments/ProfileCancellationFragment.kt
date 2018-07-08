@@ -1,6 +1,5 @@
 package com.mobile.fragments
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +13,6 @@ import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.helpers.LogUtils
 import com.mobile.network.Api
-import com.mobile.network.RestClient
 import com.mobile.requests.CancellationRequest
 import com.mobile.responses.CancellationResponse
 import com.mobile.responses.UserInfoResponse
@@ -28,7 +26,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.annotation.Nullable
 import javax.inject.Inject
 
 /**
@@ -41,7 +38,6 @@ class ProfileCancellationFragment : MPFragment() {
     @Inject
     lateinit var api: Api
 
-    @Nullable
     var profileCancellationDisposable: Disposable? = null
 
     internal var cancelReasons: String? = null
@@ -50,14 +46,16 @@ class ProfileCancellationFragment : MPFragment() {
     private var userInfoResponse: UserInfoResponse? = null
     private var billingDate: String? = null
 
-    internal var myActivity: Activity? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fr_profile_cancelation, container, false)
+        return inflater.inflate(R.layout.fr_profile_cancelation, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         cancelbutton.isEnabled = false
         spinnerCancelReason
-                .setAdapter(object : MaterialSpinnerAdapter<String>(myActivity, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
+                .setAdapter(object : MaterialSpinnerAdapter<String>(activity, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                         val view = MaterialSpinnerSpinnerView(parent.context)
                         view.bind(getItemText(position))
@@ -66,26 +64,17 @@ class ProfileCancellationFragment : MPFragment() {
                 })
         loadUserInfo()
 
-        myActivity = activity
-
-        api = RestClient.getAuthenticated()
-        return rootView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         spinnerCancelReason.setOnItemSelectedListener { view1, position, id, item ->
             cancelReasons = view1.getItems<Any>()[position] as String
             if (cancelReasons == "Reason for Cancellation") {
                 cancelbutton.isEnabled = false
-                Toast.makeText(myActivity, "Please make a selection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Please make a selection", Toast.LENGTH_SHORT).show()
             } else {
                 cancelbutton.isEnabled = true
             }
         }
 
-        cancelBack.setOnClickListener { v -> myActivity?.onBackPressed() }
+        cancelBack.setOnClickListener { v -> activity?.onBackPressed() }
         cancelbutton.setOnClickListener { v -> showCancellationConfirmationDialog() }
 
 
@@ -127,7 +116,7 @@ class ProfileCancellationFragment : MPFragment() {
             "Other" -> cancelSubscriptionReason = 7
             else -> cancelSubscriptionReason = 8
         }
-        val angryComments = CancelComments.text.toString()
+        val angryComments = cancelComments.text.toString()
         val request = CancellationRequest(requestDate, cancelSubscriptionReason, angryComments)
 
         profileCancellationDisposable?.dispose()
@@ -137,8 +126,8 @@ class ProfileCancellationFragment : MPFragment() {
                         .requestCancellation(request)
                         .subscribe({ r ->
                             progress.visibility = View.GONE
-                            Toast.makeText(myActivity, "Cancellation successful", Toast.LENGTH_SHORT).show()
-                            myActivity?.onBackPressed()
+                            Toast.makeText(activity, "Cancellation successful", Toast.LENGTH_SHORT).show()
+                            activity?.onBackPressed()
                         })
                         { error ->
                             if (error is ApiError) {
@@ -149,7 +138,7 @@ class ProfileCancellationFragment : MPFragment() {
 
     private fun loadUserInfo() {
         val userId = UserPreferences.userId
-        RestClient.getAuthenticated().getUserData(userId).enqueue(object : Callback<UserInfoResponse> {
+        api.getUserData(userId).enqueue(object : Callback<UserInfoResponse> {
             override fun onResponse(call: Call<UserInfoResponse>, response: Response<UserInfoResponse>) {
                 userInfoResponse = response.body()
                 if (userInfoResponse != null) {
@@ -161,7 +150,7 @@ class ProfileCancellationFragment : MPFragment() {
             }
 
             override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
-                Toast.makeText(myActivity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show()
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
             }
         })
@@ -169,6 +158,7 @@ class ProfileCancellationFragment : MPFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        profileCancellationDisposable?.dispose()
         profileCancellationDisposable = null
     }
 
