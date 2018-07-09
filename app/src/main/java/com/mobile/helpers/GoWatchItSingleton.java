@@ -46,8 +46,8 @@ public class GoWatchItSingleton implements GoWatchItManager {
     private List<AllMoviesResponse> ALLMOVIES;
     private RealmResults<Movie> allMovies;
     private final GoWatchItApi api;
-//    String l = String.valueOf(UserPreferences.getLatitude());
-//    String ln = String.valueOf(UserPreferences.getLongitude());
+//    String l = String.valueOf(UserPreferences.getLat());
+//    String ln = String.valueOf(UserPreferences.getLon());
 
     private GoWatchItSingleton() {
         getMovies();

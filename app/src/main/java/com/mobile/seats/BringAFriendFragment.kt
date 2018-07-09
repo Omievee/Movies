@@ -119,7 +119,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         val payload: SelectSeatPayload = payloadSub.value ?: return
         val activity = activity ?: return
         val screeningToken = ScreeningToken(
-                payload.screening, payload.availability, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater?.toTheater()
+                payload.screening, payload.availability, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater
         )
         activity.finish()
         startActivity(ReservationActivity.newInstance(activity, screeningToken))

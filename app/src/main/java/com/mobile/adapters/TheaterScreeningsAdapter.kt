@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.model.Screening
-import com.mobile.model.Theater2
+import com.mobile.model.Theater
 import com.mobile.model.TicketType
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.NoMoreScreenings
@@ -71,20 +71,9 @@ class TheaterScreeningsAdapter(
             val theaterLoc = location?.let { Location("") }
             val presentations = screenings?.map {
 
-                val theater = theaters.get(it.tribuneTheaterId)?.let {
-                    Theater2(id = it.id,
-                            tribuneTheaterId = it.tribuneTheaterId,
-                            name = it.name,
-                            latitude = it.lat,
-                            longitude = it.lon,
-                            address = it.address,
-                            city = it.city,
-                            state = it.state,
-                            zip = it.zip
-                    )
-                }
-                theaterLoc?.latitude = theater?.latitude ?: 0.0
-                theaterLoc?.longitude = theater?.longitude ?: 0.0
+                val theater = theaters.get(it.tribuneTheaterId)
+                theaterLoc?.latitude = theater?.lat ?: 0.0
+                theaterLoc?.longitude = theater?.lon ?: 0.0
                 ScreeningPresentation(
                         distance = location?.distanceTo(theaterLoc)?.toDouble(),
                         screening = it,
@@ -94,7 +83,7 @@ class TheaterScreeningsAdapter(
                             true -> selected
                             else -> null
                         },
-                        movie = movies?.get(it.moviepassId),
+                        movie = movies[it.moviepassId],
                         type = when {
                             theater != null -> TYPE_THEATER
                             it.title == CHECK_IN_IF_MOVIE_MISSING -> TYPE_MISSING

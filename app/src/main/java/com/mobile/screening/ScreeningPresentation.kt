@@ -4,12 +4,12 @@ import com.mobile.adapters.ItemSame
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Movie
 import com.mobile.model.Screening
-import com.mobile.model.Theater2
+import com.mobile.model.Theater
 import com.mobile.utils.isValidShowtime
 
 data class ScreeningPresentation(
         val distance:Double? = null,
-        val theater:Theater2? = null,
+        val theater:Theater? = null,
         val userSegments:List<Int> = emptyList(),
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,
