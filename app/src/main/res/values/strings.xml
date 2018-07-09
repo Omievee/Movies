@@ -619,4 +619,7 @@
     <string name="profile_cancel_paid_through">(paid through date).</string>
     <string name="profile_cancel_are_you_sure">Are you sure you want to cancel your membership?</string>
     <string name="profile_cancel_cancel_membership">Cancel Membership</string>
+    <string name="cancel_subscription">Cancel Subscription</string>
+    <string name="additional_comments_optional">Additional comments (optional)</string>
+    <string name="reason_for_cancellation">Reason for Cancellation</string>
 </resources>
