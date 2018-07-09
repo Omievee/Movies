@@ -26,12 +26,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/double_margin_standard"
             android:layout_marginBottom="@dimen/margin_standard"
+            android:layout_marginEnd="@dimen/double_margin_standard"
             android:text="Done"
             android:textColor="@color/white"
-            android:visibility="gone"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/dots"
@@ -86,7 +86,6 @@
                 android:layout_height="10dp"
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:background="@drawable/indicator_unselected" />
-
 
 
         </LinearLayout>
