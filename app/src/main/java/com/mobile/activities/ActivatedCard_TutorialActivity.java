@@ -1,16 +1,14 @@
 package com.mobile.activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobile.Constants;
-import com.mobile.fragments.MovieFragment;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.Screening;
 import com.mobile.model.Theater;
@@ -167,7 +164,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         ImageView img;
 
         int[] tutorialImages = new int[]{R.drawable.tutorial_1, R.drawable.tutorial_2,
-                R.drawable.tutorial_3, R.drawable.tutorial_4, R.drawable.image_onboarding_final};
+                R.drawable.tutorial_3, R.drawable.tutorial_4, R.drawable.tutorial_5};
 
         int[] tutorialHeaders = new int[]{R.string.tutorial_header_1,
                 R.string.tutorial_header_2, R.string.tutorial_header_3, R.string.tutorial_header_4, R.string.activity_onboarding_header_final};
@@ -185,8 +182,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fr_tutorial, container, false);
             RelativeLayout relativeEtick = rootView.findViewById(R.id.relfinal);
             TextView finePrint = rootView.findViewById(R.id.finePrint);

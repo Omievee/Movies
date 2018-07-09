@@ -96,10 +96,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
         if (result != ConnectionResult.SUCCESS) {
             AlertDialog.Builder(context).setMessage("Google Play Services must either be enabled or updated in order to continue")
-                    .setPositiveButton("OK", { dialog, which ->
+                    .setPositiveButton("OK") { dialog, which ->
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
                         finish()
-                    }).setCancelable(false).show()
+                    }.setCancelable(false).show()
             return false
         }
         return true
