@@ -12,6 +12,7 @@ import com.mobile.UserPreferences
 import com.mobile.model.GuestTicket
 import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
+import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.utils.showBottomFragment
@@ -25,6 +26,9 @@ class ConfirmDetailsFragment : Fragment() {
 
     @Inject
     lateinit var locationManager: com.mobile.location.LocationManager
+
+    @Inject
+    lateinit var api: Api
 
     var listener: BringAFriendListener? = null
 
@@ -110,16 +114,16 @@ class ConfirmDetailsFragment : Fragment() {
         val availability = payload.availability ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
-        val lat:Double
-        val lng:Double
-        when(local==null) {
-            true-> {
+        val lat: Double
+        val lng: Double
+        when (local == null) {
+            true -> {
                 val location = UserPreferences.location
                 lat = location.latitude
                 lng = location.longitude
             }
-            false-> {
-                val loc = local?:return
+            false -> {
+                val loc = local ?: return
                 lat = loc.lat
                 lng = loc.lon
             }

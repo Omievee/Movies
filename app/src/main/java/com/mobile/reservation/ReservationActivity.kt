@@ -41,8 +41,6 @@ class ReservationActivity : MPActivty() {
         val showCurrentReservationText = intent.getBooleanExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, false)
         canClose = intent.getBooleanExtra(KEY_CAN_CLOSE, false)
         reservation?.let {
-            if(UserPreferences.zipCode == null)
-                presenter.getUserZipCode()
             reservationV.bind(it, showCurrentReservationText, canClose)
         }
         reservationV.setOnCloseListener(object : OnCloseListener {
@@ -65,6 +63,11 @@ class ReservationActivity : MPActivty() {
             }
         }
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
     }
 
     fun CurrentReservationV2.toPop() : PopInfo {
@@ -92,6 +95,14 @@ class ReservationActivity : MPActivty() {
         reservationV.progress.visibility = View.GONE
     }
 
+    fun showZipCode(zipCode: String) {
+        reservationV.bind(zipCode=zipCode)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
+    }
 
     companion object {
 
