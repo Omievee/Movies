@@ -22,6 +22,10 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
 
     var reservationId: Int? = null
 
+    fun bind(zipCode:String) {
+        zipCodeNumberReservation.text = zipCode
+    }
+
     fun bind(reservation: CurrentReservationV2, showCurrentReservationText: Boolean = false, canClose: Boolean) {
         reservationId = reservation.reservation?.id
         movieName.text = reservation.title
@@ -116,7 +120,7 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     setText(R.string.if_asked_provide_zip)
                     visibility = View.VISIBLE
                 }
-                ZipCodeNumberReservation.apply {
+                zipCodeNumberReservation.apply {
                     text = UserPreferences.zipCode
                     visibility = View.VISIBLE
                 }

@@ -12,6 +12,8 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
     private var cancelReservationDisposable: Disposable? = null
     private var userInfoDisposable: Disposable? = null
 
+    private var zipCode:String? = null
+
     fun cancelCurrentReservation(reservation: Int) {
         val request = ChangedMindRequest(reservation)
         cancelReservationDisposable?.dispose()
@@ -39,5 +41,30 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
                 },{
 
                 })
+    }
+
+    private fun fetchZipCode() {
+        if (zipCode != null) {
+            return
+        }
+        userInfoDisposable?.dispose()
+        userInfoDisposable = api.getUserDataRx(
+                UserPreferences.userId
+        ).subscribe({ data ->
+            val zip = data.billingZipCode?: return@subscribe
+            zipCode = zip
+            UserPreferences.zipCode = zip
+            view.showZipCode(zip)
+        }, {
+
+        })
+    }
+
+    fun onResume() {
+        fetchZipCode()
+    }
+
+    fun onPause() {
+        userInfoDisposable?.dispose()
     }
 }
