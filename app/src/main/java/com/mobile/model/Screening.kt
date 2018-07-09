@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.mobile.network.SurgeResponse
 import com.mobile.reservation.CurrentReservationV2
 import kotlinx.android.parcel.Parcelize
-import java.util.Date;
 
 @Parcelize
 data class Screening(var moviepassId: Int? = null,
@@ -111,13 +110,3 @@ data class Screening(var moviepassId: Int? = null,
         }
     }
 }
-
-fun from(theater: Theater): Theater2 {
-    return Theater2(id = theater.id,
-            name = theater.name,
-            latitude = theater.lat,
-            longitude = theater.lon,
-            tribuneTheaterId = theater.tribuneTheaterId
-    )
-}
-

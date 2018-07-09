@@ -29,7 +29,7 @@ class ShowtimeAdapter : RecyclerView.Adapter<BaseViewHolder>() {
                         time?.let { time ->
                             screening?.screening?.let {
                                 isSelected = true
-                                showtimeClickListener?.onShowtimeClick(screening?.theater?.toTheater(), it, time)
+                                showtimeClickListener?.onShowtimeClick(screening?.theater, it, time)
                             }
 
                         }

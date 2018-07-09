@@ -142,7 +142,7 @@ class ConfirmSurgeFragment : MPFragment() {
 
     private fun reserveTicket() {
         val screening: Screening = payload?.screening ?: return
-        val theater: Theater = payload?.theater?.toTheater() ?: return
+        val theater: Theater = payload?.theater ?: return
         val availability: Availability = payload?.availability ?: return
         val info = availability.providerInfo ?: return
         val lat = locationManager.lastLocation() ?: return

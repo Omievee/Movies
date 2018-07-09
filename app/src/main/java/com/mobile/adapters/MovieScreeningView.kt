@@ -48,7 +48,7 @@ class MovieScreeningView(context: Context?, attrs: AttributeSet? = null) : Const
 
         pinIcon.setOnClickListener {
             val screeningPresentation = this.screeningPresentation ?: return@setOnClickListener
-            val uri = Uri.parse("geo:" + screeningPresentation.theater?.latitude + "," + screeningPresentation.theater?.longitude + "?q=" + Uri.encode(screeningPresentation.theater?.name))
+            val uri = Uri.parse("geo:" + screeningPresentation.theater?.lat + "," + screeningPresentation.theater?.lon + "?q=" + Uri.encode(screeningPresentation.theater?.name))
 
             try {
                 val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()))

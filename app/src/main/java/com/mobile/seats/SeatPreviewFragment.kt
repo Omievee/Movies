@@ -94,4 +94,4 @@ interface SeatPreviewListener {
 }
 
 @Parcelize
-class SeatPreviewPayload(val screening: Screening? = null, val theater: Theater2? = null, val availability: Availability? = null) : Parcelable
+class SeatPreviewPayload(val screening: Screening? = null, val theater: Theater? = null, val availability: Availability? = null) : Parcelable
