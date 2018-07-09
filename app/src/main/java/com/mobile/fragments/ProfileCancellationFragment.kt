@@ -130,6 +130,7 @@ class ProfileCancellationFragment : MPFragment() {
                             activity?.onBackPressed()
                         })
                         { error ->
+                            progress.visibility = View.GONE
                             if (error is ApiError) {
                                 Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
                             }
