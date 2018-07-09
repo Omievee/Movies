@@ -4,10 +4,10 @@ import com.mobile.Constants
 import com.mobile.model.Availability
 import com.mobile.model.Screening
 import com.mobile.model.SeatInfo
-import com.mobile.model.Theater2
+import com.mobile.model.Theater
 
 class SelectSeatPayload(
-        val theater: Theater2? = null,
+        val theater: Theater? = null,
         val screening: Screening? = null,
         val availability: Availability? = null,
         val ticketPurchaseData: List<TicketPurchaseData>? = null,

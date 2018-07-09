@@ -39,7 +39,7 @@ class BringAFriendActivity : MPActivty() {
         fun newIntent(context: Context, theater: Theater, screening: Screening, availability: Availability): Intent {
             return Intent(context, BringAFriendActivity::class.java).apply {
                 putExtra("data", BringAFriendPayload(
-                        theater = from(theater),
+                        theater = theater,
                         screening = screening,
                         availability = availability
                 ))
