@@ -10,11 +10,12 @@ import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
 import com.mobile.session.UserManager
 import com.mobile.session.UserManagerImpl
+import com.mobile.upload.UploadModule
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [SharedPreferencesModule::class, HistoryModule::class, LocationModule::class, TicketModule::class])
+@Module(includes = [SharedPreferencesModule::class, UploadModule::class, HistoryModule::class, LocationModule::class, TicketModule::class])
 class AppModule {
 
     @Provides

@@ -11,10 +11,7 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.fragments.MPFragment
-import com.mobile.model.Availability
-import com.mobile.model.Screening
-import com.mobile.model.ScreeningToken
-import com.mobile.model.Theater
+import com.mobile.model.*
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.reservation.Checkin
 import com.mobile.reservation.ReservationActivity
@@ -69,7 +66,11 @@ class ConfirmSurgeFragment : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         submit.setOnClickListener {
-            reserveTicket()
+            val ticketType: TicketType = payload?.screening?.getTicketType() ?: return@setOnClickListener
+            when (isTicketVerification() && ticketType == TicketType.STANDARD){
+                true -> showTicketVerificationDialog()
+                false -> reserveTicket()
+            }
         }
         closeButton
                 .setOnClickListener {
@@ -108,6 +109,10 @@ class ConfirmSurgeFragment : MPFragment() {
 
     }
 
+    private fun isTicketVerification() : Boolean{
+        return UserPreferences.restrictions.proofOfPurchaseRequired
+    }
+
     private fun subscribe() {
         disposable?.dispose()
         disposable = listener?.payload()
@@ -139,6 +144,14 @@ class ConfirmSurgeFragment : MPFragment() {
                 })
     }
 
+    private fun showTicketVerificationDialog() {
+        val context = activity?:return
+        android.support.v7.app.AlertDialog.Builder(context,R.style.CUSTOM_ALERT)
+                .setView(R.layout.alertdialog_ticketverif)
+                .setPositiveButton(android.R.string.ok, {_,_ ->
+                    reserveTicket()
+                }).show()
+    }
 
     private fun reserveTicket() {
         val screening: Screening = payload?.screening ?: return

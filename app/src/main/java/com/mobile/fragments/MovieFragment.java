@@ -188,6 +188,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     }
 
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

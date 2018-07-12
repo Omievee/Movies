@@ -43,14 +43,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
 
     private static Application mApplication;
     public static final String TAG = "TAG";
-    private AmazonS3 s3;
-    private static CognitoCachingCredentialsProvider sCredProvider;
-
-    private static String getCognitoKey() {
-        return BuildConfig.COGNITO_KEY;
-    }
-
-    static String cognitoPoolId = String.valueOf(getCognitoKey());
 
     public static Application getInstance() {
         return mApplication;
@@ -69,7 +61,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         inject();
         UserPreferences.INSTANCE.load(this, gson);
         Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
-        s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
         RealmTaskService.scheduleRepeatTask(this);
@@ -103,25 +94,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
                 .application(this)
                 .build()
                 .inject(this);
-    }
-
-
-    private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
-        if (sCredProvider == null) {
-            sCredProvider = new CognitoCachingCredentialsProvider(
-                    context.getApplicationContext(),
-                    cognitoPoolId,
-                    Regions.US_EAST_1);
-        }
-        return sCredProvider;
-    }
-
-    private void setUpAmazon() {
-        s3 = new AmazonS3Client(getCredProvider(getApplicationContext()));
-    }
-
-    public AmazonS3 getAmazonS3Client() {
-        return s3;
     }
 
     @Override

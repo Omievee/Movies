@@ -108,11 +108,11 @@ public class ConfirmationActivity extends BaseActivity implements GestureDetecto
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_confirmation);
 
-        transferUtility = TransferUtility.builder()
-                .context(getApplicationContext())
-                .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
-                .s3Client(((Application) getApplicationContext()).getAmazonS3Client())
-                .build();
+//        transferUtility = TransferUtility.builder()
+//                .context(getApplicationContext())
+//                .awsConfiguration(AWSMobileClient.getInstance().getConfiguration())
+//                .s3Client(((Application) getApplicationContext()).getAmazonS3Client())
+//                .build();
 
         whiteProgress = findViewById(R.id.white_progress);
         progress = findViewById(R.id.confirm_progress);

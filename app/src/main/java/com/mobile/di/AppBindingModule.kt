@@ -89,4 +89,8 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun confirmSurgeFragment(): ConfirmSurgeFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun ticketVerification(): TicketVerificationV2
 }

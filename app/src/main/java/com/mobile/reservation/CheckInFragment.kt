@@ -100,7 +100,6 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                 presenter.onContinueToETicketingClicked()
             }
         }
-
     }
 
     override fun onDestroy() {
@@ -136,7 +135,6 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showCheckinWithProof() {
         continueOrCheckin.apply {
-            text = R.string.checkin
             setOnClickListener {
                 showTicketVerificationDialog()
             }
@@ -148,7 +146,6 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         AlertDialog.Builder(context,R.style.CUSTOM_ALERT)
         .setView(R.layout.alertdialog_ticketverif)
                 .setPositiveButton(android.R.string.ok, {_,_ ->
-                    showCheckin()
                     presenter.onContinueClicked()
                 }).show()
     }

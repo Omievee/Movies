@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -20,40 +21,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.amazonaws.mobile.client.AWSMobileClient
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.helpshift.support.Support
+import com.mobile.ApiError
 import com.mobile.Constants
 import com.mobile.UserPreferences
-import com.mobile.application.Application
 import com.mobile.helpers.LogUtils
 import com.mobile.model.PopInfo
-import com.mobile.network.RestClient
+import com.mobile.network.Api
 import com.mobile.requests.VerificationRequest
-import com.mobile.responses.VerificationResponse
 import com.mobile.tv.TicketVerificationNoStubV2
 import com.mobile.tv.TicketVerificationView
+import com.mobile.upload.Upload
+import com.mobile.upload.UploadManager
 import com.mobile.utils.AppUtils
 import com.mobile.utils.onBackExtension
 import com.moviepass.BuildConfig
 import com.moviepass.R
+import dagger.android.support.AndroidSupportInjection
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_ticket_verification_v2.*
-import org.json.JSONException
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 
 private const val POP_INFO = "pop_info"
 private const val TICKET_STATUS = "redeem"
-
 
 class TicketVerificationV2 : MPFragment() {
 
@@ -67,14 +63,20 @@ class TicketVerificationV2 : MPFragment() {
     var bmOptions: BitmapFactory.Options? = null
     var key: String? = null
     var objectMetadata: ObjectMetadata? = null
-    var transferUtility: TransferUtility? = null
+
+    var uploadObservable: Disposable? = null
+    var uploadPicture: Disposable? = null
+
+    @Inject
+    lateinit var uploadManager: UploadManager
+
+    @Inject
+    lateinit var api: Api
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            popInfo = it.getParcelable<PopInfo>(POP_INFO)
-            isTicketRedeemed = it.getBoolean(TICKET_STATUS)
-        }
+        popInfo = arguments?.getParcelable(POP_INFO)
+        isTicketRedeemed = arguments?.getBoolean(TICKET_STATUS)
     }
 
     private val STORAGE_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -83,18 +85,11 @@ class TicketVerificationV2 : MPFragment() {
         return inflater.inflate(R.layout.fragment_ticket_verification_v2, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         popInfo?.let {
             ticketVerificationV.bind(it, isTicketRedeemed ?: false)
         }
-
-        transferUtility = TransferUtility.builder()
-                .context(activity?.applicationContext)
-                .awsConfiguration(AWSMobileClient.getInstance().configuration)
-                .s3Client((activity?.applicationContext as Application).amazonS3Client)
-                .build()
 
         ticketVerificationV.setOnClickListeners(object : TicketVerificationView.ClickListeners {
             override fun close() {
@@ -110,12 +105,14 @@ class TicketVerificationV2 : MPFragment() {
             }
 
             override fun noTicketSub() {
-                showFragment(TicketVerificationNoStubV2.newInstance(isTicketRedeemed ?: false,popInfo?.reservationId ?: 0))
+                showFragment(TicketVerificationNoStubV2.newInstance(isTicketRedeemed
+                        ?: false, popInfo?.reservationId ?: 0))
             }
 
         })
 
     }
+
 
     private fun openCamera() {
         context?.let {
@@ -159,7 +156,7 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     override fun onBack(): Boolean {
-        if(super.onBack()) {
+        if (super.onBack()) {
             return true;
         } else {
             return isTicketRedeemed == true
@@ -221,9 +218,7 @@ class TicketVerificationV2 : MPFragment() {
 
     fun createFileForUpload() {
         val handler = Handler()
-        //TODO
         ticketVerificationV.showProgress()
-//        ticketScan.setVisibility(View.INVISIBLE)
 
         handler.postDelayed({
 
@@ -244,7 +239,6 @@ class TicketVerificationV2 : MPFragment() {
             } catch (e: IOException) {
 
                 LogUtils.newLog(Constants.TAG, "Error accessing file: " + e.message)
-
             }
 
             //Turn into file
@@ -287,64 +281,49 @@ class TicketVerificationV2 : MPFragment() {
         objectMetadata?.userMetadata = showTime?.let { tribuneMovieId?.let { it1 -> movieTitle?.let { it2 -> tribuneTheaterId?.let { it3 -> theaterName?.let { it4 -> metaDataMap(reservationId.toString(), it, it1, it2, it3, it4, reservationKind) } } } } }
 
 
-        val observer = transferUtility?.upload(BuildConfig.BUCKET, key, ticketPhoto, objectMetadata)
-        observer?.setTransferListener(object : TransferListener {
-            override fun onStateChanged(id: Int, state: TransferState) {
-                if (state == TransferState.COMPLETED) {
-                    val ticketVerificationRequest = VerificationRequest()
-                    RestClient.getAuthenticated().verifyTicket(reservationId
-                            ?: 0, ticketVerificationRequest).enqueue(object : Callback<VerificationResponse> {
-                        override fun onResponse(call: Call<VerificationResponse>, response: Response<VerificationResponse>) {
-                            if (response != null && response.isSuccessful) {
-                                //TODO
-                                ticketVerificationV.hideProgress()
-                                Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
-                                pictureSubmitted()
-                            } else {
-                                ticketVerificationV.hideProgress()
-                                var jObjError: JSONObject? = null
-                                try {
-                                    jObjError = JSONObject(response.errorBody()?.string())
-                                    if (jObjError.getString("message") == "Verification status is different from PENDING_SUBMISSION") {
-                                        //TODO
-                                        ticketVerificationV.hideProgress()
-                                        Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
-                                        pictureSubmitted()
-                                    }
-                                } catch (e: JSONException) {
-                                    e.printStackTrace()
-                                } catch (e: IOException) {
-                                    e.printStackTrace()
-                                }
-
-                            }
-                        }
-
-                        override fun onFailure(call: Call<VerificationResponse>, t: Throwable) {
-                            ticketVerificationV.hideProgress()
-                            Toast.makeText(activity, "Server Error. Try Again", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                }
+        uploadObservable?.dispose()
+        var upload = Upload( ticketPhoto, popInfo?.reservationId.toString(), BuildConfig.BUCKET)
+        uploadObservable = uploadManager.upload(upload).subscribe({
+            if (it.isCompleted) {
+                submitPicture(reservationId ?: 0)
             }
-
-            override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-
-            }
-
-            override fun onError(id: Int, ex: Exception) {
-                LogUtils.newLog(Constants.TAG, "onError: ")
-            }
+        }, {
+           it.printStackTrace()
+            ticketVerificationV?.hideProgress()
         })
     }
 
-    fun pictureSubmitted(){
+    fun submitPicture(reservationId: Int){
+        uploadPicture?.dispose()
+        val ticketVerificationRequest = VerificationRequest()
+        uploadPicture = api.verifyTicketV2(reservationId, ticketVerificationRequest)
+                .subscribe({
+                    val activity: Activity = activity ?: return@subscribe
+                    ticketVerificationV?.hideProgress()
+                    Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
+                    pictureSubmitted()
+
+                }, { error ->
+                    val activity: Activity = activity ?: return@subscribe
+                    if (error is ApiError) {
+                        if (error.error.message == "Verification status is different from PENDING_SUBMISSION") {
+                            ticketVerificationV.hideProgress()
+                            Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
+                            pictureSubmitted()
+                        } else
+                            Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
+                    }
+                    ticketVerificationV?.hideProgress()
+                })
+    }
+
+    fun pictureSubmitted() {
         UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
         closeFragment()
     }
 
     fun closeFragment() {
-        when (isTicketRedeemed){
+        when (isTicketRedeemed) {
             true -> {
                 isTicketRedeemed = false
                 onBackExtension()
@@ -353,6 +332,13 @@ class TicketVerificationV2 : MPFragment() {
             false -> activity?.finish()
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        uploadPicture?.dispose()
+        uploadObservable?.dispose()
+    }
+
 
     private fun metaDataMap(reservationId: String, showTime: String, movieId: String, movieTitle: String,
                             theaterId: String, theaterName: String, reservationKind: String): HashMap<String, String> {
@@ -390,6 +376,7 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         thisActivity = activity
     }

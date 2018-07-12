@@ -104,11 +104,16 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 }
                 reservationCode.visibility = View.VISIBLE
                 reservationCode.text = it.redemptionCode
+
+                currentReservationTV.visibility = when (showCurrentReservationText) {
+                    true -> View.VISIBLE
+                    else -> View.GONE
+                }
             }
         } else {
             run {
 
-                if (UserPreferences.restrictions?.proofOfPurchaseRequired==true && UserPreferences.lastReservationPopInfo != reservationId) {
+                if (UserPreferences.restrictions.proofOfPurchaseRequired && UserPreferences.lastReservationPopInfo != reservationId) {
                     ticketVerificationBanner.visibility = View.VISIBLE
                     closeIV.visibility = View.GONE
                 }

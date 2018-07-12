@@ -50,7 +50,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private val showProofOfPurchase: Boolean
         get() {
-            return checkin?.screening?.popRequired == true
+            return checkin?.screening?.popRequired == true ||  UserPreferences.restrictions.proofOfPurchaseRequired
         }
 
 
@@ -63,15 +63,16 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                 ?: return
         when (surge.level) {
             SurgeType.NO_SURGE -> {
-                when (showProofOfPurchase) {
-                    true -> view.showCheckinWithProof()
-                    false -> view.showCheckin()
-                }
                 view.showCheckin()
+                if (showProofOfPurchase) {
+                    view.showCheckinWithProof()
+                }
             }
             SurgeType.WILL_SURGE -> {
-                view.showCheckin()
                 view.showWillSurge(surge)
+                if (showProofOfPurchase) {
+                    view.showCheckinWithProof()
+                }
             }
             else -> view.showSurge(surge)
         }
@@ -140,6 +141,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         val perf = checkin.availability.providerInfo ?: return
         val loc = locationManager.lastLocation() ?: return view.showNeedLocation()
         reservDis?.dispose()
+        view.showProgress()
         reservDis = api
                 .reserve(checkin, TicketInfoRequest(
                         performanceInfo = perf,

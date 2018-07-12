@@ -147,6 +147,10 @@ public interface Api {
     @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationResponse> verifyTicket(@Path("reservationId") int reservationId, @Body VerificationRequest request);
 
+    /* Verify Ticket Photo */
+    @POST("/rest/v1/reservations/{reservationId}/verification")
+    Single<VerificationResponse> verifyTicketV2(@Path("reservationId") int reservationId, @Body VerificationRequest request);
+
     /* lost Ticket */
     @POST("/rest/v1/reservations/{reservationId}/verification")
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
