@@ -34,7 +34,7 @@ aliases:
           destination: apks
       - store_artifacts:
           path: release-notes.txt
-          destination: reports
+          destination: reports/release-notes.txt
 jobs:
   build_staging:
     working_directory: ~/code
