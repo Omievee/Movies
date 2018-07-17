@@ -2,7 +2,7 @@ version: 2
 aliases:
   docker_build_config: &docker_build_config
     docker:
-      - image: us.gcr.io/moviepass-dev-188316/gcloud-sdk:latest
+      - image: circleci/android:api-27-alpha
   build_deploy_steps: &build_deploy_steps
     steps:
       - restore_cache:
