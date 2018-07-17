@@ -30,7 +30,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
 
     private fun subscribe() {
         run {
-            theaterUISub = theaterUIManager.theaters()
+            theaterUISub = theaterUIManager.listTheaters()
                     .subscribe({ theaters ->
                         view.setAdapterData(theaters.location, theaters.theaters)
                     }, {
@@ -133,6 +133,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                 }
                 .subscribe({ loc ->
                     view.setAdapterData(it.location, loc)
+                    theaterUIManager.listTheaters(TheatersPayload(it.location, loc))
                 }, {
                     it.printStackTrace()
                 })

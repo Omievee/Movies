@@ -57,7 +57,7 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
     override fun theaters(userLocation: UserLocation?, box: BoundingBox?): Observable<List<Theater>> {
         val obs: Observable<List<Theater>> = Observable.create { emitter ->
             val theatersEverLoaded = UserPreferences.theatersLoadedToday
-            val theaters = realm.get().copyFromRealm(queryRealm(userLocation, box))
+            val theaters = queryRealm(userLocation, box)
             if (emitter.isDisposed) {
                 return@create
             }
@@ -83,9 +83,8 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
             if(it.isDisposed) {
                 return@create
             }
-            val theatersfound = realm.get().copyFromRealm(theaters)
             if(!it.isDisposed) {
-                it.onSuccess(theatersfound)
+                it.onSuccess(theaters)
             }
         }
         return single.compose(Schedulers.singleDefault())
@@ -97,10 +96,12 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
                 .getAllMoviePassTheaters()
                 .map { reservationHistoryResponse ->
                     reservationHistoryResponse.theaters?.let {
-                        realm.get().executeTransaction { transaction ->
-                            transaction.insertOrUpdate(it)
+                        val realm = realm.get()
+                        realm.executeTransaction { transaction ->
+                            transaction.delete(Theater::class.java)
+                            transaction.insert(it)
+                            UserPreferences.theatersLoadedToday = true
                         }
-                        UserPreferences.theatersLoadedToday = true
                         if (userLocation != null) {
                             it.sortAndFilter(userLocation, box)
                         } else {
@@ -126,14 +127,15 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
     }
 
     private fun queryRealm(str:UserAddress, radius:Double = 10.0): List<Theater> {
-        val query = realm.get()
+        val realm = realm.get()
+        val query = realm
                 .where(Theater::class.java)
         val box = BoundingBox(str.location,1_609.34*radius)
         query.greaterThan("lat", box.southWest.lat)
         query.greaterThan("lon", box.southWest.lon)
         query.lessThan("lat", box.northEast.lat)
         query.lessThan("lon", box.northEast.lon)
-        val theaters = query.findAll().sortAndFilter(str.location,box).take(40)
+        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location,box).take(40))
         if(theaters.isEmpty() && radius < 40) {
             return queryRealm(str, radius+10)
         } else {
@@ -142,7 +144,8 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
     }
 
     private fun queryRealm(userLocation: UserLocation?, box:BoundingBox?): List<Theater> {
-        val query = realm.get()
+        val realm = realm.get()
+        val query = realm
                 .where(Theater::class.java)
         val loc = userLocation ?: return query.findAll()
         if(box!=null) {
@@ -151,7 +154,8 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
             query.lessThan("lat", box.northEast.lat)
             query.lessThan("lon", box.northEast.lon)
         }
-        return query.findAll().sortAndFilter(loc, box).take(40)
+        val list = realm.copyFromRealm(query.findAll().sortAndFilter(loc, box).take(40))
+        return list
     }
 }
 
