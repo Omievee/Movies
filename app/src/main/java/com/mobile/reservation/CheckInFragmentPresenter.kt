@@ -47,7 +47,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private val showProofOfPurchase: Boolean
         get() {
-            return checkin?.screening?.popRequired == true ||  UserPreferences.restrictions.proofOfPurchaseRequired
+            return checkin?.screening?.popRequired == true || UserPreferences.restrictions.proofOfPurchaseRequired
         }
 
 
@@ -90,9 +90,10 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
 
         val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
-        when(surge.level) {
-            SurgeType.SURGING-> return view.navigateToSurchargeConfirm(checkin)
-            else-> {}
+        when (surge.level) {
+            SurgeType.SURGING -> return view.navigateToSurchargeConfirm(checkin)
+            else -> {
+            }
         }
         view.showProgress()
         surgeCheckDis = api.peakCheck(
@@ -119,11 +120,11 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
     }
 
-    private fun showSurgeModal(surge:SurgeResponse) {
+    private fun showSurgeModal(surge: SurgeResponse) {
         val message = surge.peakMessage
-        when(message) {
-            null-> view.showSurgeModal(surge.peakAmount.centsAsDollars)
-            else-> view.showSurgeModal(message)
+        when (message) {
+            null -> view.showSurgeModal(surge.peakAmount.centsAsDollars)
+            else -> view.showSurgeModal(message)
         }
     }
 

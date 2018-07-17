@@ -21,8 +21,6 @@ import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.
 import javax.inject.Inject
 import com.mobile.activities.ActivateMoviePassCard
 
-
-
 class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showActivateCard(checkin: Checkin) {
@@ -97,8 +95,8 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         presenter.onDestroy()
     }
 

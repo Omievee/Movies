@@ -65,7 +65,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
-            SynopsisFragment.newInstance(movie.synopsis).show(childFragmentManager, "synopsis")
+            SynopsisFragment.newInstance(movie).show(childFragmentManager, "synopsis")
         }
 
     }
@@ -112,21 +112,21 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
             fetchTheatersIfNecessary(necessary = true)
         }
         val movie = screeningData?.movie
-        movieHeader.visibility = when(movie) {
-            null->View.GONE
-            else-> {
-                movieHeader.bind(movie=movie, synopsisListener= synopsislistener)
+        movieHeader.visibility = when (movie) {
+            null -> View.GONE
+            else -> {
+                movieHeader.bind(movie = movie, synopsisListener = synopsislistener)
                 View.VISIBLE
             }
         }
-        theaterHeader.visibility = when(screeningData?.movie) {
-            null-> {
+        theaterHeader.visibility = when (screeningData?.movie) {
+            null -> {
                 screeningData?.theater?.let {
                     theaterHeader.bind(it)
                 }
                 View.VISIBLE
             }
-            else->View.GONE
+            else -> View.GONE
         }
         showTheaterBottomSheetIfNecessary(screeningData?.theater)
     }
@@ -164,11 +164,12 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     private fun showLocationError() {
     }
 
-    private fun observ(location:UserLocation): Observable<Pair<List<ReservationHistory>,ScreeningsResponseV2>>  {
+    private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {
         val theaterId = screeningData?.theater?.tribuneTheaterId
-        val screeningsObserv:Observable<ScreeningsResponseV2> = when(theaterId) {
-            null-> api.getScreeningsForMovieRx(location.lat, location.lon, screeningData?.movie?.id?:0).toObservable()
-            else-> api.getScreeningsForTheaterV2(theaterId).toObservable()
+        val screeningsObserv: Observable<ScreeningsResponseV2> = when (theaterId) {
+            null -> api.getScreeningsForMovieRx(location.lat, location.lon, screeningData?.movie?.id
+                    ?: 0).toObservable()
+            else -> api.getScreeningsForTheaterV2(theaterId).toObservable()
         }
         return Observable.zip(
                 historyManager.getHistory(), screeningsObserv,
@@ -207,7 +208,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     }
 
     companion object {
-        fun newInstance(data:ScreeningsData): ScreeningsFragment {
+        fun newInstance(data: ScreeningsData): ScreeningsFragment {
             return ScreeningsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("data", data)
@@ -225,4 +226,4 @@ fun UserLocation.toLocation(): Location {
 }
 
 @Parcelize
-class ScreeningsData(val theater:Theater?=null, val movie:Movie?=null) : Parcelable
+class ScreeningsData(val theater: Theater? = null, val movie: Movie? = null) : Parcelable
