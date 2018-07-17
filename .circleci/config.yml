@@ -1,9 +1,9 @@
 version: 2
-aliases: # yaml anchors to reference in jobs below for common steps and patterns
+aliases:
   docker_build_config: &docker_build_config
     docker:
       - image: us.gcr.io/moviepass-dev-188316/gcloud-sdk:latest
-  build_deploy_steps: &deploy_steps
+  build_deploy_steps: &build_deploy_steps
     steps:
       - restore_cache:
           keys:
