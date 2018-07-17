@@ -3,6 +3,7 @@ package com.mobile.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,29 +54,36 @@ class ProfileCancellationFragment : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cancelbutton.isEnabled = false
+
         spinnerCancelReason
-                .setAdapter(object : MaterialSpinnerAdapter<String>(activity, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
+                .setAdapter(object : MaterialSpinnerAdapter<String>(context, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                        val spinner = MaterialSpinnerSpinnerView(parent.context)
-                        spinner.bind(getItemText(position))
-                        return spinner
+                        val view = MaterialSpinnerSpinnerView(parent.context)
+                        view.bind(getItemText(position))
+                        return view
                     }
                 })
         loadUserInfo()
 
-        spinnerCancelReason.setOnItemSelectedListener { view1, position, _, _ ->
+        spinnerCancelReason.setOnItemSelectedListener { view1, position, id, item ->
             cancelReasons = view1.getItems<Any>()[position] as String
-            if (cancelReasons == "Reason for Cancellation") {
-                cancelbutton.isEnabled = false
-                Toast.makeText(activity, "Please make a selection", Toast.LENGTH_SHORT).show()
-            } else {
-                cancelbutton.isEnabled = true
+            if (cancelReasons == getString(R.string.cancel_reason_for_cancellation)) {
+                Toast.makeText(context, R.string.cancel_make_selection, Toast.LENGTH_SHORT).show()
             }
         }
 
-        cancelBack.setOnClickListener { _ -> activity?.onBackPressed() }
-        cancelbutton.setOnClickListener { _ -> showCancellationConfirmationDialog() }
+        cancelBack.setOnClickListener { v -> activity?.onBackPressed() }
+
+
+        cancelbutton.setOnClickListener { v ->
+            Log.d("Reasons", ">>>>>" + cancelReasons)
+            if (cancelReasons.equals(getString(R.string.cancel_reason_for_cancellation)) || cancelReasons.isNullOrBlank()) {
+                Toast.makeText(activity, getString(R.string.cancel_make_selection), Toast.LENGTH_SHORT).show()
+            } else {
+                showCancellationConfirmationDialog()
+            }
+
+        }
 
 
     }
@@ -90,11 +98,11 @@ class ProfileCancellationFragment : MPFragment() {
         }
         builder.setMessage(message)
                 .setTitle(R.string.profile_cancel_cancel_membership)
-                .setPositiveButton("Cancel Membership") { _, _ ->
+                .setPositiveButton("Cancel Membership") { dialog, id ->
                     progress.visibility = View.VISIBLE
                     cancelFlow()
                 }
-                .setNegativeButton("Keep") { _, _ ->
+                .setNegativeButton("Keep") { dialog, id ->
 
                 }
         builder.create()
@@ -124,7 +132,7 @@ class ProfileCancellationFragment : MPFragment() {
         profileCancellationDisposable =
                 api
                         .requestCancellation(request)
-                        .subscribe({ _ ->
+                        .subscribe({ r ->
                             progress.visibility = View.GONE
                             Toast.makeText(activity, "Cancellation successful", Toast.LENGTH_SHORT).show()
                             activity?.onBackPressed()
@@ -132,7 +140,7 @@ class ProfileCancellationFragment : MPFragment() {
                         { error ->
                             progress.visibility = View.GONE
                             if (error is ApiError) {
-                                Toast.makeText(context, error.error.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
                             }
                         }
     }

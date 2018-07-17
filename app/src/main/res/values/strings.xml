@@ -77,7 +77,7 @@
     <!--<string name="activity_onboarding_body_3">Use the MoviePass apptestheck in to the movie and showtime you want to see.</string>-->
     <string name="activity_onboarding_body_3">You can see any 2D movie from its first day of release.</string>
 
-    <!--<string name="activity_onboarding_body_4">Use the apptestheck into a screeningData, then swipe your card to get your ticket!</string>-->
+    <!--<string name="activity_onboarding_body_4">Use the apptestheck into a theater, then swipe your card to get your ticket!</string>-->
     <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the mail, and you\'re ready to go!</string>
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
@@ -151,6 +151,7 @@
     <string name="fragment_refer_a_friend_sub_titlte">Your first three friends to sign up for MoviePass get their first month for free!</string>
 
     <!-- Credit Card Errors-->
+
     <string name="invalid_credit_card_number">Invalid credit card number</string>
     <string name="invalid_exp">Invalid expiration</string>
     <string name="invalid_cvv">Invalid CVV</string>
@@ -641,4 +642,6 @@
     <string name="current_location_theaters_list_view">Current Location</string>
     <string name="generic_error">There was a problem with your request.\n\nPlease try again.</string>
     <string name="reserve_in_app">Reserve E-Tickets In-App</string>
+    <string name="cancel_make_selection">Please make a selection</string>
+    <string name="cancel_reason_for_cancellation">Reason for Cancellation</string>
 </resources>
