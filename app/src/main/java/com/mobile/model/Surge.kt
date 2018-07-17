@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 data class Surge(
         var level: SurgeType = SurgeType.WILL_SURGE,
         var amount: Int = 0,
-        val screeningSurging: Boolean = false,
+        var screeningSurging: Boolean = false,
         val dependentUserSegments: List<Int> = emptyList(),
         val independentUserSegments: List<Int> = emptyList()
 ) : Parcelable {

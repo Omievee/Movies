@@ -8,6 +8,8 @@ import com.mobile.model.SurgeType
 import com.mobile.model.TicketType
 import com.mobile.model.toSurgeCheck
 import com.mobile.network.Api
+import com.mobile.network.SurgeAttributes
+import com.mobile.network.SurgeData
 import com.mobile.network.SurgeResponse
 import com.mobile.requests.SurgeCheckRequest
 import com.mobile.requests.TicketInfoRequest
@@ -61,6 +63,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
     private fun doSurge() {
         val surge = checkin?.screening?.getSurge(checkin?.availability?.startTime, UserPreferences.restrictions.userSegments)
                 ?: return
+
         when (surge.level) {
             SurgeType.NO_SURGE -> {
                 view.showCheckin()
