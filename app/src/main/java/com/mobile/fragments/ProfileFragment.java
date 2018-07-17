@@ -219,8 +219,8 @@ public class ProfileFragment extends MPFragment {
                 final boolean checkedIn;
 
                 if (token != null) {
-                    Reservation rs = token.getReservation();
-                    checkedIn = rs != null && rs.getExpiration() > System.currentTimeMillis();
+                    Reservation rs = token.getReservation().getReservation();
+                    checkedIn = rs.getExpiration() > System.currentTimeMillis();
                     Date starttime = token.getTimeAsDate();
                     if (starttime != null) {
                         long diff = starttime.getTime() - System.currentTimeMillis();

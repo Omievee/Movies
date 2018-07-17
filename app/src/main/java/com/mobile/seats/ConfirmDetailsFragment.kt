@@ -9,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.model.GuestTicket
 import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
 import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
+import com.mobile.reservation.Checkin
 import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -26,6 +28,9 @@ class ConfirmDetailsFragment : Fragment() {
 
     @Inject
     lateinit var locationManager: com.mobile.location.LocationManager
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     @Inject
     lateinit var api: Api
@@ -112,6 +117,8 @@ class ConfirmDetailsFragment : Fragment() {
         val local = locationManager.lastLocation()
         val payload = payload ?: return
         val availability = payload.availability ?: return
+        val screening = payload.screening ?: return
+        val theater = payload.theater ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
         val provideInfo = availability.providerInfo ?: return
         val lat: Double
@@ -161,6 +168,10 @@ class ConfirmDetailsFragment : Fragment() {
         }
         getTickets.progress = true
         getTicketsDisposable?.dispose()
+        val checkIn = Checkin(
+                screening = screening,
+                theater = theater,
+                availability = availability)
         getTicketsDisposable = RestClient
                 .getAuthenticated()
                 .reserve(
@@ -187,17 +198,20 @@ class ConfirmDetailsFragment : Fragment() {
                 .subscribe({ result ->
                     result?.let {
                         listener?.onTicketsPurchased(result)
+                        analyticsManager.onCheckinSuccessful(checkIn = checkIn,
+                                reservationResponse = it
+                        )
                     }
                 }
                 ) { error ->
                     if (error is ApiError) {
                         val context = context ?: return@subscribe
-                        AlertDialog.Builder(context).setTitle(error.error?.title)
-                                .setMessage(error.error?.message)
+                        AlertDialog.Builder(context).setTitle(error.error.title)
+                                .setMessage(error.error.message)
                                 .setPositiveButton(android.R.string.ok) { _, _ ->
                                     when (error.httpErrorCode) {
                                         409 -> {
-                                            listener?.navigateToSeats(error.error?.unavailablePositions
+                                            listener?.navigateToSeats(error.error.unavailablePositions
                                                     ?: emptyList())
                                         }
                                         else -> {
@@ -206,6 +220,7 @@ class ConfirmDetailsFragment : Fragment() {
                                 }
                                 .show()
                     }
+                    analyticsManager.onCheckinFailed(checkIn)
                 }
     }
 }

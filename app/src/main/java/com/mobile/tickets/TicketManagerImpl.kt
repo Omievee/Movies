@@ -18,9 +18,11 @@ class TicketManagerImpl(val api: Api) : TicketManager {
 
     override fun reserve(checkin: Checkin, ticketRequest: TicketInfoRequest): Single<ReservationResponse> {
         return api.reserve(ticketRequest).doOnSuccess {
-            UserPreferences.saveReservation(ScreeningToken(
-                    checkin.screening, checkin.availability, it.reservation, it.eTicketConfirmation, checkin.theater
-            ))
+            UserPreferences.saveReservation(
+                    ScreeningToken(
+                            checkIn = checkin,
+                            reservation = it
+                    ))
         }
     }
 

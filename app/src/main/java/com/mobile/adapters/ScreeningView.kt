@@ -1,6 +1,7 @@
 package com.mobile.adapters
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
@@ -14,10 +15,12 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.listeners.ShowtimeClickListener
+import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
 import com.moviepass.R
+import kotlinx.android.synthetic.main.horizontal_poster.view.*
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
 
 fun Int.runningTimeString(context: Context): SpannableStringBuilder {
@@ -47,6 +50,24 @@ fun Int.runningTimeString(context: Context): SpannableStringBuilder {
                 setSpan(TextAppearanceSpan(context, R.style.RatedText), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
             })
         }
+    }
+}
+
+fun String?.toFormattedRating(context:Context):SpannableStringBuilder {
+    return android.text.SpannableStringBuilder().apply {
+        if (this.isEmpty()) {
+            return@apply
+        }
+        val resources = context.resources
+        val rated = android.text.SpannableString(resources.getString(com.moviepass.R.string.screening_rating)).apply {
+            setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatedText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        val rating = android.text.SpannableString(this).apply {
+            setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatingText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        append(rated)
+        append("  ")
+        append(rating)
     }
 }
 
@@ -121,21 +142,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 false -> View.VISIBLE
             }
         }
-        val rating = SpannableStringBuilder().apply {
-            if (screening.screening?.rating.isNullOrEmpty()) {
-                return@apply
-            }
-            val rated = SpannableString(resources.getString(R.string.screening_rating)).apply {
-                setSpan(TextAppearanceSpan(context, R.style.RatedText), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            val rating = SpannableString(screening.screening?.rating).apply {
-                setSpan(TextAppearanceSpan(context, R.style.RatingText), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            append(rated)
-            append("  ")
-            append(rating)
-        }
-        movieRating.text = rating
+        movieRating.text = screening.screening?.rating.toFormattedRating(context)
         movieRating.visibility = when (movieRating.text.isEmpty()) {
             true -> View.GONE
             else -> View.VISIBLE

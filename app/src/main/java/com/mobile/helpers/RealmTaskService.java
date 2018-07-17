@@ -15,14 +15,11 @@ import com.mobile.UserPreferences;
 import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
-import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
-import com.mobile.responses.LocalStorageTheaters;
+import com.mobile.responses.TheatersResponse;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -134,10 +131,10 @@ public class RealmTaskService extends GcmTaskService {
         try {
             tRealm = Realm.getDefaultInstance();
 
-            RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<LocalStorageTheaters>() {
+            RestClient.getLocalStorageAPI().getAllMoviePassTheaters().enqueue(new Callback<TheatersResponse>() {
                 @Override
-                public void onResponse(Call<LocalStorageTheaters> call, Response<LocalStorageTheaters> response) {
-                    LocalStorageTheaters locallyStoredTheaters = response.body();
+                public void onResponse(Call<TheatersResponse> call, Response<TheatersResponse> response) {
+                    TheatersResponse locallyStoredTheaters = response.body();
                     if (locallyStoredTheaters != null && response.isSuccessful()) {
 
                         tRealm.executeTransactionAsync(realm -> {
@@ -155,8 +152,8 @@ public class RealmTaskService extends GcmTaskService {
                 }
 
                 @Override
-                public void onFailure(Call<LocalStorageTheaters> call, Throwable t) {
-                    Toast.makeText(RealmTaskService.this, "Error while downloading Theaters.", Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<TheatersResponse> call, Throwable t) {
+                    Toast.makeText(RealmTaskService.this, "Error while downloading TheaterScope.", Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (IllegalStateException e) {

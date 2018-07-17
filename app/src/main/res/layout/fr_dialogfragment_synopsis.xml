@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/SYNOPSIS_TITLE"
+            android:id="@+id/synopsisTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_half"
@@ -35,7 +35,7 @@
 
 
                 <TextView
-                    android:id="@+id/SYNOPSIS_TEXT"
+                    android:id="@+id/synopsisText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_half"

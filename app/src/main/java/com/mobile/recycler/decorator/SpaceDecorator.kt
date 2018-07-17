@@ -1,6 +1,8 @@
 package com.mobile.recycler.decorator
 
+import android.content.Context
 import android.graphics.Rect
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 
@@ -10,7 +12,8 @@ class SpaceDecorator(
         val bottom: Int? = null,
         val end: Int? = null,
         val lastEnd: Int? = null,
-        val lastBottom: Int? = null
+        val lastBottom: Int? = null,
+        val firstTop: Int? = null
 ) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -37,6 +40,20 @@ class SpaceDecorator(
                 outRect.bottom += it
             }
         }
+        firstTop?.let {
+            if (position==0) {
+                outRect.top += it
+            }
+        }
+        lastBottom?.let {
+            if (state.itemCount - 1 == position) {
+                outRect.bottom += it
+            }
+        }
     }
+}
+
+class StickyLayout(context: Context?) : LinearLayoutManager(context) {
+
 
 }

@@ -17,12 +17,18 @@ import com.helpshift.Core;
 import com.helpshift.InstallConfig;
 import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
+import com.mobile.analytics.AnalyticsManager;
 import com.mobile.di.DaggerAppComponent;
 import com.mobile.helpers.RealmTaskService;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.network.RestClient;
+import com.mobile.utils.FastStack;
 import com.moviepass.BuildConfig;
 import com.taplytics.sdk.Taplytics;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Stack;
 
 import javax.inject.Inject;
 
@@ -41,6 +47,9 @@ public class Application extends MultiDexApplication implements HasActivityInjec
     @Inject
     Gson gson;
 
+    @Inject
+    AnalyticsManager analyticsManager;
+
     private static Application mApplication;
     public static final String TAG = "TAG";
 
@@ -48,11 +57,20 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         return mApplication;
     }
 
+    private FastStack<Activity> activityStack = new FastStack<>();
+
     public Application() {
         super();
         mApplication = this;
     }
 
+    @Nullable public Activity getCurrentActivity() {
+        return activityStack.peek();
+    }
+
+    public FastStack<Activity> getActivityStack() {
+        return activityStack;
+    }
 
     //giguyigfyug
     @Override
@@ -75,6 +93,17 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
+        registerActivityLifecycleCallbacks(new ActivigtyCallbacks() {
+            @Override
+            public void onActivityResumed(@Nullable Activity activity) {
+                activityStack.push(activity);
+            }
+
+            @Override
+            public void onActivityDestroyed(@Nullable Activity activity) {
+                activityStack.remove(activity);
+            }
+        });
         try {
             Core.install(this,
                     "d7307fbf50724282a116acadd54fb053",
@@ -85,7 +114,7 @@ public class Application extends MultiDexApplication implements HasActivityInjec
             Core.login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
         } catch (InstallException e) {
         }
-
+        analyticsManager.onAppOpened();
     }
 
     protected void inject() {

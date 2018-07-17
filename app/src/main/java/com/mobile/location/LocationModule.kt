@@ -1,6 +1,7 @@
 package com.mobile.location
 
 import android.content.Context
+import android.location.Geocoder
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.mobile.application.Application
@@ -32,5 +33,17 @@ class LocationModule {
     @Singleton
     fun provideLocationManager(application: Application, systemLocationManager: android.location.LocationManager, fused:FusedLocationProviderClient?) : LocationManager {
         return LocationManagerImpl(application, systemLocationManager, fused)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSystemGeocoder(application: Application):Geocoder {
+        return Geocoder(application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeocoder(geocoder:Geocoder):com.mobile.location.Geocoder {
+        return GeocoderImpl(geocoder)
     }
 }

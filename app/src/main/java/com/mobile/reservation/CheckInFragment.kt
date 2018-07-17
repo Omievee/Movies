@@ -19,11 +19,7 @@ import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.*
 import javax.inject.Inject
-import com.moviepass.R.id.showtime
-import org.parceler.Parcels
 import com.mobile.activities.ActivateMoviePassCard
-
-
 
 class CheckInFragment : MPFragment(), CheckInFragmentView {
 
@@ -35,16 +31,13 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         startActivity(activateCard)
     }
 
-    override fun navigateTo(checkin: Checkin, reservation: ReservationResponse) {
+    override fun navigateTo(checkIn: Checkin, reservation: ReservationResponse) {
         val activity = activity?:return
         activity.onBackPressed()
         startActivity(ReservationActivity.newInstance(activity,
                 ScreeningToken(
-                        checkin.screening,
-                        checkin.availability,
-                        reservation.reservation,
-                        reservation.eTicketConfirmation,
-                        checkin.theater
+                        checkIn = checkIn,
+                        reservation=reservation
                 )))
     }
 
@@ -58,7 +51,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         AlertDialog.Builder(context)
                 .setTitle(R.string.peak_pricing)
                 .setMessage(context.getString(R.string.reservation_surge_description,peakAmount))
-                .setPositiveButton(R.string.continue_button) { a, b->
+                .setPositiveButton(R.string.continue_button) { _, _->
                     presenter.onContinueDialogClicked()
                 }
                 .setNegativeButton(R.string.go_back, null)
@@ -102,8 +95,8 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         presenter.onDestroy()
     }
 

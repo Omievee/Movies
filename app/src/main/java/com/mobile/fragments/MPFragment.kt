@@ -1,8 +1,11 @@
 package com.mobile.fragments
 
 import android.os.Bundle
+import android.support.transition.Slide
+import android.support.transition.TransitionManager
+import android.support.transition.TransitionSet
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -12,21 +15,19 @@ import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.mobile.BackFragment
-import com.mobile.utils.onBackExtension
-import com.mobile.utils.removeFragmentExtension
-import com.mobile.utils.replaceFragmentExtension
-import com.mobile.utils.showFragmentExtension
+import com.mobile.utils.*
 import com.moviepass.R
 
 open class MPFragment : Fragment(), BackFragment {
 
     var fragmentContainer: FrameLayout? = null
 
-    fun showFragment(fragment: Fragment) {
-        showFragmentExtension(fragment)
+    open fun showFragment(fragment: Fragment) {
+        showFragment(R.id.fragmentContainer, fragment)
     }
 
     fun showFragment(id:Int, fragment: Fragment) {
+        println("showFragment $id")
         showFragmentExtension(id, fragment)
     }
 
@@ -34,8 +35,31 @@ open class MPFragment : Fragment(), BackFragment {
         removeFragmentExtension(id)
     }
 
-    fun replaceFragment(fragment: Fragment) {
-        replaceFragmentExtension(fragment)
+    fun slideFragmentIn(v:ViewGroup) {
+        println("slideInFragment ${v.id}")
+        view as? ViewGroup ?: return
+        val set = TransitionSet()
+        set.duration = 250
+        val slide = Slide(Gravity.END);
+        set.addTransition(slide)
+        TransitionManager.beginDelayedTransition(v, set)
+        v.visibility = View.VISIBLE
+    }
+
+    fun slideFragmentOut(v:ViewGroup?) {
+        val view = view as? ViewGroup ?: return
+        v?:return
+        val set = TransitionSet()
+        set.duration = 250
+        val slide = Slide(Gravity.END);
+        set.addTransition(slide);
+        TransitionManager.beginDelayedTransition(view, set)
+        v.visibility = View.INVISIBLE
+    }
+
+    fun preloadFragment(id:Int, fragment: Fragment) {
+        println("preloadFragment $id")
+        preLoadFragmentExtension(id, fragment)
     }
 
     override fun onBack(): Boolean {
@@ -46,13 +70,14 @@ open class MPFragment : Fragment(), BackFragment {
         super.onViewCreated(view, savedInstanceState)
         val vg = view as? ViewGroup ?: return
         val none = (0 until vg.childCount).none {
-            val view = vg.getChildAt(it)
-            view.id == R.id.fragmentContainer
+            val vv = vg.getChildAt(it)
+            vv.id == R.id.fragmentContainer
         }
         when (none) {
             true -> {
                 fragmentContainer = FrameLayout(context).apply {
                     id = R.id.fragmentContainer
+                    elevation = vg.highestElevation
                 }
                 vg.addView(fragmentContainer, MATCH_PARENT, MATCH_PARENT)
             }

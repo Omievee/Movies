@@ -11,10 +11,10 @@ import kotlinx.android.parcel.Parcelize
 @RealmClass
 open class Theater(
         @PrimaryKey
-        var id: Int? = null,
+        var id: Int = 0,
         var name: String? = null,
-        var lat: Double? = null,
-        var lon: Double? = null,
+        var lat: Double = 0.0,
+        var lon: Double = 0.0,
         var tribuneTheaterId: Int? = null,
         var distance:Double = 0.0,
         var city: String? = null,
@@ -24,7 +24,6 @@ open class Theater(
         var ticketType: String? = null,
         var moviepassId:Int = 0
 ) : RealmModel, Parcelable {
-
 
     fun ticketTypeIsStandard(): Boolean {
         return ticketType?.matches("STANDARD".toRegex()) == true
@@ -55,22 +54,24 @@ open class Theater(
         if (address != other.address) return false
         if (zip != other.zip) return false
         if (ticketType != other.ticketType) return false
+        if (moviepassId != other.moviepassId) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = id ?: 0
+        var result = id
         result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (lat?.hashCode() ?: 0)
-        result = 31 * result + (lon?.hashCode() ?: 0)
+        result = 31 * result + lat.hashCode()
+        result = 31 * result + lon.hashCode()
         result = 31 * result + (tribuneTheaterId ?: 0)
-        result = 31 * result + (distance.hashCode() ?: 0)
+        result = 31 * result + distance.hashCode()
         result = 31 * result + (city?.hashCode() ?: 0)
         result = 31 * result + (state?.hashCode() ?: 0)
         result = 31 * result + (address?.hashCode() ?: 0)
         result = 31 * result + (zip?.hashCode() ?: 0)
         result = 31 * result + (ticketType?.hashCode() ?: 0)
+        result = 31 * result + moviepassId
         return result
     }
 
@@ -79,3 +80,4 @@ open class Theater(
             return "${city}, ${state} ${zip}"
         }
 }
+

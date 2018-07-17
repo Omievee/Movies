@@ -12,7 +12,6 @@ class SeatHelper {
     companion object {
         fun getDrawable(seat: SeatInfo, resources: Resources):StateListDrawable? {
             val builder = when (seat.seatType) {
-                null-> null
                 SeatTypeNotASeat-> null
                 SeatTypeCanReserve,
                 SeatTypeUnknown,

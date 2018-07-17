@@ -211,7 +211,7 @@
 
 
             <TextView
-                android:id="@+id/EnableText"
+                android:id="@+id/enableButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/GPSmessage"
@@ -229,7 +229,7 @@
                 android:layout_width="25dp"
                 android:layout_height="40dp"
                 android:layout_below="@id/message"
-                android:layout_toEndOf="@id/EnableText"
+                android:layout_toEndOf="@id/enableButton"
                 android:src="@drawable/arrowforward"
                 android:tint="@color/new_red"
                 android:visibility="gone" />

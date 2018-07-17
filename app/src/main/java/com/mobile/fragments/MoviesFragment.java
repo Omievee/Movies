@@ -26,11 +26,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.MoviePosterClickListener;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.adapters.DynamicMoviesTabAdapter;
 import com.mobile.featured.FeaturedMovieAdapter;
-import com.mobile.helpers.GoWatchItSingleton;
 import com.mobile.helpers.LogUtils;
 import com.mobile.history.HistoryManager;
 import com.mobile.home.RestrictionsManager;
@@ -39,6 +37,7 @@ import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.screening.MoviePosterClickListener;
 import com.moviepass.R;
 
 import java.util.ArrayList;
@@ -228,7 +227,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 realm.deleteAll();
             });
             getMoviesForStorage();
-            GoWatchItSingleton.getInstance().getMovies();
         });
 
         if (moviesRealm.isEmpty()) {
@@ -355,7 +353,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     public void onMoviePosterClick(Movie movie) {
         if (movie == null || !movie.isValid()) {
         } else {
-            showFragment(MovieFragment.newInstance(movie));
+            showFragment(ScreeningsFragment.Companion.newInstance(new ScreeningsData(null,movie)));
         }
     }
 
@@ -447,10 +445,8 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                     }, () -> {
                         LogUtils.newLog(Constants.TAG, "onSuccess: ");
                         setAdaptersWithRealmOBjects();
-                        moviesRealm.close();
                     }, error -> {
                         LogUtils.newLog(Constants.TAG, "onResponse: " + error.getMessage());
-                        moviesRealm.close();
                     });
                     swiper.setRefreshing(false);
                 }
@@ -510,9 +506,9 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     public void getMovie(int movieId) {
         Log.d(TAG, "getMovie: " + movieId);
 
-        RealmResults<Movie> movie = moviesRealm.where(Movie.class)
+        List<Movie> movie = moviesRealm.copyFromRealm(moviesRealm.where(Movie.class)
                 .equalTo("id", movieId)
-                .findAll();
+                .findAll());
 
         if (movie != null && movie.size() > 0) {
             showFragment(MovieFragment.newInstance(movie.get(0)));

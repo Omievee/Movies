@@ -26,7 +26,7 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
                 }
                         , { error ->
                     if (error is ApiError) {
-                        Toast.makeText(view, error.error?.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(view, error.error.message, Toast.LENGTH_SHORT).show()
                     }
                     view.hideProgress()
                 })

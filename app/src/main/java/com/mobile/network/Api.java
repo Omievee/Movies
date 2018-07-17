@@ -4,7 +4,6 @@ import com.mobile.billing.BillingInfo;
 import com.mobile.history.response.ReservationHistoryResponse;
 import com.mobile.loyalty.TheaterChain;
 import com.mobile.model.Emails;
-import com.mobile.model.PerformanceInfo;
 import com.mobile.model.ProviderInfo;
 import com.mobile.model.User;
 import com.mobile.requests.AddressChangeRequest;
@@ -18,7 +17,6 @@ import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.requests.SignUpRequest;
-import com.mobile.requests.SurgeCheckRequest;
 import com.mobile.requests.TicketInfoRequest;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.requests.VerificationRequest;
@@ -33,7 +31,7 @@ import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.GoWatchItResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
-import com.mobile.responses.LocalStorageTheaters;
+import com.mobile.responses.TheatersResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
@@ -138,7 +136,6 @@ public interface Api {
 
     @GET("/rest/v1/reservations/history")
     Single<ReservationHistoryResponse> getReservationHistory();
-
 
     @GET("/rest/v2/seats")
     Single<SeatingsInfoResponse> getSeats(@Query("tribuneTheaterId") int tribuneTheaterId, @Query("theater") String theater, @Query("performanceId") String performanceId);
@@ -260,7 +257,7 @@ public interface Api {
 
     /* ALL THEATERS */
     @GET("/theaters/all.json")
-    Call<LocalStorageTheaters> getAllMoviePassTheaters();
+    Call<TheatersResponse> getAllMoviePassTheaters();
 
 
     //NEW RESTRICTIONS

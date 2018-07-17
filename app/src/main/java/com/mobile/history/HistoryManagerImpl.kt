@@ -96,13 +96,13 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         }
         return api
                 .submitRatingRx(id, HistoryResponse(rating))
-                .doOnSuccess { v ->
+                .doOnSuccess { _ ->
                     history.userRating = rating
                     realmHistory.get().executeTransaction { r->
                         r.insertOrUpdate(history)
                     }
                 }
-                .map { res ->
+                .map { _ ->
                     history
                 }
 

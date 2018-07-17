@@ -9,13 +9,10 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
 import com.mobile.activities.OnboardingActivity
-import com.mobile.helpers.GoWatchItSingleton
 import com.mobile.home.HomeActivity
-import com.mobile.responses.SubscriptionStatus
 import com.mobile.responses.SubscriptionStatus.*
 import com.moviepass.R
 import dagger.android.AndroidInjection
@@ -38,7 +35,6 @@ class SplashActivity : AppCompatActivity() {
         val data = intent.data
 
         getAAID().execute()
-        GoWatchItSingleton.getInstance().getMovies()
         if (data != null && data.path.length >= 2) run {
             var movieIdEncripted: String
             var movieOrTheater: String
@@ -59,32 +55,30 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (urlPath.size >= 4) {
                         val campaign = urlPath.get(3)
-                        GoWatchItSingleton.getInstance().setCampaign(campaign)
+                        //GoWatchItSingleton.getInstance().setCampaign(campaign)
                     }
                     launchActivity(0, -1)
                 } else if (movieOrTheater.equals("theaters")) {
                     launchActivity(1, -1)
                     if (urlPath.size >= 3) {
                         val campaign = urlPath.get(2)
-                        GoWatchItSingleton.getInstance().setCampaign(campaign)
+                        //GoWatchItSingleton.getInstance().setCampaign(campaign)
                     }
                 } else {
                     val campaign = urlPath.get(1)
-                    GoWatchItSingleton.getInstance().setCampaign(campaign)
+                    //GoWatchItSingleton.getInstance().setCampaign(campaign)
                     launchActivity(2, -1)
                 }
             } else {
                 launchActivity(2, -1)
             }
 
-            GoWatchItSingleton.getInstance().userOpenedApp(this, url)
 //            loadMovies()
 
         }
         else {
             launchActivity(2, -1)
             var url = "https://www.moviepass.com/go"
-            GoWatchItSingleton.getInstance().userOpenedApp(this, url)
         }
     }
 
@@ -97,7 +91,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 val restrictions = UserPreferences.restrictions
-                when (restrictions?.subscriptionStatus) {
+                when (restrictions.subscriptionStatus) {
                     ACTIVE, ACTIVE_FREE_TRIAL, PENDING_ACTIVATION, PENDING_FREE_TRIAL -> {
                         Crashlytics.setUserIdentifier(UserPreferences.userId.toString())
                         val i = HomeActivity.newIntent(this@SplashActivity, typeMovie)
