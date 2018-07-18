@@ -50,7 +50,7 @@ android {
         release {
             keyAlias 'upload'
             keyPassword 'moviepass'
-            storeFile file("${System.getProperty("user.home")}/.moviepass/upload_key.jks")
+            storeFile file("upload_key.jks")
             storePassword 'moviepass'
         }
         debug {
@@ -96,7 +96,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "DEFAULT_LOCATION", '"arlington tx"'
+            buildConfigField "String", "DEFAULT_LOCATION", '"portland or"'
         }
     }
 
@@ -136,6 +136,8 @@ ext {
     play_services_version = '11.0.0'
     retrofit_version = '2.3.0'
     support_lib_version = '27.1.0'
+    ext.betaDistributionGroupAliases="moviepass-group"
+    ext.betaDistributionReleaseNotesFilePath="../release-notes.txt"
 }
 
 androidExtensions {
