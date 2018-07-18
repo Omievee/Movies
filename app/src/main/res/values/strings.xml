@@ -645,4 +645,5 @@
     <string name="reserve_in_app">Reserve E-Tickets In-App</string>
     <string name="cancel_make_selection">Please make a selection</string>
     <string name="cancel_reason_for_cancellation">Reason for Cancellation</string>
+    <string name="in_theaters_date">In Theaters %1$s</string>
 </resources>
