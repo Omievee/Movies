@@ -78,7 +78,7 @@ class SplashActivity : AppCompatActivity() {
         }
         else {
             launchActivity(2, -1)
-            var url = "https://www.moviepass.com/go"
+
         }
     }
 

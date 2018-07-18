@@ -397,7 +397,7 @@ object UserPreferences {
             }
         }
     private val theatersLoadedKey by lazy {
-        "${Constants.LAST_DOWNLOADED_THEATERS}_${BuildConfig.VERSION_CODE}"
+        "${Constants.LAST_DOWNLOADED_THEATERS}_${BuildConfig.VERSION_CODE}_${Calendar.getInstance().get(Calendar.DAY_OF_YEAR)}"
     }
     var theatersLoadedToday: Boolean
     get() {

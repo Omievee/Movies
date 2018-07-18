@@ -87,6 +87,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
     var theaterSub: Disposable? = null
     var geocodeSub: Disposable? = null
     var searchSub: Disposable? = null
+    var listSearchSub:Disposable? = null
     var theatersFetchedInitially = false
 
     @Inject
@@ -135,6 +136,14 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
         listCard.setOnClickListener {
             activity?.onBackPressed()
         }
+        subscribeToSearch()
+    }
+
+    private fun subscribeToSearch() {
+        listSearchSub?.dispose()
+        listSearchSub = theaterUIManager
+                .listTheaters()
+                .subscribe {  }
     }
 
     private fun panCameraTo(it: TheatersPayload) {
@@ -161,7 +170,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                         else -> latLngBounds
                     }
                     val payload = TheatersPayload(centerPoint, it)
-                    theaterUIManager.theaters(payload)
+                    theaterUIManager.mappedTheaters(payload)
                     payload
                 }
                 .subscribe({ theaters ->
@@ -273,7 +282,6 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                         ), makeMeasureSpec(resources.displayMetrics.heightPixels, UNSPECIFIED))
                         val width = measuredWidth
                         val height = measuredHeight
-                        println("${width}x${height}")
                         bind(p0, theater!!)
                         setOnClickListener {
                             showFragment(ScreeningsFragment.newInstance(ScreeningsData(theater = theater)))
@@ -291,7 +299,11 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
             false
         }
         clusterManager?.cluster()
-        fetchUsersLocation()
+        val location = theaterUIManager.listTheatersLocation()
+        when(location) {
+            null-> fetchUsersLocation()
+            else-> moveAndFetch(location)
+        }
     }
 
     private fun fetchTheaters() {
@@ -305,13 +317,15 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
         locationSub = theaterManager
                 .theaterLocation()
                 .subscribe({
-                    moveCamera(it)
-                    if (!theatersFetchedInitially) {
-                        fetchTheaters()
-                    }
+                    moveAndFetch(it)
                 }, {
 
                 })
+    }
+
+    private fun moveAndFetch(it:UserLocation) {
+        moveCamera(it)
+        fetchTheaters()
     }
 
     private fun moveCamera(it: UserLocation) {
@@ -324,7 +338,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
                 .theaters(userLocation, box)
                 .map {
                     val location = it.centerPoint() ?: userLocation
-                    theaterUIManager.theaters(TheatersPayload(location, it))
+                    theaterUIManager.mappedTheaters(TheatersPayload(location, it))
                     it
                 }
                 .subscribe({

@@ -1,9 +1,7 @@
 package com.mobile.fragments
 
-import com.mobile.location.Geocoder
-import com.mobile.location.LocationManager
-import com.mobile.location.UserAddress
-import com.mobile.location.UserLocation
+import com.mobile.location.*
+import com.mobile.model.Theater
 import com.mobile.theater.*
 import io.reactivex.disposables.Disposable
 
@@ -30,7 +28,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
 
     private fun subscribe() {
         run {
-            theaterUISub = theaterUIManager.theaters()
+            theaterUISub = theaterUIManager.listTheaters()
                     .subscribe({ theaters ->
                         view.setAdapterData(theaters.location, theaters.theaters)
                     }, {
@@ -96,7 +94,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                 .theaters(loc)
                 .doAfterTerminate { view.hideProgress() }
                 .subscribe({ theaters ->
-                    view.setAdapterData(loc, theaters)
+                    onTheaters(loc, theaters)
                 }, { error ->
                     error.printStackTrace()
                 })
@@ -132,10 +130,23 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                     view.hideProgress()
                 }
                 .subscribe({ loc ->
-                    view.setAdapterData(it.location, loc)
+                    onTheaters(it.location, loc)
                 }, {
                     it.printStackTrace()
+                    when(it is NoLocationFoundException) {
+                        true-> view.showNoLocationFound()
+                    }
                 })
+    }
+
+    private fun onTheaters(location:UserLocation, theaters: List<Theater>) {
+        view.setAdapterData(location, theaters)
+        if(theaters.isEmpty()) {
+            view.showNoTheatersFound()
+        } else {
+            view.hideNoTheatersFound()
+        }
+        theaterUIManager.listTheaters(TheatersPayload(location, theaters))
     }
 }
 

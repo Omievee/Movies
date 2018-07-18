@@ -13,5 +13,8 @@ interface TheatersFragmentView {
     fun showMap(invisible:Boolean=false)
     fun showProgress()
     fun hideProgress()
+    fun showNoTheatersFound()
+    fun hideNoTheatersFound()
+    fun showNoLocationFound()
 
 }
