@@ -13,9 +13,15 @@ aliases:
       - run:
           name: Build Release Notes
           command: |
-            echo "#BRANCH: ${CIRCLE_BRANCH}" > "release-notes.txt"
+            curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
+            chmod +x jq
+            pull_number=$(echo ${CIRCLE_PULL_REQUEST} | sed 's/[^0-9]*//g')
+            url=https://api.github.com/repos/Moviepass/android/pulls/${pull_number}?access_token=fbe6794640779fc86990c03eba850bbd0523474a
+            target_branch=$(curl $url | ./jq '.base.ref' | tr -d '"')
             echo "#CHANGELOG" >> "release-notes.txt"
-            git log origin/dev..origin/${CIRCLE_BRANCH} --no-merges --pretty=format:"%h %s" >> "release-notes.txt"
+            echo "##BRANCH: ${CIRCLE_BRANCH}" >> "release-notes.txt"
+            echo "##BASE BRANCH: ${target_branch}" >> "release-notes.txt"
+            git log origin/${target_branch}..origin/${CIRCLE_BRANCH} --no-merges --pretty=format:"%h %s" >> "release-notes.txt"
       - run:
           name: Build
           command: |
