@@ -50,6 +50,10 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
         adapter.data = TheatersAdapterV2.createData(last = adapter.data, userLocation = location, theaters = theaters)
     }
 
+    override fun scrollToTop() {
+        recyclerView.scrollToPosition(0)
+    }
+
     private val hasFineLocation: Boolean
         get() {
             val context = context ?: return false
@@ -189,14 +193,17 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
 
     override fun showNoTheatersFound() {
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
+        recyclerView.visibility = View.GONE
     }
 
     override fun hideNoTheatersFound() {
         errorView.hide()
+        recyclerView.visibility = View.VISIBLE
     }
 
     override fun showNoLocationFound() {
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
+        recyclerView.visibility = View.GONE
     }
 
     override fun showProgress() {

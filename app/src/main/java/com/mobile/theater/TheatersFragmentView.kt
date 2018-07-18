@@ -16,5 +16,6 @@ interface TheatersFragmentView {
     fun showNoTheatersFound()
     fun hideNoTheatersFound()
     fun showNoLocationFound()
+    fun scrollToTop()
 
 }

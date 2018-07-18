@@ -27,14 +27,14 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
     }
 
     private fun subscribe() {
-        run {
-            theaterUISub = theaterUIManager.listTheaters()
-                    .subscribe({ theaters ->
-                        view.setAdapterData(theaters.location, theaters.theaters)
-                    }, {
+        theaterUISub = theaterUIManager.mappedTheaters()
+                .subscribe({ theaters ->
+                    view.scrollToTop()
+                    view.setAdapterData(theaters.location, theaters.theaters)
+                }, {
 
-                    })
-        }
+                })
+
     }
 
     fun onPrimary() {
@@ -119,6 +119,9 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                     onGeocode(it)
                 }, {
                     view.hideProgress()
+                    when (it is NoLocationFoundException) {
+                        true -> view.showNoLocationFound()
+                    }
                     it.printStackTrace()
                 })
     }
@@ -130,18 +133,16 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                     view.hideProgress()
                 }
                 .subscribe({ loc ->
+                    view.scrollToTop()
                     onTheaters(it.location, loc)
                 }, {
                     it.printStackTrace()
-                    when(it is NoLocationFoundException) {
-                        true-> view.showNoLocationFound()
-                    }
                 })
     }
 
-    private fun onTheaters(location:UserLocation, theaters: List<Theater>) {
+    private fun onTheaters(location: UserLocation, theaters: List<Theater>) {
         view.setAdapterData(location, theaters)
-        if(theaters.isEmpty()) {
+        if (theaters.isEmpty()) {
             view.showNoTheatersFound()
         } else {
             view.hideNoTheatersFound()

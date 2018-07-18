@@ -635,7 +635,7 @@
     <string name="low_storage_error">There is low storage, please free up space on your device.</string>
 
     <string name="location_permission_required">In order to view theaters &amp; showtimes, location services must be enabled.</string>
-    <string name="eticket">E-Ticket Theaters</string>
+    <string name="eticket">E-Ticketing</string>
     <string name="theaters">Theaters</string>
     <string name="theaters_list">Theaters List</string>
     <string name="map_search_box_hint"><![CDATA[search city & state or zip code]]></string>
