@@ -1,7 +1,6 @@
 package com.mobile.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
-import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
 import com.mobile.requests.ChangeEmailRequest;
-import com.mobile.requests.ChangePasswordRequest;
 import com.mobile.responses.ChangeEmailResponse;
-import com.mobile.responses.ChangePasswordResponse;
 import com.moviepass.R;
 
 import org.json.JSONObject;
@@ -59,7 +52,7 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
         setUpViews(view);
     }
 
-    public void setUpViews(View v){
+    public void setUpViews(View v) {
         newEmailTextInputLayout = v.findViewById(R.id.newEmailTextInputLayout);
         newEmail = v.findViewById(R.id.newEmailEditText);
         currentPasswordTextInputLayout = v.findViewById(R.id.currentPasswordTextInputLayout);
@@ -72,18 +65,18 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
         cancel.setOnClickListener(this);
     }
 
-    public void enableSave(){
+    public void enableSave() {
         save.setVisibility(View.VISIBLE);
         cancel.setVisibility(View.VISIBLE);
     }
 
-    public void disableSave(){
+    public void disableSave() {
         save.setVisibility(View.INVISIBLE);
         cancel.setVisibility(View.INVISIBLE);
 
     }
 
-    public void closeKeyboard(){
+    public void closeKeyboard() {
         final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
@@ -97,9 +90,9 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.saveChanges:
-                if(valid()){
+                if (valid()) {
                     updateEmail();
                 }
                 break;
@@ -119,15 +112,16 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
 
     private void updateEmail() {
         int userId = UserPreferences.INSTANCE.getUserId();
-        ChangeEmailRequest request = new ChangeEmailRequest(newEmail.getText().toString().trim(),currentPassword.getText().toString().trim(), userId);
+        String updatedEmail = newEmail.getText().toString().replace(" ", "");
+        String pw = currentPassword.getText().toString().replace(" ", "");
+
+        ChangeEmailRequest request = new ChangeEmailRequest(updatedEmail, pw, userId);
         RestClient.getAuthenticated().changeEmail(request).enqueue(new Callback<ChangeEmailResponse>() {
             @Override
             public void onResponse(Call<ChangeEmailResponse> call, Response<ChangeEmailResponse> response) {
-                if (response != null && response.isSuccessful()) {
-                    Log.d(Constants.TAG, "onResponse: "+response.toString());
+                if (response.isSuccessful()) {
+                    UserPreferences.INSTANCE.updateEmail(updatedEmail);
                     Toast.makeText(myActivity, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    UserPreferences.INSTANCE.updateEmail(newEmail.getText().toString().trim());
-                    myActivity.onBackPressed();
                     myActivity.onBackPressed();
                 } else {
                     try {
@@ -146,19 +140,21 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
         });
     }
 
-    public boolean valid(){
+
+
+    public boolean valid() {
         newEmailTextInputLayout.setError("");
         currentPasswordTextInputLayout.setError("");
         boolean valid = true;
-        if(newEmail.getText().toString().trim().isEmpty()) {
+        if (newEmail.getText().toString().trim().isEmpty()) {
             valid = false;
             newEmailTextInputLayout.setError("Enter a valid email address");
         }
-        if(currentPassword.getText().toString().trim().isEmpty() || (currentPassword.getText().toString().trim().length() < 6 || currentPassword.getText().toString().trim().length() > 20)) {
+        if (currentPassword.getText().toString().trim().isEmpty() || (currentPassword.getText().toString().trim().length() < 6 || currentPassword.getText().toString().trim().length() > 20)) {
             valid = false;
             currentPasswordTextInputLayout.setError("Enter a valid password");
         }
-      return  valid;
+        return valid;
     }
 
     class CustomTextWatcher implements TextWatcher {
@@ -176,9 +172,9 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
 
         @Override
         public void afterTextChanged(Editable s) {
-            if(newEmail.getText().toString().trim().isEmpty() && currentPassword.getText().toString().trim().isEmpty()){
+            if (newEmail.getText().toString().trim().isEmpty() && currentPassword.getText().toString().trim().isEmpty()) {
                 disableSave();
-            } else{
+            } else {
                 enableSave();
             }
         }
@@ -187,6 +183,6 @@ public class ProfileAccountChangeEmail extends android.support.v4.app.Fragment i
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-       myActivity = getActivity();
+        myActivity = getActivity();
     }
 }

@@ -421,7 +421,6 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
                 Toast.makeText(myActivity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
                 myActivity.onBackPressed();
                 progress.setVisibility(View.GONE);
             }
@@ -471,12 +470,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
             }
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myActivity.onBackPressed();
-            }
-        });
+        cancel.setOnClickListener(view -> myActivity.onBackPressed());
     }
 
     //LOGIC IS HERE
@@ -503,13 +497,13 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
         RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
-                if (response != null && response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     loadUserInfo();
                     Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                     myActivity.onBackPressed();
                 } else {
                     Toast.makeText(myActivity, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
-                    ;
+
                 }
                 progress.setVisibility(View.GONE);
             }
@@ -598,11 +592,11 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
                     newBillingCC.clearComposingText();
                     newBillingCVV.clearComposingText();
                     newBillingExp.clearComposingText();
-                    Toast.makeText(myActivity, "Billing Information Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myContext, "Billing Information Updated", Toast.LENGTH_SHORT).show();
                     myActivity.onBackPressed();
                 } else {
                     loadUserInfo();
-                    Toast.makeText(myActivity, "Error updating credit card information", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myContext, "Error updating credit card information", Toast.LENGTH_SHORT).show();
                 }
                 progress.setVisibility(View.GONE);
             }
