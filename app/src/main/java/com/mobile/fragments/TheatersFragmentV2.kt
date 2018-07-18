@@ -50,6 +50,10 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
         adapter.data = TheatersAdapterV2.createData(last = adapter.data, userLocation = location, theaters = theaters)
     }
 
+    override fun scrollToTop() {
+        recyclerView.scrollToPosition(0)
+    }
+
     private val hasFineLocation: Boolean
         get() {
             val context = context ?: return false

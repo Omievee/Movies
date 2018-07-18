@@ -29,6 +29,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
     private fun subscribe() {
         theaterUISub = theaterUIManager.mappedTheaters()
                 .subscribe({ theaters ->
+                    view.scrollToTop()
                     view.setAdapterData(theaters.location, theaters.theaters)
                 }, {
 
@@ -132,6 +133,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                     view.hideProgress()
                 }
                 .subscribe({ loc ->
+                    view.scrollToTop()
                     onTheaters(it.location, loc)
                 }, {
                     it.printStackTrace()
