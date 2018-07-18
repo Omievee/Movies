@@ -15,3 +15,5 @@ interface TheaterManager {
 
     fun search(address:UserAddress) : Single<List<Theater>>
 }
+
+class NoTheatersException : Throwable()

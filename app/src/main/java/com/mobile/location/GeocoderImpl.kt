@@ -17,7 +17,7 @@ class GeocoderImpl(val geocoder: android.location.Geocoder) : Geocoder {
                 }
                 when (results.isNotEmpty()) {
                     true -> it.onSuccess(results.first().toUserAddress())
-                    false -> it.onError(ApiError())
+                    false -> it.onError(NoLocationFoundException())
                 }
             } catch (e:Error) {
                 if(!it.isDisposed) {

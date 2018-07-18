@@ -12,7 +12,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mobile.ApiError
 import com.mobile.Constants
+import com.mobile.Error
 import com.mobile.Primary
 import com.mobile.keyboard.KeyboardManager
 import com.mobile.location.UserLocation
@@ -183,6 +185,18 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
         searchBar.visibility = View.VISIBLE
         searchIcon.visibility = View.INVISIBLE
         currentLocationContainer.visibility = View.VISIBLE
+    }
+
+    override fun showNoTheatersFound() {
+        errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
+    }
+
+    override fun hideNoTheatersFound() {
+        errorView.hide()
+    }
+
+    override fun showNoLocationFound() {
+        errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
     }
 
     override fun showProgress() {
