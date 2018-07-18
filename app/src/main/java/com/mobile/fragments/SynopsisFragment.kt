@@ -8,6 +8,9 @@ import android.view.ViewGroup
 
 import com.mobile.Constants
 import com.mobile.model.Movie
+import com.mobile.utils.isComingSoon
+import com.mobile.utils.releaseDateFormatted
+import com.mobile.utils.releaseDateTime
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fr_dialogfragment_synopsis.*
 
@@ -21,7 +24,11 @@ class SynopsisFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         val movie = arguments?.getParcelable<Movie>(Constants.MOVIE)
         synopsisText.text = movie?.synopsis
-        synopsisTitle.text = movie?.title
+        val date =  movie?.releaseDateFormatted
+        synopsisTitle.text = when (movie?.isComingSoon==true && date!=null) {
+            true -> resources.getString(R.string.in_theaters_date, date)
+            else -> movie?.title
+        }
     }
 
     companion object {

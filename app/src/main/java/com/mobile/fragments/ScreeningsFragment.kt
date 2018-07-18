@@ -29,6 +29,9 @@ import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.screening.NoMoreScreenings
+import com.mobile.utils.isComingSoon
+import com.mobile.utils.showMovieBottomSheetIfNecessary
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -129,6 +132,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
             else -> View.GONE
         }
         showTheaterBottomSheetIfNecessary(screeningData?.theater)
+        showMovieBottomSheetIfNecessary(screeningData?.movie)
     }
 
     override fun onResume() {
@@ -154,9 +158,11 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
                     response = it
                     updateAdapter()
                 }, {
-                    when (it is ApiError) {
-                        true -> showError(it as ApiError)
-                        else -> showError()
+                    when (it) {
+                        is ApiError -> showError(it)
+                        is NoScreeningsException-> {}
+                        else->showError()
+
                     }
                 })
     }
@@ -165,6 +171,9 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     }
 
     private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {
+        when(screeningData?.movie?.isComingSoon) {
+            true-> return Observable.error(NoScreeningsException())
+        }
         val theaterId = screeningData?.theater?.tribuneTheaterId
         val screeningsObserv: Observable<ScreeningsResponseV2> = when (theaterId) {
             null -> api.getScreeningsForMovieRx(location.lat, location.lon, screeningData?.movie?.id
