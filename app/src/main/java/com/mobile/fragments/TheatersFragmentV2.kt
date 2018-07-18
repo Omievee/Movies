@@ -189,14 +189,17 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
 
     override fun showNoTheatersFound() {
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
+        recyclerView.visibility = View.GONE
     }
 
     override fun hideNoTheatersFound() {
         errorView.hide()
+        recyclerView.visibility = View.VISIBLE
     }
 
     override fun showNoLocationFound() {
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
+        recyclerView.visibility = View.GONE
     }
 
     override fun showProgress() {
