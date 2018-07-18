@@ -123,6 +123,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                         availability = availability,
                         theater = theater),
                 reservation = result,
+                confirmationCode = result.eTicketConfirmation,
                 seatSelected = payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }
         )
         activity.finish()
