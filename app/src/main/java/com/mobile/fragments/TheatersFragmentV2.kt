@@ -3,10 +3,13 @@ package com.mobile.fragments
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.content.pm.PackageManager.*
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import android.support.transition.*
-import android.support.v4.content.ContextCompat.*
+import android.support.transition.AutoTransition
+import android.support.transition.Transition
+import android.support.transition.TransitionListenerAdapter
+import android.support.transition.TransitionManager
+import android.support.v4.content.ContextCompat.checkSelfPermission
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -160,7 +163,6 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
             presenter.onLocationClicked()
             showProgress()
         }
-
         presenter.onCreate()
     }
 

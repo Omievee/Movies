@@ -4,8 +4,8 @@
     android:id="@+id/rel_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foreground="?selectableItemBackgroundBorderless"
-    android:background="@color/charcoalGrey">
+    android:background="@color/charcoalGrey"
+    android:foreground="?selectableItemBackgroundBorderless">
 
     <TextView
         android:id="@+id/theaterName"
@@ -49,19 +49,19 @@
 
     <RelativeLayout
         android:id="@+id/distanceView"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/theaterAddress"
+        android:layout_marginEnd="@dimen/margin_half"
         android:layout_marginBottom="@dimen/margin_standard">
 
         <TextView
             android:id="@+id/theaterDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_marginEnd="@dimen/margin_half"
-            android:layout_toStartOf="@id/theaterPin"
+            android:layout_alignParentStart="true"
             android:textColor="@color/almost_white"
             android:textSize="12sp"
             tools:text="@string/fragment_theaters_distance" />
@@ -70,9 +70,7 @@
             android:id="@+id/theaterPin"
             android:layout_width="18dp"
             android:layout_height="20dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="@dimen/margin_half"
+            android:layout_toEndOf="@id/theaterDistance"
             android:paddingBottom="@dimen/margin_minimum"
             android:src="@drawable/locationiconsmallred"
             android:textAlignment="viewStart"

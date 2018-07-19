@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.mobile.utils.MapUtil
+import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_theater.view.*
 
@@ -18,6 +20,12 @@ class TheaterItemView(context: Context, attr: AttributeSet? = null) : FrameLayou
             var theater = presentation?.theater?: return@setOnClickListener
             clickListener?.onTheaterClicked(theater)
         }
+
+        distanceView.setOnClickListener {
+            val screeningPresentation = this.presentation ?: return@setOnClickListener
+            context.startIntentIfResolves(MapUtil.mapIntent(screeningPresentation?.theater?.lat, screeningPresentation.theater?.lon))
+        }
+
     }
 
     fun bind(presentation: TheaterPresentation, listener: TheaterClickListener? = null) {
