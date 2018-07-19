@@ -1,13 +1,11 @@
 package com.mobile.theater
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
+import com.mobile.utils.MapUtil
+import com.mobile.utils.startIntentIfResolves
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_theater.view.*
 
@@ -25,18 +23,7 @@ class TheaterItemView(context: Context, attr: AttributeSet? = null) : FrameLayou
 
         distanceView.setOnClickListener {
             val screeningPresentation = this.presentation ?: return@setOnClickListener
-            val uri = Uri.parse("geo:" + screeningPresentation.theater.lat + "," + screeningPresentation.theater.lon + "?q=" + Uri.encode(screeningPresentation.theater?.name))
-
-            try {
-                val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()))
-                mapIntent.setPackage("com.google.android.apps.maps")
-                context?.startActivity(mapIntent)
-            } catch (e: ActivityNotFoundException) {
-                Toast.makeText(context, "Google Maps isn't installed", Toast.LENGTH_SHORT).show()
-            } catch (x: Exception) {
-                x.message
-            }
-
+            context.startIntentIfResolves(MapUtil.mapIntent(screeningPresentation?.theater?.lat, screeningPresentation.theater?.lon))
         }
 
     }
