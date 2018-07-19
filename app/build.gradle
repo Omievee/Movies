@@ -221,7 +221,7 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
 
     // Helpshift
-    implementation 'com.helpshift:android-helpshift-aar:7.0.1'
+    implementation 'com.helpshift:android-helpshift-aar:7.1.0'
 
     // Parceler
     implementation 'org.parceler:parceler-api:1.1.6'

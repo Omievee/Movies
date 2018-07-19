@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.mobile.requests.SurgeCheck
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class Availability(
@@ -26,13 +27,4 @@ data class Availability(
 
 fun fromTime(str:String):Availability {
     return Availability(startTime = str)
-}
-
-fun Availability.toSurgeCheck(): SurgeCheck {
-    return SurgeCheck(
-            tribuneTheaterId = providerInfo?.tribuneTheaterId?:0,
-            normalizedMovieId = providerInfo?.normalizedMovieId?:0,
-            dateTime = providerInfo?.dateTime?.timeAsString?:"",
-            showtimeStart = ""
-    )
 }

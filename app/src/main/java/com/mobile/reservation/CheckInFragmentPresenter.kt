@@ -143,7 +143,11 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                         performanceInfo = perf,
                         latitude = loc.lat,
                         longitude = loc.lon
-                )).subscribe({
+                ))
+                .doOnSubscribe {
+                    analyticsManager.onCheckinAttempt(checkin)
+                }
+                .subscribe({
                     view.navigateTo(checkin, it)
                     analyticsManager.onCheckinSuccessful(checkin, it)
                 }, {

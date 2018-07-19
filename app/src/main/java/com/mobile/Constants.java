@@ -90,7 +90,7 @@ public class Constants {
     public static final String BILLING = "billing";
 
     //Check In Attempt
-    public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
+    public static final String LAST_CHECK_IN_ATTEMPT = "lastCheckInAttempt";
     public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInScreening";
 
     //Movie History Data
