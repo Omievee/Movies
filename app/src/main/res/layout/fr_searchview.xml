@@ -39,6 +39,7 @@
             android:backgroundTint="@color/charcoalGrey"
             android:hint="Search a movie"
             android:lines="1"
+            android:singleLine="true"
             android:maxLines="1"
             android:textColor="@color/almost_white"
             android:textColorHint="@color/almost_white"

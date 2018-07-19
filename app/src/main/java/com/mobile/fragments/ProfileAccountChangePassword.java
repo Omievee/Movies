@@ -2,7 +2,6 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,13 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mobile.Constants;
-import com.mobile.DeviceID;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
-import com.mobile.model.User;
 import com.mobile.network.RestClient;
 import com.mobile.requests.ChangePasswordRequest;
-import com.mobile.requests.LogInRequest;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
@@ -177,7 +173,9 @@ public class ProfileAccountChangePassword extends MPFragment {
             public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
                 if (response != null && response.isSuccessful()) {
                     changePasswordResponse = response.body();
-                    logIn();
+                    Toast.makeText(myActivity, "Password changed", Toast.LENGTH_LONG).show();
+                    disableSaveAndCancel();
+                    myActivity.onBackPressed();
                 } else {
                     oldPasswordTextInputLayout.setError("Wrong password");
                     progress.setVisibility(View.GONE);
@@ -193,49 +191,9 @@ public class ProfileAccountChangePassword extends MPFragment {
         });
     }
 
-    private void logIn() {
-        String email = UserPreferences.INSTANCE.getUserEmail().trim();
-        String password = newPassword1.getText().toString().trim();
-        String device_ID = DeviceID.getID(myActivity);
-        String device_type = Build.DEVICE;
-        String device = "android";
 
-        LogInRequest request = new LogInRequest(email, password, device_ID, device_type, device);
-        String UUID = "";
-        LogUtils.newLog(TAG, "logIn: USER EMAIL " + email + " USER PASSWORD " + password);
-        RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.body() != null && response.isSuccessful()) {
-                    moviePassLoginSucceeded(response.body());
-                    Toast.makeText(myActivity, "Password changed", Toast.LENGTH_LONG).show();
-                    progress.setVisibility(View.GONE);
-                    disableSaveAndCancel();
-                    myActivity.onBackPressed();
-                } else {
-                    progress.setVisibility(View.GONE);
-                    LogUtils.newLog(TAG, "onResponse: FAILURE LOG IN " + response.toString());
-                }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                progress.setVisibility(View.GONE);
-//                   Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
-    private void moviePassLoginSucceeded(User user) {
-        if (user != null) {
-
-            int us = user.getId();
-            String deviceUuid = user.getAndroidID();
-            String authToken = user.getAuthToken();
-
-            // UserPreferences.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail());
-        }
-    }
 
     public void enableSaveAndCancel() {
         save.setClickable(true);

@@ -8,8 +8,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -22,9 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.helpshift.support.Log;
 import com.mobile.Constants;
-import com.mobile.Interfaces.ProfileActivityInterface;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
@@ -44,8 +42,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileAccountShippingInformation extends Fragment {
 
-    Button save,cancel;
-    EditText address1,address2,city,state,zip;
+    Button save, cancel;
+    EditText address1, address2, city, state, zip;
     View rootView, progress;
     UserInfoResponse userInfoResponse;
     boolean firstClick = true;
@@ -56,7 +54,7 @@ public class ProfileAccountShippingInformation extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView =  inflater.inflate(R.layout.fragment_profile_account_shipping_information, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile_account_shipping_information, container, false);
         address1 = rootView.findViewById(R.id.Address1);
         address2 = rootView.findViewById(R.id.Address2);
         city = rootView.findViewById(R.id.city);
@@ -86,35 +84,36 @@ public class ProfileAccountShippingInformation extends Fragment {
         progress.setVisibility(View.VISIBLE);
         loadUserInfo();
 
-        address1.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(firstClick){
-                    firstClick = false;
-                    address2.setEnabled(true);
-                    state.setEnabled(true);
-                    zip.setEnabled(true);
-                    city.setEnabled(true);
+        address1.setOnTouchListener((v, event) -> {
+            if (firstClick) {
 
-                    AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                            .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
-                            .build();
+                firstClick = false;
+                address2.setEnabled(true);
+                state.setEnabled(true);
+                zip.setEnabled(true);
+                city.setEnabled(true);
 
-                    try {
-                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
-                        startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
-                    } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-                        // TODO: Handle the error.
-                    }
-                    return true;
+                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                        .setCountry("USA")
+                        .build();
+
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(typeFilter).build(getActivity());
+                    startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE2);
+                } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+
+                    // TODO: Handle the error.
                 }
-                else{
-                    return false;
-                }
+                return true;
+            } else {
+                return false;
             }
         });
+
         return rootView;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -131,10 +130,13 @@ public class ProfileAccountShippingInformation extends Fragment {
                 String address = place.getAddress().toString();
                 List<String> localList = Arrays.asList(address.split(",", -1));
                 for (int i = 0; i < localList.size(); i++) {
+                    Log.d(Constants.TAG, "onActivityResult 1: " + localList.get(2));
                     if (localList.get(2).trim().length() < 8) {
+                        Log.d(Constants.TAG, "onActivityResult 2: ");
                         Toast.makeText(context, "Invalid Address", Toast.LENGTH_SHORT).show();
-                        firstClick=true;
+                        firstClick = true;
                     } else {
+                        Log.d(Constants.TAG, "onActivityResult 3 : " + localList.get(i));
                         address1.setText(localList.get(0));
                         city.setText(localList.get(1).trim());
                         String State = localList.get(2).substring(0, 3).trim();
@@ -160,7 +162,7 @@ public class ProfileAccountShippingInformation extends Fragment {
         save.setClickable(true);
         save.setOnClickListener(v -> {
             progress.setVisibility(View.VISIBLE);
-            InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             updateShippingAddress();
         });
@@ -186,7 +188,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             String[] address1Array = address1.getText().toString().split("\\W+");
             if (address1Array.length >= 2 && address1Array[0].trim().matches(".*\\d+.*")) {
                 i++;
-            }else {
+            } else {
                 address1TextInputLayout.setError(getResources().getString(R.string.address_invalid_address));
                 address1.clearFocus();
                 LogUtils.newLog("ADDRESS", "isValidAddress: ");
@@ -194,10 +196,10 @@ public class ProfileAccountShippingInformation extends Fragment {
 
             //Validating City
             String[] cityArray = city.getText().toString().split("\\W+");
-            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+","");
+            String cityWithNotWhiteSpaces = city.getText().toString().replaceAll("\\s+", "");
             //If city has less than 3 words
             if (cityArray.length <= 3 && cityWithNotWhiteSpaces.matches("^[a-zA-Z]+$")) {
-                    i++;
+                i++;
             } else {
                 cityTextInputLayout.setError(getResources().getString(R.string.address_invalid_city));
                 city.clearFocus();
@@ -212,7 +214,7 @@ public class ProfileAccountShippingInformation extends Fragment {
             }
 
             //Validating Zip Code
-            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length()>=5) {
+            if (zip.getText().toString().trim().matches("^[0-9]+$") && zip.getText().toString().trim().length() >= 5) {
                 i++;
             } else {
                 zipTextInputLayout.setError(getResources().getString(R.string.address_invalid_zip));
@@ -238,7 +240,7 @@ public class ProfileAccountShippingInformation extends Fragment {
                 city.clearFocus();
             }
         }
-        if(i==4)
+        if (i == 4)
             return true;
         return false;
     }
@@ -246,7 +248,7 @@ public class ProfileAccountShippingInformation extends Fragment {
     private void updateShippingAddress() {
         int userId = UserPreferences.INSTANCE.getUserId();
         if (address1.getText().toString() != userInfoResponse.getShippingAddressLine1()) {
-            if(isValidAddress()){
+            if (isValidAddress()) {
                 String newAddress = address1.getText().toString().trim();
                 String newAddress2 = address2.getText().toString().trim();
                 String newCity = city.getText().toString().trim();
@@ -260,11 +262,10 @@ public class ProfileAccountShippingInformation extends Fragment {
                 RestClient.getAuthenticated().updateAddress(userId, request).enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
-                        if(response!=null & response.isSuccessful()){
+                        if (response != null & response.isSuccessful()) {
                             Toast.makeText(context, "Address updated", Toast.LENGTH_SHORT).show();
                             context.onBackPressed();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(context, "Invalid address. Please try another address.", Toast.LENGTH_SHORT).show();
                         }
                         progress.setVisibility(View.GONE);
@@ -276,7 +277,7 @@ public class ProfileAccountShippingInformation extends Fragment {
                         Toast.makeText(context, "Server Response Error", Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else{
+            } else {
                 progress.setVisibility(View.GONE);
             }
         } else
@@ -293,7 +294,7 @@ public class ProfileAccountShippingInformation extends Fragment {
 
                     String address = userInfoResponse.getShippingAddressLine2();
                     List<String> addressList = Arrays.asList(address.split(",", -1));
-                    String shippingCity = "", shippingState = "", shippingZip ="";
+                    String shippingCity = "", shippingState = "", shippingZip = "";
 
                     address1.setText(userInfoResponse.getShippingAddressLine1());
 
@@ -329,7 +330,7 @@ public class ProfileAccountShippingInformation extends Fragment {
         context = null;
     }
 
-    public class CustomTextWatcher implements TextWatcher{
+    public class CustomTextWatcher implements TextWatcher {
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -347,13 +348,13 @@ public class ProfileAccountShippingInformation extends Fragment {
             if (address1.isFocused() || address2.isFocused() || city.isFocused() || state.isFocused() || zip.isFocused()) {
                 saveChanges();
             }
-            if(address1.hasFocus())
+            if (address1.hasFocus())
                 address1TextInputLayout.setError(null);
-            if(city.hasFocus())
+            if (city.hasFocus())
                 cityTextInputLayout.setError(null);
-            if(state.hasFocus())
+            if (state.hasFocus())
                 stateTextInputLayout.setError(null);
-            if(zip.hasFocus())
+            if (zip.hasFocus())
                 zipTextInputLayout.setError(null);
         }
     }

@@ -4,16 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
 import com.google.gson.Gson
-
 import com.mobile.history.model.ReservationHistory
 import com.mobile.location.UserLocation
 import com.mobile.model.ScreeningToken
 import com.mobile.responses.MicroServiceRestrictionsResponse
-import com.mobile.responses.SubscriptionStatus
 import com.mobile.responses.UserInfoResponse
 import com.moviepass.BuildConfig
-
-import java.util.Calendar
+import java.util.*
 
 /**
  * Created by ryan on 4/26/17.
