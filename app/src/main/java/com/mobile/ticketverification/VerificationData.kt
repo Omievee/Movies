@@ -79,7 +79,6 @@ data class VerificationData(
         showtimeFormats.forEach {
             val newTxt = it.format(showtime).sanitize()
             if (time.contains(newTxt)) {
-                println("we have a match ${time} ${text.text}")
                 this.movieTime = text.text
             }
         }
@@ -94,7 +93,6 @@ data class VerificationData(
         showtimeFormats.forEach {
             val newTxt = it.format(showtime).sanitize()
             if (time.contains(newTxt)) {
-                println("we have a match ${time} ${text.text}")
                 this.movieDate = text.text
             }
         }

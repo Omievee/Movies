@@ -190,10 +190,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
 
     @Override
     public void getSearchString(Movie movie) {
-        String url = "https://moviepass.com/go/movies";
-        //GoWatchItSingleton.getInstance().searchEvent(searchBar.getText().toString(), "search", url);
-        MovieFragment movieFragment = MovieFragment.newInstance(movie, "");
-        showFragment(movieFragment);
+        showFragment(ScreeningsFragment.Companion.newInstance(new ScreeningsData(null, movie)));
     }
 
     public void showSfotKeyboard() {

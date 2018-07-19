@@ -9,6 +9,7 @@ import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
@@ -68,9 +69,8 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
-            SynopsisFragment.newInstance(movie).show(childFragmentManager, "synopsis")
+            showFragment(SynopsisFragment.newInstance(movie))
         }
-
     }
 
     override fun onClick(screening: Screening, showTime: String) {
@@ -118,7 +118,11 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
         movieHeader.visibility = when (movie) {
             null -> View.GONE
             else -> {
-                movieHeader.bind(movie = movie, synopsisListener = synopsislistener)
+                val listener = when(movie.isComingSoon) {
+                    true-> null
+                    false->synopsislistener
+                }
+                movieHeader.bind(movie = movie, synopsisListener = listener)
                 View.VISIBLE
             }
         }
@@ -132,7 +136,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
             else -> View.GONE
         }
         showTheaterBottomSheetIfNecessary(screeningData?.theater)
-        showMovieBottomSheetIfNecessary(screeningData?.movie)
+        showMovieBottomSheetIfNecessary(screeningData?.movie, movieHeader)
     }
 
     override fun onResume() {
@@ -160,8 +164,9 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
                 }, {
                     when (it) {
                         is ApiError -> showError(it)
-                        is NoScreeningsException-> {}
-                        else->showError()
+                        is NoScreeningsException -> {
+                        }
+                        else -> showError()
 
                     }
                 })
@@ -171,8 +176,8 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     }
 
     private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {
-        when(screeningData?.movie?.isComingSoon) {
-            true-> return Observable.error(NoScreeningsException())
+        when (screeningData?.movie?.isComingSoon) {
+            true -> return Observable.error(NoScreeningsException())
         }
         val theaterId = screeningData?.theater?.tribuneTheaterId
         val screeningsObserv: Observable<ScreeningsResponseV2> = when (theaterId) {

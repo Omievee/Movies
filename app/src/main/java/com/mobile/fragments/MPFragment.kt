@@ -27,7 +27,6 @@ open class MPFragment : Fragment(), BackFragment {
     }
 
     fun showFragment(id:Int, fragment: Fragment) {
-        println("showFragment $id")
         showFragmentExtension(id, fragment)
     }
 
@@ -36,7 +35,6 @@ open class MPFragment : Fragment(), BackFragment {
     }
 
     fun slideFragmentIn(v:ViewGroup) {
-        println("slideInFragment ${v.id}")
         view as? ViewGroup ?: return
         val set = TransitionSet()
         set.duration = 250
@@ -58,7 +56,6 @@ open class MPFragment : Fragment(), BackFragment {
     }
 
     fun preloadFragment(id:Int, fragment: Fragment) {
-        println("preloadFragment $id")
         preLoadFragmentExtension(id, fragment)
     }
 
