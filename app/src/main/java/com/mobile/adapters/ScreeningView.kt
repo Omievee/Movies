@@ -1,7 +1,6 @@
 package com.mobile.adapters
 
 import android.content.Context
-import android.content.res.Resources
 import android.net.Uri
 import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
@@ -15,7 +14,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.listeners.ShowtimeClickListener
-import com.mobile.model.Movie
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
@@ -53,7 +51,7 @@ fun Int.runningTimeString(context: Context): SpannableStringBuilder {
     }
 }
 
-fun String?.toFormattedRating(context:Context):SpannableStringBuilder {
+fun String?.toFormattedRating(context: Context): SpannableStringBuilder {
     return android.text.SpannableStringBuilder().apply {
         if (this.isEmpty()) {
             return@apply
@@ -76,7 +74,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
-    val layoutManager:LinearLayoutManager
+    val layoutManager: LinearLayoutManager
 
     init {
         View.inflate(context, R.layout.list_item_cinemaposter, this)
@@ -89,7 +87,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         recyclerView.adapter = adapter
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(
-                top=resources.getDimension(R.dimen.margin_quarter).toInt(),
+                top = resources.getDimension(R.dimen.margin_quarter).toInt(),
                 bottom = resources.getDimension(R.dimen.margin_half).toInt()))
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
@@ -115,6 +113,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         movieTitle.text = screening.screening?.title
         val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
         val approval = screeningPresentation?.screening?.approved ?: true
+
 
         when (screening.enabled) {
             false -> {
