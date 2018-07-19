@@ -23,8 +23,9 @@ class TheaterItemView(context: Context, attr: AttributeSet? = null) : FrameLayou
 
         distanceView.setOnClickListener {
             val screeningPresentation = this.presentation ?: return@setOnClickListener
-            context.startIntentIfResolves(MapUtil.mapIntent(screeningPresentation.theater.lat, screeningPresentation.theater.lon))
+            context.startIntentIfResolves(MapUtil.mapIntent(screeningPresentation?.theater?.lat, screeningPresentation.theater?.lon))
         }
+
     }
 
     fun bind(presentation: TheaterPresentation, listener: TheaterClickListener? = null) {
