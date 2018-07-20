@@ -1,21 +1,17 @@
 package com.mobile.theater
 
+import com.mobile.fragments.LocationRequiredPresenter
+import com.mobile.fragments.LocationRequiredView
 import com.mobile.location.UserLocation
 import com.mobile.model.Theater
 
-interface TheatersFragmentView {
+interface TheatersFragmentView : LocationRequiredView {
 
-    fun checkLocationPermissions()
-    fun requestLocationPermissions()
-    fun showNeedLocationPermissions()
-    fun showEnableLocation()
     fun setAdapterData(location: UserLocation, theaters: List<Theater>)
     fun showMap(invisible:Boolean=false)
-    fun showProgress()
-    fun hideProgress()
     fun showNoTheatersFound()
     fun hideNoTheatersFound()
-    fun showNoLocationFound()
     fun scrollToTop()
+    fun showNoLocationFound()
 
 }

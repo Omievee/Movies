@@ -10,23 +10,17 @@ import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import com.mobile.ApiError
-import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
 import com.mobile.adapters.ScreeningsAdapter.Companion.createData
-import com.mobile.analytics.AnalyticsManager
-import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
-import com.mobile.location.LocationManager
 import com.mobile.location.UserLocation
 import com.mobile.model.Screening
 import com.mobile.model.Theater
 import com.mobile.model.Movie
 
-import com.mobile.network.Api
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
@@ -37,36 +31,15 @@ import com.mobile.utils.isComingSoon
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_screenings.*
 import javax.inject.Inject
 
-class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinListener {
-
+class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView {
     var adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
 
-    var response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>? = null
-
-    var selected: android.util.Pair<Screening, String?>? = null
-
     @Inject
-    lateinit var locationManager: LocationManager
-
-    @Inject
-    lateinit var historyManager: HistoryManager
-
-    @Inject
-    lateinit var analyticsManager: AnalyticsManager
-
-    @Inject
-    lateinit var api: Api
-
-    var disposable: Disposable? = null
-
-    var screeningData: ScreeningsData? = null
+    lateinit var presenter:ScreeningsFragmentPresenter
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
@@ -74,7 +47,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
         }
     }
 
-    fun showSynopsis(movie: Movie) {
+    override fun showSynopsis(movie: Movie) {
         val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior?:return
         synopsisBottomSheetView.bind(movie)
         bottom.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -99,13 +72,40 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
         }
     }
 
-    fun hideSynopsis() {
+    override fun hideSynopsis() {
         val bottom = BottomSheetBehavior.from(synopsisBottomSheetView)
         bottom.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
+    override fun presenter(): LocationRequiredPresenter {
+        return presenter
+    }
+
+    override fun onPrimary() {
+        presenter.onPrimary()
+    }
+
+    override fun showLocationError() {
+    }
+
+    override fun showTheaterBottomSheetNecessary(theater: Theater?) {
+        showTheaterBottomSheetIfNecessary(theater)
+    }
+
+    override fun showProgress() {
+        swipeRefresh.isRefreshing = true
+    }
+
+    override fun hideProgress() {
+        swipeRefresh.isRefreshing = false
+    }
+
+    override fun showCheckinFragment(checkin: Checkin) {
+        showFragment(R.id.checkinFragment,com.mobile.reservation.newInstance(checkin))
+    }
+
     override fun onClick(screening: Screening, showTime: String) {
-        onShowtimeClick(null, screening, showTime)
+        presenter.onShowtimeClick(null, screening, showTime)
     }
 
     override fun onAttach(context: Context?) {
@@ -114,141 +114,75 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     }
 
     override fun onShowtimeClick(theater: Theater?, screening: Screening, showtime: String) {
-        if (selected?.first == screening && selected?.second == showtime) {
-            selected = null
-        } else {
-            selected = android.util.Pair(screening, showtime)
-        }
+        presenter.onShowtimeClick(theater, screening, showtime)
+    }
 
-        when (selected) {
-            null -> removeFragment(R.id.checkinFragment)
-            else -> {
-                val availability = screening.getAvailability(showtime) ?: return
-                val mytheater = this.screeningData?.theater ?: theater ?: return
-                analyticsManager.onShowtimeClicked(mytheater, screening, availability)
-                showFragment(R.id.checkinFragment, com.mobile.reservation.newInstance(Checkin(
-                        screening = screening,
-                        theater = mytheater,
-                        availability = availability)))
-            }
+    override fun removeCheckinFragment() {
+        removeFragment(R.id.checkinFragment)
+    }
+
+    override fun setMovieHeader(movie:Movie, synopsisListener:Boolean) {
+        movieHeader.visibility = View.VISIBLE
+        when(synopsisListener) {
+            true-> movieHeader.bind(movie, this.synopsislistener)
+            false-> movieHeader.bind(movie, null)
         }
-        updateAdapter()
+    }
+
+    override fun setTheaterHeader(theater:Theater) {
+        theaterHeader.visibility = View.VISIBLE
+        theaterHeader.bind(theater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        screeningData = arguments?.getParcelable("data")
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
         val dimens = resources.getDimension(R.dimen.bottom_navigation_height)
         recyclerView.addItemDecoration(SpaceDecorator(lastBottom = dimens.toInt()))
         swipeRefresh.setOnRefreshListener {
-            fetchTheatersIfNecessary(necessary = true)
+            presenter.onRefresh()
         }
-        val movie = screeningData?.movie
-        hideSynopsis()
-        movieHeader.visibility = when (movie) {
-            null -> View.GONE
-            else -> {
-                val listener = when (movie.isComingSoon) {
-                    true -> {
-                        showSynopsis(movie)
-                        null
-                    }
-                    false -> synopsislistener
-                }
-                movieHeader.bind(movie = movie, synopsisListener = listener)
-                View.VISIBLE
-            }
-        }
-        theaterHeader.visibility = when (screeningData?.movie) {
-            null -> {
-                screeningData?.theater?.let {
-                    theaterHeader.bind(it)
-                }
-                View.VISIBLE
-            }
-            else -> View.GONE
-        }
-        showTheaterBottomSheetIfNecessary(screeningData?.theater)
+        presenter.onViewCreated()
     }
 
     override fun onResume() {
         super.onResume()
-        fetchTheatersIfNecessary()
+        presenter.onResume()
     }
 
-    private fun fetchTheatersIfNecessary(necessary: Boolean = false) {
-        disposable?.dispose()
-        when (response) {
-            null -> {
-
-            }
-            else -> when (necessary) {
-                false -> return
-            }
-        }
-        swipeRefresh.isRefreshing = true
-        val location = locationManager.lastLocation() ?: return showLocationError()
-        disposable = observ(location)
-                .doAfterTerminate { swipeRefresh.isRefreshing = false }
-                .subscribe({
-                    response = it
-                    updateAdapter()
-                }, {
-                    when (it) {
-                        is ApiError -> showError(it)
-                        is NoScreeningsException -> {
-                        }
-                        else -> showError()
-
-                    }
-                })
-    }
-
-    private fun showLocationError() {
-    }
-
-    private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {
-        when (screeningData?.movie?.isComingSoon) {
-            true -> return Observable.error(NoScreeningsException())
-        }
-        val theaterId = screeningData?.theater?.tribuneTheaterId
-        val screeningsObserv: Observable<ScreeningsResponseV2> = when (theaterId) {
-            null -> api.getScreeningsForMovieRx(location.lat, location.lon, screeningData?.movie?.id
-                    ?: 0).toObservable()
-            else -> api.getScreeningsForTheaterV2(theaterId).toObservable()
-        }
-        return Observable.zip(
-                historyManager.getHistory(), screeningsObserv,
-                BiFunction { t1, t2 -> Pair(t1, t2) }
-        )
-    }
-
-    private fun showError(apiError: ApiError) {
+    override fun showError(apiError: ApiError) {
         errorView.show(apiError)
     }
 
-    private fun showError() {
+    override fun showError() {
         errorView.show()
     }
 
-    private fun updateAdapter() {
+    override fun updateAdapter(response:Pair<List<ReservationHistory>,ScreeningsResponseV2>, location: UserLocation?, selected:Pair<Screening, String?>?, segments:List<Int>) {
         recyclerView.visibility = View.VISIBLE
-        val response = response ?: return
         errorView.visibility = View.GONE
         adapter.data = createData(data =
         adapter.data,
                 response = response,
-                location = locationManager.lastLocation()?.toLocation(),
+                location = location?.toLocation(),
                 selected = selected,
-                userSegments = UserPreferences.restrictions.userSegments
+                userSegments = segments
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable?.dispose()
+    override fun showRefreshing() {
+        swipeRefresh.isRefreshing = true
+    }
+
+    override fun notRefreshing() {
+        swipeRefresh.isRefreshing = false
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroy()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
