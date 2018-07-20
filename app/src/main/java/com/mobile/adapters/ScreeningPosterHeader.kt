@@ -24,7 +24,12 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
     fun bind(movie:Movie, synopsisListener:MoviePosterClickListener?=null) {
         movieTitle.text = movie.title
         movieRating.text = movie.rating.toFormattedRating(context)
+        movieRating.visibility = when(movieRating.text.isEmpty()) {
+            true-> View.GONE
+            else-> View.VISIBLE
+        }
         movieTime.text = movie.runningTime.runningTimeString(context)
+        spacer.visibility = movieRating.visibility
         posterSPV.setImageURI(movie.landscapeImageUrl)
         when(synopsisListener) {
             null-> {
@@ -32,8 +37,10 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
             }
             else-> {
                 synopsis.visibility = View.VISIBLE
-                synopsis.setOnClickListener {
-                    synopsisListener.onMoviePosterClick(movie)
+                arrayOf(this,synopsis).forEach {
+                    setOnClickListener {
+                        synopsisListener.onMoviePosterClick(movie)
+                    }
                 }
             }
         }

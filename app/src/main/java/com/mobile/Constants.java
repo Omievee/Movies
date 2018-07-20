@@ -21,14 +21,11 @@ public class Constants {
 
     //COMMON VARIABLES
     public static final String MOVIE = "movie";
-    public static final String TITLE = "title";
     public static final String POLICY = "policy";
-    public static final String RESERVATION = "reservation";
     public static final String RESERVATION_ID = "reservation_id";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "theater";
-    public static final String TOKEN = "token";
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";

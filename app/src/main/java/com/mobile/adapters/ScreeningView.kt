@@ -52,15 +52,16 @@ fun Int.runningTimeString(context: Context): SpannableStringBuilder {
 }
 
 fun String?.toFormattedRating(context: Context): SpannableStringBuilder {
+    val ratingStr = this
     return android.text.SpannableStringBuilder().apply {
-        if (this.isEmpty()) {
+        if (ratingStr.isNullOrEmpty()) {
             return@apply
         }
         val resources = context.resources
         val rated = android.text.SpannableString(resources.getString(com.moviepass.R.string.screening_rating)).apply {
             setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatedText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
-        val rating = android.text.SpannableString(this).apply {
+        val rating = android.text.SpannableString(ratingStr).apply {
             setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatingText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         append(rated)

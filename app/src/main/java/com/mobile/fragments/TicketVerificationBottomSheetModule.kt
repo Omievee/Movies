@@ -13,7 +13,7 @@ import dagger.Provides
 class TicketVerificationBottomSheetModule {
 
     init {
-        println("OK")
+
     }
 
     @Provides

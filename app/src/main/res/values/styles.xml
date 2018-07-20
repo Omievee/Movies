@@ -499,6 +499,10 @@
     <style name="DialogFragment">
         <item name="android:background">@drawable/dialog_fragment_graient</item>
     </style>
+    
+    <style name="SynopsisFragment" parent="DialogFragment">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 
     <style name="DialogFragmentTitleView" parent="TitleView">
         <item name="android:textSize">16sp</item>

@@ -100,6 +100,10 @@ fun Fragment.onBackExtension(): Boolean {
                         .commit()
             }
         }
+
+        override fun onTransitionCancel(transition: Transition) {
+            super.onTransitionCancel(transition)
+        }
     }
     val set = TransitionSet()
     set.duration = 200

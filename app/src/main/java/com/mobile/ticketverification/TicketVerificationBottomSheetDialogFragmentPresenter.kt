@@ -24,7 +24,6 @@ class TicketVerificationBottomSheetDialogFragmentPresenter(
                 }
                 .subscribe({text->
                     view.updateDebugView(data)
-                    println("text: ${text.text}")
                 },{
                     it.printStackTrace()
                 })

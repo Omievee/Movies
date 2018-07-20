@@ -25,7 +25,6 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
     init {
         location().compose(Schedulers.singleDefault())
                 .subscribe({
-                    println("_lastLocation: ${it}")
                     _lastLocation = it
                 }, {})
     }
