@@ -69,6 +69,12 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
 
     override fun onAppOpened() {
         goWatchItManager.userOpenedApp()
+        val campaign = goWatchItManager.campaign
+        when(campaign) {
+            null-> {}
+            else-> Answers.getInstance().logCustom(CustomEvent("campaign").putCustomAttribute("key", campaign))
+        }
+
     }
 
     override fun onShowtimeClicked(mytheater: Theater, screening: Screening, availability: Availability) {

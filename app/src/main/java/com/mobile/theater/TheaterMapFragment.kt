@@ -135,6 +135,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
         }
         listCard.setOnClickListener {
             activity?.onBackPressed()
+            analyticsManager.onTheaterListOpened()
         }
         subscribeToSearch()
     }

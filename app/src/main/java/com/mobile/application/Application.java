@@ -50,6 +50,8 @@ public class Application extends MultiDexApplication implements HasActivityInjec
     @Inject
     AnalyticsManager analyticsManager;
 
+    private Activity firstActivity;
+
     private static Application mApplication;
     public static final String TAG = "TAG";
 
@@ -97,10 +99,17 @@ public class Application extends MultiDexApplication implements HasActivityInjec
             @Override
             public void onActivityResumed(@Nullable Activity activity) {
                 activityStack.push(activity);
+                if(firstActivity==null) {
+                    firstActivity = activity;
+                    analyticsManager.onAppOpened();
+                }
             }
 
             @Override
             public void onActivityDestroyed(@Nullable Activity activity) {
+                if(firstActivity==activity) {
+                    return;
+                }
                 activityStack.remove(activity);
             }
         });
@@ -114,7 +123,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
             Core.login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
         } catch (InstallException e) {
         }
-        analyticsManager.onAppOpened();
     }
 
     protected void inject() {

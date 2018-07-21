@@ -18,4 +18,5 @@ interface GoWatchItManager {
     fun onTicketPurchasedConfirmation(checkIn: Checkin, reservationV2: CurrentReservationV2)
     fun onCheckInSuccessful(checkIn: Checkin)
     fun onCheckInFailed(checkIn: Checkin)
+    val campaign:String?
 }

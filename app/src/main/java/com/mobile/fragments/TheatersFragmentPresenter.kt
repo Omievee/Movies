@@ -1,11 +1,12 @@
 package com.mobile.fragments
 
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.*
 import com.mobile.model.Theater
 import com.mobile.theater.*
 import io.reactivex.disposables.Disposable
 
-class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder) {
+class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) {
 
 
     var location: UserLocation? = null
@@ -106,6 +107,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
 
     fun onMapIconClicked() {
         view.showMap()
+        analyticsManager.onTheaterMapOpened()
     }
 
     fun onLocationClicked() {
