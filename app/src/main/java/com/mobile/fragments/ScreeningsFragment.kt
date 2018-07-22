@@ -31,6 +31,7 @@ import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.screenings.PinnedBottomSheetBehavior
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
@@ -74,11 +75,33 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
     }
 
     fun showSynopsis(movie: Movie) {
-        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView)
-        synopsisBottomSheetView.visibility = View.VISIBLE
+        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior?:return
         synopsisBottomSheetView.bind(movie)
         bottom.state = BottomSheetBehavior.STATE_COLLAPSED
         synopsisBottomSheetView.elevation = appBarLayout.elevation + appBarLayout.highestElevation
+        bottom.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_EXPANDED,
+                    BottomSheetBehavior.STATE_COLLAPSED-> {
+                            appBarLayout.setExpanded(true)
+                    }
+                }
+            }
+
+        })
+        when(movie.isComingSoon) {
+            true-> bottom.locked = true
+        }
+    }
+
+    fun hideSynopsis() {
+        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView)
+        bottom.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun onClick(screening: Screening, showTime: String) {
@@ -123,6 +146,7 @@ class ScreeningsFragment : MPFragment(), ShowtimeClickListener, MissingCheckinLi
             fetchTheatersIfNecessary(necessary = true)
         }
         val movie = screeningData?.movie
+        hideSynopsis()
         movieHeader.visibility = when (movie) {
             null -> View.GONE
             else -> {
