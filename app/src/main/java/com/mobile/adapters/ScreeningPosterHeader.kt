@@ -37,7 +37,7 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
             }
             else-> {
                 synopsis.visibility = View.VISIBLE
-                arrayOf(this,synopsis).forEach {
+                arrayOf(this).forEach {
                     setOnClickListener {
                         synopsisListener.onMoviePosterClick(movie)
                     }
