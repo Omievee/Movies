@@ -115,6 +115,7 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
     }
 
     fun onSearchLocation(loc: String) {
+        analyticsManager.onTheaterSearch(loc)
         geocodeSub?.dispose()
         geocodeSub = geocoder.reverseLocation(loc)
                 .subscribe({

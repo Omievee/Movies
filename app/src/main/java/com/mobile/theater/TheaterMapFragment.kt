@@ -119,6 +119,7 @@ class TheaterMapFragment : MPFragment(), OnMapReadyCallback {
             }
 
             override fun onSearch(query: String) {
+                analyticsManager.onTheaterSearch(query)
                 geocodeSub?.dispose()
                 geocodeSub = geocoder.reverseLocation(query)
                         .subscribe({
