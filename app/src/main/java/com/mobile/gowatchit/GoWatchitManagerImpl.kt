@@ -43,12 +43,12 @@ class GoWatchitManagerImpl(val goWatchItApi: GoWatchItApi, val gson: Gson, val l
         send(MovieSearch(query))
     }
 
-    private val campaign: String?
+    override val campaign: String?
         get() {
             val campaignStr = application
                     .activityStack
                     .map { activity->
-                        activity.intent.data.mapQueryNames()
+                        activity.intent?.data?.mapQueryNames() ?: emptyMap()
                     }
                     .flatMap {
                         it.entries

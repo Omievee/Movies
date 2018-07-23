@@ -7,6 +7,7 @@ class AppOpened : Base() {
     val clickThrough = "Unset"
     @SerializedName("ci")
     val clearit = -1
-    @SerializedName("e")
-    override var event = "app_open"
+    init {
+        event = "app_open"
+    }
 }

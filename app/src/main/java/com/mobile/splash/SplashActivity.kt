@@ -127,13 +127,9 @@ class SplashActivity : AppCompatActivity() {
             try {
                 adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
 
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 // Unrecoverable error connecting to Google Play services (e.g.,
                 // the old version of the service doesn't support getting AdvertisingId).
-            } catch (e: GooglePlayServicesNotAvailableException) {
-                // Google Play services is not available entirely.
-            } catch (e: GooglePlayServicesRepairableException) {
-                e.printStackTrace()
             }
             if (adInfo?.id != null) {
                 ID = adInfo.id
