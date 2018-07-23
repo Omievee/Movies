@@ -13,5 +13,5 @@ data class Checkin(
         var screening: Screening,
         var theater: Theater,
         var availability: Availability,
-        var time:Date = Date()
+        var time:ParcelableDate = ParcelableDate(timeAsString = System.currentTimeMillis().toString())
 ) : Parcelable
