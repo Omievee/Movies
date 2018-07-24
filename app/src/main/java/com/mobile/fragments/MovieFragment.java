@@ -469,8 +469,8 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 bundle.putString(MOVIE, synopsis);
                 bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
+//                SynopsisFragment fragobj = new SynopsisFragment();
+//                fragobj.setArguments(bundle);
 //                FragmentManager fm = getChildFragmentManager();
 //                fragobj.show(fm, "fr_dialogfragment_synopsis");
             });
@@ -482,8 +482,8 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 bundle.putString(MOVIE, synopsis);
                 bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
+//                SynopsisFragment fragobj = new SynopsisFragment();
+//                fragobj.setArguments(bundle);
 //                FragmentManager fm = getChildFragmentManager();
 //                fragobj.show(fm, "fr_dialogfragment_synopsis");
 

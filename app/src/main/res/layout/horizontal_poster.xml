@@ -29,15 +29,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_standard" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/synopsis"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignTop="@id/movieTitle"
             android:layout_marginStart="@dimen/margin_standard"
             android:layout_toEndOf="@id/movieTitle"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
             android:src="@drawable/infoicon2"
             android:tint="@color/almost_white" />
 

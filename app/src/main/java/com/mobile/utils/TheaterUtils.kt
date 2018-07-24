@@ -5,12 +5,10 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.mobile.Constants
 import com.mobile.fragments.MPFragment
-import com.mobile.fragments.SynopsisFragment
 import com.mobile.fragments.TheaterPolicy
 import com.mobile.model.Movie
 import com.mobile.model.Theater
 import com.moviepass.R
-import kotlinx.android.synthetic.main.fragment_screenings.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -28,14 +26,6 @@ fun Fragment.showTheaterBottomSheetIfNecessary(theater: Theater?) {
             val fragobj = TheaterPolicy()
             fragobj.arguments = bundle
             fragobj.show(childFragmentManager, "fr_theaterpolicy")
-        }
-    }
-}
-
-fun MPFragment.showMovieBottomSheetIfNecessary(movie: Movie?, view: View) {
-    when (movie?.isComingSoon) {
-        true -> {
-            showFragment(R.id.synopsisFragment, SynopsisFragment.newInstance(movie = movie))
         }
     }
 }
