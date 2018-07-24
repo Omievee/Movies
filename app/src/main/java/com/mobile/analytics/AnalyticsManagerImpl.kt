@@ -13,9 +13,12 @@ import java.lang.String.valueOf
 
 class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsManager {
 
+    override fun onCheckinAttempt(checkIn: Checkin) {
+        UserPreferences.setLastCheckInAttempt(checkIn)
+    }
+
     override fun onCheckinFailed(checkIn: Checkin) {
         goWatchItManager.onCheckInFailed(checkIn)
-        UserPreferences.setLastCheckInAttemptDate()
     }
 
     override fun onTheaterListOpened() {
@@ -41,7 +44,6 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
                 checkIn = checkIn,
                 reservation = reservation
         ))
-        UserPreferences.setLastCheckInAttemptDate()
     }
 
     override fun onMovieSearch(query: String) {

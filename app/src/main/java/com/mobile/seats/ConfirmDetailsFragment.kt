@@ -177,14 +177,14 @@ class ConfirmDetailsFragment : Fragment() {
                 .reserve(
                         TicketInfoRequest(
                                 performanceInfo = ProviderInfo(
-                                        tribuneTheaterId = payload.theater?.tribuneTheaterId ?: 0,
+                                        tribuneTheaterId = payload.theater.tribuneTheaterId ?: 0,
                                         normalizedMovieId = provideInfo.normalizedMovieId,
                                         externalMovieId = provideInfo.externalMovieId,
                                         format = provideInfo.format,
                                         performanceId = provideInfo.performanceId,
                                         dateTime = provideInfo.dateTime,
                                         seatPosition = mySeat?.asPosition(),
-                                        guestsAllowed = payload.screening?.maximumGuests,
+                                        guestsAllowed = payload.screening.maximumGuests,
                                         guestTickets = when (guestTickets.isEmpty()) {
                                             true -> null
                                             false -> guestTickets
@@ -194,6 +194,9 @@ class ConfirmDetailsFragment : Fragment() {
                                 latitude = lng
                         )
                 )
+                .doOnSubscribe {
+                    analyticsManager.onCheckinAttempt(checkIn)
+                }
                 .doAfterTerminate { getTickets.progress = false }
                 .subscribe({ result ->
                     result?.let {
@@ -204,6 +207,7 @@ class ConfirmDetailsFragment : Fragment() {
                     }
                 }
                 ) { error ->
+                    analyticsManager.onCheckinFailed(checkIn)
                     if (error is ApiError) {
                         val context = context ?: return@subscribe
                         AlertDialog.Builder(context).setTitle(error.error.title)
@@ -220,7 +224,6 @@ class ConfirmDetailsFragment : Fragment() {
                                 }
                                 .show()
                     }
-                    analyticsManager.onCheckinFailed(checkIn)
                 }
     }
 }

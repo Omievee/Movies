@@ -417,9 +417,9 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         if (selected == null) {
             removeFragment(R.id.checkinFragment);
         } else {
-            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
-                    screening, theater, availability
-            )));
+//            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
+//                    screening, theater, availability,null
+//            )));
         }
     }
 

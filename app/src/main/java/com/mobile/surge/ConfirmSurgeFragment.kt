@@ -175,6 +175,9 @@ class ConfirmSurgeFragment : MPFragment() {
                                 latitude = lat.lat,
                                 longitude = lat.lon)
                 )
+                .doOnSubscribe {
+                    analyticsManager.onCheckinAttempt(checkIn)
+                }
                 .doAfterTerminate({ submit.progress = false })
                 .subscribe({
                     val activity = activity ?: return@subscribe

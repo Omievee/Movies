@@ -19,6 +19,7 @@ interface AnalyticsManager {
     fun onTheaterListOpened()
     fun onTheaterSearch(query:String)
     fun onMovieSearch(query:String)
+    fun onCheckinAttempt(checkIn: Checkin)
     fun onCheckinFailed(checkIn: Checkin)
     fun onCheckinSuccessful(checkIn: Checkin, reservationResponse: ReservationResponse)
 }

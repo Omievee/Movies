@@ -13,7 +13,7 @@ class ScreeningToken(val checkIn:Checkin = Checkin(screening = Screening(), thea
                      ){
     fun getTimeAsDate(): Date? {
         try {
-            return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(checkIn.availability.startTime)
+            return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US).parse(reservation.showtime)
         } catch (e: Exception) {
             e.printStackTrace()
         }

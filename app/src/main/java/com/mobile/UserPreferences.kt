@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.mobile.history.model.ReservationHistory
 import com.mobile.location.UserLocation
 import com.mobile.model.ScreeningToken
+import com.mobile.reservation.Checkin
 import com.mobile.responses.MicroServiceRestrictionsResponse
 import com.mobile.responses.UserInfoResponse
 import com.moviepass.BuildConfig
@@ -101,13 +102,16 @@ object UserPreferences {
             return sPrefs.getString(Constants.FIREBASE_TOKEN, "null") ?: "null"
         }
 
-    val lastCheckInAttemptDate: Long?
+    val lastCheckInAttempt: Checkin?
         get() {
-            val dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + userId
-            val `val` = sPrefs.getLong(dateKey, -1)
-            return if (`val` == -1L) {
+            val dateKey = Constants.LAST_CHECK_IN_ATTEMPT + "_" + userId
+            val json = sPrefs.getString(dateKey, null) ?: return null
+            return try {
+                gson.fromJson(json, Checkin::class.java)
+            } catch (e: Exception) {
                 null
-            } else `val`
+            }
+
         }
 
     val location: Location
@@ -310,10 +314,10 @@ object UserPreferences {
         hasUserLoggedInBefore(logIn)
     }
 
-    fun setLastCheckInAttemptDate() {
+    fun setLastCheckInAttempt(checkIn: Checkin) {
         val editor = sPrefs.edit() ?: return
-        val dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + userId
-        editor.putLong(dateKey, System.currentTimeMillis())
+        val dateKey = Constants.LAST_CHECK_IN_ATTEMPT + "_" + userId
+        editor.putString(dateKey, gson.toJson(checkIn))
         editor.apply()
     }
 
@@ -387,7 +391,7 @@ object UserPreferences {
             }
         }
         set(value) {
-            if(value!=null) {
+            if (value != null) {
                 sPrefs.edit().putString(Constants.USER_LOCATION, gson.toJson(value)).apply()
             } else {
                 sPrefs.edit().remove(Constants.USER_LOCATION).apply()
@@ -397,11 +401,11 @@ object UserPreferences {
         "${Constants.LAST_DOWNLOADED_THEATERS}_${BuildConfig.VERSION_CODE}_${Calendar.getInstance().get(Calendar.DAY_OF_YEAR)}"
     }
     var theatersLoadedToday: Boolean
-    get() {
-        return sPrefs.getInt(theatersLoadedKey, -1)==Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
-    }
-    set(_) {
-        sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
-    }
+        get() {
+            return sPrefs.getInt(theatersLoadedKey, -1) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+        }
+        set(_) {
+            sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
+        }
 
 }
