@@ -181,10 +181,13 @@ class SeatsAdapter(var seatClickListener: SeatClickListener? = null) : RecyclerV
                         it.row
                     }?.row?:0 + 1
             val minCol = 0
-            val maxCol = seatingsInfo.seats
+            var maxCol = seatingsInfo.seats
                     .maxBy {
                         it.column
                     }?.column?:0 + 1
+            if(maxCol==seatingsInfo.columns) {
+                maxCol += 1
+            }
             val data = mutableListOf<SeatInfo?>()
             for (i in minRow..maxRow) {
                 for (j in minCol..maxCol) {
@@ -196,7 +199,7 @@ class SeatsAdapter(var seatClickListener: SeatClickListener? = null) : RecyclerV
                     .forEach {
                         val row = it.row
                         val col = it.column
-                        val index = row * maxCol + col
+                        val index = (row * maxCol) + col
                         data[index] = it
                     }
             val dataPres = data.map {
