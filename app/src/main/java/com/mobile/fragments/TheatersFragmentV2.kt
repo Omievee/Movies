@@ -1,22 +1,16 @@
 package com.mobile.fragments
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.support.transition.AutoTransition
 import android.support.transition.Transition
 import android.support.transition.TransitionListenerAdapter
 import android.support.transition.TransitionManager
-import android.support.v4.content.ContextCompat.checkSelfPermission
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
-import com.mobile.Constants
 import com.mobile.Error
 import com.mobile.Primary
 import com.mobile.keyboard.KeyboardManager
@@ -30,8 +24,11 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_theaters2.*
 import javax.inject.Inject
 
-class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
+class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Primary {
 
+    override fun presenter(): LocationRequiredPresenter {
+        return presenter
+    }
 
     @Inject
     lateinit var presenter: TheatersFragmentPresenter
@@ -55,51 +52,6 @@ class TheatersFragmentV2 : MPFragment(), TheatersFragmentView, Primary {
 
     override fun scrollToTop() {
         recyclerView.scrollToPosition(0)
-    }
-
-    private val hasFineLocation: Boolean
-        get() {
-            val context = context ?: return false
-            return checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
-        }
-
-    private val hasCoarseLocation: Boolean
-        get() {
-            val context = context ?: return false
-            return checkSelfPermission(context, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
-        }
-
-
-    override fun requestLocationPermissions() {
-        val permissions = arrayOf(ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION)
-        requestPermissions(permissions, Constants.REQUEST_LOCATION_FROM_THEATERS_CODE)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode == Constants.REQUEST_LOCATION_FROM_THEATERS_CODE) {
-            true -> presenter.onRequestPermissionResult(hasFineLocation && hasCoarseLocation)
-        }
-    }
-
-    override fun showNeedLocationPermissions() {
-        val context = context ?: return
-        AlertDialog.Builder(context).setMessage(
-                R.string.location_permission_required
-        ).setPositiveButton(android.R.string.ok, { _, _ ->
-            presenter.onClickPermissionsNeededMessasage()
-        }).show()
-    }
-
-    override fun showEnableLocation() {
-        EnableLocation.newInstance().show(childFragmentManager, "enable_location")
-    }
-
-    override fun checkLocationPermissions() {
-        when (hasFineLocation && hasCoarseLocation) {
-            true -> presenter.onHasLocationPermission()
-            false -> presenter.onDoesNotHaveLocationPermission()
-        }
     }
 
     override fun onPrimary() {

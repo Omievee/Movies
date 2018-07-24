@@ -584,8 +584,6 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
     }
-
-
 }
 
 

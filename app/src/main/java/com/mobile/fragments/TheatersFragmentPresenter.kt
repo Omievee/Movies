@@ -6,17 +6,15 @@ import com.mobile.model.Theater
 import com.mobile.theater.*
 import io.reactivex.disposables.Disposable
 
-class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) {
+class TheatersFragmentPresenter(override val view: TheatersFragmentView, locationManager: LocationManager, val theaterManager: TheaterManager, val theaterUIManager: TheaterUIManager, val geocoder: Geocoder, val analyticsManager: AnalyticsManager) : LocationRequiredPresenter(view, locationManager) {
 
-
-    var location: UserLocation? = null
-    var locationSub: Disposable? = null
     var theaterSub: Disposable? = null
     var searchSub: Disposable? = null
     var geocodeSub: Disposable? = null
     var theaterUISub: Disposable? = null
 
-    fun onDestroy() {
+    public override fun onDestroy() {
+        super.onDestroy()
         locationSub?.dispose()
         theaterSub?.dispose()
         theaterUISub?.dispose()
@@ -38,53 +36,8 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
 
     }
 
-    fun onPrimary() {
-        when (location == null) {
-            true -> checkLocationPermissions()
-        }
-    }
 
-    private fun checkLocationPermissions() {
-        view.checkLocationPermissions()
-    }
-
-    fun onHasLocationPermission() {
-        fetchLocation()
-    }
-
-    fun onDoesNotHaveLocationPermission() {
-        view.requestLocationPermissions()
-    }
-
-    fun onRequestPermissionResult(hasPermissions: Boolean) {
-        when (hasPermissions) {
-            true -> checkLocationEnabled()
-            false -> view.showNeedLocationPermissions()
-        }
-    }
-
-    private fun checkLocationEnabled() {
-        when (locationManager.isLocationEnabled()) {
-            true -> fetchLocation()
-            false -> view.showEnableLocation()
-        }
-    }
-
-    private fun fetchLocation() {
-        locationSub?.dispose()
-        locationSub = locationManager
-                .location()
-                .subscribe { t1, t2 ->
-                    t1?.let {
-                        onLocation(it)
-                    }
-                    t2?.let {
-                        //TODO: show error
-                    }
-                }
-    }
-
-    private fun onLocation(it: UserLocation) {
+    override fun onLocation(it: UserLocation) {
         location = it
         fetchNearbyTheaters(it)
     }
@@ -99,10 +52,6 @@ class TheatersFragmentPresenter(val view: TheatersFragmentView, val locationMana
                 }, { error ->
                     error.printStackTrace()
                 })
-    }
-
-    fun onClickPermissionsNeededMessasage() {
-        view.requestLocationPermissions()
     }
 
     fun onMapIconClicked() {

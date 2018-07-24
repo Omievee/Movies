@@ -20,6 +20,7 @@ import com.mobile.theater.TheatersFragmentModule
 import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.surge.ConfirmSurgeFragment
+import com.mobile.fragments.ScreeningsFragmentModule
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -47,7 +48,7 @@ interface AppBindingModule {
     fun theatersFragment(): TheatersFragmentV2
 
     @FragmentScope
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [ScreeningsFragmentModule::class])
     fun theaterFragmentV2(): ScreeningsFragment
 
     @FragmentScope
