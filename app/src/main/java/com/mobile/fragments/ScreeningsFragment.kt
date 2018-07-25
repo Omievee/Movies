@@ -17,10 +17,9 @@ import com.mobile.adapters.ScreeningsAdapter.Companion.createData
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.location.UserLocation
+import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater
-import com.mobile.model.Movie
-
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
@@ -39,7 +38,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     var adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
 
     @Inject
-    lateinit var presenter:ScreeningsFragmentPresenter
+    lateinit var presenter: ScreeningsFragmentPresenter
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
@@ -48,7 +47,8 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showSynopsis(movie: Movie) {
-        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior?:return
+        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior
+                ?: return
         synopsisBottomSheetView.bind(movie)
         bottom.state = BottomSheetBehavior.STATE_COLLAPSED
         synopsisBottomSheetView.elevation = appBarLayout.elevation + appBarLayout.highestElevation
@@ -58,17 +58,17 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
+                when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED,
-                    BottomSheetBehavior.STATE_COLLAPSED-> {
-                            appBarLayout.setExpanded(true)
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        appBarLayout.setExpanded(true)
                     }
                 }
             }
 
         })
-        when(movie.isComingSoon) {
-            true-> bottom.locked = true
+        when (movie.isComingSoon) {
+            true -> bottom.locked = true
         }
     }
 
@@ -101,7 +101,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showCheckinFragment(checkin: Checkin) {
-        showFragment(R.id.checkinFragment,com.mobile.reservation.newInstance(checkin))
+        showFragment(R.id.checkinFragment, com.mobile.reservation.newInstance(checkin))
     }
 
     override fun onClick(screening: Screening, showTime: String) {
@@ -121,15 +121,15 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         removeFragment(R.id.checkinFragment)
     }
 
-    override fun setMovieHeader(movie:Movie, synopsisListener:Boolean) {
+    override fun setMovieHeader(movie: Movie, synopsisListener: Boolean) {
         movieHeader.visibility = View.VISIBLE
-        when(synopsisListener) {
-            true-> movieHeader.bind(movie, this.synopsislistener)
-            false-> movieHeader.bind(movie, null)
+        when (synopsisListener) {
+            true -> movieHeader.bind(movie, this.synopsislistener)
+            false -> movieHeader.bind(movie, null)
         }
     }
 
-    override fun setTheaterHeader(theater:Theater) {
+    override fun setTheaterHeader(theater: Theater) {
         theaterHeader.visibility = View.VISIBLE
         theaterHeader.bind(theater)
     }
@@ -159,8 +159,11 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         errorView.show()
     }
 
-    override fun updateAdapter(response:Pair<List<ReservationHistory>,ScreeningsResponseV2>, location: UserLocation?, selected:Pair<Screening, String?>?, segments:List<Int>) {
-        recyclerView.visibility = View.VISIBLE
+    override fun updateAdapter(response: Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: UserLocation?, selected: Pair<Screening, String?>?, segments: List<Int>) {
+        when (recyclerView) {
+            null -> return@updateAdapter
+            else -> recyclerView.visibility = View.VISIBLE
+        }
         errorView.visibility = View.GONE
         adapter.data = createData(data =
         adapter.data,
@@ -172,11 +175,19 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showRefreshing() {
-        swipeRefresh.isRefreshing = true
+        when (context) {
+            null -> return
+            else -> swipeRefresh.isRefreshing = true
+        }
+
     }
 
     override fun notRefreshing() {
-        swipeRefresh.isRefreshing = false
+        when (context) {
+            null -> return
+            else -> swipeRefresh.isRefreshing = false
+        }
+
     }
 
 
