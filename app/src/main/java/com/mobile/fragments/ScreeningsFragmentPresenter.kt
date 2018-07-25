@@ -131,7 +131,8 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
     fun onResume() {
         if(location==null) {
             return onPrimary()
+        } else {
+            fetchTheatersIfNecessary(necessary = false)
         }
-        fetchTheatersIfNecessary(necessary = false)
     }
 }
