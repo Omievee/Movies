@@ -1,5 +1,6 @@
 package com.mobile.home
 
+import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
@@ -12,4 +13,6 @@ interface HomeActivityView {
     fun showForceLogout(it: LogoutInfo)
     fun showConfirmationScreen(it: CurrentReservationV2)
     fun showActivatedCardScreen()
+    fun showHistoryRateScreen(reservationHistory: ReservationHistory)
+
 }

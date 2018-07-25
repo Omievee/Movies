@@ -195,12 +195,17 @@ object UserPreferences {
         }
 
 
-    val isHistoryLoadedToday: Boolean
+    val wasHistoryLoadedRecently: Calendar
         get() {
-            val cal = Calendar.getInstance()
-            val dayOfYear = cal.get(Calendar.DAY_OF_YEAR)
-            return sPrefs.getInt(Constants.LAST_DOWNLOADED_HISTORY, -1) == dayOfYear
+            return Calendar.getInstance().apply {
+                timeInMillis = sPrefs.getLong(Constants.LAST_DOWNLOADED_HISTORY, 0)
+            }
         }
+
+    fun saveHistoryLoadedDate() {
+        val currentTime = System.currentTimeMillis()
+        sPrefs.edit().putLong(Constants.LAST_DOWNLOADED_HISTORY, currentTime).apply()
+    }
 
     val aAID: String?
         get() {
@@ -351,11 +356,6 @@ object UserPreferences {
         sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS, dayOfYear).apply()
     }
 
-    fun saveHistoryLoadedDate() {
-        val cal = Calendar.getInstance()
-        val dayOfYear = cal.get(Calendar.DAY_OF_YEAR)
-        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_HISTORY, dayOfYear).apply()
-    }
 
     fun setTotalMoviesSeen(totalMoviesSeen: Int) {
         sPrefs
@@ -407,5 +407,18 @@ object UserPreferences {
         set(_) {
             sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
         }
+
+    val historyRatingAlertId: Int
+        get() {
+            return sPrefs.getInt(Constants.SHOW_HISTORY_RATING, 0)
+        }
+
+
+    fun setUserDismissedHistoryRateScreen(historyRatingID: Int) {
+        val prefs = sPrefs.edit() ?: return
+        prefs
+                .putInt(Constants.SHOW_HISTORY_RATING, historyRatingID).apply()
+
+    }
 
 }

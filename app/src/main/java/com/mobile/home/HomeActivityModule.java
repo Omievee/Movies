@@ -1,6 +1,7 @@
 package com.mobile.home;
 
 import com.mobile.di.ActivityScope;
+import com.mobile.history.HistoryManager;
 import com.mobile.network.Api;
 import com.mobile.network.MicroApi;
 import com.mobile.session.SessionManager;
@@ -13,8 +14,7 @@ public abstract class HomeActivityModule {
 
     @Provides
     @ActivityScope
-    static HomeActivityPresenter provideLoginPresenter(HomeActivity activity, Api api, MicroApi micro, SessionManager sessionManager, RestrictionsManager restrictionsManager) {
-        return new HomeActivityPresenter(activity, api, micro, sessionManager, restrictionsManager);
+    static HomeActivityPresenter provideLoginPresenter(HomeActivity activity, Api api, MicroApi micro, SessionManager sessionManager, RestrictionsManager restrictionsManager, HistoryManager historyManager) {
+        return new HomeActivityPresenter(activity, api, micro, sessionManager, restrictionsManager, historyManager);
     }
-
 }

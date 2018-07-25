@@ -646,4 +646,8 @@
     <string name="cancel_make_selection">Please make a selection</string>
     <string name="cancel_reason_for_cancellation">Reason for Cancellation</string>
     <string name="in_theaters_date">In Theaters %1$s</string>
+    <string name="history_details_movie_dislike">You didn\'t like this movie!</string>
+    <string name="history_details_movie_like">You liked this movie!</string>
+    <string name="history_rating_thanks">Thanks for rating!</string>
+    <string name="history_rating_rate_last">Rate your last movie!</string>
 </resources>

@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.res.ResourcesCompat
-import android.transition.TransitionInflater
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +19,8 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
+import com.mobile.Constants
 import com.mobile.fragments.MPFragment
-import com.mobile.helpers.LogUtils
 import com.mobile.history.model.Rating
 import com.mobile.history.model.ReservationHistory
 import com.moviepass.R
@@ -41,13 +41,7 @@ class HistoryDetailsFragment : MPFragment() {
 
     var historySub: Disposable? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val activity = activity ?: return
-        activity.startPostponedEnterTransition()
-        sharedElementEnterTransition = TransitionInflater.from(activity).inflateTransition(android.R.transition.explode).setDuration(2000)
-    }
-
+    var fromRateScreen: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fr_historydetails, container, false)
@@ -58,36 +52,17 @@ class HistoryDetailsFragment : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        close.setOnClickListener { _ -> activity?.onBackPressed() }
-
-
-        val historyItem = arguments!!.getParcelable<ReservationHistory>(HISTORY_POSTER)
-        val transition = arguments!!.getString(EXTRA_TRANSITION_NAME)
-
+        val historyItem = arguments?.getParcelable<ReservationHistory>(HISTORY_POSTER)
+                ?: return@onViewCreated
+        fromRateScreen = arguments?.getBoolean(Constants.IS_FROM_RATE_SCREEN)
+                ?: return
         val black = Color.argb(200, 0, 0, 0)
         detailsBackground.setBackgroundColor(black)
 
 
+        checkIfUserHasRatedFilm(historyItem)
+        close.setOnClickListener { _ -> activity?.onBackPressed() }
 
-        if (historyItem.userRating != null) {
-            didYouLikeIt.visibility = View.GONE
-            if (historyItem.userRating == "GOOD") {
-                like.setImageDrawable(ResourcesCompat.getDrawable(resources,R.drawable.thumbsupselect, null))
-                dislike.visibility = View.GONE
-            } else if (historyItem.userRating == "BAD") {
-                dislike.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsdownselect,null))
-                like.visibility = View.GONE
-            }
-
-        } else {
-            like.setOnClickListener { _ ->
-                userClickedRating(historyItem, true)
-            }
-            dislike.setOnClickListener { _ ->
-                userClickedRating(historyItem, false)
-            }
-        }
 
         val imgUrl = Uri.parse(historyItem.imageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
@@ -113,36 +88,64 @@ class HistoryDetailsFragment : MPFragment() {
                 .build()
 
 
-        val createdAt = historyItem.created
-        createdAt?.let {
-            val sdf = SimpleDateFormat("M/dd/yyyy")
-            historyDate.text = sdf.format(createdAt)
+        Log.d("Fromscreen", "...........: " + fromRateScreen)
+
+        if (fromRateScreen) {
+            historyTitle.text = getString(R.string.history_rating_rate_last)
+            historyLocal.visibility = View.INVISIBLE
+            historyDate.visibility = View.INVISIBLE
+        } else {
+            val createdAt = historyItem.created
+            createdAt?.let {
+                val sdf = SimpleDateFormat("M/dd/yyyy")
+                historyDate.text = sdf.format(createdAt)
+            }
+            historyLocal.text = historyItem.theaterName
+            historyTitle.text = historyItem.title
         }
 
-        historyLocal.text = historyItem.theaterName
-        historyTitle.text = historyItem.title
-        enlargedImage.transitionName = transition
         enlargedImage.controller = controller
+    }
+
+    private fun checkIfUserHasRatedFilm(historyItem: ReservationHistory) {
+        when (historyItem.rating) {
+            Rating.GOOD -> {
+                didYouLikeIt.text = getString(R.string.history_details_movie_like)
+                like.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsupselect, null))
+            }
+            Rating.BAD -> {
+                didYouLikeIt.text = getString(R.string.history_details_movie_dislike)
+                dislike.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsdownselect, null))
+            }
+            null -> {
+                like.setOnClickListener { _ ->
+                    userClickedRating(historyItem, true)
+                }
+                dislike.setOnClickListener { _ ->
+                    userClickedRating(historyItem, false)
+                }
+            }
+
+        }
     }
 
     private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
         historySub?.dispose()
 
-        LogUtils.newLog("RATING!! >>>>", " RATED: " + wasGood)
-
         historySub = historyManagerImpl.submitRating(history, wasGood)
+                .doAfterSuccess { historyTitle.text = getString(R.string.history_rating_thanks) }
                 .subscribe({ res ->
                     onHistorySaved(res)
                 }, {
 
                 })
+
     }
 
     private fun onHistorySaved(res: ReservationHistory?) {
         val wasGood = res?.rating == Rating.GOOD
 
         if (wasGood) {
-
             dislike.visibility = View.GONE
             fadeOut(dislike)
             animate(like)
@@ -152,8 +155,10 @@ class HistoryDetailsFragment : MPFragment() {
             animate(dislike)
         }
 
-        val h = Handler()
-        h.postDelayed({ activity?.onBackPressed() }, 1000)
+        if (!fromRateScreen) {
+            Handler().postDelayed({ activity?.onBackPressed() }, 1500)
+        }
+
 
     }
 
@@ -184,15 +189,14 @@ class HistoryDetailsFragment : MPFragment() {
 
     companion object {
         private val HISTORY_POSTER = "poster"
-        private val EXTRA_TRANSITION_NAME = "transition_name"
 
 
-        fun newInstance(moviePoster: ReservationHistory, transitionName: String): HistoryDetailsFragment {
+        fun newInstance(moviePoster: ReservationHistory, isFromRatingScreen: Boolean): HistoryDetailsFragment {
             val fragment = HistoryDetailsFragment()
 
             val bundle = Bundle()
+            bundle.putBoolean(Constants.IS_FROM_RATE_SCREEN, isFromRatingScreen)
             bundle.putParcelable(HISTORY_POSTER, moviePoster)
-            bundle.putString(EXTRA_TRANSITION_NAME, transitionName)
             fragment.arguments = bundle
             return fragment
         }

@@ -1,19 +1,20 @@
 package com.mobile.utils
 
-import java.util.*
-import java.util.Calendar.*
 import java.text.SimpleDateFormat
+import java.util.*
+import java.util.Calendar.HOUR_OF_DAY
+import java.util.Calendar.getInstance
 
 class DateUtils {
 
     companion object {
-        fun isSameDay(item: Date): Boolean {
+        fun everyFourHours(item: Date): Boolean {
             val itemCal = getInstance()
             itemCal.timeInMillis = item.time
 
             val now = getInstance()
-            val dayOfYear = itemCal.get(DAY_OF_YEAR)
-            val todaysDayOfYear = now.get(DAY_OF_YEAR)
+            val dayOfYear = itemCal.get(HOUR_OF_DAY)
+            val todaysDayOfYear = now.get(HOUR_OF_DAY)
             return dayOfYear == todaysDayOfYear
         }
     }

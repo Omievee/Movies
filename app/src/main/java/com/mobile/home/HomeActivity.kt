@@ -20,6 +20,8 @@ import com.mobile.Primary
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
+import com.mobile.history.HistoryDetailsFragment
+import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
@@ -141,7 +143,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
 
     override fun showTicketVerification(it: PopInfo) {
-        showFragment(TicketVerificationV2.newInstance(it,true))
+        showFragment(TicketVerificationV2.newInstance(it, true))
     }
 
     override fun showConfirmationScreen(it: CurrentReservationV2) {
@@ -153,6 +155,10 @@ class HomeActivity : MPActivty(), HomeActivityView {
         val activate = Intent(this@HomeActivity, AutoActivatedCard::class.java)
         startActivity(activate)
 
+    }
+
+    override fun showHistoryRateScreen(reservationHistory: ReservationHistory) {
+        showFragment(HistoryDetailsFragment.newInstance(reservationHistory, true))
     }
 
     var currentItem: Int = 0
