@@ -108,22 +108,20 @@ class HistoryDetailsFragment : MPFragment() {
     }
 
     private fun checkIfUserHasRatedFilm(historyItem: ReservationHistory) {
-        when (historyItem.userRating) {
-            Rating.GOOD.toString() -> {
+        when (historyItem.rating) {
+            Rating.GOOD -> {
                 didYouLikeIt.text = getString(R.string.history_details_movie_like)
                 like.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsupselect, null))
             }
-            Rating.BAD.toString() -> {
+            Rating.BAD -> {
                 didYouLikeIt.text = getString(R.string.history_details_movie_dislike)
                 dislike.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsdownselect, null))
             }
             null -> {
                 like.setOnClickListener { _ ->
-                    historyTitle.text = getString(R.string.history_rating_thanks)
                     userClickedRating(historyItem, true)
                 }
                 dislike.setOnClickListener { _ ->
-                    historyTitle.text = getString(R.string.history_rating_thanks)
                     userClickedRating(historyItem, false)
                 }
             }
@@ -133,12 +131,15 @@ class HistoryDetailsFragment : MPFragment() {
 
     private fun userClickedRating(history: ReservationHistory, wasGood: Boolean) {
         historySub?.dispose()
+
         historySub = historyManagerImpl.submitRating(history, wasGood)
+                .doAfterSuccess { historyTitle.text = getString(R.string.history_rating_thanks) }
                 .subscribe({ res ->
                     onHistorySaved(res)
                 }, {
 
                 })
+
     }
 
     private fun onHistorySaved(res: ReservationHistory?) {

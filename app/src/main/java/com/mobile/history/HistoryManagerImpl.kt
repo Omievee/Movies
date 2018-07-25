@@ -23,9 +23,11 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
     override fun getHistory(): Observable<List<ReservationHistory>> {
         return Observable.create<List<ReservationHistory>> {
+
             val movies = realmHistory.get()
                     .where(ReservationHistory::class.java)
                     .findAll()
+
             val wasHistoryUpdatedToday = movies
                     .find {
                         DateUtils.everyFourHours(it.updatedAt)
@@ -33,8 +35,8 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
             if (it.isDisposed) {
                 return@create
             }
-            it.onNext(realmHistory.get().copyFromRealm(movies))
 
+            it.onNext(realmHistory.get().copyFromRealm(movies))
 
             if (!wasHistoryUpdatedToday || hasItBeenFourHoursSinceHistoryTimeStamp()) {
                 getHistoryFromApi(it)
@@ -63,6 +65,14 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                 api.reservationHistory
                         .compose(Schedulers.singleBackground())
                         .map { reservationHistoryResponse ->
+
+                            Collections.sort<ReservationHistory>(reservationHistoryResponse.reservations) { o1, o2 ->
+                                val latestReservation = o2.createdAt ?: 0
+                                val oldestReservation = o1.createdAt ?: 0
+
+                                latestReservation.compareTo(oldestReservation)
+                            }
+
                             reservationHistoryResponse.reservations?.let {
                                 realmHistory.get().executeTransaction { transaction ->
                                     transaction.insertOrUpdate(it)

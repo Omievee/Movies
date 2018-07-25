@@ -1,6 +1,7 @@
 package com.mobile.home
 
 import android.os.Build
+import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.history.HistoryManager
@@ -99,6 +100,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                         .fetchLastMovieWithoutRating()
                         .subscribe({ r ->
                             showMovieForRating(r)
+                            Log.d("it????" , ">>>>>>>>" + r.title)
                         }) {
                             it.printStackTrace()
 
