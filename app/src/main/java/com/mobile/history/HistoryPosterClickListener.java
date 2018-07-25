@@ -1,6 +1,5 @@
 package com.mobile.history;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.history.model.ReservationHistory;
 
 /**
@@ -9,5 +8,5 @@ import com.mobile.history.model.ReservationHistory;
 
 public interface HistoryPosterClickListener {
 
-    void onPosterClicked(int pos, ReservationHistory historyposter, SimpleDraweeView sharedView);
+    void onPosterClicked(int pos, ReservationHistory historyposter, boolean isRatingScreen);
 }

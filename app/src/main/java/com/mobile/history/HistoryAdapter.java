@@ -94,7 +94,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         ViewCompat.setTransitionName(holder.posterImageView, movie.getTitle());
 
         holder.itemView.setOnClickListener(v -> {
-            historyListener.onPosterClicked(position, movie, holder.posterImageView);
+            historyListener.onPosterClicked(position, movie, false);
         });
 
     }

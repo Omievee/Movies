@@ -3,8 +3,6 @@ package com.mobile;
 
 import com.moviepass.BuildConfig;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 
 /**
@@ -112,4 +110,8 @@ public class Constants {
     public static final int CONVENIENCE_FEE_CENTS = (int) (CONVENIENCE_FEE * 100);
 
     public static final int OFFSET = 3232323;
+
+    public static final String SHOW_HISTORY_RATING = "historyRating";
+
+    public static final String IS_FROM_RATE_SCREEN = "rate_screen";
 }
