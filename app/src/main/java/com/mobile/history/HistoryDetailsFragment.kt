@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.res.ResourcesCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +60,6 @@ class HistoryDetailsFragment : MPFragment() {
 
 
         checkIfUserHasRatedFilm(historyItem)
-        Log.d("Rating>>>>", "Ratingggggggg" + historyItem.rating)
         close.setOnClickListener { _ -> activity?.onBackPressed() }
 
 
@@ -88,8 +86,6 @@ class HistoryDetailsFragment : MPFragment() {
                 })
                 .build()
 
-
-        Log.d("Fromscreen", "...........: " + fromRateScreen)
 
         if (fromRateScreen) {
             historyTitle.text = getString(R.string.history_rating_rate_last)
