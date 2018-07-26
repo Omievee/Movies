@@ -53,6 +53,7 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
                 .location()
                 .subscribe { t1, t2 ->
                     t1?.let {
+                        location = it
                         onLocation(it)
                     }
                     t2?.let {

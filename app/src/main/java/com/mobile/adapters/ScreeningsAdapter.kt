@@ -60,7 +60,7 @@ class ScreeningsAdapter(
         const val TYPE_THEATER = 3
         const val CHECK_IN_IF_MOVIE_MISSING = "Check In if Movie Missing"
 
-        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: Location?, userSegments:List<Int>?, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: Location?, userSegments:List<Int>, selected: android.util.Pair<Screening, String?>?): ScreeningData {
             val screeningsResponse = response.second;
             val movies = response.first.associateBy { it.id }
             val old = data?.data ?: emptyList()
@@ -92,7 +92,11 @@ class ScreeningsAdapter(
                 )
             }?.filter { it ->
                 (it.type == TYPE_MISSING) || it.hasShowtimes
-            }?.sortedWith(compareBy(
+            }?.filter { when(it.type==TYPE_MISSING) {
+                true-> !    screeningsResponse.isSurging(userSegments)
+                else-> true
+            } }
+            ?.sortedWith(compareBy(
                     {
                         when (it.screening?.getTicketType()) {
                             TicketType.SELECT_SEATING, TicketType.E_TICKET -> false
