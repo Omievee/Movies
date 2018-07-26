@@ -33,13 +33,17 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         this.deviceId = deviceId
     }
 
+    fun onCreate(){
+        latestMovieWithoutRating()
+    }
+
     fun onResume() {
         if (UserPreferences.oneDeviceId == null) {
             checkOneDevice()
         } else {
             checkRestrictions()
         }
-        latestMovieWithoutRating()
+
     }
 
     private fun checkOneDevice() {
