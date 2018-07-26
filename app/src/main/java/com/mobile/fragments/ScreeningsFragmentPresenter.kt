@@ -108,8 +108,12 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
         screeningsSub = observ(location)
                 .doAfterTerminate { view.notRefreshing() }
                 .subscribe({
+                    val wasResponseNull = response==null
                     response = it
                     view.updateAdapter(it, location, selected, UserPreferences.restrictions.userSegments)
+                    when (wasResponseNull) {
+                        true-> view.surgeInterstitialFlow(it.second)
+                    }
                 }, {
                     when (it) {
                         is ApiError -> view.showError(it)
