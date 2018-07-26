@@ -61,6 +61,7 @@ class HistoryDetailsFragment : MPFragment() {
 
 
         checkIfUserHasRatedFilm(historyItem)
+        Log.d("Rating>>>>", "Ratingggggggg" + historyItem.rating)
         close.setOnClickListener { _ -> activity?.onBackPressed() }
 
 
@@ -117,7 +118,7 @@ class HistoryDetailsFragment : MPFragment() {
                 didYouLikeIt.text = getString(R.string.history_details_movie_dislike)
                 dislike.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.thumbsdownselect, null))
             }
-            null -> {
+            Rating.UNKNOWN -> {
                 like.setOnClickListener { _ ->
                     userClickedRating(historyItem, true)
                 }
