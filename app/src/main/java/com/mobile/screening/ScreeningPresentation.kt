@@ -14,6 +14,7 @@ data class ScreeningPresentation(
         val screening: Screening? = null,
         val selected: android.util.Pair<Screening, String?>? = null,
         val movie: ReservationHistory? = null,
+        val hideDistance:Boolean=false,
         val type: Int = 0
 ) : ItemSame<ScreeningPresentation> {
 

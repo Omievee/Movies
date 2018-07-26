@@ -18,9 +18,7 @@ import com.mobile.adapters.ScreeningsAdapter.Companion.createData
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.location.UserLocation
-import com.mobile.model.Movie
-import com.mobile.model.Screening
-import com.mobile.model.Theater
+import com.mobile.model.*
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
@@ -38,10 +36,13 @@ import javax.inject.Inject
 
 class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView {
 
-    var adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
-
     @Inject
     lateinit var presenter: ScreeningsFragmentPresenter
+
+    @Inject
+    lateinit var dataMap:AmcDmaMap
+
+    val adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
 
     val synopsislistener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
@@ -172,34 +173,28 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun updateAdapter(response: Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: UserLocation?, selected: Pair<Screening, String?>?, segments: List<Int>) {
-        when (recyclerView) {
-            null -> return@updateAdapter
-            else -> recyclerView.visibility = View.VISIBLE
-        }
+        context ?: return
+        recyclerView.visibility = View.VISIBLE
         errorView.visibility = View.GONE
         adapter.data = createData(data =
         adapter.data,
                 response = response,
                 location = location?.toLocation(),
                 selected = selected,
-                userSegments = segments
+                userSegments = segments,
+                dataMap = dataMap
+
         )
     }
 
     override fun showRefreshing() {
-        when (context) {
-            null -> return
-            else -> swipeRefresh.isRefreshing = true
-        }
-
+        context ?: return
+        swipeRefresh.isRefreshing = true
     }
 
     override fun notRefreshing() {
-        when (context) {
-            null -> return
-            else -> swipeRefresh.isRefreshing = false
-        }
-
+        context ?: return
+        swipeRefresh.isRefreshing = false
     }
 
 

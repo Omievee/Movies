@@ -1,0 +1,734 @@
+[
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21009"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21015"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21030"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21044"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21046"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21047"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21054"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21060"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21061"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21061"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21076"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21090"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21117"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21157"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21157"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21201"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21201"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21202"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21208"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21211"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21211"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21212"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21220"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21224"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21227"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21230"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21236"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21236"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21244"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21286"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21401"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21401"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21601"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21613"
+  },
+  {
+    "dma": "Baltimore MD",
+    "zipcode": "21620"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "06351"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40004"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40031"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40047"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40065"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40160"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40202"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40202"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40204"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40207"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40207"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40208"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40208"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40220"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40220"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40229"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40241"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40258"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "40299"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "42701"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "42718"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47112"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47122"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47129"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47150"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47250"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47250"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47250"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47250"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47274"
+  },
+  {
+    "dma": "Louisville KY",
+    "zipcode": "47432"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54016"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54017"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54022"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54024"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54728"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54736"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54751"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54751"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54801"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54868"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "54872"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55008"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55011"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55016"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55019"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55020"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55025"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55033"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55037"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55042"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55044"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55051"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55056"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55060"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55066"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55068"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55076"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55101"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55102"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55105"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55108"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55109"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55110"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55112"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55113"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55116"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55122"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55124"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55124"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55125"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55125"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55128"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55128"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55304"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55306"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55313"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55316"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55317"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55328"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55330"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55331"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55343"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55344"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55350"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55355"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55355"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55362"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55369"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55374"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55376"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55379"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55379"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55379"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55387"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55403"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55406"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55406"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55408"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55408"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55408"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55414"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55414"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55416"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55416"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55416"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55417"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55421"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55424"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55425"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55427"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55430"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55430"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55433"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55435"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55441"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55447"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "55455"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56051"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56082"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56143"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56201"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56215"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56256"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56258"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56265"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56265"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56267"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56283"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56288"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56308"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56320"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56329"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56345"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56347"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56359"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56362"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56378"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56387"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56425"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56431"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56452"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56470"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56472"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56479"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56482"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56601"
+  },
+  {
+    "dma": "Minneapolis-St. Paul MN",
+    "zipcode": "56630"
+  }
+]

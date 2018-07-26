@@ -5,6 +5,7 @@ import com.mobile.location.BoundingBox
 import com.mobile.location.LocationManager
 import com.mobile.location.UserAddress
 import com.mobile.location.UserLocation
+import com.mobile.model.AmcDmaMap
 import com.mobile.model.Theater
 import com.mobile.network.StaticApi
 import com.mobile.rx.Schedulers
@@ -17,7 +18,12 @@ import io.realm.Case
 import io.realm.Realm
 import javax.inject.Provider
 
-class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<Realm>, val locationManager: LocationManager) : TheaterManager {
+class TheaterManagerImpl(
+        val api: StaticApi,
+        @TheaterScope val realm: Provider<Realm>,
+        val locationManager: LocationManager,
+        val amcDmaMap: AmcDmaMap
+        ) : TheaterManager {
 
     private val userDefinedLocation: PublishSubject<UserLocation> = PublishSubject.create()
     private var disposable: Disposable? = null
@@ -103,7 +109,7 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
                             UserPreferences.theatersLoadedToday = true
                         }
                         if (userLocation != null) {
-                            it.sortAndFilter(userLocation, box)
+                            it.sortAndFilter(userLocation, dmaMap = amcDmaMap)
                         } else {
                             it
                         }
@@ -135,7 +141,7 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
         query.greaterThan("lon", box.southWest.lon)
         query.lessThan("lat", box.northEast.lat)
         query.lessThan("lon", box.northEast.lon)
-        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location,box).take(40))
+        val theaters = realm.copyFromRealm(query.findAll().sortAndFilter(str.location,amcDmaMap).take(40))
         if(theaters.isEmpty() && radius < 40) {
             return queryRealm(str, radius+10)
         } else {
@@ -154,15 +160,19 @@ class TheaterManagerImpl(val api: StaticApi, @TheaterScope val realm: Provider<R
             query.lessThan("lat", box.northEast.lat)
             query.lessThan("lon", box.northEast.lon)
         }
-        val list = realm.copyFromRealm(query.findAll().sortAndFilter(loc, box).take(40))
+        val list = realm.copyFromRealm(query.findAll().sortAndFilter(loc, amcDmaMap).take(40))
         return list
     }
 }
 
-fun List<Theater>.sortAndFilter(userLocation: UserLocation, box: BoundingBox?): List<Theater> {
-    return sortedWith(compareBy(
+fun List<Theater>.sortAndFilter(userLocation: UserLocation, dmaMap: AmcDmaMap): List<Theater> {
+    return sortedWith(compareBy {
+        UserLocation.haversine(it.lat, it.lon, userLocation.lat, userLocation.lon)
+    }).take(40)
+            .sortedWith(compareBy({ !it.ticketTypeIsSelectSeating() }, { !it.ticketTypeIsETicket()
+            },
             {
-                UserLocation.haversine(it.lat, it.lon, userLocation.lat, userLocation.lon)
-            })).take(40).sortedWith(compareBy({ !it.ticketTypeIsSelectSeating() }, { !it.ticketTypeIsETicket()
-            })).toMutableList()
+                dmaMap.shouldMoveToBottom(it)
+            }
+            )).toMutableList()
 }

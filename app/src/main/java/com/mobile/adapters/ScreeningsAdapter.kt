@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
+import com.mobile.model.AmcDmaMap
 import com.mobile.model.Screening
 import com.mobile.model.Theater
 import com.mobile.model.TicketType
@@ -60,7 +61,13 @@ class ScreeningsAdapter(
         const val TYPE_THEATER = 3
         const val CHECK_IN_IF_MOVIE_MISSING = "Check In if Movie Missing"
 
-        fun createData(data: ScreeningData?, response: android.util.Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: Location?, userSegments:List<Int>, selected: android.util.Pair<Screening, String?>?): ScreeningData {
+        fun createData(data: ScreeningData?,
+                       response: android.util.Pair<List<ReservationHistory>,
+                               ScreeningsResponseV2>,
+                       location: Location?, userSegments:List<Int>,
+                       selected: android.util.Pair<Screening, String?>?,
+                       dataMap:AmcDmaMap
+        ): ScreeningData {
             val screeningsResponse = response.second;
             val movies = response.first.associateBy { it.id }
             val old = data?.data ?: emptyList()
@@ -69,6 +76,7 @@ class ScreeningsAdapter(
                 it.tribuneTheaterId
             } ?: emptyMap()
             val theaterLoc = location?.let { Location("") }
+            val hasAnyTheaterMoveToBottom = dataMap.hasOneMoveToBottom(screeningsResponse.theaters?: emptyList())?:false
             val presentations = screenings?.map {
 
                 val theater = theaters.get(it.tribuneTheaterId)
@@ -83,6 +91,7 @@ class ScreeningsAdapter(
                             true -> selected
                             else -> null
                         },
+                        hideDistance = hasAnyTheaterMoveToBottom,
                         movie = movies[it.moviepassId],
                         type = when {
                             theater != null -> TYPE_THEATER
@@ -111,6 +120,9 @@ class ScreeningsAdapter(
 
 
             }, {
+                dataMap.shouldMoveToBottom(it.theater)
+            },
+            {
                 !(it.screening?.approved ?: false)
             },
                     {

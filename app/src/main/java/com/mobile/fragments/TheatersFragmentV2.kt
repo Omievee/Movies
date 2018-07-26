@@ -15,6 +15,7 @@ import com.mobile.Error
 import com.mobile.Primary
 import com.mobile.keyboard.KeyboardManager
 import com.mobile.location.UserLocation
+import com.mobile.model.AmcDmaMap
 import com.mobile.model.Theater
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.theater.*
@@ -36,6 +37,9 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
     @Inject
     lateinit var keyboardManager: KeyboardManager
 
+    @Inject
+    lateinit var dataMap: AmcDmaMap
+
     var mapFragment: TheaterMapFragment? = null
 
     val clickLocation = object : TheaterClickListener {
@@ -47,7 +51,12 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
     var adapter: TheatersAdapterV2 = TheatersAdapterV2(clickLocation)
 
     override fun setAdapterData(location: UserLocation, theaters: List<Theater>) {
-        adapter.data = TheatersAdapterV2.createData(last = adapter.data, userLocation = location, theaters = theaters)
+        adapter.data = TheatersAdapterV2.createData(
+                last = adapter.data,
+                userLocation = location,
+                theaters = theaters,
+                dataMap = dataMap
+                )
     }
 
     override fun scrollToTop() {

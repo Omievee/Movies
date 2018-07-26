@@ -296,6 +296,8 @@ public class RestClient {
         });
 
         Gson gson = new GsonBuilder()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .setLenient()
                 .create();
         httpClient.addInterceptor(logging);
@@ -354,6 +356,8 @@ public class RestClient {
 
         Gson gson = new GsonBuilder()
                 .setLenient()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .create();
 
         sAuthenticatedMicroServiceInstance = new Retrofit.Builder()

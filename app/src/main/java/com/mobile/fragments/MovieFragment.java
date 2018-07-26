@@ -402,25 +402,25 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     }
 
     public void onShowtimeClick(Theater theater, final Screening screening, final String showtime) {
-        if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
-            selected = null;
-        } else {
-            selected = new Pair<>(screening, showtime);
-        }
-        movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
-        if (movie != null) {
-            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
-        } else {
-            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
-        }
-        Availability availability = screening.getAvailability(showtime);
-        if (selected == null) {
-            removeFragment(R.id.checkinFragment);
-        } else {
-//            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
-//                    screening, theater, availability,null
-//            )));
-        }
+//        if (selected != null && screening.equals(selected.first) && showtime.equals(selected.second)) {
+//            selected = null;
+//        } else {
+//            selected = new Pair<>(screening, showtime);
+//        }
+//        movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
+//        if (movie != null) {
+//            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
+//        } else {
+//            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
+//        }
+//        Availability availability = screening.getAvailability(showtime);
+//        if (selected == null) {
+//            removeFragment(R.id.checkinFragment);
+//        } else {
+////            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
+////                    screening, theater, availability,null
+////            )));
+//        }
     }
 
     private void loadTheaters(Double latitude, Double longitude, int moviepassId) {
@@ -447,49 +447,49 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
 
     private void onScreeningsResponse() {
-        ScreeningsResponseV2 response = screeningsResponse.second;
-        if (response.getScreenings().size() == 0) {
-            selectedTheatersRecyclerView.setVisibility(View.GONE);
-            noTheaters.setVisibility(View.VISIBLE);
-        } else {
-            noTheaters.setVisibility(View.GONE);
-            movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
-        }
-
-        if (movie.getSynopsis().equals("")) {
-            selectedSynopsis.setVisibility(View.GONE);
-            selectedMoviePoster.setClickable(false);
-        } else {
-            selectedMoviePoster.setClickable(true);
-
-            selectedSynopsis.setOnClickListener(view -> {
-                String synopsis = movie.getSynopsis();
-                String title = movie.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
-
-//                SynopsisFragment fragobj = new SynopsisFragment();
-//                fragobj.setArguments(bundle);
-//                FragmentManager fm = getChildFragmentManager();
-//                fragobj.show(fm, "fr_dialogfragment_synopsis");
-            });
-
-            selectedMoviePoster.setOnClickListener(v -> {
-                String synopsis = movie.getSynopsis();
-                String title = movie.getTitle();
-                Bundle bundle = new Bundle();
-                bundle.putString(MOVIE, synopsis);
-                bundle.putString(TITLE, title);
-
-//                SynopsisFragment fragobj = new SynopsisFragment();
-//                fragobj.setArguments(bundle);
-//                FragmentManager fm = getChildFragmentManager();
-//                fragobj.show(fm, "fr_dialogfragment_synopsis");
-
-            });
-        }
-        showSurgeInterstitial();
+//        ScreeningsResponseV2 response = screeningsResponse.second;
+//        if (response.getScreenings().size() == 0) {
+//            selectedTheatersRecyclerView.setVisibility(View.GONE);
+//            noTheaters.setVisibility(View.VISIBLE);
+//        } else {
+//            noTheaters.setVisibility(View.GONE);
+//            movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
+//        }
+//
+//        if (movie.getSynopsis().equals("")) {
+//            selectedSynopsis.setVisibility(View.GONE);
+//            selectedMoviePoster.setClickable(false);
+//        } else {
+//            selectedMoviePoster.setClickable(true);
+//
+//            selectedSynopsis.setOnClickListener(view -> {
+//                String synopsis = movie.getSynopsis();
+//                String title = movie.getTitle();
+//                Bundle bundle = new Bundle();
+//                bundle.putString(MOVIE, synopsis);
+//                bundle.putString(TITLE, title);
+//
+////                SynopsisFragment fragobj = new SynopsisFragment();
+////                fragobj.setArguments(bundle);
+////                FragmentManager fm = getChildFragmentManager();
+////                fragobj.show(fm, "fr_dialogfragment_synopsis");
+//            });
+//
+//            selectedMoviePoster.setOnClickListener(v -> {
+//                String synopsis = movie.getSynopsis();
+//                String title = movie.getTitle();
+//                Bundle bundle = new Bundle();
+//                bundle.putString(MOVIE, synopsis);
+//                bundle.putString(TITLE, title);
+//
+////                SynopsisFragment fragobj = new SynopsisFragment();
+////                fragobj.setArguments(bundle);
+////                FragmentManager fm = getChildFragmentManager();
+////                fragobj.show(fm, "fr_dialogfragment_synopsis");
+//
+//            });
+//        }
+//        showSurgeInterstitial();
     }
 
     private void loadMoviePosterData() {
