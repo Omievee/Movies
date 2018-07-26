@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.ApiError
+import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
 import com.mobile.adapters.ScreeningsAdapter.Companion.createData
@@ -25,6 +26,7 @@ import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screenings.PinnedBottomSheetBehavior
+import com.mobile.surge.PeakPricingActivity
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
@@ -35,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_screenings.*
 import javax.inject.Inject
 
 class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, MissingCheckinListener, ScreeningsFragmentView {
+
     var adapter: ScreeningsAdapter = ScreeningsAdapter(this, this)
 
     @Inject
@@ -69,6 +72,13 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         })
         when (movie.isComingSoon) {
             true -> bottom.locked = true
+        }
+    }
+
+    override fun surgeInterstitialFlow(second: ScreeningsResponseV2) {
+        val context = context?:return
+        if(!UserPreferences.shownPeakPricing && second.isSurging(UserPreferences.restrictions.userSegments)) {
+            startActivity(PeakPricingActivity.newInstance(context))
         }
     }
 

@@ -26,4 +26,5 @@ interface ScreeningsFragmentView : LocationRequiredView {
     fun showTheaterBottomSheetNecessary(theater: Theater?)
     fun showSynopsis(movie:Movie)
     fun hideSynopsis()
+    fun surgeInterstitialFlow(second: ScreeningsResponseV2)
 }
