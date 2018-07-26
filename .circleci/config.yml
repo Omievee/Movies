@@ -60,13 +60,9 @@ workflows:
     jobs:
       - build_staging:
           context: android-staging
-          filters:
-            branches:
-              ignore:
-                - master
+      - hold:
+          type: approval
       - build_production:
           context: android-production
-          filters:
-            branches:
-              only:
-                - master
+          requires:
+            - hold
