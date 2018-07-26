@@ -143,7 +143,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
 
     override fun showTicketVerification(it: PopInfo) {
-        showFragment(TicketVerificationV2.newInstance(it, true))
+        showFragment(TicketVerificationV2.newInstance(it))
     }
 
     override fun showConfirmationScreen(it: CurrentReservationV2) {

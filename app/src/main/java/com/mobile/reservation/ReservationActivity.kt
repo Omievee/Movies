@@ -46,7 +46,7 @@ class ReservationActivity : MPActivty() {
         reservationV.setOnCloseListener(object : OnCloseListener {
             override fun openTicketVerificationFragment() {
                 reservation?.let {
-                    showFragment(TicketVerificationV2.newInstance(it.toPop(),false))
+                    showFragment(TicketVerificationV2.newInstance(it.toPop()))
                 }
             }
 
@@ -65,11 +65,6 @@ class ReservationActivity : MPActivty() {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.onResume()
-    }
-
     fun CurrentReservationV2.toPop() : PopInfo {
         return PopInfo(
                 reservationId = reservation?.id?:0,
@@ -81,22 +76,18 @@ class ReservationActivity : MPActivty() {
     }
 
     override fun onBackPressed() {
-        onBackExtension()
-        val canGoBack = UserPreferences.restrictions?.proofOfPurchaseRequired==false || reservation?.ticket?.redemptionCode!=null
-        if(canGoBack)
-            super.onBackPressed()
-        else{
-            if(canClose)
-                super.onBackPressed()
+        if(onBackExtension()){
+            return
         }
+
+        val canGoBack = !UserPreferences.restrictions.proofOfPurchaseRequired ||
+                (!UserPreferences.restrictions.proofOfPurchaseRequired && reservation?.ticket?.redemptionCode != null)
+        if(canClose || canGoBack)
+            super.onBackPressed()
     }
 
     fun hideProgress(){
         reservationV.progress.visibility = View.GONE
-    }
-
-    fun showZipCode(zipCode: String) {
-        reservationV.bind(zipCode=zipCode)
     }
 
     override fun onPause() {
@@ -149,7 +140,8 @@ class ReservationActivity : MPActivty() {
                         latitude = reservation.checkIn.theater.lat,
                         longitude = reservation.checkIn.theater.lon,
                         title = reservation.checkIn.screening.title,
-                        theater = reservation.checkIn.theater.name?:reservation.checkIn.screening.theaterName
+                        theater = reservation.checkIn.theater.name?:reservation.checkIn.screening.theaterName,
+                        zip = reservation.reservation.zip
                 )
                 putExtra(KEY_RESERVATION, reservationV2)
                 putExtra(KEY_SHOW_CURRENT_RESERVATION_TEXT, true)

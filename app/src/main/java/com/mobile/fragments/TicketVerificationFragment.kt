@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -21,16 +20,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.helpshift.support.Support
 import com.mobile.ApiError
 import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.helpers.LogUtils
+import com.mobile.home.HomeActivity
 import com.mobile.model.PopInfo
 import com.mobile.network.Api
 import com.mobile.requests.VerificationRequest
+import com.mobile.reservation.ReservationActivity
 import com.mobile.tv.TicketVerificationNoStubV2
 import com.mobile.tv.TicketVerificationView
 import com.mobile.upload.Upload
@@ -49,13 +49,12 @@ import javax.inject.Inject
 
 
 private const val POP_INFO = "pop_info"
-private const val TICKET_STATUS = "redeem"
 
 class TicketVerificationV2 : MPFragment() {
 
     var thisActivity: Activity? = null
     private var popInfo: PopInfo? = null
-    private var isTicketRedeemed: Boolean? = null
+    private var isTicketRedeemed: Boolean = false
     private val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     var photoFile: File? = null
     val APP_TAG = "TicketVerification"
@@ -64,8 +63,8 @@ class TicketVerificationV2 : MPFragment() {
     var key: String? = null
     var objectMetadata: ObjectMetadata? = null
 
-    var uploadObservable: Disposable? = null
-    var uploadPicture: Disposable? = null
+    private var uploadObservable: Disposable? = null
+    private var uploadPicture: Disposable? = null
 
     @Inject
     lateinit var uploadManager: UploadManager
@@ -76,7 +75,6 @@ class TicketVerificationV2 : MPFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         popInfo = arguments?.getParcelable(POP_INFO)
-        isTicketRedeemed = arguments?.getBoolean(TICKET_STATUS)
     }
 
     private val STORAGE_PERMISSIONS = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -88,7 +86,7 @@ class TicketVerificationV2 : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         popInfo?.let {
-            ticketVerificationV.bind(it, isTicketRedeemed ?: false)
+            ticketVerificationV.bind(it, activity is HomeActivity)
         }
 
         ticketVerificationV.setOnClickListeners(object : TicketVerificationView.ClickListeners {
@@ -105,14 +103,11 @@ class TicketVerificationV2 : MPFragment() {
             }
 
             override fun noTicketSub() {
-                showFragment(TicketVerificationNoStubV2.newInstance(isTicketRedeemed
-                        ?: false, popInfo?.reservationId ?: 0))
+                showFragment(TicketVerificationNoStubV2.newInstance( popInfo?.reservationId ?: 0))
             }
 
         })
-
     }
-
 
     private fun openCamera() {
         context?.let {
@@ -157,10 +152,9 @@ class TicketVerificationV2 : MPFragment() {
 
     override fun onBack(): Boolean {
         if (super.onBack()) {
-            return true;
-        } else {
-            return isTicketRedeemed == true
+            return true
         }
+        return false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -200,8 +194,6 @@ class TicketVerificationV2 : MPFragment() {
                     }
                     image.recycle()
                 }
-
-
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (context?.let { ContextCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) } != PackageManager.PERMISSION_GRANTED) {
@@ -311,7 +303,7 @@ class TicketVerificationV2 : MPFragment() {
                             Toast.makeText(activity, "Your ticket stub has been submitted", Toast.LENGTH_LONG).show()
                             pictureSubmitted()
                         } else
-                            Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, error.error.message, Toast.LENGTH_SHORT).show()
                     }
                     ticketVerificationV?.hideProgress()
                 })
@@ -319,17 +311,17 @@ class TicketVerificationV2 : MPFragment() {
 
     fun pictureSubmitted() {
         UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
+        isTicketRedeemed = true
         closeFragment()
     }
 
     fun closeFragment() {
-        when (isTicketRedeemed) {
-            true -> {
-                isTicketRedeemed = false
+        when (activity) {
+            is HomeActivity -> {
                 onBackExtension()
                 activity?.onBackExtension()
             }
-            false -> activity?.finish()
+            is ReservationActivity -> activity?.finish()
         }
     }
 
@@ -382,11 +374,10 @@ class TicketVerificationV2 : MPFragment() {
     }
 
     companion object {
-        fun newInstance(param1: PopInfo, isTicketRedeemed: Boolean): TicketVerificationV2 {
+        fun newInstance(param1: PopInfo): TicketVerificationV2 {
             return TicketVerificationV2().apply {
                 arguments = Bundle().apply {
                     putParcelable(POP_INFO, param1)
-                    putBoolean(TICKET_STATUS, isTicketRedeemed)
                 }
             }
         }
