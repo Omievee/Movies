@@ -429,7 +429,7 @@
     <string name="xml_subscription_information_preferences_contact">Contact Support</string>
 
 
-    <string name="cancel_sub_active">Your MoviePass account will remain active until the end of the current billing period</string>
+    <string name="cancel_sub_active">Your MoviePass account will remain active until the end of the current billing period.</string>
     <string name="cancel_sub_exception">*Exception made when redeeming a gift subscription that carries from an active month to month subscription.</string>
     <string name="cancel_sub_notice">Please note that if you cancel your account you will not be able to reactivate your account or start a new subscription for 9 months*</string>
     <!-- Settings Preferences -->
@@ -616,8 +616,8 @@
     <string name="peak_pricing">Peak Pricing</string>
     <string name="go_back">Go Back</string>
     <string name="last_4">Confirm the last 4 digits of your card</string>
-    <string name="profile_cancel_remain_active">You account will remain active until</string>
-    <string name="profile_cancel_paid_through">(paid through date).</string>
+    <string name="profile_cancel_remain_active">You account will remain active until %1$s (paid through date). </string>
+    <string name="profile_cancel_paid_through"> (paid through date).</string>
     <string name="profile_cancel_are_you_sure">Are you sure you want to cancel your membership?</string>
     <string name="profile_cancel_cancel_membership">Cancel Membership</string>
     <string name="cancel_subscription">Cancel Subscription</string>
@@ -646,6 +646,13 @@
     <string name="cancel_make_selection">Please make a selection</string>
     <string name="cancel_reason_for_cancellation">Reason for Cancellation</string>
     <string name="in_theaters_date">In Theaters %1$s</string>
+    <string name="counter_characters">/250 characters</string>
+    <string name="reason_for_cancellation_is_required">Reason for cancellation is required</string>
+    <string name="profile_cancel_membership">Membership cancelled</string>
+    <string name="profile_cancel_membership_message">The last day your account will be active is on</string>
+    <string name="required">*required</string>
+    <string name="cancel_membership">Cancel Membership</string>
+    <string name="ok">Ok</string>
     <string name="history_details_movie_dislike">You didn\'t like this movie!</string>
     <string name="history_details_movie_like">You liked this movie!</string>
     <string name="history_rating_thanks">Thanks for rating!</string>

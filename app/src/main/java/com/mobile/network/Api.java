@@ -156,6 +156,10 @@ public interface Api {
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")
+    Single<UserInfoResponse> getUserDataV2(@Path("userId") int userId);
+
+    /* user Data */
+    @GET("/rest/v1/users/{userId}")
     Single<UserInfoResponse> getUserDataRx(@Path("userId") int userId);
 
     @POST("/rest/v1/users/exists")

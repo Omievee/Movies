@@ -70,8 +70,8 @@ android {
             buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
             resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.debug.fileprovider\""
             resValue 'string', 'authority_file_provider_path', "\"Android/data/${defaultConfig.applicationId}.debug/files/Pictures\""
-            ext.betaDistributionGroupAliases="moviepass-group"
-            ext.betaDistributionReleaseNotesFilePath="release-notes.txt"
+            ext.betaDistributionGroupAliases = "moviepass-group"
+            ext.betaDistributionReleaseNotesFilePath = "release-notes.txt"
         }
 
         prod {
@@ -87,8 +87,8 @@ android {
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
             buildConfigField "String", "REGISTRATION_URL", '"https://www.moviepass.com"'
             buildConfigField "String", "REACTIVATION_URL", '"https://www.moviepass.com/reactivate"'
-            ext.betaDistributionGroupAliases="moviepass-group"
-            ext.betaDistributionReleaseNotesFilePath="release-notes.txt"
+            ext.betaDistributionGroupAliases = "moviepass-group"
+            ext.betaDistributionReleaseNotesFilePath = "release-notes.txt"
         }
     }
 

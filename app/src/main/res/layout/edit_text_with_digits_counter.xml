@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/margin_standard"
+    android:layout_marginStart="@dimen/margin_standard"
+    android:background="@drawable/white_background_rounded_corners"
+    android:focusableInTouchMode="true"
+    android:minHeight="150dp">
+
+    <EditText
+        android:id="@+id/comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginTop="@dimen/margin_standard"
+        android:backgroundTint="@color/white"
+        android:hint="@string/additional_comments_optional"
+        android:maxLength="250"
+        android:textColor="@color/black_text"
+        android:textColorHighlight="@color/gray_icon"
+        android:textColorHint="@color/gray_icon"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintBottom_toTopOf="@id/counter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:text="@string/counter_characters"
+        android:textColor="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

@@ -3,172 +3,88 @@ package com.mobile.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
-import com.mobile.ApiError
-import com.mobile.Constants
-import com.mobile.UserPreferences
-import com.mobile.helpers.LogUtils
-import com.mobile.network.Api
-import com.mobile.requests.CancellationRequest
-import com.mobile.responses.CancellationResponse
-import com.mobile.responses.UserInfoResponse
+import com.mobile.profile.CancellationReason
+import com.mobile.profile.ProfileCancellationPresenter
+import com.mobile.profile.ProfileCancellationView
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.fr_profile_cancelation.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.android.synthetic.main.profile_cancellation_view_layout.*
 import javax.inject.Inject
 
-/**
- * Created by anubis on 9/1/17.
- */
-
-class ProfileCancellationFragment : MPFragment() {
 
 
+class ProfileCancellationFragment : MPFragment(), ProfileCancellationView {
+
+
+    var spinnerList: List<String>? = null
     @Inject
-    lateinit var api: Api
+    lateinit var presenter: ProfileCancellationPresenter
 
-    var profileCancellationDisposable: Disposable? = null
 
-    internal var cancelReasons: String? = null
-    internal var cancelSubscriptionReason: Long = 0
-    internal var cancellationResponse: CancellationResponse? = null
-    private var userInfoResponse: UserInfoResponse? = null
-    private var billingDate: String? = null
+    override fun bindView() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fr_profile_cancelation, container, false)
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+        spinnerList = CancellationReason.getList()
 
         spinnerCancelReason
-                .setAdapter(object : MaterialSpinnerAdapter<String>(context, Arrays.asList("Reason for Cancellation", "Price", "Theater selection", "Ease of use", "Lack of use", "Other")) {
+                .setAdapter(object : MaterialSpinnerAdapter<String>(context, spinnerList) {
                     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                         val view = MaterialSpinnerSpinnerView(parent.context)
                         view.bind(getItemText(position))
                         return view
                     }
                 })
-        loadUserInfo()
 
-        spinnerCancelReason.setOnItemSelectedListener { view1, position, id, item ->
-            cancelReasons = view1.getItems<Any>()[position] as String
-            if (cancelReasons == getString(R.string.cancel_reason_for_cancellation)) {
-                Toast.makeText(context, R.string.cancel_make_selection, Toast.LENGTH_SHORT).show()
+        cancelComments.bind()
+
+        spinnerCancelReason.setOnItemSelectedListener { view, position, id, item ->
+            if (position != 0) {
+                requiredLabel.visibility = View.GONE
+                cancellationError.visibility = View.INVISIBLE
+            } else{
+                requiredLabel.visibility = View.VISIBLE
             }
         }
 
-        cancelBack.setOnClickListener { v -> activity?.onBackPressed() }
-
-
-        cancelbutton.setOnClickListener { v ->
-            Log.d("Reasons", ">>>>>" + cancelReasons)
-            if (cancelReasons.equals(getString(R.string.cancel_reason_for_cancellation)) || cancelReasons.isNullOrBlank()) {
-                Toast.makeText(activity, getString(R.string.cancel_make_selection), Toast.LENGTH_SHORT).show()
-            } else {
-                showCancellationConfirmationDialog()
-            }
-
+        cancelbutton.setOnClickListener {
+            presenter.onSubmitCancellation(getReasonForCancellation(), cancelComments.getComments())
         }
 
 
-    }
-
-    fun showCancellationConfirmationDialog() {
-
-        val builder = AlertDialog.Builder(spinnerCancelReason.context, R.style.CUSTOM_ALERT)
-        var message: String?
-        when (billingDate) {
-            null -> message = getString(R.string.profile_cancel_are_you_sure)
-            else -> message = getString(R.string.profile_cancel_remain_active) + billingDate + getString(R.string.profile_cancel_paid_through)
+        cancelBack.setOnClickListener {
+            close()
         }
-        builder.setMessage(message)
-                .setTitle(R.string.profile_cancel_cancel_membership)
-                .setPositiveButton("Cancel Membership") { dialog, id ->
-                    progress.visibility = View.VISIBLE
-                    cancelFlow()
-                }
-                .setNegativeButton("Keep") { dialog, id ->
 
-                }
-        builder.create()
-        builder.show()
     }
 
-
-    fun cancelFlow() {
-        val c = Calendar.getInstance()
-        val df = SimpleDateFormat("yyyy-MM-dd")
-        val requestDate = df.format(c.time)
-
-        val cancelReason = spinnerCancelReason.text.toString()
-        when (cancelReason) {
-            "Price" -> cancelSubscriptionReason = 1
-            "Theater selection" -> cancelSubscriptionReason = 2
-            "Ease of use" -> cancelSubscriptionReason = 3
-            "Lack of use" -> cancelSubscriptionReason = 4
-            "Other" -> cancelSubscriptionReason = 7
-            else -> cancelSubscriptionReason = 8
-        }
-        val angryComments = cancelComments.text.toString()
-        val request = CancellationRequest(requestDate, cancelSubscriptionReason, angryComments)
-
-        profileCancellationDisposable?.dispose()
-
-        profileCancellationDisposable =
-                api
-                        .requestCancellation(request)
-                        .subscribe({ r ->
-                            progress.visibility = View.GONE
-                            Toast.makeText(activity, "Cancellation successful", Toast.LENGTH_SHORT).show()
-                            activity?.onBackPressed()
-                        })
-                        { error ->
-                            progress.visibility = View.GONE
-                            if (error is ApiError) {
-                                Toast.makeText(context, error.error?.message, Toast.LENGTH_SHORT).show()
-                            }
-                        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.profile_cancellation_view_layout, container, false)
     }
 
-    private fun loadUserInfo() {
-        val userId = UserPreferences.userId
-        api.getUserData(userId).enqueue(object : Callback<UserInfoResponse> {
-            override fun onResponse(call: Call<UserInfoResponse>, response: Response<UserInfoResponse>) {
-                userInfoResponse = response.body()
-                if (userInfoResponse != null) {
-                    if (userInfoResponse?.nextBillingDate == "") {
-                    } else {
-                        billingDate = userInfoResponse?.nextBillingDate
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
-                Toast.makeText(activity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show()
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.message)
-            }
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        presenter.onCreate()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        profileCancellationDisposable?.dispose()
-        profileCancellationDisposable = null
+    private fun getReasonForCancellation(): String {
+        spinnerList?.let {
+            return it[spinnerCancelReason.selectedIndex]
+        } ?: return CancellationReason.TITLE.reasonName
+    }
+
+    override fun showErrorMessage() {
+        cancellationError.visibility = View.VISIBLE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroy()
     }
 
     override fun onAttach(context: Context?) {
@@ -176,5 +92,62 @@ class ProfileCancellationFragment : MPFragment() {
         super.onAttach(context)
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
+
+    fun close() {
+        activity?.onBackPressed()
+    }
+
+    override fun hideProgress() {
+        progress.visibility = View.GONE
+    }
+
+    override fun showProgress() {
+        progress.visibility = View.VISIBLE
+    }
+
+    override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: String?) {
+
+        val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
+
+
+        var message: String = getString(R.string.profile_cancel_remain_active,billingDate)
+        builder.setMessage(message)
+                .setTitle(R.string.profile_cancel_are_you_sure)
+                .setPositiveButton(getString(R.string.cancel_membership)) { _, _ ->
+                    presenter.cancelFlow(reason, comment)
+                }
+                .setNegativeButton(getString(R.string.go_back)) { _, _ ->
+
+                }
+        builder.create()
+        builder.show()
+    }
+
+    override fun successfullCancellation(billingDate: String?) {
+
+        val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
+        var message: String? = when (billingDate) {
+            null -> getString(R.string.profile_cancel_membership_message)
+            else -> getString(R.string.profile_cancel_membership_message) + " " + billingDate
+        }
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setTitle(R.string.profile_cancel_membership)
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    activity?.onBackPressed()
+                }
+
+        builder.create()
+        builder.show()
+    }
+
+
+    override fun unccessfullCancellation(error: String) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+    }
 
 }

@@ -8,6 +8,7 @@ import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
+import com.mobile.profile.ProfileCancellationModule
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.reservation.ReservationCheckinModule
@@ -91,10 +92,6 @@ interface AppBindingModule {
     @ContributesAndroidInjector
     fun activateMoviepassCardActivity(): ActivateMoviePassCard
 
-    @ActivityScope
-    @ContributesAndroidInjector
-    fun profileAccountCancellation(): ProfileCancellationFragment
-
     @FragmentScope
     @ContributesAndroidInjector(modules = [MissingBillingFragmentModule::class])
     fun missingBilling(): MissingBillingFragment
@@ -110,4 +107,8 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun ticketVerification(): TicketVerificationV2
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [ProfileCancellationModule::class])
+    fun profileCancellationFragment(): ProfileCancellationFragment
 }

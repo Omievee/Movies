@@ -499,7 +499,7 @@
     <style name="DialogFragment">
         <item name="android:background">@drawable/dialog_fragment_graient</item>
     </style>
-    
+
     <style name="SynopsisFragment" parent="DialogFragment">
         <item name="android:backgroundDimEnabled">false</item>
     </style>
@@ -960,5 +960,41 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="CancellationNormalText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:lineSpacingExtra">6dp</item>
+    </style>
+
+    <style name="CancellationSmallText" parent="CancellationNormalText">
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="TextErrorMessage" parent="error_appearance">
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TextErrorMessageItalic" parent="TextErrorMessage">
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:textStyle">italic</item>
     </style>
 </resources>
