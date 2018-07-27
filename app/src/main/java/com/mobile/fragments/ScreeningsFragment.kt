@@ -162,10 +162,12 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     }
 
     override fun showError(apiError: ApiError) {
+        activity?:return
         errorView.show(apiError)
     }
 
     override fun showError() {
+        activity?:return
         errorView.show()
     }
 
