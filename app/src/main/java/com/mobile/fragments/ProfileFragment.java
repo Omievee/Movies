@@ -208,7 +208,7 @@ public class ProfileFragment extends MPFragment {
                 Checkin checkinAttempt = INSTANCE.getLastCheckInAttempt();
                 final boolean checkedIn;
 
-                if (token != null) {
+                if (token != null && token.getReservation()!=null && token.getReservation().getReservation()!=null) {
                     Reservation rs = token.getReservation().getReservation();
                     checkedIn = rs.getExpiration() > System.currentTimeMillis();
                     Date starttime = token.getTimeAsDate();
