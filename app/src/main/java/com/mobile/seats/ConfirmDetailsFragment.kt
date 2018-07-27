@@ -135,14 +135,14 @@ class ConfirmDetailsFragment : Fragment() {
                 lng = loc.lon
             }
         }
-
-        val mySeat = payload.selectedSeats?.first()
+        val seatsIter = payload.selectedSeats?.iterator()
+        val mySeat = seatsIter?.next()
         if (availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
         }
 
 
-        val emails = payload.emails
+        val emails = payload.emails.iterator()
         val hasMatchingSeatCount = mySeat == null || ((payload.selectedSeats?.size
                 ?: 0) - 1) == tpd.sumBy { it.tickets }
         when (hasMatchingSeatCount) {
@@ -155,12 +155,12 @@ class ConfirmDetailsFragment : Fragment() {
             expanded
         }.flatMap { it ->
             it.mapIndexed { index, tpd ->
-                val seat = payload.selectedSeats?.get(index + 1)
+                val seat = seatsIter?.next()
                 GuestTicket(ticketType = tpd.ticket.ticketType,
                         price = tpd.ticket.price,
                         seatPosition = seat?.asPosition(),
                         email = when {
-                            index < emails.size -> emails[index].email
+                            emails.hasNext() -> emails.next().email
                             else -> null
                         }
                 )
