@@ -54,7 +54,7 @@ class TicketVerificationV2 : MPFragment() {
 
     var thisActivity: Activity? = null
     private var popInfo: PopInfo? = null
-    private var isTicketRedeemed: Boolean = false
+    private var isSubmitted: Boolean = false
     private val CAMERA_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     var photoFile: File? = null
     val APP_TAG = "TicketVerification"
@@ -154,7 +154,7 @@ class TicketVerificationV2 : MPFragment() {
         if (super.onBack()) {
             return true
         }
-        return false
+        return (activity is HomeActivity && !isSubmitted)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -311,7 +311,7 @@ class TicketVerificationV2 : MPFragment() {
 
     fun pictureSubmitted() {
         UserPreferences.saveLastReservationPopInfo(popInfo?.reservationId ?: 0)
-        isTicketRedeemed = true
+        isSubmitted = true
         closeFragment()
     }
 
