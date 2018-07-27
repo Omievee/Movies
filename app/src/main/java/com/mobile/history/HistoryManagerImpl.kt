@@ -20,24 +20,22 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
     var getHistoryFromApi: Disposable? = null
 
-    override fun getHistory(): Observable<List<ReservationHistory>> {
+    private fun getHistoryInternal(onlyFromWeb: Boolean = false): Observable<List<ReservationHistory>> {
         return Observable.create<List<ReservationHistory>> {
 
-            val movies = realmHistory.get()
-                    .where(ReservationHistory::class.java)
-                    .findAll()
+            if (!onlyFromWeb) {
+                val movies = realmHistory.get()
+                        .where(ReservationHistory::class.java)
+                        .findAll()
 
-            val wasHistoryUpdatedToday = movies
-                    .find {
-                        DateUtils.everyFourHours(it.updatedAt)
-                    } != null
-            if (it.isDisposed) {
-                return@create
+                if (it.isDisposed) {
+                    return@create
+                }
+
+                it.onNext(realmHistory.get().copyFromRealm(movies))
             }
 
-            it.onNext(realmHistory.get().copyFromRealm(movies))
-
-            if (!wasHistoryUpdatedToday || hasItBeenFourHoursSinceHistoryTimeStamp) {
+            if (hasItBeenFourHoursSinceHistoryTimeStamp) {
                 getHistoryFromApi(it)
             } else {
                 if (!it.isDisposed) {
@@ -47,11 +45,15 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         }.compose(Schedulers.observableDefault())
     }
 
-    val hasItBeenFourHoursSinceHistoryTimeStamp: Boolean
-    get() {
-        val lastSavedHistory = historyLoadedDate.add(Calendar.HOUR,4)
-        return Calendar.getInstance().after(lastSavedHistory)
+    override fun getHistory(): Observable<List<ReservationHistory>> {
+        return getHistoryInternal(false)
     }
+
+    val hasItBeenFourHoursSinceHistoryTimeStamp: Boolean
+        get() {
+            val lastSavedHistory = historyLoadedDate.add(Calendar.HOUR, 4)
+            return Calendar.getInstance().after(lastSavedHistory)
+        }
 
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {
         getHistoryFromApi?.dispose()
@@ -123,7 +125,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     }
 
     override fun fetchLastMovieWithoutRating(): Single<ReservationHistory> {
-        return getHistory()
+        return getHistoryInternal(true)
                 .map {
                     it.firstOrNull()
                 }
