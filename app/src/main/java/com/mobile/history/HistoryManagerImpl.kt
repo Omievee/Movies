@@ -2,7 +2,7 @@ package com.mobile.history
 
 import com.mobile.UserPreferences
 import com.mobile.UserPreferences.saveHistoryLoadedDate
-import com.mobile.UserPreferences.wasHistoryLoadedRecently
+import com.mobile.UserPreferences.historyLoadedDate
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
 import com.mobile.responses.HistoryResponse
@@ -13,7 +13,6 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Provider
 
@@ -38,7 +37,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
             it.onNext(realmHistory.get().copyFromRealm(movies))
 
-            if (!wasHistoryUpdatedToday || hasItBeenFourHoursSinceHistoryTimeStamp()) {
+            if (!wasHistoryUpdatedToday || hasItBeenFourHoursSinceHistoryTimeStamp) {
                 getHistoryFromApi(it)
             } else {
                 if (!it.isDisposed) {
@@ -48,15 +47,10 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         }.compose(Schedulers.observableDefault())
     }
 
-    fun hasItBeenFourHoursSinceHistoryTimeStamp(): Boolean {
-        val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
-        val historyTimeStampPlusFourHours = Calendar.getInstance()
-        val timeSaved = sdf.parse(wasHistoryLoadedRecently.time.toString())
-        historyTimeStampPlusFourHours.time = timeSaved
-        historyTimeStampPlusFourHours.add(Calendar.HOUR_OF_DAY, 4)
-        val curentSystemTime = Calendar.getInstance()
-
-        return curentSystemTime.time.after(historyTimeStampPlusFourHours.time)
+    val hasItBeenFourHoursSinceHistoryTimeStamp: Boolean
+    get() {
+        val lastSavedHistory = historyLoadedDate.add(Calendar.HOUR,4)
+        return Calendar.getInstance().after(lastSavedHistory)
     }
 
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {

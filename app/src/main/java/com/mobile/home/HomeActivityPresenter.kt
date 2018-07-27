@@ -104,10 +104,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                         .fetchLastMovieWithoutRating()
                         .subscribe({ r ->
                             showMovieForRating(r)
-                            Log.d("it????" , ">>>>>>>>" + r.title)
                         }) {
                             it.printStackTrace()
-
                         }
     }
 
@@ -181,12 +179,11 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
         reservationDisposable?.dispose()
-        historyDispose?.dispose()
-
     }
 
     fun onPause() {
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
+        historyDispose?.dispose()
     }
 }
