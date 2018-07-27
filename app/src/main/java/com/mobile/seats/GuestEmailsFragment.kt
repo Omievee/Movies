@@ -71,7 +71,7 @@ class GuestEmailsFragment : Fragment() {
                 }
             }
         }
-        provideEmails.onCheckChangedListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        provideEmails.onCheckChangedListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
             if(!isChecked) {
                 return@OnCheckedChangeListener
             }
@@ -233,7 +233,7 @@ class GuestEmailsFragment : Fragment() {
     private fun onPayload() {
         val emails: List<GuestEmail> = state.payload?.emails ?: return
         emailLL.removeAllViews()
-        emails.forEachIndexed { index, email ->
+        emails.forEachIndexed { _, email ->
             emailLL.addView(GuestEmailView(context).apply {
                 bind(email)
                 isEnabled = provideEmails.isChecked

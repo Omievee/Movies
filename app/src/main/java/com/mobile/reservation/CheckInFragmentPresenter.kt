@@ -2,21 +2,18 @@ package com.mobile.reservation
 
 import com.mobile.ApiError
 import com.mobile.UserPreferences
-import com.mobile.helpers.GoWatchItSingleton
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.LocationManager
 import com.mobile.model.SurgeType
 import com.mobile.model.TicketType
-import com.mobile.model.toSurgeCheck
-import com.mobile.network.Api
 import com.mobile.network.SurgeResponse
-import com.mobile.requests.SurgeCheckRequest
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.responses.SubscriptionStatus
 import com.mobile.tickets.TicketManager
 import com.mobile.utils.text.centsAsDollars
 import io.reactivex.disposables.Disposable
 
-class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketManager, val locationManager: LocationManager) {
+class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketManager, val locationManager: LocationManager, val analyticsManager: AnalyticsManager) {
 
     var checkin: Checkin? = null
     var surgeCheckDis: Disposable? = null
@@ -50,7 +47,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private val showProofOfPurchase: Boolean
         get() {
-            return checkin?.screening?.popRequired == true
+            return checkin?.screening?.popRequired == true || UserPreferences.restrictions.proofOfPurchaseRequired
         }
 
 
@@ -63,15 +60,16 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                 ?: return
         when (surge.level) {
             SurgeType.NO_SURGE -> {
-                when (showProofOfPurchase) {
-                    true -> view.showCheckinWithProof()
-                    false -> view.showCheckin()
-                }
                 view.showCheckin()
+                if (showProofOfPurchase) {
+                    view.showCheckinWithProof()
+                }
             }
             SurgeType.WILL_SURGE -> {
-                view.showCheckin()
                 view.showWillSurge(surge)
+                if (showProofOfPurchase) {
+                    view.showCheckinWithProof()
+                }
             }
             else -> view.showSurge(surge)
         }
@@ -92,9 +90,10 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
 
         val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
-        when(surge.level) {
-            SurgeType.SURGING-> return view.navigateToSurchargeConfirm(checkin)
-            else-> {}
+        when (surge.level) {
+            SurgeType.SURGING -> return view.navigateToSurchargeConfirm(checkin)
+            else -> {
+            }
         }
         view.showProgress()
         surgeCheckDis = api.peakCheck(
@@ -121,11 +120,11 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
     }
 
-    private fun showSurgeModal(surge:SurgeResponse) {
+    private fun showSurgeModal(surge: SurgeResponse) {
         val message = surge.peakMessage
-        when(message) {
-            null-> view.showSurgeModal(surge.peakAmount.centsAsDollars)
-            else-> view.showSurgeModal(message)
+        when (message) {
+            null -> view.showSurgeModal(surge.peakAmount.centsAsDollars)
+            else -> view.showSurgeModal(message)
         }
     }
 
@@ -135,21 +134,26 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private fun createReservation() {
         val checkin = checkin ?: return
-        GoWatchItSingleton.getInstance().checkInEvent(checkin.theater, checkin.screening, checkin.availability.startTime
-                ?: "", "ticket_purchase", checkin.theater.id.toString(), "")
         val perf = checkin.availability.providerInfo ?: return
         val loc = locationManager.lastLocation() ?: return view.showNeedLocation()
         reservDis?.dispose()
+        view.showProgress()
         reservDis = api
                 .reserve(checkin, TicketInfoRequest(
                         performanceInfo = perf,
                         latitude = loc.lat,
                         longitude = loc.lon
-                )).subscribe({
+                ))
+                .doOnSubscribe {
+                    analyticsManager.onCheckinAttempt(checkin)
+                }
+                .subscribe({
                     view.navigateTo(checkin, it)
+                    analyticsManager.onCheckinSuccessful(checkin, it)
                 }, {
                     val apiError = it as? ApiError ?: return@subscribe
                     view.showError(apiError)
+                    analyticsManager.onCheckinFailed(checkin)
                 })
     }
 

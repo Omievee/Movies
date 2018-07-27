@@ -18,6 +18,7 @@ import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.screening.ScreeningPresentation
 import com.mobile.screening.ShowtimeAdapter
 import com.moviepass.R
+import kotlinx.android.synthetic.main.horizontal_poster.view.*
 import kotlinx.android.synthetic.main.list_item_cinemaposter.view.*
 
 fun Int.runningTimeString(context: Context): SpannableStringBuilder {
@@ -50,12 +51,31 @@ fun Int.runningTimeString(context: Context): SpannableStringBuilder {
     }
 }
 
+fun String?.toFormattedRating(context: Context): SpannableStringBuilder {
+    val ratingStr = this
+    return android.text.SpannableStringBuilder().apply {
+        if (ratingStr.isNullOrEmpty()) {
+            return@apply
+        }
+        val resources = context.resources
+        val rated = android.text.SpannableString(resources.getString(com.moviepass.R.string.screening_rating)).apply {
+            setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatedText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        val rating = android.text.SpannableString(ratingStr).apply {
+            setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.RatingText), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        append(rated)
+        append("  ")
+        append(rating)
+    }
+}
+
 class ScreeningView(context: Context) : FrameLayout(context) {
 
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
     var screeningPresentation: ScreeningPresentation? = null
     var showtimeListener: ShowtimeClickListener? = null
-    val layoutManager:LinearLayoutManager
+    val layoutManager: LinearLayoutManager
 
     init {
         View.inflate(context, R.layout.list_item_cinemaposter, this)
@@ -68,7 +88,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         recyclerView.adapter = adapter
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(
-                top=resources.getDimension(R.dimen.margin_quarter).toInt(),
+                top = resources.getDimension(R.dimen.margin_quarter).toInt(),
                 bottom = resources.getDimension(R.dimen.margin_half).toInt()))
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
@@ -94,6 +114,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         movieTitle.text = screening.screening?.title
         val disabledEx = screeningPresentation?.screening?.disabledExplanation ?: ""
         val approval = screeningPresentation?.screening?.approved ?: true
+
 
         when (screening.enabled) {
             false -> {
@@ -121,21 +142,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
                 false -> View.VISIBLE
             }
         }
-        val rating = SpannableStringBuilder().apply {
-            if (screening.screening?.rating.isNullOrEmpty()) {
-                return@apply
-            }
-            val rated = SpannableString(resources.getString(R.string.screening_rating)).apply {
-                setSpan(TextAppearanceSpan(context, R.style.RatedText), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            val rating = SpannableString(screening.screening?.rating).apply {
-                setSpan(TextAppearanceSpan(context, R.style.RatingText), 0, length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            append(rated)
-            append("  ")
-            append(rating)
-        }
-        movieRating.text = rating
+        movieRating.text = screening.screening?.rating.toFormattedRating(context)
         movieRating.visibility = when (movieRating.text.isEmpty()) {
             true -> View.GONE
             else -> View.VISIBLE

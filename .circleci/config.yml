@@ -1,21 +1,33 @@
 version: 2
-jobs:
-  build:
-    working_directory: ~/code
+aliases:
+  docker_build_config: &docker_build_config
     docker:
       - image: circleci/android:api-27-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
+  build_deploy_steps: &build_deploy_steps
     steps:
       - checkout
       - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#      - run:
-#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this. 
-#         command: sudo chmod +x ./gradlew
+          keys:
+            - jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - jars-
       - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
+          name: Build Release Notes
+          command: |
+            curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
+            chmod +x jq
+            pull_number=$(echo ${CIRCLE_PULL_REQUEST} | sed 's/[^0-9]*//g')
+            url=https://api.github.com/repos/Moviepass/android/pulls/${pull_number}?access_token=fbe6794640779fc86990c03eba850bbd0523474a
+            target_branch=$(curl $url | ./jq '.base.ref' | tr -d '"')
+            echo "#CHANGELOG" >> "release-notes.txt"
+            echo "##BRANCH: ${CIRCLE_BRANCH}" >> "release-notes.txt"
+            echo "##BASE BRANCH: ${target_branch}" >> "release-notes.txt"
+            git log origin/${target_branch}..origin/${CIRCLE_BRANCH} --no-merges --pretty=format:"%h %s" >> "release-notes.txt"
+      - run:
+          name: Build
+          command: |
+            # ASSEMBLE_ENV and DIST_ENV are defined in circleci context via worflows
+            ./gradlew :app:clean :app:assemble${ASSEMBLE_ENV} :app:crashlyticsUploadDistribution${DIST_ENV}
+          no_output_timeout: 10m
       - save_cache:
           paths:
             - ~/.gradle
@@ -23,4 +35,34 @@ jobs:
       - store_artifacts:
           path: app/build/reports
           destination: reports
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples   
+      - store_artifacts:
+          path: app/build/outputs/apk
+          destination: apks
+      - store_artifacts:
+          path: release-notes.txt
+          destination: reports/release-notes.txt
+jobs:
+  build_staging:
+    working_directory: ~/code
+    environment:
+      JVM_OPTS: -Xmx3200m
+    <<: *docker_build_config
+    <<: *build_deploy_steps
+  build_production:
+    working_directory: ~/code
+    environment:
+      JVM_OPTS: -Xmx3200m
+    <<: *docker_build_config
+    <<: *build_deploy_steps
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_staging:
+          context: android-staging
+      - hold:
+          type: approval
+      - build_production:
+          context: android-production
+          requires:
+            - hold

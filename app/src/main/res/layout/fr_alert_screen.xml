@@ -60,8 +60,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:text=""
             android:textAlignment="center"
             android:textColor="@color/new_red"
             android:textSize="20sp" />
@@ -73,18 +71,15 @@
             android:rotation="180"
             android:tint="@color/new_red" />
 
-
     </RelativeLayout>
 
-    <Button
+    <com.mobile.widgets.MPProgressButton
         android:id="@+id/acceptButton"
-        style="@style/RedMoviepassButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/double_margin_standard"
-        android:textAllCaps="false"
-        android:textSize="20sp"
         android:visibility="gone" />
-
 
 </RelativeLayout>

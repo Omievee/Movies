@@ -23,12 +23,13 @@ android {
         applicationId 'com.moviepass.mobile'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 129
-        versionName "3.0.24"
+        versionCode 134
+        versionName "3.0.26"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
-        buildConfigField "String", "baseUrl", '"https://staging.moviepass.com"'
+        buildConfigField "String", "baseUrl", '"https://staging.moviepass.com/"'
+        buildConfigField "String", "STATIC_URL", '"https://a1.moviepass.com/staging/"'
         buildConfigField "String", "registrationURL", '"https://registration-stg.herokuapp.com"'
         buildConfigField "String", "microServiceURL", '"https://authorization-service-stg.herokuapp.com/"'
         buildConfigField "String", "COGNITO_KEY", '"us-east-1:4b4b52ee-11c2-4c56-b109-b654a1d2ad37"'
@@ -49,7 +50,7 @@ android {
         release {
             keyAlias 'upload'
             keyPassword 'moviepass'
-            storeFile file("${System.getProperty("user.home")}/.moviepass/upload_key.jks")
+            storeFile file("upload_key.jks")
             storePassword 'moviepass'
         }
         debug {
@@ -69,6 +70,8 @@ android {
             buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
             resValue 'string', 'authority_file_provider', "\"${defaultConfig.applicationId}.debug.fileprovider\""
             resValue 'string', 'authority_file_provider_path', "\"Android/data/${defaultConfig.applicationId}.debug/files/Pictures\""
+            ext.betaDistributionGroupAliases = "moviepass-group"
+            ext.betaDistributionReleaseNotesFilePath = "release-notes.txt"
         }
 
         prod {
@@ -78,11 +81,14 @@ android {
             buildConfigField "String", "ENVIRONMENT", '"prod"'
             buildConfigField "String", "BUCKET", '"mpcore.production.tickets"'
             buildConfigField "String", "TOKENIZATION_KEY", '"sandbox_snpbh3w8_2fj37y3ndsjstzxv"'
-            buildConfigField "String", "baseUrl", '"https://api.moviepass.com"'
+            buildConfigField "String", "baseUrl", '"https://api.moviepass.com/"'
+            buildConfigField "String", "STATIC_URL", '"https://a1.moviepass.com/prod/"'
             buildConfigField "String", "registrationURL", '"https://registration.moviepass.com/"'
             buildConfigField "String", "microServiceURL", '"https://auth.moviepass.com/"'
             buildConfigField "String", "REGISTRATION_URL", '"https://www.moviepass.com"'
             buildConfigField "String", "REACTIVATION_URL", '"https://www.moviepass.com/reactivate"'
+            ext.betaDistributionGroupAliases = "moviepass-group"
+            ext.betaDistributionReleaseNotesFilePath = "release-notes.txt"
         }
     }
 
@@ -94,7 +100,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "DEFAULT_LOCATION", '"arlington tx"'
+            buildConfigField "String", "DEFAULT_LOCATION", '"portland or"'
         }
     }
 
@@ -142,11 +148,11 @@ androidExtensions {
 
 dependencies {
 
-    implementation 'com.google.android.gms:play-services-maps:11.0.0'
+    implementation "com.google.android.gms:play-services-maps:$play_services_version"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.google.firebase:firebase-messaging:11.0.0'
-    implementation 'com.android.support:support-v4:27.1.1'
+    implementation "com.android.support:support-v4:$support_lib_version"
     debugImplementation('io.socket:socket.io-client:+') {
         exclude group: 'org.json', module: 'json'
     }
@@ -158,12 +164,13 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$play_services_version"
     implementation "com.google.android.gms:play-services-maps:$play_services_version"
     implementation "com.google.android.gms:play-services-places:$play_services_version"
+    implementation "com.google.android.gms:play-services-vision:$play_services_version"
     implementation "com.android.support:support-v4:$support_lib_version"
     implementation("com.google.android.gms:play-services-gcm:$play_services_version")
 
     //Support Libraries
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation "com.android.support:support-v13:${support_lib_version}"
+    implementation "com.android.support:support-v13:$support_lib_version"
     implementation 'com.android.support:multidex:1.0.3'
 
     //implementation 'com.android.support:support-core-utils:26.2.1'
@@ -214,7 +221,7 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
 
     // Helpshift
-    implementation 'com.helpshift:android-helpshift-aar:7.0.1'
+    implementation 'com.helpshift:android-helpshift-aar:7.1.0'
 
     // Parceler
     implementation 'org.parceler:parceler-api:1.1.6'
@@ -256,6 +263,10 @@ dependencies {
     implementation "android.arch.lifecycle:runtime:1.1.1"
     implementation "android.arch.lifecycle:livedata-core:1.1.1"
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
+
+    implementation('com.timehop.stickyheadersrecyclerview:library:0.4.3') {
+        exclude group: "com.android.support"
+    }
 
     //Spinner
     implementation 'com.jaredrummler:material-spinner:1.2.4'

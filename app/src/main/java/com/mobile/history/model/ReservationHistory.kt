@@ -23,7 +23,6 @@ open class ReservationHistory(
         var updatedAt: Date = Date()
 
 ) : RealmObject(), Parcelable {
-
     @IgnoredOnParcel val rating: Rating
         get() {
             return Rating.values().find {

@@ -42,7 +42,7 @@ class AlertScreenFragment : MPFragment() {
         val dismiss = alertObject?.dismissible ?: return
 
         if (dismiss) {
-            dismissAlert.setOnClickListener { v ->
+            dismissAlert.setOnClickListener { _ ->
                 UserPreferences.alertDisplayedId = alertObject?.id
                 activity?.onBackPressed()
             }
@@ -54,7 +54,7 @@ class AlertScreenFragment : MPFragment() {
             alertClickMessage.visibility = View.INVISIBLE
         } else {
             LinkText.text = alertObject?.urlTitle
-            alertClickMessage.setOnClickListener { v ->
+            alertClickMessage.setOnClickListener { _ ->
                 if (Patterns.WEB_URL.matcher(alertObject?.url).matches()) {
                     val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject?.url))
                     startActivity(alertIntentClick)

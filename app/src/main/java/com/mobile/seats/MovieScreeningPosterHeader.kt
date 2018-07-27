@@ -24,8 +24,8 @@ class MovieScreeningPosterHeader(context: Context, attrs: AttributeSet? = null) 
         theaterName.text = theater?.name ?: screening?.theaterName
         arrayOf(theaterName, theaterPin).forEach {
             it.setOnClickListener {
-                val lat = payload.theater?.latitude ?: return@setOnClickListener
-                val lng = payload.theater?.longitude ?: return@setOnClickListener
+                val lat = payload.theater?.lat ?: return@setOnClickListener
+                val lng = payload.theater.lon
                 context.startIntentIfResolves(mapIntent(lat, lng))
             }
         }

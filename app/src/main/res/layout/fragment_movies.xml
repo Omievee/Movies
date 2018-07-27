@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
 
-    <com.mobile.extensions.CustomSwipeRefresh
+    <com.mobile.seats.MPSwipeRefreshLayout
         android:id="@+id/SWIPE2REFRESH"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -54,7 +54,7 @@
 
         </ScrollView>
 
-    </com.mobile.extensions.CustomSwipeRefresh>
+    </com.mobile.seats.MPSwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/toolBarBackground"

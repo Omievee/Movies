@@ -32,7 +32,7 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
     override fun isLocationEnabled(): Boolean {
         return systemLocationManager
                 .isProviderEnabled(GPS_PROVIDER)
-                &&
+                ||
                 systemLocationManager
                         .isProviderEnabled(NETWORK_PROVIDER)
     }
@@ -71,10 +71,10 @@ class LocationManagerImpl(val application: Application, val systemLocationManage
                 emitter.onError(it)
             }
         }
-        single.map {
+        return single.map {
             _lastLocation = it
-        }
-        return single.compose(Schedulers.singleDefault())
+            it
+        }.compose(Schedulers.singleDefault())
     }
 
     @SuppressLint("MissingPermission")

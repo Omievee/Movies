@@ -1,7 +1,5 @@
 package com.mobile.tv
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +12,6 @@ import com.mobile.fragments.TicketVerificationV2
 import com.mobile.network.RestClient
 import com.mobile.requests.VerificationLostRequest
 import com.mobile.responses.VerificationLostResponse
-import com.mobile.utils.onBackExtension
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_ticket_verification_no_stub_v2.*
 import retrofit2.Call
@@ -22,7 +19,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-private const val TICKET_STATUS = "ticket_status"
 private const val RESERVATION_ID = "reservation_id"
 
 class TicketVerificationNoStubV2 : MPFragment(), TicketVerificationNoStubView.SubmitListener {
@@ -44,14 +40,12 @@ class TicketVerificationNoStubV2 : MPFragment(), TicketVerificationNoStubView.Su
         })
     }
 
-    var isTicketRedeemed: Boolean = true
     var reservationID: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            isTicketRedeemed = it.getBoolean(TICKET_STATUS)
             reservationID = it.getInt(RESERVATION_ID)
         }
     }
@@ -75,10 +69,9 @@ class TicketVerificationNoStubV2 : MPFragment(), TicketVerificationNoStubView.Su
     }
 
     companion object {
-        fun newInstance(ticketStatus: Boolean, reservationId: Int) =
+        fun newInstance(reservationId: Int) =
                 TicketVerificationNoStubV2().apply {
                     arguments = Bundle().apply {
-                        putBoolean(TICKET_STATUS, ticketStatus)
                         putInt(RESERVATION_ID, reservationId)
                     }
                 }

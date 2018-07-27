@@ -1,6 +1,5 @@
 package com.mobile.seats
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -8,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mobile.BackFragment
-import com.mobile.Constants
 import com.mobile.UserPreferences
-import com.mobile.activities.ConfirmationActivity
 import com.mobile.model.ScreeningToken
 import com.mobile.model.SeatPosition
 import com.mobile.model.SeatSelected
-import com.mobile.reservation.Reservation2
+import com.mobile.reservation.Checkin
 import com.mobile.reservation.ReservationActivity
 import com.mobile.responses.ReservationResponse
 import com.mobile.rx.Schedulers
@@ -118,8 +115,16 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
     override fun onTicketsPurchased(result: ReservationResponse) {
         val payload: SelectSeatPayload = payloadSub.value ?: return
         val activity = activity ?: return
+        val screening = payload.screening ?: return
+        val theater = payload.theater ?: return
+        val availability = payload.availability ?: return
         val screeningToken = ScreeningToken(
-                payload.screening, payload.availability, result.reservation, result.eTicketConfirmation, payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }, payload.theater?.toTheater()
+                Checkin(screening = screening,
+                        availability = availability,
+                        theater = theater),
+                reservation = result,
+                confirmationCode = result.eTicketConfirmation,
+                seatSelected = payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }
         )
         activity.finish()
         startActivity(ReservationActivity.newInstance(activity, screeningToken))

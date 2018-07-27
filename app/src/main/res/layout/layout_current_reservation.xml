@@ -40,7 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/movieCL"
         android:layout_width="match_parent"
@@ -228,7 +227,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/ZipCodeNumberReservation"
+                android:id="@+id/zipCodeNumberReservation"
                 style="@style/ZipCodeNumberReservation"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

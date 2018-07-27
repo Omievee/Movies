@@ -69,11 +69,11 @@ class SeatInfo(@SerializedName("available") var isAvailable: Boolean = false,
             this.row - ss.row
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
 
-        val seatInfo = o as SeatInfo?
+        val seatInfo = other as SeatInfo?
 
         if (row != seatInfo!!.row) return false
         if (column != seatInfo.column) return false

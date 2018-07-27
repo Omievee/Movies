@@ -2,6 +2,7 @@ package com.mobile.utils.text
 
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.util.*
 
 fun String?.toSentenceCase(): String {
     if (this == null) {
@@ -23,7 +24,7 @@ fun String?.toSentenceCase(): String {
 }
 
 fun Double?.toCurrency(): String {
-    return DecimalFormat.getCurrencyInstance().format(this)
+    return DecimalFormat.getCurrencyInstance(Locale.US).format(this)
 }
 
 val Int.centsAsDollars: String

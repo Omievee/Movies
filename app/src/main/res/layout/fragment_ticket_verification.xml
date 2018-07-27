@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ReservationBackground"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:text="@string/ticket_verification"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        style="@style/CloseButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TVTitle"
+        app:layout_constraintBottom_toTopOf="@+id/info"
+        app:layout_constraintTop_toBottomOf="@id/titleView"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/TVInfo"
+        app:layout_constraintBottom_toTopOf="@id/cameraFL"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <FrameLayout
+        android:id="@+id/cameraFL"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:elevation="@dimen/dp_1"
+        android:background="@drawable/shape_circle_red"
+        android:foreground="?selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toTopOf="@id/warning"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info">
+
+        <ImageView
+            android:padding="@dimen/margin_standard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_camera"
+            android:tint="@color/white_ish" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/warning"
+        style="@style/TVWarning"
+        app:layout_constraintBottom_toTopOf="@id/bottomCL"
+        app:layout_constraintTop_toBottomOf="@id/cameraFL" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottomCL"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1">
+
+        <TextView
+            android:id="@+id/noStub"
+            style="@style/TVButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/ticket_verification_no_stub_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+        <TextView
+            android:id="@+id/help"
+            style="@style/TVButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@string/help"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+    </android.support.constraint.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:elevation="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/debugView"
+        android:elevation="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.constraint.ConstraintLayout>

@@ -10,7 +10,6 @@ import io.reactivex.disposables.Disposable
 
 class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) {
     private var cancelReservationDisposable: Disposable? = null
-    private var userInfoDisposable: Disposable? = null
 
     fun cancelCurrentReservation(reservation: Int) {
         val request = ChangedMindRequest(reservation)
@@ -24,20 +23,13 @@ class ReservationActivityPresenter(val view: ReservationActivity, val api: Api) 
                 }
                         , { error ->
                     if (error is ApiError) {
-                        Toast.makeText(view, error.error?.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(view, error.error.message, Toast.LENGTH_SHORT).show()
                     }
                     view.hideProgress()
                 })
     }
 
-    fun getUserZipCode() {
-        userInfoDisposable?.dispose()
-        userInfoDisposable = api
-                .getUserDataRx(UserPreferences.userId)
-                .subscribe({
-                    UserPreferences.zipCode = it.billingZipCode
-                },{
-
-                })
+    fun onPause() {
+        cancelReservationDisposable?.dispose()
     }
 }

@@ -8,6 +8,7 @@ import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
+import com.mobile.profile.ProfileCancellationModule
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.reservation.ReservationCheckinModule
@@ -15,7 +16,12 @@ import com.mobile.seats.BringAFriendActivity
 import com.mobile.seats.ConfirmDetailsFragment
 import com.mobile.splash.SplashActivity
 import com.mobile.splash.SplashActivityModule
+import com.mobile.theater.TheaterMapFragment
+import com.mobile.theater.TheatersFragmentModule
+import com.mobile.ticketverification.OcrCaptureFragment
+import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.surge.ConfirmSurgeFragment
+import com.mobile.fragments.ScreeningsFragmentModule
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -39,12 +45,12 @@ interface AppBindingModule {
     fun moviesFragment(): MoviesFragment
 
     @FragmentScope
-    @ContributesAndroidInjector
-    fun theatersFragment(): TheatersFragment
+    @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
+    fun theatersFragment(): TheatersFragmentV2
 
     @FragmentScope
-    @ContributesAndroidInjector
-    fun theaterFragment(): TheaterFragment
+    @ContributesAndroidInjector(modules = [ScreeningsFragmentModule::class])
+    fun theaterFragmentV2(): ScreeningsFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -66,6 +72,18 @@ interface AppBindingModule {
     @ContributesAndroidInjector
     fun historyDeatils(): HistoryDetailsFragment
 
+    @TVScope
+    @ContributesAndroidInjector(modules = [TicketVerificationBottomSheetModule::class])
+    fun ticketVerificationBottomSheetDialogFragment(): TicketVerificationBottomSheetDialogFragment
+
+    @TVScope
+    @ContributesAndroidInjector()
+    fun ocrCaptureFragment():OcrCaptureFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun theaterMap(): TheaterMapFragment
+
     @ActivityScope
     @ContributesAndroidInjector(modules = [ReservationActivityModule::class])
     fun reservationActivity(): ReservationActivity
@@ -73,10 +91,6 @@ interface AppBindingModule {
     @ActivityScope
     @ContributesAndroidInjector
     fun activateMoviepassCardActivity(): ActivateMoviePassCard
-
-    @ActivityScope
-    @ContributesAndroidInjector
-    fun profileAccountCancellation(): ProfileCancellationFragment
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [MissingBillingFragmentModule::class])
@@ -89,4 +103,12 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun confirmSurgeFragment(): ConfirmSurgeFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun ticketVerification(): TicketVerificationV2
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [ProfileCancellationModule::class])
+    fun profileCancellationFragment(): ProfileCancellationFragment
 }

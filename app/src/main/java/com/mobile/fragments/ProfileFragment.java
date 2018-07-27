@@ -29,9 +29,14 @@ import com.mobile.activities.LogInActivity;
 import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
 import com.mobile.history.PastReservationsFragment;
 import com.mobile.loyalty.LoyaltyProgramFragment;
+import com.mobile.model.Availability;
 import com.mobile.model.Reservation;
+import com.mobile.model.Screening;
 import com.mobile.model.ScreeningToken;
+import com.mobile.model.Surge;
+import com.mobile.model.User;
 import com.mobile.network.RestClient;
+import com.mobile.reservation.Checkin;
 import com.mobile.reservation.ReservationActivity;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
@@ -198,39 +203,41 @@ public class ProfileFragment extends MPFragment {
                 Map<String, String[]> customIssueFileds = new HashMap<>();
                 HashMap<String, Object> userData = new HashMap<>();
                 customIssueFileds.put("version name", new String[]{"sl", versionName});
-                Long dateMillis = INSTANCE.getLastCheckInAttemptDate();
-                if (dateMillis != null) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTimeInMillis(dateMillis);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
-                    long diff = System.currentTimeMillis() - dateMillis;
-                    long diffHours = diff / (60 * 60 * 1000);
-                    long diffMinutes = diff / (60 * 1000);
-
-
-                    customIssueFileds.put("last_check_in_attempt_date", new String[]{"sl", dateFormat.format(cal.getTime())});
-                    customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(cal.getTime())});
-                    customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
-                    customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
-                }
 
                 ScreeningToken token = INSTANCE.getLastReservation();
+                Checkin checkinAttempt = INSTANCE.getLastCheckInAttempt();
                 final boolean checkedIn;
 
                 if (token != null) {
-                    Reservation rs = token.getReservation();
-                    checkedIn = rs != null && rs.getExpiration() > System.currentTimeMillis();
+                    Reservation rs = token.getReservation().getReservation();
+                    checkedIn = rs.getExpiration() > System.currentTimeMillis();
                     Date starttime = token.getTimeAsDate();
-                    if (starttime != null) {
-                        long diff = starttime.getTime() - System.currentTimeMillis();
-                        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
-                        if (checkedIn && minutes >= -30) {
-                            customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
-                        }
+                    long diff = starttime.getTime() - System.currentTimeMillis();
+                    int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(diff);
+                    if (checkedIn && minutes >= -30) {
+                        customIssueFileds.put("minutes_until_showtime", new String[]{"n", valueOf(minutes)});
                     }
                 } else {
                     checkedIn = false;
+                }
+
+                if (checkinAttempt != null) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
+                    long diff = System.currentTimeMillis() - checkinAttempt.getTime().getTime();
+                    long diffHours = diff / (60 * 60 * 1000);
+                    long diffMinutes = diff / (60 * 1000);
+
+                    customIssueFileds.put("last_check_in_attempt_date", new String[]{"sl", dateFormat.format(checkinAttempt.getTime())});
+                    customIssueFileds.put("last_check_in_attempt_time", new String[]{"sl", timeFormat.format(checkinAttempt.getTime())});
+                    customIssueFileds.put("hours_since_last_checkin_attempt", new String[]{"n", valueOf(diffHours)});
+                    customIssueFileds.put("minutes_since_last_checkin_attempt", new String[]{"n", valueOf(diffMinutes)});
+
+                    Screening screening = checkinAttempt.getScreening();
+                    Availability availability = checkinAttempt.getAvailability();
+                    Surge surge = screening.getSurge(availability.getStartTime(), UserPreferences.INSTANCE.getRestrictions().getUserSegments());
+                    customIssueFileds.put("peak_level", new String[]{"dd", valueOf(surge.getLevel().getLevel()) + " - " + surge.getLevel().getDescription()});
+                    customIssueFileds.put("peak_fee", new String[]{"n", valueOf(surge.getAmount())});
                 }
 
                 customIssueFileds.put("subscription_type", new String[]{"dd", INSTANCE.getRestrictions().getSubscriptionStatus().name()});
@@ -258,11 +265,15 @@ public class ProfileFragment extends MPFragment {
         });
 
 
-        history.setOnClickListener(view2 -> {
+        history.setOnClickListener(view2 ->
+
+        {
             showFragment(pastReservations);
         });
 
-        currentRes.setOnClickListener(view1 -> {
+        currentRes.setOnClickListener(view1 ->
+
+        {
             if (isOnline()) {
                 RestClient
                         .getAuthenticated()
@@ -281,13 +292,17 @@ public class ProfileFragment extends MPFragment {
         });
 
 
-        howToUse.setOnClickListener(view15 -> {
+        howToUse.setOnClickListener(view15 ->
+
+        {
             Intent intent = new Intent(myContext, ActivatedCard_TutorialActivity.class);
             startActivity(intent);
         });
 
 
-        loyaltyPrograms.setOnClickListener(view1 -> {
+        loyaltyPrograms.setOnClickListener(view1 ->
+
+        {
             if (isOnline())
                 showFragment(LoyaltyProgramFragment.Companion.newInstance());
         });

@@ -100,11 +100,16 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                 }
                 reservationCode.visibility = View.VISIBLE
                 reservationCode.text = it.redemptionCode
+
+                currentReservationTV.visibility = when (showCurrentReservationText) {
+                    true -> View.VISIBLE
+                    else -> View.GONE
+                }
             }
         } else {
             run {
 
-                if (UserPreferences.restrictions?.proofOfPurchaseRequired==true && UserPreferences.lastReservationPopInfo != reservationId) {
+                if (UserPreferences.restrictions.proofOfPurchaseRequired && UserPreferences.lastReservationPopInfo != reservationId) {
                     ticketVerificationBanner.visibility = View.VISIBLE
                     closeIV.visibility = View.GONE
                 }
@@ -116,8 +121,8 @@ class ReservationView(context: Context, attributeSet: AttributeSet?) : Constrain
                     setText(R.string.if_asked_provide_zip)
                     visibility = View.VISIBLE
                 }
-                ZipCodeNumberReservation.apply {
-                    text = UserPreferences.zipCode
+                zipCodeNumberReservation.apply {
+                    text = reservation.zip
                     visibility = View.VISIBLE
                 }
                 cancelCurrentReservationTV.visibility = View.VISIBLE

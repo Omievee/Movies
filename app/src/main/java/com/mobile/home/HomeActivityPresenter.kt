@@ -1,8 +1,11 @@
 package com.mobile.home
 
 import android.os.Build
+import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.history.HistoryManager
+import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.PopInfo
 import com.mobile.network.Api
@@ -16,7 +19,7 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager) {
+class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager, val historyManager: HistoryManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
@@ -24,9 +27,14 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     var deviceId: String? = null
     var lastRestrictionRequest: Long = 0
     var currentReservation: CurrentReservationV2? = null
+    var historyDispose: Disposable? = null
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
+    }
+
+    fun onCreate(){
+        latestMovieWithoutRating()
     }
 
     fun onResume() {
@@ -35,6 +43,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         } else {
             checkRestrictions()
         }
+
     }
 
     private fun checkOneDevice() {
@@ -87,6 +96,34 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     it.printStackTrace()
                 })
     }
+
+    fun latestMovieWithoutRating() {
+        historyDispose?.dispose()
+        historyDispose =
+                historyManager
+                        .fetchLastMovieWithoutRating()
+                        .subscribe({ r ->
+                            showMovieForRating(r)
+                            Log.d("it????" , ">>>>>>>>" + r.title)
+                        }) {
+                            it.printStackTrace()
+
+                        }
+    }
+
+    private fun showMovieForRating(movie: ReservationHistory) {
+        when (movie.userRating) {
+            null ->
+                movie.id?.let {
+                    if (it != UserPreferences.historyRatingAlertId) {
+                        view.showHistoryRateScreen(movie)
+                        UserPreferences.setUserDismissedHistoryRateScreen(it)
+                    }
+                }
+            else -> return
+        }
+    }
+
 
     private fun determineActivationScreen(it: MicroServiceRestrictionsResponse?) {
         it ?: return
@@ -144,6 +181,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
         reservationDisposable?.dispose()
+        historyDispose?.dispose()
+
     }
 
     fun onPause() {

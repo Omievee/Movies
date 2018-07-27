@@ -1,10 +1,10 @@
 package com.mobile.model
 
 import android.os.Parcelable
+import com.mobile.UserPreferences
 import com.mobile.network.SurgeResponse
 import com.mobile.reservation.CurrentReservationV2
 import kotlinx.android.parcel.Parcelize
-import java.util.Date;
 
 @Parcelize
 data class Screening(var moviepassId: Int? = null,
@@ -14,7 +14,7 @@ data class Screening(var moviepassId: Int? = null,
                      val landscapeImageUrl: String? = null,
                      val qualifiersApproved: Boolean = false,
                      val availabilities: List<Availability> = emptyList(),
-                     val surge: Map<String, Surge> = emptyMap(),
+                     val surge: MutableMap<String, Surge> = mutableMapOf(),
                      val popRequired: Boolean = false,
                      val imageUrl: String? = null,
                      val theaterAddress: String? = null,
@@ -86,18 +86,16 @@ data class Screening(var moviepassId: Int? = null,
     }
 
     fun updateSurge(availability: Availability?, surgeResponse: SurgeResponse) {
-        val avail = availability?:return
-        val surge = surge[avail.startTime]?:return
-        when(surge!== Surge.NONE) {
-            true-> {
-                when(surgeResponse.currentlyPeaking) {
-                    true-> {
-                        surge.level = SurgeType.SURGING
-                        surge.amount = surgeResponse.peakAmount
-                    }
-                }
-            }
+        val avail = availability ?: return
+        var surging = surge[avail.startTime]
+        if (surging == null) {
+            surging = Surge(
+                    independentUserSegments = UserPreferences.restrictions.userSegments)
+            surge[avail.startTime ?: ""] = surging
         }
+        surging.screeningSurging = surgeResponse.currentlyPeaking
+        surging.level = SurgeType.SURGING
+        surging.amount = surgeResponse.peakAmount
     }
 
     companion object {
@@ -111,13 +109,3 @@ data class Screening(var moviepassId: Int? = null,
         }
     }
 }
-
-fun from(theater: Theater): Theater2 {
-    return Theater2(id = theater.id,
-            name = theater.name,
-            latitude = theater.lat,
-            longitude = theater.lon,
-            tribuneTheaterId = theater.tribuneTheaterId
-    )
-}
-

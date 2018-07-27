@@ -32,8 +32,7 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivateMoviePassCard;
 import com.mobile.adapters.MissingCheckinListener;
-import com.mobile.adapters.TheaterScreeningsAdapter;
-import com.mobile.helpers.GoWatchItSingleton;
+import com.mobile.adapters.ScreeningsAdapter;
 import com.mobile.history.HistoryManager;
 import com.mobile.history.model.ReservationHistory;
 import com.mobile.listeners.ShowtimeClickListener;
@@ -98,7 +97,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
     boolean isMovieComingSoon = false;
 
-    TheaterScreeningsAdapter movieTheatersAdapter;
+    ScreeningsAdapter movieTheatersAdapter;
     Pair<List<ReservationHistory>, ScreeningsResponseV2> screeningsResponse;
 
     TextView THEATER_ADDRESS_LISTITEM, noTheaters, enableLocation, locationMsg, noWifi;
@@ -188,6 +187,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
     }
 
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -252,10 +252,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 selectedRuntimeMinutes.setText(Integer.toString(minutes));
             }
         }
-        movieTheatersAdapter = new TheaterScreeningsAdapter(this, this);
+        movieTheatersAdapter = new ScreeningsAdapter(this, this);
         selectedTheatersRecyclerView.setAdapter(movieTheatersAdapter);
         int margin = (int) getResources().getDimension(R.dimen.margin_half);
-        selectedTheatersRecyclerView.addItemDecoration(new SpaceDecorator(null,null, 0,null,null,null));
+        selectedTheatersRecyclerView.addItemDecoration(new SpaceDecorator(null,null, 0,null,null,null,null));
 
     }
 
@@ -270,7 +270,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 Date date = format1.parse(movie.getReleaseDate());
                 SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
                 String result = format2.format(date);
-                comingSoonTitle.setText("In Theaters " + result);
+                comingSoonTitle.setText("In TheaterScope " + result);
                 filmRating.setText(movie.getRating());
                 synopsisContent.setText(movie.getSynopsis());
             }
@@ -296,7 +296,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
         showtimeScrolls.setVisibility(View.VISIBLE);
 
-        /* Theaters RecyclerView */
+        /* TheaterScope RecyclerView */
         LinearLayoutManager moviesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false) {
             @Override
             public boolean supportsPredictiveItemAnimations() {
@@ -379,7 +379,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
 
     public void setUpView(View view) {
         arrow = view.findViewById(R.id.arrow);
-        enableLocation = view.findViewById(R.id.EnableText);
+        enableLocation = view.findViewById(R.id.enableButton);
         locationMsg = view.findViewById(R.id.GPSmessage);
         noTheaters = view.findViewById(R.id.NoTheaters);
         selectedMoviePoster = view.findViewById(R.id.SELECTED_MOVIE_IMAGE);
@@ -407,19 +407,19 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
         } else {
             selected = new Pair<>(screening, showtime);
         }
-        movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
+        movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
         if (movie != null) {
-            GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
+            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(movie.getId()), "");
         } else {
-            GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
+            //GoWatchItSingleton.getInstance().userClickedOnShowtime(theater, screening, showtime, String.valueOf(screening.getMoviepassId()), "");
         }
         Availability availability = screening.getAvailability(showtime);
         if (selected == null) {
             removeFragment(R.id.checkinFragment);
         } else {
-            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
-                    screening, theater, availability
-            )));
+//            showFragment(R.id.checkinFragment, CheckInFragmentKt.newInstance(new Checkin(
+//                    screening, theater, availability,null
+//            )));
         }
     }
 
@@ -453,7 +453,7 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
             noTheaters.setVisibility(View.VISIBLE);
         } else {
             noTheaters.setVisibility(View.GONE);
-            movieTheatersAdapter.setData(TheaterScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
+            movieTheatersAdapter.setData(ScreeningsAdapter.Companion.createData(movieTheatersAdapter.getData(), screeningsResponse, myLocation, UserPreferences.INSTANCE.getRestrictions().getUserSegments(), selected));
         }
 
         if (movie.getSynopsis().equals("")) {
@@ -469,10 +469,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 bundle.putString(MOVIE, synopsis);
                 bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = getChildFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
+//                SynopsisFragment fragobj = new SynopsisFragment();
+//                fragobj.setArguments(bundle);
+//                FragmentManager fm = getChildFragmentManager();
+//                fragobj.show(fm, "fr_dialogfragment_synopsis");
             });
 
             selectedMoviePoster.setOnClickListener(v -> {
@@ -482,10 +482,10 @@ public class MovieFragment extends MPFragment implements ShowtimeClickListener, 
                 bundle.putString(MOVIE, synopsis);
                 bundle.putString(TITLE, title);
 
-                SynopsisFragment fragobj = new SynopsisFragment();
-                fragobj.setArguments(bundle);
-                FragmentManager fm = getChildFragmentManager();
-                fragobj.show(fm, "fr_dialogfragment_synopsis");
+//                SynopsisFragment fragobj = new SynopsisFragment();
+//                fragobj.setArguments(bundle);
+//                FragmentManager fm = getChildFragmentManager();
+//                fragobj.show(fm, "fr_dialogfragment_synopsis");
 
             });
         }

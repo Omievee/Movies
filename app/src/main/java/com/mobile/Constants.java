@@ -3,8 +3,6 @@ package com.mobile;
 
 import com.moviepass.BuildConfig;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 
 /**
@@ -21,13 +19,11 @@ public class Constants {
 
     //COMMON VARIABLES
     public static final String MOVIE = "movie";
-    public static final String TITLE = "title";
-    public static final String RESERVATION = "reservation";
+    public static final String POLICY = "policy";
     public static final String RESERVATION_ID = "reservation_id";
     public static final String SCREENING = "screening";
     public static final String SHOWTIME = "showtime";
     public static final String THEATER = "theater";
-    public static final String TOKEN = "token";
     public static final String SEAT = "seat";
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";
@@ -39,6 +35,11 @@ public class Constants {
     public static final int REQUEST_STORAGE_CODE = 2;
     public static final int SURGE_CHECKOUT_CODE = 3;
     public static final int REQUEST_TICKET_VERIF = 00;
+    public static final int REQUEST_LOCATION_FROM_THEATERS_CODE = 4;
+    public final static int REQUEST_CAMERA_CODE_FOR_TICKET_VERIFICATION = 5;
+    public final static int REQUEST_CAMERA_CODE_FOR_TICKET_VERIFICATION_DENIED = 6;
+    public final static int REQUEST_GMS_CAMERA_CODE = 7;
+    public static final int ENABLE_LOCATION_CODE = 8;
     public static final int GOOGLE_PLAY_SERVICES_CODE = 1;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
@@ -57,6 +58,7 @@ public class Constants {
     public static final String IS_LOCATION_USER_DEFINED = "usr_loc_defi";
     public static final String PREFS_LATITUDE = "lat";
     public static final String PREFS_LONGITUDE = "lng";
+    public static final String USER_LOCATION = "userLocation";
     public static final String LOCATION_UPDATE_INTENT_FILTER = "LOCATION_UPDATE_INTENT_FILTER";
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 00;
     public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE2 = 01;
@@ -86,7 +88,7 @@ public class Constants {
     public static final String BILLING = "billing";
 
     //Check In Attempt
-    public static final String LAST_CHECK_IN_ATTEMPT_DATETIME = "lastCheckInAttemptDateTime";
+    public static final String LAST_CHECK_IN_ATTEMPT = "lastCheckInAttempt";
     public static final String LAST_CHECK_IN_RESERVATION = "lastCheckInScreening";
 
     //Movie History Data
@@ -108,4 +110,8 @@ public class Constants {
     public static final int CONVENIENCE_FEE_CENTS = (int) (CONVENIENCE_FEE * 100);
 
     public static final int OFFSET = 3232323;
+
+    public static final String SHOW_HISTORY_RATING = "historyRating";
+
+    public static final String IS_FROM_RATE_SCREEN = "rate_screen";
 }

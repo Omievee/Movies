@@ -59,14 +59,19 @@ fun Fragment.showFragmentExtension(id:Int, fragment: Fragment? = null) {
     }
     TransitionManager.endTransitions(fl)
     TransitionManager.beginDelayedTransition(fl, set)
+    fl.bringToFront()
     fl.visibility = View.VISIBLE
     childFragmentManager.beginTransaction()
-            .setCustomAnimations(R.animator.enter_from_right, R.animator.exit_to_left, R.animator.enter_from_left, R.animator.exit_to_right)
             .replace(id, fragment).commit()
 }
 
 fun Fragment.showBottomFragment(sheetData: SheetData) {
     MPBottomSheetFragment.newInstance(sheetData).show(fragmentManager, "")
+}
+
+fun Fragment.preLoadFragmentExtension(id:Int, fragment:Fragment?=null) {
+    childFragmentManager.beginTransaction()
+            .replace(id, fragment).commit()
 }
 
 fun Fragment.replaceFragmentExtension(fragment: Fragment? = null) {
@@ -94,6 +99,10 @@ fun Fragment.onBackExtension(): Boolean {
                         .remove(it)
                         .commit()
             }
+        }
+
+        override fun onTransitionCancel(transition: Transition) {
+            super.onTransitionCancel(transition)
         }
     }
     val set = TransitionSet()

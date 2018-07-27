@@ -60,7 +60,7 @@ class TicketVerificationNoStubView(context: Context?, attrs: AttributeSet? = nul
         alert.setCancelable(false)
         alert.setOnDismissListener { listener?.closeFragment() }
         alert.setMessage(R.string.activity_verification_lost_ticket_message_post)
-        alert.setPositiveButton(android.R.string.ok) { dialog, which ->
+        alert.setPositiveButton(android.R.string.ok) { _, _ ->
             listener?.closeFragment()
         }
         alert.show()

@@ -4,14 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
 import com.google.gson.Gson
-
 import com.mobile.history.model.ReservationHistory
+import com.mobile.location.UserLocation
 import com.mobile.model.ScreeningToken
+import com.mobile.reservation.Checkin
 import com.mobile.responses.MicroServiceRestrictionsResponse
-import com.mobile.responses.SubscriptionStatus
 import com.mobile.responses.UserInfoResponse
-
-import java.util.Calendar
+import com.moviepass.BuildConfig
+import java.util.*
 
 /**
  * Created by ryan on 4/26/17.
@@ -20,32 +20,32 @@ import java.util.Calendar
 object UserPreferences {
 
     private lateinit var sPrefs: SharedPreferences
-    private lateinit var gson:Gson
+    private lateinit var gson: Gson
 
-    var restrictionsLoaded:Boolean = false
-    var restrictions:MicroServiceRestrictionsResponse = MicroServiceRestrictionsResponse()
-    set(it) {
-        field = it
-        sPrefs.edit()
-                .putString(Constants.RESTRICTIONS,
-                       gson.toJson(it)).apply()
-    }
-    get() {
-        if(restrictionsLoaded==false) {
-            val ss = sPrefs.getString(Constants.RESTRICTIONS,null)
-            if(ss==null) {
-                field = MicroServiceRestrictionsResponse()
-            } else {
-                try {
-                    field = gson.fromJson(ss, MicroServiceRestrictionsResponse::class.java)
-                } catch (e:Exception) {
-                    field = MicroServiceRestrictionsResponse()
-                }
-            }
-            restrictionsLoaded = true
+    var restrictionsLoaded: Boolean = false
+    var restrictions: MicroServiceRestrictionsResponse = MicroServiceRestrictionsResponse()
+        set(it) {
+            field = it
+            sPrefs.edit()
+                    .putString(Constants.RESTRICTIONS,
+                            gson.toJson(it)).apply()
         }
-        return field
-    }
+        get() {
+            if (restrictionsLoaded == false) {
+                val ss = sPrefs.getString(Constants.RESTRICTIONS, null)
+                if (ss == null) {
+                    field = MicroServiceRestrictionsResponse()
+                } else {
+                    try {
+                        field = gson.fromJson(ss, MicroServiceRestrictionsResponse::class.java)
+                    } catch (e: Exception) {
+                        field = MicroServiceRestrictionsResponse()
+                    }
+                }
+                restrictionsLoaded = true
+            }
+            return field
+        }
 
     val deviceAndroidID: String
         get() {
@@ -54,12 +54,12 @@ object UserPreferences {
 
     val hasUserLoggedInBefore: Boolean
         get() {
-            return sPrefs.getBoolean(Constants.IS_USER_FIRST_LOGIN, false) ?: false
+            return sPrefs.getBoolean(Constants.IS_USER_FIRST_LOGIN, false)
         }
 
     val hasUserSeenCardActivationScreen: Boolean
         get() {
-            return sPrefs.getBoolean(Constants.CARD_ACTIVATED_SCREEN, false) ?: false
+            return sPrefs.getBoolean(Constants.CARD_ACTIVATED_SCREEN, false)
         }
 
     var oneDeviceId: String?
@@ -102,13 +102,16 @@ object UserPreferences {
             return sPrefs.getString(Constants.FIREBASE_TOKEN, "null") ?: "null"
         }
 
-    val lastCheckInAttemptDate: Long?
+    val lastCheckInAttempt: Checkin?
         get() {
-            val dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + userId
-            val `val` = sPrefs.getLong(dateKey, -1)
-            return if (`val` == -1L) {
+            val dateKey = Constants.LAST_CHECK_IN_ATTEMPT + "_" + userId
+            val json = sPrefs.getString(dateKey, null) ?: return null
+            return try {
+                gson.fromJson(json, Checkin::class.java)
+            } catch (e: Exception) {
                 null
-            } else `val`
+            }
+
         }
 
     val location: Location
@@ -122,19 +125,17 @@ object UserPreferences {
 
     val longitude: Double
         get() {
-            return java.lang.Double.longBitsToDouble(sPrefs?.getLong(Constants.PREFS_LONGITUDE, java.lang.Double.doubleToLongBits(0.0))
-                    ?: 0)
+            return java.lang.Double.longBitsToDouble(sPrefs.getLong(Constants.PREFS_LONGITUDE, java.lang.Double.doubleToLongBits(0.0)))
         }
 
     val latitude: Double
         get() {
-            return java.lang.Double.longBitsToDouble(sPrefs?.getLong(Constants.PREFS_LATITUDE, java.lang.Double.doubleToLongBits(0.0))
-                    ?: 0)
+            return java.lang.Double.longBitsToDouble(sPrefs.getLong(Constants.PREFS_LATITUDE, java.lang.Double.doubleToLongBits(0.0)))
         }
 
     var pushPermission: Boolean
         get() {
-            return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true) ?: true
+            return sPrefs.getBoolean(Constants.PUSH_PERMISSION, true)
         }
         set(pushPermission) {
             val editor = sPrefs.edit()
@@ -145,7 +146,7 @@ object UserPreferences {
 
     var alertDisplayedId: String?
         get() {
-            return sPrefs.getString(Constants.ALERT_ID, "id") ?: "id"
+            return sPrefs.getString(Constants.ALERT_ID, "id")
         }
         set(alertID) {
 
@@ -157,7 +158,7 @@ object UserPreferences {
 
     val lastReservationPopInfo: Int
         get() {
-            return sPrefs?.getInt(Constants.RESERVATION_ID, 0) ?: 0
+            return sPrefs.getInt(Constants.RESERVATION_ID, 0)
         }
 
     val billing: UserInfoResponse?
@@ -194,12 +195,17 @@ object UserPreferences {
         }
 
 
-    val isHistoryLoadedToday: Boolean
+    val wasHistoryLoadedRecently: Calendar
         get() {
-            val cal = Calendar.getInstance()
-            val dayOfYear = cal.get(Calendar.DAY_OF_YEAR)
-            return sPrefs.getInt(Constants.LAST_DOWNLOADED_HISTORY, -1) == dayOfYear
+            return Calendar.getInstance().apply {
+                timeInMillis = sPrefs.getLong(Constants.LAST_DOWNLOADED_HISTORY, 0)
+            }
         }
+
+    fun saveHistoryLoadedDate() {
+        val currentTime = System.currentTimeMillis()
+        sPrefs.edit().putLong(Constants.LAST_DOWNLOADED_HISTORY, currentTime).apply()
+    }
 
     val aAID: String?
         get() {
@@ -208,12 +214,12 @@ object UserPreferences {
 
     val totalMovieSeen: Int
         get() {
-            return sPrefs?.getInt(Constants.TOTAL_MOVIES_SEEN + "_" + userId, -1) ?: -1
+            return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN + "_" + userId, -1)
         }
 
     val totalMovieSeenLastMonth: Int
         get() {
-            return sPrefs?.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + userId, -1) ?: -1
+            return sPrefs.getInt(Constants.TOTAL_MOVIES_SEEN_LAST_DAYS + "_" + userId, -1)
         }
 
     val lastMovieSeen: String?
@@ -221,7 +227,7 @@ object UserPreferences {
             return sPrefs.getString(Constants.LAST_MOVIE_SEEN + "_" + userId, null)
         }
 
-    fun load(context: Context, gson:Gson) {
+    fun load(context: Context, gson: Gson) {
         sPrefs = context.getSharedPreferences(Constants.PREFS_FILE, Context.MODE_PRIVATE)
         this.gson = gson
     }
@@ -313,10 +319,10 @@ object UserPreferences {
         hasUserLoggedInBefore(logIn)
     }
 
-    fun setLastCheckInAttemptDate() {
+    fun setLastCheckInAttempt(checkIn: Checkin) {
         val editor = sPrefs.edit() ?: return
-        val dateKey = Constants.LAST_CHECK_IN_ATTEMPT_DATETIME + "_" + userId
-        editor.putLong(dateKey, System.currentTimeMillis())
+        val dateKey = Constants.LAST_CHECK_IN_ATTEMPT + "_" + userId
+        editor.putString(dateKey, gson.toJson(checkIn))
         editor.apply()
     }
 
@@ -350,11 +356,6 @@ object UserPreferences {
         sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_THEATERS, dayOfYear).apply()
     }
 
-    fun saveHistoryLoadedDate() {
-        val cal = Calendar.getInstance()
-        val dayOfYear = cal.get(Calendar.DAY_OF_YEAR)
-        sPrefs.edit().putInt(Constants.LAST_DOWNLOADED_HISTORY, dayOfYear).apply()
-    }
 
     fun setTotalMoviesSeen(totalMoviesSeen: Int) {
         sPrefs
@@ -375,8 +376,49 @@ object UserPreferences {
                 .putBoolean(Constants.SHOWN_PEAK_PRICING_ALERT, true).apply()
     }
 
-    val shownPeakPricing:Boolean
-    get() {
-        return sPrefs.getBoolean(Constants.SHOWN_PEAK_PRICING_ALERT, false)
+    val shownPeakPricing: Boolean
+        get() {
+            return sPrefs.getBoolean(Constants.SHOWN_PEAK_PRICING_ALERT, false)
+        }
+
+    var userLocation: UserLocation?
+        get() {
+            val loc = sPrefs.getString(Constants.USER_LOCATION, null) ?: return null
+            return try {
+                gson.fromJson(loc, UserLocation::class.java)
+            } catch (e: Exception) {
+                null
+            }
+        }
+        set(value) {
+            if (value != null) {
+                sPrefs.edit().putString(Constants.USER_LOCATION, gson.toJson(value)).apply()
+            } else {
+                sPrefs.edit().remove(Constants.USER_LOCATION).apply()
+            }
+        }
+    private val theatersLoadedKey by lazy {
+        "${Constants.LAST_DOWNLOADED_THEATERS}_${BuildConfig.VERSION_CODE}_${Calendar.getInstance().get(Calendar.DAY_OF_YEAR)}"
     }
+    var theatersLoadedToday: Boolean
+        get() {
+            return sPrefs.getInt(theatersLoadedKey, -1) == Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+        }
+        set(_) {
+            sPrefs.edit().putInt(theatersLoadedKey, Calendar.getInstance().get(Calendar.DAY_OF_YEAR)).apply()
+        }
+
+    val historyRatingAlertId: Int
+        get() {
+            return sPrefs.getInt(Constants.SHOW_HISTORY_RATING, 0)
+        }
+
+
+    fun setUserDismissedHistoryRateScreen(historyRatingID: Int) {
+        val prefs = sPrefs.edit() ?: return
+        prefs
+                .putInt(Constants.SHOW_HISTORY_RATING, historyRatingID).apply()
+
+    }
+
 }

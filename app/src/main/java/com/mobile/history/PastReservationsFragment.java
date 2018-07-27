@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.mobile.fragments.MPFragment;
 import com.mobile.helpers.LogUtils;
 import com.mobile.history.model.ReservationHistory;
@@ -50,7 +48,6 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
 
     public PastReservationsFragment() {
     }
-
 
     public static PastReservationsFragment newInstance() {
 
@@ -125,8 +122,8 @@ public class PastReservationsFragment extends MPFragment implements HistoryPoste
     }
 
     @Override
-    public void onPosterClicked(int pos, ReservationHistory historyposter, SimpleDraweeView sharedView) {
-        showFragment(HistoryDetailsFragment.Companion.newInstance(historyposter, ViewCompat.getTransitionName(sharedView)));
+    public void onPosterClicked(int pos, ReservationHistory historyposter, boolean isFromRatingScreen) {
+        showFragment(HistoryDetailsFragment.Companion.newInstance(historyposter, isFromRatingScreen));
     }
 }
 

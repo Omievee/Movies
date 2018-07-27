@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_black">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header"
+                style="@style/TitleView"
+                android:layout_marginTop="@dimen/status_bar_height"
+                android:text="@string/cancel_subscription"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/cancelBack"
+                style="@style/BackButton"
+                app:layout_constraintBottom_toBottomOf="@id/header"
+                app:layout_constraintTop_toTopOf="@id/header" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerCancelReason"
+                style="@style/MaterialSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/reason_for_cancellation"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintTop_toBottomOf="@id/header" />
+
+            <TextView
+                android:id="@+id/requiredLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_standard_and_half"
+                android:text="@string/required"
+                android:textColor="@color/red"
+                app:layout_constraintBottom_toBottomOf="@id/spinnerCancelReason"
+                app:layout_constraintEnd_toEndOf="@id/guideline4"
+                app:layout_constraintTop_toTopOf="@id/spinnerCancelReason" />
+
+            <com.mobile.profile.CancelAccountView
+                android:id="@+id/cancelComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_standard"
+                app:layout_constraintTop_toBottomOf="@id/spinnerCancelReason" />
+
+            <TextView
+                android:id="@+id/notice"
+                style="@style/CancellationNormalText"
+                android:text="@string/cancel_sub_notice"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cancelComments" />
+
+            <TextView
+                android:id="@+id/exception"
+                style="@style/CancellationSmallText"
+                android:layout_below="@id/notice"
+                android:text="@string/cancel_sub_exception"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/notice" />
+
+            <TextView
+                android:id="@+id/warning"
+                style="@style/CancellationSmallText"
+                android:layout_below="@id/exception"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:layout_marginTop="@dimen/doubledouble_margin_standard"
+                android:text="@string/cancel_sub_active"
+                android:textColor="@color/almost_white"
+                app:layout_constraintBottom_toTopOf="@id/cancellationError"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/exception" />
+
+            <TextView
+                android:id="@+id/cancellationError"
+                style="@style/TextErrorMessageItalic"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="@string/reason_for_cancellation_is_required"
+                app:layout_constraintBottom_toTopOf="@id/cancelbutton"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.mobile.widgets.MPProgressButton
+                android:id="@+id/cancelbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/bottom_navigation_height"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:mp_text="@string/cancel_subscription" />
+
+            <include
+                android:id="@+id/progress"
+                layout="@layout/view_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.88" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
+</FrameLayout>

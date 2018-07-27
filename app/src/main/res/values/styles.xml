@@ -215,6 +215,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ElevatedContainer">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:clipChildren">false</item>
+        <item name="android:background">@color/dark</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+
     <style name="LoyaltySpinnerItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -294,23 +301,22 @@
         <item name="android:text">@string/loyalty_my_loyalty_programs</item>
     </style>
 
-    <style name="BackButton">
+    <style name="ActionButton">
         <item name="android:layout_width">@dimen/action_bar_size</item>
         <item name="android:layout_height">@dimen/action_bar_size</item>
-        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:foreground">?selectableItemBackgroundBorderless</item>
         <item name="android:padding">@dimen/margin_standard</item>
+        <item name="android:tint">@color/white_ish</item>
+    </style>
+
+    <style name="BackButton" parent="ActionButton">
         <item name="android:tint">@color/white_ish</item>
         <item name="android:contentDescription">@string/cd_back_button</item>
         <item name="android:src">@drawable/iconback</item>
     </style>
 
-    <style name="CloseButton">
-        <item name="android:layout_width">@dimen/action_bar_size</item>
-        <item name="android:layout_height">@dimen/action_bar_size</item>
+    <style name="CloseButton" parent="ActionButton">
         <item name="layout_constraintEnd_toEndOf">parent</item>
-        <item name="android:background">?actionBarItemBackground</item>
-        <item name="android:padding">@dimen/margin_standard</item>
-        <item name="android:tint">@color/white_ish</item>
         <item name="android:contentDescription">@string/cd_back_button</item>
         <item name="android:src">@drawable/close_white</item>
     </style>
@@ -456,6 +462,10 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="MPText_Italic_Bold" parent="MPText">
+        <item name="android:textStyle">italic|bold</item>
+    </style>
+
     <style name="ContinueButton" parent="RedMoviepassButton">
         <item name="android:layout_height">@dimen/button_height</item>
         <item name="android:layout_marginTop">@dimen/margin_standard</item>
@@ -488,6 +498,10 @@
 
     <style name="DialogFragment">
         <item name="android:background">@drawable/dialog_fragment_graient</item>
+    </style>
+
+    <style name="SynopsisFragment" parent="DialogFragment">
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
 
     <style name="DialogFragmentTitleView" parent="TitleView">
@@ -875,4 +889,112 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+
+    <style name="TVText" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="TVTitle" parent="TVText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="TVInfo" parent="TVText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:text">@string/ticket_verification_info_text</item>
+    </style>
+
+
+    <style name="TVWarning" parent="TVText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:text">@string/ticket_verification_warning_text</item>
+    </style>
+
+    <style name="TVButton" parent="MPText">
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/red_text_csl</item>
+    </style>
+
+    <style name="DarkCardView" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/dark2</item>
+        <item name="cardCornerRadius">30dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <style name="InfoWindowCardView" parent="CardView.Light">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardPreventCornerOverlap">false</item>
+    </style>
+
+    <style name="MapSearchText" parent="MPText">
+        <item name="android:lines">1</item>
+        <item name="android:inputType">textNoSuggestions</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textCursorDrawable">@color/white</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/action_bar_size</item>
+    </style>
+
+    <style name="TheaterHeaderName" parent="MPText_Bold">
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TheaterHeaderAddress" parent="MPText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="CancellationNormalText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="android:lineSpacingExtra">6dp</item>
+    </style>
+
+    <style name="CancellationSmallText" parent="CancellationNormalText">
+        <item name="android:textSize">@dimen/text_size_12</item>
+    </style>
+
+    <style name="TextErrorMessage" parent="error_appearance">
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginTop">@dimen/margin_standard</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TextErrorMessageItalic" parent="TextErrorMessage">
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:textStyle">italic</item>
+    </style>
 </resources>

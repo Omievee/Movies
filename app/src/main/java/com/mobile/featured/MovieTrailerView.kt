@@ -22,7 +22,7 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
 import com.mobile.Constants
-import com.mobile.MoviePosterClickListener
+import com.mobile.screening.MoviePosterClickListener
 import com.mobile.model.Movie
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*

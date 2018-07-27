@@ -1,9 +1,25 @@
 package com.mobile.analytics
 
+import com.mobile.model.Availability
+import com.mobile.model.Screening
+import com.mobile.model.Theater
 import com.mobile.model.User
+import com.mobile.reservation.Checkin
+import com.mobile.reservation.CurrentReservationV2
+import com.mobile.responses.ReservationResponse
 
 interface AnalyticsManager {
 
     fun onUserLoggedIn(user:User)
     fun onUserLoggedOut(user:User?)
+    fun onAppOpened()
+    fun onShowtimeClicked(mytheater: Theater, screening: Screening, availability: Availability)
+    fun onTheaterOpened(theater:Theater)
+    fun onTheaterMapOpened()
+    fun onTheaterListOpened()
+    fun onTheaterSearch(query:String)
+    fun onMovieSearch(query:String)
+    fun onCheckinAttempt(checkIn: Checkin)
+    fun onCheckinFailed(checkIn: Checkin)
+    fun onCheckinSuccessful(checkIn: Checkin, reservationResponse: ReservationResponse)
 }

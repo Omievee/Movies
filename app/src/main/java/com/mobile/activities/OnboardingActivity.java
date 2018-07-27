@@ -8,24 +8,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,18 +32,13 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mobile.fragments.MoviesFragment;
 import com.mobile.fragments.NearMe;
-import com.mobile.fragments.ProfileAccountInformation;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.Plans;
-import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,9 +69,6 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_onboarding);
 
-
-
-//        getPlans();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mCoordinator = findViewById(R.id.main_content);

@@ -2,6 +2,7 @@ package com.mobile.adapters;
 
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,8 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.mobile.MoviePosterClickListener;
 import com.mobile.model.Movie;
+import com.mobile.screening.MoviePosterClickListener;
 import com.moviepass.R;
 
 import java.util.List;
@@ -150,6 +151,12 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
             onBind.printStackTrace();
 
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.title.setText("");
     }
 
     @Override

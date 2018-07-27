@@ -8,9 +8,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class ReservationResponse(var status: String? = null,
-                          var zipCode: String? = null,
+                          var zip: String? = null,
                           var showtime: String? = null,
-                          var reservation: Reservation? = null,
+                          val reservation: Reservation,
                           @SerializedName("e_ticket_confirmation") var eTicketConfirmation: ETicketConfirmation? = null
 ) : Parcelable {
 

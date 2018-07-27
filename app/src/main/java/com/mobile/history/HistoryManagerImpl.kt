@@ -1,8 +1,8 @@
 package com.mobile.history
 
 import com.mobile.UserPreferences
-import com.mobile.UserPreferences.isHistoryLoadedToday
 import com.mobile.UserPreferences.saveHistoryLoadedDate
+import com.mobile.UserPreferences.wasHistoryLoadedRecently
 import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
 import com.mobile.responses.HistoryResponse
@@ -13,6 +13,7 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Provider
 
@@ -22,21 +23,22 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
     override fun getHistory(): Observable<List<ReservationHistory>> {
         return Observable.create<List<ReservationHistory>> {
+
             val movies = realmHistory.get()
                     .where(ReservationHistory::class.java)
                     .findAll()
-            val wasHistoryUpdatedEver =
-                    isHistoryLoadedToday
 
             val wasHistoryUpdatedToday = movies
                     .find {
-                        DateUtils.isSameDay(it.updatedAt)
+                        DateUtils.everyFourHours(it.updatedAt)
                     } != null
             if (it.isDisposed) {
                 return@create
             }
+
             it.onNext(realmHistory.get().copyFromRealm(movies))
-            if (!wasHistoryUpdatedEver || !wasHistoryUpdatedToday) {
+
+            if (!wasHistoryUpdatedToday || hasItBeenFourHoursSinceHistoryTimeStamp()) {
                 getHistoryFromApi(it)
             } else {
                 if (!it.isDisposed) {
@@ -46,12 +48,31 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         }.compose(Schedulers.observableDefault())
     }
 
+    fun hasItBeenFourHoursSinceHistoryTimeStamp(): Boolean {
+        val sdf = SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
+        val historyTimeStampPlusFourHours = Calendar.getInstance()
+        val timeSaved = sdf.parse(wasHistoryLoadedRecently.time.toString())
+        historyTimeStampPlusFourHours.time = timeSaved
+        historyTimeStampPlusFourHours.add(Calendar.HOUR_OF_DAY, 4)
+        val curentSystemTime = Calendar.getInstance()
+
+        return curentSystemTime.time.after(historyTimeStampPlusFourHours.time)
+    }
+
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {
         getHistoryFromApi?.dispose()
         getHistoryFromApi =
                 api.reservationHistory
                         .compose(Schedulers.singleBackground())
                         .map { reservationHistoryResponse ->
+
+                            Collections.sort<ReservationHistory>(reservationHistoryResponse.reservations) { o1, o2 ->
+                                val latestReservation = o2.createdAt ?: 0
+                                val oldestReservation = o1.createdAt ?: 0
+
+                                latestReservation.compareTo(oldestReservation)
+                            }
+
                             reservationHistoryResponse.reservations?.let {
                                 realmHistory.get().executeTransaction { transaction ->
                                     transaction.insertOrUpdate(it)
@@ -67,7 +88,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
                             }
                             UserPreferences
                                     .setTotalMoviesSeen(it.size)
-                            val count = it.count { it.created?.after(Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR,-30) }.time)==true }
+                            val count = it.count { it.created?.after(Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -30) }.time) == true }
                             UserPreferences.setTotalMoviesSeenLast30Days(count)
                             it
                         }
@@ -88,7 +109,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     }
 
     override fun submitRating(history: ReservationHistory, wasGood: Boolean): Single<ReservationHistory> {
-        val id = history.id?:0
+        val id = history.id ?: 0
 
         val rating = when (wasGood) {
             true -> "GOOD"
@@ -96,17 +117,27 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
         }
         return api
                 .submitRatingRx(id, HistoryResponse(rating))
-                .doOnSuccess { v ->
+                .doOnSuccess { _ ->
                     history.userRating = rating
-                    realmHistory.get().executeTransaction { r->
+                    realmHistory.get().executeTransaction { r ->
                         r.insertOrUpdate(history)
                     }
                 }
-                .map { res ->
+                .map { _ ->
                     history
                 }
-
     }
 
-
+    override fun fetchLastMovieWithoutRating(): Single<ReservationHistory> {
+        return getHistory()
+                .map {
+                    it.firstOrNull()
+                }
+                .map {
+                    if (it.userRating != null) {
+                        throw IllegalArgumentException("Last movie has been rated")
+                    }
+                    it
+                }.singleOrError()
+    }
 }

@@ -7,6 +7,10 @@ package com.mobile.responses;
 public class CancellationResponse {
 
     String message;
+    String nextBillingDate;
+
+    public String getNextBillingDate() {return nextBillingDate;}
+
 
     public String getMessage() { return message; }
 }

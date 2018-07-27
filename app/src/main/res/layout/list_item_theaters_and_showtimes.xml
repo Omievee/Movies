@@ -28,16 +28,16 @@
                 android:layout_margin="@dimen/margin_standard">
 
                 <ImageView
-                    android:id="@+id/icon_ticket"
+                    android:id="@+id/iconTicket"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="@dimen/margin_standard"
-                    android:layout_toEndOf="@id/icon_seat"
+                    android:layout_toEndOf="@id/iconSeat"
                     android:src="@drawable/ticketnavwhite"
                     android:tint="@color/white" />
 
                 <ImageView
-                    android:id="@+id/icon_seat"
+                    android:id="@+id/iconSeat"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="@dimen/margin_half"

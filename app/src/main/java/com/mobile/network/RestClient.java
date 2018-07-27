@@ -45,7 +45,7 @@ public class RestClient {
     static String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
 
-    static String a1URL = "https://a1.moviepass.com ";
+    static String a1URL = "https://a1.moviepass.com";
 
 
     private static Api sAuthenticatedAPI;

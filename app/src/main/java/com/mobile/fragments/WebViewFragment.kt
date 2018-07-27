@@ -41,7 +41,7 @@ class WebViewFragment : Fragment() {
             }
             fragment = fragment.parentFragment
         }
-        if(webViewListener==null) {
+        if (webViewListener == null) {
             webViewListener = activity as? WebViewListener
         }
     }
@@ -51,16 +51,13 @@ class WebViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val cookeiManager = CookieManager.getInstance()
         val tokens = arrayOf(Pair("at", UserPreferences.authToken), Pair(("uid"), UserPreferences.userId))
-        if (tokens.filter { it.second != null }.size == tokens.size) {
-            tokens.forEach {
-                cookeiManager.setCookie(url, "${it.first}=${it.second}")
-                Log.d(url, "${it.first}=${it.second}")
-            }
+        tokens.forEach {
+            cookeiManager.setCookie(url, "${it.first}=${it.second}")
         }
         web?.apply {
             webViewClient = object : WebViewClient() {
                 override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                    return when (request?.url?.toString() == BuildConfig.REGISTRATION_URL+"/reactivationComplete") {
+                    return when (request?.url?.toString() == BuildConfig.REGISTRATION_URL + "/reactivationComplete") {
                         true -> {
                             callOnDone()
                             null
@@ -74,26 +71,26 @@ class WebViewFragment : Fragment() {
         var urlExtra: String = "/?"
         var firstTime: Boolean = true
         tokens.forEach {
-            if(firstTime){
+            if (firstTime) {
                 firstTime = false
-            } else{
+            } else {
                 urlExtra = "$urlExtra&"
             }
             urlExtra += "${it.first}=${it.second}"
         }
-        Log.d("WEB_VIEW",url+urlExtra)
-        web?.loadUrl(url+urlExtra)
+        Log.d("WEB_VIEW", url + urlExtra)
+        web?.loadUrl(url + urlExtra)
     }
 
     private fun callOnDone() {
         Single.create(
-                SingleOnSubscribe <Any> {
+                SingleOnSubscribe<Any> {
                     it.onSuccess(Any())
                 }
         ).compose(Schedulers.singleDefault())
-                .subscribe({data->
+                .subscribe({ _ ->
                     webViewListener?.onDoneWithWebview()
-                },{error->})
+                }, { error -> })
     }
 
     fun canGoBack(): Boolean {
