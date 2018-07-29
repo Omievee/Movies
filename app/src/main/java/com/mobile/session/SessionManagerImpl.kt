@@ -1,13 +1,20 @@
 package com.mobile.session
 
+import com.helpshift.util.HelpshiftContext
 import com.mobile.UserPreferences
+import com.mobile.history.HistoryManager
 import com.mobile.model.User
-import com.mobile.network.Api
-import com.mobile.responses.UserInfoResponse
-import com.mobile.rx.Schedulers
-import io.reactivex.Single
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import javax.inject.Provider
 
-class SessionManagerImpl() : SessionManager {
+class SessionManagerImpl : SessionManager {
+
+    val sub = PublishSubject.create<Boolean>()
+
+    override fun loggedOut(): Observable<Boolean> {
+        return sub
+    }
 
     override fun getUser(): User? {
         val userId = UserPreferences.userId
@@ -29,6 +36,7 @@ class SessionManagerImpl() : SessionManager {
     }
 
     override fun logout() {
+        HelpshiftContext.getCoreApi().logout()
         UserPreferences.clearEverything()
     }
 }

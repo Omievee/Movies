@@ -1,5 +1,6 @@
 package com.mobile.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +83,11 @@ public class ProfileAccountInformation extends MPFragment {
 
             @Override
             public void onFailure(Call<UserInfoResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
+                Activity activity = getActivity();
+                if(activity==null) {
+                    return;
+                }
+                Toast.makeText(activity, "Server Error; Please try again.", Toast.LENGTH_SHORT).show();
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });

@@ -27,6 +27,7 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
+import com.mobile.profile.ProfileFragmentV2
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
 import com.mobile.utils.onBackExtension
@@ -221,7 +222,7 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         profile = position.getAndIncrement()
         map.put(movies, MoviesFragment())
         map.put(theaters, TheatersFragmentV2())
-        map.put(profile, ProfileFragment())
+        map.put(profile, ProfileFragmentV2())
         map
     }
 

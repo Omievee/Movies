@@ -5,6 +5,7 @@ import com.mobile.analytics.AnalyticsManagerImpl
 import com.mobile.application.Application
 import com.mobile.gowatchit.GoWatchItManager
 import com.mobile.gowatchit.GoWatchItModule
+import com.mobile.history.HistoryManager
 import com.mobile.history.HistoryModule
 import com.mobile.home.RestrictionsManager
 import com.mobile.keyboard.KeyboardManager

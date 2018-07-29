@@ -1037,6 +1037,41 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="ProfileTitle" parent="MPText">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingStart">@dimen/margin_standard</item>
+        <item name="android:paddingEnd">@dimen/margin_standard</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <style name="ProfileSubHeader" parent="ProfileTitle">
+        <item name="android:gravity">center_vertical|end</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="ProfileVersion" parent="MPText">
+        <item name="android:textSize">10sp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="ProfileHeader" parent="ProfileTitle">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="ProfileNotificationTitle" parent="ProfileTitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ProfileLinkView" parent="ProfileTitle">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <style name="InterstitialTitle" parent="MPText_Bold">
         <item name="android:lineSpacingExtra">6sp</item>
         <item name="android:textSize">20sp</item>

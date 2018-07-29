@@ -23,6 +23,7 @@ import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.surge.ConfirmSurgeFragment
 import com.mobile.fragments.ScreeningsFragmentModule
+import com.mobile.profile.ProfileFragmentV2
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -105,6 +106,10 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector
     fun confirmSurgeFragment(): ConfirmSurgeFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun profileFragmentt(): ProfileFragmentV2
 
     @FragmentScope
     @ContributesAndroidInjector

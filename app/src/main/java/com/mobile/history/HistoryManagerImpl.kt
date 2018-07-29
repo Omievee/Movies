@@ -7,7 +7,7 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.network.Api
 import com.mobile.responses.HistoryResponse
 import com.mobile.rx.Schedulers
-import com.mobile.utils.DateUtils
+import com.mobile.session.SessionManager
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
@@ -16,9 +16,17 @@ import io.realm.Realm
 import java.util.*
 import javax.inject.Provider
 
-class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Api) : HistoryManager {
+class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Api, val sessionManager: SessionManager) : HistoryManager {
 
     var getHistoryFromApi: Disposable? = null
+
+
+    init {
+        sessionManager.loggedOut()
+                .subscribe {
+                    realmHistory.get().deleteAll()
+                }
+    }
 
     private fun getHistoryInternal(onlyFromWeb: Boolean = false): Observable<List<ReservationHistory>> {
         return Observable.create<List<ReservationHistory>> {

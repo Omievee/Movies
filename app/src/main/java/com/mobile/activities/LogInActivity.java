@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -31,11 +30,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.gson.GsonBuilder;
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.DeviceID;
-import com.mobile.UserPreferences;
 import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.fragments.WebViewListener;
@@ -47,7 +43,6 @@ import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
 import com.mobile.responses.MicroServiceRestrictionsResponse;
-import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.SubscriptionStatus;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
@@ -433,7 +428,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         Crashlytics.setUserIdentifier(String.valueOf(INSTANCE.getUserId()));
                         if (!INSTANCE.getHasUserLoggedInBefore()) {
                             INSTANCE.hasUserLoggedInBefore(true);
-                            Intent i = new Intent(LogInActivity.this, ActivatedCard_TutorialActivity.class);
+                            Intent i = new Intent(LogInActivity.this, ActivatedCardTutorialActivity.class);
                             startActivity(i);
                         } else {
                             Intent i = new Intent(LogInActivity.this, HomeActivity.class);

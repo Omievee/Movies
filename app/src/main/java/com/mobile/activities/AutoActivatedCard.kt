@@ -39,7 +39,7 @@ class AutoActivatedCard : AppCompatActivity() {
     fun checkPreference() {
         if (!UserPreferences.hasUserSeenCardActivationScreen && !UserPreferences.restrictions.subscriptionStatus.equals(SubscriptionStatus.ACTIVE)) {
             UserPreferences.setUserHasSeenCardActivationScreen(true)
-            val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
+            val activatedIntent = Intent(this, ActivatedCardTutorialActivity::class.java)
             activatedIntent.putExtra(Constants.SCREENING, screeningObject)
             activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
             startActivity(activatedIntent)
