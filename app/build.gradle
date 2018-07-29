@@ -36,7 +36,6 @@ android {
         buildConfigField "String", "GO_WATCH_IT_URL", '"https://click.moviepass.com/"'
         buildConfigField "String", "REGISTRATION_URL", '"https://stg.moviepass.com"'
         buildConfigField "String", "DEFAULT_LOCATION", 'null'
-        buildConfigField "com.mobile.location.UserLocation", "USER_LOCATION", 'null'
         buildConfigField "String", "REACTIVATION_URL", '"https://stg.moviepass.com/reactivate"'
 
     }
@@ -102,7 +101,6 @@ android {
         }
         debug {
             buildConfigField "String", "DEFAULT_LOCATION", '"portland or"'
-            buildConfigField "com.mobile.location.UserLocation", "USER_LOCATION", "new com.mobile.location.UserLocation(40.752,-73.996)"
         }
     }
 
