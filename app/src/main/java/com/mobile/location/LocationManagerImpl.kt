@@ -12,17 +12,35 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.mobile.application.Application
 import com.mobile.rx.Schedulers
+import com.moviepass.BuildConfig
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.Single
 import io.reactivex.Single.create
+import android.os.Build
+
 
 class LocationManagerImpl(val application: Application, val systemLocationManager: android.location.LocationManager, val fused: FusedLocationProviderClient?) : LocationManager {
 
     private var _lastLocation: UserLocation? = null
 
+    private val isEmulator: Boolean
+        get() {
+            return (Build.FINGERPRINT.startsWith("generic")
+                    || Build.FINGERPRINT.startsWith("unknown")
+                    || Build.MODEL.contains("google_sdk")
+                    || Build.MODEL.contains("Emulator")
+                    || Build.MODEL.contains("Android SDK built for x86")
+                    || Build.MANUFACTURER.contains("Genymotion")
+                    || Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
+                    || "google_sdk" == Build.PRODUCT)
+        }
+
     init {
+        if (isEmulator) {
+            _lastLocation = BuildConfig.USER_LOCATION
+        }
         location().compose(Schedulers.singleDefault())
                 .subscribe({
                     _lastLocation = it
