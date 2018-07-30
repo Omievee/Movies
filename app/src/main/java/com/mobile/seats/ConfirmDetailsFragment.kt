@@ -11,6 +11,7 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.model.GuestTicket
+import com.mobile.model.GuestTicketType
 import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
 import com.mobile.network.Api
@@ -160,6 +161,7 @@ class ConfirmDetailsFragment : Fragment() {
                         price = tpd.ticket.price,
                         seatPosition = seat?.asPosition(),
                         email = when {
+                            tpd.ticket.ticketType==GuestTicketType.CHILD_COMPANION->null
                             emails.hasNext() -> emails.next().email
                             else -> null
                         }
