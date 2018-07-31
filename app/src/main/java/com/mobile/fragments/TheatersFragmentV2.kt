@@ -51,6 +51,7 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
     }
 
     override fun scrollToTop() {
+        activity?:return
         recyclerView.scrollToPosition(0)
     }
 
@@ -146,30 +147,35 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
     }
 
     override fun showNoTheatersFound() {
+        activity?:return
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
         recyclerView.visibility = View.GONE
     }
 
     override fun hideNoTheatersFound() {
+        activity?:return
         errorView.hide()
         recyclerView.visibility = View.VISIBLE
     }
 
     override fun showNoLocationFound() {
+        activity?:return
         errorView.show(ApiError(error = Error(message = resources.getString(R.string.no_theaters_found))))
         recyclerView.visibility = View.GONE
     }
 
     override fun showProgress() {
+        activity?:return
         progress.visibility = View.VISIBLE
     }
 
     override fun hideProgress() {
+        activity?:return
         progress.visibility = View.GONE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         presenter.onDestroy()
     }
 }
