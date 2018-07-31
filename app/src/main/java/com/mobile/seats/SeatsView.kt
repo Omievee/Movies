@@ -187,6 +187,8 @@ class SeatsAdapter(var seatClickListener: SeatClickListener? = null) : RecyclerV
                     }?.column?:0 + 1
             if(maxCol==seatingsInfo.columns) {
                 maxCol += 1
+            } else if(maxCol < seatingsInfo.columns) {
+                maxCol = seatingsInfo.columns
             }
             val data = mutableListOf<SeatInfo?>()
             for (i in minRow..maxRow) {
