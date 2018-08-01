@@ -22,6 +22,7 @@ open class Theater(
         var address: String? = null,
         var zip: String? = null,
         var ticketType: String? = null,
+        var theaterChainName:String? = null,
         var moviepassId:Int = 0
 ) : RealmModel, Parcelable {
 

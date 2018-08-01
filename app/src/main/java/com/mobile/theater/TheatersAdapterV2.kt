@@ -11,6 +11,7 @@ import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
 import com.mobile.listeners.TheatersClickListener
 import com.mobile.location.UserLocation
+import com.mobile.model.AmcDmaMap
 import com.mobile.utils.text.toFixed
 import com.mobile.utils.text.toMiles
 import com.moviepass.R
@@ -64,10 +65,18 @@ class TheatersAdapterV2(val onTheaterClicked:TheaterClickListener) : RecyclerVie
     companion object {
         const val TYPE_E_TICKET = 0
         const val TYPE_STANDARD = 1
-        fun createData(last: TheatersData?, userLocation: UserLocation, theaters: List<com.mobile.model.Theater>): TheatersData {
+        fun createData(last: TheatersData?,
+                       userLocation: UserLocation,
+                       theaters: List<com.mobile.model.Theater>,
+                       dataMap:AmcDmaMap): TheatersData {
             val old = last?.theaters ?: emptyList()
+            val showDistance = !dataMap.hasOneMoveToBottom(theaters)
             val new = theaters.map {
-                TheaterPresentation(it, UserLocation.haversine(userLocation.lat, userLocation.lon, it.lat, it.lon).toMiles().toFixed(2))
+                TheaterPresentation(it,
+                        when(showDistance) {
+                            true-> UserLocation.haversine(userLocation.lat, userLocation.lon, it.lat, it.lon).toMiles().toFixed(2)
+                            false-> null
+                        })
             }
             return TheatersData(new, DiffUtil.calculateDiff(BasicDiffCallback(old, new)))
         }
@@ -76,7 +85,7 @@ class TheatersAdapterV2(val onTheaterClicked:TheaterClickListener) : RecyclerVie
 
 class TheatersData(val theaters: List<TheaterPresentation>, val diffResult: DiffUtil.DiffResult)
 
-data class TheaterPresentation(val theater: Theater, val distance: Double) : ItemSame<TheaterPresentation> {
+data class TheaterPresentation(val theater: Theater, val distance: Double?) : ItemSame<TheaterPresentation> {
     override fun sameAs(same: TheaterPresentation): Boolean {
         return same.theater.id == theater.id
     }

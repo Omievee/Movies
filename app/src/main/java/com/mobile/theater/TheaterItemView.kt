@@ -35,7 +35,11 @@ class TheaterItemView(context: Context, attr: AttributeSet? = null) : FrameLayou
         theaterAddress.text = presentation.theater.address
         val theater = presentation.theater
         theaterCity.text = "${theater.city}, ${theater.state} ${theater.zip}"
-        theaterDistance.text = "${presentation.distance} mi"
+        theaterDistance.text =
+                when(presentation.distance) {
+                    null -> null
+                    else-> "${presentation.distance} mi"
+                }
         iconSeat.visibility = when (presentation.theater.ticketTypeIsSelectSeating()) {
             true -> View.VISIBLE
             false -> View.INVISIBLE

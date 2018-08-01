@@ -418,7 +418,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
                     if (restriction.getSubscriptionStatus().equals(SubscriptionStatus.MISSING)
-                     || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
+                            || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
                             restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equals(SubscriptionStatus.ENDED_FREE_TRIAL)) {
                         progress.setVisibility(View.GONE);
                         hideKeyboard();
