@@ -613,7 +613,9 @@
     <string name="street_address2_hint">Billing Street Address #2</string>
     <string name="continue_to_eticketing">Continue to E-Ticketing</string>
     <string name="checkin">Check In</string>
-    <string name="reservation_surge_description">This showtime is now at Peak Pricing. There will be a surcharge of <b>%1$s</b> for your ticket.</string>
+    <string name="reservation_surge_description"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of _surcharge_ for your ticket.]]></string>
+    <string name="reservation_surge_start"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of ]]></string>
+    <string name="reservation_surge_end"><![CDATA[ for your ticket.]]></string>
     <string name="reservation_will_surge_description">This showtime is nearing Peak Pricing. There is no surcharge if you check-in at this time, but a surcharge of <b>%1$s</b> could be added soon.</string>
     <string name="reservation_will_surge_unknown_description">This showtime is nearing Peak Pricing. There is no surcharge if you check-in at this time, but a surcharge could be added soon.</string>
     <string name="peak_surcharge">Peak Surcharge:</string>

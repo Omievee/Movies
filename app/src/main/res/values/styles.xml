@@ -432,18 +432,14 @@
         <item name="android:background">@color/test_black</item>
     </style>
 
-    <style name="ShowtimeButton">
-        <item name="android:background">@drawable/showtime_background</item>
-        <item name="android:minHeight">40dp</item>
+    <style name="ShowtimeButton" parent="MPText_Bold">
+        <item name="android:minHeight">26dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">15dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
         <item name="android:textColor">@color/showtime_csl</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 

@@ -145,12 +145,24 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
-        val dimens = resources.getDimension(R.dimen.bottom_navigation_height)
-        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = dimens.toInt()))
+
         swipeRefresh.setOnRefreshListener {
             presenter.onRefresh()
         }
         presenter.onViewCreated()
+    }
+
+    override fun setRecyclerSpacing(topSpacing:Boolean) {
+        val dimens = resources.getDimension(R.dimen.bottom_navigation_height)
+        val top = when(topSpacing) {
+            true-> resources.getDimension(R.dimen.margin_half)
+            false-> 0f
+        }
+        recyclerView.addItemDecoration(
+                SpaceDecorator(
+                        lastBottom = dimens.toInt(),
+                        firstTop = top.toInt()
+                ))
     }
 
     override fun onResume() {

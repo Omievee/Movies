@@ -1,5 +1,7 @@
 package com.mobile.utils.text
 
+import android.content.res.Resources
+import android.support.annotation.StringRes
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.*
