@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
+import com.appboy.AppboyLifecycleCallbackListener;
+import com.appboy.support.AppboyLogger;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
@@ -59,7 +62,8 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         mApplication = this;
     }
 
-    @Nullable public Activity getCurrentActivity() {
+    @Nullable
+    public Activity getCurrentActivity() {
         return activityStack.peek();
     }
 
@@ -71,6 +75,8 @@ public class Application extends MultiDexApplication implements HasActivityInjec
     @Override
     public void onCreate() {
         super.onCreate();
+        registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener());
+        AppboyLogger.setLogLevel(Log.VERBOSE);
         inject();
         UserPreferences.INSTANCE.load(this, gson);
         Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
@@ -88,11 +94,13 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
         Core.init(All.getInstance());
+
+
         registerActivityLifecycleCallbacks(new ActivigtyCallbacks() {
             @Override
             public void onActivityResumed(@Nullable Activity activity) {
                 activityStack.push(activity);
-                if(firstActivity==null) {
+                if (firstActivity == null) {
                     firstActivity = activity;
                     analyticsManager.onAppOpened();
                 }
@@ -100,7 +108,7 @@ public class Application extends MultiDexApplication implements HasActivityInjec
 
             @Override
             public void onActivityDestroyed(@Nullable Activity activity) {
-                if(firstActivity==activity) {
+                if (firstActivity == activity) {
                     return;
                 }
                 activityStack.remove(activity);

@@ -7,8 +7,6 @@ import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
 import com.mobile.activities.OnboardingActivity
@@ -16,7 +14,6 @@ import com.mobile.home.HomeActivity
 import com.mobile.responses.SubscriptionStatus.*
 import com.moviepass.R
 import dagger.android.AndroidInjection
-import java.io.IOException
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
@@ -83,7 +80,6 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun launchActivity(typeMovie: Int, id: Int) {
-
         Handler().postDelayed({
             if (UserPreferences.userId == 0 || UserPreferences.userId.equals("")) {
                 val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
@@ -124,6 +120,7 @@ class SplashActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg strings: Void): String? {
             var adInfo: AdvertisingIdClient.Info? = null
+
             try {
                 adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
 

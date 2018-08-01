@@ -17,11 +17,11 @@ import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
 import com.mobile.session.UserManager
 import com.mobile.session.UserManagerImpl
-import com.mobile.upload.UploadModule
-import com.mobile.ticketverification.BarcodeDetectorManager
-import com.mobile.ticketverification.DetectedTextManager
 import com.mobile.theater.TheaterModule
 import com.mobile.theater.TheaterModuleUI
+import com.mobile.ticketverification.BarcodeDetectorManager
+import com.mobile.ticketverification.DetectedTextManager
+import com.mobile.upload.UploadModule
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -31,13 +31,13 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideAnalyticsManager(goWatchItManager: GoWatchItManager): AnalyticsManager {
-        return AnalyticsManagerImpl(goWatchItManager)
+    fun provideAnalyticsManager(context: Application, goWatchItManager: GoWatchItManager): AnalyticsManager {
+        return AnalyticsManagerImpl(context, goWatchItManager)
     }
 
     @Provides
     @Singleton
-    fun restrictionManager() : RestrictionsManager {
+    fun restrictionManager(): RestrictionsManager {
         return RestrictionsManager()
     }
 
@@ -49,7 +49,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun userManager(api:Api): UserManager {
+    fun userManager(api: Api): UserManager {
         return UserManagerImpl(api)
     }
 
@@ -67,7 +67,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideKeyboardManager(application: Application):KeyboardManager {
+    fun provideKeyboardManager(application: Application): KeyboardManager {
         return KeyboardManagerImpl(application)
     }
 

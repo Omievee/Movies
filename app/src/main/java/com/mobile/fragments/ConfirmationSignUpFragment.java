@@ -2,7 +2,6 @@ package com.mobile.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivatedCardTutorialActivity;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
@@ -87,11 +85,11 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
                     RestClient.authToken = userRESPONSE.getAuthToken();
 
-                    UserPreferences.INSTANCE.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
-                    Intent i = new Intent(myContext, ActivatedCardTutorialActivity.class);
-                    i.putExtra("launch", true);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+//                    UserPreferences.INSTANCE.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
+//                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
+//                    i.putExtra("launch", true);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(i);
 
 
                 } else if (response.errorBody() != null) {

@@ -62,17 +62,7 @@
         </service>
 
         <!-- Taplytics -->
-        <receiver
-            android:name="com.mobile.BroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="taplytics.push.OPEN" />
-                <action android:name="taplytics.push.DISMISS" />
-            </intent-filter>
-        </receiver>
+
 
         <service android:name="com.taplytics.sdk.TLGcmIntentService" />
 
@@ -137,10 +127,21 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/RedTheme">
-            <intent-filter>
+            <intent-filter android:priority="1">
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:host="moviepass.com" />
+                <data android:pathPrefix="/go" />
+                <data android:scheme="http" />
+
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -148,12 +149,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="moviepass.com"/>
-                <data android:pathPrefix="/go"/>
-                <data android:scheme="http"/>
-                <data android:scheme="https"/>
-
+                <data
+                    android:host="www.moviepass.com"
+                    android:pathPrefix="/go"
+                    android:scheme="https" />
             </intent-filter>
+
+
         </activity>
 
         <activity
@@ -262,6 +264,30 @@
         <activity
             android:name="com.mobile.activities.AutoActivatedCard"
             android:screenOrientation="portrait" />
+
+
+        <!--BRAZE RECIEVER-->
+        <receiver
+            android:name="com.appboy.AppboyGcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.moviepass.mobile" />
+            </intent-filter>
+        </receiver>
+
+        <!--CUSTOM RECIEVER DEEP LINKS -->
+        <receiver android:name="com.mobile.BroadcastReceiver">
+            <intent-filter>
+                <!-- Replace YOUR-APPLICATION-PACKAGE-NAME with the package name of your app -->
+                <action android:name="com.moviepass.mobile.intent.APPBOY_PUSH_RECEIVED" />
+                <action android:name="com.moviepass.mobile.intent.APPBOY_NOTIFICATION_OPENED" />
+            </intent-filter>
+        </receiver>
+
     </application>
+
 
 </manifest>

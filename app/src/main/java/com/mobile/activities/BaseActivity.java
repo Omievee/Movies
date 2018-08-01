@@ -14,19 +14,8 @@ import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.helpshift.util.HelpshiftContext;
-
-import com.mobile.helpers.LogUtils;
-import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
-import com.taplytics.sdk.Taplytics;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.mobile.UserPreferences.INSTANCE;
-import static java.lang.String.valueOf;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -39,22 +28,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            JSONObject attributes = new JSONObject();
-            attributes.put("email", INSTANCE.getUserEmail());
-            attributes.put("name", INSTANCE.getUserName());
-            attributes.put("user_id", valueOf(INSTANCE.getUserId()));
-            LogUtils.newLog("taplytics put", INSTANCE.getUserEmail());
-            Taplytics.setUserAttributes(attributes);
-        } catch (JSONException e) {
+//        try {
+//            JSONObject attributes = new JSONObject();
+//            attributes.put("email", INSTANCE.getUserEmail());
+//            attributes.put("name", INSTANCE.getUserName());
+//            attributes.put("user_id", valueOf(INSTANCE.getUserId()));
+//            LogUtils.newLog("taplytics put", INSTANCE.getUserEmail());
+//            Taplytics.setUserAttributes(attributes);
+//        } catch (JSONException e) {
+//
+//        }
 
-        }
-
-        try {
-            HelpshiftContext.getCoreApi().login(HelpshiftHelper.Companion.getHelpshiftUser());
-        } catch (Exception e) {
-
-        }
+//        try {
+//            HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
+//        } catch (Exception e) {
+//
+//        }
 
 
     }

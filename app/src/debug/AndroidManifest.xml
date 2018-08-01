@@ -4,18 +4,20 @@
     package="com.moviepass">
 
     <application
-        tools:replace="android:name"
-        android:name=".debug.DebugApplication">
+        android:name=".debug.DebugApplication"
+        tools:replace="android:name">
         <meta-data
-            tools:replace="android:value"
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBOSj4DA2yt9zDlV2RI5hmfP1RuNKuMe3o" />
-        <activity android:name=".debug.DebugActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="MP Debug">
+            android:value="AIzaSyBOSj4DA2yt9zDlV2RI5hmfP1RuNKuMe3o"
+            tools:replace="android:value" />
+        <activity
+            android:name=".debug.DebugActivity"
+            android:label="MP Debug"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <action android:name="android.intent.action.MAIN"/>
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
     </application>

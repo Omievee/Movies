@@ -104,9 +104,14 @@ object UserPreferences {
             return sPrefs.getString(Constants.USER_AUTH_TOKEN, "") ?: ""
         }
 
-    val userName: String
+    val firstName: String
         get() {
             return sPrefs.getString(Constants.USER_FIRST_NAME, "bob") ?: "bob"
+        }
+
+    val lastName: String
+        get() {
+            return sPrefs.getString(Constants.USER_LAST_NAME, "") ?: ""
         }
 
     val userEmail: String
@@ -189,6 +194,7 @@ object UserPreferences {
         get() {
             return java.lang.Double.longBitsToDouble(sPrefs.getLong(Constants.PREFS_LATITUDE, java.lang.Double.doubleToLongBits(0.0)))
         }
+
 
     var pushPermission: Boolean
         get() {
@@ -346,13 +352,14 @@ object UserPreferences {
     }
 
     fun setUserCredentials(userId: Int, deviceAndroidID: String?, authToken: String?,
-                           firstName: String?, email: String?, oneDeviceID: String?) {
+                           firstName: String?, lastName: String?, email: String?, oneDeviceID: String?) {
         val editor = sPrefs.edit() ?: return
 
         editor.putInt(Constants.USER_ID, userId)
         editor.putString(Constants.DEVICE_ANDROID_ID, deviceAndroidID)
         editor.putString(Constants.USER_AUTH_TOKEN, authToken)
         editor.putString(Constants.USER_FIRST_NAME, firstName)
+        editor.putString(Constants.USER_LAST_NAME, lastName)
         if (oneDeviceID != null && !oneDeviceID.isEmpty())
             editor.putString(Constants.ONE_DEVICE_ID, oneDeviceID)
         editor.putString(Constants.USER_EMAIL, email)

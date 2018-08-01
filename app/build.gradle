@@ -16,7 +16,7 @@ apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -287,6 +287,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
+
+    //Braze
+    implementation 'com.appboy:android-sdk-ui:2.5.+'
+
 
 }
 

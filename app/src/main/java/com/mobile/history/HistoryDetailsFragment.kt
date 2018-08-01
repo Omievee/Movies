@@ -38,6 +38,8 @@ class HistoryDetailsFragment : MPFragment() {
     @Inject
     lateinit var historyManagerImpl: HistoryManager
 
+
+
     var historySub: Disposable? = null
 
     var fromRateScreen: Boolean = false
