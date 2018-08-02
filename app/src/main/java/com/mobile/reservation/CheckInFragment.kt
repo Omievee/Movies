@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.*
 import javax.inject.Inject
 import com.mobile.activities.ActivateMoviePassCard
+import com.mobile.adapters.toBold
 import com.mobile.network.SurgeResponse
 import com.mobile.responses.PeakPass
 import com.mobile.responses.PeakPassInfo
@@ -87,7 +89,10 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                         title = getString(R.string.peak_pass),
                         description = getString(R.string.peak_pass_description),
                         subDescription = when(peakPass) {
-                            null-> null
+                            null-> when(peak.nextRefillDate) {
+                                null-> null
+                                else-> resources.getString(R.string.next_pass_applied, peak.nextRefillDate)
+                            }
                             else-> resources.getString(R.string.peak_pass_expires, peakPass.expiresAsString())
                         },
                         gravity = Gravity.CENTER
@@ -244,7 +249,13 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
     override fun showSurge(surge: Surge, peakPassInfo: PeakPassInfo, peakPass: PeakPass?) {
         continueDescription.apply {
             visibility = View.VISIBLE
-            text = getString(R.string.reservation_surge_description, surge.costAsDollars)
+            val span = SpannableStringBuilder()
+            span.append(resources.getString(R.string.reservation_surge_start))
+            span.append(' ')
+            span.append(surge.costAsDollars.toBold(context))
+            span.append(' ')
+            span.append(resources.getString(R.string.reservation_surge_end))
+            text = span
         }
         continueOrCheckin.apply {
             text = R.string.continue_button

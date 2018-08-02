@@ -147,10 +147,6 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
     }
 
-    private fun showSurgeModal(text: String) {
-        view.showSurgeModal(text)
-    }
-
     private fun createReservation() {
         val checkin = checkin ?: return
         val perf = checkin.availability.providerInfo ?: return

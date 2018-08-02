@@ -76,6 +76,7 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             }
         }
         view.showTheaterBottomSheetNecessary(theater)
+        view.setRecyclerSpacing(movie!=null)
     }
 
     private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {

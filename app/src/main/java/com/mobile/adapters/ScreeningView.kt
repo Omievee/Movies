@@ -70,6 +70,17 @@ fun String?.toFormattedRating(context: Context): SpannableStringBuilder {
     }
 }
 
+fun String?.toBold(context: Context): SpannableStringBuilder {
+    val ratingStr = this
+    return android.text.SpannableStringBuilder().apply {
+        val resources = context.resources
+        val bold = android.text.SpannableString(ratingStr).apply {
+            setSpan(android.text.style.TextAppearanceSpan(context, com.moviepass.R.style.MPText_Bold), 0, length, android.text.SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        append(bold)
+    }
+}
+
 class ScreeningView(context: Context) : FrameLayout(context) {
 
     val adapter: ShowtimeAdapter = ShowtimeAdapter()
@@ -88,8 +99,11 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         recyclerView.adapter = adapter
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(SpaceDecorator(
-                top = resources.getDimension(R.dimen.margin_quarter).toInt(),
-                bottom = resources.getDimension(R.dimen.margin_half).toInt()))
+                firstStart = resources.getDimension(R.dimen.margin_quarter).toInt(),
+                start = resources.getDimension(R.dimen.margin_quarter).toInt(),
+                top = resources.getDimension(R.dimen.dp_1).toInt(),
+                bottom = resources.getDimension(R.dimen.margin_half).toInt() + resources.getDimension(R.dimen.dp_1).toInt()
+        ))
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
