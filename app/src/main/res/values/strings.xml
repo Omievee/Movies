@@ -567,7 +567,7 @@
         <item quantity="one">You have %1$d Peak Pass</item>
         <item quantity="many">You have %1$d Peak Passes</item>
         <item quantity="other">You have %1$d Peak Passes</item>
-        <item quantity="zero">You hve no Peak Passes</item>
+        <item quantity="zero">You have no Peak Passes</item>
     </plurals>
     <plurals name="passes">
         <item quantity="one">%1$d Pass</item>
