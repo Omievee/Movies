@@ -1,6 +1,7 @@
 package com.mobile.gowatchit
 
 import com.mobile.model.Availability
+import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater
 import com.mobile.reservation.Checkin
@@ -14,6 +15,7 @@ interface GoWatchItManager {
     fun userOpenedApp()
     fun onTheaterOpened(theater: Theater)
     fun onMovieSearched(query: String)
+    fun onMovieImpression(movie:Movie)
     fun onTheaterSearch(query: String)
     fun onTicketPurchasedConfirmation(checkIn: Checkin, reservationV2: CurrentReservationV2)
     fun onCheckInSuccessful(checkIn: Checkin)

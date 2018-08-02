@@ -58,6 +58,7 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
     private fun doSurge() {
         val surge = checkin?.screening?.getSurge(checkin?.availability?.startTime, UserPreferences.restrictions.userSegments)
                 ?: return
+        val peak = UserPreferences.restrictions.peakPassInfo
         when (surge.level) {
             SurgeType.NO_SURGE -> {
                 view.showCheckin()
@@ -66,12 +67,12 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                 }
             }
             SurgeType.WILL_SURGE -> {
-                view.showWillSurge(surge)
+                view.showWillSurge(surge, peak, peak.currentPeakPass)
                 if (showProofOfPurchase) {
                     view.showCheckinWithProof()
                 }
             }
-            else -> view.showSurge(surge)
+            else -> view.showSurge(surge, peak, peak.currentPeakPass)
         }
     }
 
@@ -91,7 +92,14 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
         val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
         when (surge.level) {
-            SurgeType.SURGING -> return view.navigateToSurchargeConfirm(checkin)
+            SurgeType.SURGING -> {
+                val peakPass = UserPreferences.restrictions.peakPassInfo.currentPeakPass
+                return when (peakPass) {
+                    null -> view.navigateToSurchargeConfirm(checkin)
+                    else -> view.showApplyPeakPass(checkin, UserPreferences.restrictions.peakPassInfo, UserPreferences.restrictions.peakPassInfo.currentPeakPass)
+                }
+
+            }
             else -> {
             }
         }
@@ -111,10 +119,21 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
     }
 
     private fun onSurgeResponse(it: SurgeResponse) {
+        val checkin = checkin ?: return
         when (it.currentlyPeaking) {
             true -> {
-                checkin?.screening?.updateSurge(checkin?.availability, it)
-                showSurgeModal(it)
+                checkin.screening.updateSurge(checkin.availability, it)
+                val surge = checkin.getSurge(UserPreferences.restrictions.userSegments)
+                val peak = UserPreferences.restrictions.peakPassInfo
+                val peakPass = peak.currentPeakPass
+                when (peak.enabled) {
+                    false -> showSurgeModal(it)
+                    true -> when (peakPass) {
+                        null -> view.showNowPeakingNoPeakPass(checkin, surge)
+                        else -> view.showNowPeakingApplyPeakPass(it, peak, peakPass)
+                    }
+                }
+
             }
             false -> createReservation()
         }
@@ -165,6 +184,25 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
     fun onContinueDialogClicked() {
         val chekcin = checkin ?: return
         view.navigateToSurchargeConfirm(chekcin)
+    }
+
+    fun onPeakPassInfoClicked() {
+        val checkin = checkin ?: return
+        val peak = UserPreferences.restrictions.peakPassInfo
+        val peakPass = peak.currentPeakPass
+        view.showPeakPassSheet(checkin, peak, peakPass)
+    }
+
+    fun onApplyPeakPassClicked() {
+        val checkin = checkin ?: return
+        checkin.peakPass = UserPreferences.restrictions.peakPassInfo.currentPeakPass
+        view.navigateToSurchargeConfirm(checkin)
+    }
+
+    fun onSavePeakPassForLaterClicked() {
+        val checkin = checkin ?: return
+        checkin.peakPass = null
+        view.navigateToSurchargeConfirm(checkin)
     }
 
 }

@@ -321,6 +321,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                progress.setVisibility(View.GONE);
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
@@ -459,7 +460,8 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
             @Override
             public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
-
+                progress.setVisibility(View.GONE);
+                t.printStackTrace();
             }
         });
     }

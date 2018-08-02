@@ -5,11 +5,10 @@ import com.mobile.model.Availability
 import com.mobile.model.Screening
 import com.mobile.model.SeatInfo
 import com.mobile.model.Theater
+import com.mobile.reservation.Checkin
 
 class SelectSeatPayload(
-        val theater: Theater? = null,
-        val screening: Screening? = null,
-        val availability: Availability? = null,
+        val checkin:Checkin?=null,
         val ticketPurchaseData: List<TicketPurchaseData>? = null,
         var selectedSeats: List<SeatInfo>? = null,
         var emails: MutableList<GuestEmail> = mutableListOf()

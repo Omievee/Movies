@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dark"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text="@string/you_got_a_new_peak_pass"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/TitleView" />
+
+    <ImageView
+        android:id="@+id/closeButton"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/CloseButton" />
+
+    <TextView
+        style="@style/PeakPassDescription"
+        android:id="@+id/description"
+        app:layout_constraintTop_toBottomOf="@id/titleView"
+        app:layout_constraintBottom_toTopOf="@id/surge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/peak_pass_description_onboard" />
+
+    <android.support.constraint.ConstraintLayout
+        app:layout_constraintTop_toBottomOf="@id/description"
+        app:layout_constraintBottom_toTopOf="@+id/subDescription"
+        android:id="@+id/surge"
+        app:layout_constraintWidth_percent=".5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_width="0dp"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/spotlight"
+            android:layout_width="match_parent"
+            android:src="@drawable/peak_pass_spotlight"
+            android:layout_height="match_parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        style="@style/PeakPassDescription"
+        android:id="@+id/subDescription"
+
+        app:layout_constraintTop_toBottomOf="@id/surge"
+        app:layout_constraintBottom_toTopOf="@+id/terms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/peak_pass_subdescription_onboard" />
+
+    <TextView
+        android:id="@+id/terms"
+        style="@style/PeakPassTerms"
+        android:layout_width="match_parent"
+        android:text="@string/peak_pass_terms"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>

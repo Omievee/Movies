@@ -267,6 +267,7 @@ dependencies {
     implementation('com.timehop.stickyheadersrecyclerview:library:0.4.3') {
         exclude group: "com.android.support"
     }
+    implementation 'com.aurelhubert:ahbottomnavigation:2.2.0'
 
     //Spinner
     implementation 'com.jaredrummler:material-spinner:1.2.4'

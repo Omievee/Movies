@@ -511,7 +511,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
                 .findAll());
 
         if (movie != null && movie.size() > 0) {
-            showFragment(MovieFragment.newInstance(movie.get(0)));
+            showFragment(ScreeningsFragment.Companion.newInstance(new ScreeningsData(null, movie.get(0))));
         }
         progress.setVisibility(View.GONE);
     }

@@ -242,6 +242,8 @@ public class RestClient {
 
         Gson gson = new GsonBuilder()
                 .setLenient()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .create();
 
 
@@ -299,6 +301,8 @@ public class RestClient {
                 .registerTypeAdapter(new TypeToken<ParcelableDate>() {
                 }.getType(), new DateAdapter())
                 .setLenient()
+                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+                }.getType(), new DateAdapter())
                 .create();
         httpClient.addInterceptor(logging);
 

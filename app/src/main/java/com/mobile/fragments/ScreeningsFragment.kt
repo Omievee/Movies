@@ -1,16 +1,16 @@
 package com.mobile.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Pair
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.mobile.ApiError
+import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
@@ -19,14 +19,17 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.listeners.ShowtimeClickListener
 import com.mobile.location.UserLocation
 import com.mobile.model.*
+import com.mobile.peakpass.PeakPassActivity
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screenings.PinnedBottomSheetBehavior
+import com.mobile.seats.SheetData
 import com.mobile.surge.PeakPricingActivity
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
+import com.mobile.utils.showBottomFragment
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -73,13 +76,6 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         })
         when (movie.isComingSoon) {
             true -> bottom.locked = true
-        }
-    }
-
-    override fun surgeInterstitialFlow(second: ScreeningsResponseV2) {
-        val context = context?:return
-        if(!UserPreferences.shownPeakPricing && second.isSurging(UserPreferences.restrictions.userSegments)) {
-            startActivity(PeakPricingActivity.newInstance(context))
         }
     }
 
@@ -183,7 +179,6 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
                 selected = selected,
                 userSegments = segments,
                 dataMap = dataMap
-
         )
     }
 
@@ -205,6 +200,25 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_screenings, container, false)
+    }
+
+    override fun surgeInterstitialFlow(screening: ScreeningsResponseV2, lastCode: Int) {
+        val activity = activity ?: return
+        if (lastCode != Constants.SURGE_INTERSTITIAL_CODE && !UserPreferences.shownPeakPricing && screening.isSurging(UserPreferences.restrictions.userSegments)) {
+            startActivityForResult(PeakPricingActivity.newInstance(activity), Constants.SURGE_INTERSTITIAL_CODE)
+        } else if (UserPreferences.showPeakPassOnboard) {
+            showPeakPassActivity()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        presenter.onActivityResult(requestCode)
+    }
+
+    private fun showPeakPassActivity() {
+        val activity = activity ?: return
+        startActivityForResult(PeakPassActivity.newInstance(activity), Constants.PEAK_PASS_INTERSTITIAL)
     }
 
     companion object {

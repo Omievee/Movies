@@ -10,24 +10,27 @@
         android:id="@+id/ticketType"
         style="@style/MPText"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_standard_and_half"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Adult Tickets:" />
 
     <ImageView
         android:id="@+id/infoIcon"
-        app:layout_constraintStart_toEndOf="@id/ticketType"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
         android:layout_marginStart="2dp"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
         android:adjustViewBounds="true"
-        app:layout_constraintTop_toTopOf="@id/ticketType"
-        app:layout_constraintBottom_toBottomOf="@id/ticketType"
+        android:padding="1dp"
         android:src="@drawable/infoicon2"
         android:tint="@color/red"
         android:visibility="gone"
-        app:layout_constraintBaseline_toBaselineOf="@id/ticketType" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ticketType"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/quantity"
@@ -35,7 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/x"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="2" />
 
     <TextView
@@ -57,7 +62,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/x"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="$7.45" />
 
     <TextView
@@ -66,7 +73,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard_and_half"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="$14.90" />
+
+    <View
+        android:id="@+id/strikethrough"
+        style="@style/divider"
+        android:alpha="1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/total"
+        app:layout_constraintStart_toStartOf="@id/ticketType"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </merge>

@@ -563,6 +563,18 @@
         <item quantity="other">Please only select $1$d seats</item>
         <item quantity="one">Please only select $1$d seat</item>
     </plurals>
+    <plurals name="peak_passes_left" >
+        <item quantity="one">You have %1$d Peak Pass</item>
+        <item quantity="many">You have %1$d Peak Passes</item>
+        <item quantity="other">You have %1$d Peak Passes</item>
+        <item quantity="zero">You hve no Peak Passes</item>
+    </plurals>
+    <plurals name="passes">
+        <item quantity="one">%1$d Pass</item>
+        <item quantity="many">%1$d Passes</item>
+        <item quantity="other">%1$d Passes</item>
+        <item quantity="zero">%1$d Passes</item>
+    </plurals>
     <string name="next">Next</string>
     <string name="choose_seats_error">You must choose seats for all tickets in the reservation before proceeding</string>
     <string name="cd_movie_screen">Movie Screen Front</string>
@@ -657,4 +669,23 @@
     <string name="history_details_movie_like">You liked this movie!</string>
     <string name="history_rating_thanks">Thanks for rating!</string>
     <string name="history_rating_rate_last">Rate your last movie!</string>
+    <string name="peak_pass">Peak Pass</string>
+    <string name="peak_pass_apply">Apply your Peak Pass to bypass this Peak Pricing surcharge.</string>
+    <string name="peak_pass_apply_surcharge">This showtime is now at peak pricing and there will be an added surcharge of %1$s.\n\nYou have a Peak Pass and can choose to bypass this surcharge.</string>
+    <string name="peak_no_pass_apply_surcharge">This showtime is now at peak pricing and there will be an added surcharge of %1$s.\n\nYou do not have a Peak Pass.</string>
+    <string name="apply_peak_pass">Apply Peak Pass</string>
+    <string name="save_peak_pass_for_later">Save Peak Pass For Later</string>
+    <string name="peak_pass_description">You can apply a Peak Pass to bypass a Peak Pricing surcharge. Just choose “Apply My Peak Pass” upon pressing “Continue” after choosing a showtime.\n\nYou get one Peak Pass a month. Peak Passes do not roll over. If you cancel your check-in or e-ticket reservation your Peak Pass will be added back to your account.</string>
+    <string name="peak_next_refill">You\'ll receive your next Peak Pass on %1$s</string>
+    <string name="you_got_a_new_peak_pass">You got a Peak Pass!</string>
+    <string name="peak_pass_apply_bottom">You can apply a Peak Pass to bypass a Peak Pricing surcharge. Just choose “Apply My Peak Pass” upon pressing “Continue” after choosing a showtime.\n\nYou get one Peak Pass a month. Peak Passes do not roll over. If you cancel your check-in or e-ticket reservation your Peak Pass will be added back to your account.</string>
+    <string name="peak_pass_description_onboard">All members get 1 Peak Pass a month which allows you to bypass one Peak Pricing surcharge.</string>
+    <string name="peak_pass_subdescription_onboard">Just choose “Apply My Peak Pass” upon pressing “Continue” after choosing a showtime.</string>
+    <string name="peak_pass_terms">Peak Passes do not roll over. If you cancel your check-in your Peak Pass will be added back to your account.</string>
+    <string name="newpass">New!</string>
+    <string name="peak_passes_remaining">Peak Passes remaining:</string>
+    <string name="next_pass_applied">Your next pass will be applied on %1$s</string>
+    <string name="peak_pass_expires">Your current Peak Pass expires on %1$s</string>
+    <string name="never">Never</string>
+    <string name="clear_everything_but_credentials">Clear Everything But Credentials</string>
 </resources>

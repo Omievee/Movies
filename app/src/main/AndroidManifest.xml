@@ -163,6 +163,12 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:name="com.mobile.peakpass.PeakPassActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TicketReservationTheme"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
             android:name="com.mobile.seats.BringAFriendActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TicketReservationTheme"

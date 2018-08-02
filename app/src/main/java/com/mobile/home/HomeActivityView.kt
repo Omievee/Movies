@@ -13,6 +13,7 @@ interface HomeActivityView {
     fun showForceLogout(it: LogoutInfo)
     fun showConfirmationScreen(it: CurrentReservationV2)
     fun showActivatedCardScreen()
+    fun showPeakPassBadge()
     fun showHistoryRateScreen(reservationHistory: ReservationHistory)
-
+    fun hidePeakPassBadge()
 }

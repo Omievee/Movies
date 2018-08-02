@@ -8,6 +8,6 @@
     tools:context=".debug.DebugActivity">
 
     <include
-        layout="@layout/fragment_confirm_details"/>
+        layout="@layout/layout_peak_pass_onboard"/>
 
 </android.support.constraint.ConstraintLayout>

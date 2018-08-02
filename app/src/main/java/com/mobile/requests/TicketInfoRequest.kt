@@ -7,5 +7,6 @@ data class TicketInfoRequest(val performanceInfo: ProviderInfo,
                              val seatPosition: SelectedSeat? = null,
                              val guestTickets: List<GuestTicket>? = null,
                              val latitude: Double,
-                             val longitude: Double
+                             val longitude: Double,
+                             val usePeakPass:Boolean?=null
 )

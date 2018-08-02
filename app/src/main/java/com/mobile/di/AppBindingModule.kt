@@ -58,10 +58,6 @@ interface AppBindingModule {
     @ContributesAndroidInjector(modules = [ScreeningsFragmentModule::class])
     fun theaterFragmentV2(): ScreeningsFragment
 
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun movieFragment(): MovieFragment
-
     @ActivityScope
     @ContributesAndroidInjector
     fun bringAFriendActivity(): BringAFriendActivity

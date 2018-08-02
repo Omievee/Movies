@@ -117,11 +117,9 @@ class ConfirmDetailsFragment : Fragment() {
     private fun reserveTickets() {
         val local = locationManager.lastLocation()
         val payload = payload ?: return
-        val availability = payload.availability ?: return
-        val screening = payload.screening ?: return
-        val theater = payload.theater ?: return
+        val checkin = payload.checkin ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
-        val provideInfo = availability.providerInfo ?: return
+        val provideInfo = checkin.availability.providerInfo ?: return
         val lat: Double
         val lng: Double
         when (local == null) {
@@ -138,7 +136,7 @@ class ConfirmDetailsFragment : Fragment() {
         }
         val seatsIter = payload.selectedSeats?.iterator()
         val mySeat = seatsIter?.next()
-        if (availability.ticketType == TicketType.SELECT_SEATING) {
+        if (checkin.availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
         }
 
@@ -161,7 +159,7 @@ class ConfirmDetailsFragment : Fragment() {
                         price = tpd.ticket.price,
                         seatPosition = seat?.asPosition(),
                         email = when {
-                            tpd.ticket.ticketType==GuestTicketType.CHILD_COMPANION->null
+                            tpd.ticket.ticketType== GuestTicketType.CHILD_COMPANION->null
                             emails.hasNext() -> emails.next().email
                             else -> null
                         }
@@ -170,23 +168,20 @@ class ConfirmDetailsFragment : Fragment() {
         }
         getTickets.progress = true
         getTicketsDisposable?.dispose()
-        val checkIn = Checkin(
-                screening = screening,
-                theater = theater,
-                availability = availability)
+        val checkIn = checkin
         getTicketsDisposable = RestClient
                 .getAuthenticated()
                 .reserve(
                         TicketInfoRequest(
                                 performanceInfo = ProviderInfo(
-                                        tribuneTheaterId = payload.theater.tribuneTheaterId ?: 0,
+                                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId ?: 0,
                                         normalizedMovieId = provideInfo.normalizedMovieId,
                                         externalMovieId = provideInfo.externalMovieId,
                                         format = provideInfo.format,
                                         performanceId = provideInfo.performanceId,
                                         dateTime = provideInfo.dateTime,
                                         seatPosition = mySeat?.asPosition(),
-                                        guestsAllowed = payload.screening.maximumGuests,
+                                        guestsAllowed = payload.checkin.screening.maximumGuests,
                                         guestTickets = when (guestTickets.isEmpty()) {
                                             true -> null
                                             false -> guestTickets
@@ -226,6 +221,7 @@ class ConfirmDetailsFragment : Fragment() {
                                 }
                                 .show()
                     }
+                    analyticsManager.onCheckinFailed(checkIn)
                 }
     }
 }

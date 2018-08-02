@@ -19,5 +19,6 @@ class MicroServiceRestrictionsResponse(
         var logoutInfo: LogoutInfo? = null,
         var subscriptionActivationRequired:Boolean = false,
         var canReactivate: canReactivate? = null,
-        var userSegments:List<Int> = emptyList()
+        var userSegments:List<Int> = emptyList(),
+        var peakPassInfo:PeakPassInfo = PeakPassInfo()
 )

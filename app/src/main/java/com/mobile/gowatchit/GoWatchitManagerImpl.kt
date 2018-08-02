@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import com.mobile.application.Application
 import com.mobile.location.LocationManager
 import com.mobile.model.Availability
+import com.mobile.model.Movie
 import com.mobile.model.Screening
 import com.mobile.model.Theater
 import com.mobile.reservation.Checkin
@@ -25,6 +26,10 @@ class GoWatchitManagerImpl(val goWatchItApi: GoWatchItApi, val gson: Gson, val l
 
     override fun onTicketPurchasedConfirmation(checkIn: Checkin, reservationV2: CurrentReservationV2) {
         send(TicketPurchase(checkIn))
+    }
+
+    override fun onMovieImpression(movie: Movie) {
+        send(MovieImpression(movie))
     }
 
     override fun onTheaterListOpened() {

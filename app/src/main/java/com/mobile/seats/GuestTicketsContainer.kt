@@ -10,11 +10,6 @@ import android.widget.LinearLayout
 import com.mobile.Constants
 import com.mobile.model.GuestTicket
 import com.mobile.model.GuestTicketType
-import com.mobile.model.SurgeType
-import com.mobile.seats.GuestTicketView
-import com.mobile.seats.SelectSeatPayload
-import com.mobile.seats.TicketPurchaseData
-import com.mobile.surge.SurgeTicketView
 import com.moviepass.R
 
 class GuestTicketsContainer(context: Context?, attrs: AttributeSet? = null) : LinearLayout(context, attrs) {

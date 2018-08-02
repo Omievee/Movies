@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settingsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/quadruple_margin_standard"
             android:orientation="vertical">
 
 
@@ -60,8 +62,19 @@
                     android:textColor="@color/almost_white"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:id="@+id/peakPassAdded"
+                    tools:visibility="visible"
+                    android:layout_width="wrap_content"
+                    android:layout_toStartOf="@+id/arrow"
+                    android:text="Peak Pass Added"
+                    android:layout_centerVertical="true"
+                    style="@style/RedThinText"
+                    android:paddingEnd="@dimen/margin_half"
+                    android:layout_height="wrap_content" />
 
                 <ImageView
+                    android:id="@+id/arrow"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -423,10 +436,24 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/SignOut"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/quadruple_margin_standard"
                 android:padding="@dimen/margin_half"
                 android:paddingStart="@dimen/margin_standard"
                 android:textSize="14dp" />
+
+            <LinearLayout
+                android:id="@+id/debugContainer"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/clearOutEverything"
+                    android:text="@string/clear_everything_but_credentials"
+                    android:padding="@dimen/margin_standard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

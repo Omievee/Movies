@@ -2,13 +2,16 @@ package com.mobile.reservation
 
 import com.mobile.ApiError
 import com.mobile.model.Surge
+import com.mobile.network.SurgeResponse
+import com.mobile.responses.PeakPass
+import com.mobile.responses.PeakPassInfo
 import com.mobile.responses.ReservationResponse
 
 interface CheckInFragmentView {
     fun showContinueToETicketing()
     fun showCheckin()
-    fun showWillSurge(surge: Surge)
-    fun showSurge(surge: Surge)
+    fun showWillSurge(surge: Surge, peakPassInfo: PeakPassInfo, peakPass: PeakPass?)
+    fun showSurge(surge: Surge, peakPassInfo: PeakPassInfo, peakPass: PeakPass?)
     fun showProgress()
     fun hideProgress()
     fun showNeedLocation()
@@ -20,5 +23,9 @@ interface CheckInFragmentView {
     fun navigateToSurchargeConfirm(checkin: Checkin)
     fun showActivateCard(checkin:Checkin)
     fun showCheckinWithProof()
+    fun showApplyPeakPass(checkin: Checkin, peakPasses: PeakPassInfo, currentPeakPass: PeakPass?)
+    fun showNowPeakingApplyPeakPass(it: SurgeResponse, peak: PeakPassInfo, peakPass: PeakPass)
+    fun showNowPeakingNoPeakPass(checkin: Checkin, surge: Surge)
+    fun showPeakPassSheet(checkin: Checkin, peak: PeakPassInfo, peakPass: PeakPass?)
 
 }

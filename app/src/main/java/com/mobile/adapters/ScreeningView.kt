@@ -99,7 +99,7 @@ class ScreeningView(context: Context) : FrameLayout(context) {
         adapter.screening = screening
         adapter.showtimeClickListener = showtimeClickListener
         adapter.data = ShowtimeAdapter.createData(adapter.data, screening)
-        synopsis.visibility = View.GONE
+        synopsisIV.visibility = View.GONE
         val imgUrl = Uri.parse(screeningPresentation?.screening?.landscapeImageUrl)
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)

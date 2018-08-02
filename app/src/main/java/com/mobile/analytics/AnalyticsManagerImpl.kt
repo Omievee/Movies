@@ -4,12 +4,15 @@ import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.crashlytics.android.answers.LoginEvent
+import com.crashlytics.android.answers.PurchaseEvent
 import com.mobile.UserPreferences
 import com.mobile.gowatchit.GoWatchItManager
 import com.mobile.model.*
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ReservationResponse
 import java.lang.String.valueOf
+import java.math.BigDecimal
+import java.util.*
 
 class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsManager {
 
@@ -19,6 +22,10 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
 
     override fun onCheckinFailed(checkIn: Checkin) {
         goWatchItManager.onCheckInFailed(checkIn)
+    }
+
+    override fun onMovieImpression(movie: Movie) {
+        goWatchItManager.onMovieImpression(movie)
     }
 
     override fun onTheaterListOpened() {
@@ -38,12 +45,22 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
                 )
     }
 
-    override fun onCheckinSuccessful(checkIn: Checkin, reservation:ReservationResponse) {
+    override fun onCheckinSuccessful(checkIn: Checkin, reservation: ReservationResponse) {
         goWatchItManager.onCheckInSuccessful(checkIn)
         UserPreferences.saveReservation(ScreeningToken(
                 checkIn = checkIn,
                 reservation = reservation
         ))
+        val surge = checkIn.getSurge(UserPreferences.restrictions.userSegments)
+        when {
+            checkIn.peakPass==null && surge.level==SurgeType.SURGING -> {
+                Answers.getInstance().logPurchase(PurchaseEvent().putItemName("peak_pricing")
+                        .putCurrency(Currency.getInstance(Locale.US)).putItemPrice(surge.amount.toBigDecimal().divide(BigDecimal(100.0))))
+            }
+            else -> {
+
+            }
+        }
     }
 
     override fun onMovieSearch(query: String) {
@@ -53,7 +70,7 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
 
     override fun onTheaterSearch(query: String) {
         goWatchItManager.onTheaterSearch(query)
-        Answers.getInstance().logCustom(CustomEvent("theater_search").putCustomAttribute("query",query))
+        Answers.getInstance().logCustom(CustomEvent("theater_search").putCustomAttribute("query", query))
     }
 
     override fun onTheaterOpened(theater: Theater) {
@@ -72,9 +89,10 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
     override fun onAppOpened() {
         goWatchItManager.userOpenedApp()
         val campaign = goWatchItManager.campaign
-        when(campaign) {
-            null-> {}
-            else-> Answers.getInstance().logCustom(CustomEvent("campaign").putCustomAttribute("key", campaign))
+        when (campaign) {
+            null -> {
+            }
+            else -> Answers.getInstance().logCustom(CustomEvent("campaign").putCustomAttribute("key", campaign))
         }
 
     }

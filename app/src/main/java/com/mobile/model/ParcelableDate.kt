@@ -31,3 +31,13 @@ data class ParcelableDate(val timeAsString: String? = null, val timeAsLong: Long
     }
 
 }
+
+val Date.asParcelableDate:ParcelableDate
+get() {
+    return ParcelableDate(timeAsLong = time)
+}
+fun ParcelableDate.monthDayYear(): String {
+    return java.text.SimpleDateFormat("M/d/yyyy", Locale.getDefault()).format(this)
+
+}
+

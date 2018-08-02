@@ -1,8 +1,8 @@
 package com.mobile.fragments
 
 import android.util.Pair
-import android.view.View
 import com.mobile.ApiError
+import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.history.HistoryManager
@@ -65,6 +65,7 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
                     }
                     false -> view.setMovieHeader(movie, true)
                 }
+                analyticsManager.onMovieImpression(movie)
             }
         }
         val theater = screeningData.theater
@@ -137,6 +138,13 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             return onPrimary()
         } else {
             fetchTheatersIfNecessary(necessary = false)
+        }
+    }
+
+    fun onActivityResult(requestCode: Int) {
+        val screening = response?.second?:return
+        when(requestCode) {
+            Constants.SURGE_INTERSTITIAL_CODE-> return view.surgeInterstitialFlow(screening, requestCode)
         }
     }
 }

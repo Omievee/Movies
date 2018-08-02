@@ -21,6 +21,7 @@ import com.mobile.seats.SelectSeatPayload
 import com.mobile.seats.SheetData
 import com.mobile.session.UserManager
 import com.mobile.tickets.TicketManager
+import com.mobile.utils.expandTouchArea
 import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -70,8 +71,9 @@ class ConfirmSurgeFragment : MPFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         submit.setOnClickListener {
-            val ticketType: TicketType = payload?.screening?.getTicketType() ?: return@setOnClickListener
-            when (isTicketVerification() && ticketType == TicketType.STANDARD){
+            val ticketType: TicketType = payload?.checkin?.screening?.getTicketType()
+                    ?: return@setOnClickListener
+            when (isTicketVerification() && ticketType == TicketType.STANDARD) {
                 true -> showTicketVerificationDialog()
                 false -> reserveTicket()
             }
@@ -113,7 +115,7 @@ class ConfirmSurgeFragment : MPFragment() {
 
     }
 
-    private fun isTicketVerification() : Boolean{
+    private fun isTicketVerification(): Boolean {
         return UserPreferences.restrictions.proofOfPurchaseRequired
     }
 
@@ -123,15 +125,43 @@ class ConfirmSurgeFragment : MPFragment() {
                 ?.subscribe({
                     payload = it
                     moviePosterHeader.bind(it)
-                    val surge = it.screening?.getSurge(it.availability?.startTime, UserPreferences.restrictions.userSegments)
-                            ?: return@subscribe
-                    surgeTicket.bind(surge, infoClickListener = infoClickListener)
-                    surgeTotal.bind(surge)
+                    val checkin = it.checkin?: return@subscribe
+                    surgeTicket.bind(checkin, infoClickListener = infoClickListener)
+                    surgeTotal.bind(checkin)
                     surgeTotal.setOnClickListener(clickListener)
+                    initPeakPass(it)
                     submit.isEnabled = true
                     fetchUserInfo()
                 }, {
                 })
+    }
+
+    private fun initPeakPass(payload: SelectSeatPayload) {
+        val peak = UserPreferences.restrictions.peakPassInfo
+        val hasAPeakPass = peak.currentPeakPass != null
+        usePeakPassOrSaveForLaterTV.visibility = when (hasAPeakPass) {
+            true -> View.VISIBLE
+            false -> View.GONE
+        }
+        val peakPass = payload.checkin?.peakPass
+        usePeakPassOrSaveForLaterTV.text = when (peakPass) {
+            null -> resources.getString(R.string.apply_peak_pass)
+            else -> resources.getString(R.string.save_peak_pass_for_later)
+        }
+        usePeakPassOrSaveForLaterTV.expandTouchArea()
+        usePeakPassOrSaveForLaterTV.setOnClickListener(when (peakPass) {
+            null -> View.OnClickListener {
+                payload.checkin?.peakPass = peak.currentPeakPass
+                initPeakPass(payload)
+            }
+            else -> View.OnClickListener {
+                payload.checkin.peakPass = null
+                initPeakPass(payload)
+            }
+        })
+        val checkin = payload.checkin?:return
+        surgeTotal.bind(checkin)
+        surgeTicket.bind(checkin, infoClickListener = infoClickListener)
     }
 
     private fun fetchUserInfo() {
@@ -139,41 +169,36 @@ class ConfirmSurgeFragment : MPFragment() {
         userInfoDisposable = sessionManager
                 .getUserInfo()
                 .subscribe({ info ->
-                    val availability = payload?.availability ?: return@subscribe
-                    val surge = payload?.screening?.getSurge(availability.startTime, UserPreferences.restrictions.userSegments)
-                            ?: return@subscribe
-                    surgeTotal.bind(surge, info)
+                    val checkin: Checkin = payload?.checkin ?: return@subscribe
+                    surgeTotal.bind(checkin, info)
                 }, {
 
                 })
     }
 
     private fun showTicketVerificationDialog() {
-        val context = activity?:return
-        android.support.v7.app.AlertDialog.Builder(context,R.style.CUSTOM_ALERT)
+        val context = activity ?: return
+        android.support.v7.app.AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
                 .setView(R.layout.alertdialog_ticketverif)
-                .setPositiveButton(android.R.string.ok, {_,_ ->
+                .setPositiveButton(android.R.string.ok, { _, _ ->
                     reserveTicket()
                 }).show()
     }
 
     private fun reserveTicket() {
-        val screening: Screening = payload?.screening ?: return
-        val theater: Theater = payload?.theater ?: return
-        val availability: Availability = payload?.availability ?: return
+        val checkIn = payload?.checkin ?:return
+        val availability: Availability = payload?.checkin?.availability ?: return
         val info = availability.providerInfo ?: return
         val lat = locationManager.lastLocation() ?: return
         submit.progress = true
-        val checkIn = Checkin(
-                screening = screening,
-                theater = theater,
-                availability = availability)
         ticketManager
                 .reserve(checkin = checkIn,
                         ticketRequest = TicketInfoRequest(
                                 performanceInfo = info,
                                 latitude = lat.lat,
-                                longitude = lat.lon)
+                                longitude = lat.lon,
+                                usePeakPass = checkIn.peakPass!=null
+                                )
                 )
                 .doOnSubscribe {
                     analyticsManager.onCheckinAttempt(checkIn)

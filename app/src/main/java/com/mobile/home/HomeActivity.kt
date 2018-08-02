@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
 import android.widget.Toast
@@ -34,6 +36,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 
 
 class HomeActivity : MPActivty(), HomeActivityView {
@@ -57,22 +60,41 @@ class HomeActivity : MPActivty(), HomeActivityView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         adapter = HomeViewPager(supportFragmentManager)
-        bottomSheetNav.setOnNavigationItemSelectedListener {
-
-            viewPager.setCurrentItem(when (it.itemId) {
-                R.id.action_movies -> adapter?.movies
-                R.id.action_theaters -> adapter?.theaters
-                else -> adapter?.profile
-            } ?: 0, false)
-            true
-        }
         val black = Color.argb(200, Color.red(0), Color.green(0), Color.blue(0))
-        bottomSheetNav.setBackgroundColor(black)
-        bottomSheetNav.setOnNavigationItemReselectedListener {
-            val currItem = adapter?.currentItem ?: return@setOnNavigationItemReselectedListener
-            val backable: BackFragment = currItem as? BackFragment
-                    ?: return@setOnNavigationItemReselectedListener
-            backable.onBack()
+        bottomSheetNav.setBackgroundColor(Color.BLACK)
+        bottomSheetNav.defaultBackgroundColor = black
+        bottomSheetNav.setNotificationTextColorResource(R.color.drawer_item)
+        val tabs = arrayOf(
+                AHBottomNavigationItem(getString(R.string.menu_bottom_navigation_main_movies), R.drawable.bottom_navigation_camera
+                ),
+                AHBottomNavigationItem(getString(R.string.menu_bottom_navigation_main_theaters), R.drawable.bottom_navigation_theaters
+                ),
+                AHBottomNavigationItem(getString(R.string.menu_bottom_navigation_main_profile), R.drawable.bottom_navigation_account
+                )
+
+        )
+        bottomSheetNav.accentColor = ContextCompat.getColor(this, R.color.red)
+        bottomSheetNav.inactiveColor = ContextCompat.getColor(this, R.color.white_ish)
+        bottomSheetNav.setColoredModeColors(ResourcesCompat.getColor(resources,R.color.red,theme), ResourcesCompat.getColor(resources,R.color.white_ish,theme))
+        bottomSheetNav.isForceTint = true
+        bottomSheetNav.setNotificationBackgroundColorResource(R.color.red)
+        tabs.forEach {
+            bottomSheetNav.addItem(it)
+        }
+        bottomSheetNav.setOnTabSelectedListener { position, wasSelected ->
+            when (wasSelected) {
+                true -> {
+                    val currItem = adapter?.currentItem ?: true
+                    val backable
+                            : BackFragment = currItem as? BackFragment
+                            ?: return@setOnTabSelectedListener true
+                    backable.onBack()
+                }
+                else -> {
+                    viewPager.currentItem = position
+                    true
+                }
+            }
         }
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
@@ -85,6 +107,14 @@ class HomeActivity : MPActivty(), HomeActivityView {
         checkGooglePlayServices()
         presenter.onDeviceId(DeviceID.getID(this))
         presenter.onResume()
+    }
+
+    override fun showPeakPassBadge() {
+        bottomSheetNav.setNotification(" ", 2)
+    }
+
+    override fun hidePeakPassBadge() {
+        bottomSheetNav.setNotification("", 2)
     }
 
     override fun onPause() {
@@ -167,20 +197,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
         set(value) {
             field = value
             viewPager.currentItem = value
-            bottomSheetNav.selectedItemId = when (value) {
-                adapter?.movies -> {
-                    R.id.action_movies
-                }
-                adapter?.theaters -> {
-                    R.id.action_theaters
-                }
-                adapter?.profile -> {
-                    R.id.action_profile
-                }
-                else -> {
-                    R.id.action_movies
-                }
-            }
+            bottomSheetNav.currentItem = value
+
         }
 
     override fun logout() {
@@ -228,6 +246,5 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getCount(): Int {
         return frags.size
     }
-
 
 }

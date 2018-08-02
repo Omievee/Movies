@@ -12,10 +12,13 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import com.mobile.UserPreferences
 import com.mobile.model.Availability
 import com.mobile.model.Surge
 import com.mobile.model.UserInfo
+import com.mobile.reservation.Checkin
 import com.mobile.responses.UserInfoResponse
+import com.mobile.utils.text.toCurrency
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_total.view.*
 
@@ -26,8 +29,13 @@ class TotalView(context: Context, attr: AttributeSet? = null) : ConstraintLayout
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
     }
 
-    fun bind(payload: Surge, userInfo: UserInfoResponse? = null) {
-        val total = payload.costAsDollars
+    fun bind(payload: Checkin, userInfo: UserInfoResponse? = null) {
+        val surge = payload.screening.getSurge(payload.availability.startTime, UserPreferences.restrictions.userSegments)
+        val zero = 0.0
+        val total = when(payload.peakPass) {
+            null -> surge.costAsDollars
+            else -> zero.toCurrency()
+        }
         val totalSpan = SpannableStringBuilder().apply {
             val span = SpannableString("Total").apply {
                 setSpan(ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.white_ish, null)), 0, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

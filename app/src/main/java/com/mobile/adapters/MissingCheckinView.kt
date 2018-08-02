@@ -18,7 +18,7 @@ class MissingCheckinView(context: Context) : FrameLayout(context) {
         inflate(context, R.layout.list_item_cinemaposter, this)
         movieRating.visibility = View.GONE
         recyclerView.visibility = View.GONE
-        synopsis.visibility = View.GONE
+        synopsisIV.visibility = View.GONE
         setOnClickListener {
             screening?.let {
                 missingCheckInListener?.onClick(it, screening?.availabilities?.get(0)?.startTime

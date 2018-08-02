@@ -14,7 +14,38 @@
             android:id="@+id/continueDescription"
             style="@style/ReservationCheckinDescription"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/continueOrCheckin" />
+            app:layout_constraintBottom_toTopOf="@+id/peakPassContainer" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/peakPassContainer"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_standard"
+            app:layout_constraintBottom_toTopOf="@+id/continueOrCheckin">
+
+            <TextView
+                android:id="@+id/peakPassDescription"
+                style="@style/ReservationPeakPassDescription"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/peakPassInfoIcon"
+                style="@style/InfoIcon"
+                android:layout_marginStart="@dimen/margin_quarter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@id/peakPassDescription" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <com.mobile.widgets.MPProgressText
             android:id="@+id/continueOrCheckin"
