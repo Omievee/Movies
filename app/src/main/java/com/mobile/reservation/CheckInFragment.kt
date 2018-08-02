@@ -89,7 +89,10 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                         title = getString(R.string.peak_pass),
                         description = getString(R.string.peak_pass_description),
                         subDescription = when(peakPass) {
-                            null-> null
+                            null-> when(peak.nextRefillDate) {
+                                null-> null
+                                else-> resources.getString(R.string.next_pass_applied, peak.nextRefillDate)
+                            }
                             else-> resources.getString(R.string.peak_pass_expires, peakPass.expiresAsString())
                         },
                         gravity = Gravity.CENTER
