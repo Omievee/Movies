@@ -216,7 +216,15 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
             visibility = View.VISIBLE
             text = when (surge.amount == 0) {
                 true -> getString(R.string.reservation_will_surge_unknown_description)
-                false -> getString(R.string.reservation_will_surge_description, surge.costAsDollars)
+                false -> {
+                    val span = SpannableStringBuilder()
+                    span.append(resources.getString(R.string.reservation_will_surge_start))
+                    span.append(' ')
+                    span.append(surge.costAsDollars.toBold(context))
+                    span.append(' ')
+                    span.append(resources.getString(R.string.reservation_will_surge_end))
+                    span
+                }
             }
         }
         continueOrCheckin.apply {
