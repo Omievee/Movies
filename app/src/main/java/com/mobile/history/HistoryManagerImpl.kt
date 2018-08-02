@@ -51,8 +51,11 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
     val hasItBeenFourHoursSinceHistoryTimeStamp: Boolean
         get() {
-            val lastSavedHistory = historyLoadedDate.add(Calendar.HOUR, 4)
-            return Calendar.getInstance().after(lastSavedHistory)
+            val fourHoursInPast = Calendar.getInstance().apply {
+                add(Calendar.HOUR,-4)
+            }
+            return historyLoadedDate.before(fourHoursInPast)
+
         }
 
     private fun getHistoryFromApi(emitter: ObservableEmitter<List<ReservationHistory>>) {

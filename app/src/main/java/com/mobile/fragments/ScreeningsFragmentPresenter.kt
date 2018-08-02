@@ -89,8 +89,12 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
                     ?: 0).toObservable()
             else -> api.getScreeningsForTheaterV2(theaterId).toObservable()
         }
+        val historyObservable:Observable<List<ReservationHistory>> = when(UserPreferences.restrictions.blockRepeatShowings) {
+            false-> Observable.just(emptyList())
+            true-> historyManager.getHistory()
+        }
         return Observable.zip(
-                historyManager.getHistory(), screeningsObserv,
+                historyObservable, screeningsObserv,
                 BiFunction { t1, t2 -> Pair(t1, t2) }
         )
     }
