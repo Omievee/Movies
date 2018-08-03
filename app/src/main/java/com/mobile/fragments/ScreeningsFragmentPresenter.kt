@@ -146,6 +146,11 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        screeningsSub?.dispose()
+    }
+
     fun onActivityResult(requestCode: Int) {
         val screening = response?.second?:return
         when(requestCode) {
