@@ -30,7 +30,7 @@
             android:layout_marginStart="@dimen/margin_standard" />
 
         <ImageView
-            android:id="@+id/synopsis"
+            android:id="@+id/synopsisIV"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignTop="@id/movieTitle"

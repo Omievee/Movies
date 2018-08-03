@@ -20,6 +20,15 @@ class DateUtils {
     }
 }
 
+val String.timeToCalendar:Calendar
+get() {
+    val sdf = SimpleDateFormat("hh:mm a", Locale.US)
+    val theaterTime = sdf.parse(this)
+    return Calendar.getInstance().apply {
+        time = theaterTime
+    }
+}
+
 fun isValidShowtime(timeStr: String?): Boolean {
     timeStr ?: return false
     val systemClock = Date()

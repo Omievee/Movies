@@ -17,7 +17,7 @@ class BringAFriendActivity : MPActivty() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bring_a_friend)
-        val bringAFriendPayload = intent?.getParcelableExtra<BringAFriendPayload>("data")
+        val bringAFriendPayload = intent?.getParcelableExtra<Checkin>("data")
         bringAFriendPayload?.let {
             when (savedInstanceState) {
                 null -> {
@@ -36,21 +36,10 @@ class BringAFriendActivity : MPActivty() {
     }
 
     companion object {
-        fun newIntent(context: Context, theater: Theater, screening: Screening, availability: Availability): Intent {
+        fun newIntent(context: Context, checkIn: Checkin): Intent {
             return Intent(context, BringAFriendActivity::class.java).apply {
-                putExtra("data", BringAFriendPayload(
-                        theater = theater,
-                        screening = screening,
-                        availability = availability
-                ))
+                putExtra("data", checkIn)
             }
-        }
-
-        fun newIntent(context: Context, checkIn:Checkin) : Intent {
-            val theater = checkIn.theater
-            val screening = checkIn.screening
-            val availability = checkIn.availability
-            return newIntent(context, theater, screening, availability)
         }
     }
 

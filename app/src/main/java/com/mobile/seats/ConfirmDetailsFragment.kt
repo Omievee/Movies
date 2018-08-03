@@ -11,6 +11,7 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.model.GuestTicket
+import com.mobile.model.GuestTicketType
 import com.mobile.model.ProviderInfo
 import com.mobile.model.TicketType
 import com.mobile.network.Api
@@ -116,11 +117,9 @@ class ConfirmDetailsFragment : Fragment() {
     private fun reserveTickets() {
         val local = locationManager.lastLocation()
         val payload = payload ?: return
-        val availability = payload.availability ?: return
-        val screening = payload.screening ?: return
-        val theater = payload.theater ?: return
+        val checkin = payload.checkin ?: return
         val tpd = payload.ticketPurchaseData ?: emptyList()
-        val provideInfo = availability.providerInfo ?: return
+        val provideInfo = checkin.availability.providerInfo ?: return
         val lat: Double
         val lng: Double
         when (local == null) {
@@ -135,14 +134,14 @@ class ConfirmDetailsFragment : Fragment() {
                 lng = loc.lon
             }
         }
-
-        val mySeat = payload.selectedSeats?.first()
-        if (availability.ticketType == TicketType.SELECT_SEATING) {
+        val seatsIter = payload.selectedSeats?.iterator()
+        val mySeat = seatsIter?.next()
+        if (checkin.availability.ticketType == TicketType.SELECT_SEATING) {
             if (mySeat == null) return
         }
 
 
-        val emails = payload.emails
+        val emails = payload.emails.iterator()
         val hasMatchingSeatCount = mySeat == null || ((payload.selectedSeats?.size
                 ?: 0) - 1) == tpd.sumBy { it.tickets }
         when (hasMatchingSeatCount) {
@@ -155,12 +154,13 @@ class ConfirmDetailsFragment : Fragment() {
             expanded
         }.flatMap { it ->
             it.mapIndexed { index, tpd ->
-                val seat = payload.selectedSeats?.get(index + 1)
+                val seat = seatsIter?.next()
                 GuestTicket(ticketType = tpd.ticket.ticketType,
                         price = tpd.ticket.price,
                         seatPosition = seat?.asPosition(),
                         email = when {
-                            index < emails.size -> emails[index].email
+                            tpd.ticket.ticketType== GuestTicketType.CHILD_COMPANION->null
+                            emails.hasNext() -> emails.next().email
                             else -> null
                         }
                 )
@@ -168,23 +168,20 @@ class ConfirmDetailsFragment : Fragment() {
         }
         getTickets.progress = true
         getTicketsDisposable?.dispose()
-        val checkIn = Checkin(
-                screening = screening,
-                theater = theater,
-                availability = availability)
+        val checkIn = checkin
         getTicketsDisposable = RestClient
                 .getAuthenticated()
                 .reserve(
                         TicketInfoRequest(
                                 performanceInfo = ProviderInfo(
-                                        tribuneTheaterId = payload.theater.tribuneTheaterId ?: 0,
+                                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId ?: 0,
                                         normalizedMovieId = provideInfo.normalizedMovieId,
                                         externalMovieId = provideInfo.externalMovieId,
                                         format = provideInfo.format,
                                         performanceId = provideInfo.performanceId,
                                         dateTime = provideInfo.dateTime,
                                         seatPosition = mySeat?.asPosition(),
-                                        guestsAllowed = payload.screening.maximumGuests,
+                                        guestsAllowed = payload.checkin.screening.maximumGuests,
                                         guestTickets = when (guestTickets.isEmpty()) {
                                             true -> null
                                             false -> guestTickets
@@ -224,6 +221,7 @@ class ConfirmDetailsFragment : Fragment() {
                                 }
                                 .show()
                     }
+                    analyticsManager.onCheckinFailed(checkIn)
                 }
     }
 }

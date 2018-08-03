@@ -1,8 +1,8 @@
 package com.mobile.fragments
 
 import android.util.Pair
-import android.view.View
 import com.mobile.ApiError
+import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.history.HistoryManager
@@ -65,6 +65,7 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
                     }
                     false -> view.setMovieHeader(movie, true)
                 }
+                analyticsManager.onMovieImpression(movie)
             }
         }
         val theater = screeningData.theater
@@ -75,6 +76,7 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             }
         }
         view.showTheaterBottomSheetNecessary(theater)
+        view.setRecyclerSpacing(movie!=null)
     }
 
     private fun observ(location: UserLocation): Observable<Pair<List<ReservationHistory>, ScreeningsResponseV2>> {
@@ -87,8 +89,12 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
                     ?: 0).toObservable()
             else -> api.getScreeningsForTheaterV2(theaterId).toObservable()
         }
+        val historyObservable:Observable<List<ReservationHistory>> = when(UserPreferences.restrictions.blockRepeatShowings) {
+            false-> Observable.just(emptyList())
+            true-> historyManager.getHistory()
+        }
         return Observable.zip(
-                historyManager.getHistory(), screeningsObserv,
+                historyObservable, screeningsObserv,
                 BiFunction { t1, t2 -> Pair(t1, t2) }
         )
     }
@@ -137,6 +143,13 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             return onPrimary()
         } else {
             fetchTheatersIfNecessary(necessary = false)
+        }
+    }
+
+    fun onActivityResult(requestCode: Int) {
+        val screening = response?.second?:return
+        when(requestCode) {
+            Constants.SURGE_INTERSTITIAL_CODE-> return view.surgeInterstitialFlow(screening, requestCode)
         }
     }
 }

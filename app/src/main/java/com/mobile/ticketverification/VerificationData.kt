@@ -19,7 +19,9 @@ data class VerificationData(
         var ticketPrice: String? = null,
         var theaterName: String? = null,
         var receipt: String? = null,
-        var barcode: BarcodeData? = null
+        var barcode: BarcodeData? = null,
+        var `3D`: String? = null,
+        var imax: String? = null
 ) {
 
     val showtimeFormats: List<DateFormat> by lazy {
@@ -63,7 +65,35 @@ data class VerificationData(
         price(reservation, t)
         showtime(reservation, t)
         showdate(reservation, t)
+        `3d`(reservation, t)
+        imax(reservation, t)
         receipt(t)
+    }
+
+    fun `3d`(reservation: CurrentReservationV2, text: TextBlock?) {
+        val t = text ?: return
+        if (`3D` != null) {
+            return
+        }
+        val time = text.text?.sanitize() ?: return
+        if (time == "3D") {
+            `3D` = time
+        }
+    }
+
+    fun imax(reservation: CurrentReservationV2, text: TextBlock?) {
+        val t = text ?: return
+        if (imax != null) {
+            return
+        }
+        val imaxtext = t.text?.sanitize() ?: return
+        if (reservation.theater?.toLowerCase()?.contains("imax") == true) {
+            if (imaxtext == "IMAX") {
+                imax = imaxtext
+            }
+        } else if (imaxtext.contains("IMAX")) {
+            imax = imaxtext
+        }
     }
 
     fun update(barcode: BarcodeData) {
@@ -90,7 +120,7 @@ data class VerificationData(
         }
         val time = text.text?.sanitize() ?: return
         val showtime = reservation.showtime ?: return
-        showtimeFormats.forEach {
+        showDateFormats.forEach {
             val newTxt = it.format(showtime).sanitize()
             if (time.contains(newTxt)) {
                 this.movieDate = text.text

@@ -8,10 +8,11 @@ import com.mobile.model.Availability
 import com.mobile.model.Screening
 import com.mobile.model.SurgeType
 import com.mobile.model.TicketType
+import com.mobile.reservation.Checkin
 import com.mobile.surge.ConfirmSurgeFragment
 import java.util.concurrent.atomic.AtomicInteger
 
-class BringAFriendPagerAdapter(val screening: Screening, val availability: Availability, userSegments:List<Int>, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
+class BringAFriendPagerAdapter(val checkin:Checkin?, userSegments:List<Int>, fm: FragmentManager?) : FragmentPagerAdapter(fm) {
 
     var emailIndex: Int? = null
     var seatIndex: Int? = null
@@ -32,10 +33,11 @@ class BringAFriendPagerAdapter(val screening: Screening, val availability: Avail
     }
 
     private val frags by lazy {
-        availability.let {
+        val checkin = checkin?: return@lazy emptyMap<Int,Fragment>()
+        checkin.availability.let {
             val map = mutableMapOf<Int, Fragment>()
             var position = AtomicInteger(0)
-            when (screening.maximumGuests > 0) {
+            when (checkin.screening.maximumGuests > 0) {
                 true -> {
                     map[position.getAndIncrement()] = AddGuestsFragment()
                 }
@@ -43,7 +45,7 @@ class BringAFriendPagerAdapter(val screening: Screening, val availability: Avail
 
                 }
             }
-            when (availability.ticketType) {
+            when (checkin.availability.ticketType) {
                 TicketType.SELECT_SEATING -> {
                     val seatPos = position.getAndIncrement()
                     seatIndex = seatPos
@@ -53,7 +55,7 @@ class BringAFriendPagerAdapter(val screening: Screening, val availability: Avail
 
                 }
             }
-            when (screening.maximumGuests > 0) {
+            when (checkin.screening.maximumGuests > 0) {
                 true -> {
                     val index = position.getAndIncrement()
                     emailIndex = index
@@ -62,8 +64,8 @@ class BringAFriendPagerAdapter(val screening: Screening, val availability: Avail
                 else -> {
                 }
             }
-            val surge = screening.getSurge(availability.startTime, userSegments)
-            when (availability.ticketType) {
+            val surge = checkin.screening.getSurge(checkin.availability.startTime, userSegments)
+            when (checkin.availability.ticketType) {
                 TicketType.STANDARD -> when (surge.level) {
                     SurgeType.SURGING -> map.put(position.getAndIncrement(), ConfirmSurgeFragment())
                     else-> {

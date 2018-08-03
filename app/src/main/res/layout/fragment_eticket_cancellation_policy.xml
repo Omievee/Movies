@@ -28,5 +28,10 @@
         android:background="@null"
         style="@style/ETicketCancellationPolicyDescription"
         app:layout_constraintTop_toBottomOf="@id/error" />
+    
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/description"
+        android:id="@+id/subDescription"
+        style="@style/BottomSheetSubDescription" />
 
 </android.support.constraint.ConstraintLayout>

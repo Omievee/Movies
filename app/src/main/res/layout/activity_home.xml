@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mpActivityContainer"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mpActivityContainer"
     android:layout_width="match_parent"
-    android:background="@color/dark2"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/dark2">
 
     <com.mobile.seats.SwipeViewPager
         android:id="@+id/viewPager"
@@ -17,30 +17,30 @@
         android:id="@+id/bottomButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_navigation_height"
-        app:layout_constraintBottom_toTopOf="@+id/bottomSheetNav"
+        android:layout_marginBottom="@dimen/bottom_navigation_height"
         android:alpha="0"
         android:background="@color/new_red"
         android:gravity="center"
         android:padding="@dimen/margin_standard"
-        android:layout_marginBottom="@dimen/bottom_navigation_height"
         android:text="@string/activate_your_moviepass_card"
         android:textColor="@color/almost_white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomSheetNav" />
 
-    <android.support.design.widget.BottomNavigationView
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottomSheetNav"
-        style="@style/BottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:elevation="0dp"
-        app:elevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <FrameLayout
         android:id="@+id/activityFragmentContainer"
-        android:elevation="10dp"
-        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:visibility="invisible" />
 </android.support.constraint.ConstraintLayout>

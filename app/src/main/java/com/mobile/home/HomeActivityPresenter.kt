@@ -1,8 +1,8 @@
 package com.mobile.home
 
 import android.os.Build
-import android.util.Log
 import com.mobile.ApiError
+import com.mobile.Change
 import com.mobile.UserPreferences
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
@@ -27,6 +27,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     var deviceId: String? = null
     var lastRestrictionRequest: Long = 0
     var currentReservation: CurrentReservationV2? = null
+    var changesDisposable: Disposable? = null
     var historyDispose: Disposable? = null
 
     fun onDeviceId(deviceId: String?) {
@@ -43,7 +44,25 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         } else {
             checkRestrictions()
         }
+        setProfileTabBadge()
+        subscribeToBadgeChange()
+    }
 
+    private fun subscribeToBadgeChange() {
+        changesDisposable?.dispose()
+        changesDisposable = UserPreferences.changes()
+                .filter { it.first == Change.PEEK_PASS_BADGE_CHANGE }
+                .subscribe {
+                    setProfileTabBadge()
+                }
+    }
+
+    private fun setProfileTabBadge() {
+        val badge = UserPreferences.showPeakPassBadge
+        when (badge) {
+            true -> view.showPeakPassBadge()
+            false -> view.hidePeakPassBadge()
+        }
     }
 
     private fun checkOneDevice() {
@@ -104,9 +123,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                         .fetchLastMovieWithoutRating()
                         .subscribe({ r ->
                             showMovieForRating(r)
-                            Log.d("it????" , ">>>>>>>>" + r.title)
                         }) {
-                            it.printStackTrace()
 
                         }
     }
@@ -156,7 +173,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
     private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
-        val popInfo = it.popInfo?:return
+        val popInfo = it.popInfo ?: return
         if (UserPreferences.lastReservationPopInfo == 0 ||
                 UserPreferences.lastReservationPopInfo != popInfo.reservationId) {
             UserPreferences.saveLastReservationPopInfo(0)
@@ -181,12 +198,12 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
         reservationDisposable?.dispose()
-        historyDispose?.dispose()
-
     }
 
     fun onPause() {
         androidIdDisposable?.dispose()
         restrictionsDisposable?.dispose()
+        changesDisposable?.dispose()
+        historyDispose?.dispose()
     }
 }

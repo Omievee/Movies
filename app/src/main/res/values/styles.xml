@@ -432,18 +432,14 @@
         <item name="android:background">@color/test_black</item>
     </style>
 
-    <style name="ShowtimeButton">
-        <item name="android:background">@drawable/showtime_background</item>
-        <item name="android:minHeight">40dp</item>
+    <style name="ShowtimeButton" parent="MPText_Bold">
+        <item name="android:minHeight">26dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">15dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">2dp</item>
         <item name="android:textColor">@color/showtime_csl</item>
-        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -624,6 +620,13 @@
         <item name="android:text">@string/e_ticket_cancellation_policy_description</item>
     </style>
 
+    <style name="BottomSheetSubDescription" parent="MPText_Italic_Bold">
+        <item name="android:lineSpacingExtra">3sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_standard_and_half</item>
+    </style>
+
     <style name="FreeGuestPolicy" parent="MPText">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/red</item>
@@ -719,7 +722,7 @@
     </style>
 
     <style name="GuestTicketTotal" parent="MPText_Bold">
-        <item name="android:textColor">@color/red</item>
+
     </style>
 
     <style name="GuestTicketsKey" parent="MPText_Bold">
@@ -732,12 +735,8 @@
     <style name="BottomNav" parent="Widget.Design.BottomNavigationView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/action_bar_size</item>
-        <item name="android:background">@color/dark2</item>
         <item name="android:elevation">0dp</item>
         <item name="android:windowSoftInputMode">adjustNothing</item>
-        <item name="menu">@menu/navigation</item>
-        <item name="itemTextColor">@color/drawer_item</item>
-        <item name="itemIconTint">@color/drawer_item</item>
     </style>
 
     <style name="HomeActivity" parent="AppTheme">
@@ -845,6 +844,11 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="ReservationPeakPassDescription" parent="MPText_Bold">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="SurgeChargeDescription" parent="MPText">
         <item name="android:alpha">.7</item>
         <item name="android:textSize">14sp</item>
@@ -871,6 +875,23 @@
     <style name="PeakPricingDescription" parent="MPText">
         <item name="android:layout_marginStart">@dimen/margin_standard</item>
         <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PeakPassDescription" parent="MPText">
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">6sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PeakPassTerms" parent="MPText_Italic">
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+        <item name="android:layout_marginBottom">@dimen/margin_standard</item>
         <item name="android:textSize">14sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:gravity">center</item>
@@ -962,6 +983,24 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="UsePeakPass" parent="MPText_Italic">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="RedThinText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="fontWeight">100</item>
+        <item name="fontFamily">@font/roboto_font</item>
+        <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
+    </style>
+
+    <style name="PeakPassesRemaining" parent="MPText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:alpha">.7</item>
+        <item name="android:text">@string/peak_passes_remaining</item>
+        <item name="android:textColor">@color/white_ish</item>
+    </style>
 
     <style name="CancellationNormalText">
         <item name="android:layout_height">wrap_content</item>

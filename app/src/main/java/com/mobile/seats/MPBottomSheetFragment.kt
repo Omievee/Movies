@@ -31,6 +31,14 @@ class MPBottomSheetFragment : BottomSheetDialogFragment() {
             else -> View.GONE
         }
         description.text = data.description
+        subDescription.text = data.subDescription
+        subDescription.visibility = when {
+            data.subDescription?.isNotEmpty()==true-> View.VISIBLE
+            else-> View.GONE
+        }
+        arrayOf(subDescription, error, title, description).forEach {
+            it.gravity = data.gravity
+        }
 
     }
 

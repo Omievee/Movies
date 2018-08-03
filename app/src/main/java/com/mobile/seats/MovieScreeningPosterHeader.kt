@@ -17,19 +17,18 @@ class MovieScreeningPosterHeader(context: Context, attrs: AttributeSet? = null) 
 
     @SuppressLint("SetTextI18n")
     fun bind(payload: SelectSeatPayload) {
-        val screening = payload.screening
-        val theater = payload.theater
-        moviePoster.setImageURI(screening?.imageUrl)
-        movieTitle.text = screening?.title
-        theaterName.text = theater?.name ?: screening?.theaterName
+        val checkin = payload.checkin?:return
+        moviePoster.setImageURI(checkin.screening.imageUrl)
+        movieTitle.text = checkin.screening.title
+        theaterName.text = checkin.theater.name ?: checkin.screening.theaterName
         arrayOf(theaterName, theaterPin).forEach {
             it.setOnClickListener {
-                val lat = payload.theater?.lat ?: return@setOnClickListener
-                val lng = payload.theater.lon
+                val lat = checkin.theater.lat
+                val lng = checkin.theater.lon
                 context.startIntentIfResolves(mapIntent(lat, lng))
             }
         }
-        showTime.text = payload.availability?.startTime
+        showTime.text = checkin.availability.startTime
         val seatsSize = payload.selectedSeats?.size ?: 1
         val seatText = resources.getQuantityString(R.plurals.seats, seatsSize, seatsSize)
         seats.text = "${seatText} ${payload.selectedSeats?.joinToString(", ") {

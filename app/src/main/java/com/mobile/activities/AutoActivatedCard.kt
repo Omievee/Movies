@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.mobile.Constants
 import com.mobile.UserPreferences
-import com.mobile.fragments.MovieFragment
 import com.mobile.model.Screening
 import com.mobile.responses.SubscriptionStatus
 import com.moviepass.R
@@ -41,7 +40,7 @@ class AutoActivatedCard : AppCompatActivity() {
         if (!UserPreferences.hasUserSeenCardActivationScreen && !UserPreferences.restrictions.subscriptionStatus.equals(SubscriptionStatus.ACTIVE)) {
             UserPreferences.setUserHasSeenCardActivationScreen(true)
             val activatedIntent = Intent(this, ActivatedCard_TutorialActivity::class.java)
-            activatedIntent.putExtra(MovieFragment.SCREENING, screeningObject)
+            activatedIntent.putExtra(Constants.SCREENING, screeningObject)
             activatedIntent.putExtra(Constants.SHOWTIME, selectedShowTime)
             startActivity(activatedIntent)
             finish()

@@ -33,10 +33,10 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
         posterSPV.setImageURI(movie.landscapeImageUrl)
         when(synopsisListener) {
             null-> {
-                synopsis.visibility = View.GONE
+                synopsisIV.visibility = View.GONE
             }
             else-> {
-                synopsis.visibility = View.VISIBLE
+                synopsisIV.visibility = View.VISIBLE
                 arrayOf(this).forEach {
                     setOnClickListener {
                         synopsisListener.onMoviePosterClick(movie)
@@ -45,5 +45,4 @@ class ScreeningPosterHeader(context: Context?, attrs: AttributeSet? = null) : Co
             }
         }
     }
-
 }

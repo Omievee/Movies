@@ -123,9 +123,9 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
                 childFragmentManager
                         .beginTransaction()
                         .replace(R.id.seatPreviewOntainer, SeatPreviewFragment.newInstance(SeatPreviewPayload(
-                                screening = selectSeatPayload?.screening,
-                                theater = selectSeatPayload?.theater,
-                                availability = selectSeatPayload?.availability
+                                screening = selectSeatPayload?.checkin?.screening,
+                                theater = selectSeatPayload?.checkin?.theater,
+                                availability = selectSeatPayload?.checkin?.availability
                         )))
                         .commit()
             }
@@ -166,8 +166,8 @@ class AddGuestsFragment : Fragment(), SeatPreviewListener, BackFragment {
                 ?.take(1)
                 ?.subscribe({
                     selectSeatPayload = it
-                    ticketContainer.constraints = TicketConstraint(0, it.screening?.maximumGuests
-                            ?: 0, guestTicketTypes = it?.availability?.guestsTicketTypes,
+                    ticketContainer.constraints = TicketConstraint(0, it.checkin?.screening?.maximumGuests
+                            ?: 0, guestTicketTypes = it?.checkin?.availability?.guestsTicketTypes,
                             ticketPurchaseData = it.ticketPurchaseData
                     )
                 }, {

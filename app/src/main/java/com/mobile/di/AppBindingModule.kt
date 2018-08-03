@@ -3,6 +3,7 @@ package com.mobile.di
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.activities.ActivateMoviePassCard
+import com.mobile.activities.LogInActivity
 import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
@@ -32,6 +33,11 @@ interface AppBindingModule {
     /**
      * Generates boilerplate
      */
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    fun loginActivity(): LogInActivity
+
     @ActivityScope
     @ContributesAndroidInjector(modules = [SplashActivityModule::class])
     fun splashActivity(): SplashActivity
@@ -51,10 +57,6 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [ScreeningsFragmentModule::class])
     fun theaterFragmentV2(): ScreeningsFragment
-
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun movieFragment(): MovieFragment
 
     @ActivityScope
     @ContributesAndroidInjector

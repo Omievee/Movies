@@ -321,6 +321,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
+                progress.setVisibility(View.GONE);
                 LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
@@ -418,7 +419,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
                     if (restriction.getSubscriptionStatus().equals(SubscriptionStatus.MISSING)
-                     || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
+                            || restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED) ||
                             restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equals(SubscriptionStatus.ENDED_FREE_TRIAL)) {
                         progress.setVisibility(View.GONE);
                         hideKeyboard();
@@ -459,7 +460,8 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
             @Override
             public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
-
+                progress.setVisibility(View.GONE);
+                t.printStackTrace();
             }
         });
     }

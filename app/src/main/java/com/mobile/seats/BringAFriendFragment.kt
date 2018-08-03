@@ -25,7 +25,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
 
     private val payloadSub: BehaviorSubject<SelectSeatPayload> = BehaviorSubject.create()
 
-    private var bringAFriend: BringAFriendPayload? = null
+    private var bringAFriend: Checkin? = null
 
     private var adapter: BringAFriendPagerAdapter? = null
 
@@ -41,14 +41,10 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         super.onViewCreated(view, savedInstanceState)
         bringAFriend = arguments?.getParcelable("data")
         viewPager.offscreenPageLimit = 5
-        val screening = bringAFriend?.screening ?: return
-        val availability = bringAFriend?.availability ?: return
-        adapter = BringAFriendPagerAdapter(screening, availability, UserPreferences.restrictions.userSegments, childFragmentManager)
+        adapter = BringAFriendPagerAdapter(bringAFriend, UserPreferences.restrictions.userSegments, childFragmentManager)
         viewPager.adapter = adapter
         payloadSub.onNext(SelectSeatPayload(
-                theater = bringAFriend?.theater,
-                screening = bringAFriend?.screening,
-                availability = bringAFriend?.availability
+                checkin = bringAFriend
         ))
     }
 
@@ -62,9 +58,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         viewPager.currentItem++
         payloadSub.onNext(
                 SelectSeatPayload(
-                        screening = bringAFriend?.screening,
-                        theater = bringAFriend?.theater,
-                        availability = bringAFriend?.availability,
+                        checkin = payloadSub.value.checkin,
                         selectedSeats = payloadSub.value?.selectedSeats,
                         ticketPurchaseData = payload
                 ))
@@ -74,9 +68,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
         viewPager.currentItem++
         payloadSub.onNext(
                 SelectSeatPayload(
-                        screening = bringAFriend?.screening,
-                        theater = bringAFriend?.theater,
-                        availability = bringAFriend?.availability,
+                        checkin = bringAFriend,
                         selectedSeats = emptyList(),
                         ticketPurchaseData = payload
                 ))
@@ -115,13 +107,9 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
     override fun onTicketsPurchased(result: ReservationResponse) {
         val payload: SelectSeatPayload = payloadSub.value ?: return
         val activity = activity ?: return
-        val screening = payload.screening ?: return
-        val theater = payload.theater ?: return
-        val availability = payload.availability ?: return
+        val checkin = payload.checkin?:return
         val screeningToken = ScreeningToken(
-                Checkin(screening = screening,
-                        availability = availability,
-                        theater = theater),
+                checkIn = checkin,
                 reservation = result,
                 confirmationCode = result.eTicketConfirmation,
                 seatSelected = payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }
@@ -154,7 +142,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
     }
 
     companion object {
-        fun newInstance(bringAFriendPayload: BringAFriendPayload): BringAFriendFragment {
+        fun newInstance(bringAFriendPayload: Checkin): BringAFriendFragment {
             return BringAFriendFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable("data", bringAFriendPayload)

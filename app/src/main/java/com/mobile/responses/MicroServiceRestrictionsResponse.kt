@@ -17,7 +17,9 @@ class MicroServiceRestrictionsResponse(
         var hasActiveCard: Boolean = false,
         var alert: Alert? = null,
         var logoutInfo: LogoutInfo? = null,
+        var blockRepeatShowings:Boolean = true,
         var subscriptionActivationRequired:Boolean = false,
         var canReactivate: canReactivate? = null,
-        var userSegments:List<Int> = emptyList()
+        var userSegments:List<Int> = emptyList(),
+        var peakPassInfo:PeakPassInfo = PeakPassInfo()
 )

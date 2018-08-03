@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.text.SpannableStringBuilder
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +22,18 @@ import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.*
 import javax.inject.Inject
 import com.mobile.activities.ActivateMoviePassCard
+import com.mobile.adapters.toBold
+import com.mobile.network.SurgeResponse
+import com.mobile.responses.PeakPass
+import com.mobile.responses.PeakPassInfo
+import com.mobile.seats.SheetData
+import com.mobile.utils.showBottomFragment
+import com.mobile.utils.text.centsAsDollars
 
 class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showActivateCard(checkin: Checkin) {
-        val activity:Activity = activity?:return
+        val activity: Activity = activity ?: return
         val activateCard = Intent(activity, ActivateMoviePassCard::class.java)
         activateCard.putExtra(Constants.SCREENING, checkin.screening)
         activateCard.putExtra(Constants.SHOWTIME, checkin.availability.startTime)
@@ -32,26 +41,85 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
     }
 
     override fun navigateTo(checkIn: Checkin, reservation: ReservationResponse) {
-        val activity = activity?:return
+        val activity = activity ?: return
         activity.onBackPressed()
         startActivity(ReservationActivity.newInstance(activity,
                 ScreeningToken(
                         checkIn = checkIn,
-                        reservation=reservation
+                        reservation = reservation
                 )))
     }
 
     override fun navigateToSurchargeConfirm(checkin: Checkin) {
-        val activity = activity?:return
-        startActivityForResult(BringAFriendActivity.newIntent(activity,checkin), Constants.SURGE_CHECKOUT_CODE)
+        val activity = activity ?: return
+        startActivityForResult(BringAFriendActivity.newIntent(activity, checkin), Constants.SURGE_CHECKOUT_CODE)
+    }
+
+    override fun showNowPeakingNoPeakPass(checkin: Checkin, surge: Surge) {
+        val context = activity ?: return
+        AlertDialog.Builder(context)
+                .setTitle(R.string.peak_pricing)
+                .setMessage(getString(R.string.peak_no_pass_apply_surcharge, surge.costAsDollars))
+                .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
+                    presenter.onApplyPeakPassClicked()
+                }
+                .setNegativeButton(R.string.go_back, null)
+                .setNeutralButton(R.string.save_peak_pass_for_later) { _, _ ->
+                    presenter.onSavePeakPassForLaterClicked()
+                }.show()
+    }
+
+    override fun showApplyPeakPass(checkin: Checkin, peakPasses: PeakPassInfo, currentPeakPass: PeakPass?) {
+        val context = activity ?: return
+        AlertDialog.Builder(context)
+                .setTitle(R.string.peak_pass)
+                .setMessage(R.string.peak_pass_apply)
+                .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
+                    presenter.onApplyPeakPassClicked()
+                }
+                .setNegativeButton(R.string.go_back, null)
+                .setNeutralButton(R.string.save_peak_pass_for_later) { _, _ ->
+                    presenter.onSavePeakPassForLaterClicked()
+                }.show()
+    }
+
+    override fun showPeakPassSheet(checkin: Checkin, peak: PeakPassInfo, peakPass: PeakPass?) {
+        showBottomFragment(
+                SheetData(
+                        title = getString(R.string.peak_pass),
+                        description = getString(R.string.peak_pass_description),
+                        subDescription = when (peakPass) {
+                            null -> when (peak.nextRefillDate) {
+                                null -> null
+                                else -> resources.getString(R.string.next_pass_applied, peak.nextRefillDate)
+                            }
+                            else -> resources.getString(R.string.peak_pass_expires, peakPass.expiresAsString())
+                        },
+                        gravity = Gravity.CENTER
+                )
+        )
+    }
+
+    override fun showNowPeakingApplyPeakPass(it: SurgeResponse, peak: PeakPassInfo, peakPass: PeakPass) {
+        val context = activity ?: return
+        AlertDialog.Builder(context)
+                .setTitle(R.string.peak_pricing)
+                .setMessage(resources.getString(R.string.peak_pass_apply_surcharge, it.peakAmount.centsAsDollars))
+                .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
+                    presenter.onApplyPeakPassClicked()
+                }
+                .setNegativeButton(R.string.go_back, null)
+                .setNeutralButton(R.string.save_peak_pass_for_later) { _, _ ->
+                    presenter.onSavePeakPassForLaterClicked()
+                }.show()
     }
 
     override fun showSurgeModal(peakAmount: String) {
-        val context = activity?:return
+        val context = activity ?: return
         AlertDialog.Builder(context)
                 .setTitle(R.string.peak_pricing)
-                .setMessage(context.getString(R.string.reservation_surge_description,peakAmount))
-                .setPositiveButton(R.string.continue_button) { _, _->
+                .setMessage(context.getString(R.string.reservation_surge_description, peakAmount))
+                .setPositiveButton(R.string.continue_button) { _, _ ->
                     presenter.onContinueDialogClicked()
                 }
                 .setNegativeButton(R.string.go_back, null)
@@ -135,34 +203,70 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
     }
 
     private fun showTicketVerificationDialog() {
-        val context = activity?:return
-        AlertDialog.Builder(context,R.style.CUSTOM_ALERT)
-        .setView(R.layout.alertdialog_ticketverif)
-                .setPositiveButton(android.R.string.ok, {_,_ ->
+        val context = activity ?: return
+        AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
+                .setView(R.layout.alertdialog_ticketverif)
+                .setPositiveButton(android.R.string.ok, { _, _ ->
                     presenter.onContinueClicked()
                 }).show()
     }
 
-    override fun showWillSurge(surge: Surge) {
+    override fun showWillSurge(surge: Surge, peakPassInfo: PeakPassInfo, peakPass: PeakPass?) {
         continueDescription.apply {
             visibility = View.VISIBLE
             text = when (surge.amount == 0) {
                 true -> getString(R.string.reservation_will_surge_unknown_description)
-                false -> getString(R.string.reservation_will_surge_description, surge.costAsDollars)
+                false -> {
+                    val span = SpannableStringBuilder()
+                    span.append(resources.getString(R.string.reservation_will_surge_start))
+                    span.append(' ')
+                    span.append(surge.costAsDollars.toBold(context))
+                    span.append(' ')
+                    span.append(resources.getString(R.string.reservation_will_surge_end))
+                    span
+                }
             }
         }
         continueOrCheckin.apply {
             text = R.string.continue_button
             setOnClickListener {
                 presenter.onContinueClicked()
+            }
+        }
+
+        handlePeakPass(peakPassInfo)
+    }
+
+    private fun handlePeakPass(peakPassInfo: PeakPassInfo) {
+        when {
+            !peakPassInfo.enabled -> {
+                peakPassContainer.visibility = View.GONE
+            }
+            else -> {
+                peakPassContainer.visibility = View.VISIBLE
+                peakPassContainer.setOnClickListener {
+                    presenter.onPeakPassInfoClicked()
+                }
+                peakPassDescription.apply {
+                    text = when (peakPassInfo.peakPasses.size) {
+                        0 -> resources.getString(R.string.no_peak_passes_left)
+                        else -> resources.getQuantityString(R.plurals.peak_passes_left, peakPassInfo.peakPasses.size, peakPassInfo.peakPasses.size)
+                    }
+                }
             }
         }
     }
 
-    override fun showSurge(surge: Surge) {
+    override fun showSurge(surge: Surge, peakPassInfo: PeakPassInfo, peakPass: PeakPass?) {
         continueDescription.apply {
             visibility = View.VISIBLE
-            text = getString(R.string.reservation_surge_description, surge.costAsDollars)
+            val span = SpannableStringBuilder()
+            span.append(resources.getString(R.string.reservation_surge_start))
+            span.append(' ')
+            span.append(surge.costAsDollars.toBold(context))
+            span.append(' ')
+            span.append(resources.getString(R.string.reservation_surge_end))
+            text = span
         }
         continueOrCheckin.apply {
             text = R.string.continue_button
@@ -170,6 +274,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                 presenter.onContinueClicked()
             }
         }
+        handlePeakPass(peakPassInfo)
     }
 
     var checkin: Checkin? = null

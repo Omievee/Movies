@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ReservationBackground"
     android:layout_width="match_parent"
-    android:clickable="true"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:focusable="true">
 
     <TextView
@@ -31,42 +31,52 @@
         app:layout_constraintTop_toBottomOf="@id/titleView" />
 
     <com.mobile.surge.SurgeTicketView
-        android:layout_marginTop="@dimen/margin_standard_and_half"
-        app:layout_constraintTop_toBottomOf="@id/moviePosterHeader"
         android:id="@+id/surgeTicket"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/moviePosterHeader" />
+
+    <TextView
+        style="@style/UsePeakPass"
+        android:id="@+id/usePeakPassOrSaveForLaterTV"
+        android:minHeight="30dp"
+        android:layout_marginStart="@dimen/margin_standard_and_half"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/surgeTicket" />
 
     <View
         android:id="@+id/divider"
         style="@style/divider"
-        app:layout_constraintTop_toBottomOf="@id/surgeTicket"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-    
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/usePeakPassOrSaveForLaterTV" />
+
     <com.mobile.surge.TotalView
         android:id="@+id/surgeTotal"
-        android:layout_marginTop="@dimen/margin_standard_and_half"
-        app:layout_constraintTop_toBottomOf="@id/divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_standard_and_half"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <TextView
         android:id="@+id/surgeChargeDescription"
-        app:layout_constraintTop_toBottomOf="@id/surgeTotal"
+        style="@style/SurgeChargeDescription"
         app:layout_constraintBottom_toTopOf="@id/surgeCancellationAndRefundPolicy"
-        style="@style/SurgeChargeDescription" />
+        app:layout_constraintTop_toBottomOf="@id/surgeTotal" />
 
     <TextView
         android:id="@+id/surgeCancellationAndRefundPolicy"
-        app:layout_constraintBottom_toTopOf="@+id/submit"
         style="@style/SurgeCancellationPolicy"
-    />
+        app:layout_constraintBottom_toTopOf="@+id/submit" />
 
     <com.mobile.widgets.MPProgressButton
+        android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/submit"
         android:layout_marginBottom="@dimen/margin_standard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

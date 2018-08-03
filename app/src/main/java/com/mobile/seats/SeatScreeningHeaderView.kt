@@ -13,9 +13,10 @@ class SeatScreeningHeaderView(context: Context?, attrs: AttributeSet? = null) : 
     }
 
     fun bind(payload: SelectSeatPayload) {
-        movieName.text = payload.screening?.title
-        theaterName.text = payload.theater?.name
-        showtime.text = payload.availability?.startTime
+        val checkin = payload.checkin?:return
+        movieName.text = checkin.screening.title
+        theaterName.text = checkin.theater.name
+        showtime.text = checkin.availability.startTime
         val totalTicketsNeeded =
                 payload.ticketPurchaseData?.sumBy {
                     it.tickets

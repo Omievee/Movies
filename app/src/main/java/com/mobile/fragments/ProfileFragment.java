@@ -23,6 +23,7 @@ import com.helpshift.support.Metadata;
 import com.helpshift.support.Support;
 import com.helpshift.util.HelpshiftContext;
 import com.mobile.Constants;
+import com.mobile.Primary;
 import com.mobile.UserPreferences;
 import com.mobile.activities.ActivatedCard_TutorialActivity;
 import com.mobile.activities.LogInActivity;
@@ -56,21 +57,22 @@ import java.util.concurrent.TimeUnit;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-import static android.text.TextUtils.isEmpty;
 import static com.mobile.UserPreferences.*;
-import static com.mobile.model.AvailabilityKt.fromTime;
 import static java.lang.String.valueOf;
 
 /**
  * Created by anubis on 5/31/17.
  */
 
-public class ProfileFragment extends MPFragment {
+public class ProfileFragment extends MPFragment implements Primary {
 
     PastReservationsFragment pastReservations = new PastReservationsFragment();
     ReferAFriend refer = new ReferAFriend();
     View root;
     RelativeLayout details, history, currentRes, howToUse, help, referAFriend, loyaltyPrograms;
+    ViewGroup debugContainer;
+    TextView clearOutEverything;
+    TextView newPeakPass;
     TextView version, TOS, PP, signout;
     Switch pushSwitch;
     boolean pushValue;
@@ -103,8 +105,10 @@ public class ProfileFragment extends MPFragment {
         PP = root.findViewById(R.id.PP);
         signout = root.findViewById(R.id.SignOut);
         loyaltyPrograms = root.findViewById(R.id.LoyaltyPrograms);
-
+        newPeakPass = root.findViewById(R.id.peakPassAdded);
         referAFriend = root.findViewById(R.id.ReferAFriend);
+        debugContainer = root.findViewById(R.id.debugContainer);
+        clearOutEverything = root.findViewById(R.id.clearOutEverything);
         fadeIn(root);
         activity = getActivity();
 
@@ -156,6 +160,10 @@ public class ProfileFragment extends MPFragment {
 
         });
 
+        debugContainer.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+        clearOutEverything.setOnClickListener(v-> {
+            UserPreferences.INSTANCE.clearOutEverythingButUser();
+        });
 
         signout.setOnClickListener(view16 -> {
             INSTANCE.clearUserId();
@@ -171,7 +179,7 @@ public class ProfileFragment extends MPFragment {
 
         details.setOnClickListener(view1 -> {
             if (isOnline())
-                showFragment(new ProfileAccountInformationFragment());
+                showFragment(new AccountDetailsFragment());
         });
 
 
@@ -208,7 +216,7 @@ public class ProfileFragment extends MPFragment {
                 Checkin checkinAttempt = INSTANCE.getLastCheckInAttempt();
                 final boolean checkedIn;
 
-                if (token != null) {
+                if (token != null && token.getReservation()!=null && token.getReservation().getReservation()!=null) {
                     Reservation rs = token.getReservation().getReservation();
                     checkedIn = rs.getExpiration() > System.currentTimeMillis();
                     Date starttime = token.getTimeAsDate();
@@ -329,4 +337,14 @@ public class ProfileFragment extends MPFragment {
         myContext = context;
     }
 
+    @Override
+    public void onPrimary() {
+        boolean hasNewPeakPass = UserPreferences.INSTANCE.getHasNewPeakPass();
+        if (hasNewPeakPass) {
+            newPeakPass.setVisibility(View.VISIBLE);
+        } else {
+            newPeakPass.setVisibility(View.GONE);
+        }
+        UserPreferences.INSTANCE.setShowPeakPassBadge(true);
+    }
 }

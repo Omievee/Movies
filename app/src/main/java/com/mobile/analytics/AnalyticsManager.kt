@@ -1,9 +1,6 @@
 package com.mobile.analytics
 
-import com.mobile.model.Availability
-import com.mobile.model.Screening
-import com.mobile.model.Theater
-import com.mobile.model.User
+import com.mobile.model.*
 import com.mobile.reservation.Checkin
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.responses.ReservationResponse
@@ -15,6 +12,7 @@ interface AnalyticsManager {
     fun onAppOpened()
     fun onShowtimeClicked(mytheater: Theater, screening: Screening, availability: Availability)
     fun onTheaterOpened(theater:Theater)
+    fun onMovieImpression(movie:Movie)
     fun onTheaterMapOpened()
     fun onTheaterListOpened()
     fun onTheaterSearch(query:String)

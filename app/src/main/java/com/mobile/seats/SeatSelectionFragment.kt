@@ -100,9 +100,9 @@ class SeatSelectionFragment : Fragment() {
         state.payload?.let {
             screeningsHeaderView.bind(it)
         }
-        val theaterId = state.payload?.theater?.id ?: return
-        val tribuneId = state.payload?.theater?.tribuneTheaterId ?: return
-        val availability = state.payload?.availability
+        val theaterId = state.payload?.checkin?.theater?.id ?: return
+        val tribuneId = state.payload?.checkin?.theater?.tribuneTheaterId ?: return
+        val availability = state.payload?.checkin?.availability
                 ?: return
         val performanceInfo = availability.providerInfo
                 ?: return

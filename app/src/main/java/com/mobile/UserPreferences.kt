@@ -10,7 +10,10 @@ import com.mobile.model.ScreeningToken
 import com.mobile.reservation.Checkin
 import com.mobile.responses.MicroServiceRestrictionsResponse
 import com.mobile.responses.UserInfoResponse
+import com.mobile.rx.Schedulers
 import com.moviepass.BuildConfig
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import java.util.*
 
 /**
@@ -22,6 +25,12 @@ object UserPreferences {
     private lateinit var sPrefs: SharedPreferences
     private lateinit var gson: Gson
 
+    private val subject: BehaviorSubject<Pair<Change, Any>> = BehaviorSubject.create()
+
+    fun changes(): Observable<Pair<Change, Any>> {
+        return subject.compose(Schedulers.observableDefault())
+    }
+
     var restrictionsLoaded: Boolean = false
     var restrictions: MicroServiceRestrictionsResponse = MicroServiceRestrictionsResponse()
         set(it) {
@@ -31,7 +40,7 @@ object UserPreferences {
                             gson.toJson(it)).apply()
         }
         get() {
-            if (restrictionsLoaded == false) {
+            if (!restrictionsLoaded) {
                 val ss = sPrefs.getString(Constants.RESTRICTIONS, null)
                 if (ss == null) {
                     field = MicroServiceRestrictionsResponse()
@@ -45,6 +54,14 @@ object UserPreferences {
                 restrictionsLoaded = true
             }
             return field
+        }
+
+    var showPeakPassBottomSheet: Boolean
+        get() {
+            return !showPeakPassOnboard && hasNewPeakPass
+        }
+        set(value) {
+            hasNewPeakPass = false
         }
 
     val deviceAndroidID: String
@@ -100,6 +117,46 @@ object UserPreferences {
     val firebaseHelpshiftToken: String
         get() {
             return sPrefs.getString(Constants.FIREBASE_TOKEN, "null") ?: "null"
+        }
+
+    var hasNewPeakPass: Boolean
+        get() {
+            return restrictions.peakPassInfo.enabled &&
+                    restrictions
+                            .peakPassInfo
+                            .peakPasses
+                            .any {
+                                val key = "seen_peak_pass_${it.id}"
+                                sPrefs.getLong(key, 0) == 0L
+                            }
+        }
+        set(value) {
+            when (value) {
+                false -> {
+                    restrictions.peakPassInfo.peakPasses.forEach {
+                        val key = "seen_peak_pass_${it.id}"
+                        sPrefs.edit().putLong(key, System.currentTimeMillis()).apply()
+                    }
+                }
+            }
+        }
+
+    var showPeakPassOnboard: Boolean
+        get() {
+            return sPrefs.getLong("show_peak_pass_onboard", 0) == 0L && hasNewPeakPass
+        }
+        set(value) {
+            sPrefs.edit().putLong("show_peak_pass_onboard", System.currentTimeMillis()).apply()
+            hasNewPeakPass = false
+        }
+
+    var showPeakPassBadge: Boolean
+        get() {
+            return sPrefs.getLong("show_peak_pass_badge", 0) == 0L && hasNewPeakPass
+        }
+        set(value) {
+            sPrefs.edit().putLong("show_peak_pass_badge", System.currentTimeMillis()).apply()
+            subject.onNext(Pair(Change.PEEK_PASS_BADGE_CHANGE, false))
         }
 
     val lastCheckInAttempt: Checkin?
@@ -195,7 +252,7 @@ object UserPreferences {
         }
 
 
-    val wasHistoryLoadedRecently: Calendar
+    val historyLoadedDate: Calendar
         get() {
             return Calendar.getInstance().apply {
                 timeInMillis = sPrefs.getLong(Constants.LAST_DOWNLOADED_HISTORY, 0)
@@ -205,6 +262,16 @@ object UserPreferences {
     fun saveHistoryLoadedDate() {
         val currentTime = System.currentTimeMillis()
         sPrefs.edit().putLong(Constants.LAST_DOWNLOADED_HISTORY, currentTime).apply()
+    }
+
+    fun clearOutEverythingButUser() {
+        val keys = setOf(Constants.AAID,Constants.CARD_ACTIVATED_SCREEN,Constants.DEVICE_ANDROID_ID, Constants.DEVICE_ID, Constants.ONE_DEVICE_ID, Constants.USER_AUTH_TOKEN, Constants.USER_EMAIL, Constants.USER_ID)
+        sPrefs.all
+                .forEach { e->
+                    if(keys.none { it.startsWith(e.key) }) {
+                        sPrefs.edit().remove(e.key).apply()
+                    }
+                }
     }
 
     val aAID: String?
@@ -421,4 +488,8 @@ object UserPreferences {
 
     }
 
+}
+
+enum class Change {
+    PEEK_PASS_BADGE_CHANGE
 }

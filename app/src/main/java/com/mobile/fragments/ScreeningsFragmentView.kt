@@ -1,7 +1,6 @@
 package com.mobile.fragments
 
 import android.util.Pair
-import android.view.View
 import com.mobile.ApiError
 import com.mobile.history.model.ReservationHistory
 import com.mobile.location.UserLocation
@@ -10,7 +9,6 @@ import com.mobile.model.Screening
 import com.mobile.model.Theater
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
-import com.mobile.screening.MoviePosterClickListener
 
 interface ScreeningsFragmentView : LocationRequiredView {
     fun removeCheckinFragment()
@@ -26,5 +24,6 @@ interface ScreeningsFragmentView : LocationRequiredView {
     fun showTheaterBottomSheetNecessary(theater: Theater?)
     fun showSynopsis(movie:Movie)
     fun hideSynopsis()
-    fun surgeInterstitialFlow(second: ScreeningsResponseV2)
+    fun surgeInterstitialFlow(screening: ScreeningsResponseV2,lastCode:Int=0)
+    fun setRecyclerSpacing(topSpacing:Boolean)
 }
