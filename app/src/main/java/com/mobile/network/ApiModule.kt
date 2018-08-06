@@ -41,7 +41,6 @@ class ApiModule {
         httpClient.cookieJar(cookieJar)
         httpClient.addInterceptor(authenticatedRequestInterceptor)
         httpClient.addInterceptor(loggingInterceptor)
-        httpClient.cache(cache)
         return httpClient
     }
 
