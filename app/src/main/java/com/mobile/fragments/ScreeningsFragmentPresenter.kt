@@ -1,6 +1,7 @@
 package com.mobile.fragments
 
 import android.util.Pair
+import com.crashlytics.android.Crashlytics
 import com.mobile.ApiError
 import com.mobile.Constants
 import com.mobile.UserPreferences
@@ -126,8 +127,8 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
                         is NoScreeningsException -> {
                         }
                         else -> view.showError()
-
                     }
+                    Crashlytics.logException(it)
                 })
     }
 
