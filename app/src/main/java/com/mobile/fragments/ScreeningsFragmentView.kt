@@ -26,4 +26,5 @@ interface ScreeningsFragmentView : LocationRequiredView {
     fun hideSynopsis()
     fun surgeInterstitialFlow(screening: ScreeningsResponseV2,lastCode:Int=0)
     fun setRecyclerSpacing(topSpacing:Boolean)
+    fun showNoMoreScreenings()
 }
