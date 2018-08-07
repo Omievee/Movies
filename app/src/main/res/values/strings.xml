@@ -693,5 +693,6 @@
     <string name="never">Never</string>
     <string name="clear_everything_but_credentials">Clear Everything But Credentials</string>
     <string name="no_peak_passes_left">You have no Peak Passes</string>
+    <string name="change_email">Change Email</string>
 
 </resources>
