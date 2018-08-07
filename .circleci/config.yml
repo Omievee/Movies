@@ -13,6 +13,7 @@ aliases:
       - run:
           name: Build Release Notes
           command: |
+            sleep 5
             curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
             chmod +x jq
             pull_number=$(echo ${CIRCLE_PULL_REQUEST} | sed 's/[^0-9]*//g')
