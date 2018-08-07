@@ -604,7 +604,8 @@
     <string name="submit_button">Submit</string>
     <string name="billing">Billing</string>
     <string name="save">Save</string>
-    <string name="billing_description">This payment method will be applied to your MoviePass membership fees (does not apply to gift or annual memberships) as well as all in-app transactions.</string>
+    <string name="billing_description_one">This payment method will be applied to all in-app purchases as well as monthly membership fees*</string>
+    <string name="billing_description_two">*Monthly membership fees do not apply to gift and annual subscriptions</string>
     <string name="payment_method">Payment method:</string>
     <string name="credit_card_hint">Credit Card number</string>
     <string name="expiration_date">Expiration mm/yy</string>
@@ -615,7 +616,7 @@
     <string name="zip_hint">Zip</string>
     <string name="state_hint">State</string>
     <string name="cancel_lower">Cancel</string>
-    <string name="street_address2_hint">Billing Street Address #2</string>
+    <string name="street_address2_hint">Billing Address 2</string>
     <string name="continue_to_eticketing">Continue to E-Ticketing</string>
     <string name="checkin">Check In</string>
     <string name="reservation_surge_description"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of %1$s for your ticket.]]></string>
@@ -716,6 +717,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="peak_pass_added">Peak Pass Added!</string>
     <string name="change_email">Change Email</string>
+    <string name="billing_updated">Your billing details have been changed.</string>
+    <string name="edit">Edit</string>
+    <string name="section_credit_card_data">creditCardData</string>
     <string name="cancel_membership">Cancel Membership</string>
     <string name="account_information">Account Information</string>
     <string name="change_password">Change Password</string>
@@ -743,6 +747,5 @@
     <string name="billing_card_on_file_eticket">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
     <string name="cycle_renews_on">Cycle renews on %1$s</string>
     <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
-
 
 </resources>

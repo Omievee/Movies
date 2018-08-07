@@ -24,6 +24,8 @@ public class CreditCardUtils {
 
     public static int getCardType(String cardNumber) {
 
+        if(cardNumber.length() < 4) return NONE;
+
         if (cardNumber.substring(0, 1).equals(VISA_PREFIX))
             return VISA;
         else if (MASTERCARD_PREFIX.contains(cardNumber.substring(0, 2) + ","))
@@ -47,6 +49,17 @@ public class CreditCardUtils {
             else if (getCardType(cardNumber) == DISCOVER && cardNumber.length() == 16)
                 return true;
         return false;
+    }
+
+    public static boolean isValidSecurityCode(String securityCode){
+        if (!TextUtils.isEmpty(securityCode) && ((securityCode.length() >= 3) || (securityCode.length() <= 4)) &&
+                isNumeric(securityCode))
+            return true;
+        return false;
+    }
+
+    public static boolean isNumeric(String s) {
+        return s != null && s.matches("[-+]?\\d*\\.?\\d*");
     }
 
     public static boolean isValidDate(String cardValidity) {

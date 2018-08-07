@@ -68,8 +68,8 @@ public interface Api {
     Call<User> login(@Header(HEADER_UUID) String deviceId, @Body LogInRequest request);
 
     /* ForgotPassword */
-    @GET("/rest/v1/password_reset/{emailAddress}")
     Call<Object> forgotPassword(@Path("emailAddress") String email);
+    @GET("/rest/v1/password_reset/{emailAddress}")
 
     /* FB Login */
     @POST("/rest/v1/auth/fb_login")
@@ -172,7 +172,7 @@ public interface Api {
     @PUT("/rest/v1/users/{userId}")
     Call<UserInfoResponse> updateBillingCard(@Path("userId") int userId, @Body CreditCardChangeRequest request);
 
-    @PUT("/rest/v2/users/{userId}")
+    @PUT("/rest/v1/users/{userId}")
     Single<ResponseBody> updateBilling(@Path("userId") int userId, @Body BillingInfo info);
 
     /* Cancel Subscription */
