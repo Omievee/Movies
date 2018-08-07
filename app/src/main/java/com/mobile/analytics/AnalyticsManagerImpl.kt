@@ -3,17 +3,14 @@ package com.mobile.analytics
 import com.appboy.Appboy
 import com.appboy.enums.NotificationSubscriptionType
 import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.CustomEvent
-import com.crashlytics.android.answers.LoginEvent
-import com.crashlytics.android.answers.PurchaseEvent
+import com.crashlytics.android.answers.*
 import com.helpshift.Core
-import com.mobile.model.User
 import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.gowatchit.GoWatchItManager
 import com.mobile.helpshift.HelpshiftHelper
 import com.mobile.model.*
+import com.mobile.requests.TicketInfoRequest
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ReservationResponse
 import java.lang.String.valueOf
@@ -23,6 +20,21 @@ import java.util.*
 class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWatchItManager) : AnalyticsManager {
 
     var appBoy = Appboy.getInstance(context)
+
+    override fun onTicketsPurchased(request: TicketInfoRequest) {
+        request.guestTickets?.forEach {
+            Answers.getInstance()
+                    .logPurchase(PurchaseEvent()
+                            .putItemPrice(it.costAsDollars.toBigDecimal())
+                            .putCurrency(Currency.getInstance(Locale.US))
+                            .putItemName(it.ticketType?.name ?: "unknown")
+                            .putItemType(when (it.ticketType) {
+                                TicketType.STANDARD -> "soft_cap"
+                                else -> "bring_a_friend"
+                            })
+                    )
+        }
+    }
 
     override fun onCheckinAttempt(checkIn: Checkin) {
         UserPreferences.setLastCheckInAttempt(checkIn)
@@ -118,6 +130,14 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
                         .putCustomAttribute("surge_amount", surge.amount)
                         .putCustomAttribute("start_time", availability.startTime)
         )
+        when (surge.level == SurgeType.SURGING) {
+            true -> Answers.getInstance().logAddToCart(
+                    AddToCartEvent()
+                            .putItemName("peak_pricing")
+                            .putCurrency(Currency.getInstance(Locale.US))
+                            .putItemPrice(surge.amount.div(100.0).toBigDecimal())
+            )
+        }
     }
 
     override fun onUserLoggedIn(user: User) {

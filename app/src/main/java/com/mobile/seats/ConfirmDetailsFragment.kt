@@ -217,28 +217,29 @@ class ConfirmDetailsFragment : Fragment() {
         getTickets.progress = true
         getTicketsDisposable?.dispose()
         val checkIn = checkin
+        val ticketInfoRequest = TicketInfoRequest(
+                performanceInfo = ProviderInfo(
+                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId
+                                                ?: 0,
+                        normalizedMovieId = provideInfo.normalizedMovieId,
+                        externalMovieId = provideInfo.externalMovieId,
+                        format = provideInfo.format,
+                        performanceId = provideInfo.performanceId,
+                        dateTime = provideInfo.dateTime,
+                        seatPosition = mySeat?.asPosition(),
+                        guestsAllowed = payload.checkin.screening.maximumGuests,
+                        guestTickets = when (guestTickets.isEmpty()) {
+                            true -> null
+                            false -> guestTickets
+                        }
+                ),
+                longitude = lng,
+                latitude = lat
+        )
         getTicketsDisposable = RestClient
                 .getAuthenticated()
                 .reserve(
-                        TicketInfoRequest(
-                                performanceInfo = ProviderInfo(
-                                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId
-                                                ?: 0,
-                                        normalizedMovieId = provideInfo.normalizedMovieId,
-                                        externalMovieId = provideInfo.externalMovieId,
-                                        format = provideInfo.format,
-                                        performanceId = provideInfo.performanceId,
-                                        dateTime = provideInfo.dateTime,
-                                        seatPosition = mySeat?.asPosition(),
-                                        guestsAllowed = payload.checkin.screening.maximumGuests,
-                                        guestTickets = when (guestTickets.isEmpty()) {
-                                            true -> null
-                                            false -> guestTickets
-                                        }
-                                ),
-                                longitude = lng,
-                                latitude = lat
-                        )
+                        ticketInfoRequest
                 )
                 .doOnSubscribe {
                     analyticsManager.onCheckinAttempt(checkIn)
@@ -250,6 +251,7 @@ class ConfirmDetailsFragment : Fragment() {
                         analyticsManager.onCheckinSuccessful(checkIn = checkIn,
                                 reservationResponse = it
                         )
+                        analyticsManager.onTicketsPurchased(ticketInfoRequest)
                     }
                 }
                 ) { error ->
