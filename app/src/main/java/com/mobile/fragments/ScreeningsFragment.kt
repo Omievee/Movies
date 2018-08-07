@@ -11,6 +11,7 @@ import android.util.Pair
 import android.view.*
 import com.mobile.ApiError
 import com.mobile.Constants
+import com.mobile.Error
 import com.mobile.UserPreferences
 import com.mobile.adapters.MissingCheckinListener
 import com.mobile.adapters.ScreeningsAdapter
@@ -168,6 +169,15 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
     override fun onResume() {
         super.onResume()
         presenter.onResume()
+    }
+
+    override fun showNoMoreScreenings() {
+        activity?:return
+        errorView.show(ApiError(
+                error = Error(
+                        message = getString(R.string.screenings_no_more_screenings)
+                )
+        ))
     }
 
     override fun showError(apiError: ApiError) {

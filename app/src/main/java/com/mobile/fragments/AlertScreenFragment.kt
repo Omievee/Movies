@@ -1,6 +1,5 @@
 package com.mobile.fragments
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,10 +18,7 @@ import java.io.IOException
 
 class AlertScreenFragment : MPFragment() {
 
-
-    internal var myContext: Context? = null
     private var alertObject: Alert? = null
-    var acceptedClick: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +47,10 @@ class AlertScreenFragment : MPFragment() {
         }
 
         if (alertObject?.urlTitle.isNullOrEmpty() || alertObject?.url.isNullOrEmpty()) {
-            alertClickMessage.visibility = View.INVISIBLE
+            alertClickMessage.visibility = View.GONE
         } else {
-            LinkText.text = alertObject?.urlTitle
+            alertClickMessage.visibility = View.VISIBLE
+            linkText.text = alertObject?.urlTitle
             alertClickMessage.setOnClickListener { _ ->
                 if (Patterns.WEB_URL.matcher(alertObject?.url).matches()) {
                     val alertIntentClick = Intent(Intent.ACTION_VIEW, Uri.parse(alertObject?.url))
@@ -71,6 +68,8 @@ class AlertScreenFragment : MPFragment() {
                 alertObject?.dismissible = true
                 activity?.onBackPressed()
             }
+        } else {
+            acceptButton.visibility = View.GONE
         }
     }
 

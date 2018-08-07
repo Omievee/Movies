@@ -9,8 +9,8 @@ class Alert(val id: String? = null,
             val body: String? = null,
             val urlTitle: String? = null,
             val url: String? = null,
-            var dismissible: Boolean? = null,
-            val dismissButton: Boolean? = false,
+            var dismissible: Boolean = true,
+            val dismissButton: Boolean = false,
             val dismissButtonText: String? = null,
             val dismissButtonWebhook: String? = null
 
