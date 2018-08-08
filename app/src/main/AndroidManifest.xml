@@ -235,7 +235,7 @@
 
         <activity android:name="com.mobile.activities.ActivateMoviePassCard" />
         <activity
-            android:name="com.mobile.activities.ActivatedCard_TutorialActivity"
+            android:name="com.mobile.activities.ActivatedCardTutorialActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
 

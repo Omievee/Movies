@@ -1,5 +1,6 @@
 package com.mobile.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -25,7 +26,7 @@ import com.moviepass.R;
 import org.parceler.Parcels;
 
 
-public class ActivatedCard_TutorialActivity extends BaseActivity {
+public class ActivatedCardTutorialActivity extends BaseActivity {
 
     Screening screeningObject;
     String selectedShowTime;
@@ -37,7 +38,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
     int page = 0;
     ImageView[] indicators;
 
-    ActivatedCard_TutorialActivity.tutorialAdapter tutorialAdapter;
+    ActivatedCardTutorialActivity.tutorialAdapter tutorialAdapter;
 
     LinearLayout dots;
     CoordinatorLayout activityLayout;
@@ -45,7 +46,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ac_activated_card__tutorial);
+        setContentView(R.layout.activity_activate_card_tutorial);
 
         zero = findViewById(R.id.tutorial_indicator_0);
         one = findViewById(R.id.tutorial_indicator_1);
@@ -68,7 +69,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
             theater = Parcels.unwrap(intent.getParcelableExtra(Constants.THEATER));
         }
         done.setOnClickListener(v -> {
-                Intent doneIntent = new Intent(ActivatedCard_TutorialActivity.this, HomeActivity.class);
+                Intent doneIntent = new Intent(ActivatedCardTutorialActivity.this, HomeActivity.class);
                 doneIntent.putExtra("launch", true);
                 doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(doneIntent);
@@ -128,7 +129,7 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return ActivatedCard_TutorialActivity.PlaceholderFragment.newInstance(position + 1);
+            return ActivatedCardTutorialActivity.PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
@@ -173,8 +174,8 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
                 R.string.tutorial_body_3, R.string.tutorial_body_4, R.string.tutorial_body_final};
 
 
-        public static ActivatedCard_TutorialActivity.PlaceholderFragment newInstance(int sectionNumber) {
-            ActivatedCard_TutorialActivity.PlaceholderFragment fragment = new ActivatedCard_TutorialActivity.PlaceholderFragment();
+        public static ActivatedCardTutorialActivity.PlaceholderFragment newInstance(int sectionNumber) {
+            ActivatedCardTutorialActivity.PlaceholderFragment fragment = new ActivatedCardTutorialActivity.PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
@@ -209,5 +210,9 @@ public class ActivatedCard_TutorialActivity extends BaseActivity {
 
             return rootView;
         }
+    }
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, ActivatedCardTutorialActivity.class);
     }
 }

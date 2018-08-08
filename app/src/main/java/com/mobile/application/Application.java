@@ -5,10 +5,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
@@ -20,15 +16,12 @@ import com.mobile.UserPreferences;
 import com.mobile.analytics.AnalyticsManager;
 import com.mobile.di.DaggerAppComponent;
 import com.mobile.helpers.RealmTaskService;
-import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
+import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.network.RestClient;
 import com.mobile.utils.FastStack;
-import com.moviepass.BuildConfig;
 import com.taplytics.sdk.Taplytics;
 
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Stack;
 
 import javax.inject.Inject;
 
@@ -120,7 +113,7 @@ public class Application extends MultiDexApplication implements HasActivityInjec
                     "moviepass_platform_20170512180003329-05097f788df2b3a",
                     installConfig);
 
-            Core.login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
+            Core.login(HelpshiftHelper.Companion.getHelpshiftUser());
         } catch (InstallException e) {
         }
     }

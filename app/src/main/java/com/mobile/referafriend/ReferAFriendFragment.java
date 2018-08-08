@@ -1,4 +1,4 @@
-package com.mobile.fragments;
+package com.mobile.referafriend;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class ReferAFriend extends Fragment {
+public class ReferAFriendFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     Activity myActivity;
@@ -42,7 +42,7 @@ public class ReferAFriend extends Fragment {
     View root, progress;
     ReferAFriendResponse referalResponse;
 
-    public ReferAFriend() {
+    public ReferAFriendFragment() {
         // Required empty public constructor
     }
 

@@ -12,4 +12,5 @@ interface HistoryManager {
     fun getHistory(): Observable<List<ReservationHistory>>
     fun fetchLastMovieWithoutRating(): Single<ReservationHistory>
     fun submitRating(history:ReservationHistory, wasGood:Boolean): Single<ReservationHistory>
+
 }

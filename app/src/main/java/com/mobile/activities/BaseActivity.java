@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.helpshift.util.HelpshiftContext;
 
 import com.mobile.helpers.LogUtils;
-import com.mobile.helpshift.HelpshiftIdentitfyVerificationHelper;
+import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.responses.UserInfoResponse;
 import com.moviepass.R;
 import com.taplytics.sdk.Taplytics;
@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         try {
-            HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
+            HelpshiftContext.getCoreApi().login(HelpshiftHelper.Companion.getHelpshiftUser());
         } catch (Exception e) {
 
         }

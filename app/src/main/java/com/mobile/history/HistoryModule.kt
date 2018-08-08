@@ -2,6 +2,7 @@ package com.mobile.history
 
 import com.mobile.network.Api
 import com.mobile.network.ApiModule
+import com.mobile.session.SessionManager
 import dagger.Module
 import dagger.Provides
 import io.realm.Realm
@@ -23,8 +24,11 @@ class HistoryModule {
 
     @Provides
     @Singleton
-    fun provideHistoryManager(@History realm: Provider<Realm>, api: Api): HistoryManager {
-        return HistoryManagerImpl(realm, api)
+    fun provideHistoryManager(@History realm: Provider<Realm>, api: Api, sessionManager: SessionManager): HistoryManager {
+        return HistoryManagerImpl(
+                realmHistory = realm,
+                api = api,
+                sessionManager = sessionManager)
     }
 
 }

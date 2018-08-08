@@ -14,10 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.helpshift.support.Log;
 import com.mobile.Constants;
 import com.mobile.UserPreferences;
-import com.mobile.activities.ActivatedCard_TutorialActivity;
+import com.mobile.activities.ActivatedCardTutorialActivity;
 import com.mobile.helpers.LogUtils;
 import com.mobile.model.ProspectUser;
 import com.mobile.model.User;
@@ -89,7 +88,7 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.authToken = userRESPONSE.getAuthToken();
 
                     UserPreferences.INSTANCE.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
-                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
+                    Intent i = new Intent(myContext, ActivatedCardTutorialActivity.class);
                     i.putExtra("launch", true);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);

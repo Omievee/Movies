@@ -26,12 +26,15 @@ class MPSwitchView(context: Context, attrs: AttributeSet? = null) : ConstraintLa
     var onCheckChangedListener: CompoundButton.OnCheckedChangeListener? = null
         set(value) = checkbox.setOnCheckedChangeListener(value)
 
-    val isChecked:Boolean
-    get() {
-        return checkbox.isChecked
-    }
+    var isChecked: Boolean
+        get() {
+            return checkbox.isChecked
+        }
+        set(value) {
+            checkbox.isChecked = value
+        }
 
-    fun toggle():Boolean {
+    fun toggle(): Boolean {
         checkbox.toggle()
         return checkbox.isChecked
     }
