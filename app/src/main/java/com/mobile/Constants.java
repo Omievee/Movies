@@ -27,7 +27,7 @@ public class Constants {
     public static final String DEVICE_ID = "ID";
     public static final String ONE_DEVICE_ID = "ODID";
     public static final String LAST_DOWNLOADED_THEATERS = "last_dl_theaters";
-    public static final String LAST_DOWNLOADED_HISTORY = "last_dl_history";
+    public static final String LAST_DOWNLOADED_HISTORY = "last_dl_history2";
 
     //PERMISSION CODES
     public final static int REQUEST_CAMERA_CODE = 0;
