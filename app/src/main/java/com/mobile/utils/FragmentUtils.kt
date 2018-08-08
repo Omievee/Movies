@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
+import com.mobile.BackFragment
 import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
 import com.moviepass.R
@@ -88,6 +89,18 @@ fun Fragment.replaceFragmentExtension(id:Int, fragment: Fragment? = null) {
 fun Fragment.onBackExtension(): Boolean {
     val fragment = findDeepestFragment(childFragmentManager) ?: return false
     val parent = fragment.parentFragment ?: return false
+
+    val fragmentAsBack = fragment as? BackFragment
+    when(fragmentAsBack!=null) {
+        true->when(fragmentAsBack?.onBack()) {
+            true-> return true
+        }
+    }
+
+    val thisFragment = this
+    if(thisFragment==fragment) {
+        return false
+    }
 
     val listener = object : TransitionListenerAdapter() {
 

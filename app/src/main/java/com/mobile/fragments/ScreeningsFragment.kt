@@ -190,6 +190,23 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         errorView.show()
     }
 
+    override fun onBack(): Boolean {
+        val bottom = BottomSheetBehavior.from(synopsisBottomSheetView) as? PinnedBottomSheetBehavior
+        return when(bottom?.locked) {
+            null -> super.onBack()
+            true -> super.onBack()
+            false -> {
+                when(bottom.state!=BottomSheetBehavior.STATE_HIDDEN) {
+                    true-> {
+                        hideSynopsis()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+    }
+
     override fun updateAdapter(response: Pair<List<ReservationHistory>, ScreeningsResponseV2>, location: UserLocation?, selected: Pair<Screening, String?>?, segments: List<Int>) {
         context ?: return
         recyclerView.visibility = View.VISIBLE
