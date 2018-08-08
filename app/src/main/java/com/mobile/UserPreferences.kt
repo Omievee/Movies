@@ -255,7 +255,7 @@ object UserPreferences {
     val historyLoadedDate: Calendar
         get() {
             return Calendar.getInstance().apply {
-                timeInMillis = sPrefs.getLong(Constants.LAST_DOWNLOADED_HISTORY, 0)
+                timeInMillis = sPrefs.getLong(Constants.LAST_DOWNLOADED_HISTORY, 0L)
             }
         }
 
