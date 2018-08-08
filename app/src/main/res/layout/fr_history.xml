@@ -6,18 +6,20 @@
     android:background="@color/test_black">
 
     <TextView
-        android:layout_marginTop="@dimen/status_bar_height"
         android:id="@+id/HEADER"
         style="@style/TitleView"
+        android:layout_marginTop="@dimen/status_bar_height"
         android:text="History" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/historyReycler"
-        android:layout_below="@id/HEADER"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/test_black"
+        android:layout_below="@id/HEADER"
         android:layout_marginBottom="55dp"
+        android:layout_marginEnd="@dimen/margin_minimum"
+        android:layout_marginStart="@dimen/margin_minimum"
+        android:background="@color/test_black"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:visibility="visible">
 

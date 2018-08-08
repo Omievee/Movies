@@ -4,19 +4,20 @@
     android:id="@+id/historyCard"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:elevation="5dp"
-    android:layout_marginStart="@dimen/margin_minimum"
-    android:layout_marginEnd="@dimen/margin_half"
     android:layout_marginBottom="@dimen/margin_half"
-    app:cardBackgroundColor="@android:color/transparent">
+    android:layout_marginEnd="5dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="@dimen/margin_half"
+    android:layout_weight="1"
+    android:elevation="5dp">
 
 
-    <com.facebook.drawee.view.SimpleDraweeView  xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    <com.facebook.drawee.view.SimpleDraweeView xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:id="@+id/historyPoster"
-        android:layout_width="125dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="172dp"
         android:adjustViewBounds="true"
-        fresco:actualImageScaleType="fitXY"
+        android:scaleType="fitXY"
         fresco:failureImage="@drawable/film_reel_icon" />
 
 

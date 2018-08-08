@@ -63,7 +63,8 @@ class HistoryDetailsFragment : MPFragment() {
         close.setOnClickListener { _ -> activity?.onBackPressed() }
 
 
-        val imgUrl = Uri.parse(historyItem.imageUrl)
+        val imgUrl = Uri.parse(historyItem.imageUrl) ?: return@onViewCreated
+
         val request = ImageRequestBuilder.newBuilderWithSource(imgUrl)
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
@@ -122,7 +123,6 @@ class HistoryDetailsFragment : MPFragment() {
                     userClickedRating(historyItem, false)
                 }
             }
-
         }
     }
 
@@ -130,7 +130,11 @@ class HistoryDetailsFragment : MPFragment() {
         historySub?.dispose()
 
         historySub = historyManagerImpl.submitRating(history, wasGood)
-                .doAfterSuccess { historyTitle.text = getString(R.string.history_rating_thanks) }
+                .doAfterSuccess {
+                    if (fromRateScreen) {
+                        historyTitle.text = getString(R.string.history_rating_thanks)
+                    }
+                }
                 .subscribe({ res ->
                     onHistorySaved(res)
                 }, {
@@ -155,8 +159,6 @@ class HistoryDetailsFragment : MPFragment() {
         if (!fromRateScreen) {
             Handler().postDelayed({ activity?.onBackPressed() }, 1500)
         }
-
-
     }
 
     fun animate(view: View) {
