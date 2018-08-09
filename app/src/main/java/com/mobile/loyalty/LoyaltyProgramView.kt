@@ -13,4 +13,5 @@ interface LoyaltyProgramView {
     fun hideLoyaltySignIn()
     fun hideAddAMovieTheaterLoyaltyMessage()
     fun showAddAMovieTheaterLoyaltyMessage()
+
 }

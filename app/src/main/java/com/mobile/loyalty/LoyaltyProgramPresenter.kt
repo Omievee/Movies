@@ -1,7 +1,6 @@
 package com.mobile.loyalty
 
 import com.mobile.network.RestClient
-import com.mobile.rx.Schedulers
 import io.reactivex.disposables.Disposable
 
 class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationModel, val view: LoyaltyProgramView) {
@@ -73,6 +72,12 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
         }
         view.showSpinnerText(loyaltyPresentationModel.addLoyaltyProgram)
     }
+
+
+    fun userClickedLoyaltyProgram(theater: TheaterChain?) {
+
+    }
+
 
     fun onSignInButtonClicked(theaterChain: TheaterChain, data: List<Triple<String, RequiredField, String>>) {
         state.lastTheaterChain = theaterChain

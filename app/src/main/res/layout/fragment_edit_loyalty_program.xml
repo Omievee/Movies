@@ -1,0 +1,75 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    android:clickable="true"
+    tools:context="com.mobile.loyalty.EditLoyaltyProgramFragment">
+
+    <TextView
+        android:id="@+id/selectedloyaltyProgram"
+        style="@style/TitleView"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/loyaltyCardNumberInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:textColorHint="@color/white_80_opacity"
+        android:theme="@style/EditTextStyle"
+        app:hintTextAppearance="@style/text_in_layout_hint_Style"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectedloyaltyProgram">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/loyaltyCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
+            android:backgroundTint="@color/white_40_opacity"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="Card Number"
+            android:inputType="text|textCapSentences"
+            android:maxLines="1"
+            android:text=" "
+            android:textColor="@color/white"
+            android:textColorLink="@android:color/transparent"
+            android:textCursorDrawable="@color/white"
+            android:textSize="@dimen/text_size_14"
+            app:backgroundTint="@color/white_40_opacity" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/editLoyaltyNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="@dimen/margin_half"
+        android:text="Edit"
+        android:textColor="@color/new_red"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toBottomOf="@+id/loyaltyCardNumberInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/loyaltyCardNumberInput" />
+
+</android.support.constraint.ConstraintLayout>

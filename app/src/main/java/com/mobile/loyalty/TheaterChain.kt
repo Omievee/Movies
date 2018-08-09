@@ -1,13 +1,16 @@
 package com.mobile.loyalty
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.mobile.adapters.ItemSame
-import com.mobile.utils.text.*
+import com.mobile.utils.text.toSentenceCase
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? = null,
                         @SerializedName("is_user_registered") var isUserRegistered: Boolean = false,
                         private @SerializedName("required_fields") var _requiredFields: Map<String, RequiredField>? = emptyMap()
-) : ItemSame<TheaterChain> {
+) : ItemSame<TheaterChain>, Parcelable {
 
     val chainName: String? by lazy {
         this.chainNameKey.toSentenceCase()
@@ -15,7 +18,7 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
 
     val requiredFields: Map<String, RequiredField>? by lazy {
         this._requiredFields?.mapKeys {
-            it.key.replace("value","").trim()
+            it.key.replace("value", "").trim()
         }
     }
 
@@ -28,7 +31,7 @@ open class TheaterChain(@SerializedName("chain_name") var chainNameKey: String? 
     }
 
     override fun toString(): String {
-        return chainName?:""
+        return chainName ?: ""
     }
 }
 

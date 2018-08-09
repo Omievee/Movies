@@ -9,7 +9,7 @@ import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 
-class RegisteredLoyaltyAdapter : RecyclerView.Adapter<BaseViewHolder>() {
+class RegisteredLoyaltyAdapter(val theaterChainClickListener: TheaterChainClickListener) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var data: Data? = null
         set(value) {
@@ -18,7 +18,7 @@ class RegisteredLoyaltyAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return BaseViewHolder(TheaterChainView(parent.context))
+        return BaseViewHolder(TheaterChainView(parent.context, theaterChainClickListener = theaterChainClickListener))
     }
 
     override fun getItemCount(): Int {
@@ -43,8 +43,15 @@ class RegisteredLoyaltyAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     }
 }
 
-class TheaterChainView(context: Context) : MaterialSpinnerSpinnerView(context) {
+class TheaterChainView(context: Context, val theaterChainClickListener: TheaterChainClickListener) : MaterialSpinnerSpinnerView(context) {
     var theater: TheaterChain? = null
+
+    init {
+        this.setOnClickListener {
+            val theater = this.theater?: return@setOnClickListener
+            theaterChainClickListener.onLoyaltyProgramClicked(theater)
+        }
+    }
     fun bind(theaterChain: TheaterChain) {
         theater = theaterChain
         theater?.let {
