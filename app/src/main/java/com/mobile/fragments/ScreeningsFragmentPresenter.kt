@@ -86,10 +86,11 @@ class ScreeningsFragmentPresenter(override val view:ScreeningsFragmentView, val 
             true -> return Observable.error(NoScreeningsException())
         }
         val theaterId = screeningData.theater?.tribuneTheaterId
+        val segment = UserPreferences.restrictions.userSegments.firstOrNull()?:0
         val screeningsObserv: Observable<ScreeningsResponseV2> = when (theaterId) {
-            null -> api.getScreeningsForMovieRx(location.lat, location.lon, screeningData.movie?.id
+            null -> api.getScreeningsForMovieRx(segment, location.lat, location.lon,screeningData.movie?.id
                     ?: 0).toObservable()
-            else -> api.getScreeningsForTheaterV2(theaterId).toObservable()
+            else -> api.getScreeningsForTheaterV2(theaterId, segment).toObservable()
         }
         val historyObservable:Observable<List<ReservationHistory>> = when(UserPreferences.restrictions.blockRepeatShowings) {
             false-> Observable.just(emptyList())

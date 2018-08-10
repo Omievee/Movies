@@ -96,9 +96,8 @@ public interface Api {
     Single<CardActivationResponse> activateCardRX(@Body CardActivationRequest request);
 
 
-    @GET("/rest/v2/screenings")
-    Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
-
+    @GET("/rest/v3/screenings/{segment}")
+    Single<ScreeningsResponseV2> getScreeningsForMovieRx(@Path("segment") int segment, @Query("lat") double latitude, @Query("lon") double longitude, @Query("moviepassId") int moviepassId);
     /* Registration */
     @POST("mobile/check/email")
     Call<Object> registerCredentials(@Body CredentialsRequest request);
@@ -147,8 +146,8 @@ public interface Api {
     Call<VerificationLostResponse> lostTicket(@Path("reservationId") int reservationId, @Body VerificationLostRequest request);
 
     /* Theater screenings (details) */
-    @GET("/rest/v2/theater/{id}/screenings")
-    Single<ScreeningsResponseV2> getScreeningsForTheaterV2(@Path("id") int id);
+    @GET("/rest/v3/theater/{id}/screenings/{segment}")
+    Single<ScreeningsResponseV2> getScreeningsForTheaterV2(@Path("id") int id, @Path("segment") int segment);
 
     /* user Data */
     @GET("/rest/v1/users/{userId}")
