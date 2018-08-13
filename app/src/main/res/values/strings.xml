@@ -22,6 +22,13 @@
     <string name="one_device_commit">Are you sure? </string>
     <string name="one_device_commit_message">This action cannot be undone.</string>
 
+    <!--Braze Data-->
+    <string name="braze_api_key">fc28219c-92cc-4af5-a512-e6e4d03dc98b</string>
+    <string name="braze_endpoint">moyo.iad-03.braze.com</string>
+
+    <!--FirebaseCM-->
+    <string name="fcm_key">941385304025</string>
+
     <!-- ConfirmationActivity -->
     <string name="activity_confirmation_movie_title">[Title]</string>
     <string name="activity_confirmation_theater">[Theater]</string>

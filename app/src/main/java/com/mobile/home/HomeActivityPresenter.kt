@@ -40,7 +40,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     fun onCreate() {
         latestMovieWithoutRating()
-        analyticsManager.onBrazeDataSetUp(sessionManager.getUser() ?: return)
+        val user = sessionManager.getUser() ?: return
+        analyticsManager.onBrazeDataSetUp(user)
     }
 
     fun onResume() {
@@ -88,7 +89,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     checkRestrictions()
                 }, { error ->
                     if (error is ApiError) {
-                        if (error.httpErrorCode / 100 == 4) {
+                        if (error.httpErrorCode == 403) {
                             analyticsManager.onUserLoggedOut(sessionManager.getUser())
                             sessionManager.logout()
                             view.logout()

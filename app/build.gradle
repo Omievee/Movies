@@ -289,7 +289,7 @@ dependencies {
     implementation 'com.loopj.android:android-async-http:1.4.9'
 
     //Braze
-    implementation 'com.appboy:android-sdk-ui:2.5.+'
+    implementation 'com.appboy:android-sdk-ui:2.6.0'
 
 
 }

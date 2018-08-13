@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,13 +31,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.mobile.Constants;
 import com.mobile.DeviceID;
 import com.mobile.analytics.AnalyticsManager;
 import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.fragments.WebViewListener;
-import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -231,7 +228,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password, deviceId, deviceType, device);
-            LogUtils.newLog(Constants.TAG, "logIn: " + deviceId);
             String UUID = "flag";
             RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
@@ -279,14 +275,12 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            LogUtils.newLog(Constants.TAG, "onResponse: " + jObjError.getString("message"));
                             progress.setVisibility(View.GONE);
 
                         } catch (Exception e) {
                             progress.setVisibility(View.GONE);
 
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            LogUtils.newLog(Constants.TAG, "onResponse: " + e.getMessage());
                         }
                     }
                 }
@@ -295,7 +289,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                 public void onFailure(Call<User> call, Throwable t) {
                     progress.setVisibility(View.GONE);
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    LogUtils.newLog(Constants.TAG, "failure: " + t.getMessage());
                 }
             });
         } else {
@@ -328,7 +321,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -396,17 +388,14 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     private void moviePassLoginSucceeded(User user) {
         if (user != null) {
 
-            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ");
             int us = user.getId();
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
-            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
             Appboy.getInstance(LogInActivity.this).changeUser(user.getEmail());
             INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
             analyticsManager.onUserLoggedIn(user);
-            Log.d(">>>>>>>>>>>>>>>>" , "LOG IN LAS TN AME"  + user.getLastName());
             checkRestrictions(user);
         }
     }
@@ -457,7 +446,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
                         INSTANCE.clearUserId();
                     } catch (Exception e) {
 
@@ -509,7 +497,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     public void onBackPressed() {
         // do nothing. We want to force user to stay in this activity and not drop out.
         FragmentManager fragmentManager = getSupportFragmentManager();
-        LogUtils.newLog("COUNT: " + fragmentManager.getBackStackEntryCount());
         WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (fragmentManager.getBackStackEntryCount() >= 1) {
             if (fragment.canGoBack())
