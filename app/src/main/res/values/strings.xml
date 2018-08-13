@@ -638,7 +638,7 @@
     <string name="profile_cancel_cancel_membership">Cancel Membership</string>
     <string name="cancel_subscription">Cancel Subscription</string>
     <string name="additional_comments_optional">Additional comments (optional)</string>
-    <string name="reason_for_cancellation">Reason for Cancellation</string>
+    <string name="reason_for_cancellation">Reason for cancellation</string>
     <string name="ticket_verification">Ticket Verification</string>
     <string name="ticket_verification_info_text">After you have purchased your ticket with your MoviePass card please take a picture of your ticket stub. You will not be able to proceed in the app or see another movie with MoviePass until doing so.</string>
     <string name="ticket_verification_warning_text">DO NOT TAKE A PICTURE OF YOUR RECEIPT</string>

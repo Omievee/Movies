@@ -8,4 +8,5 @@ interface ProfileCancellationView {
     fun unccessfullCancellation(message: String)
     fun bindView()
     fun showErrorMessage()
+    fun hideErrorMessage()
 }

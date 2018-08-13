@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/charcoalGrey">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/CustomFlatDropDownNoSelected"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/requiredText"
+        style="@style/CustomFlatDropDownRequired"
+        android:layout_marginEnd="@dimen/margin_half"
+        android:text="@string/required"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@id/arrow"
+        app:layout_constraintTop_toTopOf="@id/title" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:rotation="180"
+        android:src="@drawable/icon_arrow_up"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:nestedScrollingEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+</android.support.constraint.ConstraintLayout>

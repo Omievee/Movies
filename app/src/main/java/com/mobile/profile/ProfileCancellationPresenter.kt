@@ -3,6 +3,7 @@ package com.mobile.profile
 import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.extensions.DropDownFields
 import com.mobile.network.Api
 import com.mobile.requests.CancellationRequest
 import io.reactivex.disposables.Disposable
@@ -36,7 +37,7 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
     }
 
     fun onSubmitCancellation(reason: String, comment: String){
-        if(reason == CancellationReason.TITLE.reasonName)
+        if(reason == DropDownFields.UNKNOWN.type)
             view.showErrorMessage()
         else {
             view.showCancellationConfirmationDialog(reason, comment, billingDate)

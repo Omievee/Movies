@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootRv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/charcoalGrey">
+
+    <TextView
+        android:id="@+id/dropDownOption"
+        style="@style/CustomFlatDropDownNoSelected"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:alpha="0.2"
+        android:id="@+id/divider"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dropDownOption" />
+
+</android.support.constraint.ConstraintLayout>

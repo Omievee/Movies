@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
+import com.mobile.extensions.DropDownFields
+import com.mobile.extensions.CustomFlatDropDownClickListener
 import com.mobile.profile.CancellationReason
 import com.mobile.profile.ProfileCancellationPresenter
 import com.mobile.profile.ProfileCancellationView
-import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.profile_cancellation_view_layout.*
@@ -19,8 +19,9 @@ import javax.inject.Inject
 
 
 
-class ProfileCancellationFragment : MPFragment(), ProfileCancellationView {
+class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, CustomFlatDropDownClickListener {
 
+    var reason: String? = null
 
     var spinnerList: List<String>? = null
     @Inject
@@ -32,25 +33,7 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView {
 
         spinnerList = CancellationReason.getList()
 
-        spinnerCancelReason
-                .setAdapter(object : MaterialSpinnerAdapter<String>(context, spinnerList) {
-                    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                        val view = MaterialSpinnerSpinnerView(parent.context)
-                        view.bind(getItemText(position))
-                        return view
-                    }
-                })
-
-        cancelComments.bind()
-
-        spinnerCancelReason.setOnItemSelectedListener { view, position, id, item ->
-            if (position != 0) {
-                requiredLabel.visibility = View.GONE
-                cancellationError.visibility = View.INVISIBLE
-            } else{
-                requiredLabel.visibility = View.VISIBLE
-            }
-        }
+        spinnerCancelReason.bind(CancellationReason.getTitle(), spinnerList ?: listOf(),this,true)
 
         cancelbutton.setOnClickListener {
             presenter.onSubmitCancellation(getReasonForCancellation(), cancelComments.getComments())
@@ -63,6 +46,11 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView {
 
     }
 
+    override fun onClick(reason: String) {
+        this.reason = reason
+        hideErrorMessage()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.profile_cancellation_view_layout, container, false)
     }
@@ -73,13 +61,15 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView {
     }
 
     private fun getReasonForCancellation(): String {
-        spinnerList?.let {
-            return it[spinnerCancelReason.selectedIndex]
-        } ?: return CancellationReason.TITLE.reasonName
+        return reason ?: DropDownFields.UNKNOWN.type
     }
 
     override fun showErrorMessage() {
         cancellationError.visibility = View.VISIBLE
+    }
+
+    override fun hideErrorMessage() {
+        cancellationError.visibility = View.INVISIBLE
     }
 
     override fun onDestroyView() {
