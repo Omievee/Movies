@@ -20,7 +20,7 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loyaltyProgram = arguments?.getParcelable(ARG_PARAM1)
+        loyaltyProgram = arguments?.getParcelable(ARG_PARAM1) ?: return@onCreate
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -31,6 +31,8 @@ class EditLoyaltyProgramFragment : MPFragment(), EditLoyalProgramView {
         super.onViewCreated(view, savedInstanceState)
 
         selectedloyaltyProgram.text = loyaltyProgram?.chainName
+
+
     }
 
 

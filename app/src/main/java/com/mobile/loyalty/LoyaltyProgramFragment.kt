@@ -154,7 +154,6 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
 
     override fun onLoyaltyProgramClicked(theater: TheaterChain?) {
         val theater = theater ?: return@onLoyaltyProgramClicked
-
         showFragment(EditLoyaltyProgramFragment.newInstance(theater))
     }
 
