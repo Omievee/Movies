@@ -1,15 +1,18 @@
 package com.mobile.di
 
-import com.mobile.billing.MissingBillingFragment
-import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.activities.LogInActivity
+import com.mobile.alertscreen.AlertScreenFragment
+import com.mobile.alertscreen.AlertScreenModule
+import com.mobile.billing.MissingBillingFragment
+import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.profile.ProfileCancellationModule
+import com.mobile.profile.ProfileFragmentV2
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.reservation.ReservationCheckinModule
@@ -17,13 +20,11 @@ import com.mobile.seats.BringAFriendActivity
 import com.mobile.seats.ConfirmDetailsFragment
 import com.mobile.splash.SplashActivity
 import com.mobile.splash.SplashActivityModule
+import com.mobile.surge.ConfirmSurgeFragment
 import com.mobile.theater.TheaterMapFragment
 import com.mobile.theater.TheatersFragmentModule
 import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
-import com.mobile.surge.ConfirmSurgeFragment
-import com.mobile.fragments.ScreeningsFragmentModule
-import com.mobile.profile.ProfileFragmentV2
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -81,7 +82,7 @@ interface AppBindingModule {
 
     @TVScope
     @ContributesAndroidInjector()
-    fun ocrCaptureFragment():OcrCaptureFragment
+    fun ocrCaptureFragment(): OcrCaptureFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -109,13 +110,17 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun profileFragmentt(): ProfileFragmentV2
-
-    @FragmentScope
-    @ContributesAndroidInjector
     fun ticketVerification(): TicketVerificationV2
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [ProfileCancellationModule::class])
     fun profileCancellationFragment(): ProfileCancellationFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [AlertScreenModule::class])
+    fun alertScreenFragment(): AlertScreenFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    fun profileFragmentt(): ProfileFragmentV2
 }

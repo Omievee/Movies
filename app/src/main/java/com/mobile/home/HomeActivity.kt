@@ -13,6 +13,7 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
 import android.widget.Toast
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.mobile.BackFragment
@@ -21,7 +22,10 @@ import com.mobile.MPActivty
 import com.mobile.Primary
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
-import com.mobile.fragments.*
+import com.mobile.alertscreen.AlertScreenFragment
+import com.mobile.fragments.MoviesFragment
+import com.mobile.fragments.TheatersFragmentV2
+import com.mobile.fragments.TicketVerificationV2
 import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
@@ -37,7 +41,6 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 
 
 class HomeActivity : MPActivty(), HomeActivityView {

@@ -2,8 +2,8 @@ package com.moviepass.debug
 
 import android.os.Bundle
 import com.mobile.MPActivty
-import com.mobile.fragments.AlertScreenFragment
-import com.mobile.model.*
+import com.mobile.alertscreen.AlertScreenFragment
+import com.mobile.model.Alert
 import com.mobile.seats.SeatPreviewListener
 import com.mobile.utils.showFragment
 import com.moviepass.R
