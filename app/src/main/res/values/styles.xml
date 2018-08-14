@@ -132,11 +132,13 @@
     <!-- Style for Alert Dialogs -->
     <style name="CUSTOM_ALERT" parent="Theme.AppCompat.Dialog.Alert">
         <!-- SET BUTTON COLOR IN DIALOG BUILDER -->
-        <item name="colorPrimary">@color/charcoalGrey</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/new_red</item>
-        <item name="android:textColor">@color/almost_white</item>
+        <item name="android:textColor">@color/black_text</item>
         <item name="android:colorPrimary">@color/new_red</item>
-        <item name="android:windowBackground">@color/charcoalGrey</item>
+        <item name="android:textColorPrimary">@color/black_text</item>
+        <item name="android:windowBackground">@drawable/white_background_rounded_corners</item>
+        <item name="android:background">@drawable/white_background_rounded_corners</item>
     </style>
 
     <!-- Style to get white text on toolbars -->
@@ -1072,6 +1074,7 @@
         <item name="android:fontFamily" tools:targetApi="o">@font/roboto_font</item>
         <item name="android:textColor">@color/almost_white</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_marginStart">@dimen/margin_standard</item>
@@ -1082,6 +1085,7 @@
 
     <style name="CancellationSmallText" parent="CancellationNormalText">
         <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="TextErrorMessage" parent="error_appearance">

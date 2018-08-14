@@ -431,7 +431,7 @@
 
     <string name="cancel_sub_active">Your MoviePass account will remain active until the end of the current billing period.</string>
     <string name="cancel_sub_exception">*Exception made when redeeming a gift subscription that carries from an active month to month subscription.</string>
-    <string name="cancel_sub_notice">Please note that if you cancel your account you will not be able to reactivate your account or start a new subscription for 9 months*</string>
+    <string name="cancel_sub_notice">Please note that if you cancel your account you will not be able to reactivate your account or start a new subscription for 9 months.*</string>
     <!-- Settings Preferences -->
     <string name="xml_settings_preferences_settings">Settings</string>
     <string name="xml_settings_preferences_settings_push">Enable push notifications</string>
@@ -672,7 +672,7 @@
     <string name="profile_cancel_membership">Membership cancelled</string>
     <string name="profile_cancel_membership_message">The last day your account will be active is on</string>
     <string name="required">*required</string>
-    <string name="cancel_membership">Cancel Membership</string>
+    <string name="cancellation_drop_drown_error">Please choose a reason for cancellation from the dropdown menu provided.</string>
     <string name="ok">Ok</string>
     <string name="history_details_movie_dislike">You didn\'t like this movie!</string>
     <string name="history_details_movie_like">You liked this movie!</string>
@@ -716,6 +716,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="peak_pass_added">Peak Pass Added!</string>
     <string name="change_email">Change Email</string>
+    <string name="cancel_membership">Cancel Membership</string>
     <string name="account_information">Account Information</string>
     <string name="change_password">Change Password</string>
     <string name="shipping_address">Shipping Address</string>

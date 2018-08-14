@@ -39,6 +39,7 @@ import com.mobile.Constants;
 import com.mobile.UserPreferences;
 import com.mobile.helpers.LogUtils;
 import com.mobile.network.RestClient;
+import com.mobile.profile.ProfileCancellationFragment;
 import com.mobile.requests.AddressChangeRequest;
 import com.mobile.requests.CreditCardChangeRequest;
 import com.mobile.responses.UserInfoResponse;

@@ -1,12 +1,12 @@
 package com.mobile.profile
 
-import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.model.ParcelableDate
 import com.mobile.extensions.DropDownFields
 import com.mobile.network.Api
 import com.mobile.requests.CancellationRequest
+import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,15 +37,15 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
             loadUserInfo()
     }
 
-    fun onSubmitCancellation(reason: String, comment: String){
+    fun onSubmitCancellation(reason: String){
         if(reason == DropDownFields.UNKNOWN.type)
-            view.showErrorMessage()
+            view.showErrorDialog(R.string.cancellation_drop_drown_error)
         else {
-            view.showCancellationConfirmationDialog(reason, comment, billingDate)
+            view.showCancellationConfirmationDialog(reason, "",billingDate)
         }
     }
 
-    fun cancelFlow(reason: String, comment: String) {
+    fun cancelFlow(reason: String) {
         var cancelSubscriptionReason: Long = CancellationReason.getReasonNumber(reason)
         val c = Calendar.getInstance()
         val df = SimpleDateFormat("yyyy-MM-dd")
@@ -53,7 +53,7 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
 
         view.showProgress()
 
-        val request = CancellationRequest(requestDate, cancelSubscriptionReason, comment)
+        val request = CancellationRequest(requestDate, cancelSubscriptionReason,"")
 
         profileCancellationDisposable?.dispose()
 

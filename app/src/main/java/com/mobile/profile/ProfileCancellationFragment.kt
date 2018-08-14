@@ -1,4 +1,4 @@
-package com.mobile.fragments
+package com.mobile.profile
 
 import android.app.AlertDialog
 import android.content.Context
@@ -7,11 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.mobile.extensions.CustomFlatDropDownClickListener
 import com.mobile.extensions.DropDownFields
-import com.mobile.profile.CancellationReason
-import com.mobile.profile.ProfileCancellationPresenter
-import com.mobile.profile.ProfileCancellationView
+import com.mobile.extensions.CustomFlatDropDownClickListener
+import com.mobile.fragments.MPFragment
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.profile_cancellation_view_layout.*
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 
 class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, CustomFlatDropDownClickListener {
-
     var reason: String? = null
 
     var spinnerList: List<String>? = null
@@ -37,19 +35,16 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
         spinnerCancelReason.bind(CancellationReason.getTitle(), spinnerList ?: listOf(), this, true)
 
         cancelbutton.setOnClickListener {
-            presenter.onSubmitCancellation(getReasonForCancellation(), cancelComments.getComments())
+            presenter.onSubmitCancellation(getReasonForCancellation())
         }
-
 
         cancelBack.setOnClickListener {
             close()
         }
-
     }
 
     override fun onClick(reason: String) {
         this.reason = reason
-        hideErrorMessage()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,14 +58,6 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
 
     private fun getReasonForCancellation(): String {
         return reason ?: DropDownFields.UNKNOWN.type
-    }
-
-    override fun showErrorMessage() {
-        cancellationError.visibility = View.VISIBLE
-    }
-
-    override fun hideErrorMessage() {
-        cancellationError.visibility = View.INVISIBLE
     }
 
     override fun onDestroyView() {
@@ -100,6 +87,16 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
         progress.visibility = View.VISIBLE
     }
 
+    override fun showErrorDialog(error: Int) {
+        val context = context ?: return
+        MPAlertDialog(context)
+                .setMessage(error)
+                .setPositiveButton(getString(R.string.ok)){_,_ ->
+                    spinnerCancelReason.openDropDown()
+                }
+                .show()
+    }
+
     override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: Date?) {
 
         val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
@@ -112,7 +109,7 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
         builder.setMessage(message)
                 .setTitle(R.string.profile_cancel_are_you_sure)
                 .setPositiveButton(getString(R.string.cancel_membership)) { _, _ ->
-                    presenter.cancelFlow(reason, comment)
+                    presenter.cancelFlow(reason)
                 }
                 .setNegativeButton(getString(R.string.go_back)) { _, _ ->
 
