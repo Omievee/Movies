@@ -708,5 +708,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="peak_pass_added">Peak Pass Added!</string>
     <string name="change_email">Change Email</string>
+    <string name="alert_failed_dialog_messege">There was an error processing this request. Please try again.</string>
 
 </resources>
