@@ -1,6 +1,5 @@
 package com.mobile.activities;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
@@ -23,6 +22,7 @@ import com.mobile.home.HomeActivity;
 import com.mobile.network.RestClient;
 import com.mobile.requests.VerificationLostRequest;
 import com.mobile.responses.VerificationLostResponse;
+import com.mobile.widgets.MPAlertDialog;
 import com.moviepass.R;
 
 import retrofit2.Call;
@@ -108,13 +108,12 @@ public class TicketVerification_NoStub extends AppCompatActivity {
 
 
     public void displayWarning() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(TicketVerification_NoStub.this, R.style.CUSTOM_ALERT);
-        alert.setTitle(R.string.activity_verification_lost_ticket_title_post);
-        alert.setMessage(R.string.activity_verification_lost_ticket_message_post);
-        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+        new MPAlertDialog(TicketVerification_NoStub.this)
+        .setTitle(R.string.activity_verification_lost_ticket_title_post)
+        .setMessage(R.string.activity_verification_lost_ticket_message_post)
+        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
             Intent intent = new Intent(TicketVerification_NoStub.this, HomeActivity.class);
             startActivity(intent);
-        });
-        alert.show();
+        }).show();
     }
 }

@@ -4,13 +4,13 @@ import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.widget.TextViewCompat
-import android.support.v7.app.AlertDialog
 import android.util.AttributeSet
 import android.view.View
 import com.mobile.model.GuestTicketType
 import com.mobile.model.TicketType
 import com.mobile.utils.padding
 import com.mobile.utils.text.toCurrency
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_guest_ticket.view.*
 
@@ -55,7 +55,7 @@ class GuestTicketView(context: Context?, attributeSet: AttributeSet? = null) : C
             }
         }
         infoIcon2.setOnClickListener {
-            AlertDialog.Builder(context)
+            MPAlertDialog(context)
                     .setTitle(R.string.discounted_ticket_price)
                     .setMessage(R.string.discounted_ticket_price_descriptiopn)
                     .setPositiveButton(R.string.ok, null).show()

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.text.SpannableStringBuilder
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -31,12 +30,13 @@ import com.mobile.responses.PeakPassInfo
 import com.mobile.seats.SheetData
 import com.mobile.utils.showBottomFragment
 import com.mobile.utils.text.centsAsDollars
+import com.mobile.widgets.MPAlertDialog
 import com.mobile.utils.text.toCurrency
 
 class CheckInFragment : MPFragment(), CheckInFragmentView {
     override fun showOverCap(cappedPlan: CappedPlan?, it: RestrictionsCheckResponse) {
         val context = activity?:return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(it.data.attributes?.title)
                 .setMessage(it.data.attributes?.message)
                 .setPositiveButton(R.string.continue_button) { _, _->
@@ -97,7 +97,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showNowPeakingNoPeakPass(checkin: Checkin, surge: Surge) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.peak_pricing)
                 .setMessage(getString(R.string.peak_no_pass_apply_surcharge, surge.costAsDollars))
                 .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
@@ -111,7 +111,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showApplyPeakPass(checkin: Checkin, peakPasses: PeakPassInfo, currentPeakPass: PeakPass?) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.peak_pass)
                 .setMessage(R.string.peak_pass_apply)
                 .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
@@ -142,7 +142,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showNowPeakingApplyPeakPass(it: RestrictionsCheckResponse, peak: PeakPassInfo, peakPass: PeakPass) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.peak_pricing)
                 .setMessage(resources.getString(R.string.peak_pass_apply_surcharge, it.data.attributes?.peakAmount?.centsAsDollars?:""))
                 .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
@@ -156,7 +156,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showSurgeModal(it:RestrictionsCheckResponse) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setTitle(R.string.peak_pricing)
                 .setMessage(context.getString(R.string.reservation_surge_description, it.data.attributes?.peakAmount?.centsAsDollars?:""))
                 .setPositiveButton(R.string.continue_button) { _, _ ->
@@ -182,7 +182,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showError(apiError: ApiError) {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setMessage(apiError.error.message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
@@ -190,7 +190,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     override fun showGenericError() {
         val context = activity ?: return
-        AlertDialog.Builder(context)
+        MPAlertDialog(context)
                 .setMessage(R.string.error)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
@@ -240,8 +240,9 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
 
     private fun showTicketVerificationDialog() {
         val context = activity ?: return
-        AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
-                .setView(R.layout.alertdialog_ticketverif)
+        MPAlertDialog(context)
+                .setTitle(R.string.ticket_verification)
+                .setMessage(getString(R.string.pre_pop_dialog) + getString(R.string.pre_pop_dialog2))
                 .setPositiveButton(android.R.string.ok, { _, _ ->
                     presenter.onContinueClicked()
                 }).show()

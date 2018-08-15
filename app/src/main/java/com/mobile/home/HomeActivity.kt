@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
@@ -32,6 +31,7 @@ import com.mobile.seats.MPBottomSheetFragment
 import com.mobile.seats.SheetData
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_home.*
@@ -148,7 +148,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
         val LINK_TO_GOOGLE_PLAY_SERVICES = "play.google.com/store/apps/details?id=com.google.android.gms&hl=en"
 
         if (result != ConnectionResult.SUCCESS) {
-            AlertDialog.Builder(context).setMessage("Google Play Services must either be enabled or updated in order to continue")
+            MPAlertDialog(context)
+                    .setMessage("Google Play Services must either be enabled or updated in order to continue")
                     .setPositiveButton("OK") { _, _ ->
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://$LINK_TO_GOOGLE_PLAY_SERVICES")))
                         finish()
@@ -159,8 +160,8 @@ class HomeActivity : MPActivty(), HomeActivityView {
     }
 
     override fun showForceLogout(it: LogoutInfo) {
-        AlertDialog.Builder(this)
-                .setMessage(it.message)
+        MPAlertDialog(this)
+                .setMessage(it.getMessage())
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     startActivity(Intent(this, LogInActivity::class.java));

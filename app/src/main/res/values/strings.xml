@@ -203,8 +203,8 @@
     <string name="activity_verification_lost_ticket_title_post">Ticket Verification</string>
     <string name="activity_verification_lost_ticket_message_post">In the future please submit pictures of your ticket stubs. Your account status could be affected if you fail to do so.</string>
     <string name="activity_verification_empty_reason">You must list a reason</string>
-    <string name="pre_pop_dialog">Please take a picture of your ticket stub after using your MoviePass card to get your ticket. Follow the prompt provided to submit a photo of the ticket any time before seeing your next movie with MoviePass. </string>
-    <string name="pre_pop_dialog2">Your account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
+    <string name="pre_pop_dialog">Please take a picture of your ticket stub after using your MoviePass card to get your ticket. Follow the prompt provided to submit a photo of the ticket any time before seeing your next movie with MoviePass.\n </string>
+    <string name="pre_pop_dialog2">\nYour account status could be affected if you do not submit pictures of your ticket stubs in the future.</string>
 
 
     <!-- Adapters -->

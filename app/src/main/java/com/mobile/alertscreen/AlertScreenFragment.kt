@@ -1,6 +1,5 @@
 package com.mobile.alertscreen
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import com.mobile.UserPreferences
 import com.mobile.fragments.MPFragment
 import com.mobile.model.Alert
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fr_alert_screen.*
@@ -89,7 +89,8 @@ class AlertScreenFragment : MPFragment(), AlertScreenView {
     }
 
     override fun showFailureDialog() {
-        AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
+        val context = context ?: return
+        MPAlertDialog(context)
                 .setCancelable(false)
                 .setMessage(getString(R.string.alert_failed_dialog_messege))
                 .setPositiveButton(android.R.string.ok) { dialog, which ->

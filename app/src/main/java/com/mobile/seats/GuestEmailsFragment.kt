@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.constraint.ConstraintSet
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -21,6 +20,7 @@ import com.mobile.model.Emails
 import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.rx.Schedulers
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_guest_emails.*
@@ -173,7 +173,7 @@ class GuestEmailsFragment : Fragment() {
 
     private fun show18() {
         val context = context ?: return
-        AlertDialog.Builder(context).setMessage(R.string.eighteen_acknowledgement_error)
+        MPAlertDialog(context).setMessage(R.string.eighteen_acknowledgement_error)
                 .setPositiveButton(android.R.string.ok, null)
                 .show()
     }
@@ -203,7 +203,7 @@ class GuestEmailsFragment : Fragment() {
 
     private fun showErrorDialog(error:ApiError) {
         val context = context ?: return
-        AlertDialog.Builder(context).setMessage(error.message)
+        MPAlertDialog(context).setMessage(error.message)
                 .setPositiveButton(android.R.string.ok, { _, _ ->
                 })
                 .show()
@@ -214,7 +214,7 @@ class GuestEmailsFragment : Fragment() {
         val emailstr = ema.joinToString("\n")
         val message = "${resources.getString(R.string.duplicate_emails)}${emailstr}"
 
-        AlertDialog.Builder(context).setTitle(R.string.add_guest_emails)
+        MPAlertDialog(context).setTitle(R.string.add_guest_emails)
                 .setMessage(
                         message
                 )

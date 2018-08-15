@@ -137,8 +137,8 @@
         <item name="android:textColor">@color/black_text</item>
         <item name="android:colorPrimary">@color/new_red</item>
         <item name="android:textColorPrimary">@color/black_text</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@drawable/alert_dialog_background</item>
+        <item name="android:background">@drawable/alert_dialog_background</item>
     </style>
 
     <!-- Style to get white text on toolbars -->

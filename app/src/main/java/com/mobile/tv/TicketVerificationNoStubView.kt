@@ -1,15 +1,13 @@
 package com.mobile.tv
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.support.constraint.ConstraintLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
-import com.mobile.home.HomeActivity
+import com.mobile.widgets.MPAlertDialog
 import com.moviepass.R
 import kotlinx.android.synthetic.main.layout_ticket_verification_no_stub_view.view.*
 
@@ -36,37 +34,38 @@ class TicketVerificationNoStubView(context: Context?, attrs: AttributeSet? = nul
         })
     }
 
-    fun bind(listener: SubmitListener){
+    fun bind(listener: SubmitListener) {
         this.listener = listener
     }
 
-    fun getReason(): String{
+    fun getReason(): String {
         return noStubMessage.text.toString()
     }
 
     fun onSubmit() {
         submitStub.setOnClickListener {
             if (!noStubMessage.text.isNullOrEmpty()) {
-               listener?.submitNoStubMessage()
-            }else{
-                Toast.makeText(context,"Error",Toast.LENGTH_SHORT).show()
+                listener?.submitNoStubMessage()
+            } else {
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     fun displayWarning() {
-        val alert = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
-        alert.setTitle(R.string.activity_verification_lost_ticket_title_post)
-        alert.setCancelable(false)
-        alert.setOnDismissListener { listener?.closeFragment() }
-        alert.setMessage(R.string.activity_verification_lost_ticket_message_post)
-        alert.setPositiveButton(android.R.string.ok) { _, _ ->
-            listener?.closeFragment()
-        }
-        alert.show()
+        val context = context ?: return
+        MPAlertDialog(context)
+                .setTitle(R.string.activity_verification_lost_ticket_title_post)
+                .setCancelable(false)
+                .setOnDismissListener { listener?.closeFragment() }
+                .setMessage(R.string.activity_verification_lost_ticket_message_post)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    listener?.closeFragment()
+                }
+                .show()
     }
 
-    interface SubmitListener{
+    interface SubmitListener {
         fun submitNoStubMessage()
         fun closeFragment()
     }

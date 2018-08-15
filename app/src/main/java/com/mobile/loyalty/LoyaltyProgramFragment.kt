@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
-import android.support.v7.app.AlertDialog
+import android.support.v4.app.Fragment
 import android.text.InputFilter
 import android.text.InputType
 import android.view.ContextThemeWrapper
@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import com.jaredrummler.materialspinner.MaterialSpinnerAdapter
 import com.mobile.fragments.MPFragment
 import com.mobile.utils.text.toSentenceCase
+import com.mobile.widgets.MPAlertDialog
 import com.mobile.widgets.MaterialSpinnerSpinnerView
 import com.moviepass.R
 import kotlinx.android.synthetic.main.fragment_loyalty_program.*
@@ -84,7 +85,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
                 addView(inputEditText)
             }
             loyaltyProgramFieldsLL.apply {
-                removeAllViews()    
+                removeAllViews()
                 addView(textInputLayout)
             }
             val type = theaterChain.requiredFields ?: return
@@ -130,7 +131,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
 
     override fun showAddLoyaltyError(failure: String) {
         activity?.let { activity ->
-            AlertDialog.Builder(activity, R.style.CUSTOM_ALERT)
+            MPAlertDialog(activity)
                     .setTitle(failure)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         presenter?.retryLoyaltyProgram()
