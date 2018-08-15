@@ -534,7 +534,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:layout_marginBottom="@dimen/bottom_navigation_height"
                     android:layout_marginTop="@dimen/double_margin_standard"
                     android:orientation="vertical">
 
@@ -556,53 +556,6 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_16"
                         android:textStyle="bold" />
-
-
-                    <TextView
-                        android:id="@+id/MoviesLeft"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="invisible"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:alpha=".6"
-                        android:text="Movies left in current plan month:"
-                        android:textColor="@color/almost_white"
-                        android:textSize="@dimen/text_size_14" />
-
-
-                    <TextView
-                        android:id="@+id/MovieCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text=""
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_16"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/DaysInMonth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:alpha=".6"
-                        android:text="Days left in current plan month:"
-                        android:textColor="@color/almost_white"
-                        android:textSize="@dimen/text_size_14"
-                        android:visibility="invisible" />
-
-
-                    <TextView
-                        android:id="@+id/DaysCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="23"
-                        android:textColor="@color/white"
-
-                        android:textSize="@dimen/text_size_16"
-                        android:textStyle="bold"
-                        android:visibility="invisible" />
 
 
                 </LinearLayout>

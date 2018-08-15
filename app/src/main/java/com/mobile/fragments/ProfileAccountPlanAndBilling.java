@@ -69,7 +69,7 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
     ProfileCancellationFragment cancelSubscription;
     private View rootView, billingAddressRoot, oldBilling, newBillingData, newBillingData2;
     private Button save, cancel;
-    private TextView billingDate, plan, planPrice, planCancel, billingCard, billingChange, yesNo, moviesCountDown, moviesCountDownText;
+    private TextView billingDate, plan, planPrice, planCancel, billingCard, billingChange, yesNo;
     private EditText address1, address2, city, state, zip;
     private EditText newBillingCC, newBillingCVV, newBillingExp;
     private ImageButton scanCard;
@@ -123,8 +123,6 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
         yesNo = rootView.findViewById(R.id.YesNo);
         billingSwitch = rootView.findViewById(R.id.SWITCH);
 
-        moviesCountDownText = rootView.findViewById(R.id.MoviesLeft);
-        moviesCountDown = rootView.findViewById(R.id.MovieCount);
 
         oldBilling = rootView.findViewById(R.id.old_billing);
         newBillingData = rootView.findViewById(R.id.profile_newBilling);
@@ -403,16 +401,6 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
                     }
 
                     plan.setText(userInfoResponse.getPlan());
-                    if (userInfoResponse.getRemainingCap() != null) {
-                        moviesCountDownText.setVisibility(View.VISIBLE);
-                        if (userInfoResponse.getRemainingCap().equals("1")) {
-                            String amount = userInfoResponse.getRemainingCap() + " Movie";
-                            moviesCountDown.setText(amount);
-                        } else {
-                            moviesCountDown.setText(userInfoResponse.getRemainingCap() + " Movies");
-                        }
-
-                    }
                     progress.setVisibility(View.GONE);
 
                 }
