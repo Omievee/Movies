@@ -52,4 +52,5 @@
     <dimen name="seat_guide_height">20dp</dimen>
     <dimen name="dp_1">1dp</dimen>
     <dimen name="top_level_radius">10dp</dimen>
+    <dimen name="bottom_nav_extra">70dp</dimen>
 </resources>

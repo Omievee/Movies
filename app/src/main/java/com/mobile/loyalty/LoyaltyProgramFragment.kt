@@ -75,27 +75,24 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
 
     override fun showLoyaltyScreenFields(theaterChain: TheaterChain, triple: Map<String, String>?) {
         activity?.let { activity ->
+
             val fieldNameToValue = mutableMapOf<String, Pair<RequiredField, TextInputEditText>>()
-            theaterChain.requiredFields?.forEach { (name, type) ->
-                val inputEditText = TextInputEditText(ContextThemeWrapper(activity, R.style.TextInputEditText)).apply {
-                    hint = name.toSentenceCase().toLowerCase()
-                    inputType = when (type) {
-                        RequiredField.FI_INT -> InputType.TYPE_NUMBER_FLAG_DECIMAL
-                        else -> InputType.TYPE_CLASS_TEXT
-                    }
-                    setText(triple?.get(name))
-                    filters = arrayOf(InputFilter.LengthFilter(100))
-                }
-                fieldNameToValue.put(name, Pair(type, inputEditText))
-                val textInputLayout = TextInputLayout(ContextThemeWrapper(activity, R.style.TextInputLayout)).apply {
-                    addView(inputEditText)
-                }
-                loyaltyProgramFieldsLL.apply {
-                    removeAllViews()
-                    addView(textInputLayout)
-                }
-                loyaltySignInCL.visibility = View.VISIBLE
+
+            val inputEditText = TextInputEditText(ContextThemeWrapper(activity, R.style.TextInputEditText)).apply {
+                hint = theaterChain.chainName.toSentenceCase().toLowerCase()
+                inputType = InputType.TYPE_CLASS_TEXT
+                filters = arrayOf(InputFilter.LengthFilter(100))
             }
+            val textInputLayout = TextInputLayout(ContextThemeWrapper(activity, R.style.TextInputLayout)).apply {
+                addView(inputEditText)
+            }
+            loyaltyProgramFieldsLL.apply {
+                removeAllViews()
+                addView(textInputLayout)
+            }
+            val type = theaterChain.requiredFields ?: return
+            fieldNameToValue.put(theaterChain.chainName.toString(), Pair(type, inputEditText))
+            loyaltySignInCL.visibility = View.VISIBLE
             loyaltySignInTV.setOnClickListener {
                 val data = fieldNameToValue.map {
                     Triple(it.key, it.value.first, it.value.second.text.toString())
@@ -104,6 +101,7 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
             }
             loyaltyProgramNameTV.text = theaterChain.chainName
         }
+
     }
 
     override fun showAddAMovieTheaterLoyaltyMessage() {
@@ -120,11 +118,15 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
     }
 
     override fun showProgress() {
-        addLoyaltyProgress.visibility = View.VISIBLE
+        addLoyaltyProgress.let {
+            it.visibility = View.VISIBLE
+        }
     }
 
     override fun hideProgress() {
-        addLoyaltyProgress.visibility = View.GONE
+        addLoyaltyProgress.let {
+            it.visibility = View.GONE
+        }
     }
 
     override fun showAddLoyaltyError(theaterChain: TheaterChain) {
@@ -135,7 +137,6 @@ class LoyaltyProgramFragment : MPFragment(), LoyaltyProgramView, TheaterChainCli
                         presenter?.retryLoyaltyProgram()
                     }.show()
         }
-
     }
 
     override fun showRegisteredTheaters(theaters: List<TheaterChain>) {

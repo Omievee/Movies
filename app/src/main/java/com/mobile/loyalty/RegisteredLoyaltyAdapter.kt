@@ -4,10 +4,13 @@ import android.content.Context
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.DiffUtil.calculateDiff
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.ViewGroup
 import com.mobile.adapters.BaseViewHolder
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.widgets.MaterialSpinnerSpinnerView
+
+
 
 class RegisteredLoyaltyAdapter(val theaterChainClickListener: TheaterChainClickListener) : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -28,6 +31,7 @@ class RegisteredLoyaltyAdapter(val theaterChainClickListener: TheaterChainClickL
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val element = data?.list?.get(position)
         element?.let { theaterChain ->
+
             (holder.itemView as? TheaterChainView)?.bind(theaterChain)
         }
     }
@@ -47,11 +51,15 @@ class TheaterChainView(context: Context, val theaterChainClickListener: TheaterC
     var theater: TheaterChain? = null
 
     init {
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
         this.setOnClickListener {
-            val theater = this.theater?: return@setOnClickListener
+            it.setBackgroundResource(outValue.resourceId)
+            val theater = this.theater ?: return@setOnClickListener
             theaterChainClickListener.onLoyaltyProgramClicked(theater)
         }
     }
+
     fun bind(theaterChain: TheaterChain) {
         theater = theaterChain
         theater?.let {

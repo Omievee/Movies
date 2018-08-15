@@ -11,6 +11,8 @@ import com.mobile.history.HistoryDetailsFragment
 import com.mobile.history.HistoryFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
+import com.mobile.loyalty.EditLoyaltyProgramFragment
+import com.mobile.loyalty.EditLoyaltyProgramModule
 import com.mobile.profile.ProfileCancellationModule
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
@@ -132,6 +134,10 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [ReferAFriendFragmentModule::class])
     fun referAFriendFragment(): ReferAFriendFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [EditLoyaltyProgramModule::class])
+    fun editLoyaltyFragment(): EditLoyaltyProgramFragment
 
     @FragmentScope
     @ContributesAndroidInjector

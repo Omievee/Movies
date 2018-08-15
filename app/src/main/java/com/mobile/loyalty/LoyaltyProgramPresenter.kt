@@ -22,13 +22,18 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
                 .doAfterTerminate { view.hideProgress() }
                 .map {
                     state.allTheaterChains = it
-                    state.registeredTheaterChains = it.filter { it.isUserRegistered }
+                    state.registeredTheaterChains = it.filter {
+                        it.isUserRegistered
+                    }
                     val unregistered = state.allTheaterChains?.filter {
                         !it.isUserRegistered
+
                     }?.toMutableList()
+
                     unregistered?.add(0, TheaterChain(loyaltyPresentationModel.addLoyaltyProgram))
                     state.unregisteredTheaterChains = unregistered
                     it
+
                 }
                 .subscribe({ _ ->
                     state.error = null
@@ -74,18 +79,15 @@ class LoyaltyProgramPresenter(val loyaltyPresentationModel: LoyaltyPresentationM
     }
 
 
-    fun userClickedLoyaltyProgram(theater: TheaterChain?) {
-
-    }
-
-
     fun onSignInButtonClicked(theaterChain: TheaterChain, data: List<Triple<String, RequiredField, String>>) {
         state.lastTheaterChain = theaterChain
         val loyaltyDataMap = data
                 .associateTo(
-                        mutableMapOf(), {
+                        mutableMapOf()) {
                     it.first to it.third
-                })
+                }
+
+
         state.lastData = loyaltyDataMap
         view.showProgress()
         RestClient.getAuthenticated()

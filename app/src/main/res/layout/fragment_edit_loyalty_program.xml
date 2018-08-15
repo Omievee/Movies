@@ -23,11 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/doubledouble_margin_standard"
         android:clickable="false"
         android:focusable="false"
         android:textColorHint="@color/white_80_opacity"
-        android:theme="@style/EditTextStyle"
         app:hintTextAppearance="@style/text_in_layout_hint_Style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,22 +34,23 @@
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/loyaltyCardNumber"
+            style=" @style/TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginTop="@dimen/margin_standard"
             android:animateLayoutChanges="true"
             android:backgroundTint="@color/white_40_opacity"
+            android:clickable="true"
             android:enabled="false"
-            android:focusable="false"
+            android:focusable="true"
             android:hint="Card Number"
-            android:inputType="text|textCapSentences"
+            android:inputType="number"
             android:maxLines="1"
-            android:text=" "
             android:textColor="@color/white"
             android:textColorLink="@android:color/transparent"
             android:textCursorDrawable="@color/white"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/text_size_16"
             app:backgroundTint="@color/white_40_opacity" />
 
     </android.support.design.widget.TextInputLayout>
@@ -61,9 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/margin_half"
         android:padding="@dimen/margin_half"
         android:text="Edit"
         android:textColor="@color/new_red"
@@ -72,4 +70,63 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/loyaltyCardNumberInput" />
 
+    <ImageView
+        android:id="@+id/deleteInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:src="@drawable/icon_delete_input"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/loyaltyCardNumberInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/loyaltyCardNumberInput" />
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/updateView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/bottom_nav_extra"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <Button
+            android:id="@+id/updateLoyaltyButton"
+            style="@style/RedMoviepassButton"
+            android:text="@string/loyalty_prgram_update"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/deleteLoyalty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_standard"
+            android:text="@string/loyalty_delete_program"
+            android:textColor="@color/new_red"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updateLoyaltyButton" />
+    </android.support.constraint.ConstraintLayout>
+
+    <include
+        android:id="@+id/loyaltyProgress"
+        layout="@layout/view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent
+"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

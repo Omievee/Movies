@@ -682,7 +682,6 @@
     <string name="profile_cancel_membership_message">The last day your account will be active is on</string>
     <string name="required">*required</string>
     <string name="required_field">Required</string>
-    <string name="cancel_membership">Cancel Membership</string>
     <string name="cancellation_drop_drown_error">Please choose a reason for cancellation from the dropdown menu provided.</string>
     <string name="ok">Ok</string>
     <string name="history_details_movie_dislike">You didn\'t like this movie!</string>
@@ -730,6 +729,10 @@
     <string name="billing_updated">Your billing details have been changed.</string>
     <string name="edit">Edit</string>
     <string name="section_credit_card_data">creditCardData</string>
+    <string name="cancel_membership">Cancel Membership</string>
+    <string name="loyalty_prgram_update">Update</string>
+    <string name="loyalty_delete_program">Delete this loyalty program</string>
+    <string name="loyalty_program_delete">Are your sure you want to delete this loyalty program from your account?</string>
     <string name="account_information">Account Information</string>
     <string name="change_password">Change Password</string>
     <string name="shipping_address">Shipping Address</string>
