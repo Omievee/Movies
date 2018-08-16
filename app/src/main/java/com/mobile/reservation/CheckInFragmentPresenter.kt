@@ -4,9 +4,11 @@ import com.mobile.ApiError
 import com.mobile.UserPreferences
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.LocationManager
+import com.mobile.model.CapType
+import com.mobile.model.CappedPlan
 import com.mobile.model.SurgeType
 import com.mobile.model.TicketType
-import com.mobile.network.SurgeResponse
+import com.mobile.network.RestrictionsCheckResponse
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.responses.SubscriptionStatus
 import com.mobile.tickets.TicketManager
@@ -16,21 +18,18 @@ import io.reactivex.disposables.Disposable
 class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketManager, val locationManager: LocationManager, val analyticsManager: AnalyticsManager) {
 
     var checkin: Checkin? = null
-    var surgeCheckDis: Disposable? = null
+    var restrictionsCheckDisposable: Disposable? = null
     var reservDis: Disposable? = null
 
     fun onCreate(checkin: Checkin?) {
         this.checkin = checkin
-
+        checkin?.clearPasses()
         display()
     }
 
     private fun display() {
         val check: Checkin = checkin ?: return
-        when (check.availability.isETicket()) {
-            true -> doEticketing()
-            false -> doSurge()
-        }
+        doSurge()
     }
 
     private val showActivateCard: Boolean
@@ -47,24 +46,26 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
     private val showProofOfPurchase: Boolean
         get() {
-            return checkin?.screening?.popRequired == true || UserPreferences.restrictions.proofOfPurchaseRequired
+            return checkin?.availability?.isETicket() == false && (checkin?.screening?.popRequired == true || UserPreferences.restrictions.proofOfPurchaseRequired)
         }
 
-
-    private fun doEticketing() {
-        view.showContinueToETicketing()
-    }
-
     private fun doSurge() {
-        val surge = checkin?.screening?.getSurge(checkin?.availability?.startTime, UserPreferences.restrictions.userSegments)
-                ?: return
+        val checkin = checkin ?: return
+        val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
         val peak = UserPreferences.restrictions.peakPassInfo
         when (surge.level) {
             SurgeType.NO_SURGE -> {
-                view.showCheckin()
-                if (showProofOfPurchase) {
-                    view.showCheckinWithProof()
+                val cappedPlan = UserPreferences.restrictions.cappedPlan
+                when (cappedPlan?.isOverSoftCap) {
+                    true -> view.showSoftCapMessage(checkin = checkin, cappedPlan = cappedPlan)
+                    else -> {
+                        view.showCheckin(checkin)
+                        if (showProofOfPurchase) {
+                            view.showCheckinWithProof()
+                        }
+                    }
                 }
+
             }
             SurgeType.WILL_SURGE -> {
                 view.showWillSurge(surge, peak, peak.currentPeakPass)
@@ -76,13 +77,28 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
         }
     }
 
-    fun onContinueToETicketingClicked() {
-        val checkin = checkin ?: return
-        view.navigateToCreateReservation(checkin)
-    }
+    val skipRestrictionsCheck: Boolean
+        get() {
+            val checkin = checkin ?: return false
+            if (checkin.availability.isETicket() == true) {
+                return false
+            }
+            val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
+            val cap = UserPreferences.restrictions.cappedPlan
+            if (cap?.isOverSoftCap == true) {
+                return true
+            }
+            if (cap?.isOverHardCap == false) {
+                return false
+            }
+            if (surge.level == SurgeType.SURGING) {
+                return true
+            }
+            return false
+        }
 
     fun onContinueClicked() {
-        surgeCheckDis?.dispose()
+        restrictionsCheckDisposable?.dispose()
         val checkin = checkin ?: return
         val payload = checkin.availability.providerInfo ?: return
 
@@ -101,27 +117,82 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
 
             }
             else -> {
+
             }
         }
+        if (skipRestrictionsCheck) {
+            return skipRestrictionsCheck()
+        }
         view.showProgress()
-        surgeCheckDis = api.peakCheck(
+        restrictionsCheckDisposable = api.restrictionCheck(
                 payload
         ).doAfterTerminate {
             view.hideProgress()
-        }
-                .subscribe({
-                    onSurgeResponse(it)
-                }, {
-                    val apiError: ApiError = it as? ApiError
-                            ?: return@subscribe view.showGenericError()
-                    view.showError(apiError)
-                })
+        }.subscribe({
+            onRestrictionsCheckResponse(it)
+        }, {
+            when (it) {
+                is ApiError -> view.showError(it)
+                else -> view.showGenericError()
+            }
+        })
     }
 
-    private fun onSurgeResponse(it: SurgeResponse) {
+    private fun skipRestrictionsCheck() {
         val checkin = checkin ?: return
-        when (it.currentlyPeaking) {
-            true -> {
+        val surge = checkin.screening.getSurge(checkin.availability.startTime, UserPreferences.restrictions.userSegments)
+        val cap = UserPreferences.restrictions.cappedPlan
+        if (cap?.isOverSoftCap == true) {
+            checkin.softCap = true
+            return view.navigateToSoftCapCheckout(checkin)
+        }
+        if (surge.level == SurgeType.SURGING) {
+            val pinfo = UserPreferences.restrictions.peakPassInfo
+            if (pinfo.currentPeakPass != null) {
+                checkin.peakPass = pinfo.currentPeakPass
+                return view.showApplyPeakPass(checkin, pinfo, pinfo.currentPeakPass)
+            } else {
+                view.navigateToSurchargeConfirm(checkin)
+            }
+        }
+    }
+
+    private fun onRestrictionsCheckResponse(it: RestrictionsCheckResponse) {
+        val checkin = checkin ?: return
+        when {
+            it.data.overSoftCap && UserPreferences.restrictions.cappedPlan?.isOverSoftCap == true && checkin.availability.isETicket() -> {
+                UserPreferences.restrictions.apply {
+                    val old = cappedPlan
+                    cappedPlan = CappedPlan(
+                            type = when (it.data.overSoftCap) {
+                                true -> CapType.SOFT
+                                false -> CapType.HARD
+                            },
+                            remaining = 0,
+                            used = old?.used ?: 3,
+                            discount = it.data.attributes?.discount ?: 0
+                    )
+                }
+                checkin.softCap = true
+                view.navigateToSoftCapCheckout(checkin)
+            }
+            it.data.overSoftCap || it.data.overHardCap -> {
+                UserPreferences.restrictions.apply {
+                    val old = cappedPlan
+                    cappedPlan = CappedPlan(
+                            type = when (it.data.overSoftCap) {
+                                true -> CapType.SOFT
+                                false -> CapType.HARD
+                            },
+                            remaining = 0,
+                            used = old?.used ?: 3,
+                            discount = it.data.attributes?.discount ?: 0
+                    )
+                }
+                view.showOverCap(UserPreferences.restrictions.cappedPlan, it)
+                doSurge()
+            }
+            it.data.attributes?.currentlyPeaking == true -> {
                 checkin.screening.updateSurge(checkin.availability, it)
                 val surge = checkin.getSurge(UserPreferences.restrictions.userSegments)
                 val peak = UserPreferences.restrictions.peakPassInfo
@@ -133,24 +204,23 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                         else -> view.showNowPeakingApplyPeakPass(it, peak, peakPass)
                     }
                 }
-
+                doSurge()
             }
-            false -> createReservation()
+            true -> createReservation()
         }
     }
 
-    private fun showSurgeModal(surge: SurgeResponse) {
-        val message = surge.peakMessage
-        when (message) {
-            null -> view.showSurgeModal(surge.peakAmount.centsAsDollars)
-            else -> view.showSurgeModal(message)
-        }
+    private fun showSurgeModal(surge: RestrictionsCheckResponse) {
+        view.showSurgeModal(surge)
     }
 
     private fun createReservation() {
         val checkin = checkin ?: return
         val perf = checkin.availability.providerInfo ?: return
         val loc = locationManager.lastLocation() ?: return view.showNeedLocation()
+        if (checkin.availability.isETicket()) {
+            return view.navigateToCreateReservation(checkin)
+        }
         reservDis?.dispose()
         view.showProgress()
         reservDis = api
@@ -166,20 +236,34 @@ class CheckInFragmentPresenter(val view: CheckInFragmentView, val api: TicketMan
                     view.navigateTo(checkin, it)
                     analyticsManager.onCheckinSuccessful(checkin, it)
                 }, {
-                    val apiError = it as? ApiError ?: return@subscribe
-                    view.showError(apiError)
+                    when (it) {
+                        is ApiError -> {
+                            view.showError(it)
+                        }
+                        else -> {
+                            view.showGenericError()
+                        }
+                    }
                     analyticsManager.onCheckinFailed(checkin)
                 })
     }
 
     fun onDestroy() {
-        surgeCheckDis?.dispose()
+        restrictionsCheckDisposable?.dispose()
         reservDis?.dispose()
     }
 
-    fun onContinueDialogClicked() {
-        val chekcin = checkin ?: return
-        view.navigateToSurchargeConfirm(chekcin)
+    fun onContinueDialogClicked(restrictions: RestrictionsCheckResponse) {
+        val checkin = checkin ?: return
+        when {
+            restrictions.data.overSoftCap -> {
+                checkin.softCap = true
+                view.navigateToSoftCapCheckout(checkin)
+            }
+            restrictions.data.attributes?.currentlyPeaking == true -> view.navigateToSurchargeConfirm(checkin)
+            restrictions.data.overHardCap -> {
+            }
+        }
     }
 
     fun onPeakPassInfoClicked() {

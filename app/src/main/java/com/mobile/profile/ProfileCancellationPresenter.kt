@@ -3,6 +3,7 @@ package com.mobile.profile
 import android.util.Log
 import com.mobile.ApiError
 import com.mobile.UserPreferences
+import com.mobile.model.ParcelableDate
 import com.mobile.extensions.DropDownFields
 import com.mobile.network.Api
 import com.mobile.requests.CancellationRequest
@@ -14,7 +15,7 @@ class ProfileCancellationPresenter(var api: Api, var view: ProfileCancellationVi
 
     var userInfo : Disposable ? = null
     var profileCancellationDisposable: Disposable ? = null
-    var billingDate: String ? = null
+    var billingDate: Date? = null
 
     private fun loadUserInfo() {
         userInfo?.dispose()

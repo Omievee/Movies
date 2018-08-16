@@ -16,4 +16,5 @@ interface HomeActivityView {
     fun showPeakPassBadge()
     fun showHistoryRateScreen(reservationHistory: ReservationHistory)
     fun hidePeakPassBadge()
+    fun showOverSoftCap()
 }

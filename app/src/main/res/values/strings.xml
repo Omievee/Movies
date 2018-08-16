@@ -502,7 +502,7 @@
 
     <!-- Bring A Friend-->
     <string name="add_guests_title">Add Guests</string>
-    <string name="add_guests_descriptions">Your guests may be eligible for a FREE ticket if they join MoviePass!</string>
+    <string name="add_guests_descriptions">Your guests may be eligible for a FREE\n ticket if they join MoviePass!</string>
     <string name="add_guests_subject_to_convenience_fee">(subject to convenience fee)</string>
     <string name="convenience_fee">Convenience Fee:</string>
     <string name="bring_a_friend_legal">You will be charged the listed ticket price for every guest that does <b><i>not</i></b> subscribe to MoviePass.</string>
@@ -512,12 +512,12 @@
     <string name="total_empty">Total: $0.00</string>
     <string name="convenience_fee_empty">$0.00</string>
     <string name="convenience_fee_title">Convenience Fee</string>
-    <string name="convenience_fee_message">A %1$s convenience fee is charged for each guest in your reservation. Convenience fees are non-refundable.</string>
+    <string name="convenience_fee_message">A %1$s convenience fee is charged for each guest in your reservation. Convenience fees are non-refundable, and will not be reimbursed as a part of the “Free Guest” policy.</string>
     <string name="e_ticket_cancellation_policy_description">At this time e-tickets can’t be cancelled or changed. There are no refunds for guest tickets.\n\nBe sure this is the movie, showtime and theater you want to attend before completing the checkout process.</string>
     <string name="e_ticket_cancellation_dialog_body">You can cancel e-tickets up until 5 minutes before showtime and receive a refund on all guest tickets.\n\n<b>Guest convenience fees are not refundable.</b></string>
     <string name="see_details">See Details</string>
     <string name="free_guest_policy">Free Guest Policy</string>
-    <string name="free_guest_policy_description">Guests must be at least 18 years of age and must not be current or former MoviePass members to qualify. Each guest for whom you provide an email address will be sent an email with information on how to sign up for MoviePass.\n\nYou earn reimbursement of the ticket price for each qualified guest who signs up for MoviePass within 24 hours after the showtime of the movie to which you invited them, and activates their MoviePass account (by activating their MoviePass card upon receipt or by using the MoviePass app to check into a supported e–ticketing theater, whichever occurs first). Both steps are required.\n\nReimbursement (excluding the non–refundable $1.50 ticket convenience fee) will be applied to your card within about 3–5 business days after the guest activates their new MoviePass account.\n\nNo responsibility is assumed for undeliverable emails to guests due to improper email address, prior opt-out by the guest from commercial emails from MoviePass, or any other reason.  Offer valid only for limited screenings at participating theaters. Maximum four (4) guests per reservation. MoviePass reserves the right to terminate any promotional offer at any time.</string>
+    <string name="free_guest_policy_description">Guests must be at least 18 years of age and must not be current or former MoviePass members to qualify. Each guest for whom you provide an email address will be sent an email with information on how to sign up for MoviePass.\n\nYou earn reimbursement of the ticket price for each qualified guest who signs up for MoviePass within 24 hours after the showtime of the movie to which you invited them, and activates their MoviePass account within 30 days from sign up (when they receive and activate their MoviePass card, or use MoviePass to check into a supported e-ticketing theater, whichever occurs first). Both steps are required.\n\nReimbursement (excluding the non–refundable $1.50 ticket convenience fee) will be applied to your card within about 3–5 business days after the guest activates their new MoviePass account.\n\nNo responsibility is assumed for undeliverable emails to guests due to improper email address, prior opt-out by the guest from commercial emails from MoviePass, or any other reason.  Offer valid only for limited screenings at participating theaters. Maximum four (4) guests per reservation. MoviePass reserves the right to terminate any promotional offer at any time.</string>
     <string name="choose_seats">Choose Seats</string>
     <string name="are_you_sure_exit">Are you sure you want to exit?</string>
     <string name="exit_checkout">Exit Checkout</string>
@@ -525,9 +525,10 @@
     <string name="add_guests">Add Guests</string>
     <string name="continue_without_guests">Continue without guests</string>
     <string name="add_guest_emails">Guest Emails</string>
-    <string name="add_guest_emails_description">Guests 18 years of age or older will be sent email instructions on how to sign up for MoviePass. You will be reimbursed the ticket price (excluding convenience fee) for each guest who signs up within 24 hours after the movie’s showtime and then activates their account.</string>
+    <string name="guest_promotion">Guest Promotion</string>
+    <string name="add_guest_emails_description">\nYou will be reimbursed the ticket price (excluding convenience fee) for each adult guest (18 +) that signs up for MoviePass within 24 hours after the movie’s showtime and then activates their new MoviePass account within 30 days from sign up. Adult guests will be sent email instructions on how to sign up for MoviePass.</string>
     <string name="provide_emails">Would you like to send this promotion to your guests?</string>
-    <string name="guest_email_hint">Guest %1$d Email</string>
+    <string name="guest_email_hint">Guest Email (optional)</string>
     <string name="already_moviepass_member">Already a MoviePass member</string>
     <string name="invalid_email">Invalid Email</string>
     <string name="unavailable">Unavailable</string>
@@ -575,13 +576,17 @@
         <item quantity="other">%1$d Passes</item>
         <item quantity="zero">%1$d Passes</item>
     </plurals>
+    <plurals name="movie_left">
+        <item quantity="other">%1$d Movies</item>
+        <item quantity="one">%1$d Movie</item>
+    </plurals>
     <string name="next">Next</string>
     <string name="choose_seats_error">You must choose seats for all tickets in the reservation before proceeding</string>
     <string name="cd_movie_screen">Movie Screen Front</string>
     <string name="eighteen_acknowledgement_error">You must acknlowedge that all emails belong to guests 18 years of age or older.</string>
     <string name="restrictions_apply_see_details">Restrictions apply. See details.</string>
     <string name="if_asked_provide_zip">If asked, provide this zip code:</string>
-    <string name="e_ticket_can_not_be_cancelled">Before continuing, be aware that e-tickets can not be  canceled or changed.</string>
+    <string name="e_ticket_can_not_be_cancelled">E-Tickets at this theater cannot be cancelled or changed. No refunds will be issued.</string>
 
 
     <string name="gps_enable">In order to use the MoviePass app please enable location services in your phone’s settings.</string>
@@ -590,8 +595,8 @@
     <string name="GPS_off_enable">Enable location services</string>
     <string name="no_longer_authorized">This device is no longer authorized.</string>
     <string name="activate_your_moviepass_card">Activate your MoviePass card</string>
-    <string name="e_ticket_cancellation_policy_modal">Be sure this is the movie, showtime, and theater you want to attend before proceeding.</string>
-    <string name="e_ticket_cancellation_policy_modal_title">E-tickets can\'t be cancelled or changed.</string>
+    <string name="e_ticket_cancellation_policy_modal">E-Tickets at this theater cannot be cancelled or changed. There are no refunds for any charges associated with this reservation (if applied).</string>
+    <string name="e_ticket_cancellation_policy_modal_title">No Cancellations or Refunds</string>
     <string name="no_ticket_stub_message">Please describe what went wrong with your ticket verification process.</string>
     <string name="no_ticket_stub_title">Don’t have your ticket stub?</string>
     <string name="open_help_title">Help</string>
@@ -613,7 +618,7 @@
     <string name="street_address2_hint">Billing Street Address #2</string>
     <string name="continue_to_eticketing">Continue to E-Ticketing</string>
     <string name="checkin">Check In</string>
-    <string name="reservation_surge_description"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of _surcharge_ for your ticket.]]></string>
+    <string name="reservation_surge_description"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of %1$s for your ticket.]]></string>
     <string name="reservation_surge_start"><![CDATA[This showtime is now at Peak Pricing. There will be a surcharge of ]]></string>
     <string name="reservation_surge_end"><![CDATA[ for your ticket.]]></string>
     <string name="reservation_will_surge_start">This showtime is nearing Peak Pricing. There is no surcharge if you check-in at this time, but a surcharge of</string>
@@ -686,6 +691,9 @@
     <string name="peak_pass_description_onboard">All members get 1 Peak Pass a month which allows you to bypass one Peak Pricing surcharge.</string>
     <string name="peak_pass_subdescription_onboard">Just choose “Apply My Peak Pass” upon pressing “Continue” after choosing a showtime.</string>
     <string name="peak_pass_terms">Peak Passes do not roll over. If you cancel your check-in your Peak Pass will be added back to your account.</string>
+    <string name="capped_plan_already_seen_1_of_3">You have already seen %1$d movies this month, but you can pay for your ticket via MoviePass and receive a</string>
+    <string name="capped_plan_already_seen_2_of_3">discount</string>
+    <string name="capped_plan_already_seen_3_of_3">off the theater’s listed ticket price.</string>
     <string name="newpass">New!</string>
     <string name="peak_passes_remaining">Peak Passes remaining:</string>
     <string name="next_pass_applied">Your next pass will be applied on %1$s</string>
@@ -708,6 +716,32 @@
     <string name="sign_out">Sign Out</string>
     <string name="peak_pass_added">Peak Pass Added!</string>
     <string name="change_email">Change Email</string>
+    <string name="account_information">Account Information</string>
+    <string name="change_password">Change Password</string>
+    <string name="shipping_address">Shipping Address</string>
+    <string name="plan_and_billing_info"><![CDATA[Plan & Billing Info]]></string>
+    <string name="movies_left_in_billing_cycle">Movies left in current billing cycle:</string>
+    <string name="continue_seeing_movies_title">Continue seeing movies with the MoviePass Discount!</string>
+    <string name="continue_seeing_movies_description">You have seen three movies this month, but you can still check into showtimes with MoviePass. Your billing card on file will be charged the theater’s listed ticket price, and you will receive a discount by paying through the MoviePass app.</string>
+    <string name="zero_movies">0 Movies</string>
+    <string name="continue_seeing_movies">Continue seeing discounted movies with  MoviePass until your cycle renews!</string>
+    <string name="over_hard_cap">Your plan monthly cap was met</string>
     <string name="alert_failed_dialog_messege">There was an error processing this request. Please try again.</string>
+    <string name="agree_to_payment">Agree to Payment</string>
+    <string name="agree_to_payment_description">I agree that once I redeem my ticket using my MoviePass card I will be charged the theater’s listed ticket price for this showtime, minus the MoviePass discount.\n\nIf you cancel this check-in, or never redeem your ticket by swiping your MoviePass card, you will not be charged.</string>
+    <string name="agree_to_payment_e_ticket_description">I agree that I will be charged the theater’s listed ticket price for this showtime, minus the MoviePass discount.\n\nE-Tickets at this theater cannot be cancelled or changed. No refunds will be issued.</string>
+    <string name="i_agree">I Agree</string>
+    <string name="soft_cap_billing_card_on_file">Your billing card on file will be charged the theater’s listed adult ticket price for this showtime, minus the $2 MoviePass discount. A receipt will be emailed to you as a record for this transaction.\n\nIf you cancel this check-in before redeeming your ticket your transaction will be cancelled and you will not be charged.</string>
+    <string name="billing_card_on_file">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
+    <string name="billing_card_on_file_abbreviated">Your billing card on file will be charged the above amount</string>
+    <string name="cancellation_and_refund_policy"><![CDATA[Cancellation & Refund Policy]]></string>
+    <string name="cancellation_softcap">You can cancel your check-in before using your MoviePass card to redeem your ticket. No charges associated with this check-in will be charged if you cancel the check-in, or never swipe your MoviePass card.</string>
+    <string name="cancellation_no_refunds_once_redeemed">There are no refunds once a ticket is redeemed using your MoviePass card.</string>
+    <string name="discounted_ticket_price">Discounted Ticket Price</string>
+    <string name="discounted_ticket_price_descriptiopn">MoviePass receives the ticket price for this showtime after the transaction has gone through.\n\nPlease check your theater for the price of this ticket. You will be charged the theater’s ticket price minus the MoviePass discount.</string>
+    <string name="billing_card_on_file_eticket">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
+    <string name="cycle_renews_on">Cycle renews on %1$s</string>
+    <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
+
 
 </resources>

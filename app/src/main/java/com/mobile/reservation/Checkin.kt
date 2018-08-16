@@ -1,11 +1,7 @@
 package com.mobile.reservation
 
 import android.os.Parcelable
-import com.mobile.model.Availability
-import com.mobile.model.ParcelableDate
-import com.mobile.model.Screening
-import com.mobile.model.Surge
-import com.mobile.model.Theater
+import com.mobile.model.*
 import com.mobile.responses.PeakPass
 import com.mobile.utils.calendar
 import com.mobile.utils.timeToCalendar
@@ -20,11 +16,17 @@ data class Checkin(
         var theater: Theater,
         var availability: Availability,
         var peakPass: PeakPass?=null,
-        var time:ParcelableDate = ParcelableDate(timeAsString = System.currentTimeMillis().toString())
+        var time:ParcelableDate = ParcelableDate(timeAsString = System.currentTimeMillis().toString()),
+        var softCap:Boolean=false
 ) : Parcelable {
 
     fun getSurge(segments:List<Int>):Surge {
         return screening.getSurge(availability.startTime, segments)
+    }
+
+    fun clearPasses() {
+        peakPass = null
+        softCap = false
     }
 
     @IgnoredOnParcel
@@ -39,4 +41,9 @@ data class Checkin(
         return calendar.time
     }
 
+    @IgnoredOnParcel
+    val hasAdultTicketPrice:Boolean
+        get() {
+            return softCap!=true && availability.guestsTicketTypes?.any { it.ticketType== GuestTicketType.ADULT_COMPANION } == true
+        }
 }

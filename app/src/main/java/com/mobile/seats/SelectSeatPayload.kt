@@ -1,14 +1,12 @@
 package com.mobile.seats
 
 import com.mobile.Constants
-import com.mobile.model.Availability
-import com.mobile.model.Screening
-import com.mobile.model.SeatInfo
-import com.mobile.model.Theater
+import com.mobile.UserPreferences
+import com.mobile.model.*
 import com.mobile.reservation.Checkin
 
 class SelectSeatPayload(
-        val checkin:Checkin?=null,
+        val checkin: Checkin? = null,
         val ticketPurchaseData: List<TicketPurchaseData>? = null,
         var selectedSeats: List<SeatInfo>? = null,
         var emails: MutableList<GuestEmail> = mutableListOf()
@@ -24,10 +22,20 @@ class SelectSeatPayload(
 
     val total: Double
         get() {
-            return ticketPurchaseData
+            val discount = if (checkin?.softCap == true) {
+                UserPreferences.restrictions.cappedPlan?.asDollars ?: 0.0
+            } else {
+                0.0
+            }
+            val softCapTicketPrice = if(checkin?.softCap==true) {
+                checkin.availability.guestsTicketTypes?.firstOrNull { it.ticketType==GuestTicketType.ADULT_COMPANION }?.costAsDollars?:0.0
+            } else {
+                0.0
+            }
+            return (ticketPurchaseData
                     ?.sumByDouble {
                         it.tickets * it.ticket.costAsDollars
-                    }?.plus(fee) ?: fee
+                    }?.plus(fee) ?: fee).minus(discount).plus(softCapTicketPrice)
         }
 
     val totalGuestTickets: Int

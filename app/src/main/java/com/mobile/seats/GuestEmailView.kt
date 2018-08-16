@@ -43,7 +43,7 @@ class GuestEmailView(context: Context?, attrs: AttributeSet? = null) : Constrain
     fun bind(guestEmail: GuestEmail) {
         this.email = guestEmail
         inputLayout.hint =
-                resources.getString(R.string.guest_email_hint, (guestEmail.index ?: 0) + 1)
+                resources.getString(R.string.guest_email_hint)
         editText.setText(guestEmail.email)
         inputLayout.error = when (guestEmail.status) {
             null, EmailStatus.APPROVED -> {

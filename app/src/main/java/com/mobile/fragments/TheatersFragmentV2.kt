@@ -19,6 +19,7 @@ import com.mobile.model.AmcDmaMap
 import com.mobile.model.Theater
 import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.theater.*
+import com.moviepass.BuildConfig
 import com.moviepass.R
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import dagger.android.support.AndroidSupportInjection
@@ -153,6 +154,9 @@ class TheatersFragmentV2 : LocationRequiredFragment(), TheatersFragmentView, Pri
         searchBar.visibility = View.VISIBLE
         searchIcon.visibility = View.INVISIBLE
         currentLocationContainer.visibility = View.VISIBLE
+        BuildConfig.DEFAULT_LOCATION?.let {
+            mapSearchBox.text = it
+        }
     }
 
     override fun showNoTheatersFound() {

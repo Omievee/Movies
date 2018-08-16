@@ -22,7 +22,7 @@
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/eTicketCancellationPolicy"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleView">
@@ -46,22 +46,18 @@
                 android:layout_marginTop="@dimen/margin_standard"
                 app:layout_constraintTop_toBottomOf="@id/description" />
 
-            <TextView
-                android:id="@+id/eTicketCancellationPolicy"
-                style="@style/ETicketCancellationPolicy"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ticketContainer" />
-
-            <TextView
-                style="@style/ContinueButton"
-                android:visibility="invisible"
-                app:layout_constraintTop_toBottomOf="@id/eTicketCancellationPolicy" />
-
         </android.support.constraint.ConstraintLayout>
 
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/eTicketCancellationPolicy"
+        style="@style/ETicketCancellationPolicy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintBottom_toTopOf="@+id/continueButton" />
 
     <com.mobile.widgets.MPProgressButton
         android:id="@+id/continueButton"
@@ -69,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/continueWithoutGuests"
-        android:layout_marginBottom="@dimen/margin_standard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:mp_text="@string/add_guests" />

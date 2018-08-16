@@ -16,7 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.mobile.Interfaces.AfterSearchListener;
+import com.mobile.search.AfterSearchListener;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.model.Movie;
 import com.moviepass.R;

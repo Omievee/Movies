@@ -12,7 +12,7 @@ import com.mobile.network.Api
 import com.mobile.network.MicroApi
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.responses.AndroidIDVerificationResponse
-import com.mobile.responses.MicroServiceRestrictionsResponse
+import com.mobile.responses.RestrictionsResponse
 import com.mobile.responses.SubscriptionStatus
 import com.mobile.session.SessionManager
 import io.reactivex.disposables.Disposable
@@ -29,12 +29,14 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     var currentReservation: CurrentReservationV2? = null
     var changesDisposable: Disposable? = null
     var historyDispose: Disposable? = null
+    var didShowOverSoftCap: Boolean = false
+    var didShowAlert: Boolean = false
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
     }
 
-    fun onCreate(){
+    fun onCreate() {
         latestMovieWithoutRating()
     }
 
@@ -109,11 +111,21 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     determineActivationScreen(it)
                     determineForceLogout(it)
                     UserPreferences.restrictions = it
+                    determineOverSoftCap(it)
                     determineTicketVerification(it)
                     determineAlertScreen(it.alert)
                 }, {
                     it.printStackTrace()
                 })
+    }
+
+    private fun determineOverSoftCap(it: RestrictionsResponse) {
+        when {
+            !didShowOverSoftCap && it.cappedPlan?.isOverSoftCap == true && it.cappedPlan?.used == 3 -> {
+                didShowOverSoftCap = true
+                view.showOverSoftCap()
+            }
+        }
     }
 
     fun latestMovieWithoutRating() {
@@ -142,7 +154,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
 
-    private fun determineActivationScreen(it: MicroServiceRestrictionsResponse?) {
+    private fun determineActivationScreen(it: RestrictionsResponse?) {
         it ?: return
         when (it.subscriptionStatus) {
             SubscriptionStatus.ACTIVE ->
@@ -154,7 +166,7 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     }
 
-    private fun determineForceLogout(it: MicroServiceRestrictionsResponse) {
+    private fun determineForceLogout(it: RestrictionsResponse) {
         if (it.logoutInfo?.isForceLogout == false) {
             return
         }
@@ -165,14 +177,20 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     private fun determineAlertScreen(it: Alert?) {
         it ?: return
+        if (didShowAlert) {
+            return
+        }
         when (it.id) {
             UserPreferences.alertDisplayedId -> {
             }
-            else -> view.showAlert(it)
+            else -> {
+                didShowAlert = true
+                view.showAlert(it)
+            }
         }
     }
 
-    private fun determineTicketVerification(it: MicroServiceRestrictionsResponse) {
+    private fun determineTicketVerification(it: RestrictionsResponse) {
         val popInfo = it.popInfo ?: return
         if (UserPreferences.lastReservationPopInfo == 0 ||
                 UserPreferences.lastReservationPopInfo != popInfo.reservationId) {

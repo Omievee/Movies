@@ -15,6 +15,8 @@ import com.mobile.profile.ProfileCancellationView
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.profile_cancellation_view_layout.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -99,12 +101,12 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
         progress.visibility = View.VISIBLE
     }
 
-    override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: String?) {
+    override fun showCancellationConfirmationDialog(reason: String, comment: String, billingDate: Date?) {
 
         val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
 
 
-        var message: String = getString(R.string.profile_cancel_remain_active,billingDate)
+        var message: String = getString(R.string.profile_cancel_remain_active,SimpleDateFormat("M/d/yy"))
         builder.setMessage(message)
                 .setTitle(R.string.profile_cancel_are_you_sure)
                 .setPositiveButton(getString(R.string.cancel_membership)) { _, _ ->

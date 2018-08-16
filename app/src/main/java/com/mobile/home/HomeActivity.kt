@@ -31,9 +31,11 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
 import com.mobile.model.LogoutInfo
 import com.mobile.model.PopInfo
-import com.mobile.profile.ProfileFragmentV2
+import com.mobile.profile.ProfileFragment
 import com.mobile.reservation.CurrentReservationV2
 import com.mobile.reservation.ReservationActivity
+import com.mobile.seats.MPBottomSheetFragment
+import com.mobile.seats.SheetData
 import com.mobile.utils.onBackExtension
 import com.mobile.utils.showFragment
 import com.moviepass.R
@@ -115,6 +117,13 @@ class HomeActivity : MPActivty(), HomeActivityView {
 
     override fun showPeakPassBadge() {
         bottomSheetNav.setNotification(" ", 2)
+    }
+
+    override fun showOverSoftCap() {
+        MPBottomSheetFragment.newInstance(SheetData(
+                title = resources.getString(R.string.continue_seeing_movies_title),
+                description = resources.getString(R.string.continue_seeing_movies_description)
+        )).show(supportFragmentManager, "")
     }
 
     override fun hidePeakPassBadge() {
@@ -225,7 +234,7 @@ class HomeViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         profile = position.getAndIncrement()
         map.put(movies, MoviesFragment())
         map.put(theaters, TheatersFragmentV2())
-        map.put(profile, ProfileFragmentV2())
+        map.put(profile, ProfileFragment())
         map
     }
 

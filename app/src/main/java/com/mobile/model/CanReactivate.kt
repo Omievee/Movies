@@ -1,5 +1,5 @@
 package com.mobile.model
 
-class canReactivate(
+class CanReactivate(
         var cancelledWithinTimeframe: Boolean? = false
 )

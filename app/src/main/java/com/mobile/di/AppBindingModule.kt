@@ -12,7 +12,6 @@ import com.mobile.history.PastReservationsFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.profile.ProfileCancellationModule
-import com.mobile.profile.ProfileFragmentV2
 import com.mobile.reservation.CheckInFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.reservation.ReservationCheckinModule
@@ -25,6 +24,8 @@ import com.mobile.theater.TheaterMapFragment
 import com.mobile.theater.TheatersFragmentModule
 import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
+import com.mobile.fragments.ScreeningsFragmentModule
+import com.mobile.profile.ProfileFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -110,6 +111,10 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
+    fun profileFragmentt(): ProfileFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
     fun ticketVerification(): TicketVerificationV2
 
     @FragmentScope
@@ -117,10 +122,11 @@ interface AppBindingModule {
     fun profileCancellationFragment(): ProfileCancellationFragment
 
     @FragmentScope
+    @ContributesAndroidInjector
+    fun accountDetailsFragment():AccountDetailsFragment
+
+    @FragmentScope
     @ContributesAndroidInjector(modules = [AlertScreenModule::class])
     fun alertScreenFragment(): AlertScreenFragment
 
-    @FragmentScope
-    @ContributesAndroidInjector
-    fun profileFragmentt(): ProfileFragmentV2
 }

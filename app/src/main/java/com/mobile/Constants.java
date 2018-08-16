@@ -41,6 +41,7 @@ public class Constants {
     public static final int ENABLE_LOCATION_CODE = 8;
     public final static int SURGE_INTERSTITIAL_CODE = 9;
     public static final int PEAK_PASS_INTERSTITIAL = 10;
+    public static final int SOFT_CAP_CHECKOUT = 11;
     public static final int GOOGLE_PLAY_SERVICES_CODE = 1;
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";

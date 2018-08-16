@@ -8,7 +8,7 @@ import com.mobile.history.model.ReservationHistory
 import com.mobile.location.UserLocation
 import com.mobile.model.ScreeningToken
 import com.mobile.reservation.Checkin
-import com.mobile.responses.MicroServiceRestrictionsResponse
+import com.mobile.responses.RestrictionsResponse
 import com.mobile.responses.UserInfoResponse
 import com.mobile.rx.Schedulers
 import com.moviepass.BuildConfig
@@ -32,7 +32,7 @@ object UserPreferences {
     }
 
     var restrictionsLoaded: Boolean = false
-    var restrictions: MicroServiceRestrictionsResponse = MicroServiceRestrictionsResponse()
+    var restrictions: RestrictionsResponse = RestrictionsResponse()
         set(it) {
             field = it
             sPrefs.edit()
@@ -43,12 +43,12 @@ object UserPreferences {
             if (!restrictionsLoaded) {
                 val ss = sPrefs.getString(Constants.RESTRICTIONS, null)
                 if (ss == null) {
-                    field = MicroServiceRestrictionsResponse()
+                    field = RestrictionsResponse()
                 } else {
                     try {
-                        field = gson.fromJson(ss, MicroServiceRestrictionsResponse::class.java)
+                        field = gson.fromJson(ss, RestrictionsResponse::class.java)
                     } catch (e: Exception) {
-                        field = MicroServiceRestrictionsResponse()
+                        field = RestrictionsResponse()
                     }
                 }
                 restrictionsLoaded = true

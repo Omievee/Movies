@@ -39,4 +39,12 @@ class MPProgressButton(context: Context, attrs: AttributeSet? = null) : Constrai
             is String-> textView.text = value
         }
     }
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        alpha = when(enabled) {
+            true-> 1f
+            false-> .8f
+        }
+    }
 }

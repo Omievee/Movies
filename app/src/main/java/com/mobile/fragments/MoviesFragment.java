@@ -36,7 +36,7 @@ import com.mobile.model.Movie;
 import com.mobile.network.RestClient;
 import com.mobile.responses.AllMoviesResponse;
 import com.mobile.responses.LocalStorageMovies;
-import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.screening.MoviePosterClickListener;
 import com.moviepass.R;
 
@@ -53,7 +53,6 @@ import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
-import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -297,7 +296,7 @@ public class MoviesFragment extends MPFragment implements MoviePosterClickListen
     }
 
 
-    private void showSubscriptionButton(MicroServiceRestrictionsResponse res) {
+    private void showSubscriptionButton(RestrictionsResponse res) {
         Log.d(TAG, "showSubscriptionButton: " + res.getSubscriptionActivationRequired());
         if (res.getSubscriptionActivationRequired()) {
             activateMPCardButton.setVisibility(View.VISIBLE);

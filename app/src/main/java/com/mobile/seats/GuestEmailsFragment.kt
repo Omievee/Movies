@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.LineHeightSpan
 import android.text.style.TextAppearanceSpan
 import android.transition.TransitionManager
 import android.util.Patterns
@@ -39,15 +40,21 @@ class GuestEmailsFragment : Fragment() {
 
         override fun afterTextChanged(s: Editable?) {
             eighteenOrOlder.isEnabled = hasEmails
+            continueButton.isEnabled = hasEmails
         }
     }
 
     val hasEmails: Boolean
         get() {
-            return (0 until emailLL.childCount).none {
+            val emails = (0 until emailLL.childCount).map {
                 val emailView = (emailLL.getChildAt(it) as? GuestEmailView)
                 val emailStr = emailView?.emailText?.text.toString()
-                emailStr.isEmpty()
+                emailStr
+            }.filter {
+                !it.isEmpty()
+            }
+            return !emails.isEmpty() && emails.all {
+                Patterns.EMAIL_ADDRESS.matcher(it).matches()
             }
         }
 
@@ -120,7 +127,15 @@ class GuestEmailsFragment : Fragment() {
             }
             checkEmails()
         }
-        val descriptionSpan = SpannableStringBuilder(SpannedString(getString(R.string.add_guest_emails_description)))
+        val descriptionSpan = SpannableStringBuilder(SpannableString(getString(R.string.guests_chance_go_free))
+                .apply {
+                    setSpan(TextAppearanceSpan(context, R.style.GoFree), 0,length,SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+                })
+                .append('\n')
+                .append(SpannableString(getString(R.string.add_guest_emails_description))
+                        .apply {
+                            setSpan(TextAppearanceSpan(context, R.style.AddGuestEmailDescription), 0, length, SpannedString.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        })
                 .apply {
                     append('\n')
                     val span = SpannableString(getString(R.string.restrictions_apply_see_details))
@@ -145,6 +160,10 @@ class GuestEmailsFragment : Fragment() {
                 }
         description.movementMethod = LinkMovementMethod.getInstance()
         description.text = descriptionSpan
+        skipThisPromotion.setOnClickListener {
+            state.payload?.emails?.clear()
+            listener?.onEmailContinueClicked(payload = state.payload)
+        }
         subscribe()
     }
 
@@ -225,7 +244,7 @@ class GuestEmailsFragment : Fragment() {
                 ?.subscribe({ payload ->
                     state.payload = payload
                     onPayload()
-                }, { error ->
+                }, { _ ->
 
                 })
     }
@@ -240,6 +259,7 @@ class GuestEmailsFragment : Fragment() {
                 emailText.addTextChangedListener(textWatcher)
             })
         }
+        continueButton.isEnabled = hasEmails
     }
 
     override fun onDestroy() {

@@ -57,7 +57,7 @@ class TicketCounterView(context: Context, attrs: AttributeSet? = null) : Constra
         this.ticket = ticket
         this.constraint = constraint
         this.listener = ticketCounterListener
-        label.text = ticket?.ticketType?.display
+        label.text = resources.getString(R.string.tickets, ticket?.ticketType?.display)
         setFields()
     }
 

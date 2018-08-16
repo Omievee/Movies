@@ -245,7 +245,7 @@ class ScreeningsFragment : LocationRequiredFragment(), ShowtimeClickListener, Mi
         val activity = activity ?: return
         if (lastCode != Constants.SURGE_INTERSTITIAL_CODE && !UserPreferences.shownPeakPricing && screening.isSurging(UserPreferences.restrictions.userSegments)) {
             startActivityForResult(PeakPricingActivity.newInstance(activity), Constants.SURGE_INTERSTITIAL_CODE)
-        } else if (UserPreferences.showPeakPassOnboard) {
+        } else if (UserPreferences.showPeakPassOnboard && screening.isSurging(UserPreferences.restrictions.userSegments)) {
             showPeakPassActivity()
         }
     }

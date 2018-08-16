@@ -37,7 +37,7 @@ class BringAFriendPagerAdapter(val checkin:Checkin?, userSegments:List<Int>, fm:
         checkin.availability.let {
             val map = mutableMapOf<Int, Fragment>()
             var position = AtomicInteger(0)
-            when (checkin.screening.maximumGuests > 0) {
+            when (checkin.screening.maximumGuests > 0 && checkin.softCap==false) {
                 true -> {
                     map[position.getAndIncrement()] = AddGuestsFragment()
                 }
@@ -65,13 +65,8 @@ class BringAFriendPagerAdapter(val checkin:Checkin?, userSegments:List<Int>, fm:
                 }
             }
             val surge = checkin.screening.getSurge(checkin.availability.startTime, userSegments)
-            when (checkin.availability.ticketType) {
-                TicketType.STANDARD -> when (surge.level) {
-                    SurgeType.SURGING -> map.put(position.getAndIncrement(), ConfirmSurgeFragment())
-                    else-> {
-
-                    }
-                }
+            when {
+                checkin.availability.ticketType == TicketType.STANDARD && surge.level==SurgeType.SURGING-> map.put(position.getAndIncrement(), ConfirmSurgeFragment())
                 else -> map[position.getAndIncrement()] = ConfirmDetailsFragment()
             }
             map

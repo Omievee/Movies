@@ -1,4 +1,4 @@
-package com.mobile.activities
+package com.mobile.reservation
 
 import android.os.Parcelable
 

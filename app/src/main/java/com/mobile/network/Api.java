@@ -31,7 +31,7 @@ import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
 import com.mobile.responses.LocalStorageMovies;
 import com.mobile.responses.TheatersResponse;
-import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.PlanResponse;
 import com.mobile.responses.ReferAFriendResponse;
 import com.mobile.responses.ReservationResponse;
@@ -110,8 +110,8 @@ public interface Api {
     Call<SignUpResponse> signUp(@Header(HEADER_COOKIE) String session, @Body SignUpRequest request);
 
 
-    @POST("/rest/v3/reservations/peak-check")
-    Single<SurgeResponse> surgeCheck(@Body ProviderInfo info);
+    @POST("/rest/v2/reservations/restrictions-check")
+    Single<RestrictionsCheckResponse> restrictionsCheck(@Body ProviderInfo info);
 
     @POST("/rest/v2/reservations")
     Single<ReservationResponse> reserve(@Body TicketInfoRequest request);
@@ -196,7 +196,7 @@ public interface Api {
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
-    Call<MicroServiceRestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
+    Call<RestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
 
     @POST("/rest/v1/movies/{movieId}/rate")
     Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);

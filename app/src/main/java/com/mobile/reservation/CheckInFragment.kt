@@ -23,14 +23,27 @@ import kotlinx.android.synthetic.main.fragment_reservation_checkin_bottom_sheet.
 import javax.inject.Inject
 import com.mobile.activities.ActivateMoviePassCard
 import com.mobile.adapters.toBold
-import com.mobile.network.SurgeResponse
+import com.mobile.model.CappedPlan
+import com.mobile.model.TicketType
+import com.mobile.network.RestrictionsCheckResponse
 import com.mobile.responses.PeakPass
 import com.mobile.responses.PeakPassInfo
 import com.mobile.seats.SheetData
 import com.mobile.utils.showBottomFragment
 import com.mobile.utils.text.centsAsDollars
+import com.mobile.utils.text.toCurrency
 
 class CheckInFragment : MPFragment(), CheckInFragmentView {
+    override fun showOverCap(cappedPlan: CappedPlan?, it: RestrictionsCheckResponse) {
+        val context = activity?:return
+        AlertDialog.Builder(context)
+                .setTitle(it.data.attributes?.title)
+                .setMessage(it.data.attributes?.message)
+                .setPositiveButton(R.string.continue_button) { _, _->
+                    presenter.onContinueDialogClicked(it)
+                }
+                .setNegativeButton(R.string.go_back,null).show()
+    }
 
     override fun showActivateCard(checkin: Checkin) {
         val activity: Activity = activity ?: return
@@ -38,6 +51,27 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         activateCard.putExtra(Constants.SCREENING, checkin.screening)
         activateCard.putExtra(Constants.SHOWTIME, checkin.availability.startTime)
         startActivity(activateCard)
+    }
+
+    override fun showSoftCapMessage(checkin: Checkin, cappedPlan: CappedPlan) {
+        val context = activity ?: return
+        val span = SpannableStringBuilder()
+        span.append(resources.getString(R.string.capped_plan_already_seen_1_of_3, cappedPlan.used))
+        span.append(' ')
+        span.append(cappedPlan.asDollars.toCurrency().toBold(context))
+        span.append(' ')
+        span.append(resources.getString(R.string.capped_plan_already_seen_2_of_3).toBold(context))
+        span.append(' ')
+        span.append(resources.getString(R.string.capped_plan_already_seen_3_of_3))
+        continueDescription.text = span
+        continueOrCheckin.text = when (checkin.availability.ticketType) {
+            TicketType.STANDARD -> R.string.continue_button
+            else -> R.string.continue_to_eticketing
+        }
+        continueDescription.visibility = View.VISIBLE
+        continueOrCheckin.setOnClickListener {
+            presenter.onContinueClicked()
+        }
     }
 
     override fun navigateTo(checkIn: Checkin, reservation: ReservationResponse) {
@@ -49,6 +83,12 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                         reservation = reservation
                 )))
     }
+
+    override fun navigateToSoftCapCheckout(checkin: Checkin) {
+        val activity = activity ?: return
+        startActivityForResult(BringAFriendActivity.newIntent(activity, checkin), Constants.SOFT_CAP_CHECKOUT)
+    }
+
 
     override fun navigateToSurchargeConfirm(checkin: Checkin) {
         val activity = activity ?: return
@@ -100,11 +140,11 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
         )
     }
 
-    override fun showNowPeakingApplyPeakPass(it: SurgeResponse, peak: PeakPassInfo, peakPass: PeakPass) {
+    override fun showNowPeakingApplyPeakPass(it: RestrictionsCheckResponse, peak: PeakPassInfo, peakPass: PeakPass) {
         val context = activity ?: return
         AlertDialog.Builder(context)
                 .setTitle(R.string.peak_pricing)
-                .setMessage(resources.getString(R.string.peak_pass_apply_surcharge, it.peakAmount.centsAsDollars))
+                .setMessage(resources.getString(R.string.peak_pass_apply_surcharge, it.data.attributes?.peakAmount?.centsAsDollars?:""))
                 .setPositiveButton(R.string.apply_peak_pass) { _, _ ->
                     presenter.onApplyPeakPassClicked()
                 }
@@ -114,23 +154,25 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                 }.show()
     }
 
-    override fun showSurgeModal(peakAmount: String) {
+    override fun showSurgeModal(it:RestrictionsCheckResponse) {
         val context = activity ?: return
         AlertDialog.Builder(context)
                 .setTitle(R.string.peak_pricing)
-                .setMessage(context.getString(R.string.reservation_surge_description, peakAmount))
+                .setMessage(context.getString(R.string.reservation_surge_description, it.data.attributes?.peakAmount?.centsAsDollars?:""))
                 .setPositiveButton(R.string.continue_button) { _, _ ->
-                    presenter.onContinueDialogClicked()
+                    presenter.onContinueDialogClicked(it)
                 }
                 .setNegativeButton(R.string.go_back, null)
                 .show()
     }
 
     override fun showProgress() {
+        activity?:return
         continueOrCheckin.progress = true
     }
 
     override fun hideProgress() {
+        activity?:return
         continueOrCheckin.progress = false
     }
 
@@ -154,15 +196,6 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
                 .show()
     }
 
-    override fun showContinueToETicketing() {
-        continueOrCheckin.apply {
-            text = R.string.continue_to_eticketing
-            setOnClickListener {
-                presenter.onContinueToETicketingClicked()
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.onDestroy()
@@ -179,15 +212,18 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
             return
         }
         when (requestCode) {
-            Constants.SURGE_CHECKOUT_CODE -> {
+            Constants.SURGE_CHECKOUT_CODE, Constants.SOFT_CAP_CHECKOUT -> {
                 parentFragment?.onActivityResult(requestCode, resultCode, data)
             }
         }
     }
 
-    override fun showCheckin() {
+    override fun showCheckin(checkin:Checkin) {
         continueOrCheckin.apply {
-            text = R.string.checkin
+            continueOrCheckin.text = when (checkin.availability.ticketType) {
+                TicketType.STANDARD -> R.string.continue_button
+                else -> R.string.continue_to_eticketing
+            }
             setOnClickListener {
                 presenter.onContinueClicked()
             }

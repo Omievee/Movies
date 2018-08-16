@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/closeButton"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/CloseButton" />
+
     <TextView
         android:id="@+id/title"
         style="@style/DialogFragmentTitleView"
-        android:layout_marginTop="@dimen/action_bar_size"
+        app:layout_constraintTop_toBottomOf="@id/closeButton"
         android:background="@null"
         android:text="@string/e_ticket_cancellation_policy" />
-
-    <ImageView
-        android:id="@+id/closeButton"
-        style="@style/CloseButton" />
 
     <TextView
         android:id="@+id/error"

@@ -1,254 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/test_black"
-    android:clickable="true">
+    android:background="@color/dark"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:clickable="true"
+    android:focusable="true">
 
-    <LinearLayout
-        android:id="@+id/root"
+    <Space
+        android:id="@+id/space"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            style="@style/TitleView"
-            android:layout_marginTop="@dimen/status_bar_height"
-            android:text="Account Details" />
+    <TextView
+        android:id="@+id/titleView"
+        style="@style/TitleView"
+        android:text="@string/account_details"
+        app:layout_constraintTop_toBottomOf="@id/space" />
 
+    <ImageView
+        app:layout_constraintTop_toBottomOf="@id/space"
+        android:id="@+id/backButton"
+        style="@style/BackButton" />
 
-        <RelativeLayout
-            android:id="@+id/UP"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:padding="@dimen/margin_half">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/margin_half"
-                android:text="Account Information"
-                android:textColor="@color/almost_white"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/DOWN0"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/margin_half"
-                android:rotation="270"
-                android:src="@drawable/icondown"
-                android:textAlignment="center"
-                android:tint="@color/white" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleView" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/DOWN0"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:alpha=".5"
-                android:background="@color/gray_icon" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/changePassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:animateLayoutChanges="true"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/margin_half"
-                android:text="Change Password"
-                android:textColor="@color/almost_white"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/DOWNChangeAddress"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/margin_half"
-                android:rotation="270"
-                android:src="@drawable/icondown"
-                android:textAlignment="center"
-                android:tint="@color/white" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/DOWNChangeAddress"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:alpha=".5"
-                android:background="@color/gray_icon" />
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/MIDDLE"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:animateLayoutChanges="true"
-            android:padding="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/margin_half"
-                android:text="Shipping Address"
-                android:textColor="@color/almost_white"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/DOWN"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/margin_half"
-                android:rotation="270"
-                android:src="@drawable/icondown"
-                android:textAlignment="center"
-                android:tint="@color/white" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/DOWN"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:alpha=".5"
-                android:background="@color/gray_icon" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/END"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:animateLayoutChanges="true"
-            android:padding="5dp">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:padding="@dimen/margin_half"
-                android:text="Plan &amp; Billing Info"
-                android:textColor="@color/almost_white"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/DOWN2"
-                android:layout_width="60dp"
-                android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:paddingTop="@dimen/margin_half"
-                android:rotation="270"
-                android:src="@drawable/icondown"
-                android:textAlignment="center"
-                android:tint="@color/white" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/DOWN2"
-                android:layout_marginStart="@dimen/margin_half"
-                android:layout_marginEnd="@dimen/margin_half"
-                android:alpha=".5"
-                android:background="@color/gray_icon" />
-        </RelativeLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/peakContainer"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:layout_marginStart="@dimen/margin_standard"
-            android:layout_marginEnd="@dimen/margin_standard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/newPeakPassHeader"
-                style="@style/RedThinText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/newpass"
-                android:textSize="18sp"
-                android:paddingTop="@dimen/margin_half"
-                android:paddingBottom="@dimen/margin_half"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/peakPassesRemainingHeader"
-                style="@style/PeakPassesRemaining"
-                android:paddingTop="@dimen/margin_half"
-                android:paddingBottom="@dimen/margin_half"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/newPeakPassHeader" />
-
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/peakPassesContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/peakPassesRemainingHeader">
-
-                <TextView
-                    android:id="@+id/peakPasses"
-                    style="@style/MPText_Bold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    style="@style/InfoIcon"
-                    android:layout_marginStart="@dimen/margin_quarter"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/peakPasses"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
-
-
-            <TextView
-                android:id="@+id/nextPeakPass"
-                style="@style/MPText"
-                android:paddingTop="@dimen/margin_half"
-                android:paddingBottom="@dimen/margin_half"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/peakPassesContainer" />
-
-        </android.support.constraint.ConstraintLayout>
-    </LinearLayout>
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

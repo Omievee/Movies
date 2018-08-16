@@ -1,12 +1,10 @@
 package com.mobile.responses
 
-import com.mobile.model.Alert
-import com.mobile.model.LogoutInfo
-import com.mobile.model.PopInfo
-import com.mobile.model.canReactivate
+import com.google.gson.annotations.SerializedName
+import com.mobile.model.*
 
 
-class MicroServiceRestrictionsResponse(
+class RestrictionsResponse(
         var countDown: Int = 0,
         var subscriptionStatus: SubscriptionStatus = SubscriptionStatus.UNKNOWN,
         var facebook: Boolean = false,
@@ -15,11 +13,13 @@ class MicroServiceRestrictionsResponse(
         var proofOfPurchaseRequired: Boolean = false,
         var popInfo: PopInfo? = null,
         var hasActiveCard: Boolean = false,
+        @SerializedName("capInfo")
+        var cappedPlan:CappedPlan? = CappedPlan(),
         var alert: Alert? = null,
         var logoutInfo: LogoutInfo? = null,
         var blockRepeatShowings:Boolean = true,
         var subscriptionActivationRequired:Boolean = false,
-        var canReactivate: canReactivate? = null,
+        var canReactivate: CanReactivate? = null,
         var userSegments:List<Int> = emptyList(),
         var peakPassInfo:PeakPassInfo = PeakPassInfo()
 )

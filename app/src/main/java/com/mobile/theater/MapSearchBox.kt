@@ -24,7 +24,7 @@ class MapSearchBox(context: Context?, attrs: AttributeSet?=null) : ConstraintLay
                     }
                 }
 
-        editText.setOnKeyListener({ _: View?, keyCode: Int, _: KeyEvent? ->
+        editText.setOnKeyListener { _: View?, keyCode: Int, _: KeyEvent? ->
             when(keyCode) {
                 KeyEvent.KEYCODE_ENTER,KeyEvent.KEYCODE_SEARCH-> {
                     listener?.onSearch(editText.text.toString())
@@ -33,7 +33,12 @@ class MapSearchBox(context: Context?, attrs: AttributeSet?=null) : ConstraintLay
                 else-> false
 
             }
-        })
+        }
+    }
+
+    var text:String? = null
+    set(value) {
+        editText.setText(value)
     }
 }
 

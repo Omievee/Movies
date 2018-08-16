@@ -42,7 +42,7 @@ import com.mobile.network.RestClient;
 import com.mobile.requests.FacebookSignInRequest;
 import com.mobile.requests.LogInRequest;
 import com.mobile.responses.AndroidIDVerificationResponse;
-import com.mobile.responses.MicroServiceRestrictionsResponse;
+import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.SubscriptionStatus;
 import com.moviepass.BuildConfig;
 import com.moviepass.R;
@@ -81,7 +81,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     LoginButton facebookLogInButton;
     int offset = 3232323;
     int userId;
-    MicroServiceRestrictionsResponse restriction;
+    RestrictionsResponse restriction;
     User userRESPONSE;
     private AndroidIDVerificationResponse androidId;
 
@@ -403,9 +403,9 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
     public void checkRestrictions(User user) {
 
-        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(user.getId()).enqueue(new Callback<MicroServiceRestrictionsResponse>() {
+        RestClient.getsAuthenticatedMicroServiceAPI().getInterstitialAlert(user.getId()).enqueue(new Callback<RestrictionsResponse>() {
             @Override
-            public void onResponse(Call<MicroServiceRestrictionsResponse> call, Response<MicroServiceRestrictionsResponse> response) {
+            public void onResponse(Call<RestrictionsResponse> call, Response<RestrictionsResponse> response) {
                 if (response.body() != null && response.isSuccessful()) {
                     restriction = response.body();
 
@@ -454,7 +454,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             }
 
             @Override
-            public void onFailure(Call<MicroServiceRestrictionsResponse> call, Throwable t) {
+            public void onFailure(Call<RestrictionsResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
                 t.printStackTrace();
             }

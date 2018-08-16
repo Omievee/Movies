@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mobile.application.Application
+import com.mobile.model.CapType
 import com.mobile.model.ParcelableDate
 import com.mobile.model.SurgeType
 import com.mobile.rx.RxJava2CallAdapterFactory
@@ -76,6 +77,12 @@ class ApiModule {
                 .registerTypeAdapter(object : TypeToken<SurgeType>() {
 
                 }.type, SurgeTypeAdapter())
+                .registerTypeAdapter(object : TypeToken<CapType>() {
+
+                }.type, CapTypeAdapter())
+                .registerTypeAdapter(object : TypeToken<RestrictionsCheckType>() {
+
+                }.type, RestrictionCapTypeAdapter())
                 .create()
     }
 

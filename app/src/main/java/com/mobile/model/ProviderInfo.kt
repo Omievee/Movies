@@ -2,9 +2,7 @@ package com.mobile.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.mobile.activities.TicketType
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @Parcelize
 class ProviderInfo(

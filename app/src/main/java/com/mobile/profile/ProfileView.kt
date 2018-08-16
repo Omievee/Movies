@@ -28,6 +28,14 @@ class ProfileView(context: Context?, attrs: AttributeSet? = null) : ConstraintLa
     fun bind(pres: ProfilePresentation, clickListener: ProfileClickListener? = null) {
         this.presentation = pres
         this.clickListener = clickListener
+        if(pres.type==Profile.DIVIDER) {
+            arrayOf(
+                    name,header,subHeader
+            ).forEach { it.visibility=View.GONE }
+            divider.visibility=View.VISIBLE
+            topGuide.visibility=View.VISIBLE
+            return
+        }
         name.text = pres.title
         header.text = pres.header
         header.visibility = when {

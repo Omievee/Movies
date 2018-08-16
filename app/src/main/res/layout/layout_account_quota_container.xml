@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/newKey"
+        style="@style/RedThinText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:paddingTop="@dimen/margin_standard"
+        android:text="@string/newpass"
+        android:textSize="18sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/header"
+        style="@style/PeakPassesRemaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:paddingBottom="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_standard"
+        app:layout_constraintTop_toBottomOf="@id/newKey" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/countContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <TextView
+            android:id="@+id/amount"
+            style="@style/MPText_Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            style="@style/InfoIcon"
+            android:id="@+id/infoIcon"
+            android:visibility="invisible"
+            android:layout_marginStart="@dimen/margin_quarter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/amount"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/description2"
+        style="@style/MPText_Italic"
+        android:layout_width="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        app:layout_constraintTop_toBottomOf="@id/countContainer"
+        android:paddingBottom="@dimen/margin_half"
+        android:paddingTop="@dimen/margin_half" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/descriptionContainer"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/description2">
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/MPText"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toStartOf="@+id/infoIcon2"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_half"
+            android:paddingTop="@dimen/margin_half" />
+
+        <ImageView
+            style="@style/InfoIcon"
+            android:id="@+id/infoIcon2"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/margin_quarter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/description"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</merge>
+

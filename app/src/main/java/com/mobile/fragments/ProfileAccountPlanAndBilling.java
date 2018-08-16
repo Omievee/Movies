@@ -386,16 +386,13 @@ public class ProfileAccountPlanAndBilling extends MPFragment {
                     }
 
                     billingCard.setText(userInfoResponse.getBillingCard());
-                    if (userInfoResponse.getNextBillingDate().equals("")) {
+                    if (userInfoResponse.getNextBillingDate()==null) {
                         billingDate.setText("Unknown");
                     } else {
-                        String currentDate = userInfoResponse.getNextBillingDate();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         try {
-                            Date currentBillingDateFormatted = format.parse(currentDate);
                             SimpleDateFormat SDFormat = new SimpleDateFormat("MMMM dd, yyyy");
-                            billingDate.setText(SDFormat.format(currentBillingDateFormatted));
-                        } catch (ParseException e) {
+                            billingDate.setText(SDFormat.format(userInfoResponse.getNextBillingDate()));
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }

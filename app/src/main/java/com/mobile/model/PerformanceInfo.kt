@@ -1,7 +1,7 @@
 package com.mobile.model
 
 import android.os.Parcelable
-import com.mobile.activities.TicketType
+import com.mobile.reservation.TicketType
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

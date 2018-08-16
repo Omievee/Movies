@@ -1,5 +1,6 @@
 package com.mobile.responses
 
+import com.mobile.model.ParcelableDate
 import com.mobile.model.UserInfo
 
 
@@ -14,7 +15,7 @@ class UserInfoResponse(
         var billingAddressLine1: String? = null,
         var billingAddressLine2: String? = null,
         var billingCard: String? = null,
-        var nextBillingDate: String? = null,
+        var nextBillingDate: ParcelableDate? = null,
         var shippingAddressLine1: String? = null,
         var shippingAddressLine2: String? = null,
         var plan: String? = null,

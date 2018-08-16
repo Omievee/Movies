@@ -3,6 +3,7 @@ package com.mobile.seats
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,6 @@ import com.mobile.model.TicketType
 import com.mobile.network.Api
 import com.mobile.network.RestClient
 import com.mobile.requests.TicketInfoRequest
-import com.mobile.reservation.Checkin
 import com.mobile.utils.showBottomFragment
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
@@ -87,19 +87,67 @@ class ConfirmDetailsFragment : Fragment() {
         disposable = listener?.payload()
                 ?.subscribe({
                     payload = it
-                    guestTicketsKey.visibility = when (it.totalGuestTickets) {
-                        0 -> View.GONE
-                        else -> View.VISIBLE
+                    billingCardOnfile.visibility = when (it.totalGuestTickets > 0 || it.checkin?.softCap == true) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
                     }
-                    billingCardOnfile.visibility = guestTicketsKey.visibility
+                    billingCardOnfile.text = when {
+                        UserPreferences.restrictions.cappedPlan?.remaining==0-> getString(R.string.billing_card_on_file)
+                        else -> getString(R.string.billing_card_on_file_abbreviated)
+                    }
+
+                    cancellationPolicy.text = when (it.checkin?.availability?.ticketType == TicketType.STANDARD) {
+                        true -> {
+                            TextViewCompat.setTextAppearance(cancellationPolicy, R.style.CancellationPolicy)
+                            getString(R.string.cancellation_and_refund_policy)
+                        }
+                        else -> {
+                            TextViewCompat.setTextAppearance(cancellationPolicy, R.style.ETicketCanNotBeCancelled)
+                            getString(R.string.e_ticket_can_not_be_cancelled)
+
+                        }
+                    }
+                    cancellationPolicy.setOnClickListener {v->
+                        when (it.checkin?.availability?.ticketType == TicketType.STANDARD) {
+                            true -> {
+                                showBottomFragment(SheetData(
+                                        title = getString(R.string.cancellation_and_refund_policy),
+                                        description = getString(R.string.cancellation_softcap),
+                                        subDescription = getString(R.string.cancellation_no_refunds_once_redeemed)
+                                ))
+                            }
+                            false -> {
+                            }
+                        }
+                    }
                     moviePosterHeader.bind(it)
                     guestTicketContainer.bind(it, freeClickListener)
 
                     getTickets.setOnClickListener {
-                        showDialogToReserveTickets()
+                        val checkin = payload?.checkin ?: return@setOnClickListener
+                        when (checkin.softCap == true) {
+                            true -> showSoftCapDialog()
+                            else -> showDialogToReserveTickets()
+                        }
                     }
                 }, {
                 })
+    }
+
+    private fun showSoftCapDialog() {
+        val context = activity ?: return
+        val checkin = payload?.checkin ?: return
+        AlertDialog.Builder(context)
+                .setTitle(R.string.agree_to_payment)
+                .setMessage(if (checkin.availability.isETicket()) {
+                    R.string.agree_to_payment_e_ticket_description
+                } else {
+                    R.string.agree_to_payment_description
+                })
+                .setPositiveButton(R.string.i_agree) { _, _ ->
+                    reserveTickets()
+                }
+                .setNegativeButton(R.string.go_back, null).show()
     }
 
     private fun showDialogToReserveTickets() {
@@ -159,7 +207,7 @@ class ConfirmDetailsFragment : Fragment() {
                         price = tpd.ticket.price,
                         seatPosition = seat?.asPosition(),
                         email = when {
-                            tpd.ticket.ticketType== GuestTicketType.CHILD_COMPANION->null
+                            tpd.ticket.ticketType == GuestTicketType.CHILD_COMPANION -> null
                             emails.hasNext() -> emails.next().email
                             else -> null
                         }
@@ -174,7 +222,8 @@ class ConfirmDetailsFragment : Fragment() {
                 .reserve(
                         TicketInfoRequest(
                                 performanceInfo = ProviderInfo(
-                                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId ?: 0,
+                                        tribuneTheaterId = payload.checkin.theater.tribuneTheaterId
+                                                ?: 0,
                                         normalizedMovieId = provideInfo.normalizedMovieId,
                                         externalMovieId = provideInfo.externalMovieId,
                                         format = provideInfo.format,

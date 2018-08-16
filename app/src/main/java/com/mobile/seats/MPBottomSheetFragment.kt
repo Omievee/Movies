@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.moviepass.R
-import kotlinx.android.synthetic.main.fragment_eticket_cancellation_policy.*
+import kotlinx.android.synthetic.main.fragment_mp_bottom_sheet.*
 
 class MPBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_eticket_cancellation_policy, container, false)
+        return inflater.inflate(R.layout.fragment_mp_bottom_sheet, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
