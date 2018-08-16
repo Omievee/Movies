@@ -1169,6 +1169,11 @@
         <item name="android:textColor">@color/red</item>
     </style>
 
+    <style name="CategoryHeader" parent="MPText_Bold">
+        <item name="android:paddingTop">@dimen/margin_half</item>
+        <item name="android:paddingBottom">@dimen/margin_half</item>
+    </style>
+
 
     <string name="no_cancellations_or_refunds_at_this_theater">No cancellations or refunds at this theater.</string>
     <string name="skip_this_promotion">Skip this promotion</string>

@@ -10,6 +10,7 @@ import com.mobile.application.Application
 import com.mobile.model.CapType
 import com.mobile.model.ParcelableDate
 import com.mobile.model.SurgeType
+import com.mobile.responses.CurrentMoviesResponse
 import com.mobile.rx.RxJava2CallAdapterFactory
 import com.mobile.session.SessionManager
 import com.moviepass.BuildConfig
@@ -68,7 +69,8 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideGson(): Gson {
-        return GsonBuilder()
+        lateinit var gson2:Gson
+        var gson = GsonBuilder()
                 .setLenient()
                 .registerTypeAdapter(object : TypeToken<ParcelableDate>() {
                     }.type, DateAdapter())
@@ -83,7 +85,16 @@ class ApiModule {
                 .registerTypeAdapter(object : TypeToken<RestrictionsCheckType>() {
 
                 }.type, RestrictionCapTypeAdapter())
+                .registerTypeAdapter(object : TypeToken<CurrentMoviesResponse>() {
+
+                }.type, object : CurrentMoviesResponseTypeAdapter() {
+                    override fun gson(): Gson {
+                        return gson2
+                    }
+                })
                 .create()
+        gson2 = gson
+        return gson
     }
 
     @Provides

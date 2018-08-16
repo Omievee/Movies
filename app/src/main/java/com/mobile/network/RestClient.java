@@ -45,8 +45,6 @@ public class RestClient {
     static String versionNumber = String.valueOf(BuildConfig.VERSION_NAME);
     static String androidOS = Build.VERSION.RELEASE;
 
-    static String a1URL = "https://a1.moviepass.com";
-
 
     private static Api sAuthenticatedAPI;
     private static GoWatchItApi sAuthenticatedAPIGoWatchIt;
@@ -196,68 +194,68 @@ public class RestClient {
         sAuthenticatedAPIGoWatchIt = sAuthenticatedInstanceGoWatchIt.create(GoWatchItApi.class);
     }
 
-    public static void setUpLocalStorage(Context context) {
-
-        localStorageAPI = null;
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-
-        if (Constants.DEBUG) {
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectTimeout(20, TimeUnit.SECONDS);
-        httpClient.readTimeout(20, TimeUnit.SECONDS);
-        httpClient.addInterceptor(logging);
-        File httpCacheDirectory = new File(context.getCacheDir(), "responses");
-
-        Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
-
-        httpClient.cache(cache);
-        CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-
-        httpClient.cookieJar(cookieJar);
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("user_id", "" + UserPreferences.INSTANCE.getUserId())
-                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
-                        .addHeader("auth_token", UserPreferences.INSTANCE.getAuthToken())
-                        .addHeader("Content-type", "application/json")
-                        .addHeader("Accept", "application/json")
-                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
-                HttpUrl url = original.url();
-                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        });
-
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
-                }.getType(), new DateAdapter())
-                .create();
-
-
-        localStorageInstance = new Retrofit.Builder()
-                .baseUrl(a1URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(httpClient.build())
-                .build();
-        //Request request = requestBuilder.build();
-        //                HttpUrl url = request.url();
-        //                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
-        localStorageAPI = localStorageInstance.create(Api.class);
-    }
+//    public static void setUpLocalStorage(Context context) {
+//
+//        localStorageAPI = null;
+//
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//
+//        if (Constants.DEBUG) {
+//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        } else {
+//            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+//        }
+//
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.connectTimeout(20, TimeUnit.SECONDS);
+//        httpClient.readTimeout(20, TimeUnit.SECONDS);
+//        httpClient.addInterceptor(logging);
+//        File httpCacheDirectory = new File(context.getCacheDir(), "responses");
+//
+//        Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024);
+//
+//        httpClient.cache(cache);
+//        CookieJar cookieJar =
+//                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+//
+//        httpClient.cookieJar(cookieJar);
+//        httpClient.addInterceptor(new Interceptor() {
+//            @Override
+//            public Response intercept(Interceptor.Chain chain) throws IOException {
+//                Request original = chain.request();
+//                // Request customization: add request headers
+//                Request.Builder requestBuilder = original.newBuilder()
+//                        .addHeader("user_id", "" + UserPreferences.INSTANCE.getUserId())
+//                        .addHeader("device_androidID", UserPreferences.INSTANCE.getDeviceAndroidID())
+//                        .addHeader("auth_token", UserPreferences.INSTANCE.getAuthToken())
+//                        .addHeader("Content-type", "application/json")
+//                        .addHeader("Accept", "application/json")
+//                        .addHeader("User-Agent", "moviepass/android/" + androidOS + "/v3/" + versionNumber + "/" + buildNumber);
+//                HttpUrl url = original.url();
+//                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
+//                Request request = requestBuilder.build();
+//                return chain.proceed(request);
+//            }
+//        });
+//
+//        Gson gson = new GsonBuilder()
+//                .setLenient()
+//                .registerTypeAdapter(new TypeToken<ParcelableDate>() {
+//                }.getType(), new DateAdapter())
+//                .create();
+//
+//
+//        localStorageInstance = new Retrofit.Builder()
+//                .baseUrl(a1URL)
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//                .client(httpClient.build())
+//                .build();
+//        //Request request = requestBuilder.build();
+//        //                HttpUrl url = request.url();
+//        //                requestBuilder.url(url.url().toString().replace("#env#", BuildConfig.ENVIRONMENT));
+//        localStorageAPI = localStorageInstance.create(Api.class);
+//    }
 
     public static void setUpRegistration(Context context) {
 

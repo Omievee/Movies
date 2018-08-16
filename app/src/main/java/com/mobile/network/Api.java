@@ -29,7 +29,7 @@ import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
-import com.mobile.responses.LocalStorageMovies;
+import com.mobile.responses.CurrentMoviesResponse;
 import com.mobile.responses.TheatersResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.PlanResponse;
@@ -181,7 +181,7 @@ public interface Api {
 
     /*ALL MOVIES FOR MAIN PAGE */
     @GET("/#env#/movies/current.json")
-    Call<LocalStorageMovies> getAllCurrentMovies();
+    Call<CurrentMoviesResponse> getAllCurrentMovies();
 
 
     /* ALL MOVIES FOR SEARCH */

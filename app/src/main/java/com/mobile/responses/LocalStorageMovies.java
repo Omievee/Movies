@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class LocalStorageMovies {
+
     List<Movie> newReleases;
     List<Movie> featured;
     List<Movie> topBoxOffice;

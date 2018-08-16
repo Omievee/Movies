@@ -18,7 +18,6 @@ import com.helpshift.exceptions.InstallException;
 import com.mobile.UserPreferences;
 import com.mobile.analytics.AnalyticsManager;
 import com.mobile.di.DaggerAppComponent;
-import com.mobile.helpers.RealmTaskService;
 import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.network.RestClient;
 import com.mobile.utils.FastStack;
@@ -85,14 +84,11 @@ public class Application extends MultiDexApplication implements HasActivityInjec
         UserPreferences.INSTANCE.load(this, gson);
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
-        RealmTaskService.scheduleRepeatTask(this);
-        RealmTaskService.scheduleRepeatTaskTheaters(this);
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name(Realm.DEFAULT_REALM_NAME).build();
         Realm.setDefaultConfiguration(config);
         RestClient.setupAuthenticatedWebClient(getApplicationContext());
         RestClient.setupAuthenticatedGoWatchIt(getApplicationContext());
-        RestClient.setUpLocalStorage(getApplicationContext());
         RestClient.setUpRegistration(getApplicationContext());
         RestClient.setupMicroService(getApplicationContext());
         InstallConfig installConfig = new InstallConfig.Builder().build();
@@ -123,8 +119,9 @@ public class Application extends MultiDexApplication implements HasActivityInjec
                     "moviepass.helpshift.com",
                     "moviepass_platform_20170512180003329-05097f788df2b3a",
                     installConfig);
-
-            Core.login(HelpshiftHelper.Companion.getHelpshiftUser());
+            if(UserPreferences.INSTANCE.getUserId()!=0) {
+                Core.login(HelpshiftHelper.Companion.getHelpshiftUser());
+            }
         } catch (InstallException e) {
         }
     }

@@ -1,31 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_item_movie_poster"
-    android:layout_width="130dp"
-    android:layout_height="220dp"
-    android:layout_marginLeft="@dimen/margin_half"
-    android:elevation="4dp"
-    android:paddingBottom="5dp">
+    android:id="@+id/list_item_movie_poster">
 
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/ticket_top_red_dark"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            fresco:roundedCornerRadius="2dp"
-            android:elevation="5dp"
-            fresco:actualImageScaleType="fitXY"
-            fresco:failureImageScaleType="centerInside"
-            />
-
-
-    </FrameLayout>
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ticket_top_red_dark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        fresco:actualImageScaleType="fitXY"
+        fresco:failureImageScaleType="centerInside"
+        fresco:roundedCornerRadius="2dp" />
 
     <TextView
         android:id="@+id/RELEASEDATE"
@@ -38,7 +23,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/poster_movie_title"
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -52,5 +37,4 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-
-</RelativeLayout>
+</merge>

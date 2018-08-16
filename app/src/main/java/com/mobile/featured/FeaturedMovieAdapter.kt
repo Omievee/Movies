@@ -19,8 +19,10 @@ class FeaturedMovieAdapter(private val featured: List<Movie>, val moviePosterCli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType == TYPE_TRAILER) {
-            true -> BaseViewHolder(MovieTrailerView(parent.context, moviePosterClickListener = moviePosterClickListener))
-            else -> BaseViewHolder(MoviePosterView(parent.context, moviePosterClickListener = moviePosterClickListener))
+            true -> BaseViewHolder(MovieTrailerView(parent.context))
+            else -> BaseViewHolder(LandscapePosterView(parent.context).apply {
+                this.moviePosterClickListener = FeaturedMovieAdapter@this.moviePosterClickListener
+            })
         }
     }
 
@@ -45,7 +47,7 @@ class FeaturedMovieAdapter(private val featured: List<Movie>, val moviePosterCli
 
         if (view is MovieTrailerView) {
             view.bind(movie, enablePlayback)
-        } else if (view is MoviePosterView) {
+        } else if (view is LandscapePosterView) {
             view.bind(movie)
         }
         view.videoTitle.text = movie.title

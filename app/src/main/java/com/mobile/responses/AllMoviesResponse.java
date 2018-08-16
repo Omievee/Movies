@@ -9,7 +9,7 @@ public class AllMoviesResponse {
     String title;
     String titleNormalized;
     String tomatoRating;
-    String runningTime;
+    int runningTime;
     String releaseDate;
     String rating;
     String synopsis;
@@ -35,7 +35,7 @@ public class AllMoviesResponse {
         return tomatoRating;
     }
 
-    public String getRunningTime() {
+    public int getRunningTime() {
         return runningTime;
     }
 

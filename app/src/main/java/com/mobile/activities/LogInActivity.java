@@ -22,7 +22,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appboy.Appboy;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -393,7 +392,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
 
-            Appboy.getInstance(LogInActivity.this).changeUser(user.getEmail());
             INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
             analyticsManager.onUserLoggedIn(user);
             checkRestrictions(user);

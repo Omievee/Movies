@@ -1,5 +1,6 @@
 package com.mobile.di
 
+import com.google.gson.Gson
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.analytics.AnalyticsManagerImpl
 import com.mobile.application.Application
@@ -11,7 +12,10 @@ import com.mobile.home.RestrictionsManager
 import com.mobile.keyboard.KeyboardManager
 import com.mobile.keyboard.KeyboardManagerImpl
 import com.mobile.location.LocationModule
+import com.mobile.movie.MoviesManager
+import com.mobile.movie.MoviesManagerImpl
 import com.mobile.network.Api
+import com.mobile.network.StaticApi
 import com.mobile.network.StaticApiModule
 import com.mobile.session.SessionManager
 import com.mobile.session.SessionManagerImpl
@@ -45,6 +49,11 @@ class AppModule {
     @Singleton
     fun sessionManager(): SessionManager {
         return SessionManagerImpl()
+    }
+
+    @Provides
+    fun provideMoviesManager(api: StaticApi, gson: Gson, application: Application): MoviesManager {
+        return MoviesManagerImpl(application, gson, api)
     }
 
     @Provides

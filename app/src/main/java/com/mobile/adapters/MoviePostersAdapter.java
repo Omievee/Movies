@@ -29,7 +29,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmList;
 
 /**
  * Created by ryan on 4/26/17.
@@ -57,7 +56,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.list_item_movie_poster)
         RelativeLayout listItemMoviePoster;
-        @BindView(R.id.poster_movie_title)
+        @BindView(R.id.title)
         TextView title;
         @BindView(R.id.ticket_top_red_dark)
         SimpleDraweeView mNewReleasePosterDV;
@@ -70,7 +69,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
             super(v);
             ButterKnife.bind(this, v);
             listItemMoviePoster = v.findViewById(R.id.list_item_movie_poster);
-            title = v.findViewById(R.id.poster_movie_title);
+            title = v.findViewById(R.id.title);
             mNewReleasePosterDV = v.findViewById(R.id.ticket_top_red_dark);
             comingSoon = v.findViewById(R.id.RELEASEDATE);
             frame = v.findViewById(R.id.frame);
@@ -79,7 +78,7 @@ public class MoviePostersAdapter extends RecyclerView.Adapter<MoviePostersAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_movie_poster, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_vertical_movie_poster, parent, false);
         return new ViewHolder(view);
     }
 

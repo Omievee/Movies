@@ -7,9 +7,11 @@ import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.crashlytics.android.answers.LoginEvent
 import com.crashlytics.android.answers.PurchaseEvent
+import com.helpshift.Core
 import com.mobile.UserPreferences
 import com.mobile.application.Application
 import com.mobile.gowatchit.GoWatchItManager
+import com.mobile.helpshift.HelpshiftHelper
 import com.mobile.model.*
 import com.mobile.reservation.Checkin
 import com.mobile.responses.ReservationResponse
@@ -123,6 +125,7 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
         Crashlytics.setUserIdentifier(valueOf(user.id))
         onBrazeDataSetUp(user)
         Answers.getInstance().logLogin(LoginEvent().putSuccess(true))
+        Core.login(HelpshiftHelper.getHelpshiftUser())
     }
 
     override fun onUserLoggedOut(user: User?) {
@@ -131,7 +134,6 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
 
 
     override fun onBrazeDataSetUp(user: User) {
-
         appBoy.changeUser(valueOf(user.id))
         appBoy.currentUser.setFirstName(user.firstName)
         appBoy.currentUser.setLastName(user.lastName)

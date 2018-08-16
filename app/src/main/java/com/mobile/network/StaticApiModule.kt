@@ -2,6 +2,7 @@ package com.mobile.network
 
 import com.google.gson.Gson
 import com.mobile.rx.RxJava2CallAdapterFactory
+import com.mobile.session.SessionManager
 import com.moviepass.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -20,9 +21,11 @@ class StaticApiModule {
     @Singleton
     @Static
     fun provideOkHttpClient(
-            cache: Cache
+            cache: Cache,
+            sessionManager: SessionManager
     ): OkHttpClient.Builder {
         val httpClient = OkHttpClient.Builder()
+        httpClient.addInterceptor(AuthenticatedRequestInterceptor(sessionManager = sessionManager))
         httpClient.connectTimeout(20, TimeUnit.SECONDS)
         httpClient.readTimeout(45, TimeUnit.SECONDS)
         httpClient.cache(cache)
