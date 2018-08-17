@@ -63,6 +63,7 @@ class AlertScreenFragment : MPFragment(), AlertScreenView {
         if (alertObject.dismissible) {
             UserPreferences.alertDisplayedId = alertObject.id
         }
+        presenter.onDestroy()
     }
 
     override fun hideWebLink() {

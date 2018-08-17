@@ -1,15 +1,19 @@
 package com.mobile.alertscreen
 
 import com.mobile.model.Alert
+import com.mobile.rx.Schedulers
+import io.reactivex.Single
+import io.reactivex.SingleOnSubscribe
+import io.reactivex.disposables.Disposable
 import okhttp3.*
 import java.io.IOException
 
 
 class AlertScreenPresenter(val view: AlertScreenView) {
 
+    var dismissSub:Disposable?=null
 
     fun onCreateView(alert: Alert) {
-
         setAlert(alert)
         determineIfDismissible(alert)
         determineShowWebLink(alert)
@@ -44,14 +48,31 @@ class AlertScreenPresenter(val view: AlertScreenView) {
 
     }
 
+    fun onDestroy(){
+        dismissSub?.dispose()
+    }
+
     fun userClickedConfirm(id: String?, url: String?) {
         id ?: return
         url ?: return
 
-        if (run(url)) {
-            view.dismissAlertScreen(id)
-        } else {
-            view.showFailureDialog()
+        dismissSub = Single.create(SingleOnSubscribe<Boolean> {
+            try {
+                val result = run(url)
+                if (!it.isDisposed) {
+                    it.onSuccess(result)
+                }
+            } catch (e: Exception) {
+                if (!it.isDisposed) {
+                    it.onSuccess(false)
+                }
+            }
+        }).compose(Schedulers.singleDefault()).subscribe { t1, _ ->
+            if (t1 == true) {
+                view.dismissAlertScreen(id)
+            } else {
+                view.showFailureDialog()
+            }
         }
     }
 
@@ -72,7 +93,7 @@ class AlertScreenPresenter(val view: AlertScreenView) {
 
             override fun onResponse(call: Call?, response: Response?) {
                 response ?: return
-                passedResponse = response.isSuccessful
+                passedResponse = response.code() == 201
             }
 
             @Throws(IOException::class)
