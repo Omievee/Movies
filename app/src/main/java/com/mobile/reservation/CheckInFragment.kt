@@ -221,7 +221,7 @@ class CheckInFragment : MPFragment(), CheckInFragmentView {
     override fun showCheckin(checkin:Checkin) {
         continueOrCheckin.apply {
             continueOrCheckin.text = when (checkin.availability.ticketType) {
-                TicketType.STANDARD -> R.string.continue_button
+                TicketType.STANDARD -> R.string.check_in_button
                 else -> R.string.continue_to_eticketing
             }
             setOnClickListener {
