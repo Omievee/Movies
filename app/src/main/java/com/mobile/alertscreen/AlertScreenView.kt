@@ -5,6 +5,7 @@ import com.mobile.model.Alert
 interface AlertScreenView {
 
     fun dismissAlertScreen(id: String?)
+    fun close(id: String?)
     fun hideDismissIcon()
     fun setAlert(alert: Alert)
     fun showRedConfirmButton(alert: Alert)

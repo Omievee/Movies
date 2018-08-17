@@ -236,8 +236,8 @@ class ConfirmDetailsFragment : Fragment() {
                                             false -> guestTickets
                                         }
                                 ),
-                                longitude = lat,
-                                latitude = lng
+                                longitude = lng,
+                                latitude = lat
                         )
                 )
                 .doOnSubscribe {
