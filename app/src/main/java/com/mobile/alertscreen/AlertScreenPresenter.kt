@@ -69,7 +69,7 @@ class AlertScreenPresenter(val view: AlertScreenView) {
             }
         }).compose(Schedulers.singleDefault()).subscribe { t1, _ ->
             if (t1 == true) {
-                view.dismissAlertScreen(id)
+                view.close(id)
             } else {
                 view.showFailureDialog()
             }
@@ -85,22 +85,8 @@ class AlertScreenPresenter(val view: AlertScreenView) {
                 .url(url)
                 .build()
 
-        var passedResponse = false
-        val response = client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call?, e: IOException?) {
-                passedResponse = false
-            }
-
-            override fun onResponse(call: Call?, response: Response?) {
-                response ?: return
-                passedResponse = response.code() == 201
-            }
-
-            @Throws(IOException::class)
-            fun onResponse(response: Response) {
-            }
-        });
-        return passedResponse
+        val response = client.newCall(request).execute()
+        return response.isSuccessful
     }
 
 }

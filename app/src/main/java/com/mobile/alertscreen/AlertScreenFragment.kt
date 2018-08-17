@@ -23,6 +23,8 @@ class AlertScreenFragment : MPFragment(), AlertScreenView {
 
     lateinit var alertObject: Alert
 
+    var dismissOverride:Boolean =false
+
     @Inject
     lateinit var presenter: AlertScreenPresenter
 
@@ -56,6 +58,12 @@ class AlertScreenFragment : MPFragment(), AlertScreenView {
             UserPreferences.alertDisplayedId = id
             activity?.onBackPressed()
         }
+    }
+
+    override fun close(id: String?) {
+        UserPreferences.alertDisplayedId = id
+        dismissOverride = true
+        activity?.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -127,6 +135,9 @@ class AlertScreenFragment : MPFragment(), AlertScreenView {
     }
 
     override fun onBack(): Boolean {
+        if(dismissOverride) {
+            return false
+        }
         return !alertObject.dismissible
     }
 }
