@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.mobile.extensions.DropDownFields
 import com.mobile.extensions.CustomFlatDropDownClickListener
+import com.mobile.extensions.DropDownFields
 import com.mobile.profile.CancellationReason
 import com.mobile.profile.ProfileCancellationPresenter
 import com.mobile.profile.ProfileCancellationView
@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.profile_cancellation_view_layout.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-
 
 
 class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, CustomFlatDropDownClickListener {
@@ -35,7 +34,7 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
 
         spinnerList = CancellationReason.getList()
 
-        spinnerCancelReason.bind(CancellationReason.getTitle(), spinnerList ?: listOf(),this,true)
+        spinnerCancelReason.bind(CancellationReason.getTitle(), spinnerList ?: listOf(), this, true)
 
         cancelbutton.setOnClickListener {
             presenter.onSubmitCancellation(getReasonForCancellation(), cancelComments.getComments())
@@ -106,7 +105,10 @@ class ProfileCancellationFragment : MPFragment(), ProfileCancellationView, Custo
         val builder = AlertDialog.Builder(context, R.style.CUSTOM_ALERT)
 
 
-        var message: String = getString(R.string.profile_cancel_remain_active,SimpleDateFormat("M/d/yy"))
+        var message: String = getString(R.string.profile_cancel_remain_active, when (billingDate) {
+            null -> ""
+            else -> SimpleDateFormat("M/d/yy").format(billingDate)
+        })
         builder.setMessage(message)
                 .setTitle(R.string.profile_cancel_are_you_sure)
                 .setPositiveButton(getString(R.string.cancel_membership)) { _, _ ->
