@@ -39,6 +39,26 @@ class MPBottomSheetFragment : BottomSheetDialogFragment() {
         arrayOf(subDescription, error, title, description).forEach {
             it.gravity = data.gravity
         }
+        errorContainer.visibility = when (data.bottomErrorLink) {
+            null -> View.GONE
+            else -> {
+                errorLink.text = data.bottomErrorLink.title
+                errorIcon.apply {
+                    data.bottomErrorLink.iconRes?.let {
+                        visibility = View.VISIBLE
+                        setImageResource(it)
+                    } ?: run {
+                        visibility = View.GONE
+                    }
+                }
+                errorContainer.setOnClickListener {
+                    val link = parentFragment as? BottomLinkListener ?: return@setOnClickListener
+                    link.onLink(link = data.bottomErrorLink)
+                }
+                View.VISIBLE
+
+            }
+        }
 
     }
 

@@ -13,12 +13,12 @@ import com.mobile.analytics.AnalyticsManager
 import com.mobile.billing.MissingBillingFragment
 import com.mobile.fragments.MPFragment
 import com.mobile.model.*
+import com.mobile.requests.PendingCharges
 import com.mobile.requests.TicketInfoRequest
 import com.mobile.reservation.Checkin
 import com.mobile.reservation.ReservationActivity
-import com.mobile.seats.BringAFriendListener
-import com.mobile.seats.SelectSeatPayload
-import com.mobile.seats.SheetData
+import com.mobile.rx.PendingChargesError
+import com.mobile.seats.*
 import com.mobile.session.UserManager
 import com.mobile.tickets.TicketManager
 import com.mobile.utils.expandTouchArea
@@ -29,7 +29,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_confirm_surcharge.*
 import javax.inject.Inject
 
-class ConfirmSurgeFragment : MPFragment() {
+class ConfirmSurgeFragment : MPFragment(), BottomLinkListener {
 
     @Inject
     lateinit var locationManager: com.mobile.location.LocationManager
@@ -54,6 +54,10 @@ class ConfirmSurgeFragment : MPFragment() {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
         listener = parentFragment as? BringAFriendListener
+    }
+
+    override fun onLink(link: ErrorLink) {
+        showFragment(MissingBillingFragment())
     }
 
     override fun onDestroy() {
@@ -216,12 +220,26 @@ class ConfirmSurgeFragment : MPFragment() {
                                     reservation = it)
                             ))
                 }, {
-                    val error = it as? ApiError ?: return@subscribe
-                    showError(error)
+                    when(it) {
+                        is PendingChargesError-> showErrorSheet(it)
+                        is ApiError-> showError(it)
+                    }
                     analyticsManager.onCheckinFailed(checkIn)
                 })
 
     }
+
+    private fun showErrorSheet(error: PendingChargesError) {
+        MPBottomSheetFragment.newInstance(SheetData(
+                title = resources.getString(R.string.update_payment_method),
+                description = error.error.message,
+                error = null,
+                bottomErrorLink = ErrorLink(title = resources.getString(R.string.update_payment_information),
+                        iconRes = R.drawable.arrowforward)
+        )
+        ).show(childFragmentManager, "bottom_sheet")
+    }
+
 
     private fun showError(apiError: ApiError) {
         val context = activity ?: return
