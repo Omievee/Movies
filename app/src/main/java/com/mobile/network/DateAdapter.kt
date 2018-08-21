@@ -19,6 +19,9 @@ class DateAdapter : JsonSerializer<ParcelableDate>, JsonDeserializer<ParcelableD
 
         fun deseralize(dateString: String? = null): ParcelableDate? {
             val str = dateString ?: return null
+            if(str.isEmpty()) {
+                return null
+            }
             val sdf: SimpleDateFormat = when {
                 str.length > 8 -> {
                     val ch = str.get(str.length - 4)
