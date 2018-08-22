@@ -33,7 +33,7 @@ class HelpshiftHelper {
             val checkinAttempt = UserPreferences.lastCheckInAttempt
             val checkedIn: Boolean
 
-            if (token != null) {
+            if (token != null && token.reservation.reservation!=null) {
                 val rs = token.reservation.reservation
                 checkedIn = rs.expiration > System.currentTimeMillis()
                 val starttime = token.getTimeAsDate()
