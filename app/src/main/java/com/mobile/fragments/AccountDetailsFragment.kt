@@ -69,9 +69,15 @@ class AccountDetailsFragment : MPFragment() {
         }
         planSub?.dispose()
         planSub = api.getUserDataRx(UserPreferences.userId).subscribe { t1, t2 ->
+            activity?: return@subscribe
             planResponse = t1
             adapter.data = data
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        planSub?.dispose()
     }
 
     val data: ProfileData
