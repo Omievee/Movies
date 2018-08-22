@@ -113,7 +113,7 @@ class SeatsView(context: Context, attributeSet: AttributeSet? = null) : Constrai
         )
         val diffy = data.totalColumns * seatWidth
         val diff = (seatsContainerWidth - diffy) / 2
-        layoutManager.setTotalColumnCount(data.totalColumns)
+        layoutManager.totalColumnCount = data.totalColumns
         adapter?.data = data
         when (!scrolled) {
             diffy < seatsContainerWidth -> {
