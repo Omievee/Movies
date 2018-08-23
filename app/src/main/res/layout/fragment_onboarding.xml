@@ -1,0 +1,115 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/logoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/titleContainer"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight=".8">
+
+        <ImageView
+            android:id="@+id/moviepasslogo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/moviepass_horizontal_text"
+            android:adjustViewBounds="true"
+            android:tint="@color/red"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintWidth_percent=".6" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/body"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoContainer"
+        app:layout_constraintVertical_weight=".8"
+        tools:text="Page One">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/Onboard_Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginStart="@dimen/margin_standard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/body"
+        style="@style/Onboard_Body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/section_img"
+        app:layout_constraintTop_toBottomOf="@id/titleContainer"
+        app:layout_constraintVertical_weight="1" />
+
+    <ImageView
+        android:id="@+id/section_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/findTheaters"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/body"
+        app:layout_constraintVertical_weight="3"
+        app:layout_constraintWidth_percent=".58" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/findTheaters"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/section_img"
+        app:layout_constraintVertical_weight="1">
+
+        <TextView
+            android:id="@+id/nearMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Find theaters near me"
+            android:textAlignment="center"
+            android:textColor="@color/almost_white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/arrowforward"
+            android:textAlignment="center"
+            android:tint="@color/new_red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/nearMe"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

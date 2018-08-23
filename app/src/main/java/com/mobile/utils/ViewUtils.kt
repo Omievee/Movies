@@ -11,3 +11,12 @@ fun View.padding(
             start, top, bottom, end
     )
 }
+
+val View.navBarHeight:Int
+get() {
+    val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    if (resourceId > 0) {
+        return resources.getDimensionPixelSize(resourceId)
+    }
+    return 0
+}

@@ -166,13 +166,13 @@
 
         <activity
             android:name="com.mobile.activities.LogInActivity"
-            android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:parentActivityName="com.mobile.onboard.OnboardingActivityV2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:screenOrientation="portrait"
-                android:value="com.mobile.activities.OnboardingActivity" />
+                android:value="com.mobile.onboard.OnboardingActivityV2" />
         </activity>
         <activity
             android:name="com.mobile.home.HomeActivity"
@@ -196,18 +196,18 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.mobile.activities.OnboardingActivity"
+            android:name="com.mobile.onboard.OnboardingActivityV2"
             android:label="@string/title_activity_onboarding"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.SignUpFirstOpenActivity"
-            android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:parentActivityName="com.mobile.onboard.OnboardingActivityV2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.OnboardingActivity" />
+                android:value="com.mobile.onboard.OnboardingActivityV2" />
         </activity>
         <activity
             android:name="com.mobile.activities.SignUpActivity"

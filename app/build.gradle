@@ -272,8 +272,7 @@ dependencies {
     //material serach
     implementation 'com.github.mancj:MaterialSearchBar:0.7.5'
 
-    //Umano Sliding panel
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'com.romandanylyk:pageindicatorview:1.0.1'
 
     //Burred Backgrounds
     implementation 'jp.wasabeef:blurry:2.1.1'
