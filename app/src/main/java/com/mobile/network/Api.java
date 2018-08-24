@@ -179,21 +179,6 @@ public interface Api {
     @POST("/rest/v1/subscription/cancellation")
     Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
 
-    /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/#env#/movies/current.json")
-    Call<CurrentMoviesResponse> getAllCurrentMovies();
-
-
-    /* ALL MOVIES FOR SEARCH */
-    @GET("/#env#/movies/all.json")
-    Call<List<AllMoviesResponse>> getAllMovies();
-
-
-    /* ALL THEATERS */
-    @GET("/theaters/all.json")
-    Call<TheatersResponse> getAllMoviePassTheaters();
-
-
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")
     Call<RestrictionsResponse> getInterstitialAlert(@Path("userId") int userId);
