@@ -12,7 +12,9 @@ import com.mobile.adapters.BasicDiffCallback
 import com.mobile.model.UserInfo
 import com.mobile.network.Api
 import com.mobile.profile.*
+import com.mobile.recycler.decorator.SpaceDecorator
 import com.mobile.responses.UserInfoResponse
+import com.mobile.utils.navBarHeight
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.disposables.Disposable
@@ -125,6 +127,7 @@ class AccountDetailsFragment : MPFragment() {
         backButton.setOnClickListener { activity?.onBackPressed() }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight))
         recyclerView.itemAnimator = null
     }
 

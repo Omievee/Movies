@@ -6,4 +6,5 @@ interface MoviesView {
     fun hideProgress()
     fun showProgress()
     fun updateAdapter(t1: CurrentMoviesResponse)
+    fun showSubscriptionActivationRequired()
 }

@@ -32,7 +32,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
     @Inject
     lateinit var presenter: MoviesFragmentPresenter
 
-    val movieClickListener:MoviePosterClickListener = object : MoviePosterClickListener {
+    val movieClickListener: MoviePosterClickListener = object : MoviePosterClickListener {
         override fun onMoviePosterClick(movie: Movie) {
             showFragment(ScreeningsFragment.newInstance(ScreeningsData(
                     movie = movie
@@ -65,6 +65,11 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         swipeRefresh.isRefreshing = true
     }
 
+    override fun showSubscriptionActivationRequired() {
+        activity ?: return
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -84,7 +89,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
                 scrolled += dy
                 val height = 9 * resources.getDisplayMetrics().heightPixels / 16
                 val color = ContextCompat.getColor(context ?: return, R.color.bottomNav)
-                val percent = scrolled/height
+                val percent = scrolled / height
                 when {
                     scrolled > height -> {
                         toolbar.setBackgroundResource(R.color.bottomNav)
@@ -92,7 +97,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
                     }
                     scrolled < height -> {
                         toolbar.setBackgroundColor(Color.argb((Math.min(Color.alpha(color).toFloat(), percent * scrolled).toInt()), red(color), green(color), blue(color)))
-                        constraintSet.constrainPercentWidth(moviepassHeader.id,Math.max(.333f,(1-percent) * .45f))
+                        constraintSet.constrainPercentWidth(moviepassHeader.id, Math.max(.333f, (1 - percent) * .45f))
 
                     }
                 }
