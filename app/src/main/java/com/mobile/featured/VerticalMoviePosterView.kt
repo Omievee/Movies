@@ -18,8 +18,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 import android.os.Build
 
 
-class VerticalMoviePosterView(context: Context?,
-                          attrs: AttributeSet? = null
+open class VerticalMoviePosterView(context: Context?,
+                                   attrs: AttributeSet? = null
 
 
 ) : ConstraintLayout(context, attrs) {

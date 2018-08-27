@@ -8,7 +8,7 @@ import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
-import com.mobile.history.PastReservationsFragment
+import com.mobile.history.HistoryFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.profile.ProfileCancellationModule
@@ -79,7 +79,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun pastReservationsFragment(): PastReservationsFragment
+    fun pastReservationsFragment(): HistoryFragment
 
     @FragmentScope
     @ContributesAndroidInjector
