@@ -112,12 +112,12 @@ class ReservationActivity : MPActivty() {
         fun newInstance(context: Context, reservation: ScreeningToken, canClose: Boolean = false): Intent {
             return Intent(context, ReservationActivity::class.java).apply {
                 val rs = reservation.reservation
-                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName?:"" }?: rs.reservation.seats
+                val seatsToUse:List<String>? = reservation.seatSelected?.map { it.seatName?:"" }?: rs.reservation?.seats
                 val re2:Reservation2? = rs.let {
                     Reservation2(
-                            checkinId = rs.reservation.id,
-                            createdAt = rs.reservation.expiration,
-                            id = rs.reservation.id,
+                            checkinId = rs.reservation?.id?:0,
+                            createdAt = rs.reservation?.expiration,
+                            id = rs.reservation?.id,
                             _showtime = reservation.checkIn.availability.startTime.let {
                                 try {
                                     SimpleDateFormat("hh:mm a", Locale.US).parse(it).time

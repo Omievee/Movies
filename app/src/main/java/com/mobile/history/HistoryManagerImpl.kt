@@ -24,7 +24,9 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
     init {
         sessionManager.loggedOut()
                 .subscribe {
-                    realmHistory.get().deleteAll()
+                    realmHistory.get().executeTransaction {
+                        it.deleteAll()
+                    }
                 }
     }
 

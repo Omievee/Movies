@@ -11,7 +11,6 @@ class DateAdapter : JsonSerializer<ParcelableDate>, JsonDeserializer<ParcelableD
     companion object {
         private val PERIOD = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
         private val COLON = SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.US)
-        private val T = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS", Locale.US)
         private val YMD = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         private val HM = SimpleDateFormat("HH:mm:ss", Locale.US)
         private val HMA = SimpleDateFormat("hh:mm a", Locale.US)
@@ -19,6 +18,9 @@ class DateAdapter : JsonSerializer<ParcelableDate>, JsonDeserializer<ParcelableD
 
         fun deseralize(dateString: String? = null): ParcelableDate? {
             val str = dateString ?: return null
+            if(str.isEmpty()) {
+                return null
+            }
             val sdf: SimpleDateFormat = when {
                 str.length > 8 -> {
                     val ch = str.get(str.length - 4)

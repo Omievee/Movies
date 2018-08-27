@@ -21,7 +21,7 @@ import javax.inject.Inject
 class PastReservationsFragment : MPFragment(), HistoryPosterClickListener {
 
 
-    var historyAdapter: HistoryAdapter? = null
+    var historyAdapter: HistoryAdapter = HistoryAdapter(this)
 
 
     @Inject
@@ -41,7 +41,6 @@ class PastReservationsFragment : MPFragment(), HistoryPosterClickListener {
         val manager = GridLayoutManager(activity, 3, GridLayoutManager.VERTICAL, false)
 
         historyReycler?.layoutManager = manager
-        historyAdapter = HistoryAdapter(this)
         historyReycler?.adapter = historyAdapter
 
         progress.visibility = View.VISIBLE
@@ -54,20 +53,25 @@ class PastReservationsFragment : MPFragment(), HistoryPosterClickListener {
     }
 
     fun loadData() {
+        activity ?: return
         progress.visibility = View.VISIBLE
 
         historySub?.dispose()
 
-        historySub = historyManager.getHistory().doFinally { progress.visibility = View.GONE }?.subscribe({ res ->
-            historyAdapter?.setData(res)
+        historySub = historyManager.getHistory().doFinally {
+            activity?: return@doFinally
+            progress.visibility = View.GONE
+        }?.subscribe({ res ->
+            activity?: return@subscribe
+            historyAdapter.setData(res)
 
             when (res.size) {
                 0 -> {
-                    historyReycler?.visibility = View.GONE
+                    historyReycler.visibility = View.GONE
                     NoMoives.visibility = View.VISIBLE
                 }
                 else -> {
-                    historyReycler?.visibility = View.VISIBLE
+                    historyReycler.visibility = View.VISIBLE
                     NoMoives.visibility = View.GONE
                 }
             }
@@ -85,13 +89,9 @@ class PastReservationsFragment : MPFragment(), HistoryPosterClickListener {
         val TAG = PastReservationsFragment::class.java.simpleName
 
         fun newInstance(): PastReservationsFragment {
-
-            val args = Bundle()
-
-            val fragment = PastReservationsFragment()
-            fragment.arguments = args
-
-            return fragment
+            return PastReservationsFragment().apply {
+                arguments = Bundle()
+            }
         }
     }
 }

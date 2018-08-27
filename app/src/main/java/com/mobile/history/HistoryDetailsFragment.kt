@@ -131,11 +131,13 @@ class HistoryDetailsFragment : MPFragment() {
 
         historySub = historyManagerImpl.submitRating(history, wasGood)
                 .doAfterSuccess {
+                    activity?: return@doAfterSuccess
                     if (fromRateScreen) {
                         historyTitle.text = getString(R.string.history_rating_thanks)
                     }
                 }
                 .subscribe({ res ->
+                    activity?: return@subscribe
                     onHistorySaved(res)
                 }, {
 
