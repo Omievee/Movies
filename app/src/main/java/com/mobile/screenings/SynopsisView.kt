@@ -18,7 +18,7 @@ class SynopsisView(context: Context?, attrs: AttributeSet?=null) : ConstraintLay
 
     fun bind(movie: Movie) {
         synopsisTitle.text = when {
-            movie.isComingSoon -> movie.releaseDateFormatted
+            movie.isComingSoon -> resources.getString(R.string.in_theaters,movie.releaseDateFormatted)
             else -> movie.title
         }
         synopsisText.text = movie.synopsis

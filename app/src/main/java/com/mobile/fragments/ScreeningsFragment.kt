@@ -26,11 +26,9 @@ import com.mobile.reservation.Checkin
 import com.mobile.responses.ScreeningsResponseV2
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.screenings.PinnedBottomSheetBehavior
-import com.mobile.seats.SheetData
 import com.mobile.surge.PeakPricingActivity
 import com.mobile.utils.highestElevation
 import com.mobile.utils.isComingSoon
-import com.mobile.utils.showBottomFragment
 import com.mobile.utils.showTheaterBottomSheetIfNecessary
 import com.moviepass.R
 import dagger.android.support.AndroidSupportInjection

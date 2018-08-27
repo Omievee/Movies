@@ -761,6 +761,7 @@
     <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
     <string name="log_in">Log In</string>
     <string name="not_a_member_join_today">Not a member? Join today!</string>
+    <string name="in_theaters">In Theaters %1$s</string>
 
 
 </resources>

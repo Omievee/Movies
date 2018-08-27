@@ -11,8 +11,7 @@
         android:id="@+id/synopsisTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_half"
-        android:padding="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_standard"
         android:textColor="@color/almost_white"
         android:textSize="16sp"
         android:textStyle="bold" />
@@ -21,14 +20,15 @@
         android:id="@+id/synopsisText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_half"
+        android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintTop_toBottomOf="@id/synopsisTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginRight="@dimen/margin_standard"
         android:layout_marginLeft="@dimen/margin_standard"
         android:alpha=".8"
-        android:lineSpacingExtra="2dp"
-        android:padding="@dimen/margin_half"
+        android:lineSpacingExtra="4sp"
+        android:paddingTop="@dimen/margin_half"
+        android:paddingBottom="@dimen/margin_half"
         android:textColor="@color/almost_white"
         android:textSize="14sp" />
 </merge>
