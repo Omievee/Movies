@@ -1,7 +1,6 @@
 package com.mobile.profile;
 
 import com.mobile.di.FragmentScope;
-import com.mobile.fragments.ProfileCancellationFragment;
 import com.mobile.network.Api;
 
 import dagger.Module;

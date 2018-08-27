@@ -9,6 +9,5 @@ interface ProfileCancellationView {
     fun successfullCancellation(billingDate: String?)
     fun unccessfullCancellation(message: String)
     fun bindView()
-    fun showErrorMessage()
-    fun hideErrorMessage()
+    fun showErrorDialog(error: Int)
 }

@@ -18,6 +18,7 @@
         android:layout_marginEnd="@dimen/margin_half"
         android:text="@string/required"
         android:visibility="invisible"
+        android:textSize="@dimen/text_size_16"
         app:layout_constraintEnd_toStartOf="@id/arrow"
         app:layout_constraintTop_toTopOf="@id/title" />
 

@@ -5,7 +5,8 @@ enum class CancellationReason(val code: Int, val reasonName: String){
     THEATER_SELECTION(1, "Theater selection"),
     EASE_OF_USE(2, "Ease of use"),
     LACK_OF_USE(3, "Lack of use"),
-    OTHER(4, "Other");
+    SERVICE_OFFERINGS(4, "Service offerings"),
+    APP_FUNCTIONALITY(5, "App functionality");
 
     companion object {
 

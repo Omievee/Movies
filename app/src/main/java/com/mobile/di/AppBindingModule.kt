@@ -26,6 +26,7 @@ import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.fragments.ScreeningsFragmentModule
 import com.mobile.profile.ProfileFragment
+import com.mobile.profile.ProfileCancellationFragment
 import com.mobile.tv.ReservationActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
