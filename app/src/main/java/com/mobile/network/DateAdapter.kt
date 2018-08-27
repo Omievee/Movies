@@ -11,7 +11,6 @@ class DateAdapter : JsonSerializer<ParcelableDate>, JsonDeserializer<ParcelableD
     companion object {
         private val PERIOD = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
         private val COLON = SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.US)
-        private val T = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS", Locale.US)
         private val YMD = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         private val HM = SimpleDateFormat("HH:mm:ss", Locale.US)
         private val HMA = SimpleDateFormat("hh:mm a", Locale.US)
