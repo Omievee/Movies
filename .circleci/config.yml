@@ -17,11 +17,18 @@ aliases:
             curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
             chmod +x jq
             pull_number=$(echo ${CIRCLE_PULL_REQUEST} | sed 's/[^0-9]*//g')
-            url=https://api.github.com/repos/Moviepass/android/pulls/${pull_number}?access_token=fbe6794640779fc86990c03eba850bbd0523474a
-            target_branch=$(curl $url | ./jq '.base.ref' | tr -d '"')
-            echo "pull request ${CIRCLE_BRANCH}" into ${target_branch} >> "release-notes.txt"
-            echo "build number: ${CIRCLE_BUILD_NUMB}" >> "release-notes.txt"
-            git log origin/${target_branch}..origin/${CIRCLE_BRANCH} --pretty=format:"%h %s" >> "release-notes.txt"
+            echo $pull_number
+            if [ -z "$pull_number" ]; then
+              git for-each-ref --count=1 --sort=-taggerdate --format '%(refname:strip=2)'
+              tag=$(git for-each-ref --count=1 --sort=-taggerdate --format '%(refname:strip=2)')
+              git log $tag..origin/${CIRCLE_BRANCH} --pretty=format:"%h %s" >> "release-notes.txt"
+            else
+              url=https://api.github.com/repos/Moviepass/android/pulls/${pull_number}?access_token=fbe6794640779fc86990c03eba850bbd0523474a
+              target_branch=$(curl $url | ./jq '.base.ref' | tr -d '"')
+              echo "pull request ${CIRCLE_BRANCH}" into ${target_branch} >> "release-notes.txt"
+              echo "build number: ${CIRCLE_BUILD_NUM}" >> "release-notes.txt"
+              git log origin/${target_branch}..origin/${CIRCLE_BRANCH} --pretty=format:"%h %s" >> "release-notes.txt"
+            fi
       - run:
           name: Build
           command: |
