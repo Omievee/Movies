@@ -28,6 +28,8 @@ import org.parceler.Parcels;
 
 public class ActivatedCardTutorialActivity extends BaseActivity {
 
+
+
     Screening screeningObject;
     String selectedShowTime;
     ImageView zero, one, two, three, four, five;
@@ -47,6 +49,8 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activate_card_tutorial);
+
+
 
         zero = findViewById(R.id.tutorial_indicator_0);
         one = findViewById(R.id.tutorial_indicator_1);
@@ -69,10 +73,10 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
             theater = Parcels.unwrap(intent.getParcelableExtra(Constants.THEATER));
         }
         done.setOnClickListener(v -> {
-                Intent doneIntent = new Intent(ActivatedCardTutorialActivity.this, HomeActivity.class);
-                doneIntent.putExtra("launch", true);
-                doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(doneIntent);
+            Intent doneIntent = new Intent(ActivatedCardTutorialActivity.this, HomeActivity.class);
+            doneIntent.putExtra("launch", true);
+            doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(doneIntent);
         });
 
 

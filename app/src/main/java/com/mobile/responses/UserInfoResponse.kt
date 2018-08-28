@@ -1,7 +1,12 @@
 package com.mobile.responses
 
 import com.mobile.model.ParcelableDate
+import com.mobile.billing.BillingAddress
+import com.mobile.billing.BillingInfo
+import com.mobile.billing.PaymentInfo
+import com.mobile.billing.removeSpaces
 import com.mobile.model.UserInfo
+import java.util.*
 
 
 /**
@@ -42,6 +47,45 @@ class UserInfoResponse(
                 true-> it.get(it.size-1).trim()
                 else-> ""
             }
+        }
+    }
+
+    companion object {
+
+        fun getBillingInfo(user: UserInfoResponse) : BillingInfo{
+            val billingAddress = user.billingAddressLine2
+            val billingAddressList = billingAddress?.split(",".toRegex(),0)
+            var city : String? = null
+            var state: String? = null
+            var zip: String? =  null
+
+            if(billingAddressList?.size ?: 0 >= 3){
+                city = billingAddressList?.get(0)?.trim()
+                state = billingAddressList?.get(1)?.trim()
+                zip = billingAddressList?.get(2)?.trim()
+            }
+
+            val creditNumber = user.billingCard
+            var expiration : String? = null
+            var CVV : String? = null
+            if(!creditNumber.isNullOrEmpty()){
+                expiration = "##/####"
+                CVV  = "###"
+            }
+
+            return BillingInfo(null,
+                    PaymentInfo(
+                            creditNumber,
+                            CVV,
+                            expiration
+                    ),
+                    BillingAddress(
+                            user.billingAddressLine1,
+                            null,
+                            city,
+                            state,
+                            zip
+                    ))
         }
     }
 }

@@ -65,6 +65,7 @@ class HomeActivity : MPActivty(), HomeActivityView {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
         adapter = HomeViewPager(supportFragmentManager)
         val black = Color.argb(200, Color.red(0), Color.green(0), Color.blue(0))
         bottomSheetNav.setBackgroundColor(Color.BLACK)

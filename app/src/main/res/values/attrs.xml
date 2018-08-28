@@ -25,4 +25,14 @@
         <attr name="mp_checked" format="boolean|reference" />
     </declare-styleable>
 
+    <declare-styleable name="MPTextInputEditText">
+        <attr name="android:hint" format="string" />
+        <attr name="android:inputType"/>
+        <attr name="android:maxLength" />
+        <attr name="android:maxLines" />
+        <attr name="android:nextFocusDown" />
+        <attr name="android:nextFocusRight"/>
+        <attr name="mp_endOfString" format="boolean" />
+    </declare-styleable>
+
 </resources>

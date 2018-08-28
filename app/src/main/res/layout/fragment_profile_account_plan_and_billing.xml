@@ -27,28 +27,6 @@
             android:textSize="@dimen/text_size_16"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/saveChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
-            android:text="Save"
-            android:textAllCaps="false"
-            android:textColor="@color/gray_icon"
-            android:textSize="@dimen/text_size_16" />
-
-        <Button
-            android:id="@+id/cancelChanges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@android:color/transparent"
-            android:text="Cancel"
-            android:textAllCaps="false"
-            android:textColor="@color/gray_icon"
-            android:textSize="@dimen/text_size_16" />
-
     </RelativeLayout>
 
     <ScrollView
@@ -62,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_standard"
             android:orientation="vertical"
-            android:padding="@dimen/margin_half"
+            android:padding="@dimen/margin_standard"
             android:paddingLeft="2dp"
             android:paddingRight="2dp">
 
@@ -162,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="8dp"
-                        android:text="Change"
+                        android:text="@string/edit"
                         android:textColor="@color/new_red"
                         android:textSize="@dimen/text_size_14"
                         android:visibility="visible" />
@@ -307,59 +285,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/doubledouble_margin_standard"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Billing Address:"
-                    android:textColor="@color/white_80_opacity"
-                    android:textSize="12sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-
-                    <TextView
-                        android:id="@+id/BillingQ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:text="Use shipping address for billing?"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_16"
-
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/YesNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="45dp"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:paddingRight="5dp"
-                        android:text="YES"
-                        android:textAlignment="center"
-                        android:textColor="@color/new_red"
-                        android:textSize="@dimen/text_size_16"
-                        android:textStyle="bold" />
-
-                    <Switch
-                        android:id="@+id/SWITCH"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginTop="@dimen/margin_standard"
-                        android:checked="true" />
-
-                </RelativeLayout>
 
 
                 <LinearLayout
