@@ -20,4 +20,5 @@ interface AnalyticsManager {
     fun onCheckinAttempt(checkIn: Checkin)
     fun onCheckinFailed(checkIn: Checkin)
     fun onCheckinSuccessful(checkIn: Checkin, reservationResponse: ReservationResponse)
+    fun onTheaterTabOpened()
 }

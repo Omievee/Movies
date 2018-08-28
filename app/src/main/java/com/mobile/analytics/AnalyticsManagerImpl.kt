@@ -122,4 +122,8 @@ class AnalyticsManagerImpl(val goWatchItManager: GoWatchItManager) : AnalyticsMa
 
     }
 
+    override fun onTheaterTabOpened() {
+        Answers.getInstance().logCustom(CustomEvent("theater_tab_opened"))
+    }
+
 }

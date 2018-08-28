@@ -1,5 +1,6 @@
 package com.mobile.fragments
 
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.location.LocationManager
 import com.mobile.location.UserLocation
 import io.reactivex.disposables.Disposable
@@ -10,9 +11,11 @@ abstract class LocationRequiredPresenter(open val view: LocationRequiredView, va
     var locationSub: Disposable? = null
     var disposable: Disposable? = null
 
-    fun onPrimary() {
+    open fun onPrimary() {
         when (location == null) {
-            true -> checkLocationPermissions()
+            true -> {
+                checkLocationPermissions()
+            }
         }
     }
 

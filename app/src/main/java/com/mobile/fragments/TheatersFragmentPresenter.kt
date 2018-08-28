@@ -25,6 +25,14 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
         subscribe()
     }
 
+    override fun onPrimary() {
+        val wasNullLocation = location == null
+        super.onPrimary()
+        if (wasNullLocation) {
+            analyticsManager.onTheaterTabOpened()
+        }
+    }
+
     private fun subscribe() {
         theaterUISub = theaterUIManager.mappedTheaters()
                 .subscribe({ theaters ->
@@ -35,7 +43,6 @@ class TheatersFragmentPresenter(override val view: TheatersFragmentView, locatio
                 })
 
     }
-
 
     override fun onLocation(it: UserLocation) {
         location = it
