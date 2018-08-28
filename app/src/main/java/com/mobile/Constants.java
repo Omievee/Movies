@@ -112,7 +112,7 @@ public class Constants {
     public static final double CONVENIENCE_FEE = 1.50;
     public static final int CONVENIENCE_FEE_CENTS = (int) (CONVENIENCE_FEE * 100);
 
-    public static final int OFFSET = 3232323;
+    public static final double MINIMUM_CHECKIN_RADIUS_METERS = 1371.6d;
 
     public static final String SHOW_HISTORY_RATING = "historyRating";
 

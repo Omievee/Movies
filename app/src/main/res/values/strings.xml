@@ -769,5 +769,6 @@
     <string name="edit_loyalty_number_delete">Loyalty number removed successfully</string>
     <string name="edit_loyalty_number_update">Loyalty number updated successfully</string>
 
+    <string name="tap_to_reveal">Tap to reveal code</string>
 
 </resources>
