@@ -127,7 +127,7 @@ class AccountDetailsFragment : MPFragment() {
         backButton.setOnClickListener { activity?.onBackPressed() }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight))
+        recyclerView.addItemDecoration(SpaceDecorator(lastBottom = recyclerView.navBarHeight*2))
         recyclerView.itemAnimator = null
     }
 

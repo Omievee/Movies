@@ -7,9 +7,9 @@ import com.mobile.utils.navBarHeight
 import com.mobile.utils.padding
 import com.moviepass.R
 
-class SoftNavigationPlaceholder(context: Context?, attrs: AttributeSet? = null) : View(context, attrs) {
+open class SoftNavigationPlaceholder(context: Context?, attrs: AttributeSet? = null) : View(context, attrs) {
 
-    var showBottom: Boolean = false
+    open var showBottom: Boolean = false
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(
