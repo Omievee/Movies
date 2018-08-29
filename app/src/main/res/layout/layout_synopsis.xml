@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_standard"
         app:layout_constraintTop_toBottomOf="@id/synopsisTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/softNav"
         android:layout_marginRight="@dimen/margin_standard"
         android:layout_marginLeft="@dimen/margin_standard"
         android:alpha=".8"
@@ -31,4 +31,12 @@
         android:paddingBottom="@dimen/margin_half"
         android:textColor="@color/almost_white"
         android:textSize="14sp" />
+
+    <com.mobile.widgets.BottomSoftNavigationPlaceholder
+        android:layout_width="match_parent"
+        android:id="@+id/softNav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        />
+
 </merge>
