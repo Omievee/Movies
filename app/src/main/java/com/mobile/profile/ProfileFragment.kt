@@ -14,14 +14,15 @@ import com.mobile.Primary
 import com.mobile.UserPreferences
 import com.mobile.activities.ActivatedCardTutorialActivity
 import com.mobile.activities.LogInActivity
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.AccountDetailsFragment
 import com.mobile.fragments.MPFragment
 import com.mobile.helpshift.HelpshiftHelper
-import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.history.PastReservationsFragment
 import com.mobile.loyalty.LoyaltyProgramFragment
 import com.mobile.network.Api
 import com.mobile.recycler.decorator.SpaceDecorator
+import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.reservation.ReservationActivity
 import com.mobile.session.SessionManager
 import com.mobile.utils.startIntentIfResolves
@@ -33,6 +34,10 @@ import javax.inject.Inject
 
 class ProfileFragment : MPFragment(), Primary {
 
+
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
+
     private val clickListener: ProfileClickListener = object : ProfileClickListener {
         override fun onClick(pres: ProfilePresentation) {
             when (pres.type) {
@@ -43,21 +48,28 @@ class ProfileFragment : MPFragment(), Primary {
                 Profile.LOYALTY_PROGRAMS -> showFragment(LoyaltyProgramFragment.newInstance())
                 Profile.HOW_TO_USE_MOVIEPASS -> navigateTo(ActivatedCardTutorialActivity.newIntent(activity))
                 Profile.HELP -> onHelpClicked()
-                Profile.LINK-> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
+                Profile.LINK -> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
                 Profile.SIGN_OUT -> onLogout()
                 Profile.CLEAR_FLAGS -> UserPreferences.clearOutEverythingButUser()
-                else-> {}
+                else -> {
+                }
             }
         }
     }
 
-    private val toggleListener:ProfileToggleListener = object : ProfileToggleListener {
+    private val toggleListener: ProfileToggleListener = object : ProfileToggleListener {
         override fun onToggle(pres: ProfilePresentation) {
-            when(pres.type) {
-                Profile.NOTIFICATIONS-> UserPreferences.pushPermission = pres.toggled
-                else-> { }
+            when (pres.type) {
+
+                Profile.NOTIFICATIONS -> {
+                    UserPreferences.pushPermission = pres.toggled
+                    analyticsManager.onUserChangedNotificationsSubscriptions(pres.toggled)
+                }
+
+                else -> {
+                }
             }
-            adapter.data = ProfileAdapter.createData(adapter.data,resources)
+            adapter.data = ProfileAdapter.createData(adapter.data, resources)
         }
 
     }
