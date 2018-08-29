@@ -22,7 +22,7 @@ import com.mobile.helpers.RealmTaskService;
 import com.mobile.helpshift.HelpshiftHelper;
 import com.mobile.network.RestClient;
 import com.mobile.utils.FastStack;
-import com.taplytics.sdk.Taplytics;
+import com.moviepass.BuildConfig;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -76,10 +76,13 @@ public class Application extends MultiDexApplication implements HasActivityInjec
     public void onCreate() {
         super.onCreate();
         registerActivityLifecycleCallbacks(new AppboyLifecycleCallbackListener());
-        AppboyLogger.setLogLevel(Log.VERBOSE);
+
+        if (BuildConfig.DEBUG) {
+            AppboyLogger.setLogLevel(Log.VERBOSE);
+        }
+
         inject();
         UserPreferences.INSTANCE.load(this, gson);
-        Taplytics.startTaplytics(this, "3629c653bc0ece073faa45be6fa7081561426e87");
         Fabric.with(this, new Crashlytics());
         Fresco.initialize(this);
         RealmTaskService.scheduleRepeatTask(this);

@@ -39,8 +39,8 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBBbJ-Zgn3TALaEwxqV5Q6pjyKtFmhH9YQ" />
@@ -62,24 +62,6 @@
             </intent-filter>
         </service>
 
-        <!-- Taplytics -->
-
-
-        <service android:name="com.taplytics.sdk.TLGcmIntentService" />
-
-        <receiver android:name="com.taplytics.sdk.TLBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name="com.taplytics.sdk.TLGeofenceEventService" />
-
-        <meta-data
-            android:name="com.taplytics.sdk.notification_icon"
-            android:resource="@mipmap/ic_launcher_round" />
-
-        <!-- End of Taplytics -->
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -195,8 +177,8 @@
         <activity
             android:name="com.mobile.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/HomeActivity">
+            android:theme="@style/HomeActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -275,7 +257,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.moviepass.mobile" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 

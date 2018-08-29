@@ -84,14 +84,7 @@ public class ConfirmationSignUpFragment extends Fragment {
                     RestClient.userId = userRESPONSE.getId();
                     RestClient.deviceAndroidID = userRESPONSE.getAndroidID();
                     RestClient.authToken = userRESPONSE.getAuthToken();
-
-//                    UserPreferences.INSTANCE.setUserCredentials(RestClient.userId, RestClient.deviceAndroidID, RestClient.authToken, ProspectUser.firstName, ProspectUser.email, userRESPONSE.getOneDeviceId());
-//                    Intent i = new Intent(myContext, ActivatedCard_TutorialActivity.class);
-//                    i.putExtra("launch", true);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(i);
-
-
+                    
                 } else if (response.errorBody() != null) {
                     progress.setVisibility(View.GONE);
                     try {

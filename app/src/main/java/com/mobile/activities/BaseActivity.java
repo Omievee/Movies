@@ -27,25 +27,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        try {
-//            JSONObject attributes = new JSONObject();
-//            attributes.put("email", INSTANCE.getUserEmail());
-//            attributes.put("name", INSTANCE.getUserName());
-//            attributes.put("user_id", valueOf(INSTANCE.getUserId()));
-//            LogUtils.newLog("taplytics put", INSTANCE.getUserEmail());
-//            Taplytics.setUserAttributes(attributes);
-//        } catch (JSONException e) {
-//
-//        }
-
-//        try {
-//            HelpshiftContext.getCoreApi().login(HelpshiftIdentitfyVerificationHelper.Companion.getHelpshiftUser());
-//        } catch (Exception e) {
-//
-//        }
-
-
     }
 
 

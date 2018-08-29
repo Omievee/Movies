@@ -15,7 +15,6 @@
     <drawable name="com_appboy_push_small_notification_icon">@drawable/moviepass_logo_red</drawable>
     <!--<drawable name="com_appboy_push_large_notification_icon">REPLACE_WITH_YOUR_ICON</drawable>-->
     <integer name="com_appboy_default_notification_accent_color">0xFFf33e3e</integer>
-
     <!--DEEP LINKS-->
     <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
 

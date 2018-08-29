@@ -130,13 +130,12 @@ class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWat
     }
 
 
-    override fun onBrazeDataSetUp(user: User?) {
-        val brazeUser = user ?: return
+    override fun onBrazeDataSetUp(user: User) {
 
-        appBoy.changeUser(valueOf(brazeUser.id))
-        appBoy.currentUser.setFirstName(brazeUser.firstName)
-        appBoy.currentUser.setLastName(brazeUser.lastName)
-        appBoy.currentUser.setEmail(brazeUser.email)
+        appBoy.changeUser(valueOf(user.id))
+        appBoy.currentUser.setFirstName(user.firstName)
+        appBoy.currentUser.setLastName(user.lastName)
+        appBoy.currentUser.setEmail(user.email)
 
     }
 

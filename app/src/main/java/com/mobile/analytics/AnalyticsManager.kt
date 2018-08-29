@@ -20,6 +20,6 @@ interface AnalyticsManager {
     fun onCheckinFailed(checkIn: Checkin)
     fun onCheckinSuccessful(checkIn: Checkin, reservationResponse: ReservationResponse)
     fun onTheaterTabOpened()
-    fun onBrazeDataSetUp(user: User?)
+    fun onBrazeDataSetUp(user: User)
     fun onUserChangedNotificationsSubscriptions(permissionToggle: Boolean)
 }
