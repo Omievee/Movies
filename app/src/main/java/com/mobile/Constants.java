@@ -84,9 +84,6 @@ public class Constants {
     //Peak Pricing
     public static final String SHOWN_PEAK_PRICING_ALERT = "shownPeakPricing";
 
-    //Taplytics Notifs
-    public static final String CUSTOM_DATA = "custom_keys";
-
     //Billing
     public static final String BILLING = "billing";
 
