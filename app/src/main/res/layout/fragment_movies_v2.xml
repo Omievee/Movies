@@ -57,13 +57,24 @@
             style="@style/ActionButton" />
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        style="@style/ProgressMPText"
-        android:minHeight="@dimen/button_height"
+    <com.mobile.widgets.MPProgressText
+        android:id="@+id/activateMPCardView"
         android:visibility="gone"
         tools:visibility="visible"
-        android:text="@string/activate_your_moviepass_card"
-        android:layout_width="wrap_content"
+        style="@style/ReservationCheckinButton"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavSpace"
+        app:mp_text="@string/activate_your_moviepass_card" />
+
+    <View
+        android:id="@+id/bottomNavSpace"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_navigation_height"
+        app:layout_constraintBottom_toTopOf="@id/softNav"/>
+
+    <com.mobile.widgets.SoftNavigationPlaceholder
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/softNav"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </android.support.constraint.ConstraintLayout>

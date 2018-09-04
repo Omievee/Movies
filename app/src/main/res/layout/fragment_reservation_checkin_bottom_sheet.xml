@@ -58,10 +58,10 @@
             android:layout_height="@dimen/bottom_navigation_height"
             app:layout_constraintBottom_toTopOf="@id/bottomMenu" />
 
-        <View
+        <com.mobile.widgets.SoftNavigationPlaceholder
             android:id="@+id/bottomMenu"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/bottom_navigation_height"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 

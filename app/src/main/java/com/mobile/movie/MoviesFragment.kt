@@ -1,6 +1,7 @@
 package com.mobile.movie
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.Color.*
@@ -13,6 +14,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
 import com.mobile.Primary
+import com.mobile.activities.ActivateMoviePassCard
+import com.mobile.activities.ActivatedCardTutorialActivity
 import com.mobile.adapters.BasicDiffCallback
 import com.mobile.adapters.ItemSame
 import com.mobile.fragments.*
@@ -67,7 +70,7 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
 
     override fun showSubscriptionActivationRequired() {
         activity ?: return
-
+        activateMPCardView.visibility = View.VISIBLE
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,6 +113,9 @@ class MoviesFragment : MPFragment(), MoviesView, Primary {
         }
         searchIcon.setOnClickListener {
             showFragment(SearchFragment())
+        }
+        activateMPCardView.setOnClickListener {
+            startActivity(Intent(context,ActivateMoviePassCard::class.java))
         }
         presenter.onViewCreated()
     }
