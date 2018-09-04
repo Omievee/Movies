@@ -164,9 +164,6 @@ class ActivateMoviePassCard : AppCompatActivity() {
                 }
     }
 
-
-    override fun onBackPressed() {}
-
     fun fadeIn(view: View) {
         val fadeIn = AlphaAnimation(0f, 1f)
         fadeIn.interpolator = DecelerateInterpolator() //add this
