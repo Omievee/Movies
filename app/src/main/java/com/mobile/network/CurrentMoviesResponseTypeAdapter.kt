@@ -41,7 +41,7 @@ abstract class CurrentMoviesResponseTypeAdapter() : JsonDeserializer<CurrentMovi
             null -> emptyList()
             else -> gson().fromJson(featured, object : TypeToken<List<Movie>>() {}.type)
         },
-                categorizedMovies = others)
+                categorizedMovies = others.sortedWith(compareBy({ it.first != "newReleases" }, { it.first != "nowPlaying" }, { it.first != "topBoxOffice" }, { it.first != "comingSoon" })))
     }
 
 }
