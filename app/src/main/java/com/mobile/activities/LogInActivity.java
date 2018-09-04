@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.appboy.Appboy;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -30,12 +31,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.mobile.Constants;
 import com.mobile.DeviceID;
+import com.mobile.analytics.AnalyticsManager;
 import com.mobile.fragments.ReactivateDialog;
 import com.mobile.fragments.WebViewFragment;
 import com.mobile.fragments.WebViewListener;
-import com.mobile.helpers.LogUtils;
 import com.mobile.home.HomeActivity;
 import com.mobile.model.User;
 import com.mobile.network.RestClient;
@@ -51,18 +51,25 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
+import dagger.android.AndroidInjection;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mobile.UserPreferences.*;
+import static com.mobile.UserPreferences.INSTANCE;
 
 /**
  * Created by anubis on 4/27/17.
  */
 
 public class LogInActivity extends AppCompatActivity implements WebViewListener {
+
+    @Inject
+    AnalyticsManager analyticsManager;
+
 
     @BindView(R.id.input_email)
     EditText mInputEmail;
@@ -87,6 +94,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
@@ -220,7 +228,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && isValidEmail(email)) {
             LogInRequest request = new LogInRequest(email, password, deviceId, deviceType, device);
-            LogUtils.newLog(Constants.TAG, "logIn: " + deviceId);
             String UUID = "flag";
             RestClient.getAuthenticated().login(UUID, request).enqueue(new Callback<User>() {
                 @Override
@@ -268,14 +275,12 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         try {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                            LogUtils.newLog(Constants.TAG, "onResponse: " + jObjError.getString("message"));
                             progress.setVisibility(View.GONE);
 
                         } catch (Exception e) {
                             progress.setVisibility(View.GONE);
 
                             Toast.makeText(LogInActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            LogUtils.newLog(Constants.TAG, "onResponse: " + e.getMessage());
                         }
                     }
                 }
@@ -284,7 +289,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                 public void onFailure(Call<User> call, Throwable t) {
                     progress.setVisibility(View.GONE);
                     Toast.makeText(LogInActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    LogUtils.newLog(Constants.TAG, "failure: " + t.getMessage());
                 }
             });
         } else {
@@ -317,7 +321,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             @Override
             public void onFailure(Call<AndroidIDVerificationResponse> call, Throwable t) {
                 progress.setVisibility(View.GONE);
-                LogUtils.newLog(Constants.TAG, "onFailure: " + t.getMessage());
             }
         });
     }
@@ -333,28 +336,25 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
         alert.setView(layout);
         alert.setTitle(getString(R.string.activity_sign_in_forgot_password_title));
         alert.setMessage(getString(R.string.activity_sign_in_forgot_password_body));
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        alert.setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-                String emailAddress = email.getText().toString().replace(" ", "");
+            String emailAddress = email.getText().toString().replace(" ", "");
 
-                if (isValidEmail(emailAddress)) {
-                    RestClient.getAuthenticated().forgotPassword(emailAddress).enqueue(new Callback<Object>() {
-                        @Override
-                        public void onResponse(Call<Object> call, Response<Object> response) {
-                            Toast.makeText(LogInActivity.this, "If the email is registered with MoviePass, you will receive an email with instructions about how to reset your password.", Toast.LENGTH_SHORT).show();
-                        }
+            if (isValidEmail(emailAddress)) {
+                RestClient.getAuthenticated().forgotPassword(emailAddress).enqueue(new Callback<Object>() {
+                    @Override
+                    public void onResponse(Call<Object> call, Response<Object> response) {
+                        Toast.makeText(LogInActivity.this, "If the email is registered with MoviePass, you will receive an email with instructions about how to reset your password.", Toast.LENGTH_SHORT).show();
+                    }
 
-                        @Override
-                        public void onFailure(Call<Object> call, Throwable t) {
-                            Toast.makeText(LogInActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    dialog.dismiss();
-                } else {
-                    Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_email, Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onFailure(Call<Object> call, Throwable t) {
+                        Toast.makeText(LogInActivity.this, "Something went wrong.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.dismiss();
+            } else {
+                Toast.makeText(LogInActivity.this, R.string.activity_sign_in_enter_valid_email, Toast.LENGTH_SHORT).show();
             }
         });
         alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -388,14 +388,14 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     private void moviePassLoginSucceeded(User user) {
         if (user != null) {
 
-            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ");
             int us = user.getId();
             String deviceUuid = user.getAndroidID();
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
-            LogUtils.newLog(Constants.TAG, "moviePassLoginSucceeded: ONE DEVICE ID FROM LOG IN: "+ODID);
 
-            INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getEmail(), ODID);
+            Appboy.getInstance(LogInActivity.this).changeUser(user.getEmail());
+            INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
+            analyticsManager.onUserLoggedIn(user);
             checkRestrictions(user);
         }
     }
@@ -411,6 +411,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
 
                     INSTANCE.setRestrictions(restriction);
 
+
                     //Checking restriction
                     //If Missing - Account is cancelled, User can't log in
                     if (restriction.getSubscriptionStatus().equals(SubscriptionStatus.MISSING)
@@ -418,7 +419,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                             restriction.getSubscriptionStatus().equals(SubscriptionStatus.CANCELLED_PAST_DUE) || restriction.getSubscriptionStatus().equals(SubscriptionStatus.ENDED_FREE_TRIAL)) {
                         progress.setVisibility(View.GONE);
                         hideKeyboard();
-                        if(restriction.getCanReactivate().getCancelledWithinTimeframe()){
+                        if (restriction.getCanReactivate().getCancelledWithinTimeframe()) {
                             reactivationDialog();
                         } else {
                             INSTANCE.clearUserId();
@@ -445,7 +446,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         progress.setVisibility(View.GONE);
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(LogInActivity.this, jObjError.getString("message"), Toast.LENGTH_LONG).show();
-                        LogUtils.newLog("LOG_IN RESTRICTIONS ", "onResponse: " + jObjError);
                         INSTANCE.clearUserId();
                     } catch (Exception e) {
 
@@ -461,11 +461,11 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
         });
     }
 
-    public void reactivationDialog(){
-        ReactivateDialog.newInstance("","").show(getSupportFragmentManager(),"reactivation");
+    public void reactivationDialog() {
+        ReactivateDialog.newInstance("", "").show(getSupportFragmentManager(), "reactivation");
     }
 
-    public void openWebVIew(){
+    public void openWebVIew() {
         progress.setVisibility(View.VISIBLE);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -497,10 +497,9 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
     public void onBackPressed() {
         // do nothing. We want to force user to stay in this activity and not drop out.
         FragmentManager fragmentManager = getSupportFragmentManager();
-        LogUtils.newLog("COUNT: "+fragmentManager.getBackStackEntryCount());
         WebViewFragment fragment = (WebViewFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragmentManager.getBackStackEntryCount()>=1) {
-            if(fragment.canGoBack())
+        if (fragmentManager.getBackStackEntryCount() >= 1) {
+            if (fragment.canGoBack())
                 fragment.goBack();
             else
                 fragmentManager.popBackStack();

@@ -16,7 +16,7 @@ apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '27.0.3'
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
@@ -130,7 +130,6 @@ android {
 repositories {
     maven { url "https://jitpack.io" }
     maven { url 'https://maven.google.com' }
-    maven { url "https://github.com/taplytics/Taplytics-Android-SDK/raw/master/AndroidStudio/" }
     maven { url 'https://maven.fabric.io/public' }
     google()
 }
@@ -215,7 +214,7 @@ dependencies {
     // FAB
     implementation 'com.github.clans:fab:1.5.0'
     // Facebook
-    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
     // Fresco
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.facebook.fresco:animated-gif:1.9.0'
@@ -241,8 +240,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
     // SearchView
     implementation 'com.lapism:searchview:4.0'
-    // Taplytics
-    implementation 'com.taplytics.sdk:taplytics:+@aar'
     // zxing
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.3.0@aar'
@@ -287,6 +284,10 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.1'
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
+
+    //Braze
+    implementation 'com.appboy:android-sdk-ui:2.6.0'
+
 
 }
 

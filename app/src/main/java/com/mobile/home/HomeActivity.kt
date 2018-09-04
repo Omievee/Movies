@@ -23,6 +23,7 @@ import com.mobile.Primary
 import com.mobile.activities.AutoActivatedCard
 import com.mobile.activities.LogInActivity
 import com.mobile.alertscreen.AlertScreenFragment
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.fragments.MoviesFragment
 import com.mobile.fragments.TheatersFragmentV2
 import com.mobile.fragments.TicketVerificationV2
@@ -47,6 +48,8 @@ import javax.inject.Inject
 
 class HomeActivity : MPActivty(), HomeActivityView {
 
+    @Inject
+    lateinit var analyticsManager: AnalyticsManager
 
     @Inject
     lateinit var presenter: HomeActivityPresenter

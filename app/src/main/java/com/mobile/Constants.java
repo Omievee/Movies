@@ -46,14 +46,15 @@ public class Constants {
     public static final String PREFS_FILE = "com.moviepass.moviepass_preferences";
     public static final String IS_USER_FIRST_LOGIN = "bobloblaw";
     public static final String IS_ANDROID_ID_VERIFIED = "Android";
-    public static final String CARD_ACTIVATED_SCREEN =  "activated";
+    public static final String CARD_ACTIVATED_SCREEN = "activated";
     /* TODO REMOVE GENERIC VALUES */
     public static final String USER_ID = "0";
     public static final String DEVICE_ANDROID_ID = "androidID";
     public static final String USER_AUTH_TOKEN = "AUTH";
     public static final String FB_TOKEN = "token";
     public static final String AAID = "AAID";
-    public static final String USER_FIRST_NAME = "CATHERINE";
+    public static final String USER_FIRST_NAME = "firstName";
+    public static final String USER_LAST_NAME = "lastName";
     public static final String USER_EMAIL = "BOB@LOBLAW.COM";
 
     //Location things
@@ -116,4 +117,9 @@ public class Constants {
     public static final String SHOW_HISTORY_RATING = "historyRating";
 
     public static final String IS_FROM_RATE_SCREEN = "rate_screen";
+
+    //Braze Custom Keys
+    public static final String BRAZE_SUBSCRIPTION_STATUS = "Subscription Status";
+    public static final String BRAZE_USER_RATED_GOOD_MOVIES = "Good Movies";
+    public static final String BRAZE_USER_RATED_BAD_MOVIES = "Bad Movies";
 }

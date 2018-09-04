@@ -20,7 +20,7 @@ class HelpshiftHelper {
 
         fun getHelpshiftUser(): HelpshiftUser {
             val helpshiftUser: HelpshiftUser.Builder = HelpshiftUser.Builder(UserPreferences.userId.toString(),
-                    UserPreferences.userEmail).setName(UserPreferences.userName)
+                    UserPreferences.userEmail).setName(UserPreferences.firstName)
             return helpshiftUser.build()
         }
 

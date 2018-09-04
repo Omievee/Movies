@@ -4,6 +4,7 @@ import android.os.Build
 import com.mobile.ApiError
 import com.mobile.Change
 import com.mobile.UserPreferences
+import com.mobile.analytics.AnalyticsManager
 import com.mobile.history.HistoryManager
 import com.mobile.history.model.ReservationHistory
 import com.mobile.model.Alert
@@ -19,7 +20,7 @@ import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 
-class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager, val historyManager: HistoryManager) {
+class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microApi: MicroApi, val sessionManager: SessionManager, val restrictionManager: RestrictionsManager, val historyManager: HistoryManager, val analyticsManager: AnalyticsManager) {
 
     var androidIdDisposable: Disposable? = null
     var restrictionsDisposable: Disposable? = null
@@ -34,10 +35,13 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
 
     fun onDeviceId(deviceId: String?) {
         this.deviceId = deviceId
+
     }
 
     fun onCreate() {
         latestMovieWithoutRating()
+        val user = sessionManager.getUser() ?: return
+        analyticsManager.onBrazeDataSetUp(user)
     }
 
     fun onResume() {
@@ -74,7 +78,6 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         val deviceId = this.deviceId ?: return
         val device = "ANDROID"
         val deviceType = Build.DEVICE ?: return
-
         val request = AndroidIDVerificationResponse(device, deviceId, deviceType, true)
         androidIdDisposable = api
                 .verifyAndroidIDRx(
@@ -86,7 +89,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
                     checkRestrictions()
                 }, { error ->
                     if (error is ApiError) {
-                        if (error.httpErrorCode / 100 == 4) {
+                        if (error.httpErrorCode == 403) {
+                            analyticsManager.onUserLoggedOut(sessionManager.getUser())
                             sessionManager.logout()
                             view.logout()
                         } else {

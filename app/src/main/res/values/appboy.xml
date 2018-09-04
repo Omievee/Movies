@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--API KEY & CUTOM ENDPOINT-->
+    <string name="com_appboy_api_key">@string/braze_api_key</string>
+    <string name="com_appboy_custom_endpoint" translatable="false">@string/braze_endpoint</string>
+
+    <!--FIREBASE CLOUD MESSAGING-->
+    <bool name="com_appboy_firebase_cloud_messaging_registration_enabled" translatable="false">
+        true
+    </bool>
+    <string name="com_appboy_firebase_cloud_messaging_sender_id" translatable="false">@string/fcm_key</string>
+    <bool name="com_appboy_push_gcm_messaging_registration_enabled">false</bool>
+
+    <!--NOTIFICATION STYLE-->
+    <drawable name="com_appboy_push_small_notification_icon">@drawable/moviepass_logo_red</drawable>
+    <!--<drawable name="com_appboy_push_large_notification_icon">REPLACE_WITH_YOUR_ICON</drawable>-->
+    <integer name="com_appboy_default_notification_accent_color">0xFFf33e3e</integer>
+    <!--DEEP LINKS-->
+    <bool name="com_appboy_handle_push_deep_links_automatically">true</bool>
+
+</resources>
