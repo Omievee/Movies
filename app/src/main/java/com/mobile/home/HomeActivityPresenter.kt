@@ -54,6 +54,8 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
         subscribeToBadgeChange()
     }
 
+
+
     private fun subscribeToBadgeChange() {
         changesDisposable?.dispose()
         changesDisposable = UserPreferences.changes()

@@ -3,6 +3,7 @@ package com.mobile
 import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
+import com.mobile.deeplinks.DeepLinksManagerImpl
 import com.moviepass.BuildConfig
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -14,7 +15,11 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
+    @Inject
+    lateinit var deepLinkHandler: DeepLinksManagerImpl
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+
         return fragmentInjector
     }
 

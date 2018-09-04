@@ -393,6 +393,7 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
 
+
             INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
             analyticsManager.onUserLoggedIn(user);
             checkRestrictions(user);

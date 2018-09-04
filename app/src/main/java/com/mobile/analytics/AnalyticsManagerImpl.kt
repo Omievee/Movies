@@ -21,7 +21,6 @@ import java.util.*
 
 class AnalyticsManagerImpl(val context: Application, val goWatchItManager: GoWatchItManager) : AnalyticsManager {
 
-
     var appBoy = Appboy.getInstance(context)
 
     override fun onCheckinAttempt(checkIn: Checkin) {
