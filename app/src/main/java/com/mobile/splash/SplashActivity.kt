@@ -5,8 +5,10 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.mobile.Constants
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
 import com.mobile.onboard.OnboardingActivityV2
@@ -30,6 +32,35 @@ class SplashActivity : AppCompatActivity() {
 
         val intent = intent
         val data = intent.data
+
+        Log.d("TAG", ">>>>>>> SPLASH >>>>>>>>>>>" + intent)
+        Log.d("TAG", ">>>>>>> SPLASH >>>>>>>>>>>" + intent.getStringExtra(Constants.APPBOY_DEEP_LINK_KEY))
+
+
+        intent ?: return
+        intent.let {
+            kotlin.run {
+                var movieIdEncripted: String
+                var movieOrTheater: String
+                var url = data?.path
+
+                var idLength: Int
+//                if (urlPath?.size!! >= 2) {
+//                    movieOrTheater = urlPath?.get(1)!!
+//                    if (movieOrTheater.equals("movies")) {
+//                        if (urlPath.size >= 3) {
+//                            movieIdEncripted = urlPath.get(2)
+//                            idLength = movieIdEncripted.length
+//                            idLength = idLength - 5
+//                            movieIdEncripted = movieIdEncripted.substring(2, idLength)
+//                            val movieId = Integer.valueOf(movieIdEncripted)!!
+//                            launchActivity(0, movieId)
+//                        }
+//                    }
+//                }
+            }
+        }
+
 
         getAAID().execute()
         if (data != null && data.path.length >= 2) run {
