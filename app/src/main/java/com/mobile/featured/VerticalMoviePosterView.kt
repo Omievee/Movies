@@ -7,7 +7,6 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.mobile.screening.MoviePosterClickListener
 import com.mobile.model.Movie
 import com.moviepass.R
-import com.mobile.adapters.MoviePostersAdapter.safeLongToInt
 import kotlinx.android.synthetic.main.layout_vertical_movie_poster.view.*
 import android.graphics.drawable.Animatable
 import android.net.Uri
@@ -45,8 +44,8 @@ open class VerticalMoviePosterView(context: Context?,
         val finalWidth = width / 2.85
         val height = finalWidth * aspectH / aspectW
 
-        val w = safeLongToInt(Math.round(finalWidth))
-        val h = safeLongToInt(Math.round(height))
+        val w = Math.round(finalWidth).toInt()
+        val h = Math.round(height).toInt()
 
         layoutParams = MarginLayoutParams(w, h)
         setOnClickListener {

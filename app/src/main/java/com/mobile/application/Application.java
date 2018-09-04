@@ -1,9 +1,6 @@
 package com.mobile.application;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.appboy.AppboyLifecycleCallbackListener;
@@ -34,7 +31,7 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class Application extends MultiDexApplication implements HasActivityInjector {
+public class Application extends android.app.Application implements HasActivityInjector {
 
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
@@ -132,12 +129,6 @@ public class Application extends MultiDexApplication implements HasActivityInjec
                 .application(this)
                 .build()
                 .inject(this);
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 
     @Override
