@@ -14,8 +14,6 @@ import com.mobile.onboard.OnboardingActivityV2;
 import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
 
-import org.parceler.Parcels;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,7 +87,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpFirstOpenActivity.this,SignUpActivity.class);
-                intent.putExtra(SELECTED_PLAN, Parcels.wrap(selectedPlan));
+                intent.putExtra(SELECTED_PLAN, selectedPlan);
                 ProspectUser.plan = selectedPlan;
                 startActivity(intent);
             }

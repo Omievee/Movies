@@ -23,9 +23,6 @@ import com.mobile.model.Screening;
 import com.mobile.model.Theater;
 import com.moviepass.R;
 
-import org.parceler.Parcels;
-
-
 public class ActivatedCardTutorialActivity extends BaseActivity {
 
 
@@ -70,7 +67,7 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
         if (getIntent() != null) {
             screeningObject = intent.getParcelableExtra(Constants.SCREENING);
             selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
-            theater = Parcels.unwrap(intent.getParcelableExtra(Constants.THEATER));
+            theater = intent.getParcelableExtra(Constants.THEATER);
         }
         done.setOnClickListener(v -> {
             Intent doneIntent = new Intent(ActivatedCardTutorialActivity.this, HomeActivity.class);
