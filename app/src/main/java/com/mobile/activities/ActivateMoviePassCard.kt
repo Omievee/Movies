@@ -2,6 +2,7 @@ package com.mobile.activities
 
 import android.Manifest
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -72,8 +73,7 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
 
         activateXOut.setOnClickListener { _ ->
-            val closeIntent = Intent(this@ActivateMoviePassCard, HomeActivity::class.java)
-            startActivity(closeIntent)
+            finish()
         }
 
         activateManualInput.setOnClickListener { _ ->
@@ -117,6 +117,9 @@ class ActivateMoviePassCard : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode== Activity.RESULT_CANCELED) {
+            return
+        }
         if (requestCode == Constants.CARD_SCAN_REQUEST_CODE) {
             if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                 val scanResult = data.getParcelableExtra<CreditCard>(CardIOActivity.EXTRA_SCAN_RESULT)

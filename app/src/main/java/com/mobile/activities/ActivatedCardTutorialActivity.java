@@ -73,7 +73,10 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
             showHome = intent.getBooleanExtra("showHome",false);
         }
         done.setOnClickListener(v -> {
-            onBackPressed();
+            if(showHome) {
+                startActivity(HomeActivity.Companion.newIntent(this,0));
+            }
+            finish();
         });
 
         tutorialViewPager.setCurrentItem(page);
@@ -121,9 +124,8 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if(showHome) {
-            startActivity(HomeActivity.Companion.newIntent(this,0));
+        if(!showHome) {
+            super.onBackPressed();
         }
     }
 
