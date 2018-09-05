@@ -73,12 +73,8 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
             showHome = intent.getBooleanExtra("showHome",false);
         }
         done.setOnClickListener(v -> {
-            finish();
-            if(showHome) {
-                startActivity(HomeActivity.Companion.newIntent(this,0));
-            }
+            onBackPressed();
         });
-
 
         tutorialViewPager.setCurrentItem(page);
         updateIndicators(page);
@@ -120,6 +116,14 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
             indicators[i].setBackgroundResource(
                     i == position ? R.drawable.indicator_selected : R.drawable.indicator_unselected
             );
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(showHome) {
+            startActivity(HomeActivity.Companion.newIntent(this,0));
         }
     }
 
