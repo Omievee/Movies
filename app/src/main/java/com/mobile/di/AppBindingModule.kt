@@ -25,6 +25,8 @@ import com.mobile.theater.TheatersFragmentModule
 import com.mobile.ticketverification.OcrCaptureFragment
 import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.fragments.ScreeningsFragmentModule
+import com.mobile.referafriend.ReferAFriendFragmentModule
+import com.mobile.referafriend.ReferAFriendFragment
 import com.mobile.profile.ProfileFragment
 import com.mobile.profile.ProfileCancellationFragment
 import com.mobile.tv.ReservationActivityModule
@@ -121,6 +123,10 @@ interface AppBindingModule {
     @FragmentScope
     @ContributesAndroidInjector(modules = [ProfileCancellationModule::class])
     fun profileCancellationFragment(): ProfileCancellationFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [ReferAFriendFragmentModule::class])
+    fun referAFriendFragment(): ReferAFriendFragment
 
     @FragmentScope
     @ContributesAndroidInjector

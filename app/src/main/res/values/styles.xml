@@ -289,6 +289,10 @@
     </style>
 
     <style name="TextInputLayout" parent="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
         <item name="colorControlActivated">@color/almost_white</item>
         <item name="colorControlHighlight">@color/almost_white</item>
         <item name="colorControlNormal">@color/white_40_opacity</item>
@@ -299,6 +303,8 @@
     </style>
 
     <style name="TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textColorHint">@color/white_80_opacity</item>
         <item name="colorControlActivated">@color/white_80_opacity</item>
         <item name="android:colorControlActivated">@color/white_80_opacity</item>
@@ -1140,6 +1146,21 @@
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_marginStart">@dimen/margin_standard</item>
+        <item name="android:layout_marginEnd">@dimen/margin_standard</item>
+    </style>
+
+    <style name="ReferralsSubHeader" parent="MPText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ReferralsText" parent="ReferralsSubHeader">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:layout_marginStart">@dimen/margin_standard</item>
         <item name="android:layout_marginEnd">@dimen/margin_standard</item>
     </style>

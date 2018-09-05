@@ -201,10 +201,8 @@ public interface Api {
     @POST("/rest/v1/movies/{movieId}/rate")
     Single<HistoryResponse> submitRatingRx(@Path("movieId") int movieId, @Body HistoryResponse request);
 
-
-    //REFER A FRIEND
     @GET("/rest/v1/sharing/messages")
-    Call<ReferAFriendResponse> referAFriend();
+    Single<ReferAFriendResponse> referAFriend();
 
     //Device ID  Verification
     @POST("/rest/v1/device/verification")

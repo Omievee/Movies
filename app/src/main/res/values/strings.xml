@@ -680,6 +680,8 @@
     <string name="profile_cancel_membership">Membership cancelled</string>
     <string name="profile_cancel_membership_message">The last day your account will be active is on</string>
     <string name="required">*required</string>
+    <string name="required_field">Required</string>
+    <string name="cancel_membership">Cancel Membership</string>
     <string name="cancellation_drop_drown_error">Please choose a reason for cancellation from the dropdown menu provided.</string>
     <string name="ok">Ok</string>
     <string name="history_details_movie_dislike">You didn\'t like this movie!</string>
@@ -727,7 +729,6 @@
     <string name="billing_updated">Your billing details have been changed.</string>
     <string name="edit">Edit</string>
     <string name="section_credit_card_data">creditCardData</string>
-    <string name="cancel_membership">Cancel Membership</string>
     <string name="account_information">Account Information</string>
     <string name="change_password">Change Password</string>
     <string name="shipping_address">Shipping Address</string>
@@ -738,6 +739,10 @@
     <string name="zero_movies">0 Movies</string>
     <string name="continue_seeing_movies">Continue seeing discounted movies with  MoviePass until your cycle renews!</string>
     <string name="over_hard_cap">Your plan monthly cap was met</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="referral_email_error_message">A valid email address is required</string>
     <string name="alert_failed_dialog_messege">There was an error processing this request. Please try again.</string>
     <string name="agree_to_payment">Agree to Payment</string>
     <string name="agree_to_payment_description">I agree that once I redeem my ticket using my MoviePass card I will be charged the theater’s listed ticket price for this showtime, minus the MoviePass discount.\n\nIf you cancel this check-in, or never redeem your ticket by swiping your MoviePass card, you will not be charged.</string>
@@ -754,5 +759,6 @@
     <string name="billing_card_on_file_eticket">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
     <string name="cycle_renews_on">Cycle renews on %1$s</string>
     <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
+
 
 </resources>
