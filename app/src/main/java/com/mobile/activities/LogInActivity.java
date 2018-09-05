@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -427,8 +428,10 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         Crashlytics.setUserIdentifier(String.valueOf(INSTANCE.getUserId()));
                         if (!INSTANCE.getHasUserLoggedInBefore()) {
                             INSTANCE.hasUserLoggedInBefore(true);
-                            Intent i = new Intent(LogInActivity.this, ActivatedCardTutorialActivity.class);
-                            startActivity(i);
+                            TaskStackBuilder b = TaskStackBuilder.create(LogInActivity.this);
+                            b.addParentStack(HomeActivity.class);
+                            b.addNextIntent(ActivatedCardTutorialActivity.newIntent(LogInActivity.this,true));
+                            b.startActivities();
                         } else {
                             Intent i = new Intent(LogInActivity.this, HomeActivity.class);
                             i.putExtra("launch", true);

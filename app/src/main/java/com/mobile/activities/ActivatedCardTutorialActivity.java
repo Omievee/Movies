@@ -37,6 +37,8 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
     int page = 0;
     ImageView[] indicators;
 
+    boolean showHome;
+
     ActivatedCardTutorialActivity.tutorialAdapter tutorialAdapter;
 
     LinearLayout dots;
@@ -68,12 +70,13 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
             screeningObject = intent.getParcelableExtra(Constants.SCREENING);
             selectedShowTime = getIntent().getStringExtra(Constants.SHOWTIME);
             theater = intent.getParcelableExtra(Constants.THEATER);
+            showHome = intent.getBooleanExtra("showHome",false);
         }
         done.setOnClickListener(v -> {
-            Intent doneIntent = new Intent(ActivatedCardTutorialActivity.this, HomeActivity.class);
-            doneIntent.putExtra("launch", true);
-            doneIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(doneIntent);
+            finish();
+            if(showHome) {
+                startActivity(HomeActivity.Companion.newIntent(this,0));
+            }
         });
 
 
@@ -213,7 +216,9 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
         }
     }
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, ActivatedCardTutorialActivity.class);
+    public static Intent newIntent(Context context, boolean showHome) {
+        return new Intent(context, ActivatedCardTutorialActivity.class).putExtra(
+                "showHome", showHome
+        );
     }
 }

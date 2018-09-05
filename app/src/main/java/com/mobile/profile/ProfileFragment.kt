@@ -46,7 +46,7 @@ class ProfileFragment : MPFragment(), Primary {
                 Profile.HISTORY -> showFragment(HistoryFragment())
                 Profile.REFER_A_FRIEND -> showFragment(ReferAFriendFragment())
                 Profile.LOYALTY_PROGRAMS -> showFragment(LoyaltyProgramFragment.newInstance())
-                Profile.HOW_TO_USE_MOVIEPASS -> navigateTo(ActivatedCardTutorialActivity.newIntent(activity))
+                Profile.HOW_TO_USE_MOVIEPASS -> navigateTo(ActivatedCardTutorialActivity.newIntent(activity,false))
                 Profile.HELP -> onHelpClicked()
                 Profile.LINK-> navigateTo(Intent(Intent.ACTION_VIEW, Uri.parse(pres.link)))
                 Profile.SIGN_OUT -> onLogout()
