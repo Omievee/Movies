@@ -43,53 +43,6 @@ class SplashActivity : AppCompatActivity() {
             launchActivity(2, -1)
         }
 
-
-//        if (data != null && data.path.length >= 2) run {
-//            var movieIdEncripted: String
-//            var movieOrTheater: String
-//            var url = data.path
-//
-//            var urlPath = data.pathSegments
-//            var idLength: Int
-//            if (urlPath.size >= 2) {
-//                movieOrTheater = urlPath.get(1)
-//                if (movieOrTheater.equals("movies")) {
-//                    if (urlPath.size >= 3) {
-//                        movieIdEncripted = urlPath.get(2)
-//                        idLength = movieIdEncripted.length
-//                        idLength = idLength - 5
-//                        movieIdEncripted = movieIdEncripted.substring(2, idLength)
-//                        val movieId = Integer.valueOf(movieIdEncripted)!!
-//                        launchActivity(0, movieId)
-//                    }
-//                    if (urlPath.size >= 4) {
-//                        val campaign = urlPath.get(3)
-//                        //GoWatchItSingleton.getInstance().setCampaign(campaign)
-//                    }
-//                    launchActivity(0, -1)
-//                } else if (movieOrTheater.equals("theaters")) {
-//                    launchActivity(1, -1)
-//                    if (urlPath.size >= 3) {
-//                        val campaign = urlPath.get(2)
-//                        //GoWatchItSingleton.getInstance().setCampaign(campaign)
-//                    }
-//                } else {
-//                    val campaign = urlPath.get(1)
-//                    //GoWatchItSingleton.getInstance().setCampaign(campaign)
-//                    launchActivity(2, -1)
-//                }
-//            } else {
-//                launchActivity(2, -1)
-//            }
-//
-////            loadMovies()
-//
-//        }
-//        else {
-//            Log.d(">>>>>>>>>>>>>>>>>>>", "MADE IT")
-////            launchActivity(2, -1)
-//
-//        }
     }
 
     fun launchActivity(typeMovie: Int, movieID: Int) {

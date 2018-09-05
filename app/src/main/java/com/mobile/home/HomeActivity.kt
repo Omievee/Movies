@@ -103,8 +103,12 @@ class HomeActivity : MPActivty(), HomeActivityView {
         viewPager.offscreenPageLimit = 2
         viewPager.adapter = adapter
 
+
+
         presenter.onCreate()
     }
+
+
 
     override fun onResume() {
         super.onResume()

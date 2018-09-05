@@ -4,8 +4,6 @@ import com.google.gson.Gson
 import com.mobile.analytics.AnalyticsManager
 import com.mobile.analytics.AnalyticsManagerImpl
 import com.mobile.application.Application
-import com.mobile.deeplinks.DeepLinksManager
-import com.mobile.deeplinks.DeepLinksManagerImpl
 import com.mobile.gowatchit.GoWatchItManager
 import com.mobile.gowatchit.GoWatchItModule
 import com.mobile.history.HistoryModule
@@ -40,11 +38,11 @@ class AppModule {
         return AnalyticsManagerImpl(context, goWatchItManager)
     }
 
-    @Provides
-    @Singleton
-    fun provideDeepLinkManager(context: Application): DeepLinksManager {
-        return DeepLinksManagerImpl(context)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideDeepLinkManager(context: Application): DeepLinksManager {
+//        return DeepLinksManagerImpl(context)
+//    }
 
     @Provides
     @Singleton
