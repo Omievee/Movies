@@ -174,8 +174,8 @@ public class ActivatedCardTutorialActivity extends BaseActivity {
 
         ImageView img;
 
-        int[] tutorialImages = new int[]{R.drawable.tutorial_1, R.drawable.tutorial_2,
-                R.drawable.tutorial_3, R.drawable.tutorial_4, R.drawable.tutorial_5};
+        int[] tutorialImages = new int[]{R.drawable.onboarding_spotlight_homescreen, R.drawable.onboarding_spotlight_check_in,
+                R.drawable.onboarding_spotlight_confirmation, R.drawable.onboarding_spotlight_cancel, R.drawable.onboarding_spotlight_e_ticket};
 
         int[] tutorialHeaders = new int[]{R.string.tutorial_header_1,
                 R.string.tutorial_header_2, R.string.tutorial_header_3, R.string.tutorial_header_4, R.string.activity_onboarding_header_final};
