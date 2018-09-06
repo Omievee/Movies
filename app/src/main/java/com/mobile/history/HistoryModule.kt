@@ -30,6 +30,5 @@ class HistoryModule {
                 api = api,
                 sessionManager = sessionManager)
     }
-
 }
 

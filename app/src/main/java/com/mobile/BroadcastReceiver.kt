@@ -3,6 +3,8 @@ package com.mobile
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.appboy.push.AppboyNotificationUtils
 import com.mobile.activities.LogInActivity
 import com.mobile.home.HomeActivity
 import com.mobile.model.Movie
@@ -15,16 +17,17 @@ import org.parceler.Parcels
 
 class BroadcastReceiver : BroadcastReceiver() {
 
-    var context: Context? = null
+    lateinit var context: Context
+    lateinit var intent: Intent
+    lateinit var movieObject: Movie
 
     override fun onReceive(context: Context?, intent: Intent?) {
         this.context = context ?: return
-
-        intent?.extras?.let {
-            val url = it.get("uri")?.toString()?.trim()
-            determineCategory(url)
-        }
+        this.intent = intent ?: return
+        val url = intent.extras?.get("uri")?.toString()?.trim()
+        determineCategory(url)
     }
+
 
     private fun determineCategory(url: String?) {
         val type = url?.split("/".toRegex())
@@ -56,41 +59,46 @@ class BroadcastReceiver : BroadcastReceiver() {
                 .equalTo("id", movieId)
                 .findAll())
         if (movie != null && movie.size > 0) {
-            objectFromRealmQuery(null, movie[0])
+            movieObject = movie[0]
+            userOpenedPush(null, movieObject, intent)
         }
-
-    }
-
-    private fun objectFromRealmQuery(theaterObject: Theater? = null, movie: Movie? = null) {
-        when (UserPreferences.userId) {
-            0 -> {
-                if (movie != null) {
-                    val receivedIntent = Intent(context, LogInActivity::class.java)
-                    receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movie))
-                    context.startIntentIfResolves(receivedIntent)
-                } else {
-                    val receivedIntent = Intent(context, LogInActivity::class.java)
-                    receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(theaterObject))
-                    context.startIntentIfResolves(receivedIntent)
-                }
-            }
-            else -> {
-                if (movie != null) {
-                    val receivedIntent = Intent(context, HomeActivity::class.java)
-                    receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movie))
-                    context.startIntentIfResolves(receivedIntent)
-                } else {
-                    val receivedIntent = Intent(context, HomeActivity::class.java)
-                    receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(theaterObject))
-                    context.startIntentIfResolves(receivedIntent)
-                }
-            }
-        }
-
-
     }
 
 
+
+    fun userOpenedPush(theater: Theater? = null, movie: Movie? = null, intent: Intent) {
+        val notificationOpenedAction = context.packageName + AppboyNotificationUtils.APPBOY_NOTIFICATION_OPENED_SUFFIX
+
+        if (notificationOpenedAction == intent.action) {
+            when (UserPreferences.userId) {
+                0 -> {
+                    if (movie != null) {
+                        val receivedIntent = Intent(context, LogInActivity::class.java)
+                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movie))
+                        context.startIntentIfResolves(receivedIntent)
+                    } else {
+                        val receivedIntent = Intent(context, LogInActivity::class.java)
+                        // receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(theaterObject))
+                        context.startIntentIfResolves(receivedIntent)
+                    }
+                }
+                else -> {
+                    if (movie != null) {
+                        Log.d(">>>>>>>>>>><<<<<<<<<<<", "<<<<<<<<<<<ACTION>>>>>>>>> " + movieObject.title)
+                        val receivedIntent = Intent(context, HomeActivity::class.java)
+                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movieObject))
+                        context.startIntentIfResolves(receivedIntent)
+                    } else {
+                        val receivedIntent = Intent(context, HomeActivity::class.java)
+                        //  receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(theaterObject))
+                        context.startIntentIfResolves(receivedIntent)
+                    }
+                }
+            }
+
+
+        }
+    }
 }
 
 

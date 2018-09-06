@@ -14,5 +14,4 @@ class DeepLinksManagerImpl(context: Application) : DeepLinksManager {
     override fun onTheaterIntent(intent: Intent) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }
