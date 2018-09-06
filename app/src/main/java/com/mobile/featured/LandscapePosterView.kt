@@ -5,18 +5,19 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import com.mobile.model.Movie
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.model.Movie
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 
-class MoviePosterView(context: Context?,
-                      attrs: AttributeSet? = null,
-                      var moviePosterClickListener: MoviePosterClickListener?=null
+class LandscapePosterView(context: Context?,
+                          attrs: AttributeSet? = null
+
 
 ) : ConstraintLayout(context, attrs) {
 
     var movie: Movie? = null
+    var moviePosterClickListener: MoviePosterClickListener?=null
 
     init {
         inflate(context, R.layout.list_item_featured_poster, this)

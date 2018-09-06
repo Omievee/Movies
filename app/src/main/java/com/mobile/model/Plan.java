@@ -1,12 +1,13 @@
 package com.mobile.model;
 
-import org.parceler.Parcel;
+
+import kotlinx.android.parcel.Parcelize;
 
 /**
  * Created by anubis on 7/12/17.
  */
 
-@Parcel
+@Parcelize
 public class Plan {
 
     boolean amcUpgradeAble;

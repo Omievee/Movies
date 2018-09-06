@@ -122,4 +122,6 @@ public class Constants {
     public static final String BRAZE_SUBSCRIPTION_STATUS = "Subscription Status";
     public static final String BRAZE_USER_RATED_GOOD_MOVIES = "Good Movies";
     public static final String BRAZE_USER_RATED_BAD_MOVIES = "Bad Movies";
+
+    public static final String MOVIES_LOADED_DATE = "last_dl_movies";
 }

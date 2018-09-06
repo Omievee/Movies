@@ -487,6 +487,17 @@ object UserPreferences {
             return sPrefs.getInt(Constants.SHOW_HISTORY_RATING, 0)
         }
 
+    var currentMoviesLoaded: Calendar
+    get() {
+        return Calendar.getInstance()
+                .apply {
+                    timeInMillis = sPrefs.getLong(Constants.MOVIES_LOADED_DATE, 0)
+                }
+    }
+    set(value) {
+        sPrefs.edit().putLong(Constants.MOVIES_LOADED_DATE, value.timeInMillis).apply()
+    }
+
 
     fun setUserDismissedHistoryRateScreen(historyRatingID: Int) {
         val prefs = sPrefs.edit() ?: return

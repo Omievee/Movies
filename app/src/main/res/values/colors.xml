@@ -55,6 +55,7 @@
     <color name="facebook_blue">#3b5998</color>
 
     <color name="idk_gray">#303030</color>
+    <color name="bottomNav">#C8000000</color>
 
 
 </resources>

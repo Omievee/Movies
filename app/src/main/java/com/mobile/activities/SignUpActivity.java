@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.helpshift.support.Log;
 import com.mobile.fragments.ConfirmationSignUpFragment;
 import com.mobile.fragments.SignUpFirstTime;
 import com.mobile.fragments.SignUpStepOneFragment;
@@ -32,8 +31,6 @@ import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
 import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,7 +112,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpStepTwoFr
 
         email = getIntent().getStringExtra("email");
         password = getIntent().getStringExtra("password");
-        selectedPlan = Parcels.unwrap(getIntent().getParcelableExtra(SignUpFirstOpenActivity.SELECTED_PLAN));
+        selectedPlan = getIntent().getParcelableExtra(SignUpFirstOpenActivity.SELECTED_PLAN);
         if(selectedPlan==null){
             getPlans();
         }

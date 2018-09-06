@@ -10,10 +10,9 @@ import android.widget.TextView;
 import com.mobile.model.Plans;
 import com.mobile.model.ProspectUser;
 import com.mobile.network.RestClient;
+import com.mobile.onboard.OnboardingActivityV2;
 import com.mobile.responses.PlanResponse;
 import com.moviepass.R;
-
-import org.parceler.Parcels;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,7 +87,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpFirstOpenActivity.this,SignUpActivity.class);
-                intent.putExtra(SELECTED_PLAN, Parcels.wrap(selectedPlan));
+                intent.putExtra(SELECTED_PLAN, selectedPlan);
                 ProspectUser.plan = selectedPlan;
                 startActivity(intent);
             }
@@ -144,7 +143,7 @@ public class SignUpFirstOpenActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(this, OnboardingActivity.class);
+        Intent i = new Intent(this, OnboardingActivityV2.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         finish();

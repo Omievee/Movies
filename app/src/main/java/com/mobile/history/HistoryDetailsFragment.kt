@@ -16,6 +16,8 @@ import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.controller.BaseControllerListener
+import com.facebook.drawee.drawable.ScalingUtils
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.facebook.imagepipeline.image.ImageInfo
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.mobile.Constants
@@ -71,16 +73,13 @@ class HistoryDetailsFragment : MPFragment() {
                 .setProgressiveRenderingEnabled(true)
                 .setSource(imgUrl)
                 .build()
-
+        val hier = GenericDraweeHierarchyBuilder(resources).setDesiredAspectRatio(1.5f)
+                //.setActualImageScaleType(ScalingUtils.ScaleType.)
+        enlargedImage.hierarchy = hier.build()
         val controller = Fresco.newDraweeControllerBuilder()
                 .setUri(imgUrl)
                 .setImageRequest(request)
                 .setControllerListener(object : BaseControllerListener<ImageInfo>() {
-                    override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
-                        super.onFinalImageSet(id, imageInfo, animatable)
-                        enlargedImage.setImageURI(imgUrl)
-                    }
-
                     override fun onFailure(id: String?, throwable: Throwable?) {
                         if (historyItem.imageUrl?.contains("https://s3.amazonaws.com/") == true) {
                             enlargedImage.setImageURI(imgUrl.toString() + "/original.jpg")

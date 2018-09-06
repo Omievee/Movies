@@ -8,7 +8,7 @@ import com.mobile.billing.MissingBillingFragment
 import com.mobile.billing.MissingBillingFragmentModule
 import com.mobile.fragments.*
 import com.mobile.history.HistoryDetailsFragment
-import com.mobile.history.PastReservationsFragment
+import com.mobile.history.HistoryFragment
 import com.mobile.home.HomeActivity
 import com.mobile.home.HomeActivityModule
 import com.mobile.profile.ProfileCancellationModule
@@ -27,6 +27,7 @@ import com.mobile.ticketverification.TicketVerificationBottomSheetDialogFragment
 import com.mobile.fragments.ScreeningsFragmentModule
 import com.mobile.referafriend.ReferAFriendFragmentModule
 import com.mobile.referafriend.ReferAFriendFragment
+import com.mobile.movie.MoviesFragment
 import com.mobile.profile.ProfileFragment
 import com.mobile.profile.ProfileCancellationFragment
 import com.mobile.tv.ReservationActivityModule
@@ -57,6 +58,10 @@ interface AppBindingModule {
     fun moviesFragment(): MoviesFragment
 
     @FragmentScope
+    @ContributesAndroidInjector
+    fun searchFragment():SearchFragment
+
+    @FragmentScope
     @ContributesAndroidInjector(modules = [TheatersFragmentModule::class])
     fun theatersFragment(): TheatersFragmentV2
 
@@ -74,7 +79,7 @@ interface AppBindingModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    fun pastReservationsFragment(): PastReservationsFragment
+    fun pastReservationsFragment(): HistoryFragment
 
     @FragmentScope
     @ContributesAndroidInjector

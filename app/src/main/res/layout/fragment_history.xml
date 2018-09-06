@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReservationBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/headerBar"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <TextView
+            style="@style/TitleView"
+            android:text="@string/history" />
+
+        <ImageView
+            android:id="@+id/backButton"
+            style="@style/BackButton" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/historyReycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBar" />
+
+    <TextView
+        android:id="@+id/NoMoives"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerBar"
+        android:text="You have no viewing history at this time"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/softNav"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_loading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/softNav"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mobile.widgets.SoftNavigationPlaceholder
+        android:id="@+id/softNav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/bottom_navigation_height"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

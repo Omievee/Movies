@@ -56,12 +56,6 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <service android:name="com.mobile.notifications.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -166,13 +160,13 @@
 
         <activity
             android:name="com.mobile.activities.LogInActivity"
-            android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:parentActivityName="com.mobile.onboard.OnboardingActivityV2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:screenOrientation="portrait"
-                android:value="com.mobile.activities.OnboardingActivity" />
+                android:value="com.mobile.onboard.OnboardingActivityV2" />
         </activity>
         <activity
             android:name="com.mobile.home.HomeActivity"
@@ -196,18 +190,18 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.mobile.activities.OnboardingActivity"
+            android:name="com.mobile.onboard.OnboardingActivityV2"
             android:label="@string/title_activity_onboarding"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.mobile.activities.SignUpFirstOpenActivity"
-            android:parentActivityName="com.mobile.activities.OnboardingActivity"
+            android:parentActivityName="com.mobile.onboard.OnboardingActivityV2"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mobile.activities.OnboardingActivity" />
+                android:value="com.mobile.onboard.OnboardingActivityV2" />
         </activity>
         <activity
             android:name="com.mobile.activities.SignUpActivity"
@@ -224,15 +218,6 @@
             android:name="com.mobile.activities.ActivatedCardTutorialActivity"
             android:screenOrientation="portrait" />
         <activity android:name="com.mobile.activities.TicketVerification_NoStub" />
-
-        <service
-            android:name="com.mobile.helpers.RealmTaskService"
-            android:exported="true"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

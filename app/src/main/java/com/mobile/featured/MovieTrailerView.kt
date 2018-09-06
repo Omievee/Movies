@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -20,19 +21,22 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
-import com.mobile.model.Movie
+import com.mobile.Constants
 import com.mobile.screening.MoviePosterClickListener
+import com.mobile.model.Movie
 import com.moviepass.R
 import kotlinx.android.synthetic.main.list_item_featured_poster.view.*
 import java.io.File
 
-class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val moviePosterClickListener: MoviePosterClickListener) : ConstraintLayout(context, attrs), Player.EventListener {
+class MovieTrailerView(context: Context?, attrs: AttributeSet? = null) : ConstraintLayout(context, attrs), Player.EventListener {
 
     val player: SimpleExoPlayer
 
     var lastSource: String? = null
 
     var movie: Movie? = null
+
+    var moviePosterClickListener: MoviePosterClickListener?=null
 
     init {
         inflate(context, R.layout.list_item_featured_poster, this)
@@ -45,8 +49,9 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
         player.addListener(this)
         featuredVideo.player = player
         this.setOnClickListener {
+            Log.d(Constants.TAG, "clickclick: ")
             val movie = this.movie?: return@setOnClickListener
-            moviePosterClickListener.onMoviePosterClick(movie)
+            moviePosterClickListener?.onMoviePosterClick(movie)
         }
     }
 
@@ -61,7 +66,12 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
             if (player.playbackState == Player.STATE_READY) {
                 player.playWhenReady
             }
+            if(movie.teaserVideoUrl.isNullOrEmpty()) {
+                onNoVideo()
+            }
             return
+        } else {
+            onNoVideo()
         }
         val video = ExtractorMediaSource(Uri.parse(movie.teaserVideoUrl), CacheDataSourceFactory(context, (100 * 1024 * 1024).toLong(), (5 * 1024 * 1024).toLong()), DefaultExtractorsFactory(), null, null)
         player.prepare(video)
@@ -83,10 +93,7 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
     }
 
     override fun onPlayerError(error: ExoPlaybackException?) {
-        featuredVideo.visibility = View.GONE
-        featuredPoster.visibility = View.VISIBLE
-        featuredPoster.setImageURI(movie?.landscapeImageUrl)
-
+        onNoVideo()
     }
 
     override fun onLoadingChanged(isLoading: Boolean) {
@@ -109,9 +116,14 @@ class MovieTrailerView(context: Context?, attrs: AttributeSet? = null, val movie
 
     }
 
+    fun onNoVideo() {
+        featuredVideo.visibility = View.GONE
+        featuredPoster.visibility = View.VISIBLE
+        featuredPoster.setImageURI(movie?.landscapeImageUrl)
+    }
+
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         if (playbackState == Player.STATE_READY) {
-
             featuredPoster.visibility = View.GONE
             videoFrameLayout.visibility = View.VISIBLE
         }

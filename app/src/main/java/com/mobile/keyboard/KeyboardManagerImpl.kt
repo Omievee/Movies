@@ -15,4 +15,9 @@ class KeyboardManagerImpl(val application: Application) : KeyboardManager {
         imm.hideSoftInputFromWindow(token, 0)
     }
 
+    override fun show() {
+        val token = application.currentActivity?.window?.decorView?.windowToken?:return
+        imm.showSoftInputFromInputMethod(token,InputMethodManager.SHOW_IMPLICIT)
+    }
+
 }

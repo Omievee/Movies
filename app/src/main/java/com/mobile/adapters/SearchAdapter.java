@@ -16,9 +16,12 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.mobile.responses.AllMoviesResponse;
 import com.mobile.search.AfterSearchListener;
 import com.mobile.model.Movie;
 import com.moviepass.R;
+
+import java.util.List;
 
 import io.realm.RealmList;
 
@@ -30,9 +33,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
 
     View root;
     AfterSearchListener listener;
-    private RealmList<Movie> moviesArrayList;
+    private List<Movie> moviesArrayList;
 
-    public SearchAdapter(AfterSearchListener listener, RealmList<Movie> moviesArrayList) {
+    public SearchAdapter(AfterSearchListener listener, List<Movie> moviesArrayList) {
         this.listener = listener;
         this.moviesArrayList = moviesArrayList;
     }
@@ -93,7 +96,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Suggestion
 
     }
 
-    public void updateList(RealmList<Movie> list){
+    public void updateList(List<Movie> list){
         moviesArrayList = list;
         notifyDataSetChanged();
     }

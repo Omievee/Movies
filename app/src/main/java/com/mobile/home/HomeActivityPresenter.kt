@@ -101,13 +101,13 @@ class HomeActivityPresenter(val view: HomeActivityView, val api: Api, val microA
     }
 
     private fun checkRestrictions() {
-        restrictionsDisposable?.dispose()
         val userId = sessionManager.getUser()?.id ?: return
         val diff = System.currentTimeMillis() - lastRestrictionRequest
         val minutes = TimeUnit.MILLISECONDS.toMinutes(diff).toInt()
         when (minutes < 1) {
             true -> return
         }
+        restrictionsDisposable?.dispose()
         restrictionsDisposable = microApi.getSession(userId)
                 .subscribe({
                     lastRestrictionRequest = System.currentTimeMillis()

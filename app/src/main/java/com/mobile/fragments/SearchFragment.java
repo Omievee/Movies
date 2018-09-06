@@ -1,6 +1,5 @@
 package com.mobile.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,43 +11,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.mobile.keyboard.KeyboardManager;
+import com.mobile.movie.MoviesManager;
 import com.mobile.search.AfterSearchListener;
 import com.mobile.adapters.SearchAdapter;
 import com.mobile.model.Movie;
 import com.moviepass.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
+import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
-import io.realm.RealmResults;
-
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by o_vicarra on 2/6/18.
  */
 
 public class SearchFragment extends MPFragment implements AfterSearchListener {
+
+    @Inject
+    MoviesManager manager;
+
+    @Inject
+    KeyboardManager keyboardManager;
     public EditText searchBar;
     View rootView;
     SearchAdapter customAdapter;
-    RealmList<Movie> ALLMOVIES;
+    List<Movie> ALLMOVIES;
     View progress;
     ArrayList<Movie> noDuplicates;
     String url;
-    private RealmResults<Movie> movies;
-    private RealmResults<Movie> allMovies;
     private RecyclerView recyclerView;
-    private RealmList<Movie> suggestions;
+    private List<Movie> suggestions;
     private ImageView backArrow, removeIcon;
-    private Context myContext;
 
+    @Nullable  Disposable movieSub;
     public SearchFragment() {
     }
 
@@ -62,8 +66,6 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         backArrow = rootView.findViewById(R.id.backArrow);
         removeIcon = rootView.findViewById(R.id.removeIcon);
-
-        ALLMOVIES = new RealmList<>();
 
         noDuplicates = new ArrayList<>();
         url = "http://moviepass.com/go/movies";
@@ -85,7 +87,6 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         progress.setVisibility(View.VISIBLE);
-        LayoutInflater myInflater = (LayoutInflater) myContext.getSystemService(LAYOUT_INFLATER_SERVICE);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         searchBar.requestFocus();
@@ -103,25 +104,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String movieSearch = charSequence.toString();
-                boolean isMovieDuplicated = false;
-                if (movieSearch.equals("")) {
-                    customAdapter.updateList(ALLMOVIES);
-                } else {
-                    suggestions = new RealmList<>();
-                    for (Movie movieTitle : ALLMOVIES) {
-                        if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
-                            for (Movie movieDuplicate : suggestions) {
-                                if (movieDuplicate.getId() == movieTitle.getId()) {
-                                    isMovieDuplicated = true;
-                                }
-
-                            }
-                            if (isMovieDuplicated == false)
-                                suggestions.add(movieTitle);
-                        }
-                    }
-                    customAdapter.updateList(suggestions);
-                }
+                search(movieSearch);
             }
 
             @Override
@@ -133,7 +116,7 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(getActivity());
+                keyboardManager.hide();
                 getActivity().onBackPressed();
             }
         });
@@ -150,42 +133,48 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
 
     }
 
-    public void getMovies() {
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("Movies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm moviesRealm = Realm.getInstance(config);
-        movies = moviesRealm.where(Movie.class)
-                .equalTo("type", "Top Box Office")
-                .or()
-                .equalTo("type", "New Releases")
-                .or()
-                .equalTo("type", "Coming Soon")
-                .or()
-                .equalTo("type", "Now Playing")
-                .or()
-                .equalTo("type", "Featured")
-                .findAll();
+    private void search(String movieSearch) {
+        if(ALLMOVIES==null) {
+            return;
+        }
+        boolean isMovieDuplicated = false;
+        if (movieSearch.equals("")) {
+            customAdapter.updateList(ALLMOVIES);
+        } else {
+            suggestions = new ArrayList<>();
+            for (Movie movieTitle : ALLMOVIES) {
+                if (movieTitle.getTitle().toLowerCase().contains(movieSearch.toLowerCase())) {
+                    for (Movie movieDuplicate : suggestions) {
+                        if (movieDuplicate.getId() == movieTitle.getId()) {
+                            isMovieDuplicated = true;
+                        }
 
-
+                    }
+                    if (isMovieDuplicated == false)
+                        suggestions.add(movieTitle);
+                }
+            }
+            customAdapter.updateList(suggestions);
+        }
     }
 
     public void getAllMovies() {
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("AllMovies.Realm")
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm moviesRealm = Realm.getInstance(config);
-        allMovies = moviesRealm.where(Movie.class).findAll();
-        ALLMOVIES.clear();
-        for (Movie movie : allMovies) {
-            ALLMOVIES.add(movie);
+        if(movieSub!=null) {
+            movieSub.dispose();
         }
-        customAdapter = new SearchAdapter(this, ALLMOVIES);
-        recyclerView.setAdapter(customAdapter);
+        movieSub = manager
+                .getAllMovies()
+                .subscribe(v -> {
+                    ALLMOVIES = v;
+                    customAdapter = new SearchAdapter(this, ALLMOVIES);
+                    recyclerView.setAdapter(customAdapter);
+                    search(searchBar.getText().toString());
+                }, d -> {
+                    d.printStackTrace();
+                });
+
         progress.setVisibility(View.GONE);
-        showSfotKeyboard();
+        showKeyboard();
     }
 
     @Override
@@ -193,23 +182,14 @@ public class SearchFragment extends MPFragment implements AfterSearchListener {
         showFragment(ScreeningsFragment.Companion.newInstance(new ScreeningsData(null, movie)));
     }
 
-    public void showSfotKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(getActivity().getCurrentFocus(), InputMethodManager.SHOW_IMPLICIT);
+    public void showKeyboard() {
+        keyboardManager.show();
     }
 
-
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        myContext = context;
+        AndroidSupportInjection.inject(this);
     }
 }

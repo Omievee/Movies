@@ -1169,6 +1169,29 @@
         <item name="android:textColor">@color/red</item>
     </style>
 
+    <style name="Onboard_Title" parent="MPText_Bold">
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="Onboard_Body" parent="MPText">
+        <item name="android:lineSpacingExtra">6sp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="MP_Indicator">
+        <item name="piv_radius">4dp</item>
+        <item name="piv_unselectedColor">@color/pinkish_gray</item>
+        <item name="piv_selectedColor">@color/red</item>
+    </style>
+
+    <style name="CategoryHeader" parent="MPText_Bold">
+        <item name="android:paddingTop">@dimen/margin_half</item>
+        <item name="android:paddingBottom">@dimen/margin_half</item>
+    </style>
+
 
     <string name="no_cancellations_or_refunds_at_this_theater">No cancellations or refunds at this theater.</string>
     <string name="skip_this_promotion">Skip this promotion</string>

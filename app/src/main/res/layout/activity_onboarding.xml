@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mpActivityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/test_black"
+    android:fitsSystemWindows="false">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/logIn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.mobile.widgets.MPProgressButton
+        android:id="@+id/logIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/signUp"
+        app:mp_text="@string/log_in" />
+
+    <TextView
+        android:id="@+id/signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/dots"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/margin_standard"
+        app:layout_constraintBottom_toTopOf="@+id/viewIndicator"
+        android:text="@string/not_a_member_join_today"
+        android:textSize="@dimen/text_size_14" />
+
+    <com.rd.PageIndicatorView
+        app:piv_viewPager="@id/viewPager"
+        android:id="@+id/viewIndicator"
+        style="@style/MP_Indicator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.mobile.widgets.SoftNavigationPlaceholder
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:id="@+id/activityFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</android.support.constraint.ConstraintLayout>

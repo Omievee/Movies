@@ -29,7 +29,7 @@ import com.mobile.responses.ChangeEmailResponse;
 import com.mobile.responses.ChangePasswordResponse;
 import com.mobile.responses.ChangedMindResponse;
 import com.mobile.responses.HistoryResponse;
-import com.mobile.responses.LocalStorageMovies;
+import com.mobile.responses.CurrentMoviesResponse;
 import com.mobile.responses.TheatersResponse;
 import com.mobile.responses.RestrictionsResponse;
 import com.mobile.responses.PlanResponse;
@@ -178,21 +178,6 @@ public interface Api {
     /* Cancel Subscription */
     @POST("/rest/v1/subscription/cancellation")
     Single<CancellationResponse> requestCancellation(@Body CancellationRequest request);
-
-    /*ALL MOVIES FOR MAIN PAGE */
-    @GET("/#env#/movies/current.json")
-    Call<LocalStorageMovies> getAllCurrentMovies();
-
-
-    /* ALL MOVIES FOR SEARCH */
-    @GET("/#env#/movies/all.json")
-    Call<List<AllMoviesResponse>> getAllMovies();
-
-
-    /* ALL THEATERS */
-    @GET("/theaters/all.json")
-    Call<TheatersResponse> getAllMoviePassTheaters();
-
 
     //NEW RESTRICTIONS
     @GET("auth/v1/session/{userId}")

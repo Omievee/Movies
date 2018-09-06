@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:layout_height="match_parent">
+
+    <com.mobile.seats.MPSwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </com.mobile.seats.MPSwipeRefreshLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:minHeight="@dimen/action_bar_size"
+        android:paddingTop="@dimen/margin_standard"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/moviepassHeader"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/action_bar_size"
+            android:src="@drawable/moviepass_horizontal_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent=".45"
+            app:layout_scrollFlags="enterAlways|scroll" />
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:src="@drawable/search_icon_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/ActionButton" />
+    </android.support.constraint.ConstraintLayout>
+
+    <com.mobile.widgets.MPProgressText
+        android:id="@+id/activateMPCardView"
+        android:visibility="gone"
+        tools:visibility="visible"
+        style="@style/ReservationCheckinButton"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavSpace"
+        app:mp_text="@string/activate_your_moviepass_card" />
+
+    <View
+        android:id="@+id/bottomNavSpace"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_navigation_height"
+        app:layout_constraintBottom_toTopOf="@id/softNav"/>
+
+    <com.mobile.widgets.SoftNavigationPlaceholder
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/softNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>

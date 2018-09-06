@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -22,7 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appboy.Appboy;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -393,7 +393,6 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
             String authToken = user.getAuthToken();
             String ODID = user.getOneDeviceId();
 
-            Appboy.getInstance(LogInActivity.this).changeUser(user.getEmail());
             INSTANCE.setUserCredentials(us, deviceUuid, authToken, user.getFirstName(), user.getLastName(), user.getEmail(), ODID);
             analyticsManager.onUserLoggedIn(user);
             checkRestrictions(user);
@@ -429,8 +428,10 @@ public class LogInActivity extends AppCompatActivity implements WebViewListener 
                         Crashlytics.setUserIdentifier(String.valueOf(INSTANCE.getUserId()));
                         if (!INSTANCE.getHasUserLoggedInBefore()) {
                             INSTANCE.hasUserLoggedInBefore(true);
-                            Intent i = new Intent(LogInActivity.this, ActivatedCardTutorialActivity.class);
-                            startActivity(i);
+                            TaskStackBuilder b = TaskStackBuilder.create(LogInActivity.this);
+                            b.addParentStack(HomeActivity.class);
+                            b.addNextIntent(ActivatedCardTutorialActivity.newIntent(LogInActivity.this,true));
+                            b.startActivities();
                         } else {
                             Intent i = new Intent(LogInActivity.this, HomeActivity.class);
                             i.putExtra("launch", true);

@@ -84,6 +84,7 @@ class HistoryManagerImpl(@History val realmHistory: Provider<Realm>, val api: Ap
 
                             reservationHistoryResponse.reservations?.let {
                                 realmHistory.get().executeTransaction { transaction ->
+                                    transaction.delete(ReservationHistory::class.java)
                                     transaction.insertOrUpdate(it)
                                     saveHistoryLoadedDate()
                                 }

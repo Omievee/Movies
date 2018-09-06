@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.helpshift.support.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -39,6 +41,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if(origin!=null && origin.equalsIgnoreCase("helpshift")){
             Core.handlePush(this,data);
         }
+    }
+
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        // Get updated InstanceID token.
+
+        UserPreferences.INSTANCE.saveFirebaseHelpshiftToken(s);
+
+        Core.registerDeviceToken(this,s);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

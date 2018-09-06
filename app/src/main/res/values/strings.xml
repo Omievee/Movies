@@ -79,16 +79,16 @@
     <string name="activity_onboarding_header_5">How It Works</string>
     <string name="activity_onboarding_header_final">Have a MoviePass Supported E-ticketing Theater Near You?</string>
 
-    <string name="activity_onboarding_body_1">Join America\'s #1 Movie Subscription Service </string>
-    <string name="activity_onboarding_body_2">Your MoviePass card is accepted in over 4000 theaters nationwide!</string>
+    <string name="activity_onboarding_body_1">Join America\'s #1 Movie\nSubscription Service </string>
+    <string name="activity_onboarding_body_2">Your MoviePass card is accepted in\nover 4000 theaters nationwide!</string>
     <!--<string name="activity_onboarding_body_3">Use the MoviePass apptestheck in to the movie and showtime you want to see.</string>-->
     <string name="activity_onboarding_body_3">You can see any 2D movie from its first day of release.</string>
 
     <!--<string name="activity_onboarding_body_4">Use the apptestheck into a theater, then swipe your card to get your ticket!</string>-->
-    <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the mail, and you\'re ready to go!</string>
+    <string name="activity_onboarding_body_4">Sign up, get your MoviePass card in the\nmail, and you\'re ready to go!</string>
 
     <!--<string name="activity_onboarding_body_5">Its that easy! Imaging all the great movies you can see in theaters with MoviePass!</string>-->
-    <string name="activity_onboarding_body_5">Use the app to check into a theater, then swipe your card to get your ticket!</string>
+    <string name="activity_onboarding_body_5">Use the app to check into a theater,\nthen swipe your card to get your ticket!</string>
     <string name="activity_onboarding_body_final">Look for the e-ticket icon: </string>
     <string name="tutorial_body_final">You can reserve same-day e-tickets right on the app from any location, even before receiving your card.* </string>
 
@@ -503,6 +503,7 @@
     <string name="screening_already_seen">You\'ve already seen this movie.</string>
     <string name="screening_rating">Rated</string>
     <string name="screenings_no_more_screenings">There are no more screenings at this theater today</string>
+    <string name="screenings_no_more_screenings_movie">There are no more screenings today</string>
     <string name="screening_unlisted_showtime">Unlisted Showtime</string>
     <string name="screening_unlisted_showtime_desc">Click here to check in to a movie that is playing at this theater, but isn\'t appearing on the app.</string>
     <string name="screening_premium">This premium screening is not supported</string>
@@ -759,6 +760,9 @@
     <string name="billing_card_on_file_eticket">Your billing card on file will be charged the theater’s listed ticket price for this showtime, minus the above MoviePass discount. A receipt will be emailed to you as a record for this transaction.</string>
     <string name="cycle_renews_on">Cycle renews on %1$s</string>
     <string name="guests_chance_go_free">Guests have a chance to go FREE!</string>
+    <string name="log_in">Log In</string>
+    <string name="not_a_member_join_today">Not a member? Join today!</string>
+    <string name="in_theaters">In Theaters %1$s</string>
 
 
 </resources>

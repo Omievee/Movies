@@ -19,7 +19,6 @@ import com.moviepass.R
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.fragment_bring_a_friend.*
-import org.parceler.Parcels
 
 class BringAFriendFragment : Fragment(), BringAFriendListener {
 
@@ -112,7 +111,7 @@ class BringAFriendFragment : Fragment(), BringAFriendListener {
                 checkIn = checkin,
                 reservation = result,
                 confirmationCode = result.eTicketConfirmation,
-                seatSelected = payload.selectedSeats?.map { SeatSelected(it.row, it.column, it.seatName) }
+                seatSelected = payload.selectedSeats?.map { SeatSelected(selectedSeatRow = it.row, selectedSeatColumn = it.column, seatName = it.seatName) }
         )
         activity.finish()
         startActivity(ReservationActivity.newInstance(activity, screeningToken))

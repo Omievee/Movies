@@ -9,7 +9,7 @@ import com.crashlytics.android.Crashlytics
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.mobile.UserPreferences
 import com.mobile.activities.LogInActivity
-import com.mobile.activities.OnboardingActivity
+import com.mobile.onboard.OnboardingActivityV2
 import com.mobile.home.HomeActivity
 import com.mobile.responses.SubscriptionStatus.*
 import com.moviepass.R
@@ -82,7 +82,7 @@ class SplashActivity : AppCompatActivity() {
     fun launchActivity(typeMovie: Int, id: Int) {
         Handler().postDelayed({
             if (UserPreferences.userId == 0 || UserPreferences.userId.equals("")) {
-                val i = Intent(this@SplashActivity, OnboardingActivity::class.java)
+                val i = Intent(this@SplashActivity, OnboardingActivityV2::class.java)
                 startActivity(i)
                 finish()
             } else {

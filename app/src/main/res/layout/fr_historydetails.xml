@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/tools"
     android:id="@+id/detailsBackground"
     android:layout_width="match_parent"
@@ -8,81 +9,93 @@
 
     <ImageView
         android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/margin_half"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/close_white"
-        android:tint="@color/white" />
+        style="@style/CloseButton"
+        android:layout_marginTop="@dimen/status_bar_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/historyTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/historyDate"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_standard"
         android:clickable="false"
-        android:text="Movie Ttle"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/historyDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/close" />
 
 
     <TextView
         android:id="@+id/historyDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/historyLocal"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_half"
         android:layout_marginTop="@dimen/margin_half"
         android:clickable="false"
-        android:text="January 1, 2018"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/historyLocal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyTitle" />
 
     <TextView
         android:id="@+id/historyLocal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/enlargedImage"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_standard"
         android:clickable="false"
-        android:text="NYC"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/enlargedImageContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyDate" />
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/enlargedImage"
-        android:layout_width="200dp"
-        android:layout_height="290dp"
-        android:layout_centerInParent="true"
-        android:clickable="false"
-        android:transitionName="historyPoster"
-        fresco:scaleType="fitXY" />
+    <FrameLayout
+        android:id="@+id/enlargedImageContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/didYouLikeIt"
+        app:layout_constraintDimensionRatio="W,2:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyLocal">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/enlargedImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            fresco:scaleType="fitXY"
+            android:transitionName="historyPoster" />
+    </FrameLayout>
 
 
     <TextView
         android:id="@+id/didYouLikeIt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/enlargedImage"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/margin_standard"
         android:text="Did you like it?"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/likeContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/enlargedImageContainer" />
 
     <RelativeLayout
+        android:id="@+id/likeContainer"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/didYouLikeIt"
-        android:layout_marginTop="@dimen/double_margin_standard"
-        android:gravity="center_horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/softNav"
+        app:layout_constraintTop_toBottomOf="@id/didYouLikeIt">
 
 
         <ImageView
@@ -101,5 +114,10 @@
 
     </RelativeLayout>
 
+    <com.mobile.widgets.BottomSoftNavigationPlaceholder
+        android:id="@+id/softNav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
