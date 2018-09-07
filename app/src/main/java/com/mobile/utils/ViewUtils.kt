@@ -10,6 +10,7 @@ import android.view.KeyEvent.KEYCODE_BACK
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.ViewConfiguration
+import com.mobile.MPActivty
 import com.moviepass.R
 
 
@@ -33,7 +34,7 @@ fun getNavBarHeight(c: Context): Int {
     val hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey()
     val hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK)
 
-    if (!hasMenuKey && !hasBackKey) {
+    if (MPActivty.isEmulator || (!hasMenuKey && !hasBackKey)) {
         //The device has a navigation bar
         val resources = c.getResources()
 
@@ -41,7 +42,6 @@ fun getNavBarHeight(c: Context): Int {
     }
     return result
 }
-
 
 private fun isTablet(c: Context): Boolean {
     return c.getResources().getConfiguration().screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
