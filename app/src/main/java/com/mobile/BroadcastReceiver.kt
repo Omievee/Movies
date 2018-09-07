@@ -12,7 +12,6 @@ import com.mobile.model.Theater
 import com.mobile.utils.startIntentIfResolves
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import org.parceler.Parcels
 
 
 class BroadcastReceiver : BroadcastReceiver() {
@@ -65,7 +64,6 @@ class BroadcastReceiver : BroadcastReceiver() {
     }
 
 
-
     fun userOpenedPush(theater: Theater? = null, movie: Movie? = null, intent: Intent) {
         val notificationOpenedAction = context.packageName + AppboyNotificationUtils.APPBOY_NOTIFICATION_OPENED_SUFFIX
 
@@ -74,7 +72,7 @@ class BroadcastReceiver : BroadcastReceiver() {
                 0 -> {
                     if (movie != null) {
                         val receivedIntent = Intent(context, LogInActivity::class.java)
-                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movie))
+                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, movieObject)
                         context.startIntentIfResolves(receivedIntent)
                     } else {
                         val receivedIntent = Intent(context, LogInActivity::class.java)
@@ -86,7 +84,7 @@ class BroadcastReceiver : BroadcastReceiver() {
                     if (movie != null) {
                         Log.d(">>>>>>>>>>><<<<<<<<<<<", "<<<<<<<<<<<ACTION>>>>>>>>> " + movieObject.title)
                         val receivedIntent = Intent(context, HomeActivity::class.java)
-                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, Parcels.wrap(movieObject))
+                        receivedIntent.putExtra(Constants.APPBOY_DEEP_LINK_KEY, movieObject)
                         context.startIntentIfResolves(receivedIntent)
                     } else {
                         val receivedIntent = Intent(context, HomeActivity::class.java)

@@ -20,6 +20,11 @@ open class MPActivty : FragmentActivity(), HasSupportFragmentInjector {
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> {
 
+
+        intent?.let {
+            val movie = it.extras?.get(Constants.APPBOY_DEEP_LINK_KEY) as Movie
+            Log.d(">>>>>>>>>", " INTENT OBJECT RECEIVED FROM NOTIFICATION>>>>> " + movie.title)
+        }
         return fragmentInjector
     }
 
